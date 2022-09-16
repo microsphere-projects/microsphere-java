@@ -32,8 +32,7 @@ public class SimpleJarEntryScanner {
      */
     public static final SimpleJarEntryScanner INSTANCE = new SimpleJarEntryScanner();
 
-    protected SimpleJarEntryScanner() {
-
+    public SimpleJarEntryScanner() {
     }
 
     /**

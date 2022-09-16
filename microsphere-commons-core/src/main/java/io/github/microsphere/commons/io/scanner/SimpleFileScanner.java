@@ -24,10 +24,8 @@ public class SimpleFileScanner {
      */
     public final static SimpleFileScanner INSTANCE = new SimpleFileScanner();
 
-    protected SimpleFileScanner() {
-
+    public SimpleFileScanner() {
     }
-
 
     /**
      * Scan all {@link File} {@link Set} under root directory

@@ -1,0 +1,17 @@
+{
+  "io.github.microsphere-projects": {
+    "microsphere-core": "*"
+  },
+  "org.slf4j": {
+    "slf4j-api": "*"
+  },
+  "com.alibaba": {
+    "fastjson": "*"
+  },
+  "org.apache.commons": {
+    "commons-lang3": "*"
+  },
+  "commons-io": {
+    "commons-io": "*"
+  }
+}

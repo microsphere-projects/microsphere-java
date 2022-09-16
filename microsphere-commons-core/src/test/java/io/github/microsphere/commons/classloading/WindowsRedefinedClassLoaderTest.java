@@ -17,16 +17,12 @@ public class WindowsRedefinedClassLoaderTest {
     @Test
     public void testLoadClass() throws ClassNotFoundException {
         WindowsRedefinedClassLoader classLoader = new WindowsRedefinedClassLoader(getClass().getClassLoader());
-
         classLoader.loadClass(TEST_CLASS_NAME1);
-//        classLoader.loadClass(TEST_CLASS_NAME2);
-
     }
 
     @Test(expected = ClassNotFoundException.class)
     public void testLoadAbsentClass() throws ClassNotFoundException {
         WindowsRedefinedClassLoader classLoader = new WindowsRedefinedClassLoader(getClass().getClassLoader());
         classLoader.loadClass(TEST_CLASS_NAME2);
-
     }
 }

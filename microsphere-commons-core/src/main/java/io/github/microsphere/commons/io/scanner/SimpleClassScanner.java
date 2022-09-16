@@ -3,10 +3,10 @@
  */
 package io.github.microsphere.commons.io.scanner;
 
-import io.github.microsphere.commons.util.ClassLoaderUtils;
-import io.github.microsphere.commons.util.ClassUtils;
 import io.github.microsphere.commons.filter.FilterUtils;
 import io.github.microsphere.commons.filter.PackageNameClassNameFilter;
+import io.github.microsphere.commons.util.ClassLoaderUtils;
+import io.github.microsphere.commons.util.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
@@ -30,8 +30,7 @@ public class SimpleClassScanner {
      */
     public final static SimpleClassScanner INSTANCE = new SimpleClassScanner();
 
-    protected SimpleClassScanner() {
-
+    public SimpleClassScanner() {
     }
 
     /**
