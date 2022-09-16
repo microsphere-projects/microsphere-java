@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.microsphere-projects</groupId>
+        <artifactId>microsphere-build</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <groupId>io.github.microsphere-projects</groupId>
+    <artifactId>microsphere-commons-parent</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <name>Microsphere Commons Project :: Parent</name>
+    <description>Microsphere Commons Parent</description>
+
+    <scm>
+        <url>https://github.com/microsphere-projects/microsphere-commons</url>
+        <connection>scm:git:git://github.com/microsphere-projects/microsphere-commons.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-commons.git
+        </developerConnection>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>mercyblitz</id>
+            <name>Mercy Ma</name>
+            <email>mercyblitz@gmail.com</email>
+            <organization>Microsphere</organization>
+            <roles>
+                <role>lead</role>
+                <role>architect</role>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <revision>0.0.1-SNAPSHOT</revision>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+
+        <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
+        <apache.commons.io.version>2.4</apache.commons.io.version>
+        <apache.commons.collections.version>3.2.2</apache.commons.collections.version>
+
+        <jsr305.version>3.0.1</jsr305.version>
+        <slf4j.version>1.7.28</slf4j.version>
+
+        <junit.version>4.7</junit.version>
+    </properties>
+
+    <modules>
+        <module>microsphere-commons-core</module>
+    </modules>
+
+    <dependencyManagement>
+
+        <dependencies>
+
+            <!-- Java API Dependencies -->
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>${javax.annotation-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>jsr305</artifactId>
+                <version>${jsr305.version}</version>
+            </dependency>
+
+            <!-- Apache Commons Dependencies -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${apache.commons.lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-collections</groupId>
+                <artifactId>commons-collections</artifactId>
+                <version>${apache.commons.collections.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${apache.commons.io.version}</version>
+            </dependency>
+
+            <!-- Third-Party Dependencies -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- Testing -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+        </dependencies>
+
+    </dependencyManagement>
+
+</project>
