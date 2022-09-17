@@ -6,16 +6,16 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>${revision}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-commons-parent</artifactId>
+    <artifactId>microsphere-commons</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>Microsphere Commons Project :: Parent</name>
-    <description>Microsphere Commons Parent</description>
+    <name>Microsphere Commons Project</name>
+    <description>Microsphere Commons Project</description>
 
     <scm>
         <url>https://github.com/microsphere-projects/microsphere-commons</url>
@@ -40,100 +40,13 @@
 
     <properties>
         <revision>0.0.1-SNAPSHOT</revision>
-
-        <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
-        <apache.commons.io.version>2.4</apache.commons.io.version>
-        <apache.commons.collections.version>3.2.2</apache.commons.collections.version>
-
-        <jsr305.version>3.0.1</jsr305.version>
-        <fastjson.version>1.2.83_noneautotype</fastjson.version>
-        <feign.version>10.2.3</feign.version>
-
-        <spring-boot.version>2.6.11</spring-boot.version>
-
-        <junit.version>4.7</junit.version>
     </properties>
 
     <modules>
         <module>microsphere-commons-core</module>
         <module>microsphere-commons-i18n</module>
+        <module>microsphere-commons-parent</module>
+        <module>microsphere-commons-dependencies</module>
     </modules>
-
-    <dependencyManagement>
-
-        <dependencies>
-
-            <!-- Spring Boot Dependencies -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${spring-boot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <!-- Java API Dependencies -->
-            <dependency>
-                <groupId>javax.annotation</groupId>
-                <artifactId>javax.annotation-api</artifactId>
-                <version>${javax.annotation-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.servlet</groupId>
-                <artifactId>javax.servlet-api</artifactId>
-                <version>${javax.servlet-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>javax.validation</groupId>
-                <artifactId>validation-api</artifactId>
-                <version>${javax.validation-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>${jsr305.version}</version>
-            </dependency>
-
-            <!-- Apache Commons Dependencies -->
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${apache.commons.lang3.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${apache.commons.collections.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${apache.commons.io.version}</version>
-            </dependency>
-
-            <!-- Third-Party Dependencies -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.openfeign</groupId>
-                <artifactId>feign-core</artifactId>
-                <version>${feign.version}</version>
-            </dependency>
-
-            <!-- Testing -->
-
-
-        </dependencies>
-
-    </dependencyManagement>
 
 </project>

@@ -6,6 +6,7 @@
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-commons-parent</artifactId>
         <version>${revision}</version>
+        <relativePath>../microsphere-commons-parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
