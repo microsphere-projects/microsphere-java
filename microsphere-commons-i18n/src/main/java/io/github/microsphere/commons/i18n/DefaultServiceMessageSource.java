@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * 默认 {@link ServiceMessageSource} 实现
+ * Default {@link ServiceMessageSource} Class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -18,7 +18,7 @@ import java.util.Locale;
 public class DefaultServiceMessageSource extends PropertiesResourceServiceMessageSource {
 
     /**
-     * 资源路径模式
+     * Resource path pattern
      */
     protected static final String RESOURCE_LOCATION_PATTERN = "META-INF/i18n/{}/{}";
 
