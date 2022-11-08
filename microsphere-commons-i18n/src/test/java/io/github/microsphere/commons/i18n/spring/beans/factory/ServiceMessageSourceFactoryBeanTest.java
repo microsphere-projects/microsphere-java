@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
- * {@link ServiceMessageSourceFactoryBean} 测试
+ * {@link ServiceMessageSourceFactoryBean} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
