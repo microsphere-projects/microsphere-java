@@ -16,16 +16,17 @@ import java.util.ServiceLoader;
 public abstract class ServiceLoaderUtils {
 
     /**
-     * 利用{@link ClassLoader}的层次性， 各层次的ClassLoader（ ClassLoader 、其双亲ClassLoader以及更上层）将会能加载其class
-     * path下的配置文件/META-INF/services/ <code>serviceInterfaceType</code>。 每个service interface type 的配置文件可以定义多个实现类列表。
+     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
+     * will be able to load the configuration file META-INF/services <code>serviceInterfaceType<code> under its class path.
+     * The configuration file of each service interface type can define multiple lists of implementation classes.
      * <p/>
      *
      * @param <T>                  service interface type
      * @param classLoader          {@link ClassLoader}
      * @param serviceInterfaceType service interface type
-     * @return service interface type 的所有实现对象{@link Collections#unmodifiableList(List) 只读列表}
-     * @throws IllegalArgumentException 如果指没有定义<code>serviceInterfaceType</code> 的实现类在配置文件/META-INF/services/<code>serviceInterfaceType</code>
-     *                                  中的话，将会抛出 IllegalArgumentException
+     * @return service interface type all implementation objects of {@link Collections#unmodifiableList(List) readonly list}
+     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceInterfaceType<code>
+     *                                  in the configuration file /META-INF/services/<code>serviceInterfaceType</code>
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -62,14 +63,16 @@ public abstract class ServiceLoaderUtils {
     /**
      * Load the first instance of {@link #loadServicesList(ClassLoader, Class) Service interface instances list}
      * <p/>
-     * Design Purpose : 利用{@link ClassLoader}的层次性， 各层次的ClassLoader将会能访问其class path下的配置文件/META-INF/services/<code>serviceInterfaceType</code>
-     * 。那么，覆盖 ClassLoader 的class path下的配置文件的第一个实现类，从而提供覆盖实现类机制。
+     * Design Purpose : Using the hierarchy of {@link ClassLoader}, each level of ClassLoader will be able to access the configuration files under its class path
+     * /META-INF/services/<code>serviceInterfaceType</code>.
+     * Then, override the first implementation class of the configuration file under the class path of ClassLoader,
+     * thereby providing a mechanism for overriding the implementation class.
      *
      * @param <T>                  service interface type
      * @param serviceInterfaceType
-     * @return 如果存在的话，{@link #loadServicesList(ClassLoader, Class) 加载service interface type 的实现对象列表} 中的第一个.
-     * @throws IllegalArgumentException 如果指没有定义<code>serviceInterfaceType</code> 的实现类在配置文件/META-INF/services/<code>serviceInterfaceType</code>
-     *                                  中的话，将会抛出 IllegalArgumentException
+     * @return If it exists, {@link #loadServicesList(ClassLoader, Class) loads the first in the list of implementation objects of service interface type}.
+     * @throws IllegalArgumentException If the implementation class that does not define <code>serviceInterfaceType<code> is in the configuration file
+     *                                  META-INF/services/<code>serviceInterfaceType<code>, IllegalArgumentException will be thrown
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -79,15 +82,16 @@ public abstract class ServiceLoaderUtils {
     }
 
     /**
-     * 如果存在的话，加载service interface type 的实现对象列表中的最后一个。
+     * Loads the last in the list of objects implementing the service interface type, if present.
      * <p/>
      * <p/>
-     * 设计目的： 利用{@link ClassLoader}的层次性，一旦较高层次（这里最高层次ClassLoader为Bootstrap ClassLoader）双亲的ClassLoader中加载了配置文件/META-INF/services/
-     * <code>serviceInterfaceType</code>中的最后一个实现类的话，低层次的ClassLoader将无法覆盖前定义。
+     * Design Purpose : Using the hierarchy of {@link ClassLoader}, once the configuration file is loaded in the parent's ClassLoader at a higher level (here the highest-level ClassLoader is Bootstrap ClassLoader)
+     * /META-INF/services/<code>serviceInterfaceType</code>
+     * If the last implementation class is used, the lower-level Class Loader will not be able to override the previous definition。
      *
      * @param <T>                  service interface type
      * @param serviceInterfaceType
-     * @return 如果存在的话，加载service interface type 的实现对象列表中的最后一个。
+     * @return Loads the last in the list of objects implementing the service interface type, if present.
      * @throws IllegalArgumentException see {@link #loadServicesList(ClassLoader, Class)}
      * @version 1.0.0
      * @since 1.0.0

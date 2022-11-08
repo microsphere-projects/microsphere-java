@@ -6,7 +6,11 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.*;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -30,7 +34,7 @@ import java.util.Map;
 public abstract class ReflectionUtils {
 
     /**
-     * Sun JDK 实现类：sun.reflect.Reflection全名称
+     * Sun JDK implementation class: full name of sun.reflect.Reflection
      */
     public static final String SUN_REFLECT_REFLECTION_CLASS_NAME = "sun.reflect.Reflection";
 
@@ -38,22 +42,27 @@ public abstract class ReflectionUtils {
      * Current Type
      */
     private static final Class<?> TYPE = ReflectionUtils.class;
+
     /**
-     * sun.reflect.Reflection方法名称
+     * sun.reflect.Reflection method name
      */
     private static final String getCallerClassMethodName = "getCallerClass";
+
     /**
      * sun.reflect.Reflection invocation frame
      */
     private static final int sunReflectReflectionInvocationFrame;
+
     /**
      * {@link StackTraceElement} invocation frame
      */
     private static final int stackTraceElementInvocationFrame;
+
     /**
      * Is Supported sun.reflect.Reflection ?
      */
     private static final boolean supportedSunReflectReflection;
+
     /**
      * sun.reflect.Reflection#getCallerClass(int) method
      */
@@ -112,7 +121,7 @@ public abstract class ReflectionUtils {
     /**
      * Get Caller class
      *
-     * @return 获取调用该方法的Class name
+     * @return Get the Class name that called the method
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -126,7 +135,7 @@ public abstract class ReflectionUtils {
      *
      * @param invocationFrame invocation frame
      * @return Class name under specified invocation frame
-     * @throws IndexOutOfBoundsException 当<code>invocationFrame</code>数值为负数或者超出实际的层次
+     * @throws IndexOutOfBoundsException If the <code>invocation Frame<code> value is negative or exceeds the actual level
      * @version 1.0.0
      * @see Thread#getStackTrace()
      * @since 1.0.0
@@ -142,26 +151,25 @@ public abstract class ReflectionUtils {
     }
 
     /**
-     * 通用实现方式，获取调用类名
+     * General implementation, get the calling class name
      *
-     * @return 调用类名
+     * @return call class name
      * @version 1.0.0
      * @see #getCallerClassNameInGeneralJVM(int)
-     * @since 1.0.0 2012-3-15 下午03:09:28
+     * @since 1.0.0
      */
     static String getCallerClassNameInGeneralJVM() {
         return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
     }
 
     /**
-     * 通用实现方式，通过指定调用层次数值，获取调用类名
+     * General implementation, get the calling class name by specifying the calling level value
      *
      * @param invocationFrame invocation frame
-     * @return specified invocation frame 类
-     * @throws IndexOutOfBoundsException 当<code>invocationFrame</code>数值为负数或者超出实际的层次
+     * @return specified invocation frame class
+     * @throws IndexOutOfBoundsException If the <code>invocation Frame<code> value is negative or exceeds the actual level
      * @version 1.0.0
-     * @see
-     * @since 1.0.0 2012-3-15 下午02:43:47
+     * @since 1.0.0
      */
     static String getCallerClassNameInGeneralJVM(int invocationFrame) throws IndexOutOfBoundsException {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
@@ -171,7 +179,7 @@ public abstract class ReflectionUtils {
 
     static Class<?> getCallerClassInSunJVM(int realFramesToSkip) throws UnsupportedOperationException {
         if (!supportedSunReflectReflection) {
-            throw new UnsupportedOperationException("需要SUN的JVM！");
+            throw new UnsupportedOperationException("Requires SUN's JVM!");
         }
         Class<?> callerClass = null;
         if (getCallerClassMethod != null) {
@@ -220,7 +228,7 @@ public abstract class ReflectionUtils {
      * </pre>
      *
      * @return Get caller class
-     * @throws IllegalStateException 无法找到调用类时
+     * @throws IllegalStateException If the caller class cannot be found
      * @version 1.0.0
      * @since 1.0.0 2012-2-28 下午07:42:26
      */
@@ -278,7 +286,7 @@ public abstract class ReflectionUtils {
      * @return Caller Class
      * @version 1.0.0
      * @see #getCallerClassInGeneralJVM(int)
-     * @since 1.0.0 2012-3-15 下午03:11:16
+     * @since 1.0.0
      */
     static Class<?> getCallerClassInGeneralJVM() {
         return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
