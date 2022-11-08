@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import static org.springframework.util.ObjectUtils.toObjectArray;
 
 /**
- * 国际化初始化器
+ * Internationalization initializer
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -40,7 +40,7 @@ public class I18nInitializer implements ApplicationContextInitializer<Configurab
             return false;
         }
         if (isProcessed(context)) {
-            logger.debug("应用上下文[id: '{}' , class: {}] 已初始化", context.getId(), context.getClass());
+            logger.debug("Application context [id: '{}' , class: {}] has been initialized", context.getId(), context.getClass());
             return false;
         }
         return true;
@@ -60,7 +60,7 @@ public class I18nInitializer implements ApplicationContextInitializer<Configurab
         } else if (context instanceof BeanDefinitionRegistry) {
             register((BeanDefinitionRegistry) context, componentClasses);
         } else {
-            logger.warn("应用上下文[id: '{}' , class: {}] 不支持注册组件类：{}", context.getId(), context.getClass().getName(), toObjectArray(componentClasses));
+            logger.warn("Application context [id: '{}' , class: {}] does not support registering component class: {}", context.getId(), context.getClass().getName(), toObjectArray(componentClasses));
         }
     }
 
