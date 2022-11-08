@@ -3,13 +3,18 @@ package io.github.microsphere.commons.i18n;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.*;
 import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 /**
- * 抽象 {@link ServiceMessageSource} 资源实现
+ * Abstract Resource {@link ServiceMessageSource} Class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -17,12 +22,12 @@ import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 public abstract class AbstractResourceServiceMessageSource extends AbstractServiceMessageSource implements ResourceServiceMessageSource {
 
     /**
-     * Message 资源名称前缀
+     * Message Resource name prefix
      */
     protected static final String RESOURCE_NAME_PREFIX = "i18n_messages_";
 
     /**
-     * Message 资源名称后缀
+     * Message Resource Name Suffix
      */
     protected static final String RESOURCE_NAME_SUFFIX = ".properties";
 
@@ -36,7 +41,7 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
 
     @Override
     public void init() {
-        Assert.notNull(this.source, "'source' 属性必须在初始化前赋值！");
+        Assert.notNull(this.source, "The 'source' attribute must be assigned before initialization!");
         initialize();
     }
 
@@ -46,7 +51,7 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
     }
 
     protected String resolveMessageCode(String code) {
-        if (code.startsWith(codePrefix)) { // 完整的 Message code
+        if (code.startsWith(codePrefix)) { // The complete Message code
             return code;
         }
         return codePrefix + code;
@@ -67,7 +72,7 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
     protected void logMessage(String code, String resolvedCode, Locale locale, Locale resolvedLocale, Object[] args,
                               String messagePattern, String message) {
         if (logger.isDebugEnabled()) {
-            logger.debug("Source '{}' 获取 Message[code : '{}' , resolvedCode : '{}' , locale : '{}' , resolvedLocale : '{}', args : '{}' , pattern : '{}'] : '{}'",
+            logger.debug("Source '{}' gets Message[code : '{}' , resolvedCode : '{}' , locale : '{}' , resolvedLocale : '{}', args : '{}' , pattern : '{}'] : '{}'",
                     source, code, resolvedCode, locale, resolvedLocale, arrayToCommaDelimitedString(args), messagePattern, message);
         }
     }
@@ -80,7 +85,7 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
 
 
     /**
-     * 初始化
+     * Initialization
      */
     protected final void initialize() {
         List<Locale> supportedLocales = getSupportedLocales();
@@ -94,25 +99,25 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
                 validateMessages(messages, resource);
                 resources.add(resource);
                 if (!CollectionUtils.isEmpty(messages)) {
-                    logger.debug("Source '{}' 加载 Locale '{}' 资源['{}']中的 messages : {}", source, locale, resource, messages);
+                    logger.debug("Source '{}' loads the Locale '{}' resource['{}'] messages : {}", source, locale, resource, messages);
                     localizedMessages.put(locale, messages);
                 } else {
-                    logger.debug("Source '{}' 未找到 Locale '{}' 资源['{}']中的 messages", source, locale, resource);
+                    logger.debug("Source '{}' Locale '{}' resource not found['{}'] messages", source, locale, resource);
                 }
                 return messages;
             });
         }
-        // 更新字段
+        // Exchange the field
         synchronized (this) {
             this.localizedMessages = localizedMessages;
             this.resources = resources;
         }
-        logger.debug("Source '{}' 初始化完成 , resources : {} , localizedMessages : {}", source, resources, localizedMessages);
+        logger.debug("Source '{}' Initialization is completed , resources : {} , localizedMessages : {}", source, resources, localizedMessages);
     }
 
     private void assertSupportedLocales(List<Locale> supportedLocales) {
         if (CollectionUtils.isEmpty(supportedLocales)) {
-            throw new IllegalStateException(slf4jFormat("{}.getSupportedLocales() 方法不能返回 Locale 空列表!", this.getClass()));
+            throw new IllegalStateException(slf4jFormat("{}.getSupportedLocales() Methods cannot return an empty list of locales!", this.getClass()));
         }
     }
 
@@ -133,7 +138,7 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
 
     private void validateMessageCodePrefix(String code, String resourceName) {
         if (!code.startsWith(codePrefix)) {
-            throw new IllegalStateException(slf4jFormat("Source '{}' Message资源[name : '{}'] code '{}' 必须以 '{}' 为前缀",
+            throw new IllegalStateException(slf4jFormat("Source '{}' Message Resource[name : '{}'] code '{}' must start with '{}'",
                     source, resourceName, code, codePrefix));
         }
     }
