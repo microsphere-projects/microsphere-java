@@ -12,7 +12,7 @@ import static org.apache.commons.lang3.StringUtils.substringBetween;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
- * 消息工具类
+ * Message Utilities class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -25,11 +25,11 @@ public abstract class MessageUtils {
     }
 
     /**
-     * 获取国际化 Message
+     * Get I18n Message
      *
-     * @param messagePattern Message 内容或者 Pattern
-     * @param args           Message 模板参数列表
-     * @return 国际化 Message 如果存在的话，否则返回原 Message
+     * @param messagePattern Message or Message Pattern
+     * @param args           the arguments of Message Pattern
+     * @return Internationalized Message returns the original message if it exists
      */
     public static String getLocalizedMessage(String messagePattern, Object... args) {
         ServiceMessageSource serviceMessageSource = serviceMessageSource();
@@ -38,30 +38,31 @@ public abstract class MessageUtils {
     }
 
     /**
-     * 获取国际化 Message
+     * Get I18n Message
      * <pre>
-     * // 测试简体中文
-     * // message 参数为 "a" 的情况，不包含模式 "{" "}"，返回原始内容
-     * assertEquals("a", MessageUtils.getLocalizedMessage("a"));
-     * // "{a}" 为 Message Code 模板，其中 "a" 为 Message Code
-     * assertEquals("测试-a", MessageUtils.getLocalizedMessage("{a}"));
+     * //Test Simplified Chinese
+     * // message parameter is 'a', does not contain pattern'{''}', returns original content
+     * assertEquals ('a', MessageUtils.getLocalizedMessage ('a'));
      *
-     * // 同理如下，带 Message Pattern 参数的重载方法
-     * assertEquals("hello", MessageUtils.getLocalizedMessage("hello", "World"));
-     * assertEquals("您好,World", MessageUtils.getLocalizedMessage("{hello}", "World"));
+     * //'{a}'is the Message Code template, where 'a' is the Message Code
+     * assertEquals ("test-a", MessageUtils.getLocalizedMessage ("{a}"));
      *
-     * // 当 message code 不存在时，返回 message 原内容
-     * assertEquals("{code-not-found}", MessageUtils.getLocalizedMessage("{code-not-found}"));
+     * // Similarly, overloaded methods with Message Patterns parameter
+     * assertEquals ('hello', MessageUtils.getLocalizedMessage ('hello','World'));
+     * assertEquals ("Hello, World", MessageUtils.getLocalizedMessage ("{hello}", "World"));
      *
-     * // 测试英文
-     * assertEquals("hello", MessageUtils.getLocalizedMessage("hello", Locale.ENGLISH, "World"));
-     * assertEquals("Hello,World", MessageUtils.getLocalizedMessage("{hello}", Locale.ENGLISH, "World"));
+     * //Return the original message content when message code does not exist
+     * assertEquals ('{code-not-found}', MessageUtils.getLocalizedMessage ('{code-not-found}'));
+     *
+     * //Test English
+     * assertEquals ("hello", MessageUtils.getLocalizedMessage ("hello", Locale.ENGLISH, "World"));
+     * assertEquals ('Hello, World', MessageUtils.getLocalizedMessage ('{hello}', Locale.ENGLISH,'World'));
      * </pre>
      *
-     * @param messagePattern Message 内容或者 Pattern
-     * @param locale         {@link Locale} 对象
-     * @param args           Message 模板参数列表
-     * @return 国际化 Message 如果存在的话，否则返回原 Message
+     * @param messagePattern Message or Message Pattern
+     * @param locale         {@link Locale}
+     * @param args           the arguments of Message Pattern
+     * @return Internationalized Message returns the original message if it exists
      */
     public static String getLocalizedMessage(String messagePattern, Locale locale, Object... args) {
         if (messagePattern == null) {
@@ -71,14 +72,14 @@ public abstract class MessageUtils {
         String messageCode = resolveMessageCode(messagePattern);
 
         if (messageCode == null) {
-            logger.debug("messagePattern '{}' 未找到 message code", messagePattern);
+            logger.debug("Message code not found in messagePattern'{}", messagePattern);
             return messagePattern;
         }
 
         ServiceMessageSource serviceMessageSource = serviceMessageSource();
         String localizedMessage = serviceMessageSource.getMessage(messageCode, locale, args);
         if (hasText(localizedMessage)) {
-            logger.debug("Message Pattern['{}'] 对应的 Locale['{}'] 的 Message 为 : '{}'", messagePattern, locale, localizedMessage);
+            logger.debug("Message Pattern ['{}'] corresponds to Locale ['{}'] with MessageSage:'{}'", messagePattern, locale, localizedMessage);
         } else {
             int afterDotIndex = messageCode.indexOf(".") + 1;
             if (afterDotIndex > 0 && afterDotIndex < messageCode.length()) {
@@ -86,7 +87,7 @@ public abstract class MessageUtils {
             } else {
                 localizedMessage = messagePattern;
             }
-            logger.debug("未找到 Message Pattern['{}'] 的 Locale['{}'] Message, 返回 : {}", messagePattern, locale, localizedMessage);
+            logger.debug("No Message['{}'] found for Message Pattern ['{}'], returned: {}", messagePattern, locale, localizedMessage);
         }
 
         return localizedMessage;
