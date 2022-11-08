@@ -13,8 +13,7 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * HTTP 请求头 "Accept-Language"
- * {@link RequestInterceptor}
+ * HTTP Header "Accept-Language" {@link RequestInterceptor}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see AcceptHeaderLocaleResolver
@@ -29,7 +28,7 @@ public class AcceptLanguageHeaderRequestInterceptor implements RequestIntercepto
     public void apply(RequestTemplate template) {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (!(requestAttributes instanceof ServletRequestAttributes)) {
-            logger.debug("非 Spring WebMVC 场景 Feign 调用，忽略设置请求头: '{}'", HEADER_NAME);
+            logger.debug("Feign calls in non-Spring WebMVC scenarios, ignoring setting request headers: '{}'", HEADER_NAME);
             return;
         }
 
@@ -41,9 +40,9 @@ public class AcceptLanguageHeaderRequestInterceptor implements RequestIntercepto
 
         if (StringUtils.hasText(acceptLanguage)) {
             template.header(HEADER_NAME, acceptLanguage);
-            logger.debug("Feign 已设置 HTTP 请求头[name : '{}' , value : '{}']", HEADER_NAME, acceptLanguage);
+            logger.debug("Feign has set HTTP request header [name : '{}' , value : '{}']", HEADER_NAME, acceptLanguage);
         } else {
-            logger.debug("Feign 无法设置 HTTP 请求头[name : '{}']，因为请求方未传递： '{}'", HEADER_NAME, acceptLanguage);
+            logger.debug("Feign could not set HTTP request header [name : '{}'] because the requester did not pass: '{}'", HEADER_NAME, acceptLanguage);
         }
 
     }
