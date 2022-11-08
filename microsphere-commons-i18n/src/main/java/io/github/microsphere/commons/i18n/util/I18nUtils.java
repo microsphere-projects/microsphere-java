@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 国际化工具类
+ * Internationalization Utilities class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -19,7 +19,7 @@ public class I18nUtils {
 
     public static ServiceMessageSource serviceMessageSource() {
         if (serviceMessageSource == null) {
-            logger.warn("serviceMessageSource 尚未初始化，将使用 EmptyServiceMessageSource 对象");
+            logger.warn("serviceMessageSource is not initialized, EmptyServiceMessageSource will be used");
             return EmptyServiceMessageSource.INSTANCE;
         }
         return serviceMessageSource;
@@ -27,11 +27,11 @@ public class I18nUtils {
 
     public static void setServiceMessageSource(ServiceMessageSource serviceMessageSource) {
         I18nUtils.serviceMessageSource = serviceMessageSource;
-        logger.debug("serviceMessageSource 已初始化");
+        logger.debug("serviceMessageSource is initialized");
     }
 
     public static void destroyServiceMessageSource() {
         serviceMessageSource = null;
-        logger.debug("serviceMessageSource 已销毁");
+        logger.debug("serviceMessageSource is destroyed");
     }
 }
