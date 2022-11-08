@@ -4,9 +4,10 @@ import io.github.microsphere.commons.i18n.ResourceServiceMessageSource;
 import org.springframework.context.ApplicationEvent;
 
 /**
- * {@link ResourceServiceMessageSource} 变化事件
+ * {@link ResourceServiceMessageSource} Changed {@link ApplicationEvent Event}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see ApplicationEvent
  * @since 1.0.0
  */
 public class ResourceServiceMessageSourceChangedEvent extends ApplicationEvent {
