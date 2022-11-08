@@ -11,9 +11,9 @@ import org.springframework.context.MessageSource;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 /**
- * 国际化  {@link BeanPostProcessor}，处理：
+ * Internationalization {@link BeanPostProcessor}, Processing：
  * <ul>
- *     <li>{@link LocalValidatorFactoryBean#setValidationMessageSource(MessageSource)} 关联 {@link MessageSourceAdapter}</li>
+ *     <li>{@link LocalValidatorFactoryBean#setValidationMessageSource(MessageSource)} associates {@link MessageSourceAdapter}</li>
  * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
@@ -39,7 +39,7 @@ public class I18nBeanPostProcessor implements BeanPostProcessor {
             MessageSourceAdapter messageSourceAdapter = context.getBean(MessageSourceAdapter.class);
             LocalValidatorFactoryBean localValidatorFactoryBean = (LocalValidatorFactoryBean) bean;
             localValidatorFactoryBean.setValidationMessageSource(messageSourceAdapter);
-            logger.debug("LocalValidatorFactoryBean[name : '{}'] 已关联 MessageSource : {}", beanName, messageSourceAdapter);
+            logger.debug("LocalValidatorFactoryBean[name : '{}'] is associated with MessageSource : {}", beanName, messageSourceAdapter);
         }
 
         return bean;
