@@ -26,7 +26,7 @@ import java.util.Locale;
 import static io.github.microsphere.commons.i18n.constants.I18nConstants.*;
 
 /**
- * 国际化配置类
+ * Internationalization Configuration class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -82,7 +82,7 @@ public class I18nConfiguration {
                 List<Locale> supportedLocales = serviceMessageSource.getSupportedLocales();
                 localeContextResolver.setDefaultLocale(defaultLocale);
                 localeContextResolver.setSupportedLocales(supportedLocales);
-                logger.debug("AcceptHeaderLocaleResolver Bean 关联默认的 Locale : '{}' , 支持的 Locale 列表 : {}", defaultLocale, supportedLocales);
+                logger.debug("AcceptHeaderLocaleResolver Bean associated with default Locale : '{}' , list of supported Locales : {}", defaultLocale, supportedLocales);
             });
         });
     }
@@ -91,8 +91,8 @@ public class I18nConfiguration {
         Environment environment = context.getEnvironment();
         String propertyName = ENABLED_PROPERTY_NAME;
         boolean enabled = environment.getProperty(propertyName, boolean.class, DEFAULT_ENABLED);
-        logger.debug("应用上下文[id: '{}'] {} i18n，配置 Spring 属性['{}' = {}]", context.getId(),
-                enabled ? "开启" : "关闭",
+        logger.debug("Application context [id: '{}'] {} i18n, configure Spring properties ['{}' = {}]", context.getId(),
+                enabled ? "Enabled" : "Disabled",
                 propertyName,
                 enabled);
         return enabled;
