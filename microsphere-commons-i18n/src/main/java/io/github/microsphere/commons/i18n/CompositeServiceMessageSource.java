@@ -12,7 +12,7 @@ import java.util.Objects;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * {@link ServiceMessageSource} 组合实现
+ * The Composite class of {@link ServiceMessageSource}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -42,18 +42,18 @@ public class CompositeServiceMessageSource extends AbstractServiceMessageSource 
 
     public void setServiceMessageSources(List<ServiceMessageSource> serviceMessageSources) {
         this.serviceMessageSources = serviceMessageSources;
-        logger.debug("Source '{}' 设置 ServiceMessageSource 列表： {}", serviceMessageSources);
+        logger.debug("Source '{}' sets ServiceMessageSource list： {}", serviceMessageSources);
     }
 
     protected Locale resolveLocale(Locale locale) {
 
         Locale defaultLocale = getDefaultLocale();
 
-        if (locale == null || Objects.equals(defaultLocale, locale)) { // 如果为默认 Locale的话
+        if (locale == null || Objects.equals(defaultLocale, locale)) { // If it's the default Locale
             return defaultLocale;
         }
 
-        if (supports(locale)) { // 如果匹配支持 Locale 列表
+        if (supports(locale)) { // If it matches the supported Locale list
             return locale;
         }
 
@@ -82,7 +82,7 @@ public class CompositeServiceMessageSource extends AbstractServiceMessageSource 
 
         if (message == null) {
             Locale defaultLocale = getDefaultLocale();
-            if (!Objects.equals(defaultLocale, resolvedLocale)) { // 使用默认 Locale 作为兜底
+            if (!Objects.equals(defaultLocale, resolvedLocale)) { // Use the default Locale as the bottom pocket
                 message = getInternalMessage(resolvedCode, resolvedCode, defaultLocale, defaultLocale, args);
             }
         }
@@ -112,7 +112,7 @@ public class CompositeServiceMessageSource extends AbstractServiceMessageSource 
             }
         }
         AnnotationAwareOrderComparator.sort(serviceMessageSources);
-        logger.debug("初始化 ServiceMessageSource Bean 列表 : {}", serviceMessageSources);
+        logger.debug("Initializes the ServiceMessageSource Bean list : {}", serviceMessageSources);
         return unmodifiableList(serviceMessageSources);
     }
 
