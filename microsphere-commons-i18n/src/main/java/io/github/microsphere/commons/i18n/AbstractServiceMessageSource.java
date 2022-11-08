@@ -15,7 +15,7 @@ import static java.util.Collections.unmodifiableList;
 import static org.springframework.util.StringUtils.isEmpty;
 
 /**
- * 抽象 {@link ServiceMessageSource} 实现
+ * Abstract {@link ServiceMessageSource}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -23,7 +23,7 @@ import static org.springframework.util.StringUtils.isEmpty;
 public abstract class AbstractServiceMessageSource implements ServiceMessageSource {
 
     /*
-     * Message Source 分隔符
+     * Message Source separator
      */
     protected static final String SOURCE_SEPARATOR = ".";
 
@@ -38,7 +38,7 @@ public abstract class AbstractServiceMessageSource implements ServiceMessageSour
     private Locale defaultLocale;
 
     public AbstractServiceMessageSource(String source) {
-        Assert.notNull(source, "'source' 参数不能为空");
+        Assert.notNull(source, "'source' argument must not be null");
         this.source = source;
         this.codePrefix = source + SOURCE_SEPARATOR;
     }
@@ -98,12 +98,12 @@ public abstract class AbstractServiceMessageSource implements ServiceMessageSour
     public void setDefaultLocale(Locale defaultLocale) {
         this.defaultLocale = defaultLocale;
         LocaleContextHolder.setDefaultLocale(defaultLocale);
-        logger.debug("Source '{}' 设置默认 Locale : '{}'", source, defaultLocale);
+        logger.debug("Source '{}' sets the default Locale : '{}'", source, defaultLocale);
     }
 
     public void setSupportedLocales(List<Locale> supportedLocales) {
         this.supportedLocales = resolveLocales(supportedLocales);
-        logger.debug("Source '{}' 设置支持的 Locale 列表 : {}", source, supportedLocales);
+        logger.debug("Source '{}' sets the supported Locales : {}", source, supportedLocales);
     }
 
     protected String resolveMessageCode(String code) {
@@ -164,16 +164,16 @@ public abstract class AbstractServiceMessageSource implements ServiceMessageSour
 
 
     protected String formatMessage(String message, Object... args) {
-        // 复用 slf4j format，未来子类可能重新实现格式化
+        // Using slf4j format, future subclasses may re-implement formatting
         return slf4jFormat(message, args);
     }
 
     /**
-     * 复用 slf4j  API 格式化内容
+     * Use the slf4j API to format the content
      *
-     * @param messagePattern 消息模板
-     * @param args           模板参数
-     * @return 格式化后的内容
+     * @param messagePattern message pattern
+     * @param args           the arguments of message pattern
+     * @return The formatted content
      * @see MessageFormatter
      */
     protected static final String slf4jFormat(String messagePattern, Object... args) {
