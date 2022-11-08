@@ -36,7 +36,7 @@ import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
- * {@link ServiceMessageSource} {@link FactoryBean} 实现
+ * {@link ServiceMessageSource} {@link FactoryBean} Implementation
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -84,7 +84,7 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
             }
         }
         if (message == null && logger.isDebugEnabled()) {
-            logger.debug("Source '{}' 未找到 Message[code : '{}' , resolvedCode : '{}' , locale : '{}' , resolvedLocale : '{}', args : '{}']",
+            logger.debug("Source '{}' Message not found[code : '{}' , resolvedCode : '{}' , locale : '{}' , resolvedLocale : '{}', args : '{}']",
                     source, code, resolvedCode, locale, resolvedLocale, arrayToCommaDelimitedString(args));
         }
         return message;
@@ -102,7 +102,7 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
 
     @Override
     public void setEnvironment(Environment environment) {
-        Assert.isInstanceOf(ConfigurableEnvironment.class, environment, "'environment' 参数必须为 ConfigurableEnvironment 类型");
+        Assert.isInstanceOf(ConfigurableEnvironment.class, environment, "The 'environment' parameter must be of type ConfigurableEnvironment");
         ConfigurableEnvironment configurableEnvironment = (ConfigurableEnvironment) environment;
         Locale defaultLocale = initDefaultLocale(configurableEnvironment);
         List<Locale> supportedLocales = initSupportedLocales(configurableEnvironment);
@@ -151,10 +151,10 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
         final Locale locale;
         if (!hasText(localeValue)) {
             locale = super.getDefaultLocale();
-            logger.debug("默认 Locale 配置属性[name : '{}']未找到，使用默认值: '{}'", propertyName, locale);
+            logger.debug("Default Locale configuration property [name : '{}'] not found, use default value: '{}'", propertyName, locale);
         } else {
             locale = StringUtils.parseLocale(localeValue);
-            logger.debug("配置属性[name : '{}'] 解析的默认 Locale : '{}'", propertyName, locale);
+            logger.debug("Default Locale : '{}' parsed by configuration properties [name : '{}']", propertyName, locale);
         }
         return locale;
     }
@@ -165,10 +165,10 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
         List<String> locales = environment.getProperty(propertyName, List.class, emptyList());
         if (locales.isEmpty()) {
             supportedLocales = super.getSupportedLocales();
-            logger.debug("支持 Locale 列表配置属性[name : '{}']未找到，使用默认值: {}", propertyName, supportedLocales);
+            logger.debug("Support Locale list configuration property [name : '{}'] not found, use default value: {}", propertyName, supportedLocales);
         } else {
             supportedLocales = locales.stream().map(StringUtils::parseLocale).collect(Collectors.toList());
-            logger.debug("配置属性[name : '{}'] 解析的支持 Locale 列表: {}", propertyName, supportedLocales);
+            logger.debug("List of supported Locales parsed by configuration property [name : '{}']: {}", propertyName, supportedLocales);
         }
         return unmodifiableList(supportedLocales);
     }
@@ -176,13 +176,13 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
     @Override
     public void onApplicationEvent(ResourceServiceMessageSourceChangedEvent event) {
         Iterable<String> changedResources = event.getChangedResources();
-        logger.debug("接收事件变更资源 : {}", changedResources);
+        logger.debug("Receive event change resource: {}", changedResources);
         for (AbstractServiceMessageSource serviceMessageSource : serviceMessageSources) {
             if (serviceMessageSource instanceof ReloadableResourceServiceMessageSource) {
                 ReloadableResourceServiceMessageSource reloadableResourceServiceMessageSource = (ReloadableResourceServiceMessageSource) serviceMessageSource;
                 if (reloadableResourceServiceMessageSource.canReload(changedResources)) {
                     reloadableResourceServiceMessageSource.reload();
-                    logger.debug("变更资源[{}] 激活 {} 已重载", changedResources, reloadableResourceServiceMessageSource);
+                    logger.debug("change resource [{}] activate {} reloaded", changedResources, reloadableResourceServiceMessageSource);
                 }
             }
         }
