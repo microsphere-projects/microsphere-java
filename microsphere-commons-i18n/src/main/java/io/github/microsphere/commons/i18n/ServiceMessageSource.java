@@ -10,7 +10,7 @@ import java.util.Locale;
 import static java.util.Arrays.asList;
 
 /**
- * 服务国际化消息源
+ * Service internationalization message source
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -18,26 +18,26 @@ import static java.util.Arrays.asList;
 public interface ServiceMessageSource {
 
     /**
-     * 通过国际化消息源
+     * Common internationalizing message sources
      */
     String COMMON_SOURCE = "common";
 
     /**
-     * 初始化生命周期
+     * Initialize the life cycle
      */
     void init();
 
     /**
-     * 销毁生命周期
+     * Destruction life cycle
      */
     void destroy();
 
     /**
-     * 获取国际化消息
+     * Getting international Messages
      *
-     * @param code   消息 Code
+     * @param code   message Code
      * @param locale {@link Locale}
-     * @param args   消息模板参数
+     * @param args   the argument of message pattern
      * @return 如果获取到，返回器内容，获取不到，返回 <code>null</code>
      */
     @Nullable
@@ -48,7 +48,7 @@ public interface ServiceMessageSource {
     }
 
     /**
-     * 获取运行时 {@link Locale}
+     * Get the runtime {@link Locale}
      *
      * @return {@link Locale}
      */
@@ -59,9 +59,9 @@ public interface ServiceMessageSource {
     }
 
     /**
-     * 获取默认 {@link Locale}
+     * Get the default {@link Locale}
      *
-     * @return 默认简体中文
+     * @return {@link Locale#SIMPLIFIED_CHINESE} as default
      */
     @NonNull
     default Locale getDefaultLocale() {
@@ -69,9 +69,9 @@ public interface ServiceMessageSource {
     }
 
     /**
-     * 获取支持的 {@link Locale} 列表
+     * Gets a list of supported {@link Locale}
      *
-     * @return 非 null {@link List}， 默认简体中文和英文
+     * @return Non-null {@link List}, simplified Chinese and English by default
      */
     @NonNull
     default List<Locale> getSupportedLocales() {
@@ -79,9 +79,9 @@ public interface ServiceMessageSource {
     }
 
     /**
-     * 消息服务来源
+     * Message service source
      *
-     * @return 应用名称 或 {@link #COMMON_SOURCE}
+     * @return The application name or {@link #COMMON_SOURCE}
      */
     default String getSource() {
         return COMMON_SOURCE;
