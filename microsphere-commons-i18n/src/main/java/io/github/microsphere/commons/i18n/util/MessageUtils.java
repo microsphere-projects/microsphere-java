@@ -40,23 +40,26 @@ public abstract class MessageUtils {
     /**
      * Get I18n Message
      * <pre>
-     * //Test Simplified Chinese
-     * // message parameter is 'a', does not contain pattern'{''}', returns original content
-     * assertEquals ('a', MessageUtils.getLocalizedMessage ('a'));
+     * // Testing Simplified Chinese
+     * // null
+     * assertEquals(null, MessageUtils.getLocalizedMessage(null));
+     * // If the message argument is "a", the pattern "{" "}" is not included, and the original content is returned
+     * assertEquals("a", MessageUtils.getLocalizedMessage("a"));
+     * // "{a}" is the Message Code template, where "a" is Message Code
+     * assertEquals("测试-a", MessageUtils.getLocalizedMessage("{a}"));
      *
-     * //'{a}'is the Message Code template, where 'a' is the Message Code
-     * assertEquals ("test-a", MessageUtils.getLocalizedMessage ("{a}"));
+     * // The same is true for overloaded methods with Message Pattern arguments
+     * assertEquals("hello", MessageUtils.getLocalizedMessage("hello", "World"));
+     * assertEquals("您好,World", MessageUtils.getLocalizedMessage("{hello}", "World"));
      *
-     * // Similarly, overloaded methods with Message Patterns parameter
-     * assertEquals ('hello', MessageUtils.getLocalizedMessage ('hello','World'));
-     * assertEquals ("Hello, World", MessageUtils.getLocalizedMessage ("{hello}", "World"));
+     * // If message code does not exist, return the original content of message
+     * assertEquals("{code-not-found}", MessageUtils.getLocalizedMessage("{code-not-found}"));
+     * assertEquals("code-not-found", MessageUtils.getLocalizedMessage("{microsphere-test.code-not-found}"));
+     * assertEquals("code-not-found", MessageUtils.getLocalizedMessage("{common.code-not-found}"));
      *
-     * //Return the original message content when message code does not exist
-     * assertEquals ('{code-not-found}', MessageUtils.getLocalizedMessage ('{code-not-found}'));
-     *
-     * //Test English
-     * assertEquals ("hello", MessageUtils.getLocalizedMessage ("hello", Locale.ENGLISH, "World"));
-     * assertEquals ('Hello, World', MessageUtils.getLocalizedMessage ('{hello}', Locale.ENGLISH,'World'));
+     * // The test of English
+     * assertEquals("hello", MessageUtils.getLocalizedMessage("hello", Locale.ENGLISH, "World"));
+     * assertEquals("Hello,World", MessageUtils.getLocalizedMessage("{hello}", Locale.ENGLISH, "World"));
      * </pre>
      *
      * @param messagePattern Message or Message Pattern
