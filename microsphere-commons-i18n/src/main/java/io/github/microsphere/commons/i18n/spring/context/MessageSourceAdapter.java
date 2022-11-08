@@ -10,7 +10,7 @@ import org.springframework.context.NoSuchMessageException;
 import java.util.Locale;
 
 /**
- * Spring {@link MessageSource} 适配器
+ * Spring {@link MessageSource} Adapter
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
