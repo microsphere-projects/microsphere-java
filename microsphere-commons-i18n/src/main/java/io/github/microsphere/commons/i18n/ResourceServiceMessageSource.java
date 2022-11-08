@@ -6,7 +6,7 @@ import java.util.Locale;
 import java.util.Set;
 
 /**
- * 资源 {@link ResourceServiceMessageSource}
+ * Resource {@link ServiceMessageSource}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -14,16 +14,16 @@ import java.util.Set;
 public interface ResourceServiceMessageSource extends ServiceMessageSource {
 
     /**
-     * 获取所有的 {@link Locale} 的资源列表
+     * Gets a list of all {@link Locale} resources
      *
      * @return
      */
     Set<String> getResources();
 
     /**
-     * 获取资源内容字符编码
+     * Gets the resource content character encoding
      *
-     * @return 默认为 UTF-8
+     * @return The default is utf-8
      */
     default Charset getEncoding() {
         return StandardCharsets.UTF_8;
