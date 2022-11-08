@@ -16,7 +16,7 @@ import static io.github.microsphere.commons.i18n.util.I18nUtils.serviceMessageSo
 import static org.junit.Assert.*;
 
 /**
- * {@link I18nConfiguration} 测试类
+ * {@link I18nConfiguration} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
@@ -35,20 +35,20 @@ public class I18nConfigurationTest {
 
     @Test
     public void testGetMessage() {
-        // 测试简体中文
-        // Message Code 为 "a" 的情况
+        // Testing Simplified Chinese
+        // If the Message Code is "a"
         assertEquals("测试-a", serviceMessageSource.getMessage("a"));
 
-        // 同理如下，带 Message Pattern 参数的重载方法
+        // The same is true for overloaded methods with Message Pattern arguments
         assertEquals("您好,World", serviceMessageSource.getMessage("hello", "World"));
 
-        // 当 code 不存在时，返回 null
+        // Returns null if code does not exist
         assertNull(serviceMessageSource.getMessage("code-not-found"));
 
-        // 测试英文，因为英文 Message 资源不存在
+        // Test English, because the English Message resource does not exist
         assertEquals("Hello,World", serviceMessageSource.getMessage("hello", Locale.ENGLISH, "World"));
 
-        // 当 code 不存在时，返回 null
+        // Returns null if code does not exist
         assertNull(serviceMessageSource.getMessage("code-not-found", Locale.US));
     }
 
