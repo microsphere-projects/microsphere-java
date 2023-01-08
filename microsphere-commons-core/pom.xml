@@ -18,10 +18,6 @@
     <name>Microsphere Commons Project :: Core</name>
     <description>Microsphere Commons Core</description>
 
-
-    <properties>
-    </properties>
-
     <dependencies>
 
         <!-- Java API Dependencies -->
