@@ -16,6 +16,9 @@
  */
 package io.github.microsphere.commons.util;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +26,7 @@ import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Stop Watch
+ * Stop Watch supports the nest tasks
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
@@ -50,25 +53,31 @@ public class StopWatch {
         this.id = id;
     }
 
-    public void start(String taskName) throws IllegalStateException {
-        Task currentTask = getCurrentTask();
-
-        if (currentTask != null && Objects.equals(taskName, currentTask.taskName)) {
-            throw new IllegalStateException("Task[name : '" + taskName + "'] is already running");
+    public void start(String taskName) throws IllegalArgumentException, IllegalStateException {
+        if (StringUtils.isBlank(taskName)) {
+            throw new IllegalArgumentException("The 'taskName' argument must not be blank");
         }
 
-        currentTask = Task.start(taskName);
+        Task newTask = Task.start(taskName);
 
-        taskList.add(currentTask);
+        int taskIndex = taskList.indexOf(newTask);
+
+        if (taskIndex > -1) {
+            throw new IllegalStateException("StopWatch[id : '" + id + "']'s Task[name : '" + taskName + "' , number=" + (taskIndex + 1) + "] is already running");
+        }
+
+        taskList.add(newTask);
 
         currentTaskIndex++;
-
     }
 
-    public void stop() {
+    public void stop() throws IllegalStateException {
         Task currentTask = getCurrentTask();
+        if (currentTask == null) {
+            throw new IllegalStateException("No task is running");
+        }
         currentTask.stop();
-        this.totalTimeNanos += currentTask.getElapsedNanos();
+        this.totalTimeNanos += currentTask.elapsedNanos;
         currentTaskIndex--;
     }
 
@@ -85,20 +94,28 @@ public class StopWatch {
         return taskList.get(currentTaskIndex);
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public List<Task> getTaskList() {
+        return Collections.unmodifiableList(taskList);
+    }
+
+    public long getTotalTimeNanos() {
+        return totalTimeNanos;
+    }
+
     public long getTotalTime(TimeUnit timeUnit) {
         return TimeUnit.NANOSECONDS.convert(this.totalTimeNanos, timeUnit);
     }
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", StopWatch.class.getSimpleName() + "[", "]")
-                .add("id='" + id + "'")
-                .add("taskList=" + taskList)
-                .add("totalTime(ns)=" + totalTimeNanos)
-                .toString();
+        return new StringJoiner(", ", StopWatch.class.getSimpleName() + "[", "]").add("id='" + id + "'").add("taskList=" + taskList).add("totalTime(ns)=" + totalTimeNanos).toString();
     }
 
-    private static class Task {
+    public static class Task {
 
         private final String taskName;
 
@@ -146,10 +163,7 @@ public class StopWatch {
 
         @Override
         public String toString() {
-            return new StringJoiner(", ", "Task" + "[", "]")
-                    .add("name='" + taskName + "'")
-                    .add("elapsed(ns)=" + elapsedNanos)
-                    .toString();
+            return new StringJoiner(", ", "Task" + "[", "]").add("name='" + taskName + "'").add("elapsed(ns)=" + elapsedNanos).toString();
         }
     }
 }

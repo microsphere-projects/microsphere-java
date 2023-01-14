@@ -16,7 +16,17 @@
  */
 package io.github.microsphere.commons.util;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 
 /**
  * {@link StopWatch} Test
@@ -26,16 +36,56 @@ import org.junit.Test;
  */
 public class StopWatchTest {
 
+    private static final Logger logger = LoggerFactory.getLogger(StopWatchTest.class);
+
+    private StopWatch stopWatch;
+
+    @Before
+    public void init() {
+        stopWatch = new StopWatch("test");
+    }
+
     @Test
     public void test() throws InterruptedException {
-        StopWatch stopWatch = new StopWatch("test");
         stopWatch.start("1");
         Thread.sleep(100);
         stopWatch.start("2");
         Thread.sleep(10);
         stopWatch.stop();
         stopWatch.stop();
-
-        System.out.println(stopWatch);
+        StopWatch.Task currentTask = stopWatch.getCurrentTask();
+        assertNull(currentTask);
+        assertEquals(2, stopWatch.getTaskList().size());
+        assertEquals("2", stopWatch.getTaskList().get(1).getTaskName());
+        assertTrue(stopWatch.getTotalTimeNanos() > 0);
+        assertTrue(stopWatch.getTotalTime(TimeUnit.MILLISECONDS) > 0);
+        logger.info(stopWatch.toString());
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStartOnNullTaskName() {
+        stopWatch.start(null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStartOnEmptyTaskName() {
+        stopWatch.start("");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testStartOnBlankTaskName() {
+        stopWatch.start(" ");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testStartOnAlreadyRunning() {
+        stopWatch.start("1");
+        stopWatch.start("1");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testStopOnNoTaskRunning() {
+        stopWatch.stop();
+    }
+
 }
