@@ -54,16 +54,25 @@ public class StopWatch {
     }
 
     public void start(String taskName) throws IllegalArgumentException, IllegalStateException {
+        start(taskName, false);
+    }
+
+    public void start(String taskName, boolean reentrant) throws IllegalArgumentException, IllegalStateException {
         if (StringUtils.isBlank(taskName)) {
             throw new IllegalArgumentException("The 'taskName' argument must not be blank");
         }
 
-        Task newTask = Task.start(taskName);
+        Task newTask = Task.start(taskName, reentrant);
 
         int taskIndex = taskList.indexOf(newTask);
 
         if (taskIndex > -1) {
-            throw new IllegalStateException("StopWatch[id : '" + id + "']'s Task[name : '" + taskName + "' , number=" + (taskIndex + 1) + "] is already running");
+            Task oldTask = taskList.get(taskIndex);
+            if (oldTask.reentrant) {
+                return;
+            } else {
+                throw new IllegalStateException("StopWatch[id : '" + id + "']'s Task[name : '" + taskName + "' , number=" + (taskIndex + 1) + "] is already running");
+            }
         }
 
         taskList.add(newTask);
@@ -119,17 +128,27 @@ public class StopWatch {
 
         private final String taskName;
 
+        /**
+         * It indicates the task can be reentrant or not
+         */
+        private final boolean reentrant;
+
         private final long startTimeNanos;
 
         private long elapsedNanos;
 
-        private Task(String taskName) {
+        private Task(String taskName, boolean reentrant) {
             this.taskName = taskName;
+            this.reentrant = reentrant;
             this.startTimeNanos = System.nanoTime();
         }
 
         public static Task start(String taskName) {
-            return new Task(taskName);
+            return start(taskName, false);
+        }
+
+        public static Task start(String taskName, boolean reentrant) {
+            return new Task(taskName, reentrant);
         }
 
         public void stop() {
@@ -138,6 +157,10 @@ public class StopWatch {
 
         public String getTaskName() {
             return taskName;
+        }
+
+        public boolean isReentrant() {
+            return reentrant;
         }
 
         public long getStartTimeNanos() {
