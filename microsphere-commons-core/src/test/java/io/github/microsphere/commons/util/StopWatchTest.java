@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -55,8 +56,14 @@ public class StopWatchTest {
         stopWatch.stop();
         StopWatch.Task currentTask = stopWatch.getCurrentTask();
         assertNull(currentTask);
-        assertEquals(2, stopWatch.getTaskList().size());
-        assertEquals("2", stopWatch.getTaskList().get(1).getTaskName());
+        assertEquals("test", stopWatch.getId());
+        assertEquals(0, stopWatch.getRunningTasks().size());
+        assertEquals(2, stopWatch.getCompletedTasks().size());
+        StopWatch.Task task = stopWatch.getCompletedTasks().get(1);
+        assertEquals("1", task.getTaskName());
+        assertFalse(task.isReentrant());
+        assertTrue(task.getStartTimeNanos() > 0);
+        assertTrue(task.getElapsedNanos() > 0);
         assertTrue(stopWatch.getTotalTimeNanos() > 0);
         assertTrue(stopWatch.getTotalTime(TimeUnit.MILLISECONDS) > 0);
         logger.info(stopWatch.toString());
@@ -80,6 +87,12 @@ public class StopWatchTest {
     @Test(expected = IllegalStateException.class)
     public void testStartOnAlreadyRunning() {
         stopWatch.start("1");
+        stopWatch.start("1");
+    }
+
+    @Test
+    public void testStartOnReentrant() {
+        stopWatch.start("1", true);
         stopWatch.start("1");
     }
 

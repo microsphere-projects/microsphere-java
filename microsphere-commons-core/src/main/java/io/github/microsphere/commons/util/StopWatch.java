@@ -18,15 +18,19 @@ package io.github.microsphere.commons.util;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.Collections.unmodifiableList;
+
 /**
- * Stop Watch supports the nest tasks
+ * Stop Watch supports the nest tasks, the default task can't be reentrant, unless {@link Task#isReentrant()} is true by
+ * {@link #start(String, boolean)} method setting.
+ * <p>
+ * Note : {@link StopWatch} is not thread-safe
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
@@ -40,9 +44,15 @@ public class StopWatch {
      */
     private final String id;
 
-    private final List<Task> taskList = new LinkedList<>();
+    /**
+     * Running tasks(FIFO)
+     */
+    private final List<Task> runningTasks = new LinkedList<>();
 
-    private int currentTaskIndex = -1;
+    /**
+     * Completed tasks(FILO)
+     */
+    private final List<Task> completedTasks = new LinkedList<>();
 
     /**
      * Total running time.
@@ -64,10 +74,12 @@ public class StopWatch {
 
         Task newTask = Task.start(taskName, reentrant);
 
-        int taskIndex = taskList.indexOf(newTask);
+        List<Task> runningTasks = this.runningTasks;
+
+        int taskIndex = runningTasks.indexOf(newTask);
 
         if (taskIndex > -1) {
-            Task oldTask = taskList.get(taskIndex);
+            Task oldTask = runningTasks.get(taskIndex);
             if (oldTask.reentrant) {
                 return;
             } else {
@@ -75,44 +87,47 @@ public class StopWatch {
             }
         }
 
-        taskList.add(newTask);
-
-        currentTaskIndex++;
+        runningTasks.add(newTask);
     }
 
     public void stop() throws IllegalStateException {
-        Task currentTask = getCurrentTask();
+        Task currentTask = getCurrentTask(true);
         if (currentTask == null) {
             throw new IllegalStateException("No task is running");
         }
         currentTask.stop();
         this.totalTimeNanos += currentTask.elapsedNanos;
-        currentTaskIndex--;
+        this.completedTasks.add(currentTask);
     }
 
     public Task getCurrentTask() {
-        if (currentTaskIndex < 0) {
-            return null;
-        }
-        List<Task> taskList = this.taskList;
-        int taskCount = taskList.size();
-        if (taskCount < 1) {
-            return null;
-        }
+        return getCurrentTask(false);
+    }
 
-        return taskList.get(currentTaskIndex);
+    protected Task getCurrentTask(boolean removed) {
+        List<Task> runningTasks = this.runningTasks;
+        int size = runningTasks.size();
+        if (size == 0) {
+            return null;
+        }
+        int currentTaskIndex = size - 1;
+        return removed ? runningTasks.remove(currentTaskIndex) : runningTasks.get(currentTaskIndex);
     }
 
     public String getId() {
-        return id;
+        return this.id;
     }
 
-    public List<Task> getTaskList() {
-        return Collections.unmodifiableList(taskList);
+    public List<Task> getRunningTasks() {
+        return unmodifiableList(this.runningTasks);
+    }
+
+    public List<Task> getCompletedTasks() {
+        return unmodifiableList(this.completedTasks);
     }
 
     public long getTotalTimeNanos() {
-        return totalTimeNanos;
+        return this.totalTimeNanos;
     }
 
     public long getTotalTime(TimeUnit timeUnit) {
@@ -121,7 +136,12 @@ public class StopWatch {
 
     @Override
     public String toString() {
-        return new StringJoiner(", ", StopWatch.class.getSimpleName() + "[", "]").add("id='" + id + "'").add("taskList=" + taskList).add("totalTime(ns)=" + totalTimeNanos).toString();
+        return new StringJoiner(", ", StopWatch.class.getSimpleName() + "[", "]")
+                .add("id='" + id + "'")
+                .add("running tasks=" + runningTasks)
+                .add("completed tasks=" + completedTasks)
+                .add("totalTime(ns)=" + totalTimeNanos)
+                .toString();
     }
 
     public static class Task {
@@ -156,19 +176,19 @@ public class StopWatch {
         }
 
         public String getTaskName() {
-            return taskName;
+            return this.taskName;
         }
 
         public boolean isReentrant() {
-            return reentrant;
+            return this.reentrant;
         }
 
         public long getStartTimeNanos() {
-            return startTimeNanos;
+            return this.startTimeNanos;
         }
 
         public long getElapsedNanos() {
-            return elapsedNanos;
+            return this.elapsedNanos;
         }
 
         @Override
