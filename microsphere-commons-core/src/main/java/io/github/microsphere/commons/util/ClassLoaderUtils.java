@@ -19,7 +19,13 @@ import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarFile;
 
 
@@ -56,8 +62,7 @@ public abstract class ClassLoaderUtils {
 
     private static UnsupportedOperationException jvmUnsupportedOperationException(Throwable throwable) {
         String stackTrace = ExceptionUtils.getStackTrace(throwable);
-        String message = String.format("Current JVM[ Implementation : %s , Version : %s ] does not supported ! " +
-                "Stack Trace : %s", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
+        String message = String.format("Current JVM[ Implementation : %s , Version : %s ] does not supported ! " + "Stack Trace : %s", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
         throw new UnsupportedOperationException(message);
     }
 
@@ -97,10 +102,8 @@ public abstract class ClassLoaderUtils {
      * <p>This method can be called by multiple threads concurrently. Each invocation of this method enables or disables
      * the verbose output globally.
      *
-     * @param value
-     *         <tt>true</tt> to enable the verbose output; <tt>false</tt> to disable.
-     * @throws SecurityException
-     *         if a security manager exists and the caller does not have ManagementPermission("control").
+     * @param value <tt>true</tt> to enable the verbose output; <tt>false</tt> to disable.
+     * @throws SecurityException if a security manager exists and the caller does not have ManagementPermission("control").
      */
     public static void setVerbose(boolean value) {
         classLoadingMXBean.setVerbose(value);
@@ -118,10 +121,8 @@ public abstract class ClassLoaderUtils {
     /**
      * Find Loaded {@link Class} under specified inheritable {@link ClassLoader} and class names
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param classNames
-     *         class names set
+     * @param classLoader {@link ClassLoader}
+     * @param classNames  class names set
      * @return {@link Class} if loaded , or <code>null</code>
      */
     public static Set<Class<?>> findLoadedClasses(ClassLoader classLoader, Set<String> classNames) {
@@ -138,10 +139,8 @@ public abstract class ClassLoaderUtils {
     /**
      * Check specified {@link Class} is loaded on specified inheritable {@link ClassLoader}
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param type
-     *         {@link Class}
+     * @param classLoader {@link ClassLoader}
+     * @param type        {@link Class}
      * @return If Loaded , return <code>true</code> , or <code>false</code>
      */
     public static boolean isLoadedClass(ClassLoader classLoader, Class<?> type) {
@@ -151,10 +150,8 @@ public abstract class ClassLoaderUtils {
     /**
      * Check specified {@link Class#getName() class name}  is loaded on specified inheritable {@link ClassLoader}
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param className
-     *         {@link Class#getName() class name}
+     * @param classLoader {@link ClassLoader}
+     * @param className   {@link Class#getName() class name}
      * @return If Loaded , return <code>true</code> , or <code>false</code>
      */
     public static boolean isLoadedClass(ClassLoader classLoader, String className) {
@@ -164,10 +161,8 @@ public abstract class ClassLoaderUtils {
     /**
      * Find Loaded {@link Class} under specified inheritable {@link ClassLoader}
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param className
-     *         class name
+     * @param classLoader {@link ClassLoader}
+     * @param className   class name
      * @return {@link Class} if loaded , or <code>null</code>
      */
     public static Class<?> findLoadedClass(ClassLoader classLoader, String className) {
@@ -188,10 +183,8 @@ public abstract class ClassLoaderUtils {
     /**
      * Loaded specified class name under {@link ClassLoader}
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param className
-     *         the name of {@link Class}
+     * @param classLoader {@link ClassLoader}
+     * @param className   the name of {@link Class}
      * @return {@link Class} if can be loaded
      */
     @Nullable
@@ -206,16 +199,12 @@ public abstract class ClassLoaderUtils {
     /**
      * Get the resource URLs Set under specified resource name and type
      *
-     * @param classLoader
-     *         ClassLoader
-     * @param resourceType
-     *         {@link ResourceType} Enum
-     * @param resourceName
-     *         resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
-     *         <code>"java.lang.String"</code></li> </ul>
+     * @param classLoader  ClassLoader
+     * @param resourceType {@link ResourceType} Enum
+     * @param resourceName resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
+     *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
-     * @throws NullPointerException
-     *         If any argument is <code>null</code>
+     * @throws NullPointerException If any argument is <code>null</code>
      * @throws IOException
      * @version 1.0.0
      * @since 1.0.0
@@ -229,14 +218,11 @@ public abstract class ClassLoaderUtils {
     /**
      * Get the resource URLs list under specified resource name
      *
-     * @param classLoader
-     *         ClassLoader
-     * @param resourceName
-     *         resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
-     *         <code>"java.lang.String"</code></li> </ul>
+     * @param classLoader  ClassLoader
+     * @param resourceName resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
+     *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
-     * @throws NullPointerException
-     *         If any argument is <code>null</code>
+     * @throws NullPointerException If any argument is <code>null</code>
      * @throws IOException
      * @version 1.0.0
      * @since 1.0.0
@@ -255,14 +241,11 @@ public abstract class ClassLoaderUtils {
     /**
      * Get the resource URL under specified resource name
      *
-     * @param classLoader
-     *         ClassLoader
-     * @param resourceName
-     *         resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
-     *         <code>"java.lang.String"</code></li> </ul>
+     * @param classLoader  ClassLoader
+     * @param resourceName resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
+     *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
-     * @throws NullPointerException
-     *         If any argument is <code>null</code>
+     * @throws NullPointerException If any argument is <code>null</code>
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -280,16 +263,12 @@ public abstract class ClassLoaderUtils {
     /**
      * Get the resource URL under specified resource name and type
      *
-     * @param classLoader
-     *         ClassLoader
-     * @param resourceType
-     *         {@link ResourceType} Enum
-     * @param resourceName
-     *         resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
-     *         <code>"java.lang.String"</code></li> </ul>
+     * @param classLoader  ClassLoader
+     * @param resourceType {@link ResourceType} Enum
+     * @param resourceName resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
+     *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
-     * @throws NullPointerException
-     *         If any argument is <code>null</code>
+     * @throws NullPointerException If any argument is <code>null</code>
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -302,13 +281,10 @@ public abstract class ClassLoaderUtils {
     /**
      * Get the {@link Class} resource URL under specified {@link Class#getName() Class name}
      *
-     * @param classLoader
-     *         ClassLoader
-     * @param className
-     *         class name
+     * @param classLoader ClassLoader
+     * @param className   class name
      * @return the resource URL under specified resource name and type
-     * @throws NullPointerException
-     *         If any argument is <code>null</code>
+     * @throws NullPointerException If any argument is <code>null</code>
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -320,13 +296,10 @@ public abstract class ClassLoaderUtils {
     /**
      * Get the {@link Class} resource URL under specified {@link Class}
      *
-     * @param classLoader
-     *         ClassLoader
-     * @param type
-     *         {@link Class type}
+     * @param classLoader ClassLoader
+     * @param type        {@link Class type}
      * @return the resource URL under specified resource name and type
-     * @throws NullPointerException
-     *         If any argument is <code>null</code>
+     * @throws NullPointerException If any argument is <code>null</code>
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -338,11 +311,9 @@ public abstract class ClassLoaderUtils {
     /**
      * Get all Inheritable {@link ClassLoader ClassLoaders} {@link Set} (including {@link ClassLoader} argument)
      *
-     * @param classLoader
-     *         {@link ClassLoader}
+     * @param classLoader {@link ClassLoader}
      * @return Read-only {@link Set}
-     * @throws NullPointerException
-     *         If <code>classLoader</code> argument is <code>null</code>
+     * @throws NullPointerException If <code>classLoader</code> argument is <code>null</code>
      */
     @Nonnull
     public static Set<ClassLoader> getInheritableClassLoaders(ClassLoader classLoader) throws NullPointerException {
@@ -360,12 +331,10 @@ public abstract class ClassLoaderUtils {
      * Get all loaded classes {@link Map} under specified inheritable {@link ClassLoader} , {@link ClassLoader} as key ,
      * its loaded classes {@link Set} as value.
      *
-     * @param classLoader
-     *         {@link ClassLoader}
+     * @param classLoader {@link ClassLoader}
      * @return Read-only Map
      * @throws UnsupportedOperationException
-     * @throws NullPointerException
-     *         If <code>classLoader</code> argument is <code>null</code>
+     * @throws NullPointerException          If <code>classLoader</code> argument is <code>null</code>
      */
     @Nonnull
     public static Map<ClassLoader, Set<Class<?>>> getAllLoadedClassesMap(ClassLoader classLoader) throws UnsupportedOperationException {
@@ -380,13 +349,10 @@ public abstract class ClassLoaderUtils {
     /**
      * Get all loaded classes {@link Set} under specified inheritable {@link ClassLoader}
      *
-     * @param classLoader
-     *         {@link ClassLoader}
+     * @param classLoader {@link ClassLoader}
      * @return Read-only {@link Set}
-     * @throws UnsupportedOperationException
-     *         If JVM does not support
-     * @throws NullPointerException
-     *         If <code>classLoader</code> argument is <code>null</code>
+     * @throws UnsupportedOperationException If JVM does not support
+     * @throws NullPointerException          If <code>classLoader</code> argument is <code>null</code>
      */
     @Nonnull
     public static Set<Class<?>> getAllLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
@@ -402,13 +368,10 @@ public abstract class ClassLoaderUtils {
      * Get loaded classes {@link Set} under specified {@link ClassLoader}( not all inheritable {@link ClassLoader
      * ClassLoaders})
      *
-     * @param classLoader
-     *         {@link ClassLoader}
+     * @param classLoader {@link ClassLoader}
      * @return Read-only {@link Set}
-     * @throws UnsupportedOperationException
-     *         If JVM does not support
-     * @throws NullPointerException
-     *         If <code>classLoader</code> argument is <code>null</code>
+     * @throws UnsupportedOperationException If JVM does not support
+     * @throws NullPointerException          If <code>classLoader</code> argument is <code>null</code>
      * @see #getAllLoadedClasses(ClassLoader)
      */
     @Nonnull
@@ -426,11 +389,9 @@ public abstract class ClassLoaderUtils {
     /**
      * Find loaded classes {@link Set} in class path
      *
-     * @param classLoader
-     *         {@link ClassLoader}
+     * @param classLoader {@link ClassLoader}
      * @return Read-only {@link Set}
-     * @throws UnsupportedOperationException
-     *         If JVM does not support
+     * @throws UnsupportedOperationException If JVM does not support
      */
     public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader) throws UnsupportedOperationException {
         Set<String> classNames = ClassUtils.getAllClassNamesInClassPaths();
@@ -440,13 +401,10 @@ public abstract class ClassLoaderUtils {
     /**
      * Find loaded classes {@link Set} in class paths {@link Set}
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param classPaths
-     *         the class paths for the {@link Set} of {@link JarFile} or classes directory
+     * @param classLoader {@link ClassLoader}
+     * @param classPaths  the class paths for the {@link Set} of {@link JarFile} or classes directory
      * @return Read-only {@link Set}
-     * @throws UnsupportedOperationException
-     *         If JVM does not support
+     * @throws UnsupportedOperationException If JVM does not support
      * @see #findLoadedClass(ClassLoader, String)
      */
     public static Set<Class<?>> findLoadedClassesInClassPaths(ClassLoader classLoader, Set<String> classPaths) throws UnsupportedOperationException {
@@ -460,13 +418,10 @@ public abstract class ClassLoaderUtils {
     /**
      * Find loaded classes {@link Set} in class path
      *
-     * @param classLoader
-     *         {@link ClassLoader}
-     * @param classPath
-     *         the class path for one {@link JarFile} or classes directory
+     * @param classLoader {@link ClassLoader}
+     * @param classPath   the class path for one {@link JarFile} or classes directory
      * @return Read-only {@link Set}
-     * @throws UnsupportedOperationException
-     *         If JVM does not support
+     * @throws UnsupportedOperationException If JVM does not support
      * @see #findLoadedClass(ClassLoader, String)
      */
     public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
@@ -474,6 +429,36 @@ public abstract class ClassLoaderUtils {
         return findLoadedClasses(classLoader, classNames);
     }
 
+    /**
+     * Test the specified class name is present in the {@link ClassLoader}
+     *
+     * @param className   the name of {@link Class}
+     * @param classLoader {@link ClassLoader}
+     * @return If found, return <code>true</code>
+     */
+    public static boolean isPresent(String className, ClassLoader classLoader) {
+        return resolveClass(className, classLoader) != null;
+    }
+
+    /**
+     * Resolve the {@link Class} by the specified name and {@link ClassLoader}
+     *
+     * @param className   the name of {@link Class}
+     * @param classLoader {@link ClassLoader}
+     * @return If can't be resolved , return <code>null</code>
+     */
+    public static Class<?> resolveClass(String className, ClassLoader classLoader) {
+        Class<?> targetClass = null;
+        try {
+            targetClass = forName(className, classLoader);
+        } catch (Throwable ignored) { // Ignored
+        }
+        return targetClass;
+    }
+
+    public static Class<?> forName(String className, ClassLoader classLoader) throws ClassNotFoundException {
+        return Class.forName(className, false, classLoader);
+    }
 
     /**
      * Resource Type
@@ -492,8 +477,7 @@ public abstract class ClassLoaderUtils {
             }
 
 
-        },
-        CLASS {
+        }, CLASS {
             @Override
             boolean supported(String name) {
                 return StringUtils.endsWith(name, FileSuffixConstants.CLASS);
@@ -510,9 +494,7 @@ public abstract class ClassLoaderUtils {
             @Override
             boolean supported(String name) {
                 //TODO: use regexp to match more precise
-                return !CLASS.supported(name)
-                        && !StringUtils.contains(name, PathConstants.SLASH)
-                        && !StringUtils.contains(name, PathConstants.BACK_SLASH);
+                return !CLASS.supported(name) && !StringUtils.contains(name, PathConstants.SLASH) && !StringUtils.contains(name, PathConstants.BACK_SLASH);
             }
 
             @Override
@@ -526,14 +508,12 @@ public abstract class ClassLoaderUtils {
         /**
          * resolves resource name
          *
-         * @param name
-         *         resource name
+         * @param name resource name
          * @return a newly resolved resource name
          */
         public String resolve(String name) {
             String normalizedName = supported(name) ? normalize(name) : null;
-            if (normalizedName == null)
-                return normalizedName;
+            if (normalizedName == null) return normalizedName;
 
             normalizedName = URLUtils.resolvePath(normalizedName);
 
@@ -548,8 +528,7 @@ public abstract class ClassLoaderUtils {
         /**
          * Is supported specified resource name in current resource type
          *
-         * @param name
-         *         resource name
+         * @param name resource name
          * @return If supported , return <code>true</code> , or return <code>false</code>
          */
         abstract boolean supported(String name);
@@ -557,8 +536,7 @@ public abstract class ClassLoaderUtils {
         /**
          * Normalizes resource name
          *
-         * @param name
-         *         resource name
+         * @param name resource name
          * @return normalized resource name
          */
         abstract String normalize(String name);

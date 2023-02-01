@@ -18,6 +18,10 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.*;
 
+import static io.github.microsphere.commons.util.CollectionUtils.ofSet;
+import static java.util.Collections.emptySet;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ClassLoaderUtils} {@link Test}
  *
@@ -238,6 +242,22 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFindLoadedClassesInClassPaths() {
         Set<Class<?>> allLoadedClasses = ClassLoaderUtils.findLoadedClassesInClassPaths(classLoader, ClassPathUtils.getClassPaths());
         Assert.assertFalse(allLoadedClasses.isEmpty());
+    }
+
+    @Test
+    public void testOfSet() {
+        Set<String> set = ofSet();
+        assertEquals(emptySet(), set);
+
+        set = ofSet(((String[]) null));
+        assertEquals(emptySet(), set);
+
+        set = ofSet("A", "B", "C");
+        Set<String> expectedSet = new LinkedHashSet<>();
+        expectedSet.add("A");
+        expectedSet.add("B");
+        expectedSet.add("C");
+        assertEquals(expectedSet, set);
     }
 
 
