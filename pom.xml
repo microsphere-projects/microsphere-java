@@ -10,17 +10,17 @@
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-commons</artifactId>
+    <artifactId>microsphere</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>Microsphere Commons Project</name>
-    <description>Microsphere Commons Project</description>
+    <name>Microsphere Project</name>
+    <description>Microsphere Project</description>
 
     <scm>
-        <url>https://github.com/microsphere-projects/microsphere-commons</url>
-        <connection>scm:git:git://github.com/microsphere-projects/microsphere-commons.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-commons.git
+        <url>https://github.com/microsphere-projects/microsphere</url>
+        <connection>scm:git:git://github.com/microsphere-projects/microsphere.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere.git
         </developerConnection>
     </scm>
 
@@ -43,10 +43,11 @@
     </properties>
 
     <modules>
-        <module>microsphere-commons-core</module>
-        <module>microsphere-commons-i18n</module>
-        <module>microsphere-commons-parent</module>
-        <module>microsphere-commons-dependencies</module>
+        <module>microsphere-parent</module>
+        <module>microsphere-annotation-processor</module>
+        <module>microsphere-core</module>
+        <module>microsphere-i18n</module>
+        <module>microsphere-dependencies</module>
     </modules>
 
 </project>
