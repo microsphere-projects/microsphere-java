@@ -1,6 +1,7 @@
-package io.github.microsphere.commons.i18n.feign;
+package io.github.microsphere.i18n.feign;
 
 import feign.RequestTemplate;
+import io.github.microsphere.commons.i18n.feign.AcceptLanguageHeaderRequestInterceptor;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

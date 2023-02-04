@@ -1,7 +1,10 @@
-package io.github.microsphere.commons.i18n.util;
+package io.github.microsphere.i18n.util;
 
-import io.github.microsphere.commons.i18n.spring.beans.TestServiceMessageSourceConfiguration;
+import io.github.microsphere.i18n.spring.beans.TestServiceMessageSourceConfiguration;
 import io.github.microsphere.commons.i18n.spring.context.I18nConfiguration;
+import io.github.microsphere.commons.i18n.util.I18nUtils;
+import io.github.microsphere.commons.i18n.util.MessageUtils;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +33,7 @@ public class MessageUtilsTest {
     public void testGetLocalizedMessage() {
         // Testing Simplified Chinese
         // null
-        assertEquals(null, MessageUtils.getLocalizedMessage(null));
+        Assert.assertEquals(null, MessageUtils.getLocalizedMessage(null));
         // If the message argument is "a", the pattern "{" "}" is not included, and the original content is returned
         assertEquals("a", MessageUtils.getLocalizedMessage("a"));
         // "{a}" is the Message Code template, where "a" is Message Code
