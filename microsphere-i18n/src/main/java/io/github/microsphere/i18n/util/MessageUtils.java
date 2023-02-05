@@ -1,13 +1,13 @@
-package io.github.microsphere.commons.i18n.util;
+package io.github.microsphere.i18n.util;
 
-import io.github.microsphere.commons.i18n.ServiceMessageSource;
-import io.github.microsphere.commons.i18n.constants.I18nConstants;
+import io.github.microsphere.i18n.ServiceMessageSource;
+import io.github.microsphere.i18n.constants.I18nConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 
-import static io.github.microsphere.commons.i18n.util.I18nUtils.serviceMessageSource;
+import static io.github.microsphere.i18n.util.I18nUtils.serviceMessageSource;
 import static org.apache.commons.lang3.StringUtils.substringBetween;
 import static org.springframework.util.StringUtils.hasText;
 

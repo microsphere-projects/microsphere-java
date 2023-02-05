@@ -1,10 +1,10 @@
-package io.github.microsphere.commons.i18n.spring.context;
+package io.github.microsphere.i18n.spring.context;
 
-import io.github.microsphere.commons.i18n.CompositeServiceMessageSource;
-import io.github.microsphere.commons.i18n.ServiceMessageSource;
-import io.github.microsphere.commons.i18n.constants.I18nConstants;
-import io.github.microsphere.commons.i18n.spring.beans.factory.ServiceMessageSourceFactoryBean;
-import io.github.microsphere.commons.i18n.util.I18nUtils;
+import io.github.microsphere.i18n.CompositeServiceMessageSource;
+import io.github.microsphere.i18n.ServiceMessageSource;
+import io.github.microsphere.i18n.constants.I18nConstants;
+import io.github.microsphere.i18n.spring.beans.factory.ServiceMessageSourceFactoryBean;
+import io.github.microsphere.i18n.util.I18nUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectProvider;
@@ -23,7 +23,7 @@ import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Locale;
 
-import static io.github.microsphere.commons.i18n.constants.I18nConstants.*;
+import static io.github.microsphere.i18n.constants.I18nConstants.*;
 
 /**
  * Internationalization Configuration class

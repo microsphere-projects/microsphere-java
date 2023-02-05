@@ -1,4 +1,4 @@
-package io.github.microsphere.commons.i18n.feign;
+package io.github.microsphere.i18n.feign;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;

@@ -1,8 +1,7 @@
 package io.github.microsphere.i18n.spring.context;
 
-import io.github.microsphere.commons.i18n.ServiceMessageSource;
+import io.github.microsphere.i18n.ServiceMessageSource;
 import io.github.microsphere.i18n.spring.beans.TestServiceMessageSourceConfiguration;
-import io.github.microsphere.commons.i18n.spring.context.I18nConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Locale;
 
-import static io.github.microsphere.commons.i18n.util.I18nUtils.serviceMessageSource;
+import static io.github.microsphere.i18n.util.I18nUtils.serviceMessageSource;
 import static org.junit.Assert.*;
 
 /**

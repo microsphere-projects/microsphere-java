@@ -1,6 +1,5 @@
 package io.github.microsphere.i18n.spring;
 
-import io.github.microsphere.commons.i18n.spring.PropertySourcesServiceMessageSource;
 import org.junit.Test;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.util.StreamUtils;

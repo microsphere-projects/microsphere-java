@@ -1,6 +1,6 @@
-package io.github.microsphere.commons.i18n.spring.context;
+package io.github.microsphere.i18n.spring.context;
 
-import io.github.microsphere.commons.i18n.ResourceServiceMessageSource;
+import io.github.microsphere.i18n.ResourceServiceMessageSource;
 import org.springframework.context.ApplicationEvent;
 
 /**

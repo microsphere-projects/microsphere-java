@@ -1,6 +1,6 @@
-package io.github.microsphere.commons.i18n.constants;
+package io.github.microsphere.i18n.constants;
 
-import io.github.microsphere.commons.i18n.ServiceMessageSource;
+import io.github.microsphere.i18n.ServiceMessageSource;
 
 import java.util.Locale;
 

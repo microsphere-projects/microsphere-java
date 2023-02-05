@@ -1,6 +1,6 @@
 package io.github.microsphere.i18n.spring.beans;
 
-import io.github.microsphere.commons.i18n.spring.beans.factory.ServiceMessageSourceFactoryBean;
+import io.github.microsphere.i18n.spring.beans.factory.ServiceMessageSourceFactoryBean;
 import org.springframework.context.annotation.Bean;
 
 /**

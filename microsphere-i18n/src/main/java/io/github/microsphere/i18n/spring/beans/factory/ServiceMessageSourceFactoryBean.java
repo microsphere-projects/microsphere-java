@@ -1,10 +1,10 @@
-package io.github.microsphere.commons.i18n.spring.beans.factory;
+package io.github.microsphere.i18n.spring.beans.factory;
 
-import io.github.microsphere.commons.i18n.AbstractServiceMessageSource;
-import io.github.microsphere.commons.i18n.ReloadableResourceServiceMessageSource;
-import io.github.microsphere.commons.i18n.ServiceMessageSource;
-import io.github.microsphere.commons.i18n.constants.I18nConstants;
-import io.github.microsphere.commons.i18n.spring.context.ResourceServiceMessageSourceChangedEvent;
+import io.github.microsphere.i18n.AbstractServiceMessageSource;
+import io.github.microsphere.i18n.ReloadableResourceServiceMessageSource;
+import io.github.microsphere.i18n.ServiceMessageSource;
+import io.github.microsphere.i18n.constants.I18nConstants;
+import io.github.microsphere.i18n.spring.context.ResourceServiceMessageSourceChangedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanClassLoaderAware;

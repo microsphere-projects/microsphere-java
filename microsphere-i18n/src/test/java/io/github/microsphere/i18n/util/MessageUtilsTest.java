@@ -1,9 +1,7 @@
 package io.github.microsphere.i18n.util;
 
 import io.github.microsphere.i18n.spring.beans.TestServiceMessageSourceConfiguration;
-import io.github.microsphere.commons.i18n.spring.context.I18nConfiguration;
-import io.github.microsphere.commons.i18n.util.I18nUtils;
-import io.github.microsphere.commons.i18n.util.MessageUtils;
+import io.github.microsphere.i18n.spring.context.I18nConfiguration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

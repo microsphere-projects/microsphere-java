@@ -1,4 +1,4 @@
-package io.github.microsphere.commons.i18n;
+package io.github.microsphere.i18n;
 
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
