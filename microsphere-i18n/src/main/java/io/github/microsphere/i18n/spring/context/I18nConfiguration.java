@@ -23,7 +23,11 @@ import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Locale;
 
-import static io.github.microsphere.i18n.constants.I18nConstants.*;
+import static io.github.microsphere.i18n.constants.I18nConstants.COMMON_SERVICE_MESSAGE_SOURCE_BEAN_NAME;
+import static io.github.microsphere.i18n.constants.I18nConstants.COMMON_SERVICE_MESSAGE_SOURCE_ORDER;
+import static io.github.microsphere.i18n.constants.I18nConstants.DEFAULT_ENABLED;
+import static io.github.microsphere.i18n.constants.I18nConstants.ENABLED_PROPERTY_NAME;
+import static io.github.microsphere.i18n.constants.I18nConstants.SERVICE_MESSAGE_SOURCE_BEAN_NAME;
 
 /**
  * Internationalization Configuration class
