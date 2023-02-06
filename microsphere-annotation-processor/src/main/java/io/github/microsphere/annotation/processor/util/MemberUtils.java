@@ -28,8 +28,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
