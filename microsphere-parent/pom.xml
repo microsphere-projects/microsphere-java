@@ -26,6 +26,7 @@
         <jsr305.version>3.0.1</jsr305.version>
         <fastjson.version>1.2.83_noneautotype</fastjson.version>
         <feign.version>10.2.3</feign.version>
+        <javax.ws.rs.version>2.1</javax.ws.rs.version>
 
         <spring-boot.version>2.6.11</spring-boot.version>
 
@@ -83,6 +84,13 @@
                 <groupId>io.github.openfeign</groupId>
                 <artifactId>feign-core</artifactId>
                 <version>${feign.version}</version>
+            </dependency>
+
+            <!-- JAX-RS API -->
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>javax.ws.rs-api</artifactId>
+                <version>${javax.ws.rs.version}</version>
             </dependency>
 
             <!-- Testing -->

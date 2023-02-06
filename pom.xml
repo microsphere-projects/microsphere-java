@@ -44,10 +44,11 @@
 
     <modules>
         <module>microsphere-parent</module>
+        <module>microsphere-dependencies</module>
         <module>microsphere-annotation-processor</module>
         <module>microsphere-core</module>
         <module>microsphere-i18n</module>
-        <module>microsphere-dependencies</module>
+        <module>microsphere-tools</module>
     </modules>
 
 </project>
