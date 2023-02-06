@@ -10,7 +10,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Collections.*;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableSet;
 import static org.springframework.util.StringUtils.arrayToCommaDelimitedString;
 
 /**

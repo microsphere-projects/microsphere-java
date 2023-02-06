@@ -13,7 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Locale;
 
 import static io.github.microsphere.i18n.util.I18nUtils.serviceMessageSource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 
 /**
  * {@link I18nConfiguration} Test
