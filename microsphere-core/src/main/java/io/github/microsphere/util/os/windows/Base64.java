@@ -198,28 +198,5 @@ class Base64 {
             34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
             51, 22, 23, 24, 25
     };
-
-    public static void main(String args[]) {
-        int numRuns = Integer.parseInt(args[0]);
-        int numBytes = Integer.parseInt(args[1]);
-        java.util.Random rnd = new java.util.Random();
-        for (int i = 0; i < numRuns; i++) {
-            for (int j = 0; j < numBytes; j++) {
-                byte[] arr = new byte[j];
-                for (int k = 0; k < j; k++)
-                    arr[k] = (byte) rnd.nextInt();
-
-                String s = byteArrayToBase64(arr);
-                byte[] b = base64ToByteArray(s);
-                if (!java.util.Arrays.equals(arr, b))
-                    System.out.println("Dismal failure!");
-
-                s = byteArrayToAltBase64(arr);
-                b = altBase64ToByteArray(s);
-                if (!java.util.Arrays.equals(arr, b))
-                    System.out.println("Alternate dismal failure!");
-            }
-        }
-    }
 }
 

@@ -4,12 +4,16 @@ import io.github.microsphere.AbstractTestCase;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * {@link ReflectionUtils} {@link TestCase}
@@ -20,6 +24,8 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class ReflectionUtilsTest extends AbstractTestCase {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReflectionUtilsTest.class);
 
     @Test
     public void testAssertArrayIndex() {
@@ -114,7 +120,6 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             int times = (int) Math.pow(10 + .0, i + .0);
             testGetCallerClassNameInSunJVMPerformance(times);
             testGetCallerClassNameInGeneralJVMPerformance(times);
-            System.out.println();
         }
     }
 
@@ -124,7 +129,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             ReflectionUtils.getCallerClassNameInSunJVM();
         }
         long costTime = System.currentTimeMillis() - startTime;
-        System.out.printf("It's cost to execute ReflectionUtils.getCallerClassNameInSunJVM() %d times : %d ms！\n", times, costTime);
+        logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInSunJVM() {} times : {} ms！", times, costTime);
     }
 
     private void testGetCallerClassNameInGeneralJVMPerformance(int times) {
@@ -133,7 +138,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             ReflectionUtils.getCallerClassNameInGeneralJVM();
         }
         long costTime = System.currentTimeMillis() - startTime;
-        System.out.printf("It's cost to execute ReflectionUtils.getCallerClassNameInGeneralJVM() %d times : %d ms！\n", times, costTime);
+        logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInGeneralJVM() {} times : {} ms！", times, costTime);
     }
 
     @Test
@@ -141,13 +146,13 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         int[] intArray = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
         List<Integer> list = ReflectionUtils.toList(intArray);
         Object expectedList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
-        Assert.assertEquals(expectedList, list);
+        assertEquals(expectedList, list);
 
 
         int[][] intIntArray = new int[][]{{1, 2, 3}, {4, 5, 6,}, {7, 8, 9}};
         list = ReflectionUtils.toList(intIntArray);
         expectedList = Arrays.asList(Arrays.asList(1, 2, 3), Arrays.asList(4, 5, 6), Arrays.asList(7, 8, 9));
-        Assert.assertEquals(expectedList, list);
+        assertEquals(expectedList, list);
     }
 
     @Test
