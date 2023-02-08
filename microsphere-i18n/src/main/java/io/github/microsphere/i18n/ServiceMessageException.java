@@ -52,7 +52,7 @@ public class ServiceMessageException extends RuntimeException {
         return new StringJoiner(", ", ServiceMessageException.class.getSimpleName() + "[", "]")
                 .add("message='" + message + "'")
                 .add("args=" + Arrays.toString(args))
-                .add("localized message =" + getLocalizedMessage())
+                .add("localized message='" + getLocalizedMessage()+"'")
                 .toString();
     }
 }

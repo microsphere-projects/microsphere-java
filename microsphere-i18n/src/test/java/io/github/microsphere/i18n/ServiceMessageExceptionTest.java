@@ -22,8 +22,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.context.i18n.LocaleContextHolder;
 
+import java.util.Arrays;
 import java.util.Locale;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -63,6 +65,7 @@ public class ServiceMessageExceptionTest {
         assertTrue(exception instanceof RuntimeException);
         assertEquals(message, exception.getMessage());
         assertEquals(localizedMessage, exception.getLocalizedMessage());
+        assertEquals(format("ServiceMessageException[message='%s', args=%s, localized message='%s']", message, Arrays.toString(args), localizedMessage), exception.toString());
     }
 
 }
