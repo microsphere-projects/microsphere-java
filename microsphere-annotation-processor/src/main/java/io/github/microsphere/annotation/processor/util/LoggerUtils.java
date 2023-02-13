@@ -30,7 +30,7 @@ import static java.lang.String.format;
  */
 public interface LoggerUtils {
 
-    Logger LOGGER = LoggerFactory.getLogger("dubbo-metadata-processor");
+    Logger LOGGER = LoggerFactory.getLogger(LoggerUtils.class);
 
     static void info(String format, Object... args) {
         if (LOGGER.isInfoEnabled()) {
