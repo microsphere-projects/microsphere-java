@@ -174,17 +174,34 @@ public abstract class MethodUtils {
     }
 
     /**
-     * Invoke the target object and method
+     * Invoke the target objects' method
      *
-     * @param object           the target object
-     * @param methodName       the method name
-     * @param methodParameters the method parameters
-     * @param <T>              the return type
+     * @param object     the target object
+     * @param methodName the method name
+     * @param parameters the method parameters
+     * @param <T>        the return type
      * @return the target method's execution result
      */
-    public static <T> T invokeMethod(Object object, String methodName, Object... methodParameters) {
+    public static <T> T invokeMethod(Object object, String methodName, Object... parameters) {
         Class type = object.getClass();
-        Class[] parameterTypes = getTypes(methodParameters);
+        return invokeMethod(object, type, methodName, parameters);
+    }
+
+    /**
+     * Invoke the target classes' static method
+     *
+     * @param type       the target class
+     * @param methodName the method name
+     * @param parameters the method parameters
+     * @param <T>        the return type
+     * @return the target method's execution result
+     */
+    public static <T> T invokeStaticMethod(Class<?> type, String methodName, Object... parameters) {
+        return invokeMethod(null, type, methodName, parameters);
+    }
+
+    public static <T> T invokeMethod(Object instance, Class<?> type, String methodName, Object... parameters) {
+        Class[] parameterTypes = getTypes(parameters);
         Method method = findMethod(type, methodName, parameterTypes);
         T value = null;
 
@@ -194,7 +211,7 @@ public abstract class MethodUtils {
 
         try {
             method.setAccessible(true);
-            value = (T) method.invoke(object, methodParameters);
+            value = (T) method.invoke(instance, parameters);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
