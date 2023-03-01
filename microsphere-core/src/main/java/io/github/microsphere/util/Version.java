@@ -107,10 +107,20 @@ public class Version implements Comparable<Version> {
         return major;
     }
 
+    /**
+     * The minor version
+     *
+     * @return minor version
+     */
     public int getMinor() {
         return minor;
     }
 
+    /**
+     * The patch
+     *
+     * @return patch
+     */
     public int getPatch() {
         return patch;
     }
