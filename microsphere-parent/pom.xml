@@ -24,11 +24,12 @@
         <apache.commons.collections.version>3.2.2</apache.commons.collections.version>
 
         <jsr305.version>3.0.1</jsr305.version>
+        <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <fastjson.version>1.2.83_noneautotype</fastjson.version>
         <feign.version>10.2.3</feign.version>
-        <javax.ws.rs.version>2.1</javax.ws.rs.version>
+        <p6spy.version>3.9.1</p6spy.version>
 
-        <spring-boot.version>2.6.11</spring-boot.version>
+        <spring-boot.version>2.7.8</spring-boot.version>
 
         <junit.version>4.7</junit.version>
     </properties>
@@ -91,6 +92,13 @@
                 <groupId>javax.ws.rs</groupId>
                 <artifactId>javax.ws.rs-api</artifactId>
                 <version>${javax.ws.rs.version}</version>
+            </dependency>
+
+            <!-- JDBC -->
+            <dependency>
+                <groupId>p6spy</groupId>
+                <artifactId>p6spy</artifactId>
+                <version>${p6spy.version}</version>
             </dependency>
 
             <!-- Testing -->
