@@ -14,29 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.github.microsphere.net.handler.console;
 
-import io.github.microsphere.net.handler.console.Handler;
-import org.junit.Test;
+import io.github.microsphere.net.AbstractURLStreamHandler;
 
+import java.io.IOException;
 import java.net.URL;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import java.net.URLConnection;
 
 /**
- * {@link Handler} Test
+ * "console" protocol Handler
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class AbstractURLStreamHandlerTest {
+public class Handler extends AbstractURLStreamHandler {
 
-    @Test
-    public void test() throws Throwable {
-        Handler handler = new Handler();
-        assertEquals("io.github.microsphere.net.handler", AbstractURLStreamHandler.getHandlePackages());
-        URL url = new URL("console://test");
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
+    @Override
+    public URLConnection openConnection(URL u) throws IOException {
+        return new ConsoleURLConnection(u);
     }
 }
