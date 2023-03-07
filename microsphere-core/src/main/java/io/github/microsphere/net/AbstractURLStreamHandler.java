@@ -77,6 +77,8 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      */
     public static final String CONVENTION_CLASS_NAME = "Handler";
 
+    private static final String SCHEME_EXTENSION_TYPE_MATRIX_NAME = "_SET_";
+
     public AbstractURLStreamHandler() {
         Class<?> currentClass = getClass();
         assertConventions(currentClass);
@@ -211,7 +213,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      * <p>
      * This scheme contains two parts, the former is "jdbc" as the protocol, the later is "mysql" called the the extension
      * type of protocol which is convenient to extend the fine-grain {@link URLStreamHandler}.
-     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb?charset=UTF-8;type=mysql#top".
+     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb?charset=UTF-8;_SET_=mysql#top".
      *
      * @param url   the {@code URL} to receive the result of parsing
      *              the spec.
@@ -230,7 +232,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      */
     protected String reformSpec(URL url, String spec, int start, int end, int limit) {
         String protocol = url.getProtocol();
-        String matrix = SEMICOLON + "type" + EQUAL + spec.substring(start, end);
+        String matrix = SEMICOLON + SCHEME_EXTENSION_TYPE_MATRIX_NAME + EQUAL + spec.substring(start, end);
         String suffix = spec.substring(end, limit);
 
         int length = protocol.length() + matrix.length() + suffix.length();
