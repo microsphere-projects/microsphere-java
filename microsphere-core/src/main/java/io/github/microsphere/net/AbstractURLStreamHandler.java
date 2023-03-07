@@ -23,6 +23,7 @@ import java.util.Objects;
 /**
  * Abstract {@link URLStreamHandler} class overrides these methods making final:
  * <ul>
+ *     <li>{@link #parseURL(URL, String, int, int)}</li>
  *     <li>{@link #equals(URL, URL)}</li>
  *     <li>{@link #hostsEqual(URL, URL)}</li>
  *     <li>{@link #hashCode(URL)}</li>
@@ -181,6 +182,33 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
         }
         return result.toString();
     }
+
+    @Override
+    protected void parseURL(URL u, String spec, int start, int limit) {
+        int end = spec.indexOf("://", start);
+        String actualSpec = spec;
+        if (end > -1) { // The sub-protocol was found
+            actualSpec = normalizeSpec(u, spec, start, end, limit);
+        }
+        super.parseURL(u, actualSpec, start, limit);
+    }
+
+    private String normalizeSpec(URL url, String spec, int start, int end, int limit) {
+        String protocol = url.getProtocol();
+        String type = spec.substring(start, end);
+        String ref = "#" + url.getRef();
+        String suffix = spec.substring(end, limit);
+
+        StringBuilder newSpecBuilder = new StringBuilder();
+
+        newSpecBuilder.append(protocol)
+                .append(suffix)
+                .append(";type=")
+                .append(type)
+                .append(ref);
+        return newSpecBuilder.toString();
+    }
+
 
     @Override
     public String toString() {

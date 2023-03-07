@@ -36,7 +36,7 @@ public class AbstractURLStreamHandlerTest {
     public void test() throws Throwable {
         Handler handler = new Handler();
         assertEquals("io.github.microsphere.net.handler", AbstractURLStreamHandler.getHandlePackages());
-        URL url = new URL("console://test");
+        URL url = new URL("console:text://localhost:12345/abc?n=1;ref=top#hash");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
     }
 }
