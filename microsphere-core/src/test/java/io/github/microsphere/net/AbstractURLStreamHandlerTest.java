@@ -38,5 +38,14 @@ public class AbstractURLStreamHandlerTest {
         assertEquals("io.github.microsphere.net.handler", AbstractURLStreamHandler.getHandlePackages());
         URL url = new URL("console:text://localhost:12345/abc?n=1;ref=top#hash");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
+        assertEquals("console://localhost:12345/abc?n=1;type=text;ref=top#hash", url.toString());
+
+        url = new URL("console:text://localhost:12345/abc?n=1");
+        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
+        assertEquals("console://localhost:12345/abc?n=1;type=text", url.toString());
+
+        url = new URL("console://localhost:12345/abc?n=1;ref=top#hash");
+        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
+        assertEquals("console://localhost:12345/abc?n=1;ref=top#hash", url.toString());
     }
 }

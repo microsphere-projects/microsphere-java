@@ -20,6 +20,9 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.Objects;
 
+import static io.github.microsphere.constants.Constants.EQUAL;
+import static io.github.microsphere.constants.Constants.SEMICOLON;
+
 /**
  * Abstract {@link URLStreamHandler} class overrides these methods making final:
  * <ul>
@@ -184,28 +187,66 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
     }
 
     @Override
-    protected void parseURL(URL u, String spec, int start, int limit) {
+    protected final void parseURL(URL u, String spec, int start, int limit) {
         int end = spec.indexOf("://", start);
-        String actualSpec = spec;
-        if (end > -1) { // The sub-protocol was found
-            actualSpec = normalizeSpec(u, spec, start, end, limit);
+        if (end > start) { // The sub-protocol was found
+            String actualSpec = reformSpec(u, spec, start, end, limit);
+            super.parseURL(u, actualSpec, start, actualSpec.length());
+        } else {
+            super.parseURL(u, spec, start, limit);
         }
-        super.parseURL(u, actualSpec, start, limit);
     }
 
-    private String normalizeSpec(URL url, String spec, int start, int end, int limit) {
+    /**
+     * Reform the string of specified {@link URL} if its' scheme presents an extension type of protocol, e,g.
+     * A string representing the URL is "jdbc:mysql://localhost:3307/mydb?charset=UTF-8#top", its'
+     * <ul>
+     *     <li>scheme : "jdbc:mysql"</li>
+     *     <li>host : "localhost"</li>
+     *     <li>port : 3307</li>
+     *     <li>path : "/mydb"</li>
+     *     <li>query : "charset=UTF-8"</li>
+     *     <li>ref : "top"</li>
+     * </ul>
+     * <p>
+     * This scheme contains two parts, the former is "jdbc" as the protocol, the later is "mysql" called the the extension
+     * type of protocol which is convenient to extend the fine-grain {@link URLStreamHandler}.
+     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb?charset=UTF-8;type=mysql#top".
+     *
+     * @param url   the {@code URL} to receive the result of parsing
+     *              the spec.
+     * @param spec  the {@code String} representing the URL that
+     *              must be parsed.
+     * @param start the character index at which to begin parsing. This is
+     *              just past the '{@code :}' (if there is one) that
+     *              specifies the determination of the protocol name.
+     * @param end   the index of the string "://" present in the URL from the
+     *              <code>start</code> index, its' value is greater or equal 0.
+     * @param limit the character position to stop parsing at. This is the
+     *              end of the string or the position of the
+     *              "{@code #}" character, if present. All information
+     *              after the sharp sign indicates an anchor.
+     * @return reformed the string of specified {@link URL} if the suffix o
+     */
+    protected String reformSpec(URL url, String spec, int start, int end, int limit) {
         String protocol = url.getProtocol();
-        String type = spec.substring(start, end);
-        String ref = "#" + url.getRef();
+        String matrix = SEMICOLON + "type" + EQUAL + spec.substring(start, end);
         String suffix = spec.substring(end, limit);
 
-        StringBuilder newSpecBuilder = new StringBuilder();
+        int length = protocol.length() + matrix.length() + suffix.length();
 
-        newSpecBuilder.append(protocol)
-                .append(suffix)
-                .append(";type=")
-                .append(type)
-                .append(ref);
+        StringBuilder newSpecBuilder = new StringBuilder(length);
+
+        newSpecBuilder.append(protocol).append(suffix);
+
+        int matrixIndex = newSpecBuilder.indexOf(SEMICOLON, end);
+
+        if (matrixIndex > end) {
+            newSpecBuilder.insert(matrixIndex, matrix);
+        } else {
+            newSpecBuilder.append(matrix);
+        }
+
         return newSpecBuilder.toString();
     }
 
