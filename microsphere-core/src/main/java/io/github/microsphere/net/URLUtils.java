@@ -3,9 +3,6 @@
  */
 package io.github.microsphere.net;
 
-import io.github.microsphere.constants.PathConstants;
-import io.github.microsphere.constants.ProtocolConstants;
-import io.github.microsphere.constants.SeparatorConstants;
 import io.github.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +12,6 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,16 +19,23 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.github.microsphere.constants.Constants.EQUAL;
-import static io.github.microsphere.constants.Constants.SEMICOLON;
 import static io.github.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.github.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.github.microsphere.constants.PathConstants.SLASH;
 import static io.github.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.github.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.github.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
-import static io.github.microsphere.constants.SymbolConstants.AND;
+import static io.github.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
+import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableMap;
+import static org.apache.commons.lang3.StringUtils.length;
+import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * {@link URL} Utility class
@@ -50,6 +53,11 @@ public abstract class URLUtils {
      * The default encoding : "UTF-8"
      */
     private static final String DEFAULT_ENCODING = "UTF-8";
+
+    /**
+     * The matrix name for the URLs' sub-protocol
+     */
+    public static final String SUB_PROTOCOL_MATRIX_NAME = "_sp";
 
     /**
      * Resolve Relative path from Archive File URL
@@ -95,36 +103,69 @@ public abstract class URLUtils {
 
 
     /**
-     * Resolve parameters {@link Map} from specified URL，The parameter name as key ，parameter value list as key
+     * Resolve the query parameters {@link Map} from specified URL，The parameter name as key ，parameter value list as key
      *
      * @param url URL
      * @return Non-null and Read-only {@link Map} , the order of parameters is determined by query string
      */
     @Nonnull
-    public static Map<String, List<String>> resolveParametersMap(String url) {
+    public static Map<String, List<String>> resolveQueryParameters(String url) {
         String queryString = StringUtils.substringAfterLast(url, QUERY_STRING);
-        if (StringUtils.isNotBlank(queryString)) {
-            Map<String, List<String>> parametersMap = new LinkedHashMap();
-            String[] queryParams = StringUtils.split(queryString, AND);
-            if (queryParams != null) {
-                for (String queryParam : queryParams) {
-                    String[] paramNameAndValue = StringUtils.split(queryParam, EQUAL);
-                    if (paramNameAndValue.length > 0) {
-                        String paramName = paramNameAndValue[0];
-                        String paramValue = paramNameAndValue.length > 1 ? paramNameAndValue[1] : StringUtils.EMPTY;
-                        List<String> paramValueList = parametersMap.get(paramName);
-                        if (paramValueList == null) {
-                            paramValueList = new LinkedList();
-                            parametersMap.put(paramName, paramValueList);
-                        }
-                        paramValueList.add(paramValue);
-                    }
-                }
-            }
-            return Collections.unmodifiableMap(parametersMap);
-        } else {
-            return Collections.emptyMap();
+        return resolveParameters(queryString, AND_CHAR);
+    }
+
+    /**
+     * Resolve the matrix parameters {@link Map} from specified URL，The parameter name as key ，parameter value list as key
+     *
+     * @param url URL
+     * @return Non-null and Read-only {@link Map} , the order of parameters is determined by matrix string
+     */
+    @Nonnull
+    public static Map<String, List<String>> resolveMatrixParameters(String url) {
+        int startIndex = url.indexOf(SEMICOLON_CHAR);
+        if (startIndex == -1) { // The matrix separator ";" was not found
+            return emptyMap();
         }
+
+        int endIndex = url.indexOf(QUERY_STRING_CHAR);
+        if (endIndex == -1) { // The query string separator "?" was not found
+            endIndex = url.indexOf(SHARP_CHAR);
+        }
+        if (endIndex == -1) { // The fragment separator "#" was not found
+            endIndex = url.length();
+        }
+
+        String matrixString = url.substring(startIndex, endIndex);
+
+        return resolveParameters(matrixString, SEMICOLON_CHAR);
+    }
+
+    protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
+        String[] params = split(paramsString, separatorChar);
+        int paramsLen = params == null ? 0 : params.length;
+        if (paramsLen == 0) {
+            return emptyMap();
+        }
+
+        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, Float.MIN_NORMAL);
+
+        for (int i = 0; i < paramsLen; i++) {
+            String param = params[i];
+            String[] nameAndValue = split(param, EQUAL_CHAR);
+            int len = nameAndValue.length;
+            if (len > 0) {
+                String name = nameAndValue[0];
+                String value = len > 1 ? nameAndValue[1] : StringUtils.EMPTY;
+                List<String> paramValueList = parametersMap.get(name);
+                if (paramValueList == null) {
+                    paramValueList = new LinkedList();
+                    parametersMap.put(name, paramValueList);
+                }
+                paramValueList.add(value);
+            }
+        }
+
+        return unmodifiableMap(parametersMap);
     }
 
     /**
@@ -305,12 +346,110 @@ public abstract class URLUtils {
     /**
      * Build the Matrix String
      *
-     * @param name  the name of matrix parameter
-     * @param value the value of matrix parameter
+     * @param name   the name of matrix parameter
+     * @param values the values of matrix parameter
      * @return the Matrix String
      */
-    public static String buildMatrixString(String name, String value) {
-        return SEMICOLON + name + EQUAL + value;
+    public static String buildMatrixString(String name, String... values) {
+        int len = values.length;
+        if (len == 0) {
+            return null;
+        }
+
+        // 2 = length(SEMICOLON_CHAR) + length(EQUAL)
+        int capacity = 2 * len + name.length();
+
+        for (int i = 0; i < len; i++) {
+            capacity += length(values[i]);
+        }
+
+        StringBuilder matrixStringBuilder = new StringBuilder(capacity);
+
+        for (int i = 0; i < len; i++) {
+            // ;{name}={value}
+            matrixStringBuilder.append(SEMICOLON_CHAR).append(name).append(EQUAL_CHAR).append(values[i]);
+        }
+
+        return matrixStringBuilder.toString();
     }
 
+    /**
+     * Converts a URL of a specific protocol to a String.
+     *
+     * @param url {@link URL}
+     * @return non-null
+     * @throws NullPointerException If <code>url</code> is <code>null</code>
+     */
+    public static String toString(URL url) throws NullPointerException {
+        return toExternalForm(url);
+    }
+
+    /**
+     * Converts a URL of a specific protocol to a String.
+     *
+     * @param url {@link URL}
+     * @return non-null
+     * @throws NullPointerException If <code>url</code> is <code>null</code>
+     */
+    public static String toExternalForm(URL url) throws NullPointerException {
+        // pre-compute length of StringBuilder
+        String protocol = url.getProtocol();
+        String authority = url.getAuthority();
+        String path = url.getPath();
+        String query = url.getQuery();
+        String ref = url.getRef();
+
+        int authorityLen = length(authority);
+        int pathLen = length(path);
+        int queryLen = length(query);
+        int refLen = length(ref);
+
+        boolean hasAuthority = authorityLen > 0;
+        boolean hasPath = pathLen > 0;
+        boolean hasQuery = queryLen > 0;
+        boolean hasRef = refLen > 0;
+
+        int len = protocol.length() + 1;
+
+        if (hasAuthority) {
+            len += 2 + authority.length();
+        }
+
+        if (hasPath) {
+            len += pathLen;
+        }
+
+        if (hasQuery) {
+            len += 1 + queryLen;
+        }
+
+        if (hasRef) {
+            len += 1 + refLen;
+        }
+
+        StringBuilder result = new StringBuilder(len);
+        result.append(protocol);
+        result.append(COLON_CHAR);
+
+        if (hasAuthority) {
+            result.append(DOUBLE_SLASH);
+            result.append(authority);
+        }
+
+        if (hasPath) {
+            result.append(path);
+        }
+
+        if (hasQuery) {
+            result.append(QUERY_STRING_CHAR);
+            result.append(query);
+        }
+
+        if (hasRef) {
+            result.append(SHARP_CHAR);
+            result.append(ref);
+        }
+
+        return result.toString();
+    }
 }

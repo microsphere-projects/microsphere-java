@@ -19,6 +19,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.microsphere.net.URLUtils.buildMatrixString;
+import static io.github.microsphere.net.URLUtils.resolveMatrixParameters;
+import static io.github.microsphere.net.URLUtils.resolveQueryParameters;
+import static org.junit.Assert.assertEquals;
+
 /**
  * {@link URLUtils} Test
  *
@@ -97,9 +102,9 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testResolveParametersMap() {
+    public void testResolveQueryParameters() {
         String url = "https://www.google.com.hk/search?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
-        Map<String, List<String>> parametersMap = URLUtils.resolveParametersMap(url);
+        Map<String, List<String>> parametersMap = resolveQueryParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
         expectedParametersMap.put("q", Arrays.asList("java"));
         expectedParametersMap.put("oq", Arrays.asList("java"));
@@ -110,14 +115,50 @@ public class URLUtilsTest {
         Assert.assertEquals(expectedParametersMap, parametersMap);
 
         url = "https://www.google.com.hk/search";
-        parametersMap = URLUtils.resolveParametersMap(url);
+        parametersMap = resolveQueryParameters(url);
         expectedParametersMap = Collections.emptyMap();
-        Assert.assertEquals(expectedParametersMap, parametersMap);
+        assertEquals(expectedParametersMap, parametersMap);
 
         url = "https://www.google.com.hk/search?";
-        parametersMap = URLUtils.resolveParametersMap(url);
+        parametersMap = resolveQueryParameters(url);
         expectedParametersMap = Collections.emptyMap();
-        Assert.assertEquals(expectedParametersMap, parametersMap);
+        assertEquals(expectedParametersMap, parametersMap);
+    }
+
+    @Test
+    public void testResolveMatrixParameters() {
+        String url = "https://www.google.com.hk/search;q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
+        Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
+        Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
+        expectedParametersMap.put("q", Arrays.asList("java"));
+        expectedParametersMap.put("oq", Arrays.asList("java"));
+        expectedParametersMap.put("sourceid", Arrays.asList("chrome"));
+        expectedParametersMap.put("es_sm", Arrays.asList("122"));
+        expectedParametersMap.put("ie", Arrays.asList("UTF-8"));
+
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = "https://www.google.com.hk/search";
+        parametersMap = resolveMatrixParameters(url);
+        expectedParametersMap = Collections.emptyMap();
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = "https://www.google.com.hk/search;";
+        parametersMap = resolveMatrixParameters(url);
+        expectedParametersMap = Collections.emptyMap();
+        assertEquals(expectedParametersMap, parametersMap);
+    }
+
+    @Test
+    public void testBuildMatrixString() {
+        String matrixString = buildMatrixString("n", "1");
+        assertEquals(";n=1", matrixString);
+
+        matrixString = buildMatrixString("n", "1", "2");
+        assertEquals(";n=1;n=2", matrixString);
+
+        matrixString = buildMatrixString("n", "1", "2", "3");
+        assertEquals(";n=1;n=2;n=3", matrixString);
     }
 
     @Test

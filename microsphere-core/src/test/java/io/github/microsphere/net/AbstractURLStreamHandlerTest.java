@@ -39,19 +39,19 @@ public class AbstractURLStreamHandlerTest {
 
         URL url = new URL("console:text://localhost:12345/abc?n=1;ref=top#hash");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc?n=1;_set_=text;ref=top#hash", url.toString());
+        assertEquals("console://localhost:12345/abc?n=1;_sp=text;ref=top#hash", url.toString());
 
         url = new URL("console:text://localhost:12345/abc?n=1;ref=top");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc?n=1;_set_=text;ref=top", url.toString());
+        assertEquals("console://localhost:12345/abc?n=1;_sp=text;ref=top", url.toString());
 
         url = new URL("console:text://localhost:12345/abc?n=1");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc;_set_=text?n=1", url.toString());
+        assertEquals("console://localhost:12345/abc;_sp=text?n=1", url.toString());
 
         url = new URL("console:text://localhost:12345/abc");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc;_set_=text", url.toString());
+        assertEquals("console://localhost:12345/abc;_sp=text", url.toString());
 
         url = new URL("console://localhost:12345/abc");
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());

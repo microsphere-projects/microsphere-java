@@ -20,9 +20,12 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.Objects;
 
+import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.github.microsphere.constants.SymbolConstants.SEMICOLON;
+import static io.github.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
+import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * Abstract {@link URLStreamHandler} class overrides these methods making final:
@@ -77,8 +80,6 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      * The convention class name.
      */
     public static final String CONVENTION_CLASS_NAME = "Handler";
-
-    private static final String SCHEME_EXTENSION_TYPE_MATRIX_NAME = "_set_";
 
     public AbstractURLStreamHandler() {
         Class<?> currentClass = getClass();
@@ -157,36 +158,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      */
     @Override
     protected final String toExternalForm(URL u) {
-        // pre-compute length of StringBuilder
-        int len = u.getProtocol().length() + 1;
-        if (u.getAuthority() != null && u.getAuthority().length() > 0) len += 2 + u.getAuthority().length();
-        if (u.getPath() != null) {
-            len += u.getPath().length();
-        }
-        if (u.getQuery() != null) {
-            len += 1 + u.getQuery().length();
-        }
-        if (u.getRef() != null) len += 1 + u.getRef().length();
-
-        StringBuilder result = new StringBuilder(len);
-        result.append(u.getProtocol());
-        result.append(":");
-        if (u.getAuthority() != null && u.getAuthority().length() > 0) {
-            result.append("//");
-            result.append(u.getAuthority());
-        }
-        if (u.getPath() != null) {
-            result.append(u.getPath());
-        }
-        if (u.getQuery() != null) {
-            result.append('?');
-            result.append(u.getQuery());
-        }
-        if (u.getRef() != null) {
-            result.append("#");
-            result.append(u.getRef());
-        }
-        return result.toString();
+        return URLUtils.toExternalForm(u);
     }
 
     @Override
@@ -201,7 +173,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
     }
 
     /**
-     * Reform the string of specified {@link URL} if its' scheme presents an extension type of protocol, e,g.
+     * Reform the string of specified {@link URL} if its' scheme presents the sub-protocol, e,g.
      * A string representing the URL is "jdbc:mysql://localhost:3307/mydb?charset=UTF-8#top", its'
      * <ul>
      *     <li>scheme : "jdbc:mysql"</li>
@@ -212,9 +184,9 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      *     <li>ref : "top"</li>
      * </ul>
      * <p>
-     * This scheme contains two parts, the former is "jdbc" as the protocol, the later is "mysql" called the the extension
-     * type of protocol which is convenient to extend the fine-grain {@link URLStreamHandler}.
-     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb;_set_=mysql?charset=UTF-8#top".
+     * This scheme contains two parts, the former is "jdbc" as the protocol, the later is "mysql" called sub-protocol
+     * which is convenient to extend the fine-grain {@link URLStreamHandler}.
+     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb;_sp=mysql?charset=UTF-8#top".
      *
      * @param url   the {@code URL} to receive the result of parsing
      *              the spec.
@@ -233,12 +205,14 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      */
     protected String reformSpec(URL url, String spec, int start, int end, int limit) {
         String protocol = url.getProtocol();
-        String matrix = buildMatrixString(SCHEME_EXTENSION_TYPE_MATRIX_NAME, spec.substring(start, end));
+        String subProtocol = spec.substring(start, end);
+        String[] subProtocols = split(subProtocol, COLON_CHAR);
+        String matrix = buildMatrixString(SUB_PROTOCOL_MATRIX_NAME, subProtocols);
         String suffix = spec.substring(end, limit);
 
-        int length = protocol.length() + matrix.length() + suffix.length();
+        int capacity = protocol.length() + matrix.length() + suffix.length();
 
-        StringBuilder newSpecBuilder = new StringBuilder(length);
+        StringBuilder newSpecBuilder = new StringBuilder(capacity);
 
         newSpecBuilder.append(protocol).append(suffix);
 
