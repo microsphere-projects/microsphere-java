@@ -25,6 +25,12 @@ import java.util.jar.JarFile;
 
 import static io.github.microsphere.constants.Constants.EQUAL;
 import static io.github.microsphere.constants.Constants.SEMICOLON;
+import static io.github.microsphere.constants.PathConstants.BACK_SLASH;
+import static io.github.microsphere.constants.PathConstants.DOUBLE_SLASH;
+import static io.github.microsphere.constants.PathConstants.SLASH;
+import static io.github.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.github.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
+import static io.github.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
 import static io.github.microsphere.constants.SymbolConstants.AND;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
 
@@ -57,8 +63,8 @@ public abstract class URLUtils {
     public static String resolveRelativePath(URL archiveFileURL) throws NullPointerException {
         // NPE check
         String path = archiveFileURL.getPath();
-        if (path.contains(SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR)) {
-            String relativePath = StringUtils.substringAfterLast(path, SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR);
+        if (path.contains(ARCHIVE_ENTITY_SEPARATOR)) {
+            String relativePath = StringUtils.substringAfterLast(path, ARCHIVE_ENTITY_SEPARATOR);
             return decode(relativePath);
         }
         return null;
@@ -75,12 +81,12 @@ public abstract class URLUtils {
     public static File resolveArchiveFile(URL archiveFileURL, String archiveFileExtensionName) throws NullPointerException {
         String archiveFilePath = archiveFileURL.getPath();
         String prefix = ":/";
-        boolean hasJarEntryPath = archiveFilePath.contains(SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR);
-        String suffix = hasJarEntryPath ? SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR : archiveFileExtensionName;
+        boolean hasJarEntryPath = archiveFilePath.contains(ARCHIVE_ENTITY_SEPARATOR);
+        String suffix = hasJarEntryPath ? ARCHIVE_ENTITY_SEPARATOR : archiveFileExtensionName;
         String jarPath = StringUtils.substringBetween(archiveFilePath, prefix, suffix);
         File archiveFile = null;
         if (StringUtils.isNotBlank(jarPath)) {
-            jarPath = PathConstants.SLASH + URLUtils.decode(jarPath);
+            jarPath = SLASH + URLUtils.decode(jarPath);
             archiveFile = new File(jarPath);
             archiveFile = archiveFile.exists() ? archiveFile : null;
         }
@@ -140,12 +146,12 @@ public abstract class URLUtils {
 
         String resolvedPath = path.trim();
 
-        while (resolvedPath.contains(PathConstants.BACK_SLASH)) {
-            resolvedPath = StringUtils.replace(resolvedPath, PathConstants.BACK_SLASH, PathConstants.SLASH);
+        while (resolvedPath.contains(BACK_SLASH)) {
+            resolvedPath = StringUtils.replace(resolvedPath, BACK_SLASH, SLASH);
         }
 
-        while (resolvedPath.contains(PathConstants.DOUBLE_SLASH)) {
-            resolvedPath = StringUtils.replace(resolvedPath, PathConstants.DOUBLE_SLASH, PathConstants.SLASH);
+        while (resolvedPath.contains(DOUBLE_SLASH)) {
+            resolvedPath = StringUtils.replace(resolvedPath, DOUBLE_SLASH, SLASH);
         }
         return resolvedPath;
     }
@@ -230,7 +236,7 @@ public abstract class URLUtils {
         if (url != null) {
             String protocol = url.getProtocol();
             try {
-                if (ProtocolConstants.JAR_PROTOCOL.equals(protocol)) {
+                if (JAR_PROTOCOL.equals(protocol)) {
                     JarFile jarFile = JarUtils.toJarFile(url); // Test whether valid jar or not
                     final String relativePath = JarUtils.resolveRelativePath(url);
                     if (StringUtils.EMPTY.equals(relativePath)) { // root directory in jar
@@ -239,7 +245,7 @@ public abstract class URLUtils {
                         JarEntry jarEntry = jarFile.getJarEntry(relativePath);
                         isDirectory = jarEntry != null && jarEntry.isDirectory();
                     }
-                } else if (ProtocolConstants.FILE_PROTOCOL.equals(protocol)) {
+                } else if (FILE_PROTOCOL.equals(protocol)) {
                     File classPathFile = new File(url.toURI());
                     isDirectory = classPathFile.isDirectory();
                 }
@@ -259,14 +265,14 @@ public abstract class URLUtils {
     public static boolean isJarURL(URL url) {
         String protocol = url.getProtocol();
         boolean flag = false;
-        if (ProtocolConstants.FILE_PROTOCOL.equals(protocol)) {
+        if (FILE_PROTOCOL.equals(protocol)) {
             try {
                 File file = new File(url.toURI());
                 JarFile jarFile = new JarFile(file);
                 flag = jarFile != null;
             } catch (Exception e) {
             }
-        } else if (ProtocolConstants.JAR_PROTOCOL.equals(protocol)) {
+        } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
         return flag;
@@ -281,15 +287,15 @@ public abstract class URLUtils {
     public static String buildURI(String... paths) {
         int length = ArrayUtils.getLength(paths);
         if (length < 1) {
-            return PathConstants.SLASH;
+            return SLASH;
         }
 
-        StringBuilder uriBuilder = new StringBuilder(PathConstants.SLASH);
+        StringBuilder uriBuilder = new StringBuilder(SLASH);
         for (int i = 0; i < length; i++) {
             String path = paths[i];
             uriBuilder.append(path);
             if (i < length - 1) {
-                uriBuilder.append(PathConstants.SLASH);
+                uriBuilder.append(SLASH);
             }
         }
 
@@ -299,12 +305,12 @@ public abstract class URLUtils {
     /**
      * Build the Matrix String
      *
-     * @param matrixParameterName  the name of matrix parameter
-     * @param matrixParameterValue the value of matrix parameter
+     * @param name  the name of matrix parameter
+     * @param value the value of matrix parameter
      * @return the Matrix String
      */
-    public static String buildMatrixString(String matrixParameterName, String matrixParameterValue) {
-        return SEMICOLON + matrixParameterName + EQUAL + matrixParameterValue;
+    public static String buildMatrixString(String name, String value) {
+        return SEMICOLON + name + EQUAL + value;
     }
 
 }

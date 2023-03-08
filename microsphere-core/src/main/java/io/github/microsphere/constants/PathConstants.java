@@ -14,6 +14,16 @@ package io.github.microsphere.constants;
 public interface PathConstants {
 
     /**
+     * Slash char
+     */
+    char SLASH_CHAR = '/';
+
+    /**
+     * Back Slash char
+     */
+    char BACK_SLASH_CHAR = '\\';
+
+    /**
      * Slash : <code>"/"</code>
      */
     String SLASH = "/";

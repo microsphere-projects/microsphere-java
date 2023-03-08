@@ -20,8 +20,9 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.Objects;
 
-import static io.github.microsphere.constants.Constants.EQUAL;
-import static io.github.microsphere.constants.Constants.SEMICOLON;
+import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
+import static io.github.microsphere.constants.SymbolConstants.SEMICOLON;
+import static io.github.microsphere.net.URLUtils.buildMatrixString;
 
 /**
  * Abstract {@link URLStreamHandler} class overrides these methods making final:
@@ -77,7 +78,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      */
     public static final String CONVENTION_CLASS_NAME = "Handler";
 
-    private static final String SCHEME_EXTENSION_TYPE_MATRIX_NAME = "_SET_";
+    private static final String SCHEME_EXTENSION_TYPE_MATRIX_NAME = "_set_";
 
     public AbstractURLStreamHandler() {
         Class<?> currentClass = getClass();
@@ -213,7 +214,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      * <p>
      * This scheme contains two parts, the former is "jdbc" as the protocol, the later is "mysql" called the the extension
      * type of protocol which is convenient to extend the fine-grain {@link URLStreamHandler}.
-     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb?charset=UTF-8;_SET_=mysql#top".
+     * In this case, the reformed string of specified {@link URL} will be "jdbc://localhost:3307/mydb;_set_=mysql?charset=UTF-8#top".
      *
      * @param url   the {@code URL} to receive the result of parsing
      *              the spec.
@@ -232,10 +233,8 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      */
     protected String reformSpec(URL url, String spec, int start, int end, int limit) {
         String protocol = url.getProtocol();
-        String matrix = SEMICOLON + SCHEME_EXTENSION_TYPE_MATRIX_NAME + EQUAL + spec.substring(start, end);
+        String matrix = buildMatrixString(SCHEME_EXTENSION_TYPE_MATRIX_NAME, spec.substring(start, end));
         String suffix = spec.substring(end, limit);
-
-        // int queryIndex = spec.inde
 
         int length = protocol.length() + matrix.length() + suffix.length();
 
@@ -244,9 +243,10 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
         newSpecBuilder.append(protocol).append(suffix);
 
         int matrixIndex = newSpecBuilder.indexOf(SEMICOLON, end);
+        int insertIndex = matrixIndex > end ? matrixIndex : newSpecBuilder.indexOf(QUERY_STRING, end);
 
-        if (matrixIndex > end) {
-            newSpecBuilder.insert(matrixIndex, matrix);
+        if (insertIndex > end) {
+            newSpecBuilder.insert(insertIndex, matrix);
         } else {
             newSpecBuilder.append(matrix);
         }
