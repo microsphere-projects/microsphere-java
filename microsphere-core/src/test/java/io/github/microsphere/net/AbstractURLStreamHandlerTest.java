@@ -19,13 +19,17 @@ package io.github.microsphere.net;
 import io.github.microsphere.net.handler.console.Handler;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 /**
- * {@link Handler} Test
+ * {@link AbstractURLStreamHandler} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
@@ -61,5 +65,36 @@ public class AbstractURLStreamHandlerTest {
         url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
         assertEquals(spec, url.toString());
+    }
+
+    @Test
+    public void testClassPathProtocol() throws Throwable {
+        new io.github.microsphere.net.classpath.Handler();
+        URL url = new URL("classpath://META-INF/test.properties");
+        Properties properties = new Properties();
+        properties.load(new InputStreamReader(url.openStream(), "UTF-8"));
+        assertEquals("测试名称", properties.get("name"));
+
+        url = new URL("classpath:////META-INF/services/java.lang.CharSequence");
+        assertNotNull(url.openStream());
+
+        url = new URL("classpath:///META-INF/services/java.lang.CharSequence");
+        assertNotNull(url.openStream());
+
+        url = new URL("classpath://META-INF/services/java.lang.CharSequence");
+        assertNotNull(url.openStream());
+
+        url = new URL("classpath:/META-INF/services/java.lang.CharSequence");
+        assertNotNull(url.openStream());
+
+        url = new URL("classpath:META-INF/services/java.lang.CharSequence");
+        assertNotNull(url.openStream());
+    }
+
+    @Test(expected = IOException.class)
+    public void testClassPathProtocolOnResourceNotFound() throws Throwable {
+        new io.github.microsphere.net.classpath.Handler();
+        URL url = new URL("classpath://META-INF/not-found.res");
+        url.openStream();
     }
 }

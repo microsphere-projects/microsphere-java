@@ -118,6 +118,32 @@ public abstract class ClassLoaderUtils {
         return classLoadingMXBean.getTotalLoadedClassCount();
     }
 
+
+    /**
+     * Return the ClassLoader to use.
+     *
+     * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
+     * @see Thread#getContextClassLoader()
+     * @see ClassLoader#getSystemClassLoader()
+     */
+    @Nullable
+    public static ClassLoader getClassLoader() {
+        ClassLoader cl = null;
+        try {
+            cl = Thread.currentThread().getContextClassLoader();
+        } catch (SecurityException ex) {
+            cl = ClassUtils.class.getClassLoader();
+        }
+        if (cl == null) {
+            // cl is null indicates the bootstrap ClassLoader
+            try {
+                cl = ClassLoader.getSystemClassLoader();
+            } catch (Throwable ex) {
+            }
+        }
+        return cl;
+    }
+
     /**
      * Find Loaded {@link Class} under specified inheritable {@link ClassLoader} and class names
      *
