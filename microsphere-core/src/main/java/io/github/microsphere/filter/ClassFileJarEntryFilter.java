@@ -3,8 +3,6 @@
  */
 package io.github.microsphere.filter;
 
-import io.github.microsphere.constants.FileConstants;
-
 import java.util.jar.JarEntry;
 
 import static io.github.microsphere.constants.FileConstants.CLASS_EXTENSION;

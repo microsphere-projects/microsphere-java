@@ -1,0 +1,11 @@
+# io.github.microsphere.convert.Converter
+io.github.microsphere.convert.StringToBooleanConverter
+io.github.microsphere.convert.StringToCharacterConverter
+io.github.microsphere.convert.StringToCharArrayConverter
+io.github.microsphere.convert.StringToDoubleConverter
+io.github.microsphere.convert.StringToFloatConverter
+io.github.microsphere.convert.StringToIntegerConverter
+io.github.microsphere.convert.StringToLongConverter
+io.github.microsphere.convert.StringToOptionalConverter
+io.github.microsphere.convert.StringToShortConverter
+io.github.microsphere.convert.StringToStringConverter

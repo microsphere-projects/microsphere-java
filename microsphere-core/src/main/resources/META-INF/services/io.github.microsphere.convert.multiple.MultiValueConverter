@@ -1,0 +1,12 @@
+# io.github.microsphere.convert.multiple.MultiValueConverter
+io.github.microsphere.convert.multiple.StringToArrayConverter
+io.github.microsphere.convert.multiple.StringToBlockingDequeConverter
+io.github.microsphere.convert.multiple.StringToBlockingQueueConverter
+io.github.microsphere.convert.multiple.StringToCollectionConverter
+io.github.microsphere.convert.multiple.StringToDequeConverter
+io.github.microsphere.convert.multiple.StringToListConverter
+io.github.microsphere.convert.multiple.StringToNavigableSetConverter
+io.github.microsphere.convert.multiple.StringToQueueConverter
+io.github.microsphere.convert.multiple.StringToSetConverter
+io.github.microsphere.convert.multiple.StringToSortedSetConverter
+io.github.microsphere.convert.multiple.StringToTransferQueueConverter
