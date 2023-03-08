@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Proxy;
 import java.net.URL;
 import java.util.Properties;
 
@@ -85,10 +86,10 @@ public class AbstractURLStreamHandlerTest {
         assertNotNull(url.openStream());
 
         url = new URL("classpath:/META-INF/services/java.lang.CharSequence");
-        assertNotNull(url.openStream());
+        assertNotNull(url.openConnection());
 
         url = new URL("classpath:META-INF/services/java.lang.CharSequence");
-        assertNotNull(url.openStream());
+        assertNotNull(url.openConnection(Proxy.NO_PROXY));
     }
 
     @Test(expected = IOException.class)
