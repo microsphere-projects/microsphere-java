@@ -356,7 +356,7 @@ public abstract class URLUtils {
             return null;
         }
 
-        // 2 = length(SEMICOLON_CHAR) + length(EQUAL)
+        // 2 = length(SEMICOLON_CHAR) + length(EQUAL_CHAR)
         int capacity = 2 * len + name.length();
 
         for (int i = 0; i < len; i++) {
