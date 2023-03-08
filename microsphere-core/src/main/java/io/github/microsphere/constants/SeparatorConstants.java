@@ -4,6 +4,11 @@
 package io.github.microsphere.constants;
 
 
+import java.io.File;
+
+import static io.github.microsphere.constants.PathConstants.SLASH;
+import static io.github.microsphere.constants.SymbolConstants.EXCLAMATION;
+
 /**
  * Separator Constants
  * <p/>
@@ -15,18 +20,23 @@ package io.github.microsphere.constants;
 public interface SeparatorConstants {
 
     /**
-     * Exclamation : "!"
-     */
-    String EXCLAMATION = "!";
-
-    /**
      * Archive Entity Separator : "!/"
      */
-    String ARCHIVE_ENTITY = EXCLAMATION + PathConstants.SLASH;
+    String ARCHIVE_ENTITY_SEPARATOR = EXCLAMATION + SLASH;
 
     /**
-     * Query String Separator : "?"
+     * File Separator : {@link File#separator}
      */
-    String QUERY_STRING = "?";
+    String FILE_SEPARATOR = File.separator;
+
+    /**
+     * Path Separator : {@link File#pathSeparator}
+     */
+    String PATH_SEPARATOR = File.pathSeparator;
+
+    /**
+     * Line Separator : {@link System#lineSeparator()}
+     */
+    String LINE_SEPARATOR = System.lineSeparator();
 
 }

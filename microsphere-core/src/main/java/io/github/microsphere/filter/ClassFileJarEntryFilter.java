@@ -3,9 +3,11 @@
  */
 package io.github.microsphere.filter;
 
-import io.github.microsphere.constants.FileSuffixConstants;
+import io.github.microsphere.constants.FileConstants;
 
 import java.util.jar.JarEntry;
+
+import static io.github.microsphere.constants.FileConstants.CLASS_EXTENSION;
 
 /**
  * Class File {@link JarEntryFilter}
@@ -28,6 +30,6 @@ public class ClassFileJarEntryFilter implements JarEntryFilter {
 
     @Override
     public boolean accept(JarEntry jarEntry) {
-        return !jarEntry.isDirectory() && jarEntry.getName().endsWith(FileSuffixConstants.CLASS);
+        return !jarEntry.isDirectory() && jarEntry.getName().endsWith(CLASS_EXTENSION);
     }
 }

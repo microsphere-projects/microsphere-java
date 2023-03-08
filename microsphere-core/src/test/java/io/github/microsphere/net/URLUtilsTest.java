@@ -3,7 +3,7 @@
  */
 package io.github.microsphere.net;
 
-import io.github.microsphere.constants.FileSuffixConstants;
+import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.util.ClassLoaderUtils;
 import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
@@ -92,7 +92,7 @@ public class URLUtilsTest {
     public void testResolveArchiveFile() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        File archiveFile = URLUtils.resolveArchiveFile(resourceURL, FileSuffixConstants.JAR);
+        File archiveFile = URLUtils.resolveArchiveFile(resourceURL, FileConstants.JAR_EXTENSION);
         Assert.assertTrue(archiveFile.exists());
     }
 

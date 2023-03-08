@@ -3,7 +3,6 @@
  */
 package io.github.microsphere.net;
 
-import io.github.microsphere.constants.Constants;
 import io.github.microsphere.constants.PathConstants;
 import io.github.microsphere.constants.ProtocolConstants;
 import io.github.microsphere.constants.SeparatorConstants;
@@ -24,6 +23,11 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.github.microsphere.constants.Constants.EQUAL;
+import static io.github.microsphere.constants.Constants.SEMICOLON;
+import static io.github.microsphere.constants.SymbolConstants.AND;
+import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
+
 /**
  * {@link URL} Utility class
  *
@@ -36,28 +40,25 @@ import java.util.jar.JarFile;
  */
 public abstract class URLUtils {
 
-
     /**
-     *
+     * The default encoding : "UTF-8"
      */
     private static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * Resolve Relative path from Archive File URL
      *
-     * @param archiveFileURL
-     *         Archive File URL
+     * @param archiveFileURL Archive File URL
      * @return Relative path in archive
-     * @throws NullPointerException
-     *         <code>archiveFileURL</code> is <code>null</code>
+     * @throws NullPointerException <code>archiveFileURL</code> is <code>null</code>
      * @version 1.0.0
      * @since 1.0.0
      */
     public static String resolveRelativePath(URL archiveFileURL) throws NullPointerException {
         // NPE check
         String path = archiveFileURL.getPath();
-        if (path.contains(SeparatorConstants.ARCHIVE_ENTITY)) {
-            String relativePath = StringUtils.substringAfterLast(path, SeparatorConstants.ARCHIVE_ENTITY);
+        if (path.contains(SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR)) {
+            String relativePath = StringUtils.substringAfterLast(path, SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR);
             return decode(relativePath);
         }
         return null;
@@ -66,18 +67,16 @@ public abstract class URLUtils {
     /**
      * Resolve archive file
      *
-     * @param archiveFileURL
-     *         archive file  URL
-     * @param archiveFileExtensionName
-     *         archive file extension name
+     * @param archiveFileURL           archive file  URL
+     * @param archiveFileExtensionName archive file extension name
      * @return Resolve archive file If exists
      * @throws NullPointerException
      */
     public static File resolveArchiveFile(URL archiveFileURL, String archiveFileExtensionName) throws NullPointerException {
         String archiveFilePath = archiveFileURL.getPath();
         String prefix = ":/";
-        boolean hasJarEntryPath = archiveFilePath.contains(SeparatorConstants.ARCHIVE_ENTITY);
-        String suffix = hasJarEntryPath ? SeparatorConstants.ARCHIVE_ENTITY : archiveFileExtensionName;
+        boolean hasJarEntryPath = archiveFilePath.contains(SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR);
+        String suffix = hasJarEntryPath ? SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR : archiveFileExtensionName;
         String jarPath = StringUtils.substringBetween(archiveFilePath, prefix, suffix);
         File archiveFile = null;
         if (StringUtils.isNotBlank(jarPath)) {
@@ -92,19 +91,18 @@ public abstract class URLUtils {
     /**
      * Resolve parameters {@link Map} from specified URL，The parameter name as key ，parameter value list as key
      *
-     * @param url
-     *         URL
+     * @param url URL
      * @return Non-null and Read-only {@link Map} , the order of parameters is determined by query string
      */
     @Nonnull
     public static Map<String, List<String>> resolveParametersMap(String url) {
-        String queryString = StringUtils.substringAfterLast(url, SeparatorConstants.QUERY_STRING);
+        String queryString = StringUtils.substringAfterLast(url, QUERY_STRING);
         if (StringUtils.isNotBlank(queryString)) {
             Map<String, List<String>> parametersMap = new LinkedHashMap();
-            String[] queryParams = StringUtils.split(queryString, Constants.AND);
+            String[] queryParams = StringUtils.split(queryString, AND);
             if (queryParams != null) {
                 for (String queryParam : queryParams) {
-                    String[] paramNameAndValue = StringUtils.split(queryParam, Constants.EQUAL);
+                    String[] paramNameAndValue = StringUtils.split(queryParam, EQUAL);
                     if (paramNameAndValue.length > 0) {
                         String paramName = paramNameAndValue[0];
                         String paramValue = paramNameAndValue.length > 1 ? paramNameAndValue[1] : StringUtils.EMPTY;
@@ -129,8 +127,7 @@ public abstract class URLUtils {
      * <code> resolvePath("C:\\Windows\\\\temp") == "C:/Windows/temp"; resolvePath("C:\\\\\Windows\\/temp") ==
      * "C:/Windows/temp"; resolvePath("/home/////index.html") == "/home/index.html"; </code>
      *
-     * @param path
-     *         Path
+     * @param path Path
      * @return a newly resolved path
      * @version 1.0.0
      * @since 1.0.0
@@ -161,13 +158,10 @@ public abstract class URLUtils {
      * Wide Web Consortium Recommendation</a> states that UTF-8 should be used. Not doing so may introduce
      * incompatibilites.</em>
      *
-     * @param value
-     *         <code>String</code> to be translated.
-     * @param encoding
-     *         The name of a supported character encoding</a>.
+     * @param value    <code>String</code> to be translated.
+     * @param encoding The name of a supported character encoding</a>.
      * @return the translated <code>String</code>.
-     * @throws IllegalArgumentException
-     *         If the named encoding is not supported
+     * @throws IllegalArgumentException If the named encoding is not supported
      * @see URLDecoder#decode(String, String)
      * @since 1.4
      */
@@ -184,8 +178,7 @@ public abstract class URLUtils {
     /**
      * {@link #encode(String, String)} with "UTF-8" encoding
      *
-     * @param value
-     *         the <code>String</code> to decode
+     * @param value the <code>String</code> to decode
      * @return the newly encoded <code>String</code>
      */
     public static String encode(String value) {
@@ -195,8 +188,7 @@ public abstract class URLUtils {
     /**
      * {@link #decode(String, String)} with "UTF-8" encoding
      *
-     * @param value
-     *         the <code>String</code> to decode
+     * @param value the <code>String</code> to decode
      * @return the newly decoded <code>String</code>
      */
     public static String decode(String value) {
@@ -212,13 +204,10 @@ public abstract class URLUtils {
      * Wide Web Consortium Recommendation</a> states that UTF-8 should be used. Not doing so may introduce
      * incompatibilites.</em>
      *
-     * @param value
-     *         the <code>String</code> to decode
-     * @param encoding
-     *         The name of a supported encoding
+     * @param value    the <code>String</code> to decode
+     * @param encoding The name of a supported encoding
      * @return the newly decoded <code>String</code>
-     * @throws IllegalArgumentException
-     *         If character encoding needs to be consulted, but named character encoding is not supported
+     * @throws IllegalArgumentException If character encoding needs to be consulted, but named character encoding is not supported
      */
     public static String decode(String value, String encoding) throws IllegalArgumentException {
         String decodedValue = null;
@@ -233,8 +222,7 @@ public abstract class URLUtils {
     /**
      * Is directory URL?
      *
-     * @param url
-     *         URL
+     * @param url URL
      * @return if directory , return <code>true</code>
      */
     public static boolean isDirectoryURL(URL url) {
@@ -242,7 +230,7 @@ public abstract class URLUtils {
         if (url != null) {
             String protocol = url.getProtocol();
             try {
-                if (ProtocolConstants.JAR.equals(protocol)) {
+                if (ProtocolConstants.JAR_PROTOCOL.equals(protocol)) {
                     JarFile jarFile = JarUtils.toJarFile(url); // Test whether valid jar or not
                     final String relativePath = JarUtils.resolveRelativePath(url);
                     if (StringUtils.EMPTY.equals(relativePath)) { // root directory in jar
@@ -251,7 +239,7 @@ public abstract class URLUtils {
                         JarEntry jarEntry = jarFile.getJarEntry(relativePath);
                         isDirectory = jarEntry != null && jarEntry.isDirectory();
                     }
-                } else if (ProtocolConstants.FILE.equals(protocol)) {
+                } else if (ProtocolConstants.FILE_PROTOCOL.equals(protocol)) {
                     File classPathFile = new File(url.toURI());
                     isDirectory = classPathFile.isDirectory();
                 }
@@ -265,21 +253,20 @@ public abstract class URLUtils {
     /**
      * Is Jar URL?
      *
-     * @param url
-     *         URL
+     * @param url URL
      * @return If jar , return <code>true</code>
      */
     public static boolean isJarURL(URL url) {
         String protocol = url.getProtocol();
         boolean flag = false;
-        if (ProtocolConstants.FILE.equals(protocol)) {
+        if (ProtocolConstants.FILE_PROTOCOL.equals(protocol)) {
             try {
                 File file = new File(url.toURI());
                 JarFile jarFile = new JarFile(file);
                 flag = jarFile != null;
             } catch (Exception e) {
             }
-        } else if (ProtocolConstants.JAR.equals(protocol)) {
+        } else if (ProtocolConstants.JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
         return flag;
@@ -288,8 +275,7 @@ public abstract class URLUtils {
     /**
      * Build multiple paths to URI
      *
-     * @param paths
-     *         multiple paths
+     * @param paths multiple paths
      * @return URI
      */
     public static String buildURI(String... paths) {
@@ -308,6 +294,17 @@ public abstract class URLUtils {
         }
 
         return resolvePath(uriBuilder.toString());
+    }
+
+    /**
+     * Build the Matrix String
+     *
+     * @param matrixParameterName  the name of matrix parameter
+     * @param matrixParameterValue the value of matrix parameter
+     * @return the Matrix String
+     */
+    public static String buildMatrixString(String matrixParameterName, String matrixParameterValue) {
+        return SEMICOLON + matrixParameterName + EQUAL + matrixParameterValue;
     }
 
 }

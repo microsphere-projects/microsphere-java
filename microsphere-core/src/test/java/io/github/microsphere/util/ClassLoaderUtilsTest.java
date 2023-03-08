@@ -4,7 +4,6 @@
 package io.github.microsphere.util;
 
 import io.github.microsphere.AbstractTestCase;
-import io.github.microsphere.constants.FileSuffixConstants;
 import junit.framework.Assert;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -23,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static io.github.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -98,7 +98,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetResource() {
-        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtilsTest.class.getName() + FileSuffixConstants.CLASS);
+        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         Assert.assertNotNull(resourceURL);
         echo(resourceURL);
 
@@ -113,7 +113,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetResources() throws IOException {
-        Set<URL> resourceURLs = ClassLoaderUtils.getResources(classLoader, ClassLoaderUtilsTest.class.getName() + FileSuffixConstants.CLASS);
+        Set<URL> resourceURLs = ClassLoaderUtils.getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         Assert.assertNotNull(resourceURLs);
         Assert.assertEquals(1, resourceURLs.size());
         echo(resourceURLs);

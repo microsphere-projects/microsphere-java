@@ -4,7 +4,7 @@
 package io.github.microsphere.util;
 
 import io.github.microsphere.constants.Constants;
-import io.github.microsphere.constants.FileSuffixConstants;
+import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.constants.PathConstants;
 import io.github.microsphere.filter.ClassFileJarEntryFilter;
 import io.github.microsphere.io.FileUtils;
@@ -177,7 +177,7 @@ public abstract class ClassUtils {
         File classesFileHolder = new File(classPath); // JarFile or Directory
         if (classesFileHolder.isDirectory()) { //Directory
             return findClassNamesInDirectory(classesFileHolder, recursive);
-        } else if (classesFileHolder.isFile() && classPath.endsWith(FileSuffixConstants.JAR)) { //JarFile
+        } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
             return findClassNamesInJarFile(classesFileHolder, recursive);
         }
         return Collections.emptySet();
@@ -248,7 +248,7 @@ public abstract class ClassUtils {
     protected static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
         Set<String> classNames = new LinkedHashSet();
         SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(FileSuffixConstants.CLASS));
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(FileConstants.CLASS_EXTENSION));
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
@@ -297,7 +297,7 @@ public abstract class ClassUtils {
      */
     public static String resolveClassName(String resourceName) {
         String className = StringUtils.replace(resourceName, PathConstants.SLASH, Constants.DOT);
-        className = StringUtils.substringBefore(className, FileSuffixConstants.CLASS);
+        className = StringUtils.substringBefore(className, FileConstants.CLASS_EXTENSION);
         while (StringUtils.startsWith(className, Constants.DOT)) {
             className = StringUtils.substringAfter(className, Constants.DOT);
         }

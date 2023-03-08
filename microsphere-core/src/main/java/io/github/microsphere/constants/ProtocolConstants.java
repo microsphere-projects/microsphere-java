@@ -16,27 +16,47 @@ public interface ProtocolConstants {
     /**
      * File protocol
      */
-    String FILE = "file";
+    String FILE_PROTOCOL = "file";
+
+    /**
+     * HTTP protocol
+     */
+    String HTTP_PROTOCOL = "http";
+
+    /**
+     * HTTPS protocol
+     */
+    String HTTPS_PROTOCOL = "https";
+
+    /**
+     * FTP protocol
+     */
+    String FTP_PROTOCOL = "ftp";
 
     /**
      * Zip protocol
      */
-    String ZIP = "zip";
+    String ZIP_PROTOCOL = FileConstants.ZIP;
 
     /**
      * Jar protocol
      */
-    String JAR = "jar";
+    String JAR_PROTOCOL = FileConstants.JAR;
 
     /**
      * War protocol
      */
-    String WAR = "war";
+    String WAR_PROTOCOL = FileConstants.WAR;
 
     /**
      * Ear protocol
      */
-    String EAR = "ear";
+    String EAR_PROTOCOL = FileConstants.EAR;
 
+
+    /**
+     * Class-Path Protocol
+     */
+    String CLASSPATH_PROTOCOL = "classpath";
 
 }

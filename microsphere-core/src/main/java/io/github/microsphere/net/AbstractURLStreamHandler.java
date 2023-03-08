@@ -235,6 +235,8 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
         String matrix = SEMICOLON + SCHEME_EXTENSION_TYPE_MATRIX_NAME + EQUAL + spec.substring(start, end);
         String suffix = spec.substring(end, limit);
 
+        // int queryIndex = spec.inde
+
         int length = protocol.length() + matrix.length() + suffix.length();
 
         StringBuilder newSpecBuilder = new StringBuilder(length);

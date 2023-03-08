@@ -4,7 +4,7 @@
 package io.github.microsphere.util;
 
 import io.github.microsphere.constants.Constants;
-import io.github.microsphere.constants.FileSuffixConstants;
+import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.constants.PathConstants;
 import io.github.microsphere.net.URLUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -289,7 +289,7 @@ public abstract class ClassLoaderUtils {
      * @since 1.0.0
      */
     public static URL getClassResource(ClassLoader classLoader, String className) {
-        final String resourceName = className + FileSuffixConstants.CLASS;
+        final String resourceName = className + FileConstants.CLASS_EXTENSION;
         return getResource(classLoader, ResourceType.CLASS, resourceName);
     }
 
@@ -480,13 +480,13 @@ public abstract class ClassLoaderUtils {
         }, CLASS {
             @Override
             boolean supported(String name) {
-                return StringUtils.endsWith(name, FileSuffixConstants.CLASS);
+                return StringUtils.endsWith(name, FileConstants.CLASS_EXTENSION);
             }
 
             @Override
             public String normalize(String name) {
-                String className = StringUtils.replace(name, FileSuffixConstants.CLASS, StringUtils.EMPTY);
-                return StringUtils.replace(className, Constants.DOT, PathConstants.SLASH) + FileSuffixConstants.CLASS;
+                String className = StringUtils.replace(name, FileConstants.CLASS_EXTENSION, StringUtils.EMPTY);
+                return StringUtils.replace(className, Constants.DOT, PathConstants.SLASH) + FileConstants.CLASS_EXTENSION;
             }
 
 
