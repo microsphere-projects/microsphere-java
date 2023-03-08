@@ -22,7 +22,6 @@ import java.util.Objects;
 
 import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
-import static io.github.microsphere.constants.SymbolConstants.SEMICOLON;
 import static io.github.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -216,8 +215,7 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
 
         newSpecBuilder.append(protocol).append(suffix);
 
-        int matrixIndex = newSpecBuilder.indexOf(SEMICOLON, end);
-        int insertIndex = matrixIndex > end ? matrixIndex : newSpecBuilder.indexOf(QUERY_STRING, end);
+        int insertIndex = newSpecBuilder.indexOf(QUERY_STRING, end);
 
         if (insertIndex > end) {
             newSpecBuilder.insert(insertIndex, matrix);

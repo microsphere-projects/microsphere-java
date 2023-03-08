@@ -4,7 +4,6 @@
 package io.github.microsphere.net;
 
 import io.github.microsphere.util.jar.JarUtils;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -16,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -26,13 +26,17 @@ import static io.github.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.github.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.github.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
 import static io.github.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.COLON;
 import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static java.lang.reflect.Array.getLength;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static org.apache.commons.lang3.StringUtils.length;
 import static org.apache.commons.lang3.StringUtils.split;
@@ -138,34 +142,6 @@ public abstract class URLUtils {
         String matrixString = url.substring(startIndex, endIndex);
 
         return resolveParameters(matrixString, SEMICOLON_CHAR);
-    }
-
-    protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
-        String[] params = split(paramsString, separatorChar);
-        int paramsLen = params == null ? 0 : params.length;
-        if (paramsLen == 0) {
-            return emptyMap();
-        }
-
-        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, Float.MIN_NORMAL);
-
-        for (int i = 0; i < paramsLen; i++) {
-            String param = params[i];
-            String[] nameAndValue = split(param, EQUAL_CHAR);
-            int len = nameAndValue.length;
-            if (len > 0) {
-                String name = nameAndValue[0];
-                String value = len > 1 ? nameAndValue[1] : StringUtils.EMPTY;
-                List<String> paramValueList = parametersMap.get(name);
-                if (paramValueList == null) {
-                    paramValueList = new LinkedList();
-                    parametersMap.put(name, paramValueList);
-                }
-                paramValueList.add(value);
-            }
-        }
-
-        return unmodifiableMap(parametersMap);
     }
 
     /**
@@ -326,7 +302,7 @@ public abstract class URLUtils {
      * @return URI
      */
     public static String buildURI(String... paths) {
-        int length = ArrayUtils.getLength(paths);
+        int length = getLength(paths);
         if (length < 1) {
             return SLASH;
         }
@@ -351,26 +327,7 @@ public abstract class URLUtils {
      * @return the Matrix String
      */
     public static String buildMatrixString(String name, String... values) {
-        int len = values.length;
-        if (len == 0) {
-            return null;
-        }
-
-        // 2 = length(SEMICOLON_CHAR) + length(EQUAL_CHAR)
-        int capacity = 2 * len + name.length();
-
-        for (int i = 0; i < len; i++) {
-            capacity += length(values[i]);
-        }
-
-        StringBuilder matrixStringBuilder = new StringBuilder(capacity);
-
-        for (int i = 0; i < len; i++) {
-            // ;{name}={value}
-            matrixStringBuilder.append(SEMICOLON_CHAR).append(name).append(EQUAL_CHAR).append(values[i]);
-        }
-
-        return matrixStringBuilder.toString();
+        return buildString(name, values, SEMICOLON_CHAR, EQUAL_CHAR);
     }
 
     /**
@@ -409,15 +366,19 @@ public abstract class URLUtils {
         boolean hasQuery = queryLen > 0;
         boolean hasRef = refLen > 0;
 
-        int len = protocol.length() + 1;
+        int len = 1;
 
         if (hasAuthority) {
             len += 2 + authority.length();
         }
 
         if (hasPath) {
-            len += pathLen;
+            protocol = reformProtocol(protocol, path);
+            path = reformPath(path);
         }
+
+        len += length(path);
+        len += length(protocol);
 
         if (hasQuery) {
             len += 1 + queryLen;
@@ -451,5 +412,94 @@ public abstract class URLUtils {
         }
 
         return result.toString();
+    }
+
+    public static String getSubProtocol(String url) {
+        Map<String, List<String>> parameters = resolveMatrixParameters(url);
+        return getFirst(parameters, SUB_PROTOCOL_MATRIX_NAME);
+    }
+
+    public static List<String> getSubProtocols(String url) {
+        Map<String, List<String>> parameters = resolveMatrixParameters(url);
+        List<String> values = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
+        return values == null ? emptyList() : unmodifiableList(values);
+    }
+
+    protected static String reformPath(String path) {
+        int lastIndex = path.lastIndexOf(SEMICOLON_CHAR);
+        return lastIndex > -1 ? path.substring(0, lastIndex) : path;
+    }
+
+    protected static String reformProtocol(String protocol, String path) {
+        List<String> subProtocols = getSubProtocols(path);
+        int size = subProtocols.size();
+        if (size < 1) { // the matrix of sub-protocols was not found
+            return protocol;
+        }
+
+        StringJoiner protocolJoiner = new StringJoiner(COLON);
+        protocolJoiner.add(protocol);
+        for (int i = 0; i < size; i++) {
+            protocolJoiner.add(subProtocols.get(i));
+        }
+
+        return protocolJoiner.toString();
+    }
+
+    protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
+        String[] params = split(paramsString, separatorChar);
+        int paramsLen = params == null ? 0 : params.length;
+        if (paramsLen == 0) {
+            return emptyMap();
+        }
+
+        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, Float.MIN_NORMAL);
+
+        for (int i = 0; i < paramsLen; i++) {
+            String param = params[i];
+            String[] nameAndValue = split(param, EQUAL_CHAR);
+            int len = nameAndValue.length;
+            if (len > 0) {
+                String name = nameAndValue[0];
+                String value = len > 1 ? nameAndValue[1] : StringUtils.EMPTY;
+                List<String> paramValueList = parametersMap.get(name);
+                if (paramValueList == null) {
+                    paramValueList = new LinkedList();
+                    parametersMap.put(name, paramValueList);
+                }
+                paramValueList.add(value);
+            }
+        }
+
+        return unmodifiableMap(parametersMap);
+    }
+
+    protected static String buildString(String name, String[] values, char separator, char joiner) {
+        int len = getLength(values);
+
+        if (len == 0) {
+            return null;
+        }
+
+        // 2 = length(separator) + length(joiner)
+        int capacity = 2 * len + name.length();
+
+        for (int i = 0; i < len; i++) {
+            capacity += length(values[i]);
+        }
+
+        StringBuilder stringBuilder = new StringBuilder(capacity);
+
+        for (int i = 0; i < len; i++) {
+            // ;{name}={value}
+            stringBuilder.append(separator).append(name).append(joiner).append(values[i]);
+        }
+
+        return stringBuilder.toString();
+    }
+
+    protected static String getFirst(Map<String, List<String>> parameters, String name) {
+        List<String> values = parameters.get(name);
+        return values == null || values.isEmpty() ? null : values.get(0);
     }
 }

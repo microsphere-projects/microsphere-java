@@ -37,24 +37,29 @@ public class AbstractURLStreamHandlerTest {
         Handler handler = new Handler();
         assertEquals("io.github.microsphere.net.handler", AbstractURLStreamHandler.getHandlePackages());
 
-        URL url = new URL("console:text://localhost:12345/abc?n=1;ref=top#hash");
+        String spec = "console:text://localhost:12345/abc;ref=top?n=1#hash";
+        URL url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc?n=1;_sp=text;ref=top#hash", url.toString());
+        assertEquals(spec, url.toString());
 
-        url = new URL("console:text://localhost:12345/abc?n=1;ref=top");
+        spec = "console:text://localhost:12345/abc;ref=top?n=1";
+        url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc?n=1;_sp=text;ref=top", url.toString());
+        assertEquals(spec, url.toString());
 
-        url = new URL("console:text://localhost:12345/abc?n=1");
+        spec = "console:text://localhost:12345/abc?n=1";
+        url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc;_sp=text?n=1", url.toString());
+        assertEquals(spec, url.toString());
 
-        url = new URL("console:text://localhost:12345/abc");
+        spec = "console:text://localhost:12345/abc";
+        url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc;_sp=text", url.toString());
+        assertEquals(spec, url.toString());
 
-        url = new URL("console://localhost:12345/abc");
+        spec = "console://localhost:12345/abc";
+        url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals("console://localhost:12345/abc", url.toString());
+        assertEquals(spec, url.toString());
     }
 }
