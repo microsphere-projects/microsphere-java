@@ -14,24 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net.handler.console;
+package io.github.microsphere.net.console;
 
-import io.github.microsphere.net.AbstractURLStreamHandler;
-
+import java.io.Console;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * "console" protocol Handler
+ * {@link Console} {@link URLConnection}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class Handler extends AbstractURLStreamHandler {
+class ConsoleURLConnection extends URLConnection {
+
+    /**
+     * Constructs a URL connection to the specified URL. A connection to
+     * the object referenced by the URL is not created.
+     *
+     * @param url the specified URL.
+     */
+    protected ConsoleURLConnection(URL url) {
+        super(url);
+    }
 
     @Override
-    public URLConnection openConnection(URL u) throws IOException {
-        return new ConsoleURLConnection(u);
+    public void connect() throws IOException {
+    }
+
+    @Override
+    public InputStream getInputStream() throws IOException {
+        return System.in;
+    }
+
+    @Override
+    public OutputStream getOutputStream() throws IOException {
+        return System.out;
     }
 }

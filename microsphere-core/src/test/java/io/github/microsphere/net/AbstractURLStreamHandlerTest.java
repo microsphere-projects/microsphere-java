@@ -16,7 +16,7 @@
  */
 package io.github.microsphere.net;
 
-import io.github.microsphere.net.handler.console.Handler;
+import io.github.microsphere.net.console.Handler;
 import org.junit.Test;
 
 import java.io.IOException;
