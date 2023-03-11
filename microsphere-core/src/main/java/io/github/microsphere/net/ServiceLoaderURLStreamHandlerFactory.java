@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.ServiceLoader.load;
 
@@ -50,21 +49,15 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
     private final Map<String, AbstractURLStreamHandler> handlers;
 
     public ServiceLoaderURLStreamHandlerFactory() {
-        super(loadDelegate());
+        super(createDelegate());
         ClassLoader classLoader = getClass().getClassLoader();
         this.handlers = loadHandlers(classLoader);
     }
 
-    private static URLStreamHandlerFactory loadDelegate() {
+    private static URLStreamHandlerFactory createDelegate() {
         ClassLoader classLoader = ClassLoaderUtils.getClassLoader();
         Iterable<URLStreamHandlerFactory> factories = load(URLStreamHandlerFactory.class, classLoader);
         return new CompositeURLStreamHandlerFactory(factories);
-    }
-
-    private List<URLStreamHandlerFactory> loadFactories(ClassLoader classLoader) {
-        List<URLStreamHandlerFactory> factories = CollectionUtils.toList(load(URLStreamHandlerFactory.class, classLoader));
-        Collections.sort(factories, Prioritized.COMPARATOR);
-        return unmodifiableList(factories);
     }
 
     private Map<String, AbstractURLStreamHandler> loadHandlers(ClassLoader classLoader) {
