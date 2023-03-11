@@ -1,0 +1,107 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.microsphere.net;
+
+import io.github.microsphere.lang.Prioritized;
+import io.github.microsphere.util.CollectionUtils;
+
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+/**
+ * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}
+ * {@link #getComparator() in order}.
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @since 1.0.0
+ */
+public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory {
+
+    private final List<URLStreamHandlerFactory> factories;
+
+    public CompositeURLStreamHandlerFactory() {
+        this(Collections.emptyList());
+    }
+
+    public CompositeURLStreamHandlerFactory(Collection<URLStreamHandlerFactory> factories) {
+        this((Iterable<URLStreamHandlerFactory>) factories);
+    }
+
+    public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
+        this.factories = CollectionUtils.toList(factories);
+        sortFactories();
+    }
+
+    @Override
+    public URLStreamHandler createURLStreamHandler(String protocol) {
+        URLStreamHandler handler = null;
+        for (int i = 0; i < factories.size(); i++) {
+            URLStreamHandlerFactory factory = factories.get(i);
+            handler = factory.createURLStreamHandler(protocol);
+            if (handler != null) {
+                break;
+            }
+        }
+        return handler;
+    }
+
+    /**
+     * Add {@link URLStreamHandlerFactory}
+     *
+     * @param factory {@link URLStreamHandlerFactory}
+     * @return
+     */
+    public CompositeURLStreamHandlerFactory addURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
+        this.factories.add(factory);
+        sortFactories();
+        return this;
+    }
+
+    /**
+     * Get the {@link URLStreamHandlerFactory} delegates;
+     *
+     * @return non-null
+     */
+    protected List<URLStreamHandlerFactory> getFactories() {
+        return this.factories;
+    }
+
+    /**
+     * The {@link Comparator} to sort {@link URLStreamHandlerFactory URLStreamHandlerFactories}
+     *
+     * @return {@link Prioritized#COMPARATOR} as default
+     */
+    protected Comparator<? super URLStreamHandlerFactory> getComparator() {
+        return Prioritized.COMPARATOR;
+    }
+
+    private void sortFactories() {
+        Collections.sort(this.factories, getComparator());
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("CompositeURLStreamHandlerFactory{");
+        sb.append("factories=").append(factories);
+        sb.append('}');
+        return sb.toString();
+    }
+}

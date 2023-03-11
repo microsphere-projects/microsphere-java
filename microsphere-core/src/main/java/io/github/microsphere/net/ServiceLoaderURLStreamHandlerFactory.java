@@ -17,6 +17,7 @@
 package io.github.microsphere.net;
 
 import io.github.microsphere.lang.Prioritized;
+import io.github.microsphere.util.ClassLoaderUtils;
 import io.github.microsphere.util.CollectionUtils;
 
 import java.net.URLStreamHandler;
@@ -44,16 +45,20 @@ import static java.util.ServiceLoader.load;
  * @see Prioritized
  * @since 1.0.0
  */
-public class ServiceLoaderURLStreamHandlerFactory implements URLStreamHandlerFactory {
-
-    private final List<URLStreamHandlerFactory> factories;
+public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHandlerFactory {
 
     private final Map<String, AbstractURLStreamHandler> handlers;
 
     public ServiceLoaderURLStreamHandlerFactory() {
+        super(loadDelegate());
         ClassLoader classLoader = getClass().getClassLoader();
-        this.factories = loadFactories(classLoader);
         this.handlers = loadHandlers(classLoader);
+    }
+
+    private static URLStreamHandlerFactory loadDelegate() {
+        ClassLoader classLoader = ClassLoaderUtils.getClassLoader();
+        Iterable<URLStreamHandlerFactory> factories = load(URLStreamHandlerFactory.class, classLoader);
+        return new CompositeURLStreamHandlerFactory(factories);
     }
 
     private List<URLStreamHandlerFactory> loadFactories(ClassLoader classLoader) {
@@ -82,27 +87,7 @@ public class ServiceLoaderURLStreamHandlerFactory implements URLStreamHandlerFac
     }
 
     @Override
-    public URLStreamHandler createURLStreamHandler(String protocol) {
-        URLStreamHandler handler = createURLStreamHandlerFromFactories(protocol);
-        if (handler == null) {
-            handler = findURLStreamHandler(protocol);
-        }
-        return handler;
-    }
-
-    private URLStreamHandler createURLStreamHandlerFromFactories(String protocol) {
-        URLStreamHandler handler = null;
-        for (int i = 0; i < factories.size(); i++) {
-            URLStreamHandlerFactory factory = factories.get(i);
-            handler = factory.createURLStreamHandler(protocol);
-            if (handler != null) {
-                break;
-            }
-        }
-        return handler;
-    }
-
-    private URLStreamHandler findURLStreamHandler(String protocol) {
+    protected URLStreamHandler findURLStreamHandler(String protocol) {
         return handlers.get(protocol);
     }
 }
