@@ -51,8 +51,9 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     @Override
-    public URLStreamHandler createURLStreamHandler(String protocol) {
+    public final URLStreamHandler createURLStreamHandler(String protocol) {
         URLStreamHandler handler = null;
+        List<URLStreamHandlerFactory> factories = getFactories();
         for (int i = 0; i < factories.size(); i++) {
             URLStreamHandlerFactory factory = factories.get(i);
             handler = factory.createURLStreamHandler(protocol);
