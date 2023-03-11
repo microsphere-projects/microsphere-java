@@ -1,0 +1,56 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.github.microsphere.net;
+
+import org.junit.Test;
+
+import java.net.URLStreamHandler;
+
+import static org.junit.Assert.assertEquals;
+
+/**
+ * {@link ServiceLoaderURLStreamHandlerFactory} Test
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @since 1.0.0
+ */
+public class ServiceLoaderURLStreamHandlerFactoryTest {
+
+    @Test
+    public void test() {
+        ServiceLoaderURLStreamHandlerFactory factory = new ServiceLoaderURLStreamHandlerFactory();
+        URLStreamHandler handler = factory.createURLStreamHandler("file");
+        assertEquals("sun.net.www.protocol.file.Handler", handler.getClass().getName());
+
+        handler = factory.createURLStreamHandler("jar");
+        assertEquals("sun.net.www.protocol.jar.Handler", handler.getClass().getName());
+
+        handler = factory.createURLStreamHandler("http");
+        assertEquals("sun.net.www.protocol.http.Handler", handler.getClass().getName());
+
+        handler = factory.createURLStreamHandler("https");
+        assertEquals("sun.net.www.protocol.https.Handler", handler.getClass().getName());
+
+        handler = factory.createURLStreamHandler("classpath");
+        assertEquals("io.github.microsphere.net.classpath.Handler", handler.getClass().getName());
+
+        handler = factory.createURLStreamHandler("console");
+        assertEquals("io.github.microsphere.net.console.Handler", handler.getClass().getName());
+
+
+    }
+}

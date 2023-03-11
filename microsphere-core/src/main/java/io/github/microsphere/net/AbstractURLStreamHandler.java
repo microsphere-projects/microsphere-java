@@ -19,11 +19,15 @@ package io.github.microsphere.net;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.util.Objects;
+import java.util.Set;
 
 import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.github.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
+import static io.github.microsphere.util.CollectionUtils.ofSet;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.split;
 
 /**
@@ -36,11 +40,11 @@ import static org.apache.commons.lang3.StringUtils.split;
  *     <li>{@link #toExternalForm(URL)}</li>
  * </ul>
  * <p>
- * The implementation class must the obey conventions as follow:
+ * If an instance is instantiated by the default constructor, the implementation class must the obey conventions as follow:
  * <ul>
  *     <li>The class must be the top level</li>
  *     <li>The simple class name must be "Handler"</li>
- *     <li>The class must not be present in the builtin package : {@link #DEFAULT_HANDLER_PACKAGE_NAME "sun.net.www.protocol"}</li>
+ *     <li>The class must not be present in the "default" or builtin package({@link #DEFAULT_HANDLER_PACKAGE_NAME "sun.net.www.protocol"})</li>
  * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
@@ -71,19 +75,39 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
     public static final String DEFAULT_HANDLER_PACKAGE_NAME = "sun.net.www.protocol";
 
     /**
-     * The separator of Handler packages.
+     * The separator character of Handler packages.
      */
-    public static final String HANDLER_PACKAGES_SEPARATOR = "|";
+    public static final char HANDLER_PACKAGES_SEPARATOR_CHAR = '|';
 
     /**
      * The convention class name.
      */
     public static final String CONVENTION_CLASS_NAME = "Handler";
 
+    private final String protocol;
+
+    /**
+     * The default constructor must obey the following conventions:
+     * <ul>
+     *     <li>The class must be the top level</li>
+     *     <li>The simple class name must be "Handler"</li>
+     *     <li>The class must not be present in the "default" or builtin package({@link #DEFAULT_HANDLER_PACKAGE_NAME "sun.net.www.protocol"})</li>
+     * </ul>
+     */
     public AbstractURLStreamHandler() {
         Class<?> currentClass = getClass();
         assertConventions(currentClass);
-        appendHandlerPackage(currentClass);
+        String packageName = appendHandlerPackage(currentClass);
+        this.protocol = resolveConventionProtocol(packageName);
+    }
+
+    public AbstractURLStreamHandler(String protocol) {
+        this.protocol = protocol;
+    }
+
+    private static String resolveConventionProtocol(String packageName) {
+        int lastIndex = packageName.lastIndexOf(DOT_CHAR);
+        return packageName.substring(lastIndex + 1);
     }
 
     private static void assertConventions(Class<?> type) {
@@ -107,29 +131,52 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
 
     private static void assertPackage(Class<?> type) {
         String className = type.getName();
-        if (className.startsWith(DEFAULT_HANDLER_PACKAGE_NAME)) {
-            throw new IllegalStateException("The implementation class must not be present in the builtin package : '" + DEFAULT_HANDLER_PACKAGE_NAME + "'");
+        if (className.indexOf(DOT_CHAR) < 0) {
+            throw new IllegalStateException("The Handler class must not be present at the top package!");
         }
+        if (className.startsWith(DEFAULT_HANDLER_PACKAGE_NAME)) {
+            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + DEFAULT_HANDLER_PACKAGE_NAME + "'");
+        }
+
     }
 
-    private static void appendHandlerPackage(Class<?> type) {
+    private static String appendHandlerPackage(Class<?> type) {
         String packageName = type.getPackage().getName();
         appendHandlePackage(packageName);
+        return packageName;
     }
 
     static void appendHandlePackage(String packageName) {
         String handlePackage = packageName.substring(0, packageName.lastIndexOf('.'));
-        String currentHandlePackages = getHandlePackages();
+        Set<String> packages = getHandlePackages();
+
+        if (packages.contains(handlePackage)) {
+            return;
+        }
+
+        String currentHandlerPackages = getHandlePackagesPropertyValue();
         String handlePackages = null;
-        if (currentHandlePackages == null || currentHandlePackages.isEmpty()) {
+        if (isBlank(currentHandlerPackages)) {
             handlePackages = handlePackage;
         } else {
-            handlePackages = currentHandlePackages + HANDLER_PACKAGES_SEPARATOR + handlePackage;
+            handlePackages = currentHandlerPackages + HANDLER_PACKAGES_SEPARATOR_CHAR + handlePackage;
         }
+
         System.setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
     }
 
-    public static String getHandlePackages() {
+    public static Set<String> getHandlePackages() {
+        String value = getHandlePackagesPropertyValue();
+        String[] packages = split(value, HANDLER_PACKAGES_SEPARATOR_CHAR);
+        return ofSet(packages);
+    }
+
+    /**
+     * Get the {@link System} property value of the packages of {@link URLStreamHandler URLStreamHandlers}.
+     *
+     * @return <code>null</code> if absent
+     */
+    public static String getHandlePackagesPropertyValue() {
         return System.getProperty(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
@@ -226,11 +273,15 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
         return newSpecBuilder.toString();
     }
 
+    public final String getProtocol() {
+        return protocol;
+    }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder(getClass().getName());
         sb.append("{defaultPort=").append(getDefaultPort());
+        sb.append(",protocol=").append(getProtocol());
         sb.append('}');
         return sb.toString();
     }

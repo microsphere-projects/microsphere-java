@@ -25,6 +25,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.Properties;
 
+import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -38,9 +39,23 @@ import static org.junit.Assert.assertSame;
 public class AbstractURLStreamHandlerTest {
 
     @Test
-    public void test() throws Throwable {
+    public void testConstructorWithProtocolArg() {
+        assertTestHandler("test-1");
+        assertTestHandler("test-2");
+        assertTestHandler("test-3");
+    }
+
+    private void assertTestHandler(String protocol) {
+        AbstractURLStreamHandler handler = new TestHandler(protocol);
+        assertEquals(protocol, handler.getProtocol());
+    }
+
+
+    @Test
+    public void testConsoleProtocol() throws Throwable {
         Handler handler = new Handler();
-        assertEquals("io.github.microsphere.net.handler", AbstractURLStreamHandler.getHandlePackages());
+        assertEquals(ofSet("io.github.microsphere.net"), AbstractURLStreamHandler.getHandlePackages());
+        assertEquals("io.github.microsphere.net", AbstractURLStreamHandler.getHandlePackagesPropertyValue());
 
         String spec = "console:text://localhost:12345/abc;ref=top?n=1#hash";
         URL url = new URL(spec);
@@ -66,11 +81,14 @@ public class AbstractURLStreamHandlerTest {
         url = new URL(spec);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
         assertEquals(spec, url.toString());
+
+        assertEquals("console", handler.getProtocol());
+
     }
 
     @Test
     public void testClassPathProtocol() throws Throwable {
-        new io.github.microsphere.net.classpath.Handler();
+        io.github.microsphere.net.classpath.Handler handler = new io.github.microsphere.net.classpath.Handler();
         URL url = new URL("classpath://META-INF/test.properties");
         Properties properties = new Properties();
         properties.load(new InputStreamReader(url.openStream(), "UTF-8"));
@@ -90,6 +108,8 @@ public class AbstractURLStreamHandlerTest {
 
         url = new URL("classpath:META-INF/services/java.lang.CharSequence");
         assertNotNull(url.openConnection(Proxy.NO_PROXY));
+
+        assertEquals("classpath", handler.getProtocol());
     }
 
     @Test(expected = IOException.class)
