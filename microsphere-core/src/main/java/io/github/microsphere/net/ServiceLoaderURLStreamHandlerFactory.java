@@ -37,7 +37,7 @@ import static java.util.ServiceLoader.load;
  * <p>
  * First, the {@link #createURLStreamHandler(String)} method tries to create an instance of {@link URLStreamHandler}
  * vid each {@link URLStreamHandlerFactory} delegate in the {@link Prioritized prioritized} order, once some one returns
- * a non-null result, it will be taken. Otherwise, {@link AbstractURLStreamHandler} delegates will be used to resolve the
+ * a non-null result, it will be taken. Otherwise, {@link ExtendableProtocolURLStreamHandler} delegates will be used to resolve the
  * result if possible.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
@@ -46,7 +46,7 @@ import static java.util.ServiceLoader.load;
  */
 public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHandlerFactory {
 
-    private final Map<String, AbstractURLStreamHandler> handlers;
+    private final Map<String, ExtendableProtocolURLStreamHandler> handlers;
 
     public ServiceLoaderURLStreamHandlerFactory() {
         super(createDelegate());
@@ -60,8 +60,8 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         return new CompositeURLStreamHandlerFactory(factories);
     }
 
-    private Map<String, AbstractURLStreamHandler> loadHandlers(ClassLoader classLoader) {
-        List<AbstractURLStreamHandler> handlers = CollectionUtils.toList(load(AbstractURLStreamHandler.class, classLoader));
+    private Map<String, ExtendableProtocolURLStreamHandler> loadHandlers(ClassLoader classLoader) {
+        List<ExtendableProtocolURLStreamHandler> handlers = CollectionUtils.toList(load(ExtendableProtocolURLStreamHandler.class, classLoader));
         int size = handlers.size();
         if (size < 1) {
             return Collections.emptyMap();
@@ -70,9 +70,9 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         // sort
         Collections.sort(handlers, Prioritized.COMPARATOR);
 
-        Map<String, AbstractURLStreamHandler> handlersMap = new HashMap<>(size, Float.MIN_NORMAL);
+        Map<String, ExtendableProtocolURLStreamHandler> handlersMap = new HashMap<>(size, Float.MIN_NORMAL);
         for (int i = 0; i < size; i++) {
-            AbstractURLStreamHandler handler = handlers.get(i);
+            ExtendableProtocolURLStreamHandler handler = handlers.get(i);
             handlersMap.put(handler.getProtocol(), handler);
         }
 

@@ -21,12 +21,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 /**
- * Test {@link AbstractURLStreamHandler}
+ * Test {@link ExtendableProtocolURLStreamHandler}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class TestHandler extends AbstractURLStreamHandler {
+public class TestHandler extends ExtendableProtocolURLStreamHandler {
 
     public TestHandler(String protocol) {
         super(protocol);

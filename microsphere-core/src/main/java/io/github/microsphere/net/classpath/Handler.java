@@ -16,7 +16,7 @@
  */
 package io.github.microsphere.net.classpath;
 
-import io.github.microsphere.net.AbstractURLStreamHandler;
+import io.github.microsphere.net.ExtendableProtocolURLStreamHandler;
 import io.github.microsphere.util.ClassLoaderUtils;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ import static io.github.microsphere.util.ClassLoaderUtils.getClassLoader;
  * @see ClassLoaderUtils#getClassLoader()
  * @since 1.0.0
  */
-public class Handler extends AbstractURLStreamHandler {
+public class Handler extends ExtendableProtocolURLStreamHandler {
 
     @Override
     protected URLConnection openConnection(URL u) throws IOException {

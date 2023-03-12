@@ -16,7 +16,7 @@
  */
 package io.github.microsphere.net.console;
 
-import io.github.microsphere.net.AbstractURLStreamHandler;
+import io.github.microsphere.net.ExtendableProtocolURLStreamHandler;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,7 +28,7 @@ import java.net.URLConnection;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class Handler extends AbstractURLStreamHandler {
+public class Handler extends ExtendableProtocolURLStreamHandler {
 
     @Override
     public URLConnection openConnection(URL u) throws IOException {

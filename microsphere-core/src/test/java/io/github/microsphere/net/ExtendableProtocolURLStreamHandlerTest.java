@@ -31,12 +31,12 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
 /**
- * {@link AbstractURLStreamHandler} Test
+ * {@link ExtendableProtocolURLStreamHandler} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class AbstractURLStreamHandlerTest {
+public class ExtendableProtocolURLStreamHandlerTest {
 
     @Test
     public void testConstructorWithProtocolArg() {
@@ -46,7 +46,7 @@ public class AbstractURLStreamHandlerTest {
     }
 
     private void assertTestHandler(String protocol) {
-        AbstractURLStreamHandler handler = new TestHandler(protocol);
+        ExtendableProtocolURLStreamHandler handler = new TestHandler(protocol);
         assertEquals(protocol, handler.getProtocol());
     }
 
@@ -54,8 +54,8 @@ public class AbstractURLStreamHandlerTest {
     @Test
     public void testConsoleProtocol() throws Throwable {
         Handler handler = new Handler();
-        assertEquals(ofSet("io.github.microsphere.net"), AbstractURLStreamHandler.getHandlePackages());
-        assertEquals("io.github.microsphere.net", AbstractURLStreamHandler.getHandlePackagesPropertyValue());
+        assertEquals(ofSet("io.github.microsphere.net"), ExtendableProtocolURLStreamHandler.getHandlePackages());
+        assertEquals("io.github.microsphere.net", ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue());
 
         String spec = "console:text://localhost:12345/abc;ref=top?n=1#hash";
         URL url = new URL(spec);

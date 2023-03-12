@@ -31,7 +31,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.split;
 
 /**
- * Abstract {@link URLStreamHandler} class overrides these methods making final:
+ * Extendable Protocol {@link URLStreamHandler} class overrides these methods making final:
  * <ul>
  *     <li>{@link #parseURL(URL, String, int, int)}</li>
  *     <li>{@link #equals(URL, URL)}</li>
@@ -51,7 +51,7 @@ import static org.apache.commons.lang3.StringUtils.split;
  * @see URLStreamHandler
  * @since 1.0.0
  */
-public abstract class AbstractURLStreamHandler extends URLStreamHandler {
+public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandler {
 
     /**
      * The property which specifies the package prefix list to be scanned
@@ -94,14 +94,14 @@ public abstract class AbstractURLStreamHandler extends URLStreamHandler {
      *     <li>The class must not be present in the "default" or builtin package({@link #DEFAULT_HANDLER_PACKAGE_NAME "sun.net.www.protocol"})</li>
      * </ul>
      */
-    public AbstractURLStreamHandler() {
+    public ExtendableProtocolURLStreamHandler() {
         Class<?> currentClass = getClass();
         assertConventions(currentClass);
         String packageName = appendHandlerPackage(currentClass);
         this.protocol = resolveConventionProtocol(packageName);
     }
 
-    public AbstractURLStreamHandler(String protocol) {
+    public ExtendableProtocolURLStreamHandler(String protocol) {
         this.protocol = protocol;
     }
 
