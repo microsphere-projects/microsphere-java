@@ -57,7 +57,14 @@ public interface Predicates {
      * @return non-null
      */
     static <T> Predicate<T> and(Predicate<T>... predicates) {
-        return of(predicates).reduce((a, b) -> a.and(b)).orElseGet(Predicates::alwaysTrue);
+        int length = predicates == null ? 0 : predicates.length;
+        if (length == 0) {
+            return alwaysTrue();
+        } else if (length == 1) {
+            return predicates[0];
+        } else {
+            return of(predicates).reduce((a, b) -> a.and(b)).orElseGet(Predicates::alwaysTrue);
+        }
     }
 
     /**
@@ -68,7 +75,14 @@ public interface Predicates {
      * @return non-null
      */
     static <T> Predicate<T> or(Predicate<T>... predicates) {
-        return of(predicates).reduce((a, b) -> a.or(b)).orElse(e -> true);
+        int length = predicates == null ? 0 : predicates.length;
+        if (length == 0) {
+            return alwaysTrue();
+        } else if (length == 1) {
+            return predicates[0];
+        } else {
+            return of(predicates).reduce((a, b) -> a.or(b)).orElse(e -> true);
+        }
     }
 
 }
