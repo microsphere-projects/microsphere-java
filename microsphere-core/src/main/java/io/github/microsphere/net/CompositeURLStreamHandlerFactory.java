@@ -46,8 +46,9 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
-        this.factories = CollectionUtils.toList(factories);
-        sortFactories();
+        List<URLStreamHandlerFactory> newFactories = CollectionUtils.toList(factories);
+        sortFactories(newFactories);
+        this.factories = newFactories;
     }
 
     @Override
@@ -71,8 +72,17 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
      * @return
      */
     public CompositeURLStreamHandlerFactory addURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
-        this.factories.add(factory);
-        sortFactories();
+        if (factory != null && factory != this) {
+            List<URLStreamHandlerFactory> factories = this.getFactories();
+            if (factory instanceof CompositeURLStreamHandlerFactory) {
+                for (URLStreamHandlerFactory element : ((CompositeURLStreamHandlerFactory) factory).getFactories()) {
+                    addURLStreamHandlerFactory(element);
+                }
+            } else {
+                factories.add(factory);
+            }
+            sortFactories(factories);
+        }
         return this;
     }
 
@@ -94,8 +104,8 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
         return Prioritized.COMPARATOR;
     }
 
-    private void sortFactories() {
-        Collections.sort(this.factories, getComparator());
+    private void sortFactories(List<URLStreamHandlerFactory> factories) {
+        Collections.sort(factories, getComparator());
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.URLStreamHandlerFactory;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,7 @@ import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.github.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -428,6 +430,17 @@ public abstract class URLUtils {
     public static String resolvePath(String path) {
         int lastIndex = path.lastIndexOf(SEMICOLON_CHAR);
         return lastIndex > -1 ? path.substring(0, lastIndex) : path;
+    }
+
+    public static void resetURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
+        if (factory == null) {
+            return;
+        }
+        URLStreamHandlerFactory oldFactory = getStaticFieldValue(URL.class, "factory");
+        CompositeURLStreamHandlerFactory newFactory = new CompositeURLStreamHandlerFactory();
+        newFactory.addURLStreamHandlerFactory(oldFactory);
+        newFactory.addURLStreamHandlerFactory(factory);
+        URL.setURLStreamHandlerFactory(newFactory);
     }
 
     protected static String reformProtocol(String protocol, String path) {
