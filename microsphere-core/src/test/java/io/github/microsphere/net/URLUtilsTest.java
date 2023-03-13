@@ -53,28 +53,28 @@ public class URLUtilsTest {
         String expectedPath = null;
         String resolvedPath = null;
 
-        resolvedPath = URLUtils.resolvePath(path);
+        resolvedPath = URLUtils.normalizePath(path);
         Assert.assertEquals(expectedPath, resolvedPath);
 
         path = "";
         expectedPath = "";
-        resolvedPath = URLUtils.resolvePath(path);
+        resolvedPath = URLUtils.normalizePath(path);
         Assert.assertEquals(expectedPath, resolvedPath);
 
         path = "/abc/";
         expectedPath = "/abc/";
-        resolvedPath = URLUtils.resolvePath(path);
+        resolvedPath = URLUtils.normalizePath(path);
         Assert.assertEquals(expectedPath, resolvedPath);
 
         path = "//abc///";
         expectedPath = "/abc/";
-        resolvedPath = URLUtils.resolvePath(path);
+        resolvedPath = URLUtils.normalizePath(path);
         Assert.assertEquals(expectedPath, resolvedPath);
 
 
         path = "//\\abc///";
         expectedPath = "/abc/";
-        resolvedPath = URLUtils.resolvePath(path);
+        resolvedPath = URLUtils.normalizePath(path);
         Assert.assertEquals(expectedPath, resolvedPath);
     }
 

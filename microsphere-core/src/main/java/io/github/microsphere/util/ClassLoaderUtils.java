@@ -541,7 +541,7 @@ public abstract class ClassLoaderUtils {
             String normalizedName = supported(name) ? normalize(name) : null;
             if (normalizedName == null) return normalizedName;
 
-            normalizedName = URLUtils.resolvePath(normalizedName);
+            normalizedName = URLUtils.normalizePath(normalizedName);
 
             // 除去开头的"/"
             while (normalizedName.startsWith("/")) {

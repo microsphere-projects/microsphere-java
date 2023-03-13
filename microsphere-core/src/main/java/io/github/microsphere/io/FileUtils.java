@@ -36,6 +36,6 @@ public abstract class FileUtils {
         if (!targetFilePath.contains(parentDirectoryPath)) {
             return null;
         }
-        return URLUtils.resolvePath(StringUtils.replace(targetFilePath, parentDirectoryPath, SystemUtils.FILE_SEPARATOR));
+        return URLUtils.normalizePath(StringUtils.replace(targetFilePath, parentDirectoryPath, SystemUtils.FILE_SEPARATOR));
     }
 }

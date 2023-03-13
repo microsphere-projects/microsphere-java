@@ -155,7 +155,7 @@ public abstract class URLUtils {
      * @version 1.0.0
      * @since 1.0.0
      */
-    public static String resolvePath(final String path) {
+    public static String normalizePath(final String path) {
 
         if (StringUtils.isBlank(path)) {
             return path;
@@ -316,7 +316,7 @@ public abstract class URLUtils {
             }
         }
 
-        return resolvePath(uriBuilder.toString());
+        return normalizePath(uriBuilder.toString());
     }
 
     /**
@@ -374,7 +374,7 @@ public abstract class URLUtils {
 
         if (hasPath) {
             protocol = reformProtocol(protocol, path);
-            path = reformPath(path);
+            path = resolvePath(path);
         }
 
         len += length(path);
@@ -419,19 +419,19 @@ public abstract class URLUtils {
         return getFirst(parameters, SUB_PROTOCOL_MATRIX_NAME);
     }
 
-    public static List<String> getSubProtocols(String url) {
+    public static List<String> resolveSubProtocols(String url) {
         Map<String, List<String>> parameters = resolveMatrixParameters(url);
         List<String> values = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
         return values == null ? emptyList() : unmodifiableList(values);
     }
 
-    protected static String reformPath(String path) {
+    public static String resolvePath(String path) {
         int lastIndex = path.lastIndexOf(SEMICOLON_CHAR);
         return lastIndex > -1 ? path.substring(0, lastIndex) : path;
     }
 
     protected static String reformProtocol(String protocol, String path) {
-        List<String> subProtocols = getSubProtocols(path);
+        List<String> subProtocols = resolveSubProtocols(path);
         int size = subProtocols.size();
         if (size < 1) { // the matrix of sub-protocols was not found
             return protocol;

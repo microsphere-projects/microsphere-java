@@ -88,7 +88,7 @@ public class JarUtils {
         assertJarURLProtocol(jarURL);
         String form = jarURL.toExternalForm();
         String relativePath = StringUtils.substringAfter(form, ARCHIVE_ENTITY_SEPARATOR);
-        relativePath = URLUtils.resolvePath(relativePath);
+        relativePath = URLUtils.normalizePath(relativePath);
         return URLUtils.decode(relativePath);
     }
 

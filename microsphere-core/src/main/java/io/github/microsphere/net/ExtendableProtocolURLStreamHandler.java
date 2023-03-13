@@ -18,6 +18,7 @@ package io.github.microsphere.net;
 
 import java.net.URL;
 import java.net.URLStreamHandler;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -103,66 +104,6 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     public ExtendableProtocolURLStreamHandler(String protocol) {
         this.protocol = protocol;
-    }
-
-    private static String resolveConventionProtocol(String packageName) {
-        int lastIndex = packageName.lastIndexOf(DOT_CHAR);
-        return packageName.substring(lastIndex + 1);
-    }
-
-    private static void assertConventions(Class<?> type) {
-        assertClassTopLevel(type);
-        assertClassName(type);
-        assertPackage(type);
-    }
-
-    private static void assertClassTopLevel(Class<?> type) {
-        if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
-            throw new IllegalStateException("The implementation " + type + " must be the top level");
-        }
-    }
-
-    private static void assertClassName(Class<?> type) {
-        String simpleClassName = type.getSimpleName();
-        if (!Objects.equals(CONVENTION_CLASS_NAME, simpleClassName)) {
-            throw new IllegalStateException("The implementation class must name '" + CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + "'");
-        }
-    }
-
-    private static void assertPackage(Class<?> type) {
-        String className = type.getName();
-        if (className.indexOf(DOT_CHAR) < 0) {
-            throw new IllegalStateException("The Handler class must not be present at the top package!");
-        }
-        if (className.startsWith(DEFAULT_HANDLER_PACKAGE_NAME)) {
-            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + DEFAULT_HANDLER_PACKAGE_NAME + "'");
-        }
-
-    }
-
-    private static String appendHandlerPackage(Class<?> type) {
-        String packageName = type.getPackage().getName();
-        appendHandlePackage(packageName);
-        return packageName;
-    }
-
-    static void appendHandlePackage(String packageName) {
-        String handlePackage = packageName.substring(0, packageName.lastIndexOf('.'));
-        Set<String> packages = getHandlePackages();
-
-        if (packages.contains(handlePackage)) {
-            return;
-        }
-
-        String currentHandlerPackages = getHandlePackagesPropertyValue();
-        String handlePackages = null;
-        if (isBlank(currentHandlerPackages)) {
-            handlePackages = handlePackage;
-        } else {
-            handlePackages = currentHandlerPackages + HANDLER_PACKAGES_SEPARATOR_CHAR + handlePackage;
-        }
-
-        System.setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
     }
 
     public static Set<String> getHandlePackages() {
@@ -273,6 +214,20 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         return newSpecBuilder.toString();
     }
 
+    /**
+     * Get the sub-protocols from the specified {@link URL}
+     *
+     * @param url {@link URL}
+     * @return non-null
+     */
+    protected List<String> resolveSubProtocols(URL url) {
+        return URLUtils.resolveSubProtocols(url.toString());
+    }
+
+    protected String resolvePath(URL url) {
+        return URLUtils.resolvePath(url.getPath());
+    }
+
     public final String getProtocol() {
         return protocol;
     }
@@ -284,5 +239,64 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         sb.append(",protocol=").append(getProtocol());
         sb.append('}');
         return sb.toString();
+    }
+
+    private static String resolveConventionProtocol(String packageName) {
+        int lastIndex = packageName.lastIndexOf(DOT_CHAR);
+        return packageName.substring(lastIndex + 1);
+    }
+
+    private static void assertConventions(Class<?> type) {
+        assertClassTopLevel(type);
+        assertClassName(type);
+        assertPackage(type);
+    }
+
+    private static void assertClassTopLevel(Class<?> type) {
+        if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
+            throw new IllegalStateException("The implementation " + type + " must be the top level");
+        }
+    }
+
+    private static void assertClassName(Class<?> type) {
+        String simpleClassName = type.getSimpleName();
+        if (!Objects.equals(CONVENTION_CLASS_NAME, simpleClassName)) {
+            throw new IllegalStateException("The implementation class must name '" + CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + "'");
+        }
+    }
+
+    private static void assertPackage(Class<?> type) {
+        String className = type.getName();
+        if (className.indexOf(DOT_CHAR) < 0) {
+            throw new IllegalStateException("The Handler class must not be present at the top package!");
+        }
+        if (className.startsWith(DEFAULT_HANDLER_PACKAGE_NAME)) {
+            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + DEFAULT_HANDLER_PACKAGE_NAME + "'");
+        }
+    }
+
+    private static String appendHandlerPackage(Class<?> type) {
+        String packageName = type.getPackage().getName();
+        appendHandlePackage(packageName);
+        return packageName;
+    }
+
+    static void appendHandlePackage(String packageName) {
+        String handlePackage = packageName.substring(0, packageName.lastIndexOf('.'));
+        Set<String> packages = getHandlePackages();
+
+        if (packages.contains(handlePackage)) {
+            return;
+        }
+
+        String currentHandlerPackages = getHandlePackagesPropertyValue();
+        String handlePackages = null;
+        if (isBlank(currentHandlerPackages)) {
+            handlePackages = handlePackage;
+        } else {
+            handlePackages = currentHandlerPackages + HANDLER_PACKAGES_SEPARATOR_CHAR + handlePackage;
+        }
+
+        System.setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
     }
 }
