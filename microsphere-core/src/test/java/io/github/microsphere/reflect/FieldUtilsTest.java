@@ -21,6 +21,8 @@ import org.junit.Test;
 import static io.github.microsphere.reflect.FieldUtils.findField;
 import static io.github.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.github.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.github.microsphere.reflect.FieldUtils.setFieldValue;
+import static io.github.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
@@ -32,6 +34,8 @@ import static org.junit.Assert.assertSame;
  * @since 1.0.0
  */
 public class FieldUtilsTest {
+
+    private static String value = "1";
 
     @Test
     public void testFindField() {
@@ -53,5 +57,18 @@ public class FieldUtilsTest {
     public void testGetStaticFieldValue() {
         assertSame(System.in, getStaticFieldValue(System.class, "in"));
         assertSame(System.out, getStaticFieldValue(System.class, "out"));
+    }
+
+    @Test
+    public void testSetFieldValue() {
+        Integer value = 1;
+        setFieldValue(value, "value", 2);
+        assertEquals(value.intValue(), 2);
+    }
+
+    @Test
+    public void testStaticFieldValue() {
+        setStaticFieldValue(getClass(), "value", "abc");
+        assertEquals("abc", value);
     }
 }

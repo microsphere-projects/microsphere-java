@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import static io.github.microsphere.lang.function.Predicates.and;
+import static io.github.microsphere.reflect.ReflectionUtils.execute;
 
 /**
  * The Java Reflection {@link Field} Utility class
@@ -70,7 +71,7 @@ public abstract class FieldUtils {
     /**
      * Get {@link Field} Value
      *
-     * @param object    {@link Object}
+     * @param object    the object whose field should be modified
      * @param fieldName field name
      * @param <T>       field type
      * @return {@link Field} Value
@@ -82,7 +83,7 @@ public abstract class FieldUtils {
     /**
      * Get {@link Field} Value
      *
-     * @param object       {@link Object}
+     * @param object       the object whose field should be modified
      * @param fieldName    field name
      * @param <T>          field type
      * @param defaultValue default value
@@ -96,7 +97,7 @@ public abstract class FieldUtils {
     /**
      * Get {@link Field} Value
      *
-     * @param object    {@link Object}
+     * @param object    the object whose field should be modified
      * @param fieldName field name
      * @param fieldType field type
      * @param <T>       field type
@@ -104,7 +105,7 @@ public abstract class FieldUtils {
      */
     public static <T> T getFieldValue(Object object, String fieldName, Class<T> fieldType) {
         Field field = findField(object.getClass(), fieldName, f -> Objects.equals(fieldType, f.getType()));
-        return getFieldValue(field, object);
+        return getFieldValue(object, field);
     }
 
     /**
@@ -126,34 +127,59 @@ public abstract class FieldUtils {
      * @return <code>null</code> if <code>field</code> is <code>null</code> or get failed
      */
     public static <T> T getStaticFieldValue(Field field) {
-        return getFieldValue(field, (Object) null);
+        return getFieldValue((Object) null, field);
     }
 
     /**
      * Get the value of {@link Field}
      *
+     * @param object the object whose field should be modified
      * @param field  {@link Field}
-     * @param object the instance
      * @param <T>    the field type
      * @return <code>null</code> if <code>field</code> is <code>null</code> or get failed
      */
-    public static <T> T getFieldValue(Field field, Object object) {
+    public static <T> T getFieldValue(Object object, Field field) {
         T fieldValue = null;
         if (field != null) {
-            boolean accessible = field.isAccessible();
-            try {
-                if (!accessible) {
-                    field.setAccessible(true);
-                }
-                fieldValue = (T) field.get(object);
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            } finally {
-                if (!accessible) {
-                    field.setAccessible(accessible);
-                }
-            }
+            fieldValue = execute(field, f -> (T) field.get(object));
         }
         return fieldValue;
+    }
+
+    /**
+     * Set the value to static {@link Field}
+     *
+     * @param klass      the class declared the field
+     * @param fieldName  the name of {@link Field}
+     * @param fieldValue the value of {@link Field}
+     */
+    public static void setStaticFieldValue(Class<?> klass, String fieldName, Object fieldValue) {
+        Field field = findField(klass, fieldName);
+        setFieldValue(null, field, fieldValue);
+    }
+
+    /**
+     * Set the value to {@link Field}
+     *
+     * @param object     the object whose field should be modified
+     * @param fieldName  the name of {@link Field}
+     * @param fieldValue the value of {@link Field}
+     */
+    public static void setFieldValue(Object object, String fieldName, Object fieldValue) {
+        Field field = findField(object.getClass(), fieldName);
+        setFieldValue(object, field, fieldValue);
+    }
+
+    /**
+     * Set the value to {@link Field}
+     *
+     * @param object     the object whose field should be modified
+     * @param field      the {@link Field} object
+     * @param fieldValue the value of {@link Field}
+     */
+    public static void setFieldValue(Object object, Field field, Object fieldValue) {
+        execute(field, f -> {
+            f.set(object, fieldValue);
+        });
     }
 }

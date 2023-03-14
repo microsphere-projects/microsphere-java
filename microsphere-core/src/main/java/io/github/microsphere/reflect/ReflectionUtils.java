@@ -1,5 +1,7 @@
 package io.github.microsphere.reflect;
 
+import io.github.microsphere.lang.function.ThrowableConsumer;
+import io.github.microsphere.lang.function.ThrowableFunction;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
@@ -9,6 +11,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -160,8 +163,7 @@ public abstract class ReflectionUtils {
     protected static String getCallerClassName(int invocationFrame) throws IndexOutOfBoundsException {
         if (supportedSunReflectReflection) {
             Class<?> callerClass = getCallerClassInSunJVM(invocationFrame + 1);
-            if (callerClass != null)
-                return callerClass.getName();
+            if (callerClass != null) return callerClass.getName();
         }
         return getCallerClassNameInGeneralJVM(invocationFrame + 1);
     }
@@ -290,8 +292,7 @@ public abstract class ReflectionUtils {
     static Class<?> getCallerClass(int invocationFrame) {
         if (supportedSunReflectReflection) {
             Class<?> callerClass = getCallerClassInSunJVM(invocationFrame + 1);
-            if (callerClass != null)
-                return callerClass;
+            if (callerClass != null) return callerClass;
         }
         return getCallerClassInGeneralJVM(invocationFrame + 1);
     }
@@ -459,18 +460,14 @@ public abstract class ReflectionUtils {
         // Add Generic Super Class
         genericTypes.add(sourceClass.getGenericSuperclass());
 
-        Set<ParameterizedType> parameterizedTypes = genericTypes.stream()
-                .filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
+        Set<ParameterizedType> parameterizedTypes = genericTypes.stream().filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
                 .map(type -> ParameterizedType.class.cast(type))  // cast to ParameterizedType
                 .collect(Collectors.toSet());
 
         if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
-            genericTypes.stream()
-                    .filter(type -> type instanceof Class)
-                    .map(type -> Class.class.cast(type))
-                    .forEach(superClass -> {
-                        parameterizedTypes.addAll(findParameterizedTypes(superClass));
-                    });
+            genericTypes.stream().filter(type -> type instanceof Class).map(type -> Class.class.cast(type)).forEach(superClass -> {
+                parameterizedTypes.addAll(findParameterizedTypes(superClass));
+            });
         }
 
         return unmodifiableSet(parameterizedTypes);                     // build as a Set
@@ -517,17 +514,14 @@ public abstract class ReflectionUtils {
 
         try {
             beanInfo = Introspector.getBeanInfo(beanClass);
-            propertyValue = (T) Stream.of(beanInfo.getMethodDescriptors())
-                    .filter(methodDescriptor -> methodName.equals(methodDescriptor.getName()))
-                    .findFirst()
-                    .map(method -> {
-                        try {
-                            return method.getMethod().invoke(bean);
-                        } catch (Exception e) {
-                            //ignore
-                        }
-                        return null;
-                    }).get();
+            propertyValue = (T) Stream.of(beanInfo.getMethodDescriptors()).filter(methodDescriptor -> methodName.equals(methodDescriptor.getName())).findFirst().map(method -> {
+                try {
+                    return method.getMethod().invoke(bean);
+                } catch (Exception e) {
+                    //ignore
+                }
+                return null;
+            }).get();
         } catch (Exception e) {
 
         }
@@ -556,5 +550,45 @@ public abstract class ReflectionUtils {
         }
 
         return types;
+    }
+
+    /**
+     * Execute an {@link AccessibleObject} instance
+     *
+     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
+     * @param callback the call back to execute {@link AccessibleObject} object
+     * @param <A>      The type or subtype of {@link AccessibleObject}
+     */
+    public static <A extends AccessibleObject> void execute(A object, ThrowableConsumer<A> callback) {
+        execute(object, a -> {
+            callback.accept(a);
+            return null;
+        });
+    }
+
+    /**
+     * Execute an {@link AccessibleObject} instance
+     *
+     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
+     * @param callback the call back to execute {@link AccessibleObject} object
+     * @param <A>      The type or subtype of {@link AccessibleObject}
+     * @param <T>      The type of execution result
+     * @return The execution result
+     * @throws NullPointerException If <code>object</code> is <code>null</code>
+     */
+    public static <A extends AccessibleObject, T> T execute(A object, ThrowableFunction<A, T> callback) throws NullPointerException {
+        boolean accessible = object.isAccessible();
+        final T result;
+        try {
+            if (!accessible) {
+                object.setAccessible(true);
+            }
+            result = callback.execute(object);
+        } finally {
+            if (!accessible) {
+                object.setAccessible(accessible);
+            }
+        }
+        return result;
     }
 }
