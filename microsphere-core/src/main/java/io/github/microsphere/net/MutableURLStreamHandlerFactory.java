@@ -23,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * In-Memory storage of {@link URLStreamHandlerFactory}, which is not thread-safe extends {@link URLStreamHandler}.
+ * Mutable {@link URLStreamHandlerFactory} that is not thread-safe extends {@link URLStreamHandler}.
  *
  * @param <H> The type of {@link URLStreamHandler} or the subtype of {@link URLStreamHandler}
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
@@ -31,19 +31,19 @@ import java.util.Map;
  * @see URLStreamHandler
  * @since 1.0.0
  */
-public class InMemoryURLStreamHandlerFactory<H extends URLStreamHandler> implements URLStreamHandlerFactory {
+public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implements URLStreamHandlerFactory {
 
     private final Map<String, H> handlers;
 
-    public InMemoryURLStreamHandlerFactory() {
+    public MutableURLStreamHandlerFactory() {
         this(null);
     }
 
-    public InMemoryURLStreamHandlerFactory(Map<String, H> handlers) {
+    public MutableURLStreamHandlerFactory(Map<String, H> handlers) {
         this.handlers = handlers == null ? new HashMap<>() : new HashMap<>(handlers);
     }
 
-    public InMemoryURLStreamHandlerFactory addURLStreamHandler(String protocol, H handler) {
+    public MutableURLStreamHandlerFactory addURLStreamHandler(String protocol, H handler) {
         handlers.put(protocol, handler);
         return this;
     }

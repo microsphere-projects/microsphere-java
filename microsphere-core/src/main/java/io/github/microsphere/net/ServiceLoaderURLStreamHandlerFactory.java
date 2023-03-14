@@ -52,7 +52,7 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
      * {@link URLUtils#attachURLStreamHandlerFactory(URLStreamHandlerFactory)}
      */
     public static void attach() {
-        ExtendableProtocolURLStreamHandlerFactory factory = new ExtendableProtocolURLStreamHandlerFactory();
+        ServiceLoaderURLStreamHandlerFactory factory = new ServiceLoaderURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
     }
 
@@ -63,7 +63,7 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
     private static URLStreamHandlerFactory createDelegate() {
         ClassLoader classLoader = getClassLoader();
         Iterable<URLStreamHandlerFactory> factories = load(URLStreamHandlerFactory.class, classLoader);
-        ExtendableProtocolURLStreamHandlerFactory fallbackFactory = new ExtendableProtocolURLStreamHandlerFactory(loadHandlers());
+        MutableURLStreamHandlerFactory fallbackFactory = new MutableURLStreamHandlerFactory(loadHandlers());
         CompositeURLStreamHandlerFactory compositeFactory = new CompositeURLStreamHandlerFactory(factories);
         compositeFactory.addURLStreamHandlerFactory(fallbackFactory);
         return compositeFactory;

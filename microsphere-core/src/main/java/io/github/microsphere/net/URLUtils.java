@@ -502,6 +502,61 @@ public abstract class URLUtils {
         return getStaticFieldValue(URL.class, "factory");
     }
 
+    /**
+     * Register an instance of {@link ExtendableProtocolURLStreamHandler}
+     *
+     * @param handler {@link ExtendableProtocolURLStreamHandler}
+     */
+    public static void registerURLStreamHandler(ExtendableProtocolURLStreamHandler handler) {
+        registerURLStreamHandler(handler.getProtocol(), handler);
+    }
+
+    /**
+     * Register an instance of {@link URLStreamHandler} with the specified protocol
+     *
+     * @param protocol the specified protocol of {@link URL}
+     * @param handler  {@link URLStreamHandler}
+     */
+    public static void registerURLStreamHandler(String protocol, URLStreamHandler handler) {
+        MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory(true);
+        factory.addURLStreamHandler(protocol, handler);
+        attachURLStreamHandlerFactory(factory);
+    }
+
+    protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory() {
+        return getMutableURLStreamHandlerFactory(false);
+    }
+
+    protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory(boolean createIfAbsent) {
+        URLStreamHandlerFactory oldFactory = getURLStreamHandlerFactory();
+        MutableURLStreamHandlerFactory factory = findMutableURLStreamHandlerFactory(oldFactory);
+        if (oldFactory instanceof CompositeURLStreamHandlerFactory) {
+            factory = findMutableURLStreamHandlerFactory((CompositeURLStreamHandlerFactory) oldFactory);
+        }
+        if (factory == null && createIfAbsent) {
+            factory = new MutableURLStreamHandlerFactory();
+        }
+        return factory;
+    }
+
+    private static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(CompositeURLStreamHandlerFactory compositeFactory) {
+        MutableURLStreamHandlerFactory target = null;
+        for (URLStreamHandlerFactory factory : compositeFactory.getFactories()) {
+            target = findMutableURLStreamHandlerFactory(factory);
+            if (target != null) {
+                break;
+            }
+        }
+        return target;
+    }
+
+    private static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
+        if (factory instanceof MutableURLStreamHandlerFactory) {
+            return (MutableURLStreamHandlerFactory) factory;
+        }
+        return null;
+    }
+
     protected static void clearURLStreamHandlerFactory() {
         setStaticFieldValue(URL.class, "factory", null);
     }
