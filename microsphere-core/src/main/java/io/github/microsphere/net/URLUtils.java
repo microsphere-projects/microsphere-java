@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -60,6 +61,38 @@ public abstract class URLUtils {
      * The default encoding : "UTF-8"
      */
     private static final String DEFAULT_ENCODING = "UTF-8";
+
+
+    /**
+     * The property which specifies the package prefix list to be scanned
+     * for protocol handlers.  The value of this property (if any) should
+     * be a vertical bar delimited list of package names to search through
+     * for a protocol handler to load.  The policy of this class is that
+     * all protocol handlers will be in a class called <protocolname>.Handler,
+     * and each package in the list is examined in turn for a matching
+     * handler.  If none are found (or the property is not specified), the
+     * default package prefix, sun.net.www.protocol, is used.  The search
+     * proceeds from the first package in the list to the last and stops
+     * when a match is found.
+     *
+     * @see {@link URL#protocolPathProp}
+     */
+    public static final String HANDLER_PACKAGES_PROPERTY_NAME = "java.protocol.handler.pkgs";
+
+    /**
+     * The prefix of package for {@link URLStreamHandler Handlers}
+     */
+    public static final String DEFAULT_HANDLER_PACKAGE_PREFIX = "sun.net.www.protocol";
+
+    /**
+     * The separator character of  {@link URLStreamHandler Handlers'} packages.
+     */
+    public static final char HANDLER_PACKAGES_SEPARATOR_CHAR = '|';
+
+    /**
+     * The convention class name of {@link URLStreamHandler Handler}.
+     */
+    public static final String HANDLER_CONVENTION_CLASS_NAME = "Handler";
 
     /**
      * The matrix name for the URLs' sub-protocol
@@ -434,26 +467,35 @@ public abstract class URLUtils {
     }
 
     /**
-     * Reset the {@link URLStreamHandlerFactory} for {@link URL URL's}
+     * Set the specified {@link URLStreamHandlerFactory} for {@link URL URL's} if not set before, otherwise,
+     * add it into {@link CompositeURLStreamHandlerFactory} that will be set.
      *
      * @param factory {@link URLStreamHandlerFactory}
      */
-    public static void resetURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
+    public static void attachURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
         if (factory == null) {
             return;
         }
-        URLStreamHandlerFactory oldFactory = getURLStreamHandlerFactory();
-        CompositeURLStreamHandlerFactory compositeFactory;
 
-        if (oldFactory instanceof CompositeURLStreamHandlerFactory) {
+        URLStreamHandlerFactory oldFactory = getURLStreamHandlerFactory();
+
+        CompositeURLStreamHandlerFactory compositeFactory;
+        if (oldFactory == null) { // old factory is absent
+            URL.setURLStreamHandlerFactory(factory);
+            return;
+        } else if (oldFactory instanceof CompositeURLStreamHandlerFactory) {
             compositeFactory = (CompositeURLStreamHandlerFactory) oldFactory;
         } else {
             compositeFactory = new CompositeURLStreamHandlerFactory();
+            // Add the old one
+            compositeFactory.addURLStreamHandlerFactory(oldFactory);
+            // clear the compositeFactory to ensure the invocation of URL.setURLStreamHandlerFactory successfully
+            clearURLStreamHandlerFactory();
+            URL.setURLStreamHandlerFactory(compositeFactory);
         }
 
+        // Add the new one
         compositeFactory.addURLStreamHandlerFactory(factory);
-        clearURLStreamHandlerFactory();
-        URL.setURLStreamHandlerFactory(compositeFactory);
     }
 
     public static URLStreamHandlerFactory getURLStreamHandlerFactory() {

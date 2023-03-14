@@ -17,9 +17,9 @@
 package io.github.microsphere.net;
 
 import io.github.microsphere.lang.Prioritized;
-import io.github.microsphere.util.ClassLoaderUtils;
 import io.github.microsphere.util.CollectionUtils;
 
+import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collections;
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import static io.github.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.ServiceLoader.load;
 
@@ -46,21 +47,30 @@ import static java.util.ServiceLoader.load;
  */
 public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHandlerFactory {
 
-    private final Map<String, ExtendableProtocolURLStreamHandler> handlers;
+    /**
+     * Attach {@link ServiceLoaderURLStreamHandlerFactory} into {@link URL}
+     * {@link URLUtils#attachURLStreamHandlerFactory(URLStreamHandlerFactory)}
+     */
+    public static void attach() {
+        ExtendableProtocolURLStreamHandlerFactory factory = new ExtendableProtocolURLStreamHandlerFactory();
+        attachURLStreamHandlerFactory(factory);
+    }
 
     public ServiceLoaderURLStreamHandlerFactory() {
         super(createDelegate());
-        ClassLoader classLoader = getClass().getClassLoader();
-        this.handlers = loadHandlers(classLoader);
     }
 
     private static URLStreamHandlerFactory createDelegate() {
-        ClassLoader classLoader = ClassLoaderUtils.getClassLoader();
+        ClassLoader classLoader = getClassLoader();
         Iterable<URLStreamHandlerFactory> factories = load(URLStreamHandlerFactory.class, classLoader);
-        return new CompositeURLStreamHandlerFactory(factories);
+        ExtendableProtocolURLStreamHandlerFactory fallbackFactory = new ExtendableProtocolURLStreamHandlerFactory(loadHandlers());
+        CompositeURLStreamHandlerFactory compositeFactory = new CompositeURLStreamHandlerFactory(factories);
+        compositeFactory.addURLStreamHandlerFactory(fallbackFactory);
+        return compositeFactory;
     }
 
-    private Map<String, ExtendableProtocolURLStreamHandler> loadHandlers(ClassLoader classLoader) {
+    private static Map<String, ExtendableProtocolURLStreamHandler> loadHandlers() {
+        ClassLoader classLoader = getClassLoader();
         List<ExtendableProtocolURLStreamHandler> handlers = CollectionUtils.toList(load(ExtendableProtocolURLStreamHandler.class, classLoader));
         int size = handlers.size();
         if (size < 1) {
@@ -79,8 +89,7 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         return unmodifiableMap(handlersMap);
     }
 
-    @Override
-    protected URLStreamHandler findURLStreamHandler(String protocol) {
-        return handlers.get(protocol);
+    private static ClassLoader getClassLoader() {
+        return ServiceLoaderURLStreamHandlerFactory.class.getClassLoader();
     }
 }

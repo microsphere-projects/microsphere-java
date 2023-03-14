@@ -25,6 +25,10 @@ import java.util.Set;
 import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
+import static io.github.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
+import static io.github.microsphere.net.URLUtils.HANDLER_CONVENTION_CLASS_NAME;
+import static io.github.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
+import static io.github.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
 import static io.github.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
 import static io.github.microsphere.util.CollectionUtils.ofSet;
@@ -45,7 +49,7 @@ import static org.apache.commons.lang3.StringUtils.split;
  * <ul>
  *     <li>The class must be the top level</li>
  *     <li>The simple class name must be "Handler"</li>
- *     <li>The class must not be present in the "default" or builtin package({@link #DEFAULT_HANDLER_PACKAGE_NAME "sun.net.www.protocol"})</li>
+ *     <li>The class must not be present in the "default" or builtin package({@linkURLUtils #DEFAULT_HANDLER_PACKAGE_PREFIX "sun.net.www.protocol"})</li>
  * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
@@ -54,37 +58,6 @@ import static org.apache.commons.lang3.StringUtils.split;
  */
 public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandler {
 
-    /**
-     * The property which specifies the package prefix list to be scanned
-     * for protocol handlers.  The value of this property (if any) should
-     * be a vertical bar delimited list of package names to search through
-     * for a protocol handler to load.  The policy of this class is that
-     * all protocol handlers will be in a class called <protocolname>.Handler,
-     * and each package in the list is examined in turn for a matching
-     * handler.  If none are found (or the property is not specified), the
-     * default package prefix, sun.net.www.protocol, is used.  The search
-     * proceeds from the first package in the list to the last and stops
-     * when a match is found.
-     *
-     * @see {@link URL#protocolPathProp}
-     */
-    public static final String HANDLER_PACKAGES_PROPERTY_NAME = "java.protocol.handler.pkgs";
-
-    /**
-     * The default package name
-     */
-    public static final String DEFAULT_HANDLER_PACKAGE_NAME = "sun.net.www.protocol";
-
-    /**
-     * The separator character of Handler packages.
-     */
-    public static final char HANDLER_PACKAGES_SEPARATOR_CHAR = '|';
-
-    /**
-     * The convention class name.
-     */
-    public static final String CONVENTION_CLASS_NAME = "Handler";
-
     private final String protocol;
 
     /**
@@ -92,7 +65,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * <ul>
      *     <li>The class must be the top level</li>
      *     <li>The simple class name must be "Handler"</li>
-     *     <li>The class must not be present in the "default" or builtin package({@link #DEFAULT_HANDLER_PACKAGE_NAME "sun.net.www.protocol"})</li>
+     *     <li>The class must not be present in the "default" or builtin package({@link URLUtils#DEFAULT_HANDLER_PACKAGE_PREFIX "sun.net.www.protocol"})</li>
      * </ul>
      */
     public ExtendableProtocolURLStreamHandler() {
@@ -260,8 +233,9 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     private static void assertClassName(Class<?> type) {
         String simpleClassName = type.getSimpleName();
-        if (!Objects.equals(CONVENTION_CLASS_NAME, simpleClassName)) {
-            throw new IllegalStateException("The implementation class must name '" + CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + "'");
+        String className = HANDLER_CONVENTION_CLASS_NAME;
+        if (!Objects.equals(className, simpleClassName)) {
+            throw new IllegalStateException("The implementation class must name '" + className + "', actual : '" + simpleClassName + "'");
         }
     }
 
@@ -270,8 +244,9 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         if (className.indexOf(DOT_CHAR) < 0) {
             throw new IllegalStateException("The Handler class must not be present at the top package!");
         }
-        if (className.startsWith(DEFAULT_HANDLER_PACKAGE_NAME)) {
-            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + DEFAULT_HANDLER_PACKAGE_NAME + "'");
+        String packagePrefix = DEFAULT_HANDLER_PACKAGE_PREFIX;
+        if (className.startsWith(packagePrefix)) {
+            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + packagePrefix + "'");
         }
     }
 

@@ -16,37 +16,27 @@
  */
 package io.github.microsphere.net;
 
+import io.github.microsphere.util.ClassLoaderUtils;
+
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
 /**
- * Delegating {@link URLStreamHandlerFactory}
+ * Standard {@link URLStreamHandlerFactory}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class DelegatingURLStreamHandlerFactory implements URLStreamHandlerFactory {
-
-    private final URLStreamHandlerFactory delegate;
-
-    public DelegatingURLStreamHandlerFactory(URLStreamHandlerFactory delegate) {
-        if (delegate == null) {
-            throw new NullPointerException("The 'delegate' argument must not be null!");
-        }
-        this.delegate = delegate;
-    }
+public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        return delegate.createURLStreamHandler(protocol);
-    }
-
-    /**
-     * Get the delegate of {@link URLStreamHandlerFactory}
-     *
-     * @return non-null
-     */
-    protected final URLStreamHandlerFactory getDelegate() {
-        return delegate;
+        String className = "sun.net.www.protocol." + protocol + ".Handler";
+        Class<?> handlerClass = ClassLoaderUtils.resolveClass(className, ClassLoaderUtils.getClassLoader());
+        try {
+            return (URLStreamHandler) handlerClass.newInstance();
+        } catch (Throwable e) {
+        }
+        return null;
     }
 }

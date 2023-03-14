@@ -16,25 +16,28 @@
  */
 package io.github.microsphere.net;
 
-import io.github.microsphere.util.ClassLoaderUtils;
-
-import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.Map;
 
 /**
+ * The {@link URLStreamHandlerFactory factory} class of {@link ExtendableProtocolURLStreamHandler}, which is not
+ * thread-safe can extend {@link ExtendableProtocolURLStreamHandler}.
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory {
+public class ExtendableProtocolURLStreamHandlerFactory extends InMemoryURLStreamHandlerFactory<ExtendableProtocolURLStreamHandler> {
 
-    @Override
-    public URLStreamHandler createURLStreamHandler(String protocol) {
-        String className = "sun.net.www.protocol." + protocol + ".Handler";
-        Class<?> handlerClass = ClassLoaderUtils.resolveClass(className, ClassLoaderUtils.getClassLoader());
-        try {
-            return (URLStreamHandler) handlerClass.newInstance();
-        } catch (Throwable e) {
-        }
-        return null;
+    public ExtendableProtocolURLStreamHandlerFactory() {
+        super();
+    }
+
+    public ExtendableProtocolURLStreamHandlerFactory(Map<String, ExtendableProtocolURLStreamHandler> handlers) {
+        super(handlers);
+    }
+
+    public ExtendableProtocolURLStreamHandlerFactory addURLStreamHandler(ExtendableProtocolURLStreamHandler handler) {
+        super.addURLStreamHandler(handler.getProtocol(), handler);
+        return this;
     }
 }

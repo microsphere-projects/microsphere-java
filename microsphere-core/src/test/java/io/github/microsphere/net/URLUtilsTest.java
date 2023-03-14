@@ -13,15 +13,16 @@ import org.junit.Test;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
 import static io.github.microsphere.net.URLUtils.getURLStreamHandlerFactory;
-import static io.github.microsphere.net.URLUtils.resetURLStreamHandlerFactory;
 import static io.github.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.github.microsphere.net.URLUtils.resolveQueryParameters;
 import static org.junit.Assert.assertEquals;
@@ -195,20 +196,18 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testResetURLStreamHandlerFactory() {
-        StandardURLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
-        resetURLStreamHandlerFactory(factory);
+    public void testAttachURLStreamHandlerFactory() {
+        URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
+        attachURLStreamHandlerFactory(factory);
+        assertSame(factory, getURLStreamHandlerFactory());
+
+        attachURLStreamHandlerFactory(factory);
         CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();
         assertNotSame(factory, compositeFactory);
         assertEquals(1, compositeFactory.getFactories().size());
         assertSame(factory, compositeFactory.getFactories().get(0));
         assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
 
-        resetURLStreamHandlerFactory(factory);
-        assertNotSame(factory, compositeFactory);
-        assertEquals(1, compositeFactory.getFactories().size());
-        assertSame(factory, compositeFactory.getFactories().get(0));
-        assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
     }
 
 }
