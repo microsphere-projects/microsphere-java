@@ -461,9 +461,21 @@ public abstract class URLUtils {
         return values == null ? emptyList() : unmodifiableList(values);
     }
 
+    public static String resolveAuthority(URL url) {
+        return resolveAuthority(url.getAuthority());
+    }
+
+    public static String resolveAuthority(String authority) {
+        return truncateMatrixString(authority);
+    }
+
     public static String resolvePath(String path) {
-        int lastIndex = path.lastIndexOf(SEMICOLON_CHAR);
-        return lastIndex > -1 ? path.substring(0, lastIndex) : path;
+        return truncateMatrixString(path);
+    }
+
+    protected static String truncateMatrixString(String value) {
+        int lastIndex = value.indexOf(SEMICOLON_CHAR);
+        return lastIndex > -1 ? value.substring(0, lastIndex) : value;
     }
 
     /**
@@ -633,4 +645,5 @@ public abstract class URLUtils {
         List<String> values = parameters.get(name);
         return values == null || values.isEmpty() ? null : values.get(0);
     }
+
 }
