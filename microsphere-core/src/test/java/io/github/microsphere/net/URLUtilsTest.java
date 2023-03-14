@@ -5,9 +5,9 @@ package io.github.microsphere.net;
 
 import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.util.ClassLoaderUtils;
-import junit.framework.Assert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
@@ -20,9 +20,16 @@ import java.util.List;
 import java.util.Map;
 
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
+import static io.github.microsphere.net.URLUtils.getURLStreamHandlerFactory;
+import static io.github.microsphere.net.URLUtils.resetURLStreamHandlerFactory;
 import static io.github.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.github.microsphere.net.URLUtils.resolveQueryParameters;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link URLUtils} Test
@@ -34,17 +41,22 @@ import static org.junit.Assert.assertEquals;
  */
 public class URLUtilsTest {
 
+    @After
+    public void after() {
+        URLUtils.clearURLStreamHandlerFactory();
+    }
+
     @Test
     public void testEncodeAndDecode() {
         String path = "/abc/def";
 
         String encodedPath = URLUtils.encode(path);
         String decodedPath = URLUtils.decode(encodedPath);
-        Assert.assertEquals(path, decodedPath);
+        assertEquals(path, decodedPath);
 
         encodedPath = URLUtils.encode(path, "GBK");
         decodedPath = URLUtils.decode(encodedPath, "GBK");
-        Assert.assertEquals(path, decodedPath);
+        assertEquals(path, decodedPath);
     }
 
     @Test
@@ -54,28 +66,28 @@ public class URLUtilsTest {
         String resolvedPath = null;
 
         resolvedPath = URLUtils.normalizePath(path);
-        Assert.assertEquals(expectedPath, resolvedPath);
+        assertEquals(expectedPath, resolvedPath);
 
         path = "";
         expectedPath = "";
         resolvedPath = URLUtils.normalizePath(path);
-        Assert.assertEquals(expectedPath, resolvedPath);
+        assertEquals(expectedPath, resolvedPath);
 
         path = "/abc/";
         expectedPath = "/abc/";
         resolvedPath = URLUtils.normalizePath(path);
-        Assert.assertEquals(expectedPath, resolvedPath);
+        assertEquals(expectedPath, resolvedPath);
 
         path = "//abc///";
         expectedPath = "/abc/";
         resolvedPath = URLUtils.normalizePath(path);
-        Assert.assertEquals(expectedPath, resolvedPath);
+        assertEquals(expectedPath, resolvedPath);
 
 
         path = "//\\abc///";
         expectedPath = "/abc/";
         resolvedPath = URLUtils.normalizePath(path);
-        Assert.assertEquals(expectedPath, resolvedPath);
+        assertEquals(expectedPath, resolvedPath);
     }
 
     @Test
@@ -84,13 +96,12 @@ public class URLUtilsTest {
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
         String expectedPath = "java/lang/String.class";
         String relativePath = URLUtils.resolveRelativePath(resourceURL);
-        Assert.assertEquals(expectedPath, relativePath);
+        assertEquals(expectedPath, relativePath);
 
         File rtJarFile = new File(SystemUtils.JAVA_HOME, "lib/rt.jar");
         resourceURL = rtJarFile.toURI().toURL();
         relativePath = URLUtils.resolveRelativePath(resourceURL);
-        Assert.assertNull(relativePath);
-
+        assertNull(relativePath);
     }
 
     @Test
@@ -98,7 +109,7 @@ public class URLUtilsTest {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
         File archiveFile = URLUtils.resolveArchiveFile(resourceURL, FileConstants.JAR_EXTENSION);
-        Assert.assertTrue(archiveFile.exists());
+        assertTrue(archiveFile.exists());
     }
 
     @Test
@@ -112,7 +123,7 @@ public class URLUtilsTest {
         expectedParametersMap.put("es_sm", Arrays.asList("122"));
         expectedParametersMap.put("ie", Arrays.asList("UTF-8"));
 
-        Assert.assertEquals(expectedParametersMap, parametersMap);
+        assertEquals(expectedParametersMap, parametersMap);
 
         url = "https://www.google.com.hk/search";
         parametersMap = resolveQueryParameters(url);
@@ -165,23 +176,39 @@ public class URLUtilsTest {
     public void testIsDirectoryURL() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, StringUtils.class);
-        Assert.assertFalse(URLUtils.isDirectoryURL(resourceURL));
+        assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
         String externalForm = null;
         externalForm = StringUtils.substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
         resourceURL = new URL(externalForm);
-        Assert.assertTrue(URLUtils.isDirectoryURL(resourceURL));
+        assertTrue(URLUtils.isDirectoryURL(resourceURL));
 
         resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        Assert.assertFalse(URLUtils.isDirectoryURL(resourceURL));
+        assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
         resourceURL = ClassLoaderUtils.getClassResource(classLoader, getClass());
-        Assert.assertFalse(URLUtils.isDirectoryURL(resourceURL));
-
+        assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
         externalForm = StringUtils.substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
         resourceURL = new URL(externalForm);
-        Assert.assertTrue(URLUtils.isDirectoryURL(resourceURL));
-
+        assertTrue(URLUtils.isDirectoryURL(resourceURL));
     }
+
+    @Test
+    public void testResetURLStreamHandlerFactory() {
+        StandardURLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
+        resetURLStreamHandlerFactory(factory);
+        CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();
+        assertNotSame(factory, compositeFactory);
+        assertEquals(1, compositeFactory.getFactories().size());
+        assertSame(factory, compositeFactory.getFactories().get(0));
+        assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
+
+        resetURLStreamHandlerFactory(factory);
+        assertNotSame(factory, compositeFactory);
+        assertEquals(1, compositeFactory.getFactories().size());
+        assertSame(factory, compositeFactory.getFactories().get(0));
+        assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
+    }
+
 }

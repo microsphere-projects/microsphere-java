@@ -35,6 +35,7 @@ import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.github.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.github.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -432,15 +433,35 @@ public abstract class URLUtils {
         return lastIndex > -1 ? path.substring(0, lastIndex) : path;
     }
 
+    /**
+     * Reset the {@link URLStreamHandlerFactory} for {@link URL URL's}
+     *
+     * @param factory {@link URLStreamHandlerFactory}
+     */
     public static void resetURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
         if (factory == null) {
             return;
         }
-        URLStreamHandlerFactory oldFactory = getStaticFieldValue(URL.class, "factory");
-        CompositeURLStreamHandlerFactory newFactory = new CompositeURLStreamHandlerFactory();
-        newFactory.addURLStreamHandlerFactory(oldFactory);
-        newFactory.addURLStreamHandlerFactory(factory);
-        URL.setURLStreamHandlerFactory(newFactory);
+        URLStreamHandlerFactory oldFactory = getURLStreamHandlerFactory();
+        CompositeURLStreamHandlerFactory compositeFactory;
+
+        if (oldFactory instanceof CompositeURLStreamHandlerFactory) {
+            compositeFactory = (CompositeURLStreamHandlerFactory) oldFactory;
+        } else {
+            compositeFactory = new CompositeURLStreamHandlerFactory();
+        }
+
+        compositeFactory.addURLStreamHandlerFactory(factory);
+        clearURLStreamHandlerFactory();
+        URL.setURLStreamHandlerFactory(compositeFactory);
+    }
+
+    public static URLStreamHandlerFactory getURLStreamHandlerFactory() {
+        return getStaticFieldValue(URL.class, "factory");
+    }
+
+    protected static void clearURLStreamHandlerFactory() {
+        setStaticFieldValue(URL.class, "factory", null);
     }
 
     protected static String reformProtocol(String protocol, String path) {

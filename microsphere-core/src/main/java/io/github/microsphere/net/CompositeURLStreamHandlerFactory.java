@@ -78,7 +78,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
                 for (URLStreamHandlerFactory element : ((CompositeURLStreamHandlerFactory) factory).getFactories()) {
                     addURLStreamHandlerFactory(element);
                 }
-            } else {
+            } else if (!factories.contains(factory)) {
                 factories.add(factory);
             }
             sortFactories(factories);
