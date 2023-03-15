@@ -455,6 +455,10 @@ public abstract class URLUtils {
         return getFirst(parameters, SUB_PROTOCOL_MATRIX_NAME);
     }
 
+    public static List<String> resolveSubProtocols(URL url) {
+        return resolveSubProtocols(url.toString());
+    }
+
     public static List<String> resolveSubProtocols(String url) {
         Map<String, List<String>> parameters = resolveMatrixParameters(url);
         List<String> values = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
@@ -467,6 +471,10 @@ public abstract class URLUtils {
 
     public static String resolveAuthority(String authority) {
         return truncateMatrixString(authority);
+    }
+
+    public static String resolvePath(URL url) {
+        return resolvePath(url.getPath());
     }
 
     public static String resolvePath(String path) {

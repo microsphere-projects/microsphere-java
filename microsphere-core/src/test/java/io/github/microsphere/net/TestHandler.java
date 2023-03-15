@@ -17,6 +17,7 @@
 package io.github.microsphere.net;
 
 import java.io.IOException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -33,7 +34,8 @@ public class TestHandler extends ExtendableProtocolURLStreamHandler {
     }
 
     @Override
-    protected URLConnection openConnection(URL u) throws IOException {
+    protected URLConnection openFallbackConnection(URL url, Proxy proxy) throws IOException {
         return null;
     }
+
 }

@@ -39,7 +39,7 @@ import static io.github.microsphere.util.ClassLoaderUtils.getClassLoader;
 public class Handler extends ExtendableProtocolURLStreamHandler {
 
     @Override
-    protected URLConnection openConnection(URL u) throws IOException {
+    protected URLConnection openConnection(URL u, Proxy proxy) throws IOException {
         String authority = u.getAuthority();
         String path = u.getPath();
 
@@ -59,10 +59,5 @@ public class Handler extends ExtendableProtocolURLStreamHandler {
             throw new IOException("No Resource[classpath='" + classPath + "'] was not found!");
         }
         return url.openConnection();
-    }
-
-    @Override
-    protected URLConnection openConnection(URL u, Proxy p) throws IOException {
-        return openConnection(u);
     }
 }
