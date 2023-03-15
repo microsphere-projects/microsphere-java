@@ -38,6 +38,7 @@ import static io.github.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
 import static io.github.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
 import static io.github.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.github.microsphere.net.URLUtils.buildMatrixString;
+import static io.github.microsphere.net.URLUtils.registerURLStreamHandler;
 import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.net.Proxy.NO_PROXY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -125,6 +126,8 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     public void init() {
         initSubProtocolURLConnectionFactories();
+        // register self
+        registerURLStreamHandler(this);
     }
 
     private void initSubProtocolURLConnectionFactories() {
