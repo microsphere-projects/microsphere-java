@@ -13,6 +13,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -405,6 +406,8 @@ public abstract class URLUtils {
         int len = 1;
 
         if (hasAuthority) {
+            protocol = reformProtocol(protocol, authority);
+            authority = resolveAuthority(authority);
             len += 2 + authority.length();
         }
 
@@ -460,9 +463,27 @@ public abstract class URLUtils {
     }
 
     public static List<String> resolveSubProtocols(String url) {
-        Map<String, List<String>> parameters = resolveMatrixParameters(url);
-        List<String> values = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
-        return values == null ? emptyList() : unmodifiableList(values);
+        String subProtocolsString = findSubProtocolsString(url);
+        final List<String> subProtocols;
+        if (subProtocolsString == null) {
+            Map<String, List<String>> parameters = resolveMatrixParameters(url);
+            subProtocols = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
+        } else {
+            String[] values = split(subProtocolsString, COLON_CHAR);
+            subProtocols = Arrays.asList(values);
+        }
+        return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
+    }
+
+    private static String findSubProtocolsString(String url) {
+        int startIndex = url.indexOf(COLON_CHAR);
+        if (startIndex > -1) {
+            int endIndex = url.indexOf("://", startIndex);
+            if (endIndex > startIndex) {
+                return url.substring(startIndex, endIndex);
+            }
+        }
+        return null;
     }
 
     public static String resolveAuthority(URL url) {
@@ -581,8 +602,8 @@ public abstract class URLUtils {
         setStaticFieldValue(URL.class, "factory", null);
     }
 
-    protected static String reformProtocol(String protocol, String path) {
-        List<String> subProtocols = resolveSubProtocols(path);
+    protected static String reformProtocol(String protocol, String spec) {
+        List<String> subProtocols = resolveSubProtocols(spec);
         int size = subProtocols.size();
         if (size < 1) { // the matrix of sub-protocols was not found
             return protocol;

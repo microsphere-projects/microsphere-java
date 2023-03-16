@@ -279,7 +279,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @return non-null
      */
     protected List<String> resolveSubProtocols(URL url) {
-        return URLUtils.resolveSubProtocols(url.toString());
+        return URLUtils.resolveSubProtocols(url);
     }
 
     protected String resolveAuthority(URL url) {
