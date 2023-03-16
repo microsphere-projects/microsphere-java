@@ -79,7 +79,7 @@ public interface Converter<S, T> extends Prioritized {
      * @param targetType the target type
      * @return
      */
-    static Converter<?, ?> getConverter(Class<?> sourceType, Class<?> targetType) {
+    static <S, T> Converter<S, T> getConverter(Class<S> sourceType, Class<T> targetType) {
         ClassLoader classLoader = ClassLoaderUtils.getClassLoader();
         return loadServicesList(classLoader, Converter.class)
                 .stream()
