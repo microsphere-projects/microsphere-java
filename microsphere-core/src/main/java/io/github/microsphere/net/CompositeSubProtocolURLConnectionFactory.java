@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,27 +44,40 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
 
     public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
         List<SubProtocolURLConnectionFactory> newFactories = toList(factories);
-        sortFactories();
         this.factories = newFactories;
+        sort();
     }
 
-    public CompositeSubProtocolURLConnectionFactory add(CompositeSubProtocolURLConnectionFactory factory) {
-        this.factories.add(factory);
-        sortFactories();
+    public CompositeSubProtocolURLConnectionFactory add(SubProtocolURLConnectionFactory factory) {
+        addInternal(factory);
+        sort();
         return this;
     }
 
-    public CompositeSubProtocolURLConnectionFactory add(CompositeSubProtocolURLConnectionFactory... factories) {
-        this.factories.addAll(Arrays.asList(factories));
-        sortFactories();
+    public CompositeSubProtocolURLConnectionFactory add(SubProtocolURLConnectionFactory... factories) {
+        for (int i = 0; i < factories.length; i++) {
+            addInternal(factories[i]);
+        }
+        sort();
         return this;
     }
 
-    public boolean remove(CompositeSubProtocolURLConnectionFactory factory) {
-        return this.factories.remove(factory);
+    protected boolean addInternal(SubProtocolURLConnectionFactory factory) {
+        if (this.factories.contains(factory)) {
+            return false;
+        }
+        return this.factories.add(factory);
     }
 
-    private void sortFactories() {
+    public boolean remove(SubProtocolURLConnectionFactory factory) {
+        boolean result = this.factories.remove(factory);
+        if (result) {
+            sort();
+        }
+        return result;
+    }
+
+    private void sort() {
         List<SubProtocolURLConnectionFactory> factories = this.factories;
         Collections.sort(factories, Prioritized.COMPARATOR);
     }

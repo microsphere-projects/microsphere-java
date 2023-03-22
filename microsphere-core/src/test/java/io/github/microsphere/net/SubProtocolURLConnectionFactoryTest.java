@@ -14,44 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net.console;
+package io.github.microsphere.net;
 
-import java.io.Console;
+import io.github.microsphere.net.console.ConsoleURLConnection;
+import org.junit.Test;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * {@link Console} {@link URLConnection}
+ * {@link SubProtocolURLConnectionFactory} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ConsoleURLConnection extends URLConnection {
+public class SubProtocolURLConnectionFactoryTest {
 
-    /**
-     * Constructs a URL connection to the specified URL. A connection to
-     * the object referenced by the URL is not created.
-     *
-     * @param url the specified URL.
-     */
-    public ConsoleURLConnection(URL url) {
-        super(url);
-    }
-
-    @Override
-    public void connect() throws IOException {
-    }
-
-    @Override
-    public InputStream getInputStream() throws IOException {
-        return System.in;
-    }
-
-    @Override
-    public OutputStream getOutputStream() throws IOException {
-        return System.out;
+    @Test
+    public void test() throws IOException {
+        URL url = new URL("ftp://...");
+        List<String> subProtocols = Collections.emptyList();
+        ConsoleSubProtocolURLConnectionFactory instance = new ConsoleSubProtocolURLConnectionFactory();
+        if (instance.supports(url, subProtocols)) {
+            URLConnection urlConnection = instance.create(url, subProtocols, Proxy.NO_PROXY);
+            assertEquals(ConsoleURLConnection.class, urlConnection.getClass());
+        }
     }
 }
