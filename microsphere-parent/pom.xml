@@ -29,7 +29,8 @@
         <feign.version>10.2.3</feign.version>
         <p6spy.version>3.9.1</p6spy.version>
 
-        <spring-boot.version>2.7.8</spring-boot.version>
+        <spring-boot.version>2.7.9</spring-boot.version>
+        <resilience4j.version>2.0.2</resilience4j.version>
 
         <junit.version>4.7</junit.version>
     </properties>
@@ -44,6 +45,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
                 <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <!-- Resilience4j Dependencies -->
+                <groupId>io.github.resilience4j</groupId>
+                <artifactId>resilience4j-bom</artifactId>
+                <version>${resilience4j.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
