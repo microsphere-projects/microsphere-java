@@ -28,6 +28,7 @@ import java.util.function.Predicate;
 import static io.github.microsphere.lang.function.Streams.filterAll;
 import static io.github.microsphere.reflect.MemberUtils.isPrivate;
 import static io.github.microsphere.reflect.MemberUtils.isStatic;
+import static io.github.microsphere.reflect.TypeUtils.getClassName;
 import static io.github.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.github.microsphere.util.ClassUtils.getTypes;
 import static java.util.Collections.emptyList;
@@ -318,5 +319,22 @@ public abstract class MethodUtils {
     static Method findOverriddenMethod(Method overrider, Class<?> declaringClass) {
         List<Method> matchedMethods = getAllMethods(declaringClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
+    }
+
+    /**
+     * Get the signature of {@link Method the specified method}
+     *
+     * @param method {@link Method the specified method}
+     * @return non-null
+     */
+    public static String getSignature(Method method) {
+        Class<?> returnType = method.getReturnType();
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        String methodName = method.getName();
+        String returnTypeName = getClassName(returnType);
+        int size = returnTypeName.length() + 1;
+        StringBuilder signatureBuilder = new StringBuilder();
+
+        return signatureBuilder.toString();
     }
 }

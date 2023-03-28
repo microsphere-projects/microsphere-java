@@ -30,7 +30,7 @@
         <p6spy.version>3.9.1</p6spy.version>
 
         <spring-boot.version>2.7.9</spring-boot.version>
-        <resilience4j.version>2.0.2</resilience4j.version>
+        <resilience4j.version>1.7.0</resilience4j.version>
 
         <junit.version>4.7</junit.version>
     </properties>

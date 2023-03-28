@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package io.github.microsphere.util;
 
@@ -10,9 +10,13 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Map;
 import java.util.Set;
+
+import static io.github.microsphere.util.ClassUtils.getClassName;
+import static org.junit.Assert.assertEquals;
 
 /**
  * {@link ClassUtils} {@link TestCase}
@@ -88,6 +92,29 @@ public class ClassUtilsTest extends AbstractTestCase {
         Assert.assertNotNull(codeSourceLocation);
 
 
+    }
+
+    @Test
+    public void testClassName() {
+        // There are five kinds of classes (or interfaces):
+        // a) Top level classes
+        assertEquals("java.lang.String", getClassName(String.class));
+
+        // b) Nested classes (static member classes)
+        assertEquals("java.util.Map$Entry", getClassName(Map.Entry.class));
+
+        // c) Inner classes (non-static member classes)
+        assertEquals("java.lang.Thread$State", getClassName(Thread.State.class));
+
+        // d) Local classes (named classes declared within a method)
+        class LocalClass {
+        }
+        assertEquals("io.github.microsphere.util.ClassUtilsTest$1LocalClass", getClassName(LocalClass.class));
+
+        // e) Anonymous classes
+        Serializable instance = new Serializable() {
+        };
+        assertEquals("io.github.microsphere.util.ClassUtilsTest$1", getClassName(instance.getClass()));
     }
 
 }

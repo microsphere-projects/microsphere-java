@@ -37,6 +37,7 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.github.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
@@ -79,22 +80,7 @@ public abstract class ClassUtils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(
-            Void.class,
-            Boolean.class,
-            Character.class,
-            Byte.class,
-            Short.class,
-            Integer.class,
-            Long.class,
-            Float.class,
-            Double.class,
-            String.class,
-            BigDecimal.class,
-            BigInteger.class,
-            Date.class,
-            Object.class
-    );
+    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(Void.class, Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, BigDecimal.class, BigInteger.class, Date.class, Object.class);
 
 
     private ClassUtils() {
@@ -404,19 +390,14 @@ public abstract class ClassUtils {
 
             if (isNotEmpty(interfaces)) {
                 // add current interfaces
-                Arrays.stream(interfaces)
-                        .filter(resolved::add)
-                        .forEach(cls -> {
-                            allInterfaces.add(cls);
-                            waitResolve.add(cls);
-                        });
+                Arrays.stream(interfaces).filter(resolved::add).forEach(cls -> {
+                    allInterfaces.add(cls);
+                    waitResolve.add(cls);
+                });
             }
 
             // add all super classes to waitResolve
-            getAllSuperClasses(clazz)
-                    .stream()
-                    .filter(resolved::add)
-                    .forEach(waitResolve::add);
+            getAllSuperClasses(clazz).stream().filter(resolved::add).forEach(waitResolve::add);
 
             clazz = waitResolve.poll();
         }
@@ -492,6 +473,80 @@ public abstract class ClassUtils {
         }
 
         return types;
+    }
+
+    public static String getClassName(Class<?> type) {
+//        if (type.isArray()) {
+//            return getArrayClassName(type);
+//        }
+//        Class<?> enclosingClass = type.getEnclosingClass();
+//        if (enclosingClass == null) { // top level class
+//            return type.getName();
+//        } else {
+//            return getEnclosingClassName(type, enclosingClass);
+//        }
+        if (type.isArray()) {
+            try {
+                Class<?> cl = type;
+                int dimensions = 0;
+                while (cl.isArray()) {
+                    dimensions++;
+                    cl = cl.getComponentType();
+                }
+                String name = cl.getName();
+                StringBuilder sb = new StringBuilder(name.length() + dimensions * 2);
+                sb.append(name);
+                for (int i = 0; i < dimensions; i++) {
+                    sb.append("[]");
+                }
+                return sb.toString();
+            } catch (Throwable e) {
+            }
+        }
+        return type.getName();
+    }
+
+    private static String getEnclosingClassName(Class<?> type, Class<?> enclosingClass) {
+        String enclosingClassName = getClassName(enclosingClass);
+        String simpleName = getSimpleName(type, false);
+        return enclosingClassName + DOT_CHAR + simpleName;
+    }
+
+    public static String getSimpleName(Class<?> type) {
+        boolean array = type.isArray();
+        return getSimpleName(type, array);
+    }
+
+    private static String getSimpleName(Class<?> type, boolean array) {
+        if (array) {
+            return getSimpleName(type.getComponentType()) + "[]";
+        }
+        String simpleName = type.getName();
+        Class<?> enclosingClass = type.getEnclosingClass();
+        if (enclosingClass == null) { // top level class
+            simpleName = simpleName.substring(simpleName.lastIndexOf(".") + 1);
+        } else {
+            String ecName = enclosingClass.getName();
+            simpleName = simpleName.substring(ecName.length());
+            // Remove leading "\$[0-9]*" from the name
+            int length = simpleName.length();
+            if (length < 1 || simpleName.charAt(0) != '$') throw new InternalError("Malformed class name");
+            int index = 1;
+            while (index < length && isAsciiDigit(simpleName.charAt(index))) index++;
+            // Eventually, this is the empty string iff this is an anonymous class
+            return simpleName.substring(index);
+        }
+        return simpleName;
+    }
+
+    private static boolean isAsciiDigit(char c) {
+        return '0' <= c && c <= '9';
+    }
+
+    private static String getArrayClassName(Class<?> type) {
+        Class<?> componentType = type.getComponentType();
+        String canonicalName = getClassName(componentType);
+        return canonicalName == null ? null : canonicalName + "[]";
     }
 
 }
