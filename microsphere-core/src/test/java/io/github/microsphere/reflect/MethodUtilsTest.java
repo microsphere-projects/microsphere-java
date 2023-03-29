@@ -18,6 +18,11 @@ package io.github.microsphere.reflect;
 
 import org.junit.Test;
 
+import java.lang.reflect.Method;
+
+import static io.github.microsphere.reflect.MethodUtils.getSignature;
+import static org.junit.Assert.assertEquals;
+
 /**
  * {@link MethodUtils} Test
  *
@@ -26,8 +31,24 @@ import org.junit.Test;
  */
 public class MethodUtilsTest {
 
+    /**
+     * Test {@link MethodUtils#getSignature(Method)}
+     */
     @Test
-    public void test() {
+    public void testGetSignature() {
+        Method method = null;
+
+        // Test non-argument Method
+        method = MethodUtils.findMethod(this.getClass(), "testGetSignature");
+        assertEquals("io.github.microsphere.reflect.MethodUtilsTest#testGetSignature()", getSignature(method));
+
+        // Test one-argument Method
+        method = MethodUtils.findMethod(Object.class, "equals", Object.class);
+        assertEquals("java.lang.Object#equals(java.lang.Object)", getSignature(method));
+
+        // Test two-argument Method
+        method = MethodUtils.findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
+        assertEquals("io.github.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
 
     }
 }

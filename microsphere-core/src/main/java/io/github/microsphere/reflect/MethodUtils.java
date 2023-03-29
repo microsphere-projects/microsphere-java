@@ -332,13 +332,13 @@ public abstract class MethodUtils {
      * @return non-null
      */
     public static String getSignature(Method method) {
-        Class<?> returnType = method.getReturnType();
+        Class<?> declaringClass = method.getDeclaringClass();
         Class<?>[] parameterTypes = method.getParameterTypes();
         int parameterCount = parameterTypes.length;
         String[] parameterTypeNames = new String[parameterCount];
         String methodName = method.getName();
-        String returnTypeName = getTypeName(returnType);
-        int size = returnTypeName.length() + 1 // '#'
+        String declaringClassName = getTypeName(declaringClass);
+        int size = declaringClassName.length() + 1 // '#'
                 + methodName.length() + 1  // '('
                 + (parameterCount == 0 ? 0 : parameterCount - 1) // (parameterCount - 1) * ','
                 + 1  // ')'
@@ -353,7 +353,7 @@ public abstract class MethodUtils {
 
         StringBuilder signatureBuilder = new StringBuilder(size);
 
-        signatureBuilder.append(returnTypeName).append(SHARP_CHAR).append(methodName).append(LEFT_PARENTHESIS_CHAR);
+        signatureBuilder.append(declaringClassName).append(SHARP_CHAR).append(methodName).append(LEFT_PARENTHESIS_CHAR);
 
         for (int i = 0; i < parameterCount; i++) {
             String parameterTypeName = parameterTypeNames[i];
