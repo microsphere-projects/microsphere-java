@@ -37,7 +37,6 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.github.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
@@ -475,16 +474,13 @@ public abstract class ClassUtils {
         return types;
     }
 
-    public static String getClassName(Class<?> type) {
-//        if (type.isArray()) {
-//            return getArrayClassName(type);
-//        }
-//        Class<?> enclosingClass = type.getEnclosingClass();
-//        if (enclosingClass == null) { // top level class
-//            return type.getName();
-//        } else {
-//            return getEnclosingClassName(type, enclosingClass);
-//        }
+    /**
+     * Get the name of the specified type
+     *
+     * @param type the specified type
+     * @return non-null
+     */
+    public static String getTypeName(Class<?> type) {
         if (type.isArray()) {
             try {
                 Class<?> cl = type;
@@ -493,7 +489,7 @@ public abstract class ClassUtils {
                     dimensions++;
                     cl = cl.getComponentType();
                 }
-                String name = cl.getName();
+                String name = getTypeName(cl);
                 StringBuilder sb = new StringBuilder(name.length() + dimensions * 2);
                 sb.append(name);
                 for (int i = 0; i < dimensions; i++) {
@@ -506,12 +502,12 @@ public abstract class ClassUtils {
         return type.getName();
     }
 
-    private static String getEnclosingClassName(Class<?> type, Class<?> enclosingClass) {
-        String enclosingClassName = getClassName(enclosingClass);
-        String simpleName = getSimpleName(type, false);
-        return enclosingClassName + DOT_CHAR + simpleName;
-    }
-
+    /**
+     * Get the simple name of the specified type
+     *
+     * @param type the specified type
+     * @return non-null
+     */
     public static String getSimpleName(Class<?> type) {
         boolean array = type.isArray();
         return getSimpleName(type, array);
@@ -542,11 +538,4 @@ public abstract class ClassUtils {
     private static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';
     }
-
-    private static String getArrayClassName(Class<?> type) {
-        Class<?> componentType = type.getComponentType();
-        String canonicalName = getClassName(componentType);
-        return canonicalName == null ? null : canonicalName + "[]";
-    }
-
 }

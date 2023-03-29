@@ -25,11 +25,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static io.github.microsphere.constants.SymbolConstants.COMMA_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
+import static io.github.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.github.microsphere.lang.function.Streams.filterAll;
 import static io.github.microsphere.reflect.MemberUtils.isPrivate;
 import static io.github.microsphere.reflect.MemberUtils.isStatic;
-import static io.github.microsphere.reflect.TypeUtils.getClassName;
 import static io.github.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.github.microsphere.util.ClassUtils.getTypeName;
 import static io.github.microsphere.util.ClassUtils.getTypes;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -151,7 +155,7 @@ public abstract class MethodUtils {
      * @param methodName the specified method name
      * @return if not found, return <code>null</code>
      */
-    static Method findMethod(Class type, String methodName) {
+    public static Method findMethod(Class type, String methodName) {
         return findMethod(type, methodName, EMPTY_CLASS_ARRAY);
     }
 
@@ -163,7 +167,7 @@ public abstract class MethodUtils {
      * @param parameterTypes the parameter types
      * @return if not found, return <code>null</code>
      */
-    static Method findMethod(Class type, String methodName, Class<?>... parameterTypes) {
+    public static Method findMethod(Class type, String methodName, Class<?>... parameterTypes) {
         Method method = null;
         try {
             if (type != null && isNotEmpty(methodName)) {
@@ -330,10 +334,37 @@ public abstract class MethodUtils {
     public static String getSignature(Method method) {
         Class<?> returnType = method.getReturnType();
         Class<?>[] parameterTypes = method.getParameterTypes();
+        int parameterCount = parameterTypes.length;
+        String[] parameterTypeNames = new String[parameterCount];
         String methodName = method.getName();
-        String returnTypeName = getClassName(returnType);
-        int size = returnTypeName.length() + 1;
-        StringBuilder signatureBuilder = new StringBuilder();
+        String returnTypeName = getTypeName(returnType);
+        int size = returnTypeName.length() + 1 // '#'
+                + methodName.length() + 1  // '('
+                + (parameterCount == 0 ? 0 : parameterCount - 1) // (parameterCount - 1) * ','
+                + 1  // ')'
+                ;
+
+        for (int i = 0; i < parameterCount; i++) {
+            Class<?> parameterType = parameterTypes[i];
+            String parameterTypeName = getTypeName(parameterType);
+            parameterTypeNames[i] = parameterTypeName;
+            size += parameterTypeName.length();
+        }
+
+        StringBuilder signatureBuilder = new StringBuilder(size);
+
+        signatureBuilder.append(returnTypeName).append(SHARP_CHAR).append(methodName).append(LEFT_PARENTHESIS_CHAR);
+
+        for (int i = 0; i < parameterCount; i++) {
+            String parameterTypeName = parameterTypeNames[i];
+            signatureBuilder.append(parameterTypeName);
+            if (i < parameterCount - 1) {
+                signatureBuilder.append(COMMA_CHAR);
+            }
+            parameterTypeNames[i] = null;
+        }
+
+        signatureBuilder.append(RIGHT_PARENTHESIS_CHAR);
 
         return signatureBuilder.toString();
     }

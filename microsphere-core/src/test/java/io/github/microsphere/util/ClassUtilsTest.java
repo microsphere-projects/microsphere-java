@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
-import static io.github.microsphere.util.ClassUtils.getClassName;
+import static io.github.microsphere.util.ClassUtils.getTypeName;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -95,26 +95,34 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testClassName() {
-        // There are five kinds of classes (or interfaces):
+    public void testTypeName() {
         // a) Top level classes
-        assertEquals("java.lang.String", getClassName(String.class));
+        assertEquals("java.lang.String", getTypeName(String.class));
 
         // b) Nested classes (static member classes)
-        assertEquals("java.util.Map$Entry", getClassName(Map.Entry.class));
+        assertEquals("java.util.Map$Entry", getTypeName(Map.Entry.class));
 
         // c) Inner classes (non-static member classes)
-        assertEquals("java.lang.Thread$State", getClassName(Thread.State.class));
+        assertEquals("java.lang.Thread$State", getTypeName(Thread.State.class));
 
         // d) Local classes (named classes declared within a method)
         class LocalClass {
         }
-        assertEquals("io.github.microsphere.util.ClassUtilsTest$1LocalClass", getClassName(LocalClass.class));
+        assertEquals("io.github.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(LocalClass.class));
 
         // e) Anonymous classes
         Serializable instance = new Serializable() {
         };
-        assertEquals("io.github.microsphere.util.ClassUtilsTest$1", getClassName(instance.getClass()));
+        assertEquals("io.github.microsphere.util.ClassUtilsTest$1", getTypeName(instance.getClass()));
+
+        // f) Array classes
+        assertEquals("byte[]", getTypeName(byte[].class));
+        assertEquals("char[]", getTypeName(char[].class));
+        assertEquals("short[]", getTypeName(short[].class));
+        assertEquals("int[]", getTypeName(int[].class));
+        assertEquals("long[]", getTypeName(long[].class));
+        assertEquals("float[]", getTypeName(float[].class));
+        assertEquals("double[]", getTypeName(double[].class));
     }
 
 }

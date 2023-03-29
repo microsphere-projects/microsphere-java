@@ -30,6 +30,7 @@ public class SymbolConstantsTest {
 
     @Test
     public void test() {
+        assertEquals(',', SymbolConstants.COMMA_CHAR);
         assertEquals(' ', SymbolConstants.SPACE_CHAR);
         assertEquals('!', SymbolConstants.EXCLAMATION_CHAR);
         assertEquals('"', SymbolConstants.DOUBLE_QUOTATION_CHAR);
@@ -41,7 +42,10 @@ public class SymbolConstantsTest {
         assertEquals(';', SymbolConstants.SEMICOLON_CHAR);
         assertEquals('#', SymbolConstants.SHARP_CHAR);
         assertEquals('?', SymbolConstants.QUERY_STRING_CHAR);
+        assertEquals('(', SymbolConstants.LEFT_PARENTHESIS_CHAR);
+        assertEquals(')', SymbolConstants.RIGHT_PARENTHESIS_CHAR);
 
+        assertEquals(",", SymbolConstants.COMMA);
         assertEquals(" ", SymbolConstants.SPACE);
         assertEquals("!", SymbolConstants.EXCLAMATION);
         assertEquals("\"", SymbolConstants.DOUBLE_QUOTATION);
@@ -53,5 +57,7 @@ public class SymbolConstantsTest {
         assertEquals(";", SymbolConstants.SEMICOLON);
         assertEquals("#", SymbolConstants.SHARP);
         assertEquals("?", SymbolConstants.QUERY_STRING);
+        assertEquals("(", SymbolConstants.LEFT_PARENTHESIS);
+        assertEquals(")", SymbolConstants.RIGHT_PARENTHESIS);
     }
 }
