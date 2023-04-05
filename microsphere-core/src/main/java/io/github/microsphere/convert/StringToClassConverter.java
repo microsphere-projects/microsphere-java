@@ -29,8 +29,10 @@ public class StringToClassConverter implements StringConverter<Class> {
 
     public static final StringToClassConverter INSTANCE = new StringToClassConverter();
 
+    private static final ClassLoader classLoader = getClassLoader();
+
     @Override
     public Class convert(String className) {
-        return resolveClass(className, getClassLoader());
+        return resolveClass(className, classLoader);
     }
 }
