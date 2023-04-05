@@ -11,5 +11,6 @@ io.github.microsphere.convert.StringToShortConverter
 io.github.microsphere.convert.StringToStringConverter
 io.github.microsphere.convert.StringToInputStreamConverter
 io.github.microsphere.convert.StringToDurationConverter
+io.github.microsphere.convert.StringToClassConverter
 io.github.microsphere.convert.MapToPropertiesConverter
 io.github.microsphere.convert.PropertiesToStringConverter
