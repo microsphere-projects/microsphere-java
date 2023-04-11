@@ -48,6 +48,7 @@
         <module>microsphere-annotation-processor</module>
         <module>microsphere-core</module>
         <module>microsphere-i18n</module>
+        <module>microsphere-micrometer</module>
         <module>microsphere-tools</module>
     </modules>
 
