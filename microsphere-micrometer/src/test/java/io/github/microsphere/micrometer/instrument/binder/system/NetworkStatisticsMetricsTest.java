@@ -16,7 +16,7 @@
  */
 package io.github.microsphere.micrometer.instrument.binder.system;
 
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
+import io.github.microsphere.micrometer.instrument.binder.AbstractMetricsTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -38,11 +38,7 @@ import static org.junit.Assert.assertFalse;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class NetworkStatisticsMetricsTest {
-
-    private SimpleMeterRegistry registry = new SimpleMeterRegistry();
-
-    private NetworkStatisticsMetrics metrics = new NetworkStatisticsMetrics();
+public class NetworkStatisticsMetricsTest extends AbstractMetricsTest<NetworkStatisticsMetrics> {
 
     @BeforeClass
     public static void prepare() throws Throwable {
@@ -51,10 +47,8 @@ public class NetworkStatisticsMetricsTest {
     }
 
     @Test
-    public void testBindTo() throws Throwable {
-        metrics.bindTo(registry);
+    public void test() throws Throwable {
         assertFalse(registry.getMeters().isEmpty());
-
 
         WatchService watchService = FileSystems.getDefault().newWatchService();
         Path dir = STATS_FILE_PATH.getParent();

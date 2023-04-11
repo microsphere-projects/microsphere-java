@@ -62,21 +62,21 @@ public class NetworkStatisticsMetrics extends AbstractMeterBinder {
     private void bindStats(Stats stats) {
         Iterable<Tag> newTags = Tags.concat(tags, "interface", stats.name);
 
-        Gauge.builder("network.receive.bytes", stats, Stats::getReceiveBytes).tags(newTags).description("Receive bytes").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.receive.bytes", stats, Stats::getReceiveBytes).tags(newTags).description("Receive bytes").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.receive.packets", stats, Stats::getReceivePackets).tags(newTags).description("Receive packets").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.receive.packets", stats, Stats::getReceivePackets).tags(newTags).description("Receive packets").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.receive.errors", stats, Stats::getReceiveErrors).tags(newTags).description("Receive errors").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.receive.errors", stats, Stats::getReceiveErrors).tags(newTags).description("Receive errors").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.receive.drop", stats, Stats::getReceiveDrop).tags(newTags).description("Receive drop").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.receive.drop", stats, Stats::getReceiveDrop).tags(newTags).description("Receive drop").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.transmit.bytes", stats, Stats::getTransmitBytes).tags(newTags).description("Transmit bytes").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.transmit.bytes", stats, Stats::getTransmitBytes).tags(newTags).description("Transmit bytes").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.transmit.packets", stats, Stats::getTransmitPackets).tags(newTags).description("Transmit packets").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.transmit.packets", stats, Stats::getTransmitPackets).tags(newTags).description("Transmit packets").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.transmit.errors", stats, Stats::getTransmitErrors).tags(newTags).description("Transmit Errors").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.transmit.errors", stats, Stats::getTransmitErrors).tags(newTags).description("Transmit Errors").baseUnit(BaseUnits.BYTES).register(registry);
 
-        Gauge.builder("network.transmit.drop", stats, Stats::getTransmitDrop).tags(newTags).description("Transmit drop").baseUnit(BaseUnits.BYTES).strongReference(true).register(registry);
+        Gauge.builder("network.transmit.drop", stats, Stats::getTransmitDrop).tags(newTags).description("Transmit drop").baseUnit(BaseUnits.BYTES).register(registry);
     }
 
     private void asyncBindStatsList() {
