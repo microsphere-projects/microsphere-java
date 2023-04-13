@@ -37,7 +37,7 @@ import java.util.jar.JarFile;
  * @see ClassLoader
  * @since 1.0.0
  */
-public abstract class ClassLoaderUtils {
+public abstract class ClassLoaderUtils extends BaseUtils {
 
     protected static final ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
 

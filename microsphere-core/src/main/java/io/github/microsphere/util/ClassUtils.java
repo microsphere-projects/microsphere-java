@@ -52,7 +52,7 @@ import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
  * @see ClassUtils
  * @since 1.0.0
  */
-public abstract class ClassUtils {
+public abstract class ClassUtils extends BaseUtils {
 
     private static final Map<String, Set<String>> classPathToClassNamesMap = initClassPathToClassNamesMap();
 

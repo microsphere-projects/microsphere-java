@@ -13,7 +13,7 @@ import java.util.ServiceLoader;
  * @see ServiceLoader
  * @since 1.0.0
  */
-public abstract class ServiceLoaderUtils {
+public abstract class ServiceLoaderUtils extends BaseUtils {
 
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)

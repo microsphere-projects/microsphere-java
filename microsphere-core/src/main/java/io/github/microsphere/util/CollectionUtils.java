@@ -35,7 +35,7 @@ import static java.util.Collections.unmodifiableSet;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @version 1.0.0
  */
-public abstract class CollectionUtils {
+public abstract class CollectionUtils extends BaseUtils {
 
     public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();

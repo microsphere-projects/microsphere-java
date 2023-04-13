@@ -25,7 +25,7 @@ import java.util.Set;
  * @see ClassPathUtils
  * @since 1.0.0
  */
-public abstract class ClassPathUtils {
+public abstract class ClassPathUtils extends BaseUtils {
 
     protected static final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
 
