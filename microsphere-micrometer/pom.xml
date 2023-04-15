@@ -20,21 +20,31 @@
 
     <dependencies>
 
-        <!-- Apache Commons -->
+        <!-- Microsphere Core -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-core</artifactId>
+            <version>${revision}</version>
         </dependency>
 
         <!-- Micrometer -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
+        </dependency>
+
+        <!-- Alibaba Sentinel -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-core</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- P6spy -->
+        <dependency>
+            <groupId>p6spy</groupId>
+            <artifactId>p6spy</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- SLF4j -->
