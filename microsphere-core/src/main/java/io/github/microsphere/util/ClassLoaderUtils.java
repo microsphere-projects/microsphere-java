@@ -467,16 +467,29 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
+     * Resolve the {@link Class} by the specified name using {@link #getClassLoader()}
+     *
+     * @param className   the name of {@link Class}
+     * @return If can't be resolved , return <code>null</code>
+     */
+    public static Class<?> resolveClass(@Nullable String className) {
+        return resolveClass(className, getClassLoader());
+    }
+
+    /**
      * Resolve the {@link Class} by the specified name and {@link ClassLoader}
      *
      * @param className   the name of {@link Class}
      * @param classLoader {@link ClassLoader}
      * @return If can't be resolved , return <code>null</code>
      */
-    public static Class<?> resolveClass(String className, ClassLoader classLoader) {
+    public static Class<?> resolveClass(@Nullable String className, @Nullable ClassLoader classLoader) {
         Class<?> targetClass = null;
         try {
-            targetClass = forName(className, classLoader);
+            if (className != null) {
+                ClassLoader targetClassLoader = classLoader == null ? getClassLoader() : classLoader;
+                targetClass = forName(className, targetClassLoader);
+            }
         } catch (Throwable ignored) { // Ignored
         }
         return targetClass;
