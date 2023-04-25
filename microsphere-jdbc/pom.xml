@@ -11,12 +11,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-micrometer</artifactId>
+    <artifactId>microsphere-jdbc</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere Project :: Micrometer</name>
-    <description>Microsphere Micrometer</description>
+    <name>Microsphere Project :: JDBC</name>
+    <description>Microsphere JDBC</description>
 
     <dependencies>
 
@@ -25,19 +25,6 @@
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-core</artifactId>
             <version>${revision}</version>
-        </dependency>
-
-        <!-- Micrometer -->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-core</artifactId>
-        </dependency>
-
-        <!-- Alibaba Sentinel -->
-        <dependency>
-            <groupId>com.alibaba.csp</groupId>
-            <artifactId>sentinel-core</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <!-- P6spy -->
