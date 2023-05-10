@@ -7,6 +7,7 @@ import io.github.microsphere.constants.Constants;
 import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.constants.PathConstants;
 import io.github.microsphere.net.URLUtils;
+import io.github.microsphere.reflect.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -118,30 +119,73 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return classLoadingMXBean.getTotalLoadedClassCount();
     }
 
-
     /**
      * Return the ClassLoader to use.
      *
      * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
      * @see Thread#getContextClassLoader()
+     * @see Class#getClassLoader()
      * @see ClassLoader#getSystemClassLoader()
+     * @see ReflectionUtils#getCallerClass()
      */
     @Nullable
     public static ClassLoader getClassLoader() {
-        ClassLoader cl = null;
+        ClassLoader classLoader = null;
         try {
-            cl = Thread.currentThread().getContextClassLoader();
-        } catch (SecurityException ex) {
-            cl = ClassUtils.class.getClassLoader();
+            classLoader = Thread.currentThread().getContextClassLoader();
+        } catch (Throwable ignored) {
         }
-        if (cl == null) {
-            // cl is null indicates the bootstrap ClassLoader
-            try {
-                cl = ClassLoader.getSystemClassLoader();
-            } catch (Throwable ex) {
+
+        if (classLoader == null) { // If the ClassLoader is also not found,
+            // try to get the ClassLoader from the Caller class
+            Class<?> callerClass = ReflectionUtils.getCallerClass(3);
+            if (callerClass != null) {
+                classLoader = callerClass.getClassLoader();
             }
         }
-        return cl;
+
+        if (classLoader == null) {
+            classLoader = ClassLoaderUtils.class.getClassLoader();
+        }
+
+        if (classLoader == null) {
+            // classLoader is null indicates the bootstrap ClassLoader
+            try {
+                classLoader = ClassLoader.getSystemClassLoader();
+            } catch (Throwable ignored) {
+            }
+        }
+        return classLoader;
+    }
+
+    /**
+     * Return the ClassLoader from the caller class
+     *
+     * @return the ClassLoader (only {@code null} if the caller class was absent
+     * @see ReflectionUtils#getCallerClass()
+     */
+    public static ClassLoader getCallerClassLoader() {
+        ClassLoader classLoader = null;
+        Class<?> callerClass = ReflectionUtils.getCallerClass();
+        if (callerClass != null) {
+            classLoader = callerClass.getClassLoader();
+        }
+        return classLoader;
+    }
+
+    /**
+     * Return the ClassLoader from the caller class
+     *
+     * @return the ClassLoader (only {@code null} if the caller class was absent
+     * @see ReflectionUtils#getCallerClass()
+     */
+    static ClassLoader getCallerClassLoader(int invocationFrame) {
+        ClassLoader classLoader = null;
+        Class<?> callerClass = ReflectionUtils.getCallerClass();
+        if (callerClass != null) {
+            classLoader = callerClass.getClassLoader();
+        }
+        return classLoader;
     }
 
     /**
@@ -469,7 +513,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     /**
      * Resolve the {@link Class} by the specified name using {@link #getClassLoader()}
      *
-     * @param className   the name of {@link Class}
+     * @param className the name of {@link Class}
      * @return If can't be resolved , return <code>null</code>
      */
     public static Class<?> resolveClass(@Nullable String className) {

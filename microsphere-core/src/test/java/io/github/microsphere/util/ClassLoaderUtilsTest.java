@@ -4,6 +4,7 @@
 package io.github.microsphere.util;
 
 import io.github.microsphere.AbstractTestCase;
+import io.github.microsphere.security.TestSecurityManager;
 import junit.framework.Assert;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -263,6 +264,27 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         expectedSet.add("B");
         expectedSet.add("C");
         assertEquals(expectedSet, set);
+    }
+
+    @Test
+    public void testGetClassLoader() {
+        Thread currentThread = Thread.currentThread();
+        ClassLoader classLoader = currentThread.getContextClassLoader();
+        assertEquals(classLoader, ClassLoaderUtils.getClassLoader());
+
+        currentThread.setContextClassLoader(null);
+        assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getClassLoader());
+
+        currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
+        TestSecurityManager.denyRuntimePermission("getClassLoader", () -> {
+            new Runnable() {
+                @Override
+                public void run() {
+                    assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getClassLoader());
+                }
+            }.run();
+        });
+
     }
 
 

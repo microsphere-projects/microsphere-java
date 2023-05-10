@@ -16,15 +16,25 @@
  */
 package io.github.microsphere.util;
 
+import javax.annotation.Nonnull;
 import java.util.AbstractSet;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
@@ -175,6 +185,32 @@ public abstract class CollectionUtils extends BaseUtils {
             return values.iterator().next();
         }
     }
+
+    /**
+     * Shallow Clone {@link Map}
+     *
+     * @param source the source of {@link Map}
+     * @param <K>    the {@link Class type} of key
+     * @param <V>    the {@link Class type} of value
+     * @return non-null
+     */
+    @Nonnull
+    public static <K, V> Map<K, V> shallowCloneMap(@Nonnull Map<K, V> source) {
+        if (source instanceof SortedMap) {
+            return new TreeMap(source);
+        } else if (source instanceof LinkedHashMap) {
+            return new LinkedHashMap(source);
+        } else if (source instanceof IdentityHashMap) {
+            return new IdentityHashMap(source);
+        } else if (source instanceof ConcurrentNavigableMap) {
+            return new ConcurrentSkipListMap(source);
+        } else if (source instanceof ConcurrentMap) {
+            return new ConcurrentHashMap<>(source);
+        } else {
+            return new HashMap(source);
+        }
+    }
+
 
     static class EnumerationIteratorAdapter<E> implements Iterator<E> {
 

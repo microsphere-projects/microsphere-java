@@ -172,9 +172,7 @@ public abstract class ReflectionUtils {
      * General implementation, get the calling class name
      *
      * @return call class name
-     * @version 1.0.0
      * @see #getCallerClassNameInGeneralJVM(int)
-     * @since 1.0.0
      */
     static String getCallerClassNameInGeneralJVM() {
         return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
@@ -185,14 +183,14 @@ public abstract class ReflectionUtils {
      *
      * @param invocationFrame invocation frame
      * @return specified invocation frame class
-     * @throws IndexOutOfBoundsException If the <code>invocation Frame<code> value is negative or exceeds the actual level
-     * @version 1.0.0
-     * @since 1.0.0
      */
     static String getCallerClassNameInGeneralJVM(int invocationFrame) throws IndexOutOfBoundsException {
         StackTraceElement[] elements = Thread.currentThread().getStackTrace();
-        StackTraceElement targetStackTraceElement = elements[invocationFrame];
-        return targetStackTraceElement.getClassName();
+        if (invocationFrame < elements.length) {
+            StackTraceElement targetStackTraceElement = elements[invocationFrame];
+            return targetStackTraceElement.getClassName();
+        }
+        return null;
     }
 
     static Class<?> getCallerClassInSunJVM(int realFramesToSkip) throws UnsupportedOperationException {
@@ -206,8 +204,6 @@ public abstract class ReflectionUtils {
             } catch (Exception ignored) {
             }
         }
-        if (callerClass != null) {
-        }
         return callerClass;
     }
 
@@ -216,17 +212,14 @@ public abstract class ReflectionUtils {
      *
      * @param invocationFrame invocation frame
      * @return caller class
-     * @version 1.0.0
      * @see #getCallerClassNameInGeneralJVM(int)
-     * @since 1.0.0
      */
     static Class<?> getCallerClassInGeneralJVM(int invocationFrame) {
         String className = getCallerClassNameInGeneralJVM(invocationFrame + 1);
         Class<?> targetClass = null;
         try {
-            targetClass = Class.forName(className);
-        } catch (ClassNotFoundException impossibleException) {
-            throw new IllegalStateException("How can?");
+            targetClass = className == null ? null : Class.forName(className);
+        } catch (Throwable ignored) {
         }
         return targetClass;
     }
@@ -282,17 +275,19 @@ public abstract class ReflectionUtils {
         return callerClass.getName();
     }
 
+
     /**
-     * @param invocationFrame invocation frame
-     * @return
-     * @version 1.0.0
-     * @see
-     * @since 1.0.0
+     * Get the caller class
+     *
+     * @param invocationFrame The frame of method invocation
+     * @return <code>null</code> if not found
      */
-    static Class<?> getCallerClass(int invocationFrame) {
+    public static Class<?> getCallerClass(int invocationFrame) {
         if (supportedSunReflectReflection) {
             Class<?> callerClass = getCallerClassInSunJVM(invocationFrame + 1);
-            if (callerClass != null) return callerClass;
+            if (callerClass != null) {
+                return callerClass;
+            }
         }
         return getCallerClassInGeneralJVM(invocationFrame + 1);
     }
