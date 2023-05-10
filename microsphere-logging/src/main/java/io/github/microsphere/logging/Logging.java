@@ -21,12 +21,14 @@ import java.util.logging.LoggingMXBean;
 
 /**
  * The management interface for the logging facility.
+ * <p>
+ * The most methods are compatible with {@link LoggingMXBean}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see LoggingMXBean
  * @since 1.0.0
  */
-interface Logging {
+public interface Logging {
 
     /**
      * Returns the list of currently registered logger names.
