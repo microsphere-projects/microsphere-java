@@ -18,21 +18,20 @@ package io.github.microsphere.logging.jdk;
 
 import io.github.microsphere.logging.Logging;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.PlatformLoggingMXBean;
 import java.util.List;
 import java.util.logging.LoggingMXBean;
 
 import static java.util.logging.LogManager.getLoggingMXBean;
 
 /**
- * The Default JDK {@link Logging}
+ * The Standard JDK {@link Logging}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Logging
  * @since 1.0.0
  */
-public class DefaultLogging implements Logging {
+public class StandardLogging implements Logging {
+
     private final static LoggingMXBean loggingMXBean = getLoggingMXBean();
 
     @Override

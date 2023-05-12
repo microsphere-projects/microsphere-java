@@ -31,6 +31,20 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Spring Framework -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Log4j 1.x -->
         <dependency>
             <groupId>log4j</groupId>
