@@ -58,4 +58,12 @@ public abstract class AbstractFilter implements Filter {
     public void setOnMismatch(Filter.Result onMismatch) {
         this.onMismatch = onMismatch;
     }
+
+    public Result getOnMatch() {
+        return onMatch;
+    }
+
+    public Result getOnMismatch() {
+        return onMismatch;
+    }
 }

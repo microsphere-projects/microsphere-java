@@ -22,6 +22,8 @@ import org.apache.logging.log4j.core.config.Node;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
 
+import java.util.function.Function;
+
 import static org.apache.logging.log4j.core.util.Watcher.ELEMENT_TYPE;
 
 /**
@@ -33,7 +35,13 @@ import static org.apache.logging.log4j.core.util.Watcher.ELEMENT_TYPE;
 @Plugin(name = "Log4j2FilterAdapter", category = Node.CATEGORY, elementType = ELEMENT_TYPE, printObject = true)
 public class Log4j2FilterAdapter extends AbstractFilter {
 
-    private Filter delegate;
+    private final Filter filter;
+
+    public Log4j2FilterAdapter(Filter filter) {
+        super(toResult(filter, io.github.microsphere.logging.filter.AbstractFilter::getOnMatch),
+                toResult(filter, io.github.microsphere.logging.filter.AbstractFilter::getOnMismatch));
+        this.filter = filter;
+    }
 
     @Override
     public Result filter(LogEvent event) {
@@ -41,7 +49,20 @@ public class Log4j2FilterAdapter extends AbstractFilter {
         String level = event.getLevel().name();
         String message = event.getMessage().getFormattedMessage();
         // delegate maybe some Filter or CompositeFilter
-        Filter.Result result = delegate.filter(loggerName, level, message);
+        Filter.Result result = filter.filter(loggerName, level, message);
+        return toResult(result);
+    }
+
+    protected static Result toResult(Filter filter, Function<io.github.microsphere.logging.filter.AbstractFilter, Filter.Result> resultResolver) {
+        if (filter instanceof io.github.microsphere.logging.filter.AbstractFilter) {
+            io.github.microsphere.logging.filter.AbstractFilter abstractFilter =
+                    (io.github.microsphere.logging.filter.AbstractFilter) filter;
+            return toResult(resultResolver.apply(abstractFilter));
+        }
+        return Result.NEUTRAL;
+    }
+
+    protected static Result toResult(Filter.Result result) {
         switch (result) {
             case ACCEPT:
                 return Result.ACCEPT;
@@ -51,9 +72,4 @@ public class Log4j2FilterAdapter extends AbstractFilter {
                 return Result.NEUTRAL;
         }
     }
-
-    public void setDelegate(Filter delegate) {
-        this.delegate = delegate;
-    }
-
 }
