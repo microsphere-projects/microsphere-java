@@ -7,6 +7,7 @@ import io.github.microsphere.i18n.spring.beans.factory.ServiceMessageSourceFacto
 import io.github.microsphere.i18n.util.I18nUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,7 +20,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,7 +35,7 @@ import static io.github.microsphere.i18n.constants.I18nConstants.SERVICE_MESSAGE
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class I18nConfiguration {
+public class I18nConfiguration implements DisposableBean {
 
     private static final Logger logger = LoggerFactory.getLogger(I18nConfiguration.class);
 
@@ -45,8 +45,8 @@ public class I18nConfiguration {
         I18nUtils.setServiceMessageSource(serviceMessageSource);
     }
 
-    @PreDestroy
-    public static void destroy() {
+    @Override
+    public void destroy() {
         I18nUtils.destroyServiceMessageSource();
     }
 
