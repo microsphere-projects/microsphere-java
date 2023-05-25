@@ -46,6 +46,10 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceMessageSourceFactoryBean.class);
 
+    private ClassLoader classLoader;
+
+    private ConfigurableEnvironment environment;
+
     private List<AbstractServiceMessageSource> serviceMessageSources;
 
     private int order;
@@ -66,7 +70,9 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
 
     @Override
     public void init() {
-        serviceMessageSources.forEach(ServiceMessageSource::init);
+        if (this.serviceMessageSources == null) {
+            this.serviceMessageSources = loadServiceMessageSources();
+        }
     }
 
     @Override
@@ -97,26 +103,13 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
 
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
-        this.serviceMessageSources = initServiceMessageSources(classLoader);
+        this.classLoader = classLoader;
     }
 
     @Override
     public void setEnvironment(Environment environment) {
         Assert.isInstanceOf(ConfigurableEnvironment.class, environment, "The 'environment' parameter must be of type ConfigurableEnvironment");
-        ConfigurableEnvironment configurableEnvironment = (ConfigurableEnvironment) environment;
-        Locale defaultLocale = initDefaultLocale(configurableEnvironment);
-        List<Locale> supportedLocales = initSupportedLocales(configurableEnvironment);
-
-        setDefaultLocale(defaultLocale);
-        setSupportedLocales(supportedLocales);
-
-        serviceMessageSources.forEach(serviceMessageSource -> {
-            if (serviceMessageSource instanceof EnvironmentAware) {
-                ((EnvironmentAware) serviceMessageSource).setEnvironment(environment);
-            }
-            serviceMessageSource.setDefaultLocale(defaultLocale);
-            serviceMessageSource.setSupportedLocales(supportedLocales);
-        });
+        this.environment = (ConfigurableEnvironment) environment;
     }
 
     @Override
@@ -128,8 +121,14 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
         this.order = order;
     }
 
-    private List<AbstractServiceMessageSource> initServiceMessageSources(ClassLoader classLoader) {
+    private List<AbstractServiceMessageSource> loadServiceMessageSources() {
         List<String> factoryNames = SpringFactoriesLoader.loadFactoryNames(AbstractServiceMessageSource.class, classLoader);
+
+        Locale defaultLocale = initDefaultLocale(environment);
+        List<Locale> supportedLocales = initSupportedLocales(environment);
+
+        setDefaultLocale(defaultLocale);
+        setSupportedLocales(supportedLocales);
 
         List<AbstractServiceMessageSource> serviceMessageSources = new ArrayList<>(factoryNames.size());
 
@@ -138,6 +137,13 @@ public final class ServiceMessageSourceFactoryBean extends AbstractServiceMessag
             Constructor constructor = getConstructorIfAvailable(factoryClass, String.class);
             AbstractServiceMessageSource serviceMessageSource = (AbstractServiceMessageSource) instantiateClass(constructor, source);
             serviceMessageSources.add(serviceMessageSource);
+
+            if (serviceMessageSource instanceof EnvironmentAware) {
+                ((EnvironmentAware) serviceMessageSource).setEnvironment(environment);
+            }
+            serviceMessageSource.setDefaultLocale(defaultLocale);
+            serviceMessageSource.setSupportedLocales(supportedLocales);
+            serviceMessageSource.init();
         }
 
         AnnotationAwareOrderComparator.sort(serviceMessageSources);

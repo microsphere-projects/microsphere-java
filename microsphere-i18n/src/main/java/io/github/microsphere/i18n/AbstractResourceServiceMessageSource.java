@@ -102,7 +102,6 @@ public abstract class AbstractResourceServiceMessageSource extends AbstractServi
                 resources.add(resource);
                 if (!CollectionUtils.isEmpty(messages)) {
                     logger.debug("Source '{}' loads the Locale '{}' resource['{}'] messages : {}", source, locale, resource, messages);
-                    localizedMessages.put(locale, messages);
                 } else {
                     logger.debug("Source '{}' Locale '{}' resource not found['{}'] messages", source, locale, resource);
                 }
