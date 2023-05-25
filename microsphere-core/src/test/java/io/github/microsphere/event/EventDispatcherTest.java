@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.github.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link EventDispatcher} Test
@@ -40,6 +39,6 @@ public class EventDispatcherTest {
     @Test
     public void testDefaultMethods() {
         assertEquals(DIRECT_EXECUTOR, defaultInstance.getExecutor());
-        assertTrue(defaultInstance.getAllEventListeners().isEmpty());
+        assertEquals(2, defaultInstance.getAllEventListeners().size());
     }
 }

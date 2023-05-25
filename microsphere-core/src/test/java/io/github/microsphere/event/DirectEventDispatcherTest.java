@@ -42,13 +42,9 @@ public class DirectEventDispatcherTest {
     @BeforeEach
     public void init() {
         dispatcher = new DirectEventDispatcher();
+        dispatcher.removeAllEventListeners();
         echoEventListener = new EchoEventListener();
         echoEventListener2 = new EchoEventListener2();
-    }
-
-    @AfterEach
-    public void destroy() {
-        dispatcher.removeAllEventListeners();
     }
 
     @Test
