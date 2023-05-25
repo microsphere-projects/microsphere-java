@@ -41,6 +41,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- JAX-WS API-->
+        <dependency>
+            <groupId>javax.xml.ws</groupId>
+            <artifactId>jaxws-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
