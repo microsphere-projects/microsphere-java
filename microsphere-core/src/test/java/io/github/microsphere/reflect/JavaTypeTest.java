@@ -18,14 +18,17 @@ package io.github.microsphere.reflect;
 
 import org.junit.Test;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -71,6 +74,44 @@ public class JavaTypeTest {
         // assert Type == ParameterizedType
         Type fieldType = javaType.getType();
         assertTrue(ParameterizedType.class.isInstance(fieldType));
+        // assert source
+        assertNull(javaType.getSource());
+        assertNull(javaType.getRootSource());
+        assertTrue(javaType.isSource());
+        assertTrue(javaType.isRootSource());
+
+        // toClass -> HashMap.class
+        assertEquals(HashMap.class, javaType.toClass());
+        // HashMap implements Map<Integer, List<String>>, Cloneable, Serializable
+        JavaType[] interfaces = javaType.getInterfaces();
+        assertEquals(3, interfaces.length);
+        assertEquals(Map.class, javaType.getInterface(0).toClass());
+        assertEquals(Cloneable.class, javaType.getInterface(1).toClass());
+        assertEquals(Serializable.class, javaType.getInterface(2).toClass());
+
+        // as Cloneable -> JavaType Cloneable : Interface type - Cloneable.class
+        JavaType targetType = javaType.as(Cloneable.class);
+        assertEquals(JavaType.Kind.CLASS, targetType.getKind());
+        assertEquals(Cloneable.class, targetType.getRawType());
+        assertEquals(Cloneable.class, targetType.toClass());
+        // assert source
+        assertEquals(javaType, targetType.getSource());
+        assertEquals(javaType, targetType.getRootSource());
+        // assert generic types
+        assertEquals(0, targetType.getGenericTypes().length);
+
+        // as Map -> JavaType Map<Integer,List<String>> : Super type - AbstractMap -> Map
+        targetType = javaType.as(Map.class);
+        assertTrue(ParameterizedType.class.isInstance(targetType.getType()));
+        assertEquals(Map.class, targetType.getRawType());
+        assertEquals(Map.class, targetType.toClass());
+        // assert source
+        assertEquals(javaType, targetType.getSource());
+        assertEquals(javaType, targetType.getRootSource());
+        // assert generic types
+        assertEquals(2, targetType.getGenericTypes().length);
+        assertEquals(Integer.class, targetType.getGenericType(0).toClass());
+        assertEquals(List.class, targetType.getGenericType(1).toClass());
 
         ParameterizedType parameterizedType = (ParameterizedType) javaType.getType();
         // Raw Type = HashMap

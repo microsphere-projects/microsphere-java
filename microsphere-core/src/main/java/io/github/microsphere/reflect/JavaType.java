@@ -16,102 +16,403 @@
  */
 package io.github.microsphere.reflect;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
- * Encapsulates a Java Type(Immutable), providing access to supertypes and generic parameters.
+ * Encapsulates a Java Type(Immutable), providing the features:
+ * <ul>
+ *     <li>{@link #getSuperType() supertypes}</li>
+ *     <li>{@link #getInterfaces() interfaces}</li>
+ *     <li>{@link #getGenericTypes() generic parameters}</li>
+ *     <li>{@link #getRawType() raw type}</li>
+ *     <li>{@link #getSource() the tracing source}</li>
+ *     <li>{@link #getRootSource() the root source}</li>
+ *     <li>{@link #as(Class) cast to the super type or interface}</li>
+ * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Type
  * @since 1.0.0
  */
-public class JavaType {
+public class JavaType implements Serializable {
+
+    public static final JavaType[] EMPTY_ARRAY = new JavaType[0];
+
+    public static final JavaType OBJECT = new JavaType(Object.class, Kind.CLASS);
 
     private final Type type;
 
-    private final Kind kind;
+    private final transient Kind kind;
 
-    public JavaType(Type type) {
-        this.type = type;
-        this.kind = Kind.valueOf(type);
+    // Local cache fields
+
+    private volatile JavaType source;
+
+    private volatile JavaType superType;
+
+    private volatile JavaType[] interfaces;
+
+    private volatile JavaType[] genericTypes;
+
+    protected JavaType(Type type) {
+        this(type, Kind.valueOf(type));
     }
 
+    protected JavaType(Type type, Kind kind) {
+        this(type, kind, null);
+    }
+
+    protected JavaType(Type type, JavaType source) {
+        this(type, Kind.valueOf(type), source);
+    }
+
+    protected JavaType(Type type, Kind kind, JavaType source) {
+        this.type = type;
+        this.kind = kind;
+        this.source = source;
+    }
+
+    @Nonnull
     public Type getType() {
         return type;
     }
 
-    public Type getRawType() {
-        return this.kind.getRawType(this.type);
-    }
-
+    @Nonnull
     public Kind getKind() {
         return kind;
     }
 
-    public JavaType getSuperType() {
-        Type superType = kind.getSuperType(type);
-        return from(superType);
+    @Nullable
+    public JavaType getSource() {
+        return this.source;
     }
 
+    @Nullable
+    public JavaType getRootSource() {
+        JavaType currentSource = this.source;
+        if (currentSource == null) {
+            return null;
+        }
+        JavaType rootSource;
+        do {
+            rootSource = currentSource.source;
+            if (rootSource == null) {
+                rootSource = currentSource;
+                break;
+            } else {
+                currentSource = currentSource.source;
+            }
+        } while (true);
+
+        return rootSource;
+    }
+
+    @Nullable
+    public Type getRawType() {
+        return this.kind.getRawType(this.type);
+    }
+
+    public boolean isSource() {
+        return this.source == null;
+    }
+
+    public boolean isRootSource() {
+        return getRootSource() == null;
+    }
+
+    public boolean isClass() {
+        return Kind.CLASS.equals(this.kind);
+    }
+
+    public boolean isParameterizedType() {
+        return Kind.PARAMETERIZED_TYPE.equals(this.kind);
+    }
+
+    public boolean isTypeVariable() {
+        return Kind.TYPE_VARIABLE.equals(this.kind);
+    }
+
+    public boolean isWildCardType() {
+        return Kind.WILDCARD_TYPE.equals(this.kind);
+    }
+
+    @Nullable
+    public JavaType getSuperType() {
+        JavaType superType = this.superType;
+        if (superType == null) {
+            superType = resolveSuperType();
+            this.superType = superType;
+        }
+        return superType;
+    }
+
+    protected JavaType resolveSuperType() {
+        Type superType = kind.getSuperType(type);
+        return from(superType, this);
+    }
+
+    @Nonnull
+    public JavaType[] getInterfaces() {
+        JavaType[] interfaces = this.interfaces;
+        if (interfaces == null) {
+            interfaces = resolveInterfaces();
+            this.interfaces = interfaces;
+        }
+        return interfaces;
+    }
+
+    protected JavaType[] resolveInterfaces() {
+        Type[] interfaces = kind.getInterfaces(type);
+        return from(interfaces, this);
+    }
+
+    @Nonnull
+    public JavaType getInterface(int interfaceIndex) throws IndexOutOfBoundsException {
+        return getInterfaces()[interfaceIndex];
+    }
+
+    @Nonnull
     public JavaType[] getGenericTypes() {
-        if (Kind.PARAMETERIZED_TYPE.equals(this.kind)) {
-            ParameterizedType pType = (ParameterizedType) this.type;
+        JavaType[] genericTypes = this.genericTypes;
+        if (genericTypes == null) {
+            genericTypes = resolveGenericTypes();
+            this.genericTypes = genericTypes;
+        }
+        return genericTypes;
+    }
+
+    @Nonnull
+    protected JavaType[] resolveGenericTypes() {
+        JavaType[] genericTypes = null;
+        ParameterizedType pType = toParameterizedType();
+        if (pType != null) {
             Type[] typeArguments = pType.getActualTypeArguments();
-            return from(typeArguments);
+            int length = typeArguments.length;
+            genericTypes = new JavaType[length];
+            for (int i = 0; i < length; i++) {
+                Type typeArgument = typeArguments[i];
+                JavaType argumentType = from(typeArgument, this);
+                genericTypes[i] = resolveArgumentGenericType(typeArguments, argumentType, i);
+            }
         } else {
             // Can't resolve the generic types
-            return new JavaType[0];
+            genericTypes = EMPTY_ARRAY;
         }
+        return genericTypes;
     }
 
-    public JavaType getGenericType(int genericTypeIndex) {
+    private JavaType resolveArgumentGenericType(Type[] typeArguments, JavaType argumentType, int index) {
+        JavaType genericType = argumentType;
+        TypeVariable typeVariable = argumentType.toTypeVariable();
+        if (typeVariable != null) {
+            JavaType source = argumentType.getRootSource();
+            GenericDeclaration declaration = typeVariable.getGenericDeclaration();
+            if (matches(typeArguments, declaration)) {
+                genericType = source.getGenericType(index);
+            }
+        }
+        return genericType;
+    }
+
+    @Nonnull
+    public JavaType getGenericType(int genericTypeIndex) throws IndexOutOfBoundsException {
         return getGenericTypes()[genericTypeIndex];
     }
 
-    public JavaType as(Class<?> type) {
-        // TODO
-        return null;
+    /**
+     * Get the JavaType presenting the target class
+     *
+     * @param targetClass the target class
+     * @return <code>null</code> if can't cast to the target class
+     */
+    @Nullable
+    public JavaType as(Class<?> targetClass) {
+        Type typeToMatch = this.type;
+        Type targetType = searchSuperType(targetClass, typeToMatch);
+        if (targetType == null) {
+            targetType = searchInterfaceType(targetClass, typeToMatch);
+        }
+        return targetType == null ? null : from(targetType, this);
     }
 
+    @Nullable
+    public <T> Class<T> toClass() {
+        Type rawType = getRawType();
+        return rawType == null ? null : (Class<T>) rawType;
+    }
+
+    @Nullable
+    public ParameterizedType toParameterizedType() {
+        return isParameterizedType() ? (ParameterizedType) type : null;
+    }
+
+    @Nullable
+    public TypeVariable toTypeVariable() {
+        return isTypeVariable() ? (TypeVariable) type : null;
+    }
+
+    @Nullable
+    public WildcardType toWildcardType() {
+        return isWildCardType() ? (WildcardType) type : null;
+    }
+
+    @Override
+    public String toString() {
+        return "JavaType : " + type.getTypeName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JavaType javaType = (JavaType) o;
+        return Objects.equals(type, javaType.type);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
+    }
+
+    @Nonnull
     public static JavaType from(Field field) {
         return from(field.getGenericType());
     }
 
+    @Nonnull
     public static JavaType fromMethodReturnType(Method method) {
         Type genericReturnType = method.getGenericReturnType();
         return from(genericReturnType);
     }
 
+    @Nonnull
     public static JavaType[] fromMethodParameters(Method method) {
         Type[] genericParameterType = method.getGenericParameterTypes();
         return from(genericParameterType);
     }
 
+    @Nonnull
     public static JavaType fromMethodParameter(Method method, int parameterIndex) {
         Type genericParameterType = method.getGenericParameterTypes()[parameterIndex];
         return from(genericParameterType);
     }
 
+    @Nonnull
+    public static JavaType from(Class<?> targetClass) {
+        return from(targetClass, Kind.CLASS);
+    }
+
+    @Nonnull
     public static JavaType from(Type type) {
         return new JavaType(type);
     }
 
-    public static JavaType[] from(Type[] types) {
-        int length = types.length;
+    @Nonnull
+    protected static JavaType from(Type type, Kind kind) {
+        return new JavaType(type, kind);
+    }
+
+    @Nonnull
+    protected static JavaType from(Type type, JavaType source) {
+        return new JavaType(type, source);
+    }
+
+    @Nonnull
+    protected static JavaType from(Type type, Kind kind, JavaType source) {
+        return new JavaType(type, kind, source);
+    }
+
+    @Nonnull
+    protected static JavaType[] from(Type[] types) {
+        return from(types, null);
+    }
+
+    @Nonnull
+    protected static JavaType[] from(Type[] types, JavaType source) {
+        int length = types == null ? 0 : types.length;
+        if (length == 0) {
+            return EMPTY_ARRAY;
+        }
         JavaType[] javaTypes = new JavaType[length];
         for (int i = 0; i < length; i++) {
-            javaTypes[i] = from(types[i]);
+            javaTypes[i] = from(types[i], source);
         }
         return javaTypes;
     }
 
 
-    public static enum Kind {
+    private Type searchSuperType(Class<?> targetClass, Type typeToMatch) {
+        Type targetType = null;
+        Type superType = kind.getSuperType(typeToMatch);
+        do {
+            if (matches(targetClass, superType)) {
+                // super type matched
+                targetType = superType;
+                break;
+            }
+
+            // To search interface type from super type
+            targetType = searchInterfaceType(targetClass, superType);
+
+            if (targetType == null) {
+                superType = this.kind.getSuperType(superType);
+            } else {
+                break;
+            }
+
+        } while (!matches(Object.class, superType));
+
+        return targetType;
+    }
+
+    private Type searchInterfaceType(Class<?> targetClass, Type typeToMatch) {
+        Type targetType = null;
+        Type[] interfaces = this.kind.getInterfaces(typeToMatch);
+        for (Type interfaceType : interfaces) {
+            if (matches(targetClass, interfaceType)) {
+                targetType = interfaceType;
+                break;
+            } else {
+                targetType = searchInterfaceType(targetClass, interfaceType);
+                if (targetType != null) {
+                    break;
+                }
+            }
+        }
+        return targetType;
+    }
+
+    private static boolean matches(Class<?> targetClass, Type typeToMatch) {
+        JavaType.Kind kind = Kind.valueOf(typeToMatch);
+        Type rawType = kind.getRawType(typeToMatch);
+        return Objects.equals(targetClass, rawType);
+    }
+
+    private static boolean matches(Type[] typeArguments, GenericDeclaration declaration) {
+        TypeVariable[] typeParameters = declaration.getTypeParameters();
+        if (Arrays.deepEquals(typeArguments, typeParameters)) {
+            return true;
+        } else if (declaration instanceof Class) { // To find the super class
+            Class declaredClass = (Class) declaration;
+            return matches(typeArguments, declaredClass.getSuperclass());
+        }
+        return false;
+    }
+
+
+    public enum Kind {
 
         /**
          * The type kind presents Java {@link Class}
@@ -126,6 +427,12 @@ public class JavaType {
             @Override
             public Type getRawType(Type type) {
                 return type;
+            }
+
+            @Override
+            public Type[] getInterfaces(Type type) {
+                Class klass = (Class) type;
+                return klass.getGenericInterfaces();
             }
         },
 
@@ -147,20 +454,33 @@ public class JavaType {
                 return rawType;
             }
 
+            @Override
+            public Type[] getInterfaces(Type type) {
+                Type rawType = getRawType(type);
+                Kind rawTypeKind = valueOf(rawType);
+                return rawTypeKind.getInterfaces(rawType);
+            }
+
             private ParameterizedType as(Type type) {
                 return (ParameterizedType) type;
             }
         },
 
         /**
-         * The type kind presents Java {@link GenericArrayType}
+         * The type kind presents Java {@link TypeVariable}
          */
-        GENERIC_ARRAY_TYPE(GenericArrayType.class),
+        TYPE_VARIABLE(TypeVariable.class),
 
         /**
          * The type kind presents Java {@link WildcardType}
          */
         WILDCARD_TYPE(WildcardType.class),
+
+        /**
+         * The type kind presents Java {@link GenericArrayType}
+         * TODO
+         */
+        GENERIC_ARRAY_TYPE(GenericArrayType.class),
 
         // TODO More Types
 
@@ -192,6 +512,10 @@ public class JavaType {
             return null;
         }
 
+
+        public Type[] getInterfaces(Type type) {
+            return new Type[0];
+        }
 
         public static Kind valueOf(Type type) {
             Kind kind = Kind.UNKNOWN;
