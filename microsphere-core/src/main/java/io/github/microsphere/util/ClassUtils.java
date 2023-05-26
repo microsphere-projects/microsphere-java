@@ -939,4 +939,27 @@ public abstract class ClassUtils extends BaseUtils {
         // Keep the same order from List
         return ofSet(filterAll(allClasses, classFilters));
     }
+
+    /**
+     * the semantics is same as {@link Class#isAssignableFrom(Class)}
+     *
+     * @param targetType the target type
+     * @param superTypes the super types
+     * @return see {@link Class#isAssignableFrom(Class)}
+     * @since 1.0.0
+     */
+    public static boolean isDerived(Class<?> targetType, Class<?>... superTypes) {
+        // any argument is null
+        if (superTypes == null || superTypes.length == 0 || targetType == null) {
+            return false;
+        }
+        boolean derived = false;
+        for (Class<?> superType : superTypes) {
+            if (isAssignableFrom(superType, targetType)) {
+                derived = true;
+                break;
+            }
+        }
+        return derived;
+    }
 }
