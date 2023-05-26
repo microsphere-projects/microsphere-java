@@ -14,8 +14,8 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>Microsphere Java Project</name>
-    <description>Microsphere Java Project</description>
+    <name>Microsphere Projects :: Java</name>
+    <description>Microsphere Projects for Java</description>
 
     <scm>
         <url>https://github.com/microsphere-projects/microsphere-java</url>
