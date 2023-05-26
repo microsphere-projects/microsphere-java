@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere</artifactId>
+    <artifactId>microsphere-java</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
