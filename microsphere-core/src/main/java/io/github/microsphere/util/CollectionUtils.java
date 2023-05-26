@@ -17,7 +17,10 @@
 package io.github.microsphere.util;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
+import java.util.AbstractQueue;
 import java.util.AbstractSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -28,15 +31,21 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.Spliterator;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -75,6 +84,16 @@ public abstract class CollectionUtils extends BaseUtils {
         return toList(new EnumerationIteratorAdapter(enumeration));
     }
 
+    /**
+     * Convert to multiple values to be {@link LinkedHashSet}
+     *
+     * @param values one or more values
+     * @param <T>    the type of <code>values</code>
+     * @return read-only {@link Set}
+     */
+    public static <T> Set<T> ofSet(Iterable<T> values) {
+        return unmodifiableSet(newLinkedHashSet(values));
+    }
 
     /**
      * Convert to multiple values to be {@link LinkedHashSet}
@@ -100,6 +119,36 @@ public abstract class CollectionUtils extends BaseUtils {
             elements.add(values[i]);
         }
         return unmodifiableSet(elements);
+    }
+
+    public static <T> Set<T> newLinkedHashSet() {
+        return new LinkedHashSet<>();
+    }
+
+    public static <T> Set<T> newLinkedHashSet(Iterable<T> values) {
+        Set<T> set = newLinkedHashSet();
+        values.forEach(set::add);
+        return set;
+    }
+
+    public static <T> List<T> newArrayList(int size) {
+        return new ArrayList<>(size);
+    }
+
+    public static <T> List<T> newArrayList(Iterable<T> values) {
+        List<T> list = new ArrayList<>();
+        values.forEach(list::add);
+        return list;
+    }
+
+    public static <T> List<T> newLinkedList(Iterable<T> values) {
+        List<T> list = newLinkedList();
+        values.forEach(list::add);
+        return list;
+    }
+
+    public static <T> List<T> newLinkedList() {
+        return new LinkedList<>();
     }
 
     /**
@@ -208,6 +257,130 @@ public abstract class CollectionUtils extends BaseUtils {
             return new ConcurrentHashMap<>(source);
         } else {
             return new HashMap(source);
+        }
+    }
+
+    public static <E> Queue<E> unmodifiableQueue(Queue<E> queue) {
+        return new UnmodifiableQueue(queue);
+    }
+
+    static class UnmodifiableQueue<E> extends AbstractQueue<E> implements Queue<E>, Serializable {
+
+        private static final long serialVersionUID = -1578116770333032259L;
+
+        private final Collection<E> delegate;
+
+        UnmodifiableQueue(Queue<E> queue) {
+            this.delegate = unmodifiableCollection(queue);
+        }
+
+        @Override
+        public int size() {
+            return delegate.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return delegate.isEmpty();
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return delegate.contains(o);
+        }
+
+        @Override
+        public Iterator<E> iterator() {
+            return delegate.iterator();
+        }
+
+        @Override
+        public Object[] toArray() {
+            return delegate.toArray();
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return delegate.toArray(a);
+        }
+
+        @Override
+        public boolean offer(E e) {
+            return delegate.add(e);
+        }
+
+        @Override
+        public E poll() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E peek() {
+            Iterator<E> iterator = iterator();
+            if (iterator.hasNext()) {
+                return iterator.next();
+            }
+            return null;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return delegate.containsAll(c);
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends E> c) {
+            return delegate.addAll(c);
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return delegate.removeAll(c);
+        }
+
+        @Override
+        public boolean removeIf(Predicate<? super E> filter) {
+            return delegate.removeIf(filter);
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return delegate.retainAll(c);
+        }
+
+        @Override
+        public void clear() {
+            delegate.clear();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return delegate.equals(o);
+        }
+
+        @Override
+        public int hashCode() {
+            return delegate.hashCode();
+        }
+
+        @Override
+        public Spliterator<E> spliterator() {
+            return delegate.spliterator();
+        }
+
+        @Override
+        public Stream<E> stream() {
+            return delegate.stream();
+        }
+
+        @Override
+        public Stream<E> parallelStream() {
+            return delegate.parallelStream();
+        }
+
+        @Override
+        public void forEach(Consumer<? super E> action) {
+            delegate.forEach(action);
         }
     }
 

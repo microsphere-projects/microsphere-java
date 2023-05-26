@@ -56,14 +56,18 @@ public interface Predicates {
      * @param <T>        the type to test
      * @return non-null
      */
-    static <T> Predicate<T> and(Predicate<T>... predicates) {
+    static <T> Predicate<? super T> and(Predicate<? super T>... predicates) {
         int length = predicates == null ? 0 : predicates.length;
         if (length == 0) {
             return alwaysTrue();
         } else if (length == 1) {
             return predicates[0];
         } else {
-            return of(predicates).reduce((a, b) -> a.and(b)).orElseGet(Predicates::alwaysTrue);
+            Predicate<T> andPredicate = alwaysTrue();
+            for (Predicate<? super T> p : predicates) {
+                andPredicate = andPredicate.and(p);
+            }
+            return andPredicate;
         }
     }
 
@@ -74,14 +78,18 @@ public interface Predicates {
      * @param <T>        the detected type
      * @return non-null
      */
-    static <T> Predicate<T> or(Predicate<T>... predicates) {
+    static <T> Predicate<? super T> or(Predicate<? super T>... predicates) {
         int length = predicates == null ? 0 : predicates.length;
         if (length == 0) {
             return alwaysTrue();
         } else if (length == 1) {
             return predicates[0];
         } else {
-            return of(predicates).reduce((a, b) -> a.or(b)).orElse(e -> true);
+            Predicate<T> orPredicate = alwaysFalse();
+            for (Predicate<? super T> p : predicates) {
+                orPredicate = orPredicate.or(p);
+            }
+            return orPredicate;
         }
     }
 

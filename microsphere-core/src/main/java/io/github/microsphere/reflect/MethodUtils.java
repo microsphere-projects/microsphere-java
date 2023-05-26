@@ -23,6 +23,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.github.microsphere.constants.SymbolConstants.COMMA_CHAR;
@@ -35,6 +36,7 @@ import static io.github.microsphere.reflect.MemberUtils.isStatic;
 import static io.github.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.github.microsphere.util.ClassUtils.getTypeName;
 import static io.github.microsphere.util.ClassUtils.getTypes;
+import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -48,9 +50,15 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  */
 public abstract class MethodUtils {
 
+    /**
+     * The {@link Predicate} reference to {@link MethodUtils#isObjectMethod(Method)}
+     */
+    public final static Predicate<? super Method> OBJECT_METHOD_PREDICATE = MethodUtils::isObjectMethod;
+
+    public final static Set<Method> OBJECT_METHODS = ofSet(Object.class.getMethods());
+
     private MethodUtils() {
     }
-
 
     /**
      * Create an instance of {@link Predicate} for {@link Method} to exclude the specified declared class
@@ -71,7 +79,8 @@ public abstract class MethodUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    public static List<Method> getMethods(Class<?> declaringClass, boolean includeInheritedTypes, boolean publicOnly, Predicate<Method>... methodsToFilter) {
+    public static List<Method> getMethods(Class<?> declaringClass, boolean includeInheritedTypes, boolean publicOnly,
+                                          Predicate<? super Method>... methodsToFilter) {
 
         if (declaringClass == null || declaringClass.isPrimitive()) {
             return emptyList();
@@ -132,7 +141,7 @@ public abstract class MethodUtils {
      * @return non-null read-only {@link List}
      * @see #getMethods(Class, boolean, boolean, Predicate[])
      */
-    public static List<Method> getAllDeclaredMethods(Class<?> declaringClass, Predicate<Method>... methodsToFilter) {
+    public static List<Method> getAllDeclaredMethods(Class<?> declaringClass, Predicate<? super Method>... methodsToFilter) {
         return getMethods(declaringClass, true, false, methodsToFilter);
     }
 
@@ -237,7 +246,7 @@ public abstract class MethodUtils {
      * @jls 9.4.1 Inheritance and Overriding
      * @see Elements#overrides(ExecutableElement, ExecutableElement, TypeElement)
      */
-    static boolean overrides(Method overrider, Method overridden) {
+    public static boolean overrides(Method overrider, Method overridden) {
 
         if (overrider == null || overridden == null) {
             return false;
@@ -367,5 +376,12 @@ public abstract class MethodUtils {
         signatureBuilder.append(RIGHT_PARENTHESIS_CHAR);
 
         return signatureBuilder.toString();
+    }
+
+    public static boolean isObjectMethod(Method method) {
+        if (method != null) {
+            return Objects.equals(Object.class, method.getDeclaringClass());
+        }
+        return false;
     }
 }

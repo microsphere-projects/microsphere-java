@@ -10,8 +10,8 @@ import io.github.microsphere.filter.ClassFileJarEntryFilter;
 import io.github.microsphere.io.FileUtils;
 import io.github.microsphere.io.scanner.SimpleFileScanner;
 import io.github.microsphere.io.scanner.SimpleJarEntryScanner;
-import io.github.microsphere.lang.function.Streams;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -23,22 +23,32 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.github.microsphere.lang.function.Streams.filterAll;
 import static io.github.microsphere.util.CollectionUtils.ofSet;
+import static java.lang.reflect.Modifier.isAbstract;
+import static java.lang.reflect.Modifier.isInterface;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.synchronizedMap;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static org.apache.commons.lang3.ArrayUtils.isEmpty;
@@ -54,11 +64,25 @@ import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
  */
 public abstract class ClassUtils extends BaseUtils {
 
-    private static final Map<String, Set<String>> classPathToClassNamesMap = initClassPathToClassNamesMap();
+    /**
+     * Suffix for array class names: "[]"
+     */
+    public static final String ARRAY_SUFFIX = "[]";
 
-    private static final Map<String, String> classNameToClassPathsMap = initClassNameToClassPathsMap();
+    /**
+     * @see {@link Class#ANNOTATION}
+     */
+    private static final int ANNOTATION = 0x00002000;
 
-    private static final Map<String, Set<String>> packageNameToClassNamesMap = initPackageNameToClassNamesMap();
+    /**
+     * @see {@link Class#ENUM}
+     */
+    private static final int ENUM = 0x00004000;
+
+    /**
+     * @see {@link Class#SYNTHETIC}
+     */
+    private static final int SYNTHETIC = 0x00001000;
 
     /**
      * Simple Types including:
@@ -81,10 +105,342 @@ public abstract class ClassUtils extends BaseUtils {
      */
     public static final Set<Class<?>> SIMPLE_TYPES = ofSet(Void.class, Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, BigDecimal.class, BigInteger.class, Date.class, Object.class);
 
+    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(
+            Void.TYPE,
+            Boolean.TYPE,
+            Character.TYPE,
+            Byte.TYPE,
+            Short.TYPE,
+            Integer.TYPE,
+            Long.TYPE,
+            Float.TYPE,
+            Double.TYPE
+    );
+
+    /**
+     * Prefix for internal array class names: "[L"
+     */
+    private static final String INTERNAL_ARRAY_PREFIX = "[L";
+
+    /**
+     * A map with primitive type name as key and corresponding primitive type as
+     * value, for example: "int" -> "int.class".
+     */
+    private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP;
+
+    /**
+     * A map with primitive wrapper type as key and corresponding primitive type
+     * as value, for example: Integer.class -> int.class.
+     */
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_TYPE_MAP;
+
+    /**
+     * A map with primitive type as key and its wrapper type
+     * as value, for example: int.class -> Integer.class.
+     */
+    private static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_TYPE_MAP;
+
+    static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
+
+    private static final Map<String, Set<String>> classPathToClassNamesMap = initClassPathToClassNamesMap();
+
+    private static final Map<String, String> classNameToClassPathsMap = initClassNameToClassPathsMap();
+
+    private static final Map<String, Set<String>> packageNameToClassNamesMap = initPackageNameToClassNamesMap();
+
+    static {
+        PRIMITIVE_WRAPPER_TYPE_MAP = MapUtils.of(
+                Void.class, Void.TYPE,
+                Boolean.class, Boolean.TYPE,
+                Byte.class, Byte.TYPE,
+                Character.class, Character.TYPE,
+                Short.class, Short.TYPE,
+                Integer.class, Integer.TYPE,
+                Long.class, Long.TYPE,
+                Float.class, Float.TYPE,
+                Double.class, Double.TYPE
+        );
+    }
+
+    static {
+        WRAPPER_PRIMITIVE_TYPE_MAP = MapUtils.of(
+                Void.TYPE, Void.class,
+                Boolean.TYPE, Boolean.class,
+                Byte.TYPE, Byte.class,
+                Character.TYPE, Character.class,
+                Short.TYPE, Short.class,
+                Boolean.TYPE, Boolean.class,
+                Integer.TYPE, Integer.class,
+                Long.TYPE, Long.class,
+                Float.TYPE, Float.class,
+                Double.TYPE, Double.class
+        );
+    }
+
+    static {
+        Map<String, Class<?>> typeNamesMap = new HashMap<>(16);
+        List<Class<?>> primitiveTypeNames = new ArrayList<>(16);
+        primitiveTypeNames.addAll(asList(boolean.class, byte.class, char.class, double.class,
+                float.class, int.class, long.class, short.class));
+        primitiveTypeNames.addAll(asList(boolean[].class, byte[].class, char[].class, double[].class,
+                float[].class, int[].class, long[].class, short[].class));
+        for (Class<?> primitiveTypeName : primitiveTypeNames) {
+            typeNamesMap.put(primitiveTypeName.getName(), primitiveTypeName);
+        }
+        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(typeNamesMap);
+    }
 
     private ClassUtils() {
 
     }
+
+    /**
+     * The specified type is array or not?
+     * <p>
+     * It's an optimized implementation for {@link Class#isArray()}).
+     *
+     * @param type the type to test
+     * @return <code>true</code> if the specified type is an array class,
+     * <code>false</code> otherwise
+     * @see Class#isArray()
+     */
+    public static boolean isArray(Class<?> type) {
+        return type != null && type.getName().startsWith("[");
+    }
+
+    /**
+     * Is the specified type a concrete class or not?
+     *
+     * @param type type to check
+     * @return <code>true</code> if concrete class, <code>false</code> otherwise.
+     */
+    public static boolean isConcreteClass(Class<?> type) {
+
+        if (type == null) {
+            return false;
+        }
+
+        if (concreteClassCache.containsKey(type)) {
+            return true;
+        }
+
+        if (isGeneralClass(type, Boolean.FALSE)) {
+            concreteClassCache.put(type, Boolean.TRUE);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is the specified type a abstract class or not?
+     * <p>
+     *
+     * @param type the type
+     * @return true if type is a abstract class, false otherwise.
+     */
+    public static boolean isAbstractClass(Class<?> type) {
+        return isGeneralClass(type, Boolean.TRUE);
+    }
+
+    /**
+     * Is the specified type a general class or not?
+     * <p>
+     *
+     * @param type the type
+     * @return true if type is a general class, false otherwise.
+     */
+    public static boolean isGeneralClass(Class<?> type) {
+        return isGeneralClass(type, null);
+    }
+
+    /**
+     * Is the specified type a general class or not?
+     * <p>
+     * If <code>isAbstract</code> == <code>null</code>,  it will not check <code>type</code> is abstract or not.
+     *
+     * @param type       the type
+     * @param isAbstract optional abstract flag
+     * @return true if type is a general (abstract) class, false otherwise.
+     */
+    protected static boolean isGeneralClass(Class<?> type, Boolean isAbstract) {
+
+        if (type == null) {
+            return false;
+        }
+
+        int mod = type.getModifiers();
+
+        if (isInterface(mod)
+                || isAnnotation(mod)
+                || isEnum(mod)
+                || isSynthetic(mod)
+                || type.isPrimitive()
+                || type.isArray()) {
+            return false;
+        }
+
+        if (isAbstract != null) {
+            return isAbstract(mod) == isAbstract.booleanValue();
+        }
+
+        return true;
+    }
+
+    public static boolean isTopLevelClass(Class<?> type) {
+        if (type == null) {
+            return false;
+        }
+
+        if (type.isLocalClass() || type.isMemberClass()) {
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * The specified type is primitive type or simple type
+     * <p>
+     * It's an optimized implementation for {@link Class#isPrimitive()}.
+     *
+     * @param type the type to test
+     * @return
+     * @see Class#isPrimitive()
+     */
+    public static boolean isPrimitive(Class<?> type) {
+        return PRIMITIVE_TYPES.contains(type);
+    }
+
+    /**
+     * The specified type is simple type or not
+     *
+     * @param type the type to test
+     * @return if <code>type</code> is one element of {@link #SIMPLE_TYPES}, return <code>true</code>, or <code>false</code>
+     * @see #SIMPLE_TYPES
+     */
+    public static boolean isSimpleType(Class<?> type) {
+        return SIMPLE_TYPES.contains(type);
+    }
+
+    public static Object convertPrimitive(Class<?> type, String value) {
+        if (value == null) {
+            return null;
+        } else if (type == char.class || type == Character.class) {
+            return value.length() > 0 ? value.charAt(0) : '\0';
+        } else if (type == boolean.class || type == Boolean.class) {
+            return Boolean.valueOf(value);
+        }
+        try {
+            if (type == byte.class || type == Byte.class) {
+                return Byte.valueOf(value);
+            } else if (type == short.class || type == Short.class) {
+                return Short.valueOf(value);
+            } else if (type == int.class || type == Integer.class) {
+                return Integer.valueOf(value);
+            } else if (type == long.class || type == Long.class) {
+                return Long.valueOf(value);
+            } else if (type == float.class || type == Float.class) {
+                return Float.valueOf(value);
+            } else if (type == double.class || type == Double.class) {
+                return Double.valueOf(value);
+            }
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        return value;
+    }
+
+    /**
+     * Resolve the primitive class from the specified type
+     *
+     * @param type the specified type
+     * @return <code>null</code> if not found
+     */
+    public static Class<?> resolvePrimitiveType(Class<?> type) {
+        if (isPrimitive(type)) {
+            return type;
+        }
+        return PRIMITIVE_WRAPPER_TYPE_MAP.get(type);
+    }
+
+    /**
+     * Resolve the wrapper class from the primitive type
+     *
+     * @param primitiveType the primitive type
+     * @return <code>null</code> if not found
+     */
+    public static Class<?> resolveWrapperType(Class<?> primitiveType) {
+        if (PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(primitiveType)) {
+            return primitiveType;
+        }
+        return WRAPPER_PRIMITIVE_TYPE_MAP.get(primitiveType);
+    }
+
+    public static boolean arrayTypeEquals(Class<?> oneArrayType, Class<?> anotherArrayType) {
+        if (!isArray(oneArrayType) || !isArray(anotherArrayType)) {
+            return false;
+        }
+        Class<?> oneComponentType = oneArrayType.getComponentType();
+        Class<?> anotherComponentType = anotherArrayType.getComponentType();
+        if (isArray(oneComponentType) && isArray(anotherComponentType)) {
+            return arrayTypeEquals(oneComponentType, anotherComponentType);
+        } else {
+            return Objects.equals(oneComponentType, anotherComponentType);
+        }
+    }
+
+    /**
+     * Resolve the given class name as primitive class, if appropriate,
+     * according to the JVM's naming rules for primitive classes.
+     * <p>
+     * Also supports the JVM's internal class names for primitive arrays. Does
+     * <i>not</i> support the "[]" suffix notation for primitive arrays; this is
+     * only supported by {@link #forName}.
+     *
+     * @param name the name of the potentially primitive class
+     * @return the primitive class, or <code>null</code> if the name does not
+     * denote a primitive class or primitive array class
+     */
+    public static Class<?> resolvePrimitiveClassName(String name) {
+        Class<?> result = null;
+        // Most class names will be quite long, considering that they
+        // SHOULD sit in a package, so a length check is worthwhile.
+        if (name != null && name.length() <= 8) {
+            // Could be a primitive - likely.
+            result = (Class<?>) PRIMITIVE_TYPE_NAME_MAP.get(name);
+        }
+        return result;
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an annotation type; false otherwise
+     * @see Class#isAnnotation()
+     */
+    public static boolean isAnnotation(int modifiers) {
+        return (modifiers & ANNOTATION) != 0;
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an enumeration type; false otherwise
+     * @see Class#isEnum()
+     */
+    public static boolean isEnum(int modifiers) {
+        return (modifiers & ENUM) != 0;
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents a synthetic type; false otherwise
+     * @see Class#isSynthetic()
+     */
+    public static boolean isSynthetic(int modifiers) {
+        return (modifiers & SYNTHETIC) != 0;
+    }
+
 
     private static Map<String, Set<String>> initClassPathToClassNamesMap() {
         Map<String, Set<String>> classPathToClassNamesMap = new LinkedHashMap<>();
@@ -362,7 +718,7 @@ public abstract class ClassUtils extends BaseUtils {
             superClass = superClass.getSuperclass();
         }
 
-        return unmodifiableSet(Streams.filterAll(allSuperClasses, classFilters));
+        return unmodifiableSet(filterAll(allSuperClasses, classFilters));
     }
 
     /**
@@ -401,7 +757,7 @@ public abstract class ClassUtils extends BaseUtils {
             clazz = waitResolve.poll();
         }
 
-        return Streams.filterAll(allInterfaces, interfaceFilters);
+        return filterAll(allInterfaces, interfaceFilters);
     }
 
     /**
@@ -454,7 +810,7 @@ public abstract class ClassUtils extends BaseUtils {
      * Resolve the types of the specified values
      *
      * @param values the values
-     * @return If can't be resolved, return {@link ReflectUtils#EMPTY_CLASS_ARRAY empty class array}
+     * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
      */
     public static Class[] getTypes(Object... values) {
 
@@ -537,5 +893,50 @@ public abstract class ClassUtils extends BaseUtils {
 
     private static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';
+    }
+
+
+    /**
+     * Get all classes from the specified type with filters
+     *
+     * @param type         the specified type
+     * @param classFilters class filters
+     * @return non-null read-only {@link Set}
+     */
+    public static Set<Class<?>> getAllClasses(Class<?> type, Predicate<Class<?>>... classFilters) {
+        return getAllClasses(type, true, classFilters);
+    }
+
+    /**
+     * Get all classes(may include self type) from the specified type with filters
+     *
+     * @param type         the specified type
+     * @param includedSelf included self type or not
+     * @param classFilters class filters
+     * @return non-null read-only {@link Set}
+     */
+    public static Set<Class<?>> getAllClasses(Class<?> type, boolean includedSelf, Predicate<Class<?>>... classFilters) {
+        if (type == null || type.isPrimitive()) {
+            return emptySet();
+        }
+
+        List<Class<?>> allClasses = new LinkedList<>();
+
+        Class<?> superClass = type.getSuperclass();
+        while (superClass != null) {
+            // add current super class
+            allClasses.add(superClass);
+            superClass = superClass.getSuperclass();
+        }
+
+        // FIFO -> FILO
+        Collections.reverse(allClasses);
+
+        if (includedSelf) {
+            allClasses.add(type);
+        }
+
+        // Keep the same order from List
+        return ofSet(filterAll(allClasses, classFilters));
     }
 }

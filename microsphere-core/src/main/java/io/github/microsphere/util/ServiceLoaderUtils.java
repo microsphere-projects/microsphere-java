@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import static io.github.microsphere.util.ClassLoaderUtils.getClassLoader;
+
 /**
  * {@link ServiceLoader} Utility
  *
@@ -27,11 +29,43 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      * @return service interface type all implementation objects of {@link Collections#unmodifiableList(List) readonly list}
      * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceInterfaceType<code>
      *                                  in the configuration file /META-INF/services/<code>serviceInterfaceType</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static <T> List<T> loadServicesList(ClassLoader classLoader, Class<T> serviceInterfaceType) throws IllegalArgumentException {
         return Collections.unmodifiableList(loadServicesList0(classLoader, serviceInterfaceType));
+    }
+
+    /**
+     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
+     * will be able to load the configuration file META-INF/services <code>serviceInterfaceType<code> under its class path.
+     * The configuration file of each service interface type can define multiple lists of implementation classes.
+     * <p/>
+     *
+     * @param <T>                  service interface type
+     * @param serviceInterfaceType service interface type
+     * @return service interface type all implementation objects
+     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceInterfaceType<code>
+     *                                  in the configuration file /META-INF/services/<code>serviceInterfaceType</code>
+     */
+    public static <T> T[] loadServices(Class<T> serviceInterfaceType) throws IllegalArgumentException {
+        return loadServices(getClassLoader(), serviceInterfaceType);
+    }
+
+    /**
+     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
+     * will be able to load the configuration file META-INF/services <code>serviceInterfaceType<code> under its class path.
+     * The configuration file of each service interface type can define multiple lists of implementation classes.
+     * <p/>
+     *
+     * @param <T>                  service interface type
+     * @param classLoader          {@link ClassLoader}
+     * @param serviceInterfaceType service interface type
+     * @return service interface type all implementation objects
+     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceInterfaceType<code>
+     *                                  in the configuration file /META-INF/services/<code>serviceInterfaceType</code>
+     */
+    public static <T> T[] loadServices(ClassLoader classLoader, Class<T> serviceInterfaceType) throws IllegalArgumentException {
+        List<T> servicesList = loadServicesList0(classLoader, serviceInterfaceType);
+        return (T[]) servicesList.toArray(new Object[0]);
     }
 
     /**
