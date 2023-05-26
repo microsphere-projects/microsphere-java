@@ -14,13 +14,13 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>Microsphere Project</name>
-    <description>Microsphere Project</description>
+    <name>Microsphere Java Project</name>
+    <description>Microsphere Java Project</description>
 
     <scm>
-        <url>https://github.com/microsphere-projects/microsphere</url>
-        <connection>scm:git:git://github.com/microsphere-projects/microsphere.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere.git
+        <url>https://github.com/microsphere-projects/microsphere-java</url>
+        <connection>scm:git:git://github.com/microsphere-projects/microsphere-java.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-java.git
         </developerConnection>
     </scm>
 
