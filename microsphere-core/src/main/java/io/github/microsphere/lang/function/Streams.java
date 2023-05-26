@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import static io.github.microsphere.lang.function.Predicates.and;
 import static io.github.microsphere.lang.function.Predicates.or;
@@ -34,8 +35,12 @@ import static java.util.stream.StreamSupport.stream;
  */
 public interface Streams {
 
+    static <T> Stream<T> stream(Iterable<T> iterable) {
+        return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
     static <T, S extends Iterable<T>> Stream<T> filterStream(S values, Predicate<? super T> predicate) {
-        return stream(values.spliterator(), false).filter(predicate);
+        return StreamSupport.stream(values.spliterator(), false).filter(predicate);
     }
 
     static <T, S extends Iterable<T>> List<T> filterList(S values, Predicate<? super T> predicate) {
@@ -61,7 +66,7 @@ public interface Streams {
     }
 
     static <T> T filterFirst(Iterable<T> values, Predicate<? super T>... predicates) {
-        return stream(values.spliterator(), false)
+        return StreamSupport.stream(values.spliterator(), false)
                 .filter(and(predicates))
                 .findFirst()
                 .orElse(null);
