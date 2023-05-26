@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import static io.github.microsphere.util.ArrayUtils.asArray;
 import static io.github.microsphere.util.ClassLoaderUtils.getClassLoader;
 
 /**
@@ -65,7 +66,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      */
     public static <T> T[] loadServices(ClassLoader classLoader, Class<T> serviceInterfaceType) throws IllegalArgumentException {
         List<T> servicesList = loadServicesList0(classLoader, serviceInterfaceType);
-        return (T[]) servicesList.toArray(new Object[0]);
+        return asArray(servicesList, serviceInterfaceType);
     }
 
     /**
