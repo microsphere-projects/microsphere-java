@@ -22,6 +22,7 @@ import java.util.AbstractQueue;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -44,8 +45,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static java.lang.Float.MIN_NORMAL;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -55,6 +58,8 @@ import static java.util.Collections.unmodifiableSet;
  * @version 1.0.0
  */
 public abstract class CollectionUtils extends BaseUtils {
+
+    private static final Deque EMPTY_DEQUE = new EmptyDeque();
 
     public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
@@ -68,20 +73,56 @@ public abstract class CollectionUtils extends BaseUtils {
         return map == null || map.isEmpty();
     }
 
+    public static boolean isSet(Iterable<?> values) {
+        return values instanceof Set;
+    }
+
+    public static boolean isList(Iterable<?> values) {
+        return values instanceof List;
+    }
+
+    public static boolean isQueue(Iterable<?> values) {
+        return values instanceof Queue;
+    }
+
+    public static <E> Queue<E> emptyQueue() {
+        return EMPTY_DEQUE;
+    }
+
+    public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
+        return new EnumerationIteratorAdapter(enumeration);
+    }
+
+    public static <E> Iterable<E> toIterable(Enumeration<E> enumeration) {
+        return new EnumerationIterableAdapter(enumeration);
+    }
+
     public static <E> List<E> toList(Iterable<E> iterable) {
         return toList(iterable.iterator());
     }
 
+    public static <E> List<E> toList(Enumeration<E> enumeration) {
+        return toList(toIterator(enumeration));
+    }
+
     public static <E> List<E> toList(Iterator<E> iterator) {
-        List<E> list = new LinkedList<>();
+        List<E> list = newLinkedList();
         while (iterator.hasNext()) {
             list.add(iterator.next());
         }
         return list;
     }
 
-    public static <E> List<E> toList(Enumeration<E> enumeration) {
-        return toList(new EnumerationIteratorAdapter(enumeration));
+    public static <E> List<E> ofList(Iterable<E> iterable) {
+        return ofList(iterable.iterator());
+    }
+
+    public static <E> List<E> ofList(Enumeration<E> enumeration) {
+        return ofList(toIterator(enumeration));
+    }
+
+    public static <E> List<E> ofList(Iterator<E> iterator) {
+        return unmodifiableList(toList(iterator));
     }
 
     /**
@@ -103,6 +144,19 @@ public abstract class CollectionUtils extends BaseUtils {
      * @return read-only {@link Set}
      */
     public static <T> Set<T> ofSet(T... values) {
+        int size = values == null ? 0 : values.length;
+        if (size < 1) {
+            return emptySet();
+        }
+
+        Set<T> elements = new LinkedHashSet<>(size, MIN_NORMAL);
+        for (int i = 0; i < size; i++) {
+            elements.add(values[i]);
+        }
+        return unmodifiableSet(elements);
+    }
+
+    public static <T> Set<T> asSet(T... values) {
         int size = values == null ? 0 : values.length;
         if (size < 1) {
             return emptySet();
@@ -264,6 +318,120 @@ public abstract class CollectionUtils extends BaseUtils {
         return new UnmodifiableQueue(queue);
     }
 
+    static class EmptyDeque<E> extends AbstractQueue<E> implements Deque<E> {
+
+        @Override
+        public Iterator<E> iterator() {
+            return null;
+        }
+
+        @Override
+        public Iterator<E> descendingIterator() {
+            return null;
+        }
+
+        @Override
+        public void addFirst(E e) {
+
+        }
+
+        @Override
+        public void addLast(E e) {
+
+        }
+
+        @Override
+        public boolean offerFirst(E e) {
+            return false;
+        }
+
+        @Override
+        public boolean offerLast(E e) {
+            return false;
+        }
+
+        @Override
+        public E removeFirst() {
+            return null;
+        }
+
+        @Override
+        public E removeLast() {
+            return null;
+        }
+
+        @Override
+        public E pollFirst() {
+            return null;
+        }
+
+        @Override
+        public E pollLast() {
+            return null;
+        }
+
+        @Override
+        public E getFirst() {
+            return null;
+        }
+
+        @Override
+        public E getLast() {
+            return null;
+        }
+
+        @Override
+        public E peekFirst() {
+            return null;
+        }
+
+        @Override
+        public E peekLast() {
+            return null;
+        }
+
+        @Override
+        public boolean removeFirstOccurrence(Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean removeLastOccurrence(Object o) {
+            return false;
+        }
+
+        @Override
+        public void push(E e) {
+
+        }
+
+        @Override
+        public E pop() {
+            return null;
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean offer(E e) {
+            return false;
+        }
+
+        @Override
+        public E poll() {
+            return null;
+        }
+
+        @Override
+        public E peek() {
+            return null;
+        }
+    }
+
+
     static class UnmodifiableQueue<E> extends AbstractQueue<E> implements Queue<E>, Serializable {
 
         private static final long serialVersionUID = -1578116770333032259L;
@@ -384,6 +552,19 @@ public abstract class CollectionUtils extends BaseUtils {
         }
     }
 
+    static class EnumerationIterableAdapter<E> implements Iterable<E> {
+
+        private final Enumeration<E> enumeration;
+
+        EnumerationIterableAdapter(Enumeration<E> enumeration) {
+            this.enumeration = enumeration;
+        }
+
+        @Override
+        public Iterator<E> iterator() {
+            return new EnumerationIteratorAdapter(enumeration);
+        }
+    }
 
     static class EnumerationIteratorAdapter<E> implements Iterator<E> {
 
