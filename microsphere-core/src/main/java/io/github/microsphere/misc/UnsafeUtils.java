@@ -1149,7 +1149,7 @@ public abstract class UnsafeUtils {
      * @throws IllegalArgumentException If the class is null, or the field name is blank or empty or is matched at multiple places in the inheritance hierarchy
      * @throws NullPointerException     If any argument is <code>null</code>
      */
-    protected static long getObjectFieldOffset(Object object, String fieldName) throws IllegalArgumentException, NullPointerException {
+    public static long getObjectFieldOffset(Object object, String fieldName) throws IllegalArgumentException, NullPointerException {
         Class<?> type = object.getClass();
         Long offsetFromCache = getOffsetFromCache(type, fieldName);
         if (offsetFromCache != null) {
