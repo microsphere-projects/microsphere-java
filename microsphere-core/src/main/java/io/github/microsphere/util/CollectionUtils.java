@@ -22,6 +22,7 @@ import java.util.AbstractQueue;
 import java.util.AbstractSet;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedMap;
@@ -46,19 +48,16 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.lang.Float.MIN_NORMAL;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 
 /**
  * The utilities class for Java Collection
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @version 1.0.0
+ * @see Collections
  */
 public abstract class CollectionUtils extends BaseUtils {
-
     private static final Deque EMPTY_DEQUE = new EmptyDeque();
 
     public static boolean isEmpty(Collection<?> collection) {
@@ -86,7 +85,11 @@ public abstract class CollectionUtils extends BaseUtils {
     }
 
     public static <E> Queue<E> emptyQueue() {
-        return EMPTY_DEQUE;
+        return (Queue<E>) EMPTY_DEQUE;
+    }
+
+    public static <E> Deque<E> emptyDeque() {
+        return (Deque<E>) EMPTY_DEQUE;
     }
 
     public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
@@ -113,15 +116,15 @@ public abstract class CollectionUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> List<E> ofList(Iterable<E> iterable) {
-        return ofList(iterable.iterator());
+    public static <E> List<E> asList(Iterable<E> iterable) {
+        return asList(iterable.iterator());
     }
 
-    public static <E> List<E> ofList(Enumeration<E> enumeration) {
-        return ofList(toIterator(enumeration));
+    public static <E> List<E> asList(Enumeration<E> enumeration) {
+        return asList(toIterator(enumeration));
     }
 
-    public static <E> List<E> ofList(Iterator<E> iterator) {
+    public static <E> List<E> asList(Iterator<E> iterator) {
         return unmodifiableList(toList(iterator));
     }
 
@@ -131,7 +134,10 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param values one or more values
      * @param <T>    the type of <code>values</code>
      * @return read-only {@link Set}
+     * @deprecated {@link #asSet(Iterable)}
+     *
      */
+    @Deprecated
     public static <T> Set<T> ofSet(Iterable<T> values) {
         return unmodifiableSet(newLinkedHashSet(values));
     }
@@ -142,33 +148,39 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param values one or more values
      * @param <T>    the type of <code>values</code>
      * @return read-only {@link Set}
+     * @deprecated {@link #asSet(Object[])}
      */
+    @Deprecated
     public static <T> Set<T> ofSet(T... values) {
-        int size = values == null ? 0 : values.length;
-        if (size < 1) {
-            return emptySet();
-        }
-
-        Set<T> elements = new LinkedHashSet<>(size, MIN_NORMAL);
-        for (int i = 0; i < size; i++) {
-            elements.add(values[i]);
-        }
-        return unmodifiableSet(elements);
+        return asSet(values);
     }
 
+    /**
+     * Convert to multiple values to be {@link LinkedHashSet}
+     *
+     * @param values one or more values
+     * @param <T>    the type of <code>values</code>
+     * @return read-only {@link Set}
+     */
+    public static <T> Set<T> asSet(Iterable<T> values) {
+        return unmodifiableSet(newLinkedHashSet(values));
+    }
+
+    /**
+     * Convert to multiple values to be {@link LinkedHashSet}
+     *
+     * @param values one or more values
+     * @param <T>    the type of <code>values</code>
+     * @return read-only {@link Set}
+     */
     public static <T> Set<T> asSet(T... values) {
         int size = values == null ? 0 : values.length;
         if (size < 1) {
             return emptySet();
         }
 
-        float loadFactor = 1f / ((size + 1) * 1.0f);
+        Set<T> elements = new LinkedHashSet<>(size, MIN_NORMAL);
 
-        if (loadFactor > 0.75f) {
-            loadFactor = 0.75f;
-        }
-
-        Set<T> elements = new LinkedHashSet<>(size, loadFactor);
         for (int i = 0; i < size; i++) {
             elements.add(values[i]);
         }
@@ -322,72 +334,74 @@ public abstract class CollectionUtils extends BaseUtils {
 
         @Override
         public Iterator<E> iterator() {
-            return null;
+            return emptyIterator();
         }
 
         @Override
         public Iterator<E> descendingIterator() {
-            return null;
+            return iterator();
         }
 
         @Override
         public void addFirst(E e) {
-
+            offer(e);
         }
 
         @Override
         public void addLast(E e) {
-
+            offer(e);
         }
 
         @Override
         public boolean offerFirst(E e) {
+            offer(e);
             return false;
         }
 
         @Override
         public boolean offerLast(E e) {
+            offer(e);
             return false;
         }
 
         @Override
         public E removeFirst() {
-            return null;
+            return peek();
         }
 
         @Override
         public E removeLast() {
-            return null;
+            return peek();
         }
 
         @Override
         public E pollFirst() {
-            return null;
+            return peek();
         }
 
         @Override
         public E pollLast() {
-            return null;
+            return peek();
         }
 
         @Override
         public E getFirst() {
-            return null;
+            return peek();
         }
 
         @Override
         public E getLast() {
-            return null;
+            return peek();
         }
 
         @Override
         public E peekFirst() {
-            return null;
+            return peek();
         }
 
         @Override
         public E peekLast() {
-            return null;
+            return peek();
         }
 
         @Override
@@ -402,12 +416,12 @@ public abstract class CollectionUtils extends BaseUtils {
 
         @Override
         public void push(E e) {
-
+            offer(e);
         }
 
         @Override
         public E pop() {
-            return null;
+            return peek();
         }
 
         @Override
@@ -417,17 +431,17 @@ public abstract class CollectionUtils extends BaseUtils {
 
         @Override
         public boolean offer(E e) {
-            return false;
+            throw new IllegalStateException("Empty Queue can't add");
         }
 
         @Override
         public E poll() {
-            return null;
+            return peek();
         }
 
         @Override
         public E peek() {
-            return null;
+            throw new NoSuchElementException();
         }
     }
 
