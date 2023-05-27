@@ -6,7 +6,7 @@ package io.github.microsphere.util.jar;
 import io.github.microsphere.constants.ProtocolConstants;
 import io.github.microsphere.filter.JarEntryFilter;
 import io.github.microsphere.net.URLUtils;
-import io.github.microsphere.util.CollectionUtils;
+import io.github.microsphere.collection.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.github.microsphere.collection.ListUtils.toList;
 import static io.github.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.github.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * Jar Utility class
@@ -123,7 +125,7 @@ public class JarUtils {
             return Collections.emptyList();
         }
         Enumeration<JarEntry> jarEntries = jarFile.entries();
-        List<JarEntry> jarEntriesList = CollectionUtils.toList(jarEntries);
+        List<JarEntry> jarEntriesList = toList(jarEntries);
         return doFilter(jarEntriesList, jarEntryFilter);
     }
 
@@ -134,7 +136,7 @@ public class JarUtils {
                 jarEntriesList.add(jarEntry);
             }
         }
-        return Collections.unmodifiableList(jarEntriesList);
+        return unmodifiableList(jarEntriesList);
     }
 
     /**

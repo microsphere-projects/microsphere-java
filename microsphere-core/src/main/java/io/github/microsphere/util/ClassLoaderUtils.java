@@ -3,6 +3,7 @@
  */
 package io.github.microsphere.util;
 
+import io.github.microsphere.collection.CollectionUtils;
 import io.github.microsphere.constants.Constants;
 import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.constants.PathConstants;
@@ -29,6 +30,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 
+import static io.github.microsphere.reflect.ReflectionUtils.toList;
+
 
 /**
  * {@link ClassLoader} Utility
@@ -43,7 +46,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     protected static final ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
 
     private static final Method findLoadedClassMethod = initFindLoadedClassMethod();
-
 
     /**
      * Initializes {@link Method} for {@link ClassLoader#findLoadedClass(String)}
@@ -66,7 +68,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         String message = String.format("Current JVM[ Implementation : %s , Version : %s ] does not supported ! " + "Stack Trace : %s", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
         throw new UnsupportedOperationException(message);
     }
-
 
     /**
      * Returns the number of classes that are currently loaded in the Java virtual machine.
@@ -120,7 +121,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Return the ClassLoader to use.
+     * Get the default the ClassLoader to use.
      *
      * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
      * @see Thread#getContextClassLoader()
@@ -129,7 +130,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @see ReflectionUtils#getCallerClass()
      */
     @Nullable
-    public static ClassLoader getClassLoader() {
+    public static ClassLoader getDefaultClassLoader() {
         ClassLoader classLoader = null;
         try {
             classLoader = Thread.currentThread().getContextClassLoader();
@@ -159,18 +160,35 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
+     * Get the ClassLoader from the loaded class if present.
+     *
+     * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
+     * @param loadedClass the optional class was loaded by some {@link ClassLoader}
+     * @see #getDefaultClassLoader()
+     */
+    @Nullable
+    public static ClassLoader getClassLoader(@Nullable Class<?> loadedClass) {
+        ClassLoader classLoader = null;
+        try {
+            if (loadedClass != null) {
+                classLoader = loadedClass.getClassLoader();
+            }
+        } catch (SecurityException ignored) {
+        }
+        if (classLoader != null) {
+            return classLoader;
+        }
+        return getDefaultClassLoader();
+    }
+
+    /**
      * Return the ClassLoader from the caller class
      *
      * @return the ClassLoader (only {@code null} if the caller class was absent
      * @see ReflectionUtils#getCallerClass()
      */
     public static ClassLoader getCallerClassLoader() {
-        ClassLoader classLoader = null;
-        Class<?> callerClass = ReflectionUtils.getCallerClass();
-        if (callerClass != null) {
-            classLoader = callerClass.getClassLoader();
-        }
-        return classLoader;
+        return getCallerClassLoader(2);
     }
 
     /**
@@ -282,7 +300,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Set<URL> getResources(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
         String normalizedResourceName = resourceType.resolve(resourceName);
         Enumeration<URL> resources = classLoader.getResources(normalizedResourceName);
-        return resources != null && resources.hasMoreElements() ? new LinkedHashSet(CollectionUtils.toList(resources)) : Collections.emptySet();
+        return resources != null && resources.hasMoreElements() ? new LinkedHashSet(toList(resources)) : Collections.emptySet();
     }
 
     /**
@@ -511,13 +529,13 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Resolve the {@link Class} by the specified name using {@link #getClassLoader()}
+     * Resolve the {@link Class} by the specified name using {@link #getDefaultClassLoader()}
      *
      * @param className the name of {@link Class}
      * @return If can't be resolved , return <code>null</code>
      */
     public static Class<?> resolveClass(@Nullable String className) {
-        return resolveClass(className, getClassLoader());
+        return resolveClass(className, getDefaultClassLoader());
     }
 
     /**
@@ -531,7 +549,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         Class<?> targetClass = null;
         try {
             if (className != null) {
-                ClassLoader targetClassLoader = classLoader == null ? getClassLoader() : classLoader;
+                ClassLoader targetClassLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
                 targetClass = forName(className, targetClassLoader);
             }
         } catch (Throwable ignored) { // Ignored

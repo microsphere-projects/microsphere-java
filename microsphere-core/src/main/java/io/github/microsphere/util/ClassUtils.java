@@ -3,6 +3,8 @@
  */
 package io.github.microsphere.util;
 
+import io.github.microsphere.collection.CollectionUtils;
+import io.github.microsphere.collection.MapUtils;
 import io.github.microsphere.constants.Constants;
 import io.github.microsphere.constants.FileConstants;
 import io.github.microsphere.constants.PathConstants;
@@ -41,8 +43,8 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.github.microsphere.collection.SetUtils.of;
 import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
@@ -103,9 +105,9 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(Void.class, Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, BigDecimal.class, BigInteger.class, Date.class, Object.class);
+    public static final Set<Class<?>> SIMPLE_TYPES = of(Void.class, Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, BigDecimal.class, BigInteger.class, Date.class, Object.class);
 
-    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(
+    public static final Set<Class<?>> PRIMITIVE_TYPES = of(
             Void.TYPE,
             Boolean.TYPE,
             Character.TYPE,
@@ -937,7 +939,7 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         // Keep the same order from List
-        return ofSet(filterAll(allClasses, classFilters));
+        return of(filterAll(allClasses, classFilters));
     }
 
     /**

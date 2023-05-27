@@ -16,7 +16,7 @@
  */
 package io.github.microsphere.convert.multiple;
 
-import io.github.microsphere.util.CollectionUtils;
+import io.github.microsphere.collection.CollectionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

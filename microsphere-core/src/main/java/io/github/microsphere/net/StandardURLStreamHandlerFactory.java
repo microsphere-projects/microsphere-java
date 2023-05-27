@@ -32,7 +32,7 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
         String className = "sun.net.www.protocol." + protocol + ".Handler";
-        Class<?> handlerClass = ClassLoaderUtils.resolveClass(className, ClassLoaderUtils.getClassLoader());
+        Class<?> handlerClass = ClassLoaderUtils.resolveClass(className, ClassLoaderUtils.getDefaultClassLoader());
         try {
             return (URLStreamHandler) handlerClass.newInstance();
         } catch (Throwable e) {

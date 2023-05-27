@@ -25,7 +25,7 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
-import static io.github.microsphere.util.CollectionUtils.toList;
+import static io.github.microsphere.collection.ListUtils.toList;
 import static java.util.Collections.emptyList;
 
 /**

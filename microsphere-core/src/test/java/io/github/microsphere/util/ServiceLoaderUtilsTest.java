@@ -20,12 +20,12 @@ public class ServiceLoaderUtilsTest {
     public void testLoadServicesList() throws Exception {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        List<CharSequence> charSequenceList = ServiceLoaderUtils.loadServicesList(classLoader, CharSequence.class);
+        List<CharSequence> charSequenceList = ServiceLoaderUtils.loadServicesList(CharSequence.class, classLoader);
         Assert.assertEquals(1, charSequenceList.size());
 
         CharSequence charSequence = charSequenceList.get(0);
-        CharSequence firstService = ServiceLoaderUtils.loadFirstService(classLoader, CharSequence.class);
-        CharSequence lastService = ServiceLoaderUtils.loadLastService(classLoader, CharSequence.class);
+        CharSequence firstService = ServiceLoaderUtils.loadFirstService(CharSequence.class, classLoader);
+        CharSequence lastService = ServiceLoaderUtils.loadLastService(CharSequence.class, classLoader);
 
         Assert.assertNotNull(charSequence);
         Assert.assertEquals(charSequence, firstService);
@@ -38,7 +38,7 @@ public class ServiceLoaderUtilsTest {
         IllegalArgumentException e = null;
 
         try {
-            ServiceLoaderUtils.loadServicesList(classLoader, Set.class);
+            ServiceLoaderUtils.loadServicesList(Set.class, classLoader);
         } catch (IllegalArgumentException e_) {
             e = e_;
             e.printStackTrace();

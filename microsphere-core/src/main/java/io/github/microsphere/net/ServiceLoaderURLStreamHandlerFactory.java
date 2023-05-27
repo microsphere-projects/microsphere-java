@@ -17,20 +17,19 @@
 package io.github.microsphere.net;
 
 import io.github.microsphere.lang.Prioritized;
-import io.github.microsphere.util.CollectionUtils;
 
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
+import static io.github.microsphere.collection.MapUtils.ofEntry;
+import static io.github.microsphere.collection.MapUtils.toFixedMap;
 import static io.github.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.ServiceLoader.load;
+import static io.github.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
  * Decorating {@link URLStreamHandlerFactory} class delegates the composite of {@link URLStreamHandlerFactory} and
@@ -61,8 +60,7 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
     }
 
     private static URLStreamHandlerFactory createDelegate() {
-        ClassLoader classLoader = getClassLoader();
-        Iterable<URLStreamHandlerFactory> factories = load(URLStreamHandlerFactory.class, classLoader);
+        Iterable<URLStreamHandlerFactory> factories = loadServicesList(URLStreamHandlerFactory.class);
         MutableURLStreamHandlerFactory fallbackFactory = new MutableURLStreamHandlerFactory(loadHandlers());
         CompositeURLStreamHandlerFactory compositeFactory = new CompositeURLStreamHandlerFactory(factories);
         compositeFactory.addURLStreamHandlerFactory(fallbackFactory);
@@ -70,8 +68,8 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
     }
 
     private static Map<String, ExtendableProtocolURLStreamHandler> loadHandlers() {
-        ClassLoader classLoader = getClassLoader();
-        List<ExtendableProtocolURLStreamHandler> handlers = CollectionUtils.toList(load(ExtendableProtocolURLStreamHandler.class, classLoader));
+        List<ExtendableProtocolURLStreamHandler> handlers = loadServicesList(ExtendableProtocolURLStreamHandler.class);
+
         int size = handlers.size();
         if (size < 1) {
             return Collections.emptyMap();
@@ -80,16 +78,10 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         // sort
         Collections.sort(handlers, Prioritized.COMPARATOR);
 
-        Map<String, ExtendableProtocolURLStreamHandler> handlersMap = new HashMap<>(size, Float.MIN_NORMAL);
-        for (int i = 0; i < size; i++) {
-            ExtendableProtocolURLStreamHandler handler = handlers.get(i);
-            handlersMap.put(handler.getProtocol(), handler);
-        }
+        Map<String, ExtendableProtocolURLStreamHandler> handlersMap = toFixedMap(
+                handlers, handler -> ofEntry(handler.getProtocol(), handler));
 
-        return unmodifiableMap(handlersMap);
-    }
+        return handlersMap;
 
-    private static ClassLoader getClassLoader() {
-        return ServiceLoaderURLStreamHandlerFactory.class.getClassLoader();
     }
 }

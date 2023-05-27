@@ -16,6 +16,7 @@
  */
 package io.github.microsphere.net;
 
+import io.github.microsphere.collection.SetUtils;
 import io.github.microsphere.net.console.Handler;
 import org.junit.Test;
 
@@ -25,7 +26,6 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.Properties;
 
-import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
@@ -54,7 +54,7 @@ public class ExtendableProtocolURLStreamHandlerTest {
     @Test
     public void testConsoleProtocol() throws Throwable {
         Handler handler = new Handler();
-        assertEquals(ofSet("io.github.microsphere.net"), ExtendableProtocolURLStreamHandler.getHandlePackages());
+        assertEquals(SetUtils.of("io.github.microsphere.net"), ExtendableProtocolURLStreamHandler.getHandlePackages());
         assertEquals("io.github.microsphere.net", ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue());
 
         String spec = "console:text://localhost:12345/abc;ref=top?n=1#hash";

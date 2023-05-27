@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.github.microsphere.collection.SetUtils.of;
 import static io.github.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.github.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
@@ -36,7 +37,6 @@ import static io.github.microsphere.reflect.MemberUtils.isStatic;
 import static io.github.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.github.microsphere.util.ClassUtils.getTypeName;
 import static io.github.microsphere.util.ClassUtils.getTypes;
-import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -55,7 +55,7 @@ public abstract class MethodUtils {
      */
     public final static Predicate<? super Method> OBJECT_METHOD_PREDICATE = MethodUtils::isObjectMethod;
 
-    public final static Set<Method> OBJECT_METHODS = ofSet(Object.class.getMethods());
+    public final static Set<Method> OBJECT_METHODS = of(Object.class.getMethods());
 
     private MethodUtils() {
     }

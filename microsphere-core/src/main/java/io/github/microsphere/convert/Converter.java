@@ -80,8 +80,8 @@ public interface Converter<S, T> extends Prioritized {
      * @return
      */
     static <S, T> Converter<S, T> getConverter(Class<S> sourceType, Class<T> targetType) {
-        ClassLoader classLoader = ClassLoaderUtils.getClassLoader();
-        return loadServicesList(classLoader, Converter.class)
+        ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+        return loadServicesList(Converter.class, classLoader)
                 .stream()
                 .sorted()
                 .filter(converter -> converter.accept(sourceType, targetType))

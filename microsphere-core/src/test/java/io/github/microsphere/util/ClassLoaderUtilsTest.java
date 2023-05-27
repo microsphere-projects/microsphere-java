@@ -5,7 +5,6 @@ package io.github.microsphere.util;
 
 import io.github.microsphere.AbstractTestCase;
 import io.github.microsphere.security.TestSecurityManager;
-import junit.framework.Assert;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -23,9 +22,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static io.github.microsphere.collection.SetUtils.of;
 import static io.github.microsphere.constants.FileConstants.CLASS_EXTENSION;
-import static io.github.microsphere.util.CollectionUtils.ofSet;
 import static java.util.Collections.emptySet;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -67,120 +69,120 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         String resourceName = "META-INF/abc/def";
         String expectedResourceName = "META-INF/abc/def";
         String resolvedResourceName = ClassLoaderUtils.ResourceType.DEFAULT.resolve(resourceName);
-        Assert.assertEquals(expectedResourceName, resolvedResourceName);
+        assertEquals(expectedResourceName, resolvedResourceName);
 
         resourceName = "///////META-INF//abc\\/def";
         resolvedResourceName = ClassLoaderUtils.ResourceType.DEFAULT.resolve(resourceName);
-        Assert.assertEquals(expectedResourceName, resolvedResourceName);
+        assertEquals(expectedResourceName, resolvedResourceName);
 
         resourceName = "java.lang.String.class";
 
         expectedResourceName = "java/lang/String.class";
         resolvedResourceName = ClassLoaderUtils.ResourceType.CLASS.resolve(resourceName);
-        Assert.assertEquals(expectedResourceName, resolvedResourceName);
+        assertEquals(expectedResourceName, resolvedResourceName);
 
         resourceName = "java.lang";
         expectedResourceName = "java/lang/";
         resolvedResourceName = ClassLoaderUtils.ResourceType.PACKAGE.resolve(resourceName);
-        Assert.assertEquals(expectedResourceName, resolvedResourceName);
+        assertEquals(expectedResourceName, resolvedResourceName);
 
     }
 
     @Test
     public void testGetClassResource() {
         URL classResourceURL = ClassLoaderUtils.getClassResource(classLoader, ClassLoaderUtilsTest.class);
-        Assert.assertNotNull(classResourceURL);
+        assertNotNull(classResourceURL);
         echo(classResourceURL);
 
         classResourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class.getName());
-        Assert.assertNotNull(classResourceURL);
+        assertNotNull(classResourceURL);
         echo(classResourceURL);
     }
 
     @Test
     public void testGetResource() {
         URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
-        Assert.assertNotNull(resourceURL);
+        assertNotNull(resourceURL);
         echo(resourceURL);
 
         resourceURL = ClassLoaderUtils.getResource(classLoader, "///java/lang/CharSequence.class");
-        Assert.assertNotNull(resourceURL);
+        assertNotNull(resourceURL);
         echo(resourceURL);
 
         resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/java.lang.CharSequence");
-        Assert.assertNotNull(resourceURL);
+        assertNotNull(resourceURL);
         echo(resourceURL);
     }
 
     @Test
     public void testGetResources() throws IOException {
         Set<URL> resourceURLs = ClassLoaderUtils.getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
-        Assert.assertNotNull(resourceURLs);
-        Assert.assertEquals(1, resourceURLs.size());
+        assertNotNull(resourceURLs);
+        assertEquals(1, resourceURLs.size());
         echo(resourceURLs);
 
         resourceURLs = ClassLoaderUtils.getResources(classLoader, "///java/lang/CharSequence.class");
-        Assert.assertNotNull(resourceURLs);
-        Assert.assertEquals(1, resourceURLs.size());
+        assertNotNull(resourceURLs);
+        assertEquals(1, resourceURLs.size());
         echo(resourceURLs);
 
         resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/java.lang.CharSequence");
-        Assert.assertNotNull(resourceURLs);
-        Assert.assertEquals(1, resourceURLs.size());
+        assertNotNull(resourceURLs);
+        assertEquals(1, resourceURLs.size());
         echo(resourceURLs);
     }
 
     @Test
     public void testClassLoadingMXBean() {
         ClassLoadingMXBean classLoadingMXBean = ClassLoaderUtils.classLoadingMXBean;
-        Assert.assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), ClassLoaderUtils.getTotalLoadedClassCount());
-        Assert.assertEquals(classLoadingMXBean.getLoadedClassCount(), ClassLoaderUtils.getLoadedClassCount());
-        Assert.assertEquals(classLoadingMXBean.getUnloadedClassCount(), ClassLoaderUtils.getUnloadedClassCount());
-        Assert.assertEquals(classLoadingMXBean.isVerbose(), ClassLoaderUtils.isVerbose());
+        assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), ClassLoaderUtils.getTotalLoadedClassCount());
+        assertEquals(classLoadingMXBean.getLoadedClassCount(), ClassLoaderUtils.getLoadedClassCount());
+        assertEquals(classLoadingMXBean.getUnloadedClassCount(), ClassLoaderUtils.getUnloadedClassCount());
+        assertEquals(classLoadingMXBean.isVerbose(), ClassLoaderUtils.isVerbose());
 
         ClassLoaderUtils.setVerbose(true);
-        Assert.assertTrue(ClassLoaderUtils.isVerbose());
+        assertTrue(ClassLoaderUtils.isVerbose());
     }
 
     @Test
     public void testGetInheritableClassLoaders() {
         Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
-        Assert.assertNotNull(classLoaders);
-        Assert.assertTrue(classLoaders.size() > 1);
+        assertNotNull(classLoaders);
+        assertTrue(classLoaders.size() > 1);
         echo(classLoaders);
     }
 
     @Test
     public void testGetLoadedClasses() {
         Set<Class<?>> classesSet = ClassLoaderUtils.getLoadedClasses(classLoader);
-        Assert.assertNotNull(classesSet);
-        Assert.assertFalse(classesSet.isEmpty());
+        assertNotNull(classesSet);
+        assertFalse(classesSet.isEmpty());
 
 
         classesSet = ClassLoaderUtils.getLoadedClasses(ClassLoader.getSystemClassLoader());
-        Assert.assertNotNull(classesSet);
-        Assert.assertFalse(classesSet.isEmpty());
+        assertNotNull(classesSet);
+        assertFalse(classesSet.isEmpty());
         echo(classesSet);
     }
 
     @Test
     public void testGetAllLoadedClasses() {
         Set<Class<?>> classesSet = ClassLoaderUtils.getAllLoadedClasses(classLoader);
-        Assert.assertNotNull(classesSet);
-        Assert.assertFalse(classesSet.isEmpty());
+        assertNotNull(classesSet);
+        assertFalse(classesSet.isEmpty());
 
 
         classesSet = ClassLoaderUtils.getAllLoadedClasses(ClassLoader.getSystemClassLoader());
-        Assert.assertNotNull(classesSet);
-        Assert.assertFalse(classesSet.isEmpty());
+        assertNotNull(classesSet);
+        assertFalse(classesSet.isEmpty());
         echo(classesSet);
     }
 
     @Test
     public void testGetAllLoadedClassesMap() {
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = ClassLoaderUtils.getAllLoadedClassesMap(classLoader);
-        Assert.assertNotNull(allLoadedClassesMap);
-        Assert.assertFalse(allLoadedClassesMap.isEmpty());
+        assertNotNull(allLoadedClassesMap);
+        assertFalse(allLoadedClassesMap.isEmpty());
     }
 
 
@@ -190,21 +192,21 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Class<?> type = null;
         for (Class<?> class_ : ClassLoaderUtils.getAllLoadedClasses(classLoader)) {
             type = ClassLoaderUtils.findLoadedClass(classLoader, class_.getName());
-            Assert.assertEquals(class_, type);
+            assertEquals(class_, type);
         }
 
         type = ClassLoaderUtils.findLoadedClass(classLoader, String.class.getName());
-        Assert.assertEquals(String.class, type);
+        assertEquals(String.class, type);
 
         type = ClassLoaderUtils.findLoadedClass(classLoader, Double.class.getName());
-        Assert.assertEquals(Double.class, type);
+        assertEquals(Double.class, type);
     }
 
     @Test
     public void testIsLoadedClass() {
-        Assert.assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, String.class));
-        Assert.assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, Double.class));
-        Assert.assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, Double.class.getName()));
+        assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, String.class));
+        assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, Double.class));
+        assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, Double.class.getName()));
     }
 
 
@@ -235,30 +237,30 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testGetCount() {
         long count = ClassLoaderUtils.getTotalLoadedClassCount();
-        Assert.assertTrue(count > 0);
+        assertTrue(count > 0);
 
         count = ClassLoaderUtils.getLoadedClassCount();
-        Assert.assertTrue(count > 0);
+        assertTrue(count > 0);
 
         count = ClassLoaderUtils.getUnloadedClassCount();
-        Assert.assertTrue(count > -1);
+        assertTrue(count > -1);
     }
 
     @Test
     public void testFindLoadedClassesInClassPaths() {
         Set<Class<?>> allLoadedClasses = ClassLoaderUtils.findLoadedClassesInClassPaths(classLoader, ClassPathUtils.getClassPaths());
-        Assert.assertFalse(allLoadedClasses.isEmpty());
+        assertFalse(allLoadedClasses.isEmpty());
     }
 
     @Test
     public void testOfSet() {
-        Set<String> set = ofSet();
+        Set<String> set = of();
         assertEquals(emptySet(), set);
 
-        set = ofSet(((String[]) null));
+        set = of(((String[]) null));
         assertEquals(emptySet(), set);
 
-        set = ofSet("A", "B", "C");
+        set = of("A", "B", "C");
         Set<String> expectedSet = new LinkedHashSet<>();
         expectedSet.add("A");
         expectedSet.add("B");
@@ -270,17 +272,17 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testGetClassLoader() {
         Thread currentThread = Thread.currentThread();
         ClassLoader classLoader = currentThread.getContextClassLoader();
-        assertEquals(classLoader, ClassLoaderUtils.getClassLoader());
+        assertEquals(classLoader, ClassLoaderUtils.getDefaultClassLoader());
 
         currentThread.setContextClassLoader(null);
-        assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getClassLoader());
+        assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
 
         currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
         TestSecurityManager.denyRuntimePermission("getClassLoader", () -> {
             new Runnable() {
                 @Override
                 public void run() {
-                    assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getClassLoader());
+                    assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
                 }
             }.run();
         });

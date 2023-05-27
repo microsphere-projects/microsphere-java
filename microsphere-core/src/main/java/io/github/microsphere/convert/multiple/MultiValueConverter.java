@@ -71,8 +71,8 @@ public interface MultiValueConverter<S> extends Prioritized {
      * @return <code>null</code> if not found
      */
     static MultiValueConverter<?> find(Class<?> sourceType, Class<?> targetType) {
-        ClassLoader classLoader = ClassLoaderUtils.getClassLoader();
-        return loadServicesList(classLoader, MultiValueConverter.class)
+        ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+        return loadServicesList(MultiValueConverter.class, classLoader)
                 .stream()
                 .sorted()
                 .filter(converter -> converter.accept(sourceType, targetType))

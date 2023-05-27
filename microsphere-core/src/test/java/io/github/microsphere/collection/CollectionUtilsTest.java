@@ -14,26 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert;
+package io.github.microsphere.collection;
 
-import io.github.microsphere.util.ClassLoaderUtils;
+import org.junit.Test;
 
-import static io.github.microsphere.util.ClassLoaderUtils.resolveClass;
+import java.util.Collection;
+import java.util.Map;
+
+import static io.github.microsphere.collection.CollectionUtils.isEmpty;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.emptySet;
+import static org.junit.Assert.assertTrue;
 
 /**
- * The class to convert {@link String} to {@link Class}
+ * {@lin CollectionUtils} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToClassConverter implements StringConverter<Class> {
+public class CollectionUtilsTest {
 
-    public static final StringToClassConverter INSTANCE = new StringToClassConverter();
-
-    private static final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-
-    @Override
-    public Class convert(String className) {
-        return resolveClass(className, classLoader);
+    @Test
+    public void testIsEmpty() {
+        assertTrue(isEmpty((Collection) null));
+        assertTrue(isEmpty((Map) null));
+        assertTrue(isEmpty(emptyList()));
+        assertTrue(isEmpty(emptySet()));
+        assertTrue(isEmpty(emptyMap()));
     }
 }

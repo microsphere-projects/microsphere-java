@@ -17,7 +17,6 @@
 package io.github.microsphere.net;
 
 import io.github.microsphere.lang.Prioritized;
-import io.github.microsphere.util.CollectionUtils;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -25,6 +24,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static io.github.microsphere.collection.ListUtils.toList;
 
 /**
  * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}
@@ -46,7 +47,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
-        List<URLStreamHandlerFactory> newFactories = CollectionUtils.toList(factories);
+        List<URLStreamHandlerFactory> newFactories = toList(factories);
         sortFactories(newFactories);
         this.factories = newFactories;
     }

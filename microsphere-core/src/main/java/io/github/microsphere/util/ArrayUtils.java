@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static io.github.microsphere.util.CollectionUtils.newArrayList;
+import static io.github.microsphere.collection.ListUtils.newArrayList;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Collections.list;
 
@@ -40,6 +40,10 @@ public abstract class ArrayUtils extends BaseUtils {
 
     public static <T> int length(T... values) {
         return values == null ? 0 : values.length;
+    }
+
+    public static <T> int size(T... values) {
+        return length(values);
     }
 
     public static <T> boolean isEmpty(T... values) {

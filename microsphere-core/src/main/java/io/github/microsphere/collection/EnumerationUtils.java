@@ -14,26 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert;
+package io.github.microsphere.collection;
 
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.github.microsphere.util.BaseUtils;
 
-import static io.github.microsphere.util.ClassLoaderUtils.resolveClass;
+import java.util.Enumeration;
+import java.util.Iterator;
 
 /**
- * The class to convert {@link String} to {@link Class}
+ * The utilities class for Java {@link Enumeration}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Enumeration
  * @since 1.0.0
  */
-public class StringToClassConverter implements StringConverter<Class> {
+public abstract class EnumerationUtils extends BaseUtils {
 
-    public static final StringToClassConverter INSTANCE = new StringToClassConverter();
 
-    private static final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-
-    @Override
-    public Class convert(String className) {
-        return resolveClass(className, classLoader);
-    }
 }

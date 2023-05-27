@@ -14,34 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.github.microsphere.collection;
 
-import org.junit.Test;
-
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-
-import static io.github.microsphere.util.CollectionUtils.isEmpty;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
-import static org.junit.Assert.assertTrue;
+import java.util.Iterator;
 
 /**
- * {@lin CollectionUtils} Test
+ * {@lin Iterable} Adapter via {@link Iterator}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class CollectionUtilsTest {
+public class IterableAdapter implements Iterable {
 
-    @Test
-    public void testIsEmpty() {
-        assertTrue(isEmpty((Collection) null));
-        assertTrue(isEmpty((Map) null));
-        assertTrue(isEmpty(emptyList()));
-        assertTrue(isEmpty(emptySet()));
-        assertTrue(isEmpty(emptyMap()));
+    private final Iterator iterator;
+
+    public IterableAdapter(Iterator iterator) {
+        this.iterator = iterator;
+    }
+
+    @Override
+    public Iterator iterator() {
+        return iterator;
     }
 }

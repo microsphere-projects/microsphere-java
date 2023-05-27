@@ -16,11 +16,11 @@
  */
 package io.github.microsphere.convert;
 
+import io.github.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Test;
 
 import static io.github.microsphere.convert.Converter.convertIfPossible;
 import static io.github.microsphere.convert.Converter.getConverter;
-import static io.github.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.github.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -34,7 +34,7 @@ public class ConverterTest {
 
     @Test
     public void testGetConverter() {
-        loadServicesList(getClassLoader(), Converter.class).stream().sorted().forEach(converter -> {
+        loadServicesList(Converter.class, ClassLoaderUtils.getDefaultClassLoader()).stream().sorted().forEach(converter -> {
             assertSame(converter.getClass(), getConverter(converter.getSourceType(), converter.getTargetType()).getClass());
         });
     }
