@@ -16,15 +16,22 @@
  */
 package io.github.microsphere.collection;
 
+import io.github.microsphere.AbstractTestCase;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 
 import static io.github.microsphere.collection.CollectionUtils.isEmpty;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
+import static io.github.microsphere.collection.QueueUtils.emptyDeque;
+import static io.github.microsphere.collection.QueueUtils.emptyQueue;
+import static java.util.Collections.*;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -33,14 +40,30 @@ import static org.junit.Assert.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class CollectionUtilsTest {
+public class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsEmpty() {
-        assertTrue(isEmpty((Collection) null));
-        assertTrue(isEmpty((Map) null));
-        assertTrue(isEmpty(emptyList()));
-        assertTrue(isEmpty(emptySet()));
-        assertTrue(isEmpty(emptyMap()));
+        assertTrue(isEmpty(NULL_COLLECTION));
+        assertTrue(isEmpty(NULL_LIST));
+        assertTrue(isEmpty(NULL_SET));
+        assertTrue(isEmpty(NULL_QUEUE));
+        assertTrue(isEmpty(NULL_DEQUE));
+
+        assertTrue(isEmpty(EMPTY_COLLECTION));
+        assertTrue(isEmpty(EMPTY_LIST));
+        assertTrue(isEmpty(EMPTY_SET));
+        assertTrue(isEmpty(EMPTY_QUEUE));
+        assertTrue(isEmpty(EMPTY_DEQUE));
+
+        assertFalse(isEmpty(SINGLETON_LIST));
+        assertFalse(isEmpty(SINGLETON_SET));
+        assertFalse(isEmpty(SINGLETON_QUEUE));
+        assertFalse(isEmpty(SINGLETON_DEQUE));
+    }
+
+    @Test
+    public void testSize() {
+
     }
 }

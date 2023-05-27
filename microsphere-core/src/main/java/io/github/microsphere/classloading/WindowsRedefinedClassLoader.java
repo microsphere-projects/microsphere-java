@@ -22,6 +22,8 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static io.github.microsphere.collection.MapUtils.isEmpty;
+
 /**
  * The customized ClassLoader under Windows operating system to solve the case-insensitive
  * problem of the specified class (list) in the Class Path
@@ -94,7 +96,7 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
 
 
     private void loadRedefinedClassMetadata(ClassLoader classLoader) {
-        if (!CollectionUtils.isEmpty(redefinedClassMetadata)) {
+        if (!isEmpty(redefinedClassMetadata)) {
             return;
         }
         SortedSet<String> redefinedClassNames = loadRedefinedClassNames(classLoader);

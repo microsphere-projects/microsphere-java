@@ -47,10 +47,6 @@ public abstract class CollectionUtils extends BaseUtils {
         return !isEmpty(collection);
     }
 
-    public static boolean isEmpty(Map<?, ?> map) {
-        return map == null || map.isEmpty();
-    }
-
     public static <E> Iterable<E> toIterable(Iterator<E> iterator) {
         return new IterableAdapter(iterator);
     }
@@ -63,6 +59,25 @@ public abstract class CollectionUtils extends BaseUtils {
      */
     public static int size(Collection<?> collection) {
         return collection == null ? 0 : collection.size();
+    }
+
+    /**
+     * Get the size of the specified {@link Iterable}
+     *
+     * @param iterable the specified {@link Iterable}
+     * @return must be positive number
+     */
+    public static int size(Iterable<?> iterable) {
+        if (iterable instanceof Collection) {
+            return size((Collection) iterable);
+        }
+        Iterator<?> iterator = iterable.iterator();
+        int size = 0;
+        while (iterator.hasNext()) {
+            iterator.next();
+            size++;
+        }
+        return size;
     }
 
     /**
