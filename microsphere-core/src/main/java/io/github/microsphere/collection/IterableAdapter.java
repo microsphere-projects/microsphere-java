@@ -19,21 +19,22 @@ package io.github.microsphere.collection;
 import java.util.Iterator;
 
 /**
- * {@lin Iterable} Adapter via {@link Iterator}
+ * {@link Iterable} Adapter via {@link Iterator}
  *
+ * @param <T> the type of elements returned by the iterator
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class IterableAdapter implements Iterable {
+public class IterableAdapter<T> implements Iterable<T> {
 
-    private final Iterator iterator;
+    private final Iterator<T> iterator;
 
-    public IterableAdapter(Iterator iterator) {
+    public IterableAdapter(Iterator<T> iterator) {
         this.iterator = iterator;
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return iterator;
     }
 }
