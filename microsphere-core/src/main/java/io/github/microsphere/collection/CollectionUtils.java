@@ -51,6 +51,18 @@ public abstract class CollectionUtils extends BaseUtils {
         return new IterableAdapter(iterator);
     }
 
+    public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
+        return new EnumerationIteratorAdapter(enumeration);
+    }
+
+    public static <E> Iterable<E> toIterable(Enumeration<E> enumeration) {
+        return toIterable(toIterator(enumeration));
+    }
+
+    public static <E> Iterator<E> singletonIterator(E element) {
+        return new SingletonIterator<>(element);
+    }
+
     /**
      * Get the size of the specified {@link Collection}
      *
@@ -182,32 +194,4 @@ public abstract class CollectionUtils extends BaseUtils {
         }
         return values.next();
     }
-
-    public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
-        return new EnumerationIteratorAdapter(enumeration);
-    }
-
-    public static <E> Iterable<E> toIterable(Enumeration<E> enumeration) {
-        return CollectionUtils.toIterable(toIterator(enumeration));
-    }
-
-    static class EnumerationIteratorAdapter<E> implements Iterator<E> {
-
-        private final Enumeration<E> enumeration;
-
-        EnumerationIteratorAdapter(Enumeration<E> enumeration) {
-            this.enumeration = enumeration;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return enumeration.hasMoreElements();
-        }
-
-        @Override
-        public E next() {
-            return enumeration.nextElement();
-        }
-    }
-
 }

@@ -24,20 +24,11 @@ import java.util.NoSuchElementException;
 /**
  * Abstract {@link Deque}
  *
+ * @param <E> The elements' type
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class AbstractDeque<E> extends AbstractQueue<E> implements Deque<E> {
-
-    @Override
-    public Iterator<E> iterator() {
-        return null;
-    }
-
-    @Override
-    public Iterator<E> descendingIterator() {
-        return null;
-    }
+public abstract class AbstractDeque<E> extends AbstractQueue<E> implements Deque<E> {
 
     @Override
     public void addFirst(E e) {
@@ -49,16 +40,6 @@ public class AbstractDeque<E> extends AbstractQueue<E> implements Deque<E> {
     public void addLast(E e) {
         if (!offerLast(e))
             throw new IllegalStateException("Queue full");
-    }
-
-    @Override
-    public boolean offerFirst(E e) {
-        return false;
-    }
-
-    @Override
-    public boolean offerLast(E e) {
-        return false;
     }
 
     @Override
@@ -80,43 +61,18 @@ public class AbstractDeque<E> extends AbstractQueue<E> implements Deque<E> {
     }
 
     @Override
-    public E pollFirst() {
-        return null;
-    }
-
-    @Override
-    public E pollLast() {
-        return null;
-    }
-
-    @Override
-    public E getFirst() {
-        return null;
-    }
-
-    @Override
-    public E getLast() {
-        return null;
-    }
-
-    @Override
     public E peekFirst() {
-        return null;
+        return getFirst();
     }
 
     @Override
     public E peekLast() {
-        return null;
+        return getLast();
     }
 
     @Override
     public boolean removeFirstOccurrence(Object o) {
         return remove(o);
-    }
-
-    @Override
-    public boolean removeLastOccurrence(Object o) {
-        return false;
     }
 
     @Override
@@ -126,17 +82,12 @@ public class AbstractDeque<E> extends AbstractQueue<E> implements Deque<E> {
 
     @Override
     public E pop() {
-        return null;
-    }
-
-    @Override
-    public int size() {
-        return 0;
+        return removeFirst();
     }
 
     @Override
     public boolean offer(E e) {
-        return false;
+        return offerLast(e);
     }
 
     @Override

@@ -23,13 +23,13 @@ import java.util.AbstractQueue;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Queue;
 import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.unmodifiableCollection;
 
@@ -64,7 +64,15 @@ public abstract class QueueUtils extends BaseUtils {
         return new UnmodifiableQueue(queue);
     }
 
-    static class EmptyDeque<E> extends AbstractQueue<E> implements Deque<E> {
+    public static <E> Queue<E> singletonQueue(E element) {
+        return new SingletonDeque<>(element);
+    }
+
+    public static <E> Queue<E> singletonDeque(E element) {
+        return new SingletonDeque<>(element);
+    }
+
+    static class EmptyDeque<E> extends AbstractDeque<E> {
 
         @Override
         public Iterator<E> iterator() {
@@ -73,74 +81,37 @@ public abstract class QueueUtils extends BaseUtils {
 
         @Override
         public Iterator<E> descendingIterator() {
-            return iterator();
-        }
-
-        @Override
-        public void addFirst(E e) {
-            offer(e);
-        }
-
-        @Override
-        public void addLast(E e) {
-            offer(e);
+            return emptyIterator();
         }
 
         @Override
         public boolean offerFirst(E e) {
-            offer(e);
-            return false;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean offerLast(E e) {
-            offer(e);
-            return false;
-        }
-
-        @Override
-        public E removeFirst() {
-            return peek();
-        }
-
-        @Override
-        public E removeLast() {
-            return peek();
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public E pollFirst() {
-            return peek();
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public E pollLast() {
-            return peek();
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public E getFirst() {
-            return peek();
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public E getLast() {
-            return peek();
-        }
-
-        @Override
-        public E peekFirst() {
-            return peek();
-        }
-
-        @Override
-        public E peekLast() {
-            return peek();
-        }
-
-        @Override
-        public boolean removeFirstOccurrence(Object o) {
-            return false;
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -149,33 +120,8 @@ public abstract class QueueUtils extends BaseUtils {
         }
 
         @Override
-        public void push(E e) {
-            offer(e);
-        }
-
-        @Override
-        public E pop() {
-            return peek();
-        }
-
-        @Override
         public int size() {
             return 0;
-        }
-
-        @Override
-        public boolean offer(E e) {
-            throw new IllegalStateException("Empty Queue can't add");
-        }
-
-        @Override
-        public E poll() {
-            return peek();
-        }
-
-        @Override
-        public E peek() {
-            throw new NoSuchElementException();
         }
     }
 
@@ -299,26 +245,25 @@ public abstract class QueueUtils extends BaseUtils {
         }
     }
 
-    static class SingletonDeque<E> extends AbstractQueue<E> implements Deque<E> {
+    static class SingletonDeque<E> extends AbstractDeque<E> {
+
+        private final E element;
+
+        private final Iterator<E> iterator;
+
+        SingletonDeque(E element) {
+            this.element = element;
+            this.iterator = singletonIterator(element);
+        }
 
         @Override
         public Iterator<E> iterator() {
-            return null;
+            return iterator;
         }
 
         @Override
         public Iterator<E> descendingIterator() {
-            return null;
-        }
-
-        @Override
-        public void addFirst(E e) {
-
-        }
-
-        @Override
-        public void addLast(E e) {
-
+            return iterator;
         }
 
         @Override
@@ -332,83 +277,33 @@ public abstract class QueueUtils extends BaseUtils {
         }
 
         @Override
-        public E removeFirst() {
-            return null;
-        }
-
-        @Override
-        public E removeLast() {
-            return null;
-        }
-
-        @Override
         public E pollFirst() {
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public E pollLast() {
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public E getFirst() {
-            return null;
+            return element;
         }
 
         @Override
         public E getLast() {
-            return null;
-        }
-
-        @Override
-        public E peekFirst() {
-            return null;
-        }
-
-        @Override
-        public E peekLast() {
-            return null;
-        }
-
-        @Override
-        public boolean removeFirstOccurrence(Object o) {
-            return false;
+            return element;
         }
 
         @Override
         public boolean removeLastOccurrence(Object o) {
-            return false;
-        }
-
-        @Override
-        public void push(E e) {
-
-        }
-
-        @Override
-        public E pop() {
-            return null;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public int size() {
-            return 0;
-        }
-
-        @Override
-        public boolean offer(E e) {
-            return false;
-        }
-
-        @Override
-        public E poll() {
-            return null;
-        }
-
-        @Override
-        public E peek() {
-            return null;
+            return 1;
         }
     }
 }
