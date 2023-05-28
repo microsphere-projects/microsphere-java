@@ -24,11 +24,11 @@ import java.util.function.Consumer;
 /**
  * Singleton {@link Iterator}
  *
- * @param <E> The elements' type
+ * @param <E> the type of elements returned by this iterator
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SingletonIterator<E> implements Iterator<E> {
+public class SingletonIterator<E> extends ReadOnlyIterator<E> {
 
     private final E element;
 
@@ -50,11 +50,6 @@ public class SingletonIterator<E> implements Iterator<E> {
             return element;
         }
         throw new NoSuchElementException();
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
     }
 
     @Override

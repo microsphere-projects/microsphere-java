@@ -22,11 +22,11 @@ import java.util.function.Consumer;
 /**
  * Unmodifiable {@link Iterator}
  *
- * @param <E> The elements' type
+ * @param <E> the type of elements returned by this iterator
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class UnmodifiableIterator<E> implements Iterator<E> {
+public class UnmodifiableIterator<E> extends ReadOnlyIterator<E> {
 
     private final Iterator<E> delegate;
 
@@ -42,11 +42,6 @@ public class UnmodifiableIterator<E> implements Iterator<E> {
     @Override
     public E next() {
         return delegate.next();
-    }
-
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
