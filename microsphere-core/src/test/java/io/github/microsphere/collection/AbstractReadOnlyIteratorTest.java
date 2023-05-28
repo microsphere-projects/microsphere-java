@@ -16,20 +16,48 @@
  */
 package io.github.microsphere.collection;
 
-import java.util.Iterator;
+import io.github.microsphere.AbstractTestCase;
+import org.junit.Test;
 
-import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
- * {@link SingletonIterator} Test
+ * Abstract Read-only {@link Iterator} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ReadOnlyIterator
  * @since 1.0.0
  */
-public class SingletonIteratorTest extends AbstractReadOnlyIteratorTest {
+public abstract class AbstractReadOnlyIteratorTest extends AbstractTestCase {
 
-    @Override
-    protected Iterator<?> createIterator() {
-        return singletonIterator(TEST_ELEMENT);
+    Iterator instance = createIterator();
+
+    protected abstract Iterator<?> createIterator();
+
+    @Test
+    public void testHasNext() {
+        assertTrue(instance.hasNext());
     }
+
+    @Test(expected = NoSuchElementException.class)
+    public void testNext() {
+        assertEquals(TEST_ELEMENT, instance.next());
+        // throws exception
+        instance.next();
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void remove() {
+        instance.remove();
+    }
+
+    @Test
+    public void testForEachRemaining() {
+        instance.forEachRemaining(this::info);
+    }
+
 }

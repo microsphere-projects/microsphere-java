@@ -19,17 +19,18 @@ package io.github.microsphere.collection;
 import java.util.Iterator;
 
 import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
+import static io.github.microsphere.collection.CollectionUtils.unmodifiableIterator;
 
 /**
- * {@link SingletonIterator} Test
+ * {@link UnmodifiableIterator} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SingletonIteratorTest extends AbstractReadOnlyIteratorTest {
+public class UnmodifiableIteratorTest extends AbstractReadOnlyIteratorTest {
 
     @Override
     protected Iterator<?> createIterator() {
-        return singletonIterator(TEST_ELEMENT);
+        return unmodifiableIterator(singletonIterator(TEST_ELEMENT));
     }
 }
