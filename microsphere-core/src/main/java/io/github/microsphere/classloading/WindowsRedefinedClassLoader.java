@@ -1,6 +1,5 @@
 package io.github.microsphere.classloading;
 
-import io.github.microsphere.collection.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

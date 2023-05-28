@@ -18,7 +18,6 @@ package io.github.microsphere.collection;
 
 import java.util.AbstractQueue;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**

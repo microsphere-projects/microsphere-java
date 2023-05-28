@@ -48,13 +48,8 @@ import static io.github.microsphere.lang.function.Streams.filterAll;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.synchronizedMap;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.Collections.unmodifiableSet;
-import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static org.apache.commons.lang3.ArrayUtils.isEmpty;
-import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
+import static java.util.Collections.*;
+import static org.apache.commons.lang3.ArrayUtils.*;
 
 /**
  * {@link Class} utility class

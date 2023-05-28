@@ -30,16 +30,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import static io.github.microsphere.collection.SetUtils.of;
-import static io.github.microsphere.constants.SymbolConstants.COLON_CHAR;
-import static io.github.microsphere.constants.SymbolConstants.DOT_CHAR;
-import static io.github.microsphere.constants.SymbolConstants.QUERY_STRING;
-import static io.github.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
-import static io.github.microsphere.net.URLUtils.HANDLER_CONVENTION_CLASS_NAME;
-import static io.github.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
-import static io.github.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
-import static io.github.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
-import static io.github.microsphere.net.URLUtils.buildMatrixString;
-import static io.github.microsphere.net.URLUtils.registerURLStreamHandler;
+import static io.github.microsphere.constants.SymbolConstants.*;
+import static io.github.microsphere.net.URLUtils.*;
 import static java.net.Proxy.NO_PROXY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.split;

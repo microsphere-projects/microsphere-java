@@ -28,7 +28,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 import static io.github.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static java.util.Collections.*;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableCollection;
 
 /**
  * The utilities class for ShutdownHook

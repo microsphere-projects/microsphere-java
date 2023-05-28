@@ -26,7 +26,6 @@ import java.util.stream.StreamSupport;
 import static io.github.microsphere.lang.function.Predicates.and;
 import static io.github.microsphere.lang.function.Predicates.or;
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 
 /**
  * The utilities class for {@link Stream}

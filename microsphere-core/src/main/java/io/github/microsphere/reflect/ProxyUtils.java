@@ -23,9 +23,7 @@ import java.util.function.Predicate;
 
 import static io.github.microsphere.lang.function.Predicates.and;
 import static io.github.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
-import static io.github.microsphere.reflect.MemberUtils.FINAL_METHOD_PREDICATE;
-import static io.github.microsphere.reflect.MemberUtils.NON_PRIVATE_METHOD_PREDICATE;
-import static io.github.microsphere.reflect.MemberUtils.NON_STATIC_METHOD_PREDICATE;
+import static io.github.microsphere.reflect.MemberUtils.*;
 import static io.github.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
 import static io.github.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
 import static io.github.microsphere.util.ClassUtils.isArray;

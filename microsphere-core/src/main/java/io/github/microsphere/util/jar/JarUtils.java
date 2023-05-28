@@ -6,7 +6,6 @@ package io.github.microsphere.util.jar;
 import io.github.microsphere.constants.ProtocolConstants;
 import io.github.microsphere.filter.JarEntryFilter;
 import io.github.microsphere.net.URLUtils;
-import io.github.microsphere.collection.CollectionUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 

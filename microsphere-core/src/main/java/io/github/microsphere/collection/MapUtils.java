@@ -35,9 +35,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
 import static io.github.microsphere.collection.CollectionUtils.size;
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.singletonMap;
-import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.*;
 
 /**
  * The utilities class for Java {@link Map}

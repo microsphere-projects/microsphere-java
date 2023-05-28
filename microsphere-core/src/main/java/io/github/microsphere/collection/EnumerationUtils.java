@@ -19,7 +19,6 @@ package io.github.microsphere.collection;
 import io.github.microsphere.util.BaseUtils;
 
 import java.util.Enumeration;
-import java.util.Iterator;
 
 /**
  * The utilities class for Java {@link Enumeration}

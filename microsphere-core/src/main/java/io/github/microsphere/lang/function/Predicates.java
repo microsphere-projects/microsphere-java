@@ -18,8 +18,6 @@ package io.github.microsphere.lang.function;
 
 import java.util.function.Predicate;
 
-import static java.util.stream.Stream.of;
-
 /**
  * The utilities class for Java {@link Predicate}
  *
