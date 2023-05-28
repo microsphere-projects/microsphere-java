@@ -19,6 +19,8 @@ package io.github.microsphere.collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import static java.util.Collections.emptyEnumeration;
+
 /**
  * {@link Iterator} Adapter based on {@link Enumeration}
  *
@@ -31,7 +33,7 @@ public class EnumerationIteratorAdapter<E> extends ReadOnlyIterator<E> {
     private final Enumeration<E> enumeration;
 
     EnumerationIteratorAdapter(Enumeration<E> enumeration) {
-        this.enumeration = enumeration;
+        this.enumeration = enumeration == null ? emptyEnumeration() : enumeration;
     }
 
     @Override

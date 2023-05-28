@@ -3,6 +3,7 @@
  */
 package io.github.microsphere;
 
+import io.github.microsphere.lang.function.ThrowableAction;
 import io.github.microsphere.util.ClassLoaderUtils;
 import junit.framework.TestCase;
 import org.junit.Ignore;
@@ -15,9 +16,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Consumer;
 
-import static io.github.microsphere.collection.QueueUtils.*;
-import static java.util.Collections.*;
+import static io.github.microsphere.collection.QueueUtils.emptyDeque;
+import static io.github.microsphere.collection.QueueUtils.emptyQueue;
+import static io.github.microsphere.collection.QueueUtils.singletonDeque;
+import static io.github.microsphere.collection.QueueUtils.singletonQueue;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Abstract {@link TestCase}
@@ -85,5 +95,22 @@ public abstract class AbstractTestCase {
         while (iterator.hasNext()) {
             info(iterator.next());
         }
+    }
+
+    protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
+        assertThrowable(action, throwable -> {
+            assertEquals(throwableType, throwable.getClass());
+        });
+    }
+
+    protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
+        Throwable failure = null;
+        try {
+            action.execute();
+        } catch (Throwable t) {
+            failure = t;
+        }
+        assertNotNull(failure);
+        failureHandler.accept(failure);
     }
 }

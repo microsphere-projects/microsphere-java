@@ -44,6 +44,10 @@ public abstract class CollectionUtils extends BaseUtils {
         return !isEmpty(collection);
     }
 
+    public static <E> Iterable<E> toIterable(Collection<E> collection) {
+        return collection;
+    }
+
     public static <E> Iterable<E> toIterable(Iterator<E> iterator) {
         return new IterableAdapter(iterator);
     }
@@ -54,6 +58,10 @@ public abstract class CollectionUtils extends BaseUtils {
 
     public static <E> Iterable<E> toIterable(Enumeration<E> enumeration) {
         return toIterable(toIterator(enumeration));
+    }
+
+    public static <E> Iterable<E> singletonIterable(E element) {
+        return toIterable(singletonIterator(element));
     }
 
     public static <E> Iterator<E> singletonIterator(E element) {
@@ -183,7 +191,7 @@ public abstract class CollectionUtils extends BaseUtils {
      * @return if found, return the first one, or <code>null</code>
      */
     public static <T> T first(Iterable<T> values) {
-        return first(values.iterator());
+        return values == null ? null : first(values.iterator());
     }
 
     /**
