@@ -19,8 +19,10 @@ package io.github.microsphere.collection;
 import io.github.microsphere.AbstractTestCase;
 import org.junit.Test;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -32,7 +34,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class SingletonIteratorTest extends AbstractTestCase {
 
-    SingletonIterator instance = new SingletonIterator(TEST_ELEMENT);
+    Iterator<String> instance = singletonIterator(TEST_ELEMENT);
 
     @Test
     public void testHasNext() {
