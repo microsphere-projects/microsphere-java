@@ -60,6 +60,10 @@ public abstract class CollectionUtils extends BaseUtils {
         return new SingletonIterator<>(element);
     }
 
+    public static <E> Enumeration<E> singletonEnumeration(E element) {
+        return new SingletonEnumeration<>(element);
+    }
+
     public static <E> Iterator<E> unmodifiableIterator(Iterator<E> iterator) {
         return new UnmodifiableIterator(iterator);
     }

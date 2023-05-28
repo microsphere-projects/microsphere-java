@@ -16,31 +16,24 @@
  */
 package io.github.microsphere.collection;
 
-import java.util.Enumeration;
+import io.github.microsphere.AbstractTestCase;
+import org.junit.Test;
+
 import java.util.Iterator;
 
+import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
+
 /**
- * {@link Iterator} Adapter based on {@link Enumeration}
+ * {@link EnumerationIteratorAdapter} Test
  *
- * @param <E> The elements' type
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class EnumerationIteratorAdapter<E> extends ReadOnlyIterator<E> {
+public class EnumerationIteratorAdapterTest extends AbstractTestCase {
 
-    private final Enumeration<E> enumeration;
+    @Test
+    public void test() {
+        Iterator<String> iterator = singletonIterator(TEST_ELEMENT);
 
-    EnumerationIteratorAdapter(Enumeration<E> enumeration) {
-        this.enumeration = enumeration;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return enumeration.hasMoreElements();
-    }
-
-    @Override
-    public E next() {
-        return enumeration.nextElement();
     }
 }

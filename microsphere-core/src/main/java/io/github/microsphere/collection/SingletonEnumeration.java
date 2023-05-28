@@ -17,30 +17,36 @@
 package io.github.microsphere.collection;
 
 import java.util.Enumeration;
-import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * {@link Iterator} Adapter based on {@link Enumeration}
+ * Singleton {@link Enumeration}
  *
- * @param <E> The elements' type
+ * @param <E> the type of elements
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class EnumerationIteratorAdapter<E> extends ReadOnlyIterator<E> {
+public class SingletonEnumeration<E> implements Enumeration<E> {
 
-    private final Enumeration<E> enumeration;
+    private final E element;
 
-    EnumerationIteratorAdapter(Enumeration<E> enumeration) {
-        this.enumeration = enumeration;
+    private boolean hasNext = true;
+
+    public SingletonEnumeration(E element) {
+        this.element = element;
     }
 
     @Override
-    public boolean hasNext() {
-        return enumeration.hasMoreElements();
+    public boolean hasMoreElements() {
+        return hasNext;
     }
 
     @Override
-    public E next() {
-        return enumeration.nextElement();
+    public E nextElement() {
+        if (hasNext) {
+            hasNext = false;
+            return element;
+        }
+        throw new NoSuchElementException();
     }
 }
