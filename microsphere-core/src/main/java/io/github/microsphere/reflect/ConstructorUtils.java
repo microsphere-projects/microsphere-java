@@ -16,12 +16,18 @@
  */
 package io.github.microsphere.reflect;
 
+import io.github.microsphere.lang.function.ThrowableFunction;
+import io.github.microsphere.lang.function.ThrowableSupplier;
+import io.github.microsphere.util.BaseUtils;
+
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.function.Predicate;
 
 import static io.github.microsphere.lang.function.Streams.filterAll;
+import static io.github.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.github.microsphere.reflect.MemberUtils.isPrivate;
+import static io.github.microsphere.util.ClassUtils.getTypes;
 import static java.util.Arrays.asList;
 
 /**
@@ -30,10 +36,7 @@ import static java.util.Arrays.asList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class ConstructorUtils {
-
-    private ConstructorUtils() {
-    }
+public abstract class ConstructorUtils extends BaseUtils {
 
     /**
      * Is a non-private constructor without parameters
@@ -62,5 +65,20 @@ public abstract class ConstructorUtils {
                                                        Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = asList(type.getConstructors());
         return filterAll(constructors, constructorFilters);
+    }
+
+
+    public static <T> T newInstance(Class<T> type, Object... args) {
+        Class[] parameterTypes = getTypes(args);
+        Constructor<T> constructor = getDelcaredConstructor(type, parameterTypes);
+        return execute(() -> constructor.newInstance(args));
+    }
+
+    public static <T> Constructor<T> getConstructor(Class<T> type, Class<?>... parameterTypes) {
+        return execute(() -> type.getConstructor(parameterTypes));
+    }
+
+    public static <T> Constructor<T> getDelcaredConstructor(Class<T> type, Class<?>... parameterTypes) {
+        return execute(() -> type.getDeclaredConstructor(parameterTypes));
     }
 }

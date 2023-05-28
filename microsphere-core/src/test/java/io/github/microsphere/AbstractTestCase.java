@@ -3,6 +3,7 @@
  */
 package io.github.microsphere;
 
+import io.github.microsphere.util.ClassLoaderUtils;
 import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -15,8 +16,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import static io.github.microsphere.collection.QueueUtils.emptyDeque;
-import static io.github.microsphere.collection.QueueUtils.emptyQueue;
+import static io.github.microsphere.collection.QueueUtils.*;
 import static java.util.Collections.*;
 
 /**
@@ -29,6 +29,8 @@ import static java.util.Collections.*;
  */
 @Ignore
 public abstract class AbstractTestCase {
+
+    public static final String TEST_ELEMENT = "test";
 
     public static final Collection<?> NULL_COLLECTION = null;
 
@@ -50,16 +52,16 @@ public abstract class AbstractTestCase {
 
     public static final Deque<?> EMPTY_DEQUE = emptyDeque();
 
-    public static final List<?> SINGLETON_LIST = singletonList("test");
+    public static final List<?> SINGLETON_LIST = singletonList(TEST_ELEMENT);
 
-    public static final Set<?> SINGLETON_SET = singleton("test");
+    public static final Set<?> SINGLETON_SET = singleton(TEST_ELEMENT);
 
-    public static final Queue<?> SINGLETON_QUEUE = emptyQueue();
+    public static final Queue<?> SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
 
-    public static final Deque<?> SINGLETON_DEQUE = emptyDeque();
+    public static final Deque<?> SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
 
-    protected final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    protected final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 

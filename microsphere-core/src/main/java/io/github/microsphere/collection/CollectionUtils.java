@@ -60,6 +60,10 @@ public abstract class CollectionUtils extends BaseUtils {
         return new SingletonIterator<>(element);
     }
 
+    public static <E> Iterator<E> unmodifiableIterator(Iterator<E> iterator) {
+        return new UnmodifiableIterator(iterator);
+    }
+
     /**
      * Get the size of the specified {@link Collection}
      *

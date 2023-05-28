@@ -45,11 +45,11 @@ import java.util.jar.JarFile;
 
 import static io.github.microsphere.collection.SetUtils.of;
 import static io.github.microsphere.lang.function.Streams.filterAll;
+import static io.github.microsphere.util.ArrayUtils.*;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static org.apache.commons.lang3.ArrayUtils.*;
 
 /**
  * {@link Class} utility class

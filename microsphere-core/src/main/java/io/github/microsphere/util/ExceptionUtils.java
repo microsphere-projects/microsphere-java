@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import static io.github.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.github.microsphere.reflect.ConstructorUtils.newInstance;
 
 /**
  * {@link Exception} Utilities class
@@ -27,9 +28,9 @@ import static io.github.microsphere.lang.function.ThrowableSupplier.execute;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public interface ExceptionUtils {
+public abstract class ExceptionUtils extends BaseUtils {
 
-    static <T extends Throwable> T wrapThrowable(Throwable source, Class<T> exceptionType) {
+    public static <T extends Throwable> T wrapThrowable(Throwable source, Class<T> exceptionType) {
         String message = source.getMessage();
         Throwable cause = source.getCause();
 
@@ -56,5 +57,9 @@ public interface ExceptionUtils {
             }
         }
         return execute(() -> (T) constructor.newInstance(parameters));
+    }
+
+    public <T extends Throwable> T newThrowable(Class<T> throwableClass, Object... args) {
+        return newInstance(throwableClass, args);
     }
 }

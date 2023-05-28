@@ -19,7 +19,6 @@ package io.github.microsphere.collection;
 import io.github.microsphere.util.BaseUtils;
 
 import java.io.Serializable;
-import java.util.AbstractQueue;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.Iterator;
@@ -30,8 +29,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
+import static io.github.microsphere.collection.CollectionUtils.unmodifiableIterator;
 import static java.util.Collections.emptyIterator;
-import static java.util.Collections.unmodifiableCollection;
 
 /**
  * The utilities class for Java {@link Queue}
@@ -68,11 +67,13 @@ public abstract class QueueUtils extends BaseUtils {
         return new SingletonDeque<>(element);
     }
 
-    public static <E> Queue<E> singletonDeque(E element) {
+    public static <E> Deque<E> singletonDeque(E element) {
         return new SingletonDeque<>(element);
     }
 
-    static class EmptyDeque<E> extends AbstractDeque<E> {
+    static class EmptyDeque<E> extends AbstractDeque<E> implements Serializable {
+
+        private static final long serialVersionUID = -1L;
 
         @Override
         public Iterator<E> iterator() {
@@ -125,14 +126,14 @@ public abstract class QueueUtils extends BaseUtils {
         }
     }
 
-    static class UnmodifiableQueue<E> extends AbstractQueue<E> implements Queue<E>, Serializable {
+    static class UnmodifiableQueue<E> implements Queue<E>, Serializable {
 
-        private static final long serialVersionUID = -1578116770333032259L;
+        private static final long serialVersionUID = -1L;
 
-        private final Collection<E> delegate;
+        private final Queue<E> delegate;
 
         UnmodifiableQueue(Queue<E> queue) {
-            this.delegate = unmodifiableCollection(queue);
+            this.delegate = queue;
         }
 
         @Override
@@ -152,7 +153,7 @@ public abstract class QueueUtils extends BaseUtils {
 
         @Override
         public Iterator<E> iterator() {
-            return delegate.iterator();
+            return unmodifiableIterator(delegate.iterator());
         }
 
         @Override
@@ -166,8 +167,23 @@ public abstract class QueueUtils extends BaseUtils {
         }
 
         @Override
+        public boolean add(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
         public boolean offer(E e) {
-            return delegate.add(e);
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E remove() {
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -176,12 +192,13 @@ public abstract class QueueUtils extends BaseUtils {
         }
 
         @Override
+        public E element() {
+            return delegate.element();
+        }
+
+        @Override
         public E peek() {
-            Iterator<E> iterator = iterator();
-            if (iterator.hasNext()) {
-                return iterator.next();
-            }
-            return null;
+            return delegate.peek();
         }
 
         @Override
@@ -191,27 +208,27 @@ public abstract class QueueUtils extends BaseUtils {
 
         @Override
         public boolean addAll(Collection<? extends E> c) {
-            return delegate.addAll(c);
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean removeAll(Collection<?> c) {
-            return delegate.removeAll(c);
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean removeIf(Predicate<? super E> filter) {
-            return delegate.removeIf(filter);
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean retainAll(Collection<?> c) {
-            return delegate.retainAll(c);
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public void clear() {
-            delegate.clear();
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -245,7 +262,104 @@ public abstract class QueueUtils extends BaseUtils {
         }
     }
 
-    static class SingletonDeque<E> extends AbstractDeque<E> {
+    static class UnmodifiableDeque<E> extends UnmodifiableQueue<E> implements Deque<E>, Serializable {
+
+        private final Deque<E> delegate;
+
+        UnmodifiableDeque(Deque<E> deque) {
+            super(deque);
+            this.delegate = deque;
+        }
+
+        @Override
+        public void addFirst(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void addLast(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean offerFirst(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean offerLast(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E removeFirst() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E removeLast() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E pollFirst() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E pollLast() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E getFirst() {
+            return delegate.getFirst();
+        }
+
+        @Override
+        public E getLast() {
+            return delegate.getLast();
+        }
+
+        @Override
+        public E peekFirst() {
+            return getFirst();
+        }
+
+        @Override
+        public E peekLast() {
+            return getLast();
+        }
+
+        @Override
+        public boolean removeFirstOccurrence(Object o) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean removeLastOccurrence(Object o) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void push(E e) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public E pop() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Iterator<E> descendingIterator() {
+            return unmodifiableIterator(delegate.descendingIterator());
+        }
+    }
+
+    static class SingletonDeque<E> extends AbstractDeque<E> implements Serializable {
+
+        private static final long serialVersionUID = -1L;
 
         private final E element;
 
