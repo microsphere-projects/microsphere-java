@@ -158,22 +158,22 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     @Test
     public void testReadFieldsAsMap() {
         Map<String, Object> map = ReflectionUtils.readFieldsAsMap(new String("abc"));
-        echo(map);
+        info(map);
 
         map = ReflectionUtils.readFieldsAsMap(Arrays.asList(1, 2, 3, 4));
-        echo(map);
+        info(map);
 
         Map<String, String> value = new HashMap(3);
         value.put("a", "a");
         value.put("b", "b");
         value.put("c", "c");
         map = ReflectionUtils.readFieldsAsMap(value);
-        echo(map);
+        info(map);
 
         map = ReflectionUtils.readFieldsAsMap(String.class);
-        echo(map);
+        info(map);
 
         map = ReflectionUtils.readFieldsAsMap(Class.class);
-        echo(map);
+        info(map);
     }
 }

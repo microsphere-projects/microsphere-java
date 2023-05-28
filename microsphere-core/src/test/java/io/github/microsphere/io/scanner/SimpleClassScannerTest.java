@@ -25,10 +25,10 @@ public class SimpleClassScannerTest extends AbstractTestCase {
     public void testScan() {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.github.microsphere.commons");
         Assert.assertFalse(classesSet.isEmpty());
-        echo(classesSet);
+        info(classesSet);
 
         classesSet = simpleClassScanner.scan(classLoader, "io.github.microsphere.io.scanner");
         Assert.assertFalse(classesSet.isEmpty());
-        echo(classesSet);
+        info(classesSet);
     }
 }

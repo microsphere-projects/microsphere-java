@@ -214,8 +214,8 @@ public class ClassUtilsTest extends AbstractTestCase {
             Set<String> classNames = ClassUtils.getClassNamesInPackage(packageName);
             Assert.assertFalse(classNames.isEmpty());
             Assert.assertNotNull(classNames);
-            echo(packageName);
-            echo("\t" + classNames);
+            info(packageName);
+            info("\t" + classNames);
         }
     }
 
@@ -224,7 +224,7 @@ public class ClassUtilsTest extends AbstractTestCase {
     public void testGetAllPackageNamesInClassPaths() {
         Set<String> packageNames = ClassUtils.getAllPackageNamesInClassPaths();
         Assert.assertNotNull(packageNames);
-        echo(packageNames);
+        info(packageNames);
     }
 
     @Test
@@ -254,11 +254,11 @@ public class ClassUtilsTest extends AbstractTestCase {
         Assert.assertNull(codeSourceLocation);
 
         codeSourceLocation = ClassUtils.getCodeSourceLocation(ClassUtilsTest.class);
-        echo("codeSourceLocation : " + codeSourceLocation);
+        info("codeSourceLocation : " + codeSourceLocation);
         Assert.assertNotNull(codeSourceLocation);
 
         codeSourceLocation = ClassUtils.getCodeSourceLocation(String.class);
-        echo("codeSourceLocation : " + codeSourceLocation);
+        info("codeSourceLocation : " + codeSourceLocation);
         Assert.assertNotNull(codeSourceLocation);
 
 

@@ -51,12 +51,12 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 //        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
         Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
         for (ClassLoader classLoader : classLoaders) {
-            echo(String.format("ClassLoader : %s", classLoader));
+            info(String.format("ClassLoader : %s", classLoader));
             for (Field field : allFields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(true);
                     String message = String.format("Field name : %s , value : %s", field.getName(), ToStringBuilder.reflectionToString(field.get(classLoader), ToStringStyle.NO_CLASS_NAME_STYLE));
-                    echo(message);
+                    info(message);
                 }
             }
         }
@@ -92,26 +92,26 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testGetClassResource() {
         URL classResourceURL = ClassLoaderUtils.getClassResource(classLoader, ClassLoaderUtilsTest.class);
         assertNotNull(classResourceURL);
-        echo(classResourceURL);
+        info(classResourceURL);
 
         classResourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class.getName());
         assertNotNull(classResourceURL);
-        echo(classResourceURL);
+        info(classResourceURL);
     }
 
     @Test
     public void testGetResource() {
         URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURL);
-        echo(resourceURL);
+        info(resourceURL);
 
         resourceURL = ClassLoaderUtils.getResource(classLoader, "///java/lang/CharSequence.class");
         assertNotNull(resourceURL);
-        echo(resourceURL);
+        info(resourceURL);
 
         resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/java.lang.CharSequence");
         assertNotNull(resourceURL);
-        echo(resourceURL);
+        info(resourceURL);
     }
 
     @Test
@@ -119,17 +119,17 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<URL> resourceURLs = ClassLoaderUtils.getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
-        echo(resourceURLs);
+        info(resourceURLs);
 
         resourceURLs = ClassLoaderUtils.getResources(classLoader, "///java/lang/CharSequence.class");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
-        echo(resourceURLs);
+        info(resourceURLs);
 
         resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/java.lang.CharSequence");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
-        echo(resourceURLs);
+        info(resourceURLs);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
         assertNotNull(classLoaders);
         assertTrue(classLoaders.size() > 1);
-        echo(classLoaders);
+        info(classLoaders);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         classesSet = ClassLoaderUtils.getLoadedClasses(ClassLoader.getSystemClassLoader());
         assertNotNull(classesSet);
         assertFalse(classesSet.isEmpty());
-        echo(classesSet);
+        info(classesSet);
     }
 
     @Test
@@ -175,7 +175,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         classesSet = ClassLoaderUtils.getAllLoadedClasses(ClassLoader.getSystemClassLoader());
         assertNotNull(classesSet);
         assertFalse(classesSet.isEmpty());
-        echo(classesSet);
+        info(classesSet);
     }
 
     @Test
@@ -224,14 +224,14 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<Class<?>> sortedClasses = new TreeSet(new ClassComparator());
         sortedClasses.addAll(remainingClasses);
 
-        echo(sortedClasses);
+        info(sortedClasses);
 
         int loadedClassesSize = allLoadedClasses.size() + classesSet.size();
 
         int loadedClassCount = ClassLoaderUtils.getLoadedClassCount();
 
-        echo(loadedClassesSize);
-        echo(loadedClassCount);
+        info(loadedClassesSize);
+        info(loadedClassCount);
     }
 
     @Test

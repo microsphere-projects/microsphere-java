@@ -65,25 +65,25 @@ public abstract class AbstractTestCase {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public void echo(Object object, Object... others) {
-        echo(object);
+    public void info(Object object, Object... others) {
+        info(object);
         for (Object o : others) {
-            echo(o);
+            info(o);
         }
     }
 
-    public void echo(Object object) {
+    public void info(Object object) {
         logger.info(String.valueOf(object));
     }
 
-    public void echo(String object, Object... args) {
+    public void info(String object, Object... args) {
         logger.info(object, args);
     }
 
-    public void echo(Iterable<Object> iterable) {
+    public void info(Iterable<Object> iterable) {
         Iterator<?> iterator = iterable.iterator();
         while (iterator.hasNext()) {
-            echo(iterator.next());
+            info(iterator.next());
         }
     }
 }

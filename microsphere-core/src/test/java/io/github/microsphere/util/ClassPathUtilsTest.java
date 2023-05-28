@@ -25,7 +25,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         Set<String> bootstrapClassPaths = ClassPathUtils.getBootstrapClassPaths();
         Assert.assertNotNull(bootstrapClassPaths);
         Assert.assertFalse(bootstrapClassPaths.isEmpty());
-        echo(bootstrapClassPaths);
+        info(bootstrapClassPaths);
     }
 
 
@@ -34,7 +34,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         Set<String> classPaths = ClassPathUtils.getClassPaths();
         Assert.assertNotNull(classPaths);
         Assert.assertFalse(classPaths.isEmpty());
-        echo(classPaths);
+        info(classPaths);
     }
 
     @Test
@@ -42,11 +42,11 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         URL location = null;
         location = ClassPathUtils.getRuntimeClassLocation(String.class);
         Assert.assertNotNull(location);
-        echo(location);
+        info(location);
 
         location = ClassPathUtils.getRuntimeClassLocation(getClass());
         Assert.assertNotNull(location);
-        echo(location);
+        info(location);
 
         //Primitive type
         location = ClassPathUtils.getRuntimeClassLocation(int.class);
