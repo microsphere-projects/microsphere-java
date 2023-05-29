@@ -26,6 +26,11 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
 
     private static final Map<ClassLoader, Map<Class<?>, ServiceLoader<?>>> serviceLoadersCache = new ConcurrentHashMap<>();
 
+    static {
+        // Clear cache on JVM shutdown
+        ShutdownHookUtils.addShutdownHookCallback(serviceLoadersCache::clear);
+    }
+
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
      * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
@@ -349,7 +354,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
             IllegalArgumentException e = new IllegalArgumentException(message);
             throw e;
         }
-        
+
         return serviceList;
     }
 
