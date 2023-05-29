@@ -1,2 +1,0 @@
-io.github.microsphere.event.DirectEventDispatcher
-io.github.microsphere.event.ParallelEventDispatcher
