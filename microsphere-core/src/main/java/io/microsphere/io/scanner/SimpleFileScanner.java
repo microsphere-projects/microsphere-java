@@ -1,4 +1,4 @@
-package io.github.microsphere.io.scanner;
+package io.microsphere.io.scanner;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;

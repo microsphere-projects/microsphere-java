@@ -1,13 +1,13 @@
 /**
  *
  */
-package io.github.microsphere.constants;
+package io.microsphere.constants;
 
 
 import java.io.File;
 
-import static io.github.microsphere.constants.PathConstants.SLASH;
-import static io.github.microsphere.constants.SymbolConstants.EXCLAMATION;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.SymbolConstants.EXCLAMATION;
 
 /**
  * Separator Constants

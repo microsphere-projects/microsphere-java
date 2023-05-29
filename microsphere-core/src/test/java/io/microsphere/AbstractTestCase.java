@@ -1,10 +1,10 @@
 /**
  *
  */
-package io.github.microsphere;
+package io.microsphere;
 
-import io.github.microsphere.lang.function.ThrowableAction;
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.lang.function.ThrowableAction;
+import io.microsphere.util.ClassLoaderUtils;
 import junit.framework.TestCase;
 import org.junit.Ignore;
 import org.slf4j.Logger;
@@ -18,10 +18,10 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static io.github.microsphere.collection.QueueUtils.emptyDeque;
-import static io.github.microsphere.collection.QueueUtils.emptyQueue;
-import static io.github.microsphere.collection.QueueUtils.singletonDeque;
-import static io.github.microsphere.collection.QueueUtils.singletonQueue;
+import static io.microsphere.collection.QueueUtils.emptyDeque;
+import static io.microsphere.collection.QueueUtils.emptyQueue;
+import static io.microsphere.collection.QueueUtils.singletonDeque;
+import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;

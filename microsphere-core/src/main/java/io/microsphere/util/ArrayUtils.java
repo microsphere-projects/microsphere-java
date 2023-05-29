@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static io.github.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Collections.list;
 

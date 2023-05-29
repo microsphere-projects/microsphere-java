@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.micrometer.instrument.binder.system;
+package io.microsphere.micrometer.instrument.binder.system;
 
-import io.github.microsphere.micrometer.instrument.binder.AbstractMetricsTest;
+import io.microsphere.micrometer.instrument.binder.AbstractMetricsTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +28,7 @@ import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 
-import static io.github.microsphere.micrometer.instrument.binder.system.NetworkStatisticsMetrics.STATS_FILE_PATH;
+import static io.microsphere.micrometer.instrument.binder.system.NetworkStatisticsMetrics.STATS_FILE_PATH;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static org.junit.Assert.assertFalse;
 

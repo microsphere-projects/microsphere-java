@@ -1,4 +1,4 @@
-package io.github.microsphere.micrometer.instrument.binder;
+package io.microsphere.micrometer.instrument.binder;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;

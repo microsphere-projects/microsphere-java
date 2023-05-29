@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.micrometer.util;
+package io.microsphere.micrometer.util;
 
-import io.github.microsphere.util.BaseUtils;
+import io.microsphere.util.BaseUtils;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
 
 import java.util.concurrent.ExecutorService;
 
-import static io.github.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**

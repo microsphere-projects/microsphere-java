@@ -1,11 +1,11 @@
 /**
  *
  */
-package io.github.microsphere.util.jar;
+package io.microsphere.util.jar;
 
-import io.github.microsphere.filter.JarEntryFilter;
-import io.github.microsphere.util.ClassLoaderUtils;
-import io.github.microsphere.util.ClassPathUtils;
+import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.util.ClassLoaderUtils;
+import io.microsphere.util.ClassPathUtils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.apache.commons.io.FileUtils;

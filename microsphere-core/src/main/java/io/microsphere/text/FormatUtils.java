@@ -1,4 +1,4 @@
-package io.github.microsphere.text;
+package io.microsphere.text;
 
 /**
  * The utility class of text format

@@ -1,4 +1,4 @@
-package io.github.microsphere.performance;
+package io.microsphere.performance;
 
 /**
  * {@link PerformanceAction}

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.lang.Prioritized;
+import io.microsphere.lang.Prioritized;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -25,7 +25,7 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
-import static io.github.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.toList;
 import static java.util.Collections.emptyList;
 
 /**

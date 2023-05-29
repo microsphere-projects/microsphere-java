@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.lang.function;
+package io.microsphere.lang.function;
 
 import org.junit.jupiter.api.Test;
 
-import static io.github.microsphere.lang.function.ThrowableConsumer.execute;
+import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**

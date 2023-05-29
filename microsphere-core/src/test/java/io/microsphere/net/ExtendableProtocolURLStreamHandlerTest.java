@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.collection.SetUtils;
-import io.github.microsphere.net.console.Handler;
+import io.microsphere.collection.SetUtils;
+import io.microsphere.net.console.Handler;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -54,8 +54,8 @@ public class ExtendableProtocolURLStreamHandlerTest {
     @Test
     public void testConsoleProtocol() throws Throwable {
         Handler handler = new Handler();
-        assertEquals(SetUtils.of("io.github.microsphere.net"), ExtendableProtocolURLStreamHandler.getHandlePackages());
-        assertEquals("io.github.microsphere.net", ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue());
+        assertEquals(SetUtils.of("io.microsphere.net"), ExtendableProtocolURLStreamHandler.getHandlePackages());
+        assertEquals("io.microsphere.net", ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue());
 
         String spec = "console:text://localhost:12345/abc;ref=top?n=1#hash";
         URL url = new URL(spec);
@@ -88,7 +88,7 @@ public class ExtendableProtocolURLStreamHandlerTest {
 
     @Test
     public void testClassPathProtocol() throws Throwable {
-        io.github.microsphere.net.classpath.Handler handler = new io.github.microsphere.net.classpath.Handler();
+        io.microsphere.net.classpath.Handler handler = new io.microsphere.net.classpath.Handler();
         URL url = new URL("classpath://META-INF/test.properties");
         Properties properties = new Properties();
         properties.load(new InputStreamReader(url.openStream(), "UTF-8"));
@@ -114,7 +114,7 @@ public class ExtendableProtocolURLStreamHandlerTest {
 
     @Test(expected = IOException.class)
     public void testClassPathProtocolOnResourceNotFound() throws Throwable {
-        new io.github.microsphere.net.classpath.Handler();
+        new io.microsphere.net.classpath.Handler();
         URL url = new URL("classpath://META-INF/not-found.res");
         url.openStream();
     }

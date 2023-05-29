@@ -1,11 +1,11 @@
 /**
  *
  */
-package io.github.microsphere.util.jar;
+package io.microsphere.util.jar;
 
-import io.github.microsphere.constants.ProtocolConstants;
-import io.github.microsphere.filter.JarEntryFilter;
-import io.github.microsphere.net.URLUtils;
+import io.microsphere.constants.ProtocolConstants;
+import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.net.URLUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.github.microsphere.collection.ListUtils.toList;
-import static io.github.microsphere.constants.FileConstants.JAR_EXTENSION;
-import static io.github.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
 import static java.util.Collections.unmodifiableList;
 
 /**

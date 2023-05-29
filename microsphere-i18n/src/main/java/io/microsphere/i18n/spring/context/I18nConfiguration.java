@@ -1,10 +1,10 @@
-package io.github.microsphere.i18n.spring.context;
+package io.microsphere.i18n.spring.context;
 
-import io.github.microsphere.i18n.CompositeServiceMessageSource;
-import io.github.microsphere.i18n.ServiceMessageSource;
-import io.github.microsphere.i18n.constants.I18nConstants;
-import io.github.microsphere.i18n.spring.beans.factory.ServiceMessageSourceFactoryBean;
-import io.github.microsphere.i18n.util.I18nUtils;
+import io.microsphere.i18n.CompositeServiceMessageSource;
+import io.microsphere.i18n.ServiceMessageSource;
+import io.microsphere.i18n.constants.I18nConstants;
+import io.microsphere.i18n.spring.beans.factory.ServiceMessageSourceFactoryBean;
+import io.microsphere.i18n.util.I18nUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -23,11 +23,11 @@ import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import java.util.List;
 import java.util.Locale;
 
-import static io.github.microsphere.i18n.constants.I18nConstants.COMMON_SERVICE_MESSAGE_SOURCE_BEAN_NAME;
-import static io.github.microsphere.i18n.constants.I18nConstants.COMMON_SERVICE_MESSAGE_SOURCE_ORDER;
-import static io.github.microsphere.i18n.constants.I18nConstants.DEFAULT_ENABLED;
-import static io.github.microsphere.i18n.constants.I18nConstants.ENABLED_PROPERTY_NAME;
-import static io.github.microsphere.i18n.constants.I18nConstants.SERVICE_MESSAGE_SOURCE_BEAN_NAME;
+import static io.microsphere.i18n.constants.I18nConstants.COMMON_SERVICE_MESSAGE_SOURCE_BEAN_NAME;
+import static io.microsphere.i18n.constants.I18nConstants.COMMON_SERVICE_MESSAGE_SOURCE_ORDER;
+import static io.microsphere.i18n.constants.I18nConstants.DEFAULT_ENABLED;
+import static io.microsphere.i18n.constants.I18nConstants.ENABLED_PROPERTY_NAME;
+import static io.microsphere.i18n.constants.I18nConstants.SERVICE_MESSAGE_SOURCE_BEAN_NAME;
 
 /**
  * Internationalization Configuration class

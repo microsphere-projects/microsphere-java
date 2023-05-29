@@ -1,8 +1,8 @@
-package io.github.microsphere.i18n.spring;
+package io.microsphere.i18n.spring;
 
-import io.github.microsphere.i18n.PropertiesResourceServiceMessageSource;
-import io.github.microsphere.i18n.ReloadableResourceServiceMessageSource;
-import io.github.microsphere.i18n.ServiceMessageSource;
+import io.microsphere.i18n.PropertiesResourceServiceMessageSource;
+import io.microsphere.i18n.ReloadableResourceServiceMessageSource;
+import io.microsphere.i18n.ServiceMessageSource;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertySources;

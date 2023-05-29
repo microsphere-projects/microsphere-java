@@ -1,4 +1,4 @@
-package io.github.microsphere.tools.attach;
+package io.microsphere.tools.attach;
 
 import com.sun.tools.attach.AttachNotSupportedException;
 import com.sun.tools.attach.VirtualMachine;

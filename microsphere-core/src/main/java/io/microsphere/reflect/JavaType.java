@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

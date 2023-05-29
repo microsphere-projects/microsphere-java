@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
 import org.junit.Test;
 
@@ -46,10 +46,10 @@ public class ServiceLoaderURLStreamHandlerFactoryTest {
         assertEquals("sun.net.www.protocol.https.Handler", handler.getClass().getName());
 
         handler = factory.createURLStreamHandler("classpath");
-        assertEquals("io.github.microsphere.net.classpath.Handler", handler.getClass().getName());
+        assertEquals("io.microsphere.net.classpath.Handler", handler.getClass().getName());
 
         handler = factory.createURLStreamHandler("console");
-        assertEquals("io.github.microsphere.net.console.Handler", handler.getClass().getName());
+        assertEquals("io.microsphere.net.console.Handler", handler.getClass().getName());
 
 
     }

@@ -1,6 +1,6 @@
-package io.github.microsphere.lang.function;
+package io.microsphere.lang.function;
 
-import static io.github.microsphere.util.ExceptionUtils.wrapThrowable;
+import static io.microsphere.util.ExceptionUtils.wrapThrowable;
 
 @FunctionalInterface
 public interface ThrowableSupplier<T> {

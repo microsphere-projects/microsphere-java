@@ -1,7 +1,7 @@
-package io.github.microsphere.i18n.util;
+package io.microsphere.i18n.util;
 
-import io.github.microsphere.i18n.EmptyServiceMessageSource;
-import io.github.microsphere.i18n.ServiceMessageSource;
+import io.microsphere.i18n.EmptyServiceMessageSource;
+import io.microsphere.i18n.ServiceMessageSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

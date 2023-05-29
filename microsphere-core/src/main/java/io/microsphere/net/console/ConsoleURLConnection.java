@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net.console;
+package io.microsphere.net.console;
 
 import java.io.Console;
 import java.io.IOException;

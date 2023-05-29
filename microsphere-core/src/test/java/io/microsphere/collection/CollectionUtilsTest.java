@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.collection;
+package io.microsphere.collection;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -27,13 +27,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static io.github.microsphere.collection.CollectionUtils.addAll;
-import static io.github.microsphere.collection.CollectionUtils.first;
-import static io.github.microsphere.collection.CollectionUtils.isEmpty;
-import static io.github.microsphere.collection.CollectionUtils.isNotEmpty;
-import static io.github.microsphere.collection.CollectionUtils.singletonIterable;
-import static io.github.microsphere.collection.CollectionUtils.size;
-import static io.github.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.CollectionUtils.first;
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.CollectionUtils.isNotEmpty;
+import static io.microsphere.collection.CollectionUtils.singletonIterable;
+import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.CollectionUtils.toIterable;
 import static java.util.Collections.emptyEnumeration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

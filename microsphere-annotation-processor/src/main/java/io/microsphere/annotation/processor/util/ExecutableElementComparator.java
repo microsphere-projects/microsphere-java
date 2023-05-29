@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.util.CharSequenceComparator;
+import io.microsphere.util.CharSequenceComparator;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;

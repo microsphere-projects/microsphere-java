@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert.multiple;
+package io.microsphere.convert.multiple;
 
-import io.github.microsphere.collection.CollectionUtils;
+import io.microsphere.collection.CollectionUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.util.ClassUtils;
+import io.microsphere.util.ClassUtils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -38,10 +38,10 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static io.github.microsphere.lang.function.Predicates.EMPTY_ARRAY;
-import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.lang.function.Streams.filterFirst;
-import static io.github.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.lang.function.Predicates.EMPTY_ARRAY;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterFirst;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;

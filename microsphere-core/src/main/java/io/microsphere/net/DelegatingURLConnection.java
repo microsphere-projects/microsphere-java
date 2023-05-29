@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
 import java.io.IOException;
 import java.io.InputStream;

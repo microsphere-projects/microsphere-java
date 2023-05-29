@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.event;
+package io.microsphere.event;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -28,8 +28,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static io.github.microsphere.event.EventListener.findEventType;
-import static io.github.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.event.EventListener.findEventType;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
 

@@ -1,14 +1,14 @@
 /**
  *
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
-import io.github.microsphere.collection.CollectionUtils;
-import io.github.microsphere.constants.Constants;
-import io.github.microsphere.constants.FileConstants;
-import io.github.microsphere.constants.PathConstants;
-import io.github.microsphere.net.URLUtils;
-import io.github.microsphere.reflect.ReflectionUtils;
+import io.microsphere.collection.CollectionUtils;
+import io.microsphere.constants.Constants;
+import io.microsphere.constants.FileConstants;
+import io.microsphere.constants.PathConstants;
+import io.microsphere.net.URLUtils;
+import io.microsphere.reflect.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 
-import static io.github.microsphere.reflect.ReflectionUtils.toList;
+import static io.microsphere.reflect.ReflectionUtils.toList;
 
 
 /**

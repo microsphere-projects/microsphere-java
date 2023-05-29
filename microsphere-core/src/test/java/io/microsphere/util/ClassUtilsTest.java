@@ -1,10 +1,10 @@
 /**
  *
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
-import io.github.microsphere.AbstractTestCase;
-import io.github.microsphere.reflect.ReflectionUtils;
+import io.microsphere.AbstractTestCase;
+import io.microsphere.reflect.ReflectionUtils;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -17,15 +17,15 @@ import java.util.AbstractCollection;
 import java.util.Map;
 import java.util.Set;
 
-import static io.github.microsphere.util.ClassUtils.arrayTypeEquals;
-import static io.github.microsphere.util.ClassUtils.concreteClassCache;
-import static io.github.microsphere.util.ClassUtils.getTypeName;
-import static io.github.microsphere.util.ClassUtils.isArray;
-import static io.github.microsphere.util.ClassUtils.isConcreteClass;
-import static io.github.microsphere.util.ClassUtils.isPrimitive;
-import static io.github.microsphere.util.ClassUtils.isTopLevelClass;
-import static io.github.microsphere.util.ClassUtils.resolvePrimitiveType;
-import static io.github.microsphere.util.ClassUtils.resolveWrapperType;
+import static io.microsphere.util.ClassUtils.arrayTypeEquals;
+import static io.microsphere.util.ClassUtils.concreteClassCache;
+import static io.microsphere.util.ClassUtils.getTypeName;
+import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isConcreteClass;
+import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.ClassUtils.isTopLevelClass;
+import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
+import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -278,12 +278,12 @@ public class ClassUtilsTest extends AbstractTestCase {
         // d) Local classes (named classes declared within a method)
         class LocalClass {
         }
-        assertEquals("io.github.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(LocalClass.class));
+        assertEquals("io.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(LocalClass.class));
 
         // e) Anonymous classes
         Serializable instance = new Serializable() {
         };
-        assertEquals("io.github.microsphere.util.ClassUtilsTest$1", getTypeName(instance.getClass()));
+        assertEquals("io.microsphere.util.ClassUtilsTest$1", getTypeName(instance.getClass()));
 
         // f) Array classes
         assertEquals("byte[]", getTypeName(byte[].class));

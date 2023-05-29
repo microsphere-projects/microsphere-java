@@ -1,9 +1,9 @@
 /**
  * 
  */
-package io.github.microsphere.filter;
+package io.microsphere.filter;
 
-import io.github.microsphere.util.ClassUtils;
+import io.microsphere.util.ClassUtils;
 
 /**
  * {@link PackageNameClassNameFilter}

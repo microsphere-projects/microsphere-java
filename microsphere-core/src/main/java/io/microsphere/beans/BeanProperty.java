@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.beans;
+package io.microsphere.beans;
 
 import java.beans.PropertyDescriptor;
 import java.util.Objects;

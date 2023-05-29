@@ -1,6 +1,6 @@
-package io.github.microsphere.performance;
+package io.microsphere.performance;
 
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.util.ClassLoaderUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 

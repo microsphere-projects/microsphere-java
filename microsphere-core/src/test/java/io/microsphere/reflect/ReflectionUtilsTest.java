@@ -1,6 +1,6 @@
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 import org.junit.Test;

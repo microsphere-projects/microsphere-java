@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
 import org.junit.jupiter.api.Test;
 
-import static io.github.microsphere.annotation.processor.util.LoggerUtils.info;
-import static io.github.microsphere.annotation.processor.util.LoggerUtils.warn;
+import static io.microsphere.annotation.processor.util.LoggerUtils.info;
+import static io.microsphere.annotation.processor.util.LoggerUtils.warn;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**

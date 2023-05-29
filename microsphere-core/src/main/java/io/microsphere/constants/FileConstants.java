@@ -1,9 +1,9 @@
 /**
  *
  */
-package io.github.microsphere.constants;
+package io.microsphere.constants;
 
-import static io.github.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT;
 
 /**
  * File Constants

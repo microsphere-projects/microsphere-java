@@ -1,9 +1,9 @@
 /**
  *
  */
-package io.github.microsphere.util.os.windows;
+package io.microsphere.util.os.windows;
 
-import io.github.microsphere.constants.PathConstants;
+import io.microsphere.constants.PathConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 

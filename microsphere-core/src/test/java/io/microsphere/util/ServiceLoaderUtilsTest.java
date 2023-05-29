@@ -1,4 +1,4 @@
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import junit.framework.Assert;
 import org.junit.Test;

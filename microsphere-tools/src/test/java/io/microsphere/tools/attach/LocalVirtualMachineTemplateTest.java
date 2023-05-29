@@ -1,7 +1,7 @@
 /**
  * Confucius commmons project
  */
-package io.github.microsphere.tools.attach;
+package io.microsphere.tools.attach;
 
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.VirtualMachine;

@@ -1,4 +1,4 @@
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import org.junit.Test;
 

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.micrometer.instrument.binder.system;
+package io.microsphere.micrometer.instrument.binder.system;
 
-import io.github.microsphere.micrometer.instrument.binder.AbstractMetricsTest;
+import io.microsphere.micrometer.instrument.binder.AbstractMetricsTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

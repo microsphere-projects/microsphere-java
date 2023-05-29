@@ -1,6 +1,6 @@
-io.github.microsphere.i18n.AbstractServiceMessageSource=\
-io.github.microsphere.i18n.spring.PropertySourcesServiceMessageSource,\
-io.github.microsphere.i18n.DefaultServiceMessageSource
+io.microsphere.i18n.AbstractServiceMessageSource=\
+io.microsphere.i18n.spring.PropertySourcesServiceMessageSource,\
+io.microsphere.i18n.DefaultServiceMessageSource
 
 org.springframework.context.ApplicationContextInitializer=\
-io.github.microsphere.i18n.spring.context.I18nInitializer
+io.microsphere.i18n.spring.context.I18nInitializer

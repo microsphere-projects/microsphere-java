@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.logging.servlet;
+package io.microsphere.logging.servlet;
 
-import io.github.microsphere.logging.filter.Filter;
+import io.microsphere.logging.filter.Filter;
 
 import javax.servlet.Servlet;
 

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.i18n;
+package io.microsphere.i18n;
 
-import io.github.microsphere.i18n.util.I18nUtils;
+import io.microsphere.i18n.util.I18nUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.collection;
+package io.microsphere.collection;
 
-import io.github.microsphere.util.BaseUtils;
+import io.microsphere.util.BaseUtils;
 
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -25,7 +25,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import static io.github.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ArrayUtils.length;
 
 /**
  * The utilities class for Java Collection

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
-import io.github.microsphere.util.ClassUtils;
+import io.microsphere.util.ClassUtils;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -33,11 +33,11 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.github.microsphere.lang.function.Predicates.and;
-import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.lang.function.Streams.filterList;
-import static io.github.microsphere.util.ClassUtils.getAllSuperClasses;
-import static io.github.microsphere.util.ClassUtils.isAssignableFrom;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterList;
+import static io.microsphere.util.ClassUtils.getAllSuperClasses;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.stream.Collectors.toList;

@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.event;
+package io.microsphere.event;
 
-import io.github.microsphere.lang.function.ThrowableConsumer;
+import io.microsphere.lang.function.ThrowableConsumer;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -25,7 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static io.github.microsphere.lang.function.ThrowableFunction.execute;
+import static io.microsphere.lang.function.ThrowableFunction.execute;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
 

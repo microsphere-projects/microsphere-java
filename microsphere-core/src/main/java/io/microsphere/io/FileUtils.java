@@ -1,9 +1,9 @@
 /**
  *
  */
-package io.github.microsphere.io;
+package io.microsphere.io;
 
-import io.github.microsphere.net.URLUtils;
+import io.microsphere.net.URLUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 

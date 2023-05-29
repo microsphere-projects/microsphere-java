@@ -1,7 +1,7 @@
-package io.github.microsphere.i18n.spring.context;
+package io.microsphere.i18n.spring.context;
 
-import io.github.microsphere.i18n.CompositeServiceMessageSource;
-import io.github.microsphere.i18n.ServiceMessageSource;
+import io.microsphere.i18n.CompositeServiceMessageSource;
+import io.microsphere.i18n.ServiceMessageSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert;
+package io.microsphere.convert;
 
 import org.junit.Test;
 
@@ -35,7 +35,7 @@ public class StringToClassConverterTest {
         // The class from the bootstrap ClassLoader
         assertEquals(Class.class, converter.convert("java.lang.Class"));
         // The class from the application ClassLoader
-        assertEquals(StringToClassConverter.class, converter.convert("io.github.microsphere.convert.StringToClassConverter"));
+        assertEquals(StringToClassConverter.class, converter.convert("io.microsphere.convert.StringToClassConverter"));
         assertNull(converter.convert("not.found.class"));
     }
 }

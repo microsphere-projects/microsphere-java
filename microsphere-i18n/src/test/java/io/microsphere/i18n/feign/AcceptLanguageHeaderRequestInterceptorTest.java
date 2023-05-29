@@ -1,4 +1,4 @@
-package io.github.microsphere.i18n.feign;
+package io.microsphere.i18n.feign;
 
 import feign.RequestTemplate;
 import org.junit.After;
@@ -10,7 +10,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Arrays;
 
-import static io.github.microsphere.i18n.feign.AcceptLanguageHeaderRequestInterceptor.HEADER_NAME;
+import static io.microsphere.i18n.feign.AcceptLanguageHeaderRequestInterceptor.HEADER_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

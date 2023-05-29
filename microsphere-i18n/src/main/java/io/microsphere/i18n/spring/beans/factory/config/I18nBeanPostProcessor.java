@@ -1,6 +1,6 @@
-package io.github.microsphere.i18n.spring.beans.factory.config;
+package io.microsphere.i18n.spring.beans.factory.config;
 
-import io.github.microsphere.i18n.spring.context.MessageSourceAdapter;
+import io.microsphere.i18n.spring.context.MessageSourceAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;

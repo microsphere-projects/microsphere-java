@@ -1,17 +1,17 @@
 /**
  *
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
-import io.github.microsphere.collection.CollectionUtils;
-import io.github.microsphere.collection.MapUtils;
-import io.github.microsphere.constants.Constants;
-import io.github.microsphere.constants.FileConstants;
-import io.github.microsphere.constants.PathConstants;
-import io.github.microsphere.filter.ClassFileJarEntryFilter;
-import io.github.microsphere.io.FileUtils;
-import io.github.microsphere.io.scanner.SimpleFileScanner;
-import io.github.microsphere.io.scanner.SimpleJarEntryScanner;
+import io.microsphere.collection.CollectionUtils;
+import io.microsphere.collection.MapUtils;
+import io.microsphere.constants.Constants;
+import io.microsphere.constants.FileConstants;
+import io.microsphere.constants.PathConstants;
+import io.microsphere.filter.ClassFileJarEntryFilter;
+import io.microsphere.io.FileUtils;
+import io.microsphere.io.scanner.SimpleFileScanner;
+import io.microsphere.io.scanner.SimpleJarEntryScanner;
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,11 +44,11 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.github.microsphere.collection.SetUtils.of;
-import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.github.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
-import static io.github.microsphere.util.ArrayUtils.*;
+import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
+import static io.microsphere.util.ArrayUtils.*;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;

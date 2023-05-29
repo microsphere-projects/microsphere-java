@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static io.github.microsphere.lang.function.Predicates.and;
-import static io.github.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
-import static io.github.microsphere.reflect.MemberUtils.*;
-import static io.github.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
-import static io.github.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
-import static io.github.microsphere.util.ClassUtils.isArray;
-import static io.github.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
+import static io.microsphere.reflect.MemberUtils.*;
+import static io.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isPrimitive;
 import static java.lang.reflect.Modifier.isFinal;
 
 

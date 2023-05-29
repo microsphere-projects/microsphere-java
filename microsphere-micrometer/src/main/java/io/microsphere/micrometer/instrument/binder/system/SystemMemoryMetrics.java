@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.micrometer.instrument.binder.system;
+package io.microsphere.micrometer.instrument.binder.system;
 
 import com.sun.management.OperatingSystemMXBean;
-import io.github.microsphere.micrometer.instrument.binder.AbstractMeterBinder;
+import io.microsphere.micrometer.instrument.binder.AbstractMeterBinder;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;

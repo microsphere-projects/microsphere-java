@@ -1,4 +1,4 @@
-package io.github.microsphere.tools.attach;
+package io.microsphere.tools.attach;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;

@@ -1,6 +1,6 @@
-package io.github.microsphere.i18n.spring.context;
+package io.microsphere.i18n.spring.context;
 
-import io.github.microsphere.i18n.ServiceMessageSource;
+import io.microsphere.i18n.ServiceMessageSource;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.context.MessageSource;

@@ -1,16 +1,16 @@
-# io.github.microsphere.convert.Converter
-io.github.microsphere.convert.StringToBooleanConverter
-io.github.microsphere.convert.StringToCharacterConverter
+# io.microsphere.convert.Converter
+io.microsphere.convert.StringToBooleanConverter
+io.microsphere.convert.StringToCharacterConverter
 io.microsphere.convert.StringToCharArrayConverter
-io.github.microsphere.convert.StringToDoubleConverter
+io.microsphere.convert.StringToDoubleConverter
 io.microsphere.convert.StringToFloatConverter
-io.github.microsphere.convert.StringToIntegerConverter
+io.microsphere.convert.StringToIntegerConverter
 io.microsphere.convert.StringToLongConverter
 io.microsphere.convert.StringToOptionalConverter
 io.microsphere.convert.StringToShortConverter
-io.github.microsphere.convert.StringToStringConverter
-io.github.microsphere.convert.StringToInputStreamConverter
+io.microsphere.convert.StringToStringConverter
+io.microsphere.convert.StringToInputStreamConverter
 io.microsphere.convert.StringToDurationConverter
-io.github.microsphere.convert.StringToClassConverter
+io.microsphere.convert.StringToClassConverter
 io.microsphere.convert.MapToPropertiesConverter
 io.microsphere.convert.PropertiesToStringConverter

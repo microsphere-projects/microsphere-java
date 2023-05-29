@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.collection;
+package io.microsphere.collection;
 
-import io.github.microsphere.util.BaseUtils;
+import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -26,9 +26,9 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static io.github.microsphere.collection.CollectionUtils.toIterable;
-import static io.github.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
-import static io.github.microsphere.util.ArrayUtils.length;
+import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
+import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 

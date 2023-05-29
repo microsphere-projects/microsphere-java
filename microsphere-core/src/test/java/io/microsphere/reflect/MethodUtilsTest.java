@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
 import org.junit.Test;
 
 import java.lang.reflect.Method;
 
-import static io.github.microsphere.reflect.MethodUtils.getSignature;
+import static io.microsphere.reflect.MethodUtils.getSignature;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -40,7 +40,7 @@ public class MethodUtilsTest {
 
         // Test non-argument Method
         method = MethodUtils.findMethod(this.getClass(), "testGetSignature");
-        assertEquals("io.github.microsphere.reflect.MethodUtilsTest#testGetSignature()", getSignature(method));
+        assertEquals("io.microsphere.reflect.MethodUtilsTest#testGetSignature()", getSignature(method));
 
         // Test one-argument Method
         method = MethodUtils.findMethod(Object.class, "equals", Object.class);
@@ -48,7 +48,7 @@ public class MethodUtilsTest {
 
         // Test two-argument Method
         method = MethodUtils.findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
-        assertEquals("io.github.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
+        assertEquals("io.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
 
     }
 }

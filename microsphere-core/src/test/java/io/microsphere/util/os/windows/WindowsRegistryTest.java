@@ -1,7 +1,7 @@
 /**
  *
  */
-package io.github.microsphere.util.os.windows;
+package io.microsphere.util.os.windows;
 
 import junit.framework.Assert;
 import org.apache.commons.lang3.SystemUtils;

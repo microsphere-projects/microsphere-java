@@ -1,4 +1,4 @@
-package io.github.microsphere.util.os.windows;
+package io.microsphere.util.os.windows;
 
 /**
  * Static methods for translating Base64 encoded strings to byte arrays and vice-versa.

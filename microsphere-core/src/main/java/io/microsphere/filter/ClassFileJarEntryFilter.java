@@ -1,11 +1,11 @@
 /**
  *
  */
-package io.github.microsphere.filter;
+package io.microsphere.filter;
 
 import java.util.jar.JarEntry;
 
-import static io.github.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 
 /**
  * Class File {@link JarEntryFilter}

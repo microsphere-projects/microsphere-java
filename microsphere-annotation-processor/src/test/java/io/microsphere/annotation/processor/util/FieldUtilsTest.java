@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.github.microsphere.annotation.processor.TestServiceImpl;
-import io.github.microsphere.annotation.processor.model.Color;
-import io.github.microsphere.annotation.processor.model.Model;
+import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.TestServiceImpl;
+import io.microsphere.annotation.processor.model.Color;
+import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
@@ -33,15 +33,15 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static io.github.microsphere.annotation.processor.util.FieldUtils.findField;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.getAllDeclaredFields;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.getAllNonStaticFields;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.getDeclaredField;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.getNonStaticFields;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.isEnumMemberField;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.isField;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.isNonStaticField;
+import static io.microsphere.annotation.processor.util.FieldUtils.findField;
+import static io.microsphere.annotation.processor.util.FieldUtils.getAllDeclaredFields;
+import static io.microsphere.annotation.processor.util.FieldUtils.getAllNonStaticFields;
+import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredField;
+import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
+import static io.microsphere.annotation.processor.util.FieldUtils.getNonStaticFields;
+import static io.microsphere.annotation.processor.util.FieldUtils.isEnumMemberField;
+import static io.microsphere.annotation.processor.util.FieldUtils.isField;
+import static io.microsphere.annotation.processor.util.FieldUtils.isNonStaticField;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;

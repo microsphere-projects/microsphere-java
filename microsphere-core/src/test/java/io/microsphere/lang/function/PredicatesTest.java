@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.lang.function;
+package io.microsphere.lang.function;
 
 import org.junit.Test;
 
-import static io.github.microsphere.lang.function.Predicates.alwaysFalse;
-import static io.github.microsphere.lang.function.Predicates.alwaysTrue;
-import static io.github.microsphere.lang.function.Predicates.and;
-import static io.github.microsphere.lang.function.Predicates.or;
+import static io.microsphere.lang.function.Predicates.alwaysFalse;
+import static io.microsphere.lang.function.Predicates.alwaysTrue;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.lang.function.Predicates.or;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

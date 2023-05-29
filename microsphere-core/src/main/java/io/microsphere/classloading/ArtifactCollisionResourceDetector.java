@@ -1,4 +1,4 @@
-package io.github.microsphere.classloading;
+package io.microsphere.classloading;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;

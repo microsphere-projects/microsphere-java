@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.lang.Prioritized;
+import io.microsphere.lang.Prioritized;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static io.github.microsphere.collection.SetUtils.of;
-import static io.github.microsphere.constants.SymbolConstants.*;
-import static io.github.microsphere.net.URLUtils.*;
+import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.constants.SymbolConstants.*;
+import static io.microsphere.net.URLUtils.*;
 import static java.net.Proxy.NO_PROXY;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.split;

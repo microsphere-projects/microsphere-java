@@ -1,7 +1,7 @@
 /**
  *
  */
-package io.github.microsphere.constants;
+package io.microsphere.constants;
 
 /**
  * Protocol Constants Definition

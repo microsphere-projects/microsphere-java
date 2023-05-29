@@ -1,10 +1,10 @@
 /**
  *
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
-import io.github.microsphere.AbstractTestCase;
-import io.github.microsphere.security.TestSecurityManager;
+import io.microsphere.AbstractTestCase;
+import io.microsphere.security.TestSecurityManager;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static io.github.microsphere.collection.SetUtils.of;
-import static io.github.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

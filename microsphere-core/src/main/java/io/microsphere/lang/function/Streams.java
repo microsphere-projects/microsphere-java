@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.lang.function;
+package io.microsphere.lang.function;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,8 +23,8 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static io.github.microsphere.lang.function.Predicates.and;
-import static io.github.microsphere.lang.function.Predicates.or;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.lang.function.Predicates.or;
 import static java.util.stream.Collectors.toList;
 
 /**

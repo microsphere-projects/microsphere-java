@@ -1,7 +1,7 @@
 /**
  *
  */
-package io.github.microsphere.filter;
+package io.microsphere.filter;
 
 import java.util.jar.JarEntry;
 

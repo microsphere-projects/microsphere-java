@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.event;
+package io.microsphere.event;
 
 import org.junit.jupiter.api.Test;
 
-import static io.github.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
+import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**

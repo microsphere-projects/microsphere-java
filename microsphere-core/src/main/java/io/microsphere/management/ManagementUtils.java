@@ -1,4 +1,4 @@
-package io.github.microsphere.management;
+package io.microsphere.management;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;

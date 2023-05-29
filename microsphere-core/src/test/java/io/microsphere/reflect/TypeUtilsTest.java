@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
 import org.junit.Test;
 
@@ -25,10 +25,10 @@ import java.util.Iterator;
 import java.util.RandomAccess;
 import java.util.Set;
 
-import static io.github.microsphere.reflect.TypeUtils.getAllInterfaces;
-import static io.github.microsphere.reflect.TypeUtils.getAllSuperTypes;
+import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
+import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 
-import static io.github.microsphere.reflect.TypeUtils.getAllTypes;
+import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

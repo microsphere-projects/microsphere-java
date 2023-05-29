@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.collection;
+package io.microsphere.collection;
 
 import java.util.Iterator;
 
-import static io.github.microsphere.collection.CollectionUtils.singletonIterator;
-import static io.github.microsphere.collection.CollectionUtils.unmodifiableIterator;
+import static io.microsphere.collection.CollectionUtils.singletonIterator;
+import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
 
 /**
  * {@link UnmodifiableIterator} Test

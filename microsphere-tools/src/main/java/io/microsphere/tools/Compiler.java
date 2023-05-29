@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.tools;
+package io.microsphere.tools;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaCompiler;

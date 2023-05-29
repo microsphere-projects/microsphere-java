@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.lang.Prioritized;
+import io.microsphere.lang.Prioritized;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static io.github.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.toList;
 
 /**
  * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}

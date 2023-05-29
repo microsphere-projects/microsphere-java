@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert.multiple;
+package io.microsphere.convert.multiple;
 
-import io.github.microsphere.lang.Prioritized;
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.lang.Prioritized;
+import io.microsphere.util.ClassLoaderUtils;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
 
-import static io.github.microsphere.reflect.TypeUtils.findActualTypeArgument;
-import static io.github.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.reflect.TypeUtils.findActualTypeArgument;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
  * An interface to convert the source-typed value to multiple value, e.g , Java array, {@link Collection} or

@@ -14,17 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert.multiple;
+package io.microsphere.convert.multiple;
 
-import io.github.microsphere.convert.StringConverter;
+import io.microsphere.convert.StringConverter;
 
 import java.util.Collection;
 import java.util.Optional;
 
-import static io.github.microsphere.convert.Converter.getConverter;
-import static io.github.microsphere.reflect.TypeUtils.findActualTypeArgument;
-import static io.github.microsphere.util.ClassUtils.getAllInterfaces;
-import static io.github.microsphere.util.ClassUtils.isAssignableFrom;
+import static io.microsphere.convert.Converter.getConverter;
+import static io.microsphere.reflect.TypeUtils.findActualTypeArgument;
+import static io.microsphere.util.ClassUtils.getAllInterfaces;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
 /**
  * The class to convert {@link String} to {@link Iterable}-based value

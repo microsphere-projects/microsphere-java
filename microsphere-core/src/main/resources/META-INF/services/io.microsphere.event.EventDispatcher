@@ -1,2 +1,2 @@
 io.microsphere.event.DirectEventDispatcher
-io.github.microsphere.event.ParallelEventDispatcher
+io.microsphere.event.ParallelEventDispatcher

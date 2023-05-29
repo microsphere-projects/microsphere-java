@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
 import org.junit.Test;
 
-import static io.github.microsphere.reflect.FieldUtils.findField;
-import static io.github.microsphere.reflect.FieldUtils.getFieldValue;
-import static io.github.microsphere.reflect.FieldUtils.getStaticFieldValue;
-import static io.github.microsphere.reflect.FieldUtils.setFieldValue;
-import static io.github.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.FieldUtils.setFieldValue;
+import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;

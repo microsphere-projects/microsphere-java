@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.collection;
+package io.microsphere.collection;
 
-import io.github.microsphere.util.BaseUtils;
+import io.microsphere.util.BaseUtils;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -24,7 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import static io.github.microsphere.collection.CollectionUtils.toIterator;
+import static io.microsphere.collection.CollectionUtils.toIterator;
 import static java.util.Collections.unmodifiableList;
 
 /**

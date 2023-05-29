@@ -1,9 +1,9 @@
 /**
  *
  */
-package io.github.microsphere.io.scanner;
+package io.microsphere.io.scanner;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import junit.framework.Assert;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;

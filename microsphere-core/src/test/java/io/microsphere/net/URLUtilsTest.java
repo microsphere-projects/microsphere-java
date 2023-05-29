@@ -1,10 +1,10 @@
 /**
  *
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.constants.FileConstants;
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.constants.FileConstants;
+import io.microsphere.util.ClassLoaderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
@@ -20,11 +20,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
-import static io.github.microsphere.net.URLUtils.buildMatrixString;
-import static io.github.microsphere.net.URLUtils.getURLStreamHandlerFactory;
-import static io.github.microsphere.net.URLUtils.resolveMatrixParameters;
-import static io.github.microsphere.net.URLUtils.resolveQueryParameters;
+import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.buildMatrixString;
+import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.resolveMatrixParameters;
+import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;

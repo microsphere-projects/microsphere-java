@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import org.junit.Test;
 
@@ -25,9 +25,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 
-import static io.github.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
-import static io.github.microsphere.util.AnnotationUtils.isAnnotationPresent;
-import static io.github.microsphere.util.AnnotationUtils.isMetaAnnotation;
+import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
+import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
+import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

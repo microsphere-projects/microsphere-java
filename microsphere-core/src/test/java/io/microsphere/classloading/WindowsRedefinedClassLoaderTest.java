@@ -1,4 +1,4 @@
-package io.github.microsphere.classloading;
+package io.microsphere.classloading;
 
 import org.junit.Test;
 
@@ -10,9 +10,9 @@ import org.junit.Test;
  */
 public class WindowsRedefinedClassLoaderTest {
 
-    private static final String TEST_CLASS_NAME1 = "io.github.microsphere.classloading.WindowsRedefinedClassLoaderTest";
+    private static final String TEST_CLASS_NAME1 = "io.microsphere.classloading.WindowsRedefinedClassLoaderTest";
 
-    private static final String TEST_CLASS_NAME2 = "io.github.microsphere.classloading.AConfig";
+    private static final String TEST_CLASS_NAME2 = "io.microsphere.classloading.AConfig";
 
     @Test
     public void testLoadClass() throws ClassNotFoundException {

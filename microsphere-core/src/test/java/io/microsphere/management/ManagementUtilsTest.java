@@ -1,6 +1,6 @@
-package io.github.microsphere.management;
+package io.microsphere.management;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import junit.framework.TestCase;
 import org.junit.Assert;
 import org.junit.Test;

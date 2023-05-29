@@ -1,4 +1,4 @@
-package io.github.microsphere.i18n;
+package io.microsphere.i18n;
 
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.NonNull;

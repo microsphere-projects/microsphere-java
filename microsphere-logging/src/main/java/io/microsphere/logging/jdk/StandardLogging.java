@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.logging.jdk;
+package io.microsphere.logging.jdk;
 
-import io.github.microsphere.logging.Logging;
+import io.microsphere.logging.Logging;
 
 import java.util.List;
 import java.util.logging.LoggingMXBean;

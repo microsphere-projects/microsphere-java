@@ -1,10 +1,10 @@
 /**
  *
  */
-package io.github.microsphere.io.scanner;
+package io.microsphere.io.scanner;
 
 
-import io.github.microsphere.filter.Filter;
+import io.microsphere.filter.Filter;
 
 import javax.annotation.Nonnull;
 import java.util.Set;

@@ -1,9 +1,9 @@
 /**
  *
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.util.jar.JarUtils;
+import io.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
@@ -22,13 +22,13 @@ import java.util.StringJoiner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.github.microsphere.constants.PathConstants.*;
-import static io.github.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
-import static io.github.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
-import static io.github.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
-import static io.github.microsphere.constants.SymbolConstants.*;
-import static io.github.microsphere.reflect.FieldUtils.getStaticFieldValue;
-import static io.github.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.constants.PathConstants.*;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static io.microsphere.constants.SymbolConstants.*;
+import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.*;
 import static org.apache.commons.lang3.StringUtils.length;

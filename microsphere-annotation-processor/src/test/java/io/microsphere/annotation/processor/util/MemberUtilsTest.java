@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.github.microsphere.annotation.processor.TestServiceImpl;
-import io.github.microsphere.annotation.processor.model.Model;
+import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.TestServiceImpl;
+import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
@@ -28,12 +28,12 @@ import javax.lang.model.element.VariableElement;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
-import static io.github.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
-import static io.github.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
-import static io.github.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
-import static io.github.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.findMethod;
+import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
+import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.methodsIn;

@@ -1,2 +1,2 @@
-io.github.microsphere.event.EchoEventListener
-io.github.microsphere.event.EchoEventListener2
+io.microsphere.event.EchoEventListener
+io.microsphere.event.EchoEventListener2

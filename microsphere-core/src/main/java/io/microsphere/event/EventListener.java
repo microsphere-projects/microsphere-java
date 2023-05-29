@@ -14,15 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.event;
+package io.microsphere.event;
 
-import io.github.microsphere.lang.Prioritized;
+import io.microsphere.lang.Prioritized;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import static io.github.microsphere.reflect.ReflectionUtils.findParameterizedTypes;
+import static io.microsphere.reflect.ReflectionUtils.findParameterizedTypes;
 
 /**
  * The {@link Event Dubbo Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports

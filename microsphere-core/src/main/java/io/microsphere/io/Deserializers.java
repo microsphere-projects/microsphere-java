@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.io;
+package io.microsphere.io;
 
-import io.github.microsphere.util.PriorityComparator;
+import io.microsphere.util.PriorityComparator;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.microsphere.reflect.TypeUtils.resolveTypeArguments;
+import static io.microsphere.reflect.TypeUtils.resolveTypeArguments;
 import static java.util.Collections.emptyList;
 import static java.util.ServiceLoader.load;
 

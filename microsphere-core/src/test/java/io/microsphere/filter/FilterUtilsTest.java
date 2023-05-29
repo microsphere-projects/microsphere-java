@@ -1,9 +1,9 @@
 /**
  * 
  */
-package io.github.microsphere.filter;
+package io.microsphere.filter;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import junit.framework.Assert;
 import org.junit.Test;
 

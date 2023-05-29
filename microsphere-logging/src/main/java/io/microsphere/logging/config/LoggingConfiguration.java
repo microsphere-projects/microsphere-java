@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.logging.config;
+package io.microsphere.logging.config;
 
 import org.springframework.core.env.Environment;
 
 import javax.servlet.ServletContext;
 
-import static io.github.microsphere.logging.servlet.ServletConstants.DEFAULT_LOGGING_FILTER_LOCATION;
-import static io.github.microsphere.logging.servlet.ServletConstants.LOGGING_FILTER_LOCATION_KEY;
+import static io.microsphere.logging.servlet.ServletConstants.DEFAULT_LOGGING_FILTER_LOCATION;
+import static io.microsphere.logging.servlet.ServletConstants.LOGGING_FILTER_LOCATION_KEY;
 
 /**
  * Logging Configuration

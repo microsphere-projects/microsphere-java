@@ -1,15 +1,15 @@
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
 
-import static io.github.microsphere.collection.CollectionUtils.first;
-import static io.github.microsphere.collection.ListUtils.toList;
-import static io.github.microsphere.util.ArrayUtils.asArray;
-import static io.github.microsphere.util.ClassLoaderUtils.getClassLoader;
-import static io.github.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.collection.CollectionUtils.first;
+import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static java.util.Collections.unmodifiableList;
 import static java.util.ServiceLoader.load;
 

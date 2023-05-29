@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net.classpath;
+package io.microsphere.net.classpath;
 
-import io.github.microsphere.net.ExtendableProtocolURLStreamHandler;
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.net.ExtendableProtocolURLStreamHandler;
+import io.microsphere.util.ClassLoaderUtils;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -25,7 +25,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
-import static io.github.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 
 /**
  * The "classpath" protocol {@link URLStreamHandler} based on {@link ClassLoader}

@@ -1,4 +1,4 @@
-package io.github.microsphere.classloading;
+package io.microsphere.classloading;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import static io.github.microsphere.collection.MapUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.isEmpty;
 
 /**
  * The customized ClassLoader under Windows operating system to solve the case-insensitive

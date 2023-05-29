@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.lang.function;
+package io.microsphere.lang.function;
 
 
 import org.junit.Test;
@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static io.github.microsphere.lang.function.Streams.filterList;
-import static io.github.microsphere.lang.function.Streams.filterSet;
-import static io.github.microsphere.lang.function.Streams.filterStream;
+import static io.microsphere.lang.function.Streams.filterList;
+import static io.microsphere.lang.function.Streams.filterSet;
+import static io.microsphere.lang.function.Streams.filterStream;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;

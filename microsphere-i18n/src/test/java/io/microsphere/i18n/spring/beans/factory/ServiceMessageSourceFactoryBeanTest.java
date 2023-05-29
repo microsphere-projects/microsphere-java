@@ -1,8 +1,8 @@
-package io.github.microsphere.i18n.spring.beans.factory;
+package io.microsphere.i18n.spring.beans.factory;
 
-import io.github.microsphere.i18n.ServiceMessageSource;
-import io.github.microsphere.i18n.spring.beans.TestServiceMessageSourceConfiguration;
-import io.github.microsphere.i18n.spring.context.ResourceServiceMessageSourceChangedEvent;
+import io.microsphere.i18n.ServiceMessageSource;
+import io.microsphere.i18n.spring.beans.TestServiceMessageSourceConfiguration;
+import io.microsphere.i18n.spring.context.ResourceServiceMessageSourceChangedEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

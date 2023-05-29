@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import org.junit.Test;
 
-import static io.github.microsphere.util.Version.getValue;
-import static io.github.microsphere.util.Version.of;
+import static io.microsphere.util.Version.getValue;
+import static io.microsphere.util.Version.of;
 import static org.junit.Assert.assertEquals;
 
 /**

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -30,15 +30,15 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.github.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
-import static io.github.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
-import static io.github.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
-import static io.github.microsphere.filter.FilterUtils.filter;
-import static io.github.microsphere.lang.function.Predicates.EMPTY_ARRAY;
-import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.lang.function.Streams.filterFirst;
+import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
+import static io.microsphere.filter.FilterUtils.filter;
+import static io.microsphere.lang.function.Predicates.EMPTY_ARRAY;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterFirst;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.ElementKind.METHOD;

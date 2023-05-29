@@ -1,7 +1,7 @@
-package io.github.microsphere.i18n.util;
+package io.microsphere.i18n.util;
 
-import io.github.microsphere.i18n.DefaultServiceMessageSource;
-import io.github.microsphere.i18n.EmptyServiceMessageSource;
+import io.microsphere.i18n.DefaultServiceMessageSource;
+import io.microsphere.i18n.EmptyServiceMessageSource;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

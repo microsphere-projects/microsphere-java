@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.reflect;
+package io.microsphere.reflect;
 
-import io.github.microsphere.lang.function.ThrowableFunction;
-import io.github.microsphere.lang.function.ThrowableSupplier;
-import io.github.microsphere.util.BaseUtils;
+import io.microsphere.lang.function.ThrowableFunction;
+import io.microsphere.lang.function.ThrowableSupplier;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.github.microsphere.reflect.MemberUtils.isPrivate;
-import static io.github.microsphere.util.ClassUtils.getTypes;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.MemberUtils.isPrivate;
+import static io.microsphere.util.ClassUtils.getTypes;
 import static java.util.Arrays.asList;
 
 /**

@@ -1,4 +1,4 @@
-package io.github.microsphere.misc;
+package io.microsphere.misc;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;

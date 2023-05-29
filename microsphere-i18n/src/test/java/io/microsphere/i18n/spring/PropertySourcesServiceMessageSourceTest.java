@@ -1,4 +1,4 @@
-package io.github.microsphere.i18n.spring;
+package io.microsphere.i18n.spring;
 
 import org.junit.Test;
 import org.springframework.mock.env.MockEnvironment;

@@ -14,16 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.github.microsphere.annotation.processor.DefaultTestService;
-import io.github.microsphere.annotation.processor.GenericTestService;
-import io.github.microsphere.annotation.processor.TestServiceImpl;
-import io.github.microsphere.annotation.processor.model.ArrayTypeModel;
-import io.github.microsphere.annotation.processor.model.Color;
-import io.github.microsphere.annotation.processor.model.Model;
-import io.github.microsphere.annotation.processor.model.PrimitiveTypeModel;
+import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.DefaultTestService;
+import io.microsphere.annotation.processor.GenericTestService;
+import io.microsphere.annotation.processor.TestServiceImpl;
+import io.microsphere.annotation.processor.model.ArrayTypeModel;
+import io.microsphere.annotation.processor.model.Color;
+import io.microsphere.annotation.processor.model.Model;
+import io.microsphere.annotation.processor.model.PrimitiveTypeModel;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -44,30 +44,30 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.microsphere.annotation.processor.util.FieldUtils.findField;
-import static io.github.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getAllInterfaces;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getAllSuperTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getInterfaces;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getResource;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getResourceName;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.getSuperType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isAnnotationType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isArrayType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isClassType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isDeclaredType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isEnumType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isInterfaceType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isPrimitiveType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isSameType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isSimpleType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.isTypeElement;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.listDeclaredTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.listTypeElements;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.ofDeclaredTypes;
-import static io.github.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
+import static io.microsphere.annotation.processor.util.FieldUtils.findField;
+import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllInterfaces;
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllSuperTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getInterfaces;
+import static io.microsphere.annotation.processor.util.TypeUtils.getResource;
+import static io.microsphere.annotation.processor.util.TypeUtils.getResourceName;
+import static io.microsphere.annotation.processor.util.TypeUtils.getSuperType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isAnnotationType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isArrayType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isClassType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isDeclaredType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isInterfaceType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isPrimitiveType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isSimpleType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isTypeElement;
+import static io.microsphere.annotation.processor.util.TypeUtils.listDeclaredTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.listTypeElements;
+import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
+import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -216,11 +216,11 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         Set hierarchicalTypes = getHierarchicalTypes(testType.asType(), true, true, true);
         Iterator iterator = hierarchicalTypes.iterator();
         assertEquals(8, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
         assertEquals("java.lang.Object", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.TestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", iterator.next().toString());
         assertEquals("java.lang.AutoCloseable", iterator.next().toString());
         assertEquals("java.io.Serializable", iterator.next().toString());
         assertEquals("java.util.EventListener", iterator.next().toString());
@@ -228,11 +228,11 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         hierarchicalTypes = getHierarchicalTypes(testType);
         iterator = hierarchicalTypes.iterator();
         assertEquals(8, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
         assertEquals("java.lang.Object", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.TestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", iterator.next().toString());
         assertEquals("java.lang.AutoCloseable", iterator.next().toString());
         assertEquals("java.io.Serializable", iterator.next().toString());
         assertEquals("java.util.EventListener", iterator.next().toString());
@@ -240,10 +240,10 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         hierarchicalTypes = getHierarchicalTypes(testType.asType(), Object.class);
         iterator = hierarchicalTypes.iterator();
         assertEquals(7, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.TestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", iterator.next().toString());
         assertEquals("java.lang.AutoCloseable", iterator.next().toString());
         assertEquals("java.io.Serializable", iterator.next().toString());
         assertEquals("java.util.EventListener", iterator.next().toString());
@@ -251,16 +251,16 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         hierarchicalTypes = getHierarchicalTypes(testType.asType(), true, true, false);
         iterator = hierarchicalTypes.iterator();
         assertEquals(4, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.GenericTestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.DefaultTestService", iterator.next().toString());
         assertEquals("java.lang.Object", iterator.next().toString());
 
         hierarchicalTypes = getHierarchicalTypes(testType.asType(), true, false, true);
         iterator = hierarchicalTypes.iterator();
         assertEquals(5, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
-        assertEquals("io.github.microsphere.annotation.processor.TestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", iterator.next().toString());
         assertEquals("java.lang.AutoCloseable", iterator.next().toString());
         assertEquals("java.io.Serializable", iterator.next().toString());
         assertEquals("java.util.EventListener", iterator.next().toString());
@@ -268,7 +268,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         hierarchicalTypes = getHierarchicalTypes(testType.asType(), false, false, true);
         iterator = hierarchicalTypes.iterator();
         assertEquals(4, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", iterator.next().toString());
         assertEquals("java.lang.AutoCloseable", iterator.next().toString());
         assertEquals("java.io.Serializable", iterator.next().toString());
         assertEquals("java.util.EventListener", iterator.next().toString());
@@ -276,7 +276,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         hierarchicalTypes = getHierarchicalTypes(testType.asType(), true, false, false);
         iterator = hierarchicalTypes.iterator();
         assertEquals(1, hierarchicalTypes.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestServiceImpl", iterator.next().toString());
 
         hierarchicalTypes = getHierarchicalTypes(testType.asType(), false, false, false);
         assertEquals(0, hierarchicalTypes.size());
@@ -295,7 +295,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         interfaces = getInterfaces(testType.asType());
 
         assertEquals(3, interfaces.size());
-        assertEquals("io.github.microsphere.annotation.processor.TestService", interfaces.get(0).toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", interfaces.get(0).toString());
         assertEquals("java.lang.AutoCloseable", interfaces.get(1).toString());
         assertEquals("java.io.Serializable", interfaces.get(2).toString());
 
@@ -308,7 +308,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         Set<? extends TypeMirror> interfaces = getAllInterfaces(testType.asType());
         assertEquals(4, interfaces.size());
         Iterator<? extends TypeMirror> iterator = interfaces.iterator();
-        assertEquals("io.github.microsphere.annotation.processor.TestService", iterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", iterator.next().toString());
         assertEquals("java.lang.AutoCloseable", iterator.next().toString());
         assertEquals("java.io.Serializable", iterator.next().toString());
         assertEquals("java.util.EventListener", iterator.next().toString());
@@ -317,7 +317,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals(4, interfaces.size());
 
         Iterator<TypeElement> allIterator = allInterfaces.iterator();
-        assertEquals("io.github.microsphere.annotation.processor.TestService", allIterator.next().toString());
+        assertEquals("io.microsphere.annotation.processor.TestService", allIterator.next().toString());
         assertEquals("java.lang.AutoCloseable", allIterator.next().toString());
         assertEquals("java.io.Serializable", allIterator.next().toString());
         assertEquals("java.util.EventListener", allIterator.next().toString());
@@ -456,7 +456,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertNotNull(resource);
         assertTrue(new File(resource.toURI()).exists());
         assertEquals(resource, getResource(processingEnv, testType.asType()));
-        assertEquals(resource, getResource(processingEnv, "io.github.microsphere.annotation.processor.TestServiceImpl"));
+        assertEquals(resource, getResource(processingEnv, "io.microsphere.annotation.processor.TestServiceImpl"));
 
         assertThrows(RuntimeException.class, () -> getResource(processingEnv, "NotFound"));
     }

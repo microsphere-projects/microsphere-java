@@ -1,7 +1,7 @@
 /**
  *
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import org.apache.commons.lang3.SystemUtils;
 

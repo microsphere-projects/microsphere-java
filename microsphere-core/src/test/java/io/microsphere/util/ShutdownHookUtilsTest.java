@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import org.junit.Test;
 
-import static io.github.microsphere.util.ShutdownHookUtils.*;
-import static io.github.microsphere.util.ShutdownHookUtils.getShutdownHookCallbacks;
+import static io.microsphere.util.ShutdownHookUtils.*;
+import static io.microsphere.util.ShutdownHookUtils.getShutdownHookCallbacks;
 import static org.junit.Assert.*;
 
 /**

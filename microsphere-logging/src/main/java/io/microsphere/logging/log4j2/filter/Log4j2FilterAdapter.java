@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.logging.log4j2.filter;
+package io.microsphere.logging.log4j2.filter;
 
-import io.github.microsphere.logging.filter.Filter;
+import io.microsphere.logging.filter.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Node;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
@@ -38,8 +38,8 @@ public class Log4j2FilterAdapter extends AbstractFilter {
     private final Filter filter;
 
     public Log4j2FilterAdapter(Filter filter) {
-        super(toResult(filter, io.github.microsphere.logging.filter.AbstractFilter::getOnMatch),
-                toResult(filter, io.github.microsphere.logging.filter.AbstractFilter::getOnMismatch));
+        super(toResult(filter, io.microsphere.logging.filter.AbstractFilter::getOnMatch),
+                toResult(filter, io.microsphere.logging.filter.AbstractFilter::getOnMismatch));
         this.filter = filter;
     }
 
@@ -53,10 +53,10 @@ public class Log4j2FilterAdapter extends AbstractFilter {
         return toResult(result);
     }
 
-    protected static Result toResult(Filter filter, Function<io.github.microsphere.logging.filter.AbstractFilter, Filter.Result> resultResolver) {
-        if (filter instanceof io.github.microsphere.logging.filter.AbstractFilter) {
-            io.github.microsphere.logging.filter.AbstractFilter abstractFilter =
-                    (io.github.microsphere.logging.filter.AbstractFilter) filter;
+    protected static Result toResult(Filter filter, Function<io.microsphere.logging.filter.AbstractFilter, Filter.Result> resultResolver) {
+        if (filter instanceof io.microsphere.logging.filter.AbstractFilter) {
+            io.microsphere.logging.filter.AbstractFilter abstractFilter =
+                    (io.microsphere.logging.filter.AbstractFilter) filter;
             return toResult(resultResolver.apply(abstractFilter));
         }
         return Result.NEUTRAL;

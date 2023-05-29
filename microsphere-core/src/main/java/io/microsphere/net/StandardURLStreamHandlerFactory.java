@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.util.ClassLoaderUtils;
 
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;

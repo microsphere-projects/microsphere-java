@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
@@ -38,14 +38,14 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static io.github.microsphere.lang.function.Predicates.and;
-import static io.github.microsphere.lang.function.Streams.filterAll;
-import static io.github.microsphere.lang.function.Streams.filterFirst;
-import static io.github.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.github.microsphere.reflect.MethodUtils.OBJECT_METHODS;
-import static io.github.microsphere.reflect.MethodUtils.overrides;
-import static io.github.microsphere.util.ArrayUtils.length;
-import static io.github.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterFirst;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.MethodUtils.OBJECT_METHODS;
+import static io.microsphere.reflect.MethodUtils.overrides;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
 import static java.util.Optional.ofNullable;

@@ -1,6 +1,6 @@
-package io.github.microsphere.misc;
+package io.microsphere.misc;
 
-import io.github.microsphere.reflect.ReflectionUtils;
+import io.microsphere.reflect.ReflectionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import sun.misc.Unsafe;
 
@@ -10,8 +10,8 @@ import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static io.github.microsphere.reflect.ReflectionUtils.assertArrayIndex;
-import static io.github.microsphere.reflect.ReflectionUtils.assertFieldMatchType;
+import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
+import static io.microsphere.reflect.ReflectionUtils.assertFieldMatchType;
 
 /**
  * {@link Unsafe} Utility class <p/> <b> Take case to  use those utility methods in order to the stability fo

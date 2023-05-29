@@ -1,11 +1,11 @@
 /**
  *
  */
-package io.github.microsphere.io.scanner;
+package io.microsphere.io.scanner;
 
-import io.github.microsphere.constants.PathConstants;
-import io.github.microsphere.filter.JarEntryFilter;
-import io.github.microsphere.util.jar.JarUtils;
+import io.microsphere.constants.PathConstants;
+import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;

@@ -1,9 +1,9 @@
 /**
  * 
  */
-package io.github.microsphere.io.scanner;
+package io.microsphere.io.scanner;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -23,11 +23,11 @@ public class SimpleClassScannerTest extends AbstractTestCase {
 
     @Test
     public void testScan() {
-        Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.github.microsphere.commons");
+        Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.commons");
         Assert.assertFalse(classesSet.isEmpty());
         info(classesSet);
 
-        classesSet = simpleClassScanner.scan(classLoader, "io.github.microsphere.io.scanner");
+        classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.io.scanner");
         Assert.assertFalse(classesSet.isEmpty());
         info(classesSet);
     }

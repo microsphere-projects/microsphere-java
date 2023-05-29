@@ -1,6 +1,6 @@
-package io.github.microsphere.i18n.spring.context;
+package io.microsphere.i18n.spring.context;
 
-import io.github.microsphere.i18n.spring.beans.factory.config.I18nBeanPostProcessor;
+import io.microsphere.i18n.spring.beans.factory.config.I18nBeanPostProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;

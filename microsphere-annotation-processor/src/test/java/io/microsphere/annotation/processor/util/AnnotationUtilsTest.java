@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.github.microsphere.annotation.processor.TestService;
-import io.github.microsphere.annotation.processor.TestServiceImpl;
+import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.TestService;
+import io.microsphere.annotation.processor.TestServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.stereotype.Service;
 
@@ -32,15 +32,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.findMetaAnnotation;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.getAllAnnotations;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.getAnnotations;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.getValue;
-import static io.github.microsphere.annotation.processor.util.AnnotationUtils.isAnnotationPresent;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.findMetaAnnotation;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAllAnnotations;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotations;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getValue;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.isAnnotationPresent;
+import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

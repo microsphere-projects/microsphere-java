@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.event;
+package io.microsphere.event;
 
 /**
  * An {@link EventListener} extending the the conditional feature that {@link #accept(Event) decides} some

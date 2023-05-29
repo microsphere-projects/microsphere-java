@@ -39,7 +39,7 @@
                     <groupId>jdk.tools</groupId>
                     <artifactId>jdk.tools</artifactId>
                     <scope>system</scope>
-                    <version>1.8</version>
+                    <version>${java.version}</version>
                     <systemPath>${java.home}/../lib/tools.jar</systemPath>
                 </dependency>
             </dependencies>

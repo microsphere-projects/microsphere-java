@@ -1,7 +1,7 @@
 /**
  *
  */
-package io.github.microsphere.filter;
+package io.microsphere.filter;
 
 /**
  * {@link Filter} interface

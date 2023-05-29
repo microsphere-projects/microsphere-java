@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.convert;
+package io.microsphere.convert;
 
-import io.github.microsphere.util.ClassLoaderUtils;
+import io.microsphere.util.ClassLoaderUtils;
 
-import static io.github.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 
 /**
  * The class to convert {@link String} to {@link Class}

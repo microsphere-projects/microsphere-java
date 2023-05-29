@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.tools;
+package io.microsphere.tools;
 
-import io.github.microsphere.tools.attach.LocalVirtualMachineTemplateTest;
+import io.microsphere.tools.attach.LocalVirtualMachineTemplateTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

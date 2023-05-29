@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
-import io.github.microsphere.lang.Prioritized;
-import io.github.microsphere.reflect.FieldUtils;
+import io.microsphere.lang.Prioritized;
+import io.microsphere.reflect.FieldUtils;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -26,7 +26,7 @@ import java.util.NavigableSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
-import static io.github.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;

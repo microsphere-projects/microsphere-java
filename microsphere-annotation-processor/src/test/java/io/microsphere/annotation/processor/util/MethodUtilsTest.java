@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.util;
 
-import io.github.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.github.microsphere.annotation.processor.TestService;
-import io.github.microsphere.annotation.processor.TestServiceImpl;
-import io.github.microsphere.annotation.processor.model.Model;
+import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.TestService;
+import io.microsphere.annotation.processor.TestServiceImpl;
+import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.ExecutableElement;
@@ -28,14 +28,14 @@ import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.Set;
 
-import static io.github.microsphere.annotation.processor.util.MethodUtils.findMethod;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getDeclaredMethods;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getMethodName;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getMethodParameterTypes;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getOverrideMethod;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getPublicNonStaticMethods;
-import static io.github.microsphere.annotation.processor.util.MethodUtils.getReturnType;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
+import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.annotation.processor.util.MethodUtils.getDeclaredMethods;
+import static io.microsphere.annotation.processor.util.MethodUtils.getMethodName;
+import static io.microsphere.annotation.processor.util.MethodUtils.getMethodParameterTypes;
+import static io.microsphere.annotation.processor.util.MethodUtils.getOverrideMethod;
+import static io.microsphere.annotation.processor.util.MethodUtils.getPublicNonStaticMethods;
+import static io.microsphere.annotation.processor.util.MethodUtils.getReturnType;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;

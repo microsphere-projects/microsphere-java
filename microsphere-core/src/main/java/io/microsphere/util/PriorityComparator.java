@@ -14,13 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.util;
+package io.microsphere.util;
 
 import javax.annotation.Priority;
 import java.util.Comparator;
 import java.util.Objects;
 
-import static io.github.microsphere.util.AnnotationUtils.findAnnotation;
+import static io.microsphere.util.AnnotationUtils.findAnnotation;
 
 /**
  * The {@link Comparator} for the annotation {@link Priority}

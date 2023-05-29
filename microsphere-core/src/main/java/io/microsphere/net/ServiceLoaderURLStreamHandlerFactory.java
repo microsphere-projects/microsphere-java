@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.net;
+package io.microsphere.net;
 
-import io.github.microsphere.lang.Prioritized;
+import io.microsphere.lang.Prioritized;
 
 import java.net.URL;
 import java.net.URLStreamHandler;
@@ -26,10 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import static io.github.microsphere.collection.MapUtils.ofEntry;
-import static io.github.microsphere.collection.MapUtils.toFixedMap;
-import static io.github.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
-import static io.github.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.toFixedMap;
+import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
  * Decorating {@link URLStreamHandlerFactory} class delegates the composite of {@link URLStreamHandlerFactory} and

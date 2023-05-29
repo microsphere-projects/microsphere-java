@@ -1,6 +1,6 @@
-package io.github.microsphere.performance;
+package io.microsphere.performance;
 
-import io.github.microsphere.AbstractTestCase;
+import io.microsphere.AbstractTestCase;
 import org.junit.Ignore;
 
 /**
