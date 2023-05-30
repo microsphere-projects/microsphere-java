@@ -45,6 +45,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.constants.FileConstants.CLASS;
+import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
@@ -530,6 +532,54 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
+     * Find all class names in class path
+     *
+     * @param archiveFile JarFile or class patch directory
+     * @param recursive   is recursive on sub directories
+     * @return all class names in class path
+     */
+    public static Set<String> findClassNamesInClassPath(File archiveFile, boolean recursive) {
+        if (archiveFile == null || !archiveFile.exists()) {
+            return emptySet();
+        }
+        if (archiveFile.isDirectory()) { // Directory
+            return findClassNamesInArchiveDirectory(archiveFile, recursive);
+        } else if (archiveFile.isFile() && archiveFile.getName().endsWith(JAR)) { //JarFile
+            return findClassNamesInArchiveFile(archiveFile, recursive);
+        }
+        return emptySet();
+    }
+
+    protected static Set<String> findClassNamesInArchiveDirectory(File classesDirectory, boolean recursive) {
+        Set<String> classNames = new LinkedHashSet<>();
+        SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(CLASS));
+        for (File classFile : classFiles) {
+            String className = resolveClassName(classesDirectory, classFile);
+            classNames.add(className);
+        }
+        return classNames;
+    }
+
+    protected static Set<String> findClassNamesInArchiveFile(File jarFile, boolean recursive) {
+        Set<String> classNames = new LinkedHashSet<>();
+        SimpleJarEntryScanner simpleJarEntryScanner = SimpleJarEntryScanner.INSTANCE;
+        try {
+            JarFile jarFile_ = new JarFile(jarFile);
+            Set<JarEntry> jarEntries = simpleJarEntryScanner.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
+            for (JarEntry jarEntry : jarEntries) {
+                String jarEntryName = jarEntry.getName();
+                String className = resolveClassName(jarEntryName);
+                if (StringUtils.isNotBlank(className)) {
+                    classNames.add(className);
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return classNames;
+    }
+
+    /**
      * Find class path under specified class name
      *
      * @param type class
@@ -972,5 +1022,29 @@ public abstract class ClassUtils extends BaseUtils {
         Class[] parameterTypes = getTypes(args);
         Constructor<T> constructor = getDeclaredConstructor(type, parameterTypes);
         return execute(() -> constructor.newInstance(args));
+    }
+
+    public static Class<?> resolveClass(String className, ClassLoader classLoader) {
+        return ClassLoaderUtils.resolveClass(className, classLoader);
+    }
+
+    public static Class<?> forName(String className, ClassLoader classLoader) throws ClassNotFoundException {
+        return ClassLoaderUtils.forName(className, classLoader);
+    }
+
+    public static Class<?> getTopComponentType(Class<?> arrayType) {
+        if (!isArray(arrayType)) {
+            return null;
+        }
+        Class<?> targetType = null;
+
+        Class<?> componentType = arrayType.getComponentType();
+
+        while (componentType != null) {
+            targetType = componentType;
+            componentType = getTopComponentType(componentType);
+        }
+
+        return targetType;
     }
 }

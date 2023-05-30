@@ -19,6 +19,7 @@ import java.util.Set;
 
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
+import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
@@ -29,6 +30,7 @@ import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link ClassUtils} {@link TestCase}
@@ -293,6 +295,19 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertEquals("long[]", getTypeName(long[].class));
         assertEquals("float[]", getTypeName(float[].class));
         assertEquals("double[]", getTypeName(double[].class));
+    }
+
+    @Test
+    public void testGetTopComponentType() {
+        assertNull(getTopComponentType(null));
+        assertNull(getTopComponentType(int.class));
+        assertEquals(int.class, getTopComponentType(int[].class));
+        assertEquals(int.class, getTopComponentType(int[][].class));
+        assertEquals(int.class, getTopComponentType(int[][][].class));
+        assertEquals(int.class, getTopComponentType(int[][][][].class));
+        assertEquals(int.class, getTopComponentType(int[][][][][].class));
+        assertEquals(int.class, getTopComponentType(int[][][][][][].class));
+        assertEquals(int.class, getTopComponentType(int[][][][][][][].class));
     }
 
 }
