@@ -16,8 +16,6 @@
  */
 package io.microsphere.logging.filter;
 
-import java.util.Objects;
-
 /**
  * Abstract {@link Filter} Class
  *

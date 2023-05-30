@@ -22,12 +22,12 @@ import com.alibaba.csp.sentinel.node.DefaultNode;
 import com.alibaba.csp.sentinel.slotchain.ProcessorSlotEntryCallback;
 import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import io.microsphere.micrometer.instrument.binder.AbstractMeterBinder;
 import io.micrometer.core.instrument.Gauge;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.TimeGauge;
 import io.micrometer.core.instrument.util.StringUtils;
+import io.microsphere.micrometer.instrument.binder.AbstractMeterBinder;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;

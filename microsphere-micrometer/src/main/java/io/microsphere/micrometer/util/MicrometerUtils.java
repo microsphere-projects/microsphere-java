@@ -16,8 +16,8 @@
  */
 package io.microsphere.micrometer.util;
 
-import io.microsphere.util.BaseUtils;
 import io.micrometer.core.instrument.util.NamedThreadFactory;
+import io.microsphere.util.BaseUtils;
 
 import java.util.concurrent.ExecutorService;
 
