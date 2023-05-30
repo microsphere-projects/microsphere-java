@@ -19,6 +19,14 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
+
+import static io.microsphere.lang.function.Streams.filter;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.net.URLUtils.resolveArchiveFile;
+import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.loadClass;
+import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
 
 /**
  * Simple {@link Class} Scanner
@@ -105,12 +113,12 @@ public class SimpleClassScanner {
             for (URL resourceURL : resourceURLs) {
                 URL classPathURL = resolveClassPathURL(resourceURL, packageResourceName);
                 String classPath = classPathURL.getFile();
-                Set<String> classNamesInClassPath = ClassUtils.findClassNamesInClassPath(classPath, true);
+                Set<String> classNamesInClassPath = findClassNamesInClassPath(classPath, true);
                 classNames.addAll(filterClassNames(classNamesInClassPath, packageName, recursive));
             }
 
             for (String className : classNames) {
-                Class<?> class_ = requiredLoad ? ClassLoaderUtils.loadClass(classLoader, className) : ClassLoaderUtils.findLoadedClass(classLoader, className);
+                Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
                 if (class_ != null) {
                     classesSet.add(class_);
                 }
@@ -120,6 +128,33 @@ public class SimpleClassScanner {
 
         }
         return Collections.unmodifiableSet(classesSet);
+    }
+
+    public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,
+                              Predicate<Class<?>>... classFilters) {
+        File archiveFile = resolveArchiveFile(resourceInArchive);
+        Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
+        Set<Class<?>> classesSet = new LinkedHashSet<>();
+        for (String className : classNames) {
+            Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
+            if (class_ != null) {
+                classesSet.add(class_);
+            }
+        }
+        return filterAll(classesSet, classFilters);
+    }
+
+    public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
+                              Predicate<Class<?>>... classFilters) {
+        Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
+        Set<Class<?>> classesSet = new LinkedHashSet<>();
+        for (String className : classNames) {
+            Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
+            if (class_ != null) {
+                classesSet.add(class_);
+            }
+        }
+        return filterAll(classesSet, classFilters);
     }
 
     private Set<String> filterClassNames(Set<String> classNames, String packageName, boolean recursive) {
