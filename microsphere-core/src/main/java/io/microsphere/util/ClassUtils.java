@@ -1032,6 +1032,10 @@ public abstract class ClassUtils extends BaseUtils {
         return ClassLoaderUtils.forName(className, classLoader);
     }
 
+    public static Class<?> getTopComponentType(Object array) {
+        return array == null ? null : getTopComponentType(array.getClass());
+    }
+
     public static Class<?> getTopComponentType(Class<?> arrayType) {
         if (!isArray(arrayType)) {
             return null;
