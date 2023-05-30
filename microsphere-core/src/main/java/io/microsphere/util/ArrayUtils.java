@@ -19,10 +19,11 @@ package io.microsphere.util;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.util.ClassUtils.isArray;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Collections.list;
 
@@ -165,32 +166,72 @@ public abstract class ArrayUtils extends BaseUtils {
         return (E[]) newInstance(componentType, length);
     }
 
-    public static <E> E[] combine(E one, E[] others) {
+    public static <E> E[] combine(E one, E... others) {
         int othersLength = length(others);
-        Class<?> componentType = one.getClass();
-        int length = 1 + othersLength;
-        E[] values = newArray(componentType, length);
-        values[0] = one;
-        for (int i = 1; i < length; i++) {
-            values[i] = others[i - 1];
+        Class<?> oneType = one.getClass();
+        boolean oneIsArray = isArray(oneType);
+
+        if (oneIsArray) {
+            return combineArray((E[]) oneType.cast(one), others);
+        } else {
+            Class<?> componentType = oneType;
+            int length = 1 + othersLength;
+            E[] values = newArray(componentType, length);
+
+            values[0] = one;
+            for (int i = 1; i < length; i++) {
+                values[i] = others[i - 1];
+            }
+            return values;
         }
-        return values;
     }
 
-    public static <E> E[] combine(E[]... arrays) {
-        int length = length(arrays);
-        if (length < 1) {
-            return null;
+    public static <E> E[] combine(E[] one, E[]... others) {
+        return combineArray(one, others);
+    }
+
+    public static <E> E[] combineArray(E[] one, E[]... others) {
+        int othersSize = length(others);
+        if (othersSize < 1) {
+            return one;
         }
-        // TODO
-        return null;
+        int oneSize = length(one);
+        int size = oneSize;
+
+        for (int i = 0; i < othersSize; i++) {
+            E[] other = others[i];
+            int otherLength = length(other);
+            size += otherLength;
+        }
+
+        Class<?> componentType = one.getClass().getComponentType();
+        E[] newArray = newArray(componentType, size);
+
+        int pos = 0;
+        System.arraycopy(one, 0, newArray, pos, oneSize);
+        pos += oneSize;
+
+        for (int i = 0; i < othersSize; i++) {
+            E[] other = others[i];
+            int otherLength = length(other);
+            if (otherLength > 0) {
+                System.arraycopy(other, 0, newArray, pos, otherLength);
+                pos += otherLength;
+            }
+        }
+        return newArray;
+    }
+
+    public static <T> void iterate(T[] values, BiConsumer<Integer, T> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            T value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
     }
 
     public static <T> void iterate(T[] values, Consumer<T> consumer) {
-        Objects.requireNonNull(values, "The argument must not be null!");
-        for (T value : values) {
-            consumer.accept(value);
-        }
+        iterate(values, (i, e) -> consumer.accept(e));
     }
 
 }
