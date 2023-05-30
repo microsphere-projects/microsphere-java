@@ -30,6 +30,7 @@ import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -92,6 +93,31 @@ public abstract class SetUtils extends BaseUtils {
     }
 
     /**
+     * Convert to one or more elements to be a read-only {@link Set}
+     *
+     * @param one    one element
+     * @param others others elements
+     * @param <E>    the type of <code>values</code>
+     * @return read-only {@link Set}
+     */
+    public static <E> Set<E> asSet(E one, E... others) {
+        int othersSize = length(others);
+        if (othersSize < 1) {
+            return singleton(one);
+        }
+
+        Set<E> elements = new LinkedHashSet<>(othersSize + 1, MIN_LOAD_FACTOR);
+
+        elements.add(one);
+
+        for (int i = 0; i < othersSize; i++) {
+            elements.add(others[i]);
+        }
+
+        return unmodifiableSet(elements);
+    }
+
+    /**
      * Convert to multiple values to be {@link LinkedHashSet}
      *
      * @param values one or more values
@@ -102,6 +128,8 @@ public abstract class SetUtils extends BaseUtils {
         int size = length(values);
         if (size < 1) {
             return emptySet();
+        } else if (size == 1) {
+            return singleton(values[0]);
         }
 
         Set<E> elements = new LinkedHashSet<>(size, MIN_LOAD_FACTOR);
