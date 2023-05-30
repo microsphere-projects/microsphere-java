@@ -38,74 +38,92 @@ public abstract class ArrayUtils extends BaseUtils {
      * An empty immutable {@code Object} array.
      */
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+
     /**
      * An empty immutable {@code Class} array.
      */
     public static final Class<?>[] EMPTY_CLASS_ARRAY = new Class[0];
+
     /**
      * An empty immutable {@code String} array.
      */
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
     /**
      * An empty immutable {@code long} array.
      */
     public static final long[] EMPTY_LONG_ARRAY = new long[0];
+
     /**
      * An empty immutable {@code Long} array.
      */
     public static final Long[] EMPTY_LONG_OBJECT_ARRAY = new Long[0];
+
     /**
      * An empty immutable {@code int} array.
      */
     public static final int[] EMPTY_INT_ARRAY = new int[0];
+
     /**
      * An empty immutable {@code Integer} array.
      */
     public static final Integer[] EMPTY_INTEGER_OBJECT_ARRAY = new Integer[0];
+
     /**
      * An empty immutable {@code short} array.
      */
     public static final short[] EMPTY_SHORT_ARRAY = new short[0];
+
     /**
      * An empty immutable {@code Short} array.
      */
     public static final Short[] EMPTY_SHORT_OBJECT_ARRAY = new Short[0];
+
     /**
      * An empty immutable {@code byte} array.
      */
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+
     /**
      * An empty immutable {@code Byte} array.
      */
     public static final Byte[] EMPTY_BYTE_OBJECT_ARRAY = new Byte[0];
+
     /**
      * An empty immutable {@code double} array.
      */
     public static final double[] EMPTY_DOUBLE_ARRAY = new double[0];
+
     /**
      * An empty immutable {@code Double} array.
      */
     public static final Double[] EMPTY_DOUBLE_OBJECT_ARRAY = new Double[0];
+
     /**
      * An empty immutable {@code float} array.
      */
     public static final float[] EMPTY_FLOAT_ARRAY = new float[0];
+
     /**
      * An empty immutable {@code Float} array.
      */
     public static final Float[] EMPTY_FLOAT_OBJECT_ARRAY = new Float[0];
+
     /**
      * An empty immutable {@code boolean} array.
      */
     public static final boolean[] EMPTY_BOOLEAN_ARRAY = new boolean[0];
+
     /**
      * An empty immutable {@code Boolean} array.
      */
     public static final Boolean[] EMPTY_BOOLEAN_OBJECT_ARRAY = new Boolean[0];
+
     /**
      * An empty immutable {@code char} array.
      */
     public static final char[] EMPTY_CHAR_ARRAY = new char[0];
+
     /**
      * An empty immutable {@code Character} array.
      */
@@ -115,19 +133,19 @@ public abstract class ArrayUtils extends BaseUtils {
         return values;
     }
 
-    public static <T> int length(T... values) {
+    public static <T> int length(T[] values) {
         return values == null ? 0 : values.length;
     }
 
-    public static <T> int size(T... values) {
+    public static <T> int size(T[] values) {
         return length(values);
     }
 
-    public static <T> boolean isEmpty(T... values) {
+    public static <T> boolean isEmpty(T[] values) {
         return length(values) == 0;
     }
 
-    public static <T> boolean isNotEmpty(T... values) {
+    public static <T> boolean isNotEmpty(T[] values) {
         return !isEmpty(values);
     }
 
@@ -140,7 +158,32 @@ public abstract class ArrayUtils extends BaseUtils {
     }
 
     public static <E> E[] asArray(Collection<E> collection, Class<?> componentType) {
-        return collection.toArray((E[]) newInstance(componentType, 0));
+        return collection.toArray(newArray(componentType, 0));
+    }
+
+    public static <E> E[] newArray(Class<?> componentType, int length) {
+        return (E[]) newInstance(componentType, length);
+    }
+
+    public static <E> E[] combine(E one, E[] others) {
+        int othersLength = length(others);
+        Class<?> componentType = one.getClass();
+        int length = 1 + othersLength;
+        E[] values = newArray(componentType, length);
+        values[0] = one;
+        for (int i = 1; i < length; i++) {
+            values[i] = others[i - 1];
+        }
+        return values;
+    }
+
+    public static <E> E[] combine(E[]... arrays) {
+        int length = length(arrays);
+        if (length < 1) {
+            return null;
+        }
+        // TODO
+        return null;
     }
 
     public static <T> void iterate(T[] values, Consumer<T> consumer) {
