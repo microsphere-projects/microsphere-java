@@ -3,6 +3,7 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.util.ClassPathUtils;
 import io.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,6 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -31,6 +33,7 @@ import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARAT
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
@@ -140,6 +143,28 @@ public abstract class URLUtils {
             archiveFile = archiveFile.exists() ? archiveFile : null;
         }
         return archiveFile;
+    }
+
+    public static File resolveArchiveFile(URL resourceURL) throws NullPointerException {
+        String protocol = resourceURL.getProtocol();
+        if (FILE_PROTOCOL.equals(protocol)) {
+            return resolveArchiveDirectory(resourceURL);
+        } else {
+            return resolveArchiveFile(resourceURL, DOT + protocol);
+        }
+    }
+
+    private static File resolveArchiveDirectory(URL resourceURL) {
+        String resourcePath = new File(resourceURL.getFile()).toString();
+        Set<String> classPaths = ClassPathUtils.getClassPaths();
+        File archiveDirectory = null;
+        for (String classPath : classPaths) {
+            if (resourcePath.contains(classPath)) {
+                archiveDirectory = new File(classPath);
+                break;
+            }
+        }
+        return archiveDirectory;
     }
 
 
