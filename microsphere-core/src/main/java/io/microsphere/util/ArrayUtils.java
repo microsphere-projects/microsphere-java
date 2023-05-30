@@ -177,11 +177,8 @@ public abstract class ArrayUtils extends BaseUtils {
             Class<?> componentType = oneType;
             int length = 1 + othersLength;
             E[] values = newArray(componentType, length);
-
             values[0] = one;
-            for (int i = 1; i < length; i++) {
-                values[i] = others[i - 1];
-            }
+            System.arraycopy(others, 0, values, 1, othersLength);
             return values;
         }
     }
@@ -190,7 +187,7 @@ public abstract class ArrayUtils extends BaseUtils {
         return combineArray(one, others);
     }
 
-    public static <E> E[] combineArray(E[] one, E[]... others) {
+    private static <E> E[] combineArray(E[] one, E[]... others) {
         int othersSize = length(others);
         if (othersSize < 1) {
             return one;
