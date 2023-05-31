@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
@@ -44,6 +45,7 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.SetUtils.asSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.JAR;
@@ -318,6 +320,10 @@ public abstract class ClassUtils extends BaseUtils {
      */
     public static boolean isPrimitive(Class<?> type) {
         return PRIMITIVE_TYPES.contains(type);
+    }
+
+    public static boolean isFinal(Class<?> type) {
+        return type != null && Modifier.isFinal(type.getModifiers());
     }
 
     /**
@@ -992,7 +998,7 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         // Keep the same order from List
-        return of(filterAll(allClasses, classFilters));
+        return asSet(filterAll(allClasses, classFilters));
     }
 
     /**
