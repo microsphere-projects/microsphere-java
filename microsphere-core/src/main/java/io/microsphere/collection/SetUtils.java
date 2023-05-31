@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
@@ -42,54 +43,42 @@ import static java.util.Collections.unmodifiableSet;
  */
 public abstract class SetUtils extends BaseUtils {
 
-    public static boolean isSet(Iterable<?> values) {
-        return values instanceof Set;
+    public static boolean isSet(Iterable<?> elements) {
+        return elements instanceof Set;
     }
 
     /**
-     * Build a read-only {@link Set} from the given {@lin Enumeration} values
+     * Convert to multiple elements to be {@link LinkedHashSet}
      *
-     * @param values one or more values
-     * @param <E>    the type of <code>values</code>
+     * @param elements one or more elements
+     * @param <E>    the type of <code>elements</code>
+     * @return read-only {@link Set}
+     */
+    public static <E> Set<E> of(E... elements) {
+        return asSet(elements);
+    }
+
+    /**
+     * Build a read-only {@link Set} from the given {@lin Enumeration} elements
+     *
+     * @param elements one or more elements
+     * @param <E>    the type of <code>elements</code>
      * @return non-null read-only {@link Set}
      */
     @Nonnull
-    public static <E> Set<E> of(Enumeration<E> values) {
-        return of(toIterable(values));
+    public static <E> Set<E> asSet(Enumeration<E> elements) {
+        return asSet(toIterable(elements));
     }
 
     /**
-     * Convert to multiple values to be {@link LinkedHashSet}
+     * Convert to multiple elements to be {@link LinkedHashSet}
      *
-     * @param values one or more values
-     * @param <E>    the type of <code>values</code>
+     * @param elements one or more elements
+     * @param <E>    the type of <code>elements</code>
      * @return read-only {@link Set}
      */
-    public static <E> Set<E> of(Iterable<E> values) {
-        return unmodifiableSet(newLinkedHashSet(values));
-    }
-
-
-    /**
-     * Convert to multiple values to be {@link LinkedHashSet}
-     *
-     * @param values one or more values
-     * @param <E>    the type of <code>values</code>
-     * @return read-only {@link Set}
-     */
-    public static <E> Set<E> of(E... values) {
-        return asSet(values);
-    }
-
-    /**
-     * Convert to multiple values to be {@link LinkedHashSet}
-     *
-     * @param values one or more values
-     * @param <E>    the type of <code>values</code>
-     * @return read-only {@link Set}
-     */
-    public static <E> Set<E> asSet(Iterable<E> values) {
-        return unmodifiableSet(newLinkedHashSet(values));
+    public static <E> Set<E> asSet(Iterable<E> elements) {
+        return unmodifiableSet(newLinkedHashSet(elements));
     }
 
     /**
@@ -97,7 +86,7 @@ public abstract class SetUtils extends BaseUtils {
      *
      * @param one    one element
      * @param others others elements
-     * @param <E>    the type of <code>values</code>
+     * @param <E>    the type of <code>elements</code>
      * @return read-only {@link Set}
      */
     public static <E> Set<E> asSet(E one, E... others) {
@@ -118,38 +107,64 @@ public abstract class SetUtils extends BaseUtils {
     }
 
     /**
-     * Convert to multiple values to be {@link LinkedHashSet}
+     * Convert to multiple elements to be {@link LinkedHashSet}
      *
-     * @param values one or more values
-     * @param <E>    the type of <code>values</code>
+     * @param elements one or more elements
+     * @param <E>    the type of <code>elements</code>
      * @return read-only {@link Set}
      */
-    public static <E> Set<E> asSet(E... values) {
-        int size = length(values);
+    public static <E> Set<E> asSet(E... elements) {
+        int size = length(elements);
         if (size < 1) {
             return emptySet();
         } else if (size == 1) {
-            return singleton(values[0]);
+            return singleton(elements[0]);
         }
 
-        Set<E> elements = new LinkedHashSet<>(size, MIN_LOAD_FACTOR);
+        Set<E> set = new LinkedHashSet<>(size, MIN_LOAD_FACTOR);
 
         for (int i = 0; i < size; i++) {
-            elements.add(values[i]);
+            set.add(elements[i]);
         }
-        return unmodifiableSet(elements);
+        return unmodifiableSet(set);
     }
 
-    public static <E> Set<E> newHashSet(Iterable<E> values) {
+    public static <T> Set<T> asSet(Collection<T> elements, T... others) {
+        int valuesSize = size(elements);
+
+        if (valuesSize < 1) {
+            return asSet(others);
+        }
+
+        int othersSize = length(others);
+
+        if (othersSize < 1) {
+            return asSet(elements);
+        }
+
+        int size = valuesSize + othersSize;
+
+        Set<T> set = newLinkedHashSet(size, MIN_LOAD_FACTOR);
+        // add elements
+        set.addAll(elements);
+
+        // add others
+        for (T other : others) {
+            set.add(other);
+        }
+        return unmodifiableSet(set);
+    }
+
+    public static <E> Set<E> newHashSet(Iterable<E> elements) {
         Set<E> set = newHashSet();
-        for (E value : values) {
+        for (E value : elements) {
             set.add(value);
         }
         return set;
     }
 
-    public static <E> Set<E> newHashSet(Collection<? extends E> values) {
-        return new HashSet(values);
+    public static <E> Set<E> newHashSet(Collection<? extends E> elements) {
+        return new HashSet(elements);
     }
 
     public static <E> Set<E> newHashSet() {
@@ -164,21 +179,21 @@ public abstract class SetUtils extends BaseUtils {
         return new HashSet<>(initialCapacity, loadFactor);
     }
 
-    public static <E> Set<E> newLinkedHashSet(Iterable<E> values) {
-        return newLinkedHashSet(values.iterator());
+    public static <E> Set<E> newLinkedHashSet(Iterable<E> elements) {
+        return newLinkedHashSet(elements.iterator());
     }
 
-    public static <E> Set<E> newLinkedHashSet(Iterator<E> values) {
+    public static <E> Set<E> newLinkedHashSet(Iterator<E> elements) {
         Set<E> set = newLinkedHashSet();
-        while (values.hasNext()) {
-            E value = values.next();
+        while (elements.hasNext()) {
+            E value = elements.next();
             set.add(value);
         }
         return set;
     }
 
-    public static <E> Set<E> newLinkedHashSet(Collection<? extends E> values) {
-        return new LinkedHashSet(values);
+    public static <E> Set<E> newLinkedHashSet(Collection<? extends E> elements) {
+        return new LinkedHashSet(elements);
     }
 
     public static <E> Set<E> newLinkedHashSet() {
