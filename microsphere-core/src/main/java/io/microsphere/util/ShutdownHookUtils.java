@@ -51,7 +51,7 @@ public abstract class ShutdownHookUtils extends BaseUtils {
     private static NavigableSet<Runnable> shutdownHookCallbacks = new ConcurrentSkipListSet<>(Prioritized.COMPARATOR);
 
     private static IdentityHashMap<Thread, Thread> findHooks() {
-        return FieldUtils.getFieldValue(null, HOOKS_FIELD);
+        return FieldUtils.getStaticFieldValue(HOOKS_FIELD);
     }
 
     static {
