@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.reflect.TypeUtils.findActualTypeArgument;
+import static io.microsphere.reflect.TypeUtils.findActualTypeArgumentClass;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
@@ -68,7 +69,7 @@ public abstract class StringToIterableConverter<T extends Iterable> implements S
     }
 
     protected final Class<T> getSupportedType() {
-        return findActualTypeArgument(getClass(), StringToIterableConverter.class, 0);
+        return findActualTypeArgumentClass(getClass(), StringToIterableConverter.class, 0);
     }
 
     @Override

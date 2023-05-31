@@ -97,30 +97,44 @@ public abstract class TypeUtils {
         return null;
     }
 
-    public static <T> Class<T> findActualTypeArgument(Type type, Class<?> interfaceClass, int index) {
-        return (Class<T>) findActualTypeArguments(type, interfaceClass).get(index);
+    public static Type findActualTypeArgument(Type type, Class<?> interfaceClass, int index) {
+        return findActualTypeArguments(type, interfaceClass).get(index);
     }
 
-    public static List<Class<?>> findActualTypeArguments(Type type, Class<?> interfaceClass) {
-
-        List<Class<?>> actualTypeArguments = new LinkedList<>();
-
-        getAllGenericTypes(type, t -> isAssignableFrom(interfaceClass, getRawClass(t))).forEach(parameterizedType -> {
-            Class<?> rawClass = getRawClass(parameterizedType);
-            Type[] typeArguments = parameterizedType.getActualTypeArguments();
-            for (int i = 0; i < typeArguments.length; i++) {
-                Type typeArgument = typeArguments[i];
-                if (typeArgument instanceof Class) {
-                    actualTypeArguments.add(i, (Class) typeArgument);
-                }
-            }
-            Class<?> superClass = rawClass.getSuperclass();
-            if (superClass != null) {
-                actualTypeArguments.addAll(findActualTypeArguments(superClass, interfaceClass));
-            }
-        });
+    public static List<Type> findActualTypeArguments(Type type, Class<?> interfaceClass) {
+        List<Type> actualTypeArguments = new LinkedList<>();
+        getAllGenericTypes(type, t -> isAssignableFrom(interfaceClass, getRawClass(t)))
+                .forEach(parameterizedType -> {
+                    Class<?> rawClass = getRawClass(parameterizedType);
+                    Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                    actualTypeArguments.addAll(asList(typeArguments));
+                    Class<?> superClass = rawClass.getSuperclass();
+                    if (superClass != null) {
+                        actualTypeArguments.addAll(findActualTypeArguments(superClass, interfaceClass));
+                    }
+                });
 
         return unmodifiableList(actualTypeArguments);
+    }
+
+    public static <T> Class<T> findActualTypeArgumentClass(Type type, Class<?> interfaceClass, int index) {
+        return (Class<T>) findActualTypeArgumentClasses(type, interfaceClass).get(index);
+    }
+
+    public static List<Class<?>> findActualTypeArgumentClasses(Type type, Class<?> interfaceClass) {
+
+        List<Type> actualTypeArguments = findActualTypeArguments(type, interfaceClass);
+
+        List<Class<?>> actualTypeArgumentClasses = new LinkedList<>();
+
+        for (Type actualTypeArgument : actualTypeArguments) {
+            Class<?> rawClass = getRawClass(actualTypeArgument);
+            if (rawClass != null) {
+                actualTypeArgumentClasses.add(rawClass);
+            }
+        }
+
+        return unmodifiableList(actualTypeArgumentClasses);
     }
 
     /**

@@ -22,6 +22,7 @@ import io.microsphere.util.ClassLoaderUtils;
 import java.util.ServiceLoader;
 
 import static io.microsphere.reflect.TypeUtils.findActualTypeArgument;
+import static io.microsphere.reflect.TypeUtils.findActualTypeArgumentClass;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
@@ -60,7 +61,7 @@ public interface Converter<S, T> extends Prioritized {
      * @return non-null
      */
     default Class<S> getSourceType() {
-        return findActualTypeArgument(getClass(), Converter.class, 0);
+        return findActualTypeArgumentClass(getClass(), Converter.class, 0);
     }
 
     /**
@@ -69,7 +70,7 @@ public interface Converter<S, T> extends Prioritized {
      * @return non-null
      */
     default Class<T> getTargetType() {
-        return findActualTypeArgument(getClass(), Converter.class, 1);
+        return findActualTypeArgumentClass(getClass(), Converter.class, 1);
     }
 
     /**
