@@ -217,19 +217,22 @@ public abstract class MethodUtils {
     public static <T> T invokeMethod(Object instance, Class<?> type, String methodName, Object... parameters) {
         Class[] parameterTypes = getTypes(parameters);
         Method method = findMethod(type, methodName, parameterTypes);
-        T value = null;
 
         if (method == null) {
             throw new IllegalStateException(String.format("cannot find method %s,class: %s", methodName, type.getName()));
         }
 
+        return invokeMethod(instance, method, parameters);
+    }
+
+    public static <T> T invokeMethod(Object instance, Method method, Object... parameters) {
+        T value = null;
         try {
             method.setAccessible(true);
             value = (T) method.invoke(instance, parameters);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
-
         return value;
     }
 
