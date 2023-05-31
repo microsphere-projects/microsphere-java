@@ -56,18 +56,6 @@ public abstract class ListUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> List<E> of(Iterable<E> iterable) {
-        return asList(iterable);
-    }
-
-    public static <E> List<E> of(Enumeration<E> enumeration) {
-        return asList(enumeration);
-    }
-
-    public static <E> List<E> of(Iterator<E> iterator) {
-        return asList(iterator);
-    }
-
     public static <E> List<E> asList(Iterable<E> iterable) {
         return asList(iterable.iterator());
     }
