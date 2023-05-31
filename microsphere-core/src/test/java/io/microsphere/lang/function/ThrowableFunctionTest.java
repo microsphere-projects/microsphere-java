@@ -18,7 +18,6 @@ package io.microsphere.lang.function;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -30,7 +29,7 @@ public class ThrowableFunctionTest {
 
     @Test
     public void testExecute() {
-        assertThrows(RuntimeException.class, () -> execute("Hello,World", m -> {
+        assertThrows(RuntimeException.class, () -> ThrowableFunction.execute("Hello,World", m -> {
             throw new Exception(m);
         }), "Hello,World");
     }
