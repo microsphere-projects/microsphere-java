@@ -36,7 +36,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public abstract class ListUtils extends BaseUtils {
 
-    public static boolean isList(Iterable<?> values) {
+    public static boolean isList(Object values) {
         return values instanceof List;
     }
 
@@ -68,31 +68,31 @@ public abstract class ListUtils extends BaseUtils {
         return unmodifiableList(toList(iterator));
     }
 
-    public static <E> List<E> newArrayList(int size) {
+    public static <E> ArrayList<E> newArrayList(int size) {
         return new ArrayList<>(size);
     }
 
-    public static <E> List<E> newArrayList(Iterable<E> values) {
-        List<E> list = newArrayList();
+    public static <E> ArrayList<E> newArrayList(Iterable<E> values) {
+        ArrayList<E> list = newArrayList();
         for (E value : values) {
             list.add(value);
         }
         return list;
     }
 
-    public static <E> List<E> newArrayList() {
+    public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
     }
 
-    public static <E> List<E> newLinkedList(Iterable<E> values) {
-        List<E> list = newLinkedList();
+    public static <E> LinkedList<E> newLinkedList(Iterable<E> values) {
+        LinkedList<E> list = newLinkedList();
         for (E value : values) {
             list.add(value);
         }
         return list;
     }
 
-    public static <E> List<E> newLinkedList() {
+    public static <E> LinkedList<E> newLinkedList() {
         return new LinkedList<>();
     }
 
