@@ -19,6 +19,7 @@ package io.microsphere.convert;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.util.ClassLoaderUtils;
 
+import java.util.Objects;
 import java.util.ServiceLoader;
 
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
@@ -81,12 +82,9 @@ public interface Converter<S, T> extends Prioritized {
      */
     static <S, T> Converter<S, T> getConverter(Class<S> sourceType, Class<T> targetType) {
         ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-        return loadServicesList(Converter.class, classLoader)
-                .stream()
+        return loadServicesList(Converter.class, classLoader).stream()
                 .sorted()
-                .filter(converter -> converter.accept(sourceType, targetType))
-                .findFirst()
-                .orElse(null);
+                .filter(converter -> converter.accept(sourceType, targetType)).findFirst().orElse(null);
     }
 
     /**

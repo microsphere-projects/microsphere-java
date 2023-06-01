@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.ClassUtils;
 
 import java.lang.reflect.GenericArrayType;
@@ -26,7 +27,6 @@ import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +37,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
@@ -67,27 +68,27 @@ public abstract class TypeUtils {
 
     public static final Predicate<Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
 
-    public static boolean isClass(Type type) {
+    public static boolean isClass(Object type) {
         return type instanceof Class;
     }
 
-    public static boolean isObjectType(Type type) {
+    public static boolean isObjectType(Object type) {
         return Object.class.equals(type);
     }
 
-    public static boolean isParameterizedType(Type type) {
+    public static boolean isParameterizedType(Object type) {
         return type instanceof ParameterizedType;
     }
 
-    public static boolean isTypeVariable(Type type) {
+    public static boolean isTypeVariable(Object type) {
         return type instanceof TypeVariable;
     }
 
-    public static boolean isWildcardType(Type type) {
+    public static boolean isWildcardType(Object type) {
         return type instanceof WildcardType;
     }
 
-    public static boolean isGenericArrayType(Type type) {
+    public static boolean isGenericArrayType(Object type) {
         return type instanceof GenericArrayType;
     }
 
@@ -211,110 +212,127 @@ public abstract class TypeUtils {
 
     protected static List<Type> doResolveActualTypeArguments(Class targetClass, Class baseClass) {
 
-        Map<Type, Integer> actualTypeArgumentsMap = doResolveActualTypeArgumentsMap(targetClass, baseClass);
+        Set<TypeArgument> actualTypeArgumentsSet = doResolveActualTypeArgumentsSet(targetClass, baseClass);
 
-        int size = actualTypeArgumentsMap.size();
+        int size = actualTypeArgumentsSet.size();
 
-        if (actualTypeArgumentsMap.isEmpty()) {
+        if (actualTypeArgumentsSet.isEmpty()) {
             return emptyList();
         }
 
         List<Type> actualTypeArguments = new ArrayList<>(size);
-        actualTypeArguments.addAll(Arrays.asList(baseClass.getTypeParameters()));
 
-        for (Map.Entry<Type, Integer> entry : actualTypeArgumentsMap.entrySet()) {
-            Type typeArgument = entry.getKey();
-            Integer index = entry.getValue();
-            if (isClass(typeArgument) || isParameterizedType(typeArgument)) {
-                actualTypeArguments.set(index, typeArgument);
-            }
+        for (TypeArgument actualTypeArgument : actualTypeArgumentsSet) {
+            Type typeArgument = actualTypeArgument.getType();
+            Integer index = actualTypeArgument.getIndex();
+            actualTypeArguments.add(index, typeArgument);
         }
 
         return actualTypeArguments;
     }
 
-    protected static Map<Type, Integer> doResolveActualTypeArgumentsMap(Class targetClass, Class baseClass) {
+    protected static Set<TypeArgument> doResolveActualTypeArgumentsSet(Class targetClass, Class baseClass) {
 
         if (!isAssignableFrom(baseClass, targetClass)) { // No hierarchical relationship between type and baseType
-            return emptyMap();
+            return emptySet();
         }
 
         TypeVariable<Class>[] baseTypeParameters = baseClass.getTypeParameters();
         int baseTypeParametersLength = baseTypeParameters.length;
         if (baseTypeParametersLength == 0) { // No type-parameter in the base class
-            return emptyMap();
+            return emptySet();
         }
+
+        Set<TypeArgument> typeArguments = newLinkedHashSet();
 
         Predicate<Type> typeFilter = t -> isAssignableFrom(baseClass, t);
 
-        List<Type> hierarchicalTypes = doFindHierarchicalTypes(targetClass, typeFilter);
-
-        int hierarchicalTypesSize = hierarchicalTypes.size();
-
-        if (hierarchicalTypesSize < 1) { // No hierarchical type was derived by baseType
-            return emptyMap();
+        for (int i = 0; i < baseTypeParametersLength; i++) {
+            typeArguments.add(TypeArgument.create(baseTypeParameters[i], i));
         }
 
-        Map<Type, Integer> actualTypeArgumentsMap = new HashMap<>(baseTypeParametersLength);
+        doResolveActualTypeArgumentsMapHierarchically(typeArguments, targetClass, baseClass, baseTypeParameters, typeFilter);
 
-        for (int i = hierarchicalTypesSize - 1; i > -1; i--) {
-            Type hierarchicalType = hierarchicalTypes.get(i);
-            Map<Type, Integer> indexedTypeArguments = doResolveActualTypeArgumentsMap(hierarchicalType, baseClass, baseTypeParameters);
-            for (Map.Entry<Type, Integer> entry : indexedTypeArguments.entrySet()) {
-                Type typeArgument = entry.getKey();
-                if (isClass(typeArgument) || isParameterizedType(typeArgument)) {
-                    Integer index = entry.getValue();
-                    actualTypeArgumentsMap.put(typeArgument, index);
-                }
+        Set<TypeArgument> actualTypeArguments = newLinkedHashSet(baseTypeParametersLength);
+
+        for (TypeArgument typeArgument : typeArguments) {
+            Type actualTypeArgument = typeArgument.getType();
+            if (isClass(actualTypeArgument) || isParameterizedType(actualTypeArgument)) {
+                actualTypeArguments.add(typeArgument);
             }
         }
 
-        return actualTypeArgumentsMap;
+        typeArguments.clear();
+
+        return actualTypeArguments;
     }
 
 
-    protected static Map<Type, Integer> doResolveActualTypeArgumentsMap(Type type, Class baseClass,
-                                                                        TypeVariable<Class>[] baseTypeParameters, Predicate<Type>... typeFilters) {
+    protected static void doResolveActualTypeArgumentsSet(Set<TypeArgument> typeArguments,
+                                                          Type type,
+                                                          Class baseClass,
+                                                          TypeVariable<Class>[] baseTypeParameters,
+                                                          Predicate<Type>... typeFilters) {
         ParameterizedType parameterizedType = asParameterizedType(type);
         if (parameterizedType != null) { // ParameterizedType case
-            return doResolveActualTypeArgumentsMap(parameterizedType, baseClass, baseTypeParameters, typeFilters);
+            doResolveActualTypeArgumentsSet(typeArguments, parameterizedType, baseClass, baseTypeParameters, typeFilters);
+        } else {
+            doResolveActualTypeArgumentsMapHierarchically(typeArguments, type, baseClass, baseTypeParameters, typeFilters);
         }
-        return emptyMap();
     }
 
-    protected static Map<Type, Integer> doResolveActualTypeArgumentsMap(ParameterizedType parameterizedType, Class baseClass,
-                                                                        TypeVariable<Class>[] baseTypeParameters, Predicate<Type>... typeFilters) {
+    protected static void doResolveActualTypeArgumentsSet(Set<TypeArgument> typeArgumentsSet,
+                                                          ParameterizedType parameterizedType,
+                                                          Class baseClass,
+                                                          TypeVariable<Class>[] baseTypeParameters,
+                                                          Predicate<Type>... typeFilters) {
         int baseTypeParametersLength = baseTypeParameters.length;
 
-        Map<Type, Integer> map = new HashMap<>(baseTypeParametersLength);
-
-        Type[] typeArguments = parameterizedType.getActualTypeArguments();
+        Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
         Class currentClass = getRawClass(parameterizedType);
 
         if (Objects.equals(baseClass, currentClass)) { // If same class
             for (int i = 0; i < baseTypeParametersLength; i++) {
-                Type typeArgument = typeArguments[i];
-                map.put(typeArgument, i);
+                Type actualTypeArgument = actualTypeArguments[i];
+                typeArgumentsSet.add(TypeArgument.create(actualTypeArgument, i));
             }
         } else {
-            List<Type> hierarchicalTypes = doFindHierarchicalTypes(parameterizedType, typeFilters);
-            for (Type hierarchicalType : hierarchicalTypes) {
-                map.putAll(doResolveActualTypeArgumentsMap(hierarchicalType, baseClass, baseTypeParameters, typeFilters));
-            }
+            doResolveActualTypeArgumentsMapHierarchically(typeArgumentsSet, parameterizedType, baseClass, baseTypeParameters, typeFilters);
         }
 
         // Replace TypeVariable to actual type
         TypeVariable<Class>[] typeParameters = currentClass.getTypeParameters();
         for (int i = 0; i < typeParameters.length; i++) {
             TypeVariable<Class> typeParameter = typeParameters[i];
-            Integer index = map.remove(typeParameter);
+            Integer index = findTypeArgumentIndex(typeArgumentsSet, typeParameter);
             if (index != null) {
-                Type typeArgument = typeArguments[i];
-                map.put(typeArgument, index);
+                Type typeArgument = actualTypeArguments[i];
+                typeArgumentsSet.add(TypeArgument.create(typeArgument, index));
             }
         }
 
-        return map;
+    }
+
+    private static Integer findTypeArgumentIndex(Set<TypeArgument> typeArgumentsSet, TypeVariable<Class> typeParameter) {
+        Integer index = null;
+        for (TypeArgument typeArgument : typeArgumentsSet) {
+            Type type = typeArgument.getType();
+            if (Objects.equals(type, typeParameter)) {
+                index = typeArgument.getIndex();
+            }
+        }
+        return index;
+    }
+
+    protected static void doResolveActualTypeArgumentsMapHierarchically(Set<TypeArgument> typeArgumentsSet,
+                                                                        Type type,
+                                                                        Class baseClass,
+                                                                        TypeVariable<Class>[] baseTypeParameters,
+                                                                        Predicate<Type>... typeFilters) {
+        List<Type> hierarchicalTypes = doFindHierarchicalTypes(type, typeFilters);
+        for (Type hierarchicalType : hierarchicalTypes) {
+            doResolveActualTypeArgumentsSet(typeArgumentsSet, hierarchicalType, baseClass, baseTypeParameters, typeFilters);
+        }
     }
 
     /**

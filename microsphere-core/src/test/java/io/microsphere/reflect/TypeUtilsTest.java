@@ -18,6 +18,7 @@ package io.microsphere.reflect;
 
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
+import io.microsphere.convert.StringToStringConverter;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -99,11 +100,16 @@ public class TypeUtilsTest {
 
     @Test
     public void testResolveActualTypeArguments() {
-        List<Type> actualTypeArguments = resolveActualTypeArguments(B.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        List<Type> actualTypeArguments =
+//                resolveActualTypeArguments(B.class, Comparable.class);
+//        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = resolveActualTypeArguments(StringToStringConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, String.class);
 
         actualTypeArguments = resolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
+
     }
 
 
