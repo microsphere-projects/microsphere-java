@@ -51,18 +51,30 @@ public abstract class SetUtils extends BaseUtils {
      * Convert to multiple elements to be {@link LinkedHashSet}
      *
      * @param elements one or more elements
-     * @param <E>    the type of <code>elements</code>
+     * @param <E>      the type of <code>elements</code>
      * @return read-only {@link Set}
      */
     public static <E> Set<E> of(E... elements) {
-        return asSet(elements);
+        int size = length(elements);
+        if (size < 1) {
+            return emptySet();
+        } else if (size == 1) {
+            return singleton(elements[0]);
+        }
+
+        Set<E> set = new LinkedHashSet<>(size, MIN_LOAD_FACTOR);
+
+        for (int i = 0; i < size; i++) {
+            set.add(elements[i]);
+        }
+        return unmodifiableSet(set);
     }
 
     /**
      * Build a read-only {@link Set} from the given {@lin Enumeration} elements
      *
      * @param elements one or more elements
-     * @param <E>    the type of <code>elements</code>
+     * @param <E>      the type of <code>elements</code>
      * @return non-null read-only {@link Set}
      */
     @Nonnull
@@ -74,7 +86,7 @@ public abstract class SetUtils extends BaseUtils {
      * Convert to multiple elements to be {@link LinkedHashSet}
      *
      * @param elements one or more elements
-     * @param <E>    the type of <code>elements</code>
+     * @param <E>      the type of <code>elements</code>
      * @return read-only {@link Set}
      */
     public static <E> Set<E> asSet(Iterable<E> elements) {
@@ -106,34 +118,11 @@ public abstract class SetUtils extends BaseUtils {
         return unmodifiableSet(elements);
     }
 
-    /**
-     * Convert to multiple elements to be {@link LinkedHashSet}
-     *
-     * @param elements one or more elements
-     * @param <E>    the type of <code>elements</code>
-     * @return read-only {@link Set}
-     */
-    public static <E> Set<E> asSet(E... elements) {
-        int size = length(elements);
-        if (size < 1) {
-            return emptySet();
-        } else if (size == 1) {
-            return singleton(elements[0]);
-        }
-
-        Set<E> set = new LinkedHashSet<>(size, MIN_LOAD_FACTOR);
-
-        for (int i = 0; i < size; i++) {
-            set.add(elements[i]);
-        }
-        return unmodifiableSet(set);
-    }
-
     public static <T> Set<T> asSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
         if (valuesSize < 1) {
-            return asSet(others);
+            return of(others);
         }
 
         int othersSize = length(others);
