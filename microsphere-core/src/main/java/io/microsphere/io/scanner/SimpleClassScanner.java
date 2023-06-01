@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;

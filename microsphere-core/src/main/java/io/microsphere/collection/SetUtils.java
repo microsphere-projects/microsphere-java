@@ -30,9 +30,7 @@ import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.singleton;
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 
 /**
  * The utilities class for Java {@link Set}

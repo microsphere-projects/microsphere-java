@@ -30,7 +30,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -251,7 +250,7 @@ public abstract class TypeUtils {
             typeArguments.add(TypeArgument.create(baseTypeParameters[i], i));
         }
 
-        doResolveActualTypeArgumentsMapHierarchically(typeArguments, targetClass, baseClass, baseTypeParameters, typeFilter);
+        doResolveActualTypeArgumentsSetHierarchically(typeArguments, targetClass, baseClass, baseTypeParameters, typeFilter);
 
         Set<TypeArgument> actualTypeArguments = newLinkedHashSet(baseTypeParametersLength);
 
@@ -277,7 +276,7 @@ public abstract class TypeUtils {
         if (parameterizedType != null) { // ParameterizedType case
             doResolveActualTypeArgumentsSet(typeArguments, parameterizedType, baseClass, baseTypeParameters, typeFilters);
         } else {
-            doResolveActualTypeArgumentsMapHierarchically(typeArguments, type, baseClass, baseTypeParameters, typeFilters);
+            doResolveActualTypeArgumentsSetHierarchically(typeArguments, type, baseClass, baseTypeParameters, typeFilters);
         }
     }
 
@@ -297,7 +296,7 @@ public abstract class TypeUtils {
                 typeArgumentsSet.add(TypeArgument.create(actualTypeArgument, i));
             }
         } else {
-            doResolveActualTypeArgumentsMapHierarchically(typeArgumentsSet, parameterizedType, baseClass, baseTypeParameters, typeFilters);
+            doResolveActualTypeArgumentsSetHierarchically(typeArgumentsSet, parameterizedType, baseClass, baseTypeParameters, typeFilters);
         }
 
         // Replace TypeVariable to actual type
@@ -324,7 +323,7 @@ public abstract class TypeUtils {
         return index;
     }
 
-    protected static void doResolveActualTypeArgumentsMapHierarchically(Set<TypeArgument> typeArgumentsSet,
+    protected static void doResolveActualTypeArgumentsSetHierarchically(Set<TypeArgument> typeArgumentsSet,
                                                                         Type type,
                                                                         Class baseClass,
                                                                         TypeVariable<Class>[] baseTypeParameters,

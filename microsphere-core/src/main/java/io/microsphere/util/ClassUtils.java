@@ -52,16 +52,11 @@ import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
-import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static io.microsphere.util.ArrayUtils.isEmpty;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.ArrayUtils.*;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.synchronizedMap;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.Collections.unmodifiableSet;
+import static java.util.Collections.*;
 
 /**
  * {@link Class} utility class

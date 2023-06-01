@@ -100,9 +100,17 @@ public class TypeUtilsTest {
 
     @Test
     public void testResolveActualTypeArguments() {
-        List<Type> actualTypeArguments =
-//                resolveActualTypeArguments(B.class, Comparable.class);
-//        assertTypes(actualTypeArguments, B.class);
+        List<Type> actualTypeArguments = resolveActualTypeArguments(B.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = resolveActualTypeArguments(C.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = resolveActualTypeArguments(D.class, C.class);
+        assertTypes(actualTypeArguments, String.class);
+
+        actualTypeArguments = resolveActualTypeArguments(E.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
 
         actualTypeArguments = resolveActualTypeArguments(StringToStringConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, String.class);
