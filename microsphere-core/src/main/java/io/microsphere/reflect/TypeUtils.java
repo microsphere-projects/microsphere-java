@@ -57,9 +57,9 @@ import static java.util.stream.StreamSupport.stream;
  */
 public abstract class TypeUtils {
 
-    public static final Predicate<Type> NON_OBJECT_TYPE_FILTER = TypeUtils::isObjectType;
+    public static final Predicate<Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
 
-    public static final Predicate<Class<?>> NON_OBJECT_CLASS_FILTER = TypeUtils::isObjectType;
+    public static final Predicate<Class<?>> NON_OBJECT_CLASS_FILTER = (Predicate) NON_OBJECT_TYPE_FILTER;
 
     public static final Predicate<Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
 
