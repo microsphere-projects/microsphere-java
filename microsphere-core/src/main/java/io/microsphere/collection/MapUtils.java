@@ -94,75 +94,75 @@ public abstract class MapUtils extends BaseUtils {
         return unmodifiableMap(map);
     }
 
-    public static <K, V> Map<K, V> newHashMap() {
+    public static <K, V> HashMap<K, V> newHashMap() {
         return new HashMap<>();
     }
 
-    public static <K, V> Map<K, V> newHashMap(int initialCapacity) {
+    public static <K, V> HashMap<K, V> newHashMap(int initialCapacity) {
         return new HashMap<>(initialCapacity);
     }
 
-    public static <K, V> Map<K, V> newHashMap(int initialCapacity, float loadFactor) {
+    public static <K, V> HashMap<K, V> newHashMap(int initialCapacity, float loadFactor) {
         return new HashMap<>(initialCapacity, loadFactor);
     }
 
-    public static <K, V> Map<K, V> newHashMap(Map<? extends K, ? extends V> map) {
+    public static <K, V> HashMap<K, V> newHashMap(Map<? extends K, ? extends V> map) {
         return new HashMap<>(map);
     }
 
-    public static <K, V> Map<K, V> newLinkedHashMap() {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
         return new LinkedHashMap<>();
     }
 
-    public static <K, V> Map<K, V> newLinkedHashMap(int initialCapacity) {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity) {
         return new LinkedHashMap<>(initialCapacity);
     }
 
-    public static <K, V> Map<K, V> newLinkedHashMap(int initialCapacity,
-                                                    float loadFactor) {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity,
+                                                              float loadFactor) {
         return new LinkedHashMap<>(initialCapacity, loadFactor);
     }
 
-    public static <K, V> Map<K, V> newLinkedHashMap(int initialCapacity,
-                                                    float loadFactor,
-                                                    boolean accessOrder) {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity,
+                                                              float loadFactor,
+                                                              boolean accessOrder) {
         return new LinkedHashMap<>(initialCapacity, loadFactor, accessOrder);
     }
 
-    public static <K, V> Map<K, V> newLinkedHashMap(Map<? extends K, ? extends V> map) {
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Map<? extends K, ? extends V> map) {
         return newLinkedHashMap(map);
     }
 
-    public static <K, V> Map<K, V> newConcurrentHashMap() {
+    public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
         return new ConcurrentHashMap<>();
     }
 
-    public static <K, V> Map<K, V> newConcurrentHashMap(int initialCapacity) {
+    public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int initialCapacity) {
         return new ConcurrentHashMap<>(initialCapacity);
     }
 
-    public static <K, V> Map<K, V> newConcurrentHashMap(int initialCapacity,
-                                                        float loadFactor) {
+    public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int initialCapacity,
+                                                                      float loadFactor) {
         return new ConcurrentHashMap<>(initialCapacity, loadFactor);
     }
 
-    public static <K, V> Map<K, V> newConcurrentHashMap(Map<? extends K, ? extends V> map) {
+    public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(Map<? extends K, ? extends V> map) {
         return new ConcurrentHashMap<>(map);
     }
 
-    public static <K, V> SortedMap<K, V> newTreeMap() {
+    public static <K, V> TreeMap<K, V> newTreeMap() {
         return new TreeMap<>();
     }
 
-    public static <K, V> SortedMap<K, V> newTreeMap(Comparator<? super K> comparator) {
+    public static <K, V> TreeMap<K, V> newTreeMap(Comparator<? super K> comparator) {
         return new TreeMap<>(comparator);
     }
 
-    public static <K, V> SortedMap<K, V> newTreeMap(Map<? extends K, ? extends V> map) {
+    public static <K, V> TreeMap<K, V> newTreeMap(Map<? extends K, ? extends V> map) {
         return new TreeMap<>(map);
     }
 
-    public static <K, V> SortedMap<K, V> newTreeMap(SortedMap<K, ? extends V> map) {
+    public static <K, V> TreeMap<K, V> newTreeMap(SortedMap<K, ? extends V> map) {
         return new TreeMap<>(map);
     }
 
