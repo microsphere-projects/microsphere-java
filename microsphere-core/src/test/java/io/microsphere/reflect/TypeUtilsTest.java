@@ -33,7 +33,7 @@ import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.PARAMETERIZED_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
-import static io.microsphere.reflect.TypeUtils.findActualTypeArguments;
+import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
@@ -98,11 +98,11 @@ public class TypeUtilsTest {
     }
 
     @Test
-    public void testFindActualTypeArguments() {
-        List<Type> actualTypeArguments = findActualTypeArguments(B.class, Comparable.class);
+    public void testResolveActualTypeArguments() {
+        List<Type> actualTypeArguments = resolveActualTypeArguments(B.class, Comparable.class);
         assertTypes(actualTypeArguments, B.class);
 
-        actualTypeArguments = findActualTypeArguments(StringToIntegerConverter.class, Converter.class);
+        actualTypeArguments = resolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
     }
 

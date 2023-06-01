@@ -22,8 +22,7 @@ import io.microsphere.util.ClassLoaderUtils;
 import java.util.Collection;
 import java.util.ServiceLoader;
 
-import static io.microsphere.reflect.TypeUtils.findActualTypeArgument;
-import static io.microsphere.reflect.TypeUtils.findActualTypeArgumentClass;
+import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
@@ -61,7 +60,7 @@ public interface MultiValueConverter<S> extends Prioritized {
      * @return non-null
      */
     default Class<S> getSourceType() {
-        return findActualTypeArgumentClass(getClass(), MultiValueConverter.class, 0);
+        return resolveActualTypeArgumentClass(getClass(), MultiValueConverter.class, 0);
     }
 
     /**
