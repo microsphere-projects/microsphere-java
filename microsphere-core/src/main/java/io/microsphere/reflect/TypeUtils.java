@@ -23,6 +23,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -33,11 +34,12 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
+import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
-import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -55,14 +57,24 @@ import static java.util.stream.StreamSupport.stream;
  */
 public abstract class TypeUtils {
 
-    public static final Predicate<Class<?>> NON_OBJECT_TYPE_FILTER = t -> !Objects.equals(Object.class, t);
+    public static final Predicate<Type> NON_OBJECT_TYPE_FILTER = TypeUtils::isObjectType;
 
-    public static final Predicate<Type> TYPE_VARIABLE_FILTER = type -> type instanceof TypeVariable;
+    public static final Predicate<Class<?>> NON_OBJECT_CLASS_FILTER = TypeUtils::isObjectType;
+
+    public static final Predicate<Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
 
     public static final Predicate<Type> PARAMETERIZED_TYPE_FILTER = TypeUtils::isParameterizedType;
 
+    public static final Predicate<Type> WILDCARD_TYPE_FILTER = TypeUtils::isWildcardType;
+
+    public static final Predicate<Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
+
     public static boolean isClass(Type type) {
         return type instanceof Class;
+    }
+
+    public static boolean isObjectType(Type type) {
+        return Object.class.equals(type);
     }
 
     public static boolean isParameterizedType(Type type) {
@@ -73,12 +85,12 @@ public abstract class TypeUtils {
         return type instanceof TypeVariable;
     }
 
-    public static boolean isGenericArrayType(Type type) {
-        return type instanceof GenericArrayType;
-    }
-
     public static boolean isWildcardType(Type type) {
         return type instanceof WildcardType;
+    }
+
+    public static boolean isGenericArrayType(Type type) {
+        return type instanceof GenericArrayType;
     }
 
     public static Type getRawType(Type type) {
@@ -97,24 +109,119 @@ public abstract class TypeUtils {
         return null;
     }
 
+    /**
+     * the semantics is same as {@link Class#isAssignableFrom(Class)}
+     *
+     * @param superType  the super type
+     * @param targetType the target type
+     * @return see {@link Class#isAssignableFrom(Class)}
+     */
+    public static boolean isAssignableFrom(Type superType, Type targetType) {
+        Class<?> superClass = asClass(superType);
+        Class<?> targetClass = asClass(targetType);
+        return ClassUtils.isAssignableFrom(superClass, targetClass);
+    }
+
+    /**
+     * the semantics is same as {@link Class#isAssignableFrom(Class)}
+     *
+     * @param superType  the super type
+     * @param targetType the target type
+     * @return see {@link Class#isAssignableFrom(Class)}
+     */
+    protected static boolean isAssignableFrom(Class<?> superType, Class<?> targetType) {
+        return ClassUtils.isAssignableFrom(superType, targetType);
+    }
+
     public static Type findActualTypeArgument(Type type, Class<?> interfaceClass, int index) {
         return findActualTypeArguments(type, interfaceClass).get(index);
     }
 
-    public static List<Type> findActualTypeArguments(Type type, Class<?> interfaceClass) {
-        List<Type> actualTypeArguments = new LinkedList<>();
-        getAllGenericTypes(type, t -> isAssignableFrom(interfaceClass, getRawClass(t)))
-                .forEach(parameterizedType -> {
-                    Class<?> rawClass = getRawClass(parameterizedType);
-                    Type[] typeArguments = parameterizedType.getActualTypeArguments();
-                    actualTypeArguments.addAll(asList(typeArguments));
-                    Class<?> superClass = rawClass.getSuperclass();
-                    if (superClass != null) {
-                        actualTypeArguments.addAll(findActualTypeArguments(superClass, interfaceClass));
-                    }
-                });
+//    public static List<Type> findActualTypeArguments(Type type, Class<?> interfaceClass) {
+//        List<Type> actualTypeArguments = new LinkedList<>();
+//        getAllGenericTypes(type, t -> isAssignableFrom(interfaceClass, getRawClass(t)))
+//                .forEach(parameterizedType -> {
+//                    Type[] typeArguments = parameterizedType.getActualTypeArguments();
+//                    actualTypeArguments.addAll(asList(typeArguments));
+//                    Class<?> rawClass = getRawClass(parameterizedType);
+//                    Type genericSuperclass = rawClass.getGenericSuperclass();
+//                    if (genericSuperclass != null) {
+//                        actualTypeArguments.addAll(findActualTypeArguments(genericSuperclass, interfaceClass));
+//                    }
+//                });
+//
+//        return unmodifiableList(actualTypeArguments);
+//    }
 
-        return unmodifiableList(actualTypeArguments);
+    /**
+     * For example,
+     * <code>type</code> == StringToIntegerConverter.class
+     * <code>baseType</code> == Converter.class
+     *
+     * <prev>
+     * type
+     * - Generic Super Type = null
+     * - Generic Super Interfaces
+     * - [0] = StringConverter<String> -> StringConverter<T>
+     * Converter<String,T> -> Converter<S,T>
+     * </prev>
+     *
+     * @param type
+     * @param baseType
+     * @return
+     */
+    public static List<Type> findActualTypeArguments(Type type, Type baseType) {
+        Class targetClass = asClass(type);
+        Class baseClass = asClass(baseType);
+        if (!isAssignableFrom(baseClass, targetClass)) {
+            return emptyList();
+        }
+
+        TypeVariable<Class>[] baseTypeParameters = baseClass.getTypeParameters();
+        int baseTypeParametersLength = baseTypeParameters.length;
+        if (baseTypeParametersLength == 0) { // No type-parameter Class
+            return emptyList();
+        }
+
+
+        List<Type> actualTypeArguments = new ArrayList<>(baseTypeParametersLength);
+
+        List<Type> hierarchicalTypes = findAllHierarchicalTypes(type, t -> isAssignableFrom(baseClass, t));
+        int hierarchicalTypesSize = hierarchicalTypes.size();
+
+        if (hierarchicalTypesSize < 1) { // No hierarchical type was derived by baseType
+            return emptyList();
+        }
+
+        TOP:
+        for (int i = 0; i < baseTypeParametersLength; i++) {
+            TypeVariable<Class> baseTypeParameter = baseTypeParameters[i];
+            Class<?> declaredClass = baseTypeParameter.getGenericDeclaration();
+            MID:
+            for (int j = 0; j < hierarchicalTypesSize; j++) {
+                Type hierarchicalType = hierarchicalTypes.get(j);
+                ParameterizedType parameterizedType = asParameterizedType(hierarchicalType);
+                if (parameterizedType != null) {
+                    Class hierarchicalClass = getRawClass(parameterizedType);
+                    if (declaredClass.equals(hierarchicalClass)) {
+                        Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                        int length = typeArguments.length;
+                        if (baseTypeParametersLength == length) {
+                            for (int k = 0; k < length; k++) {
+                                Class<?> argumentClass = asClass(typeArguments[k]);
+                                if (argumentClass != null) {
+                                    actualTypeArguments.add(i, argumentClass);
+                                    break MID;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        return actualTypeArguments;
     }
 
     public static <T> Class<T> findActualTypeArgumentClass(Type type, Class<?> interfaceClass, int index) {
@@ -160,6 +267,63 @@ public abstract class TypeUtils {
         return unmodifiableList(filterList(genericTypes, TypeUtils::isParameterizedType).stream().map(ParameterizedType.class::cast).filter(and(typeFilters)).collect(toList()));
     }
 
+    public static List<Type> findAllTypes(Type type, Predicate<Type>... typeFilters) {
+        List<Type> allGenericTypes = newLinkedList();
+        Predicate filter = and(typeFilters);
+        if (filter.test(type)) {
+            // add self
+            allGenericTypes.add(type);
+        }
+        // Add all hierarchical types in declaration order
+        findAllHierarchicalTypes(allGenericTypes, type, filter);
+        return unmodifiableList(allGenericTypes);
+
+    }
+
+    public static List<Type> findAllHierarchicalTypes(Type type) {
+        return findAllHierarchicalTypes(type, of());
+    }
+
+    public static List<Type> findAllHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
+        List<Type> allTypes = newLinkedList();
+        findAllHierarchicalTypes(allTypes, type, typeFilters);
+        return unmodifiableList(allTypes);
+    }
+
+    private static void findAllHierarchicalTypes(List<Type> allTypes, Type type, Predicate<Type>... typeFilters) {
+        if (isObjectType(type)) {
+            return;
+        }
+
+        Class<?> klass = asClass(type);
+        if (klass == null) {
+            return;
+        }
+
+        List<Type> currentTypes = newLinkedList();
+
+        Predicate<? super Type> filter = and(typeFilters);
+
+        Type superType = klass.getGenericSuperclass();
+
+        if (superType != null && filter.test(superType)) { // interface type will return null
+            currentTypes.add(superType);
+            allTypes.add(superType);
+        }
+
+        Type[] interfaceTypes = klass.getGenericInterfaces();
+        for (Type interfaceType : interfaceTypes) {
+            if (filter.test(interfaceType)) {
+                currentTypes.add(interfaceType);
+                allTypes.add(interfaceType);
+            }
+        }
+
+        for (Type currentType : currentTypes) {
+            findAllHierarchicalTypes(allTypes, currentType, typeFilters);
+        }
+    }
+
     /**
      * Get all generic types(including super classes and interfaces) that are assignable from {@link ParameterizedType} interface
      *
@@ -196,9 +360,13 @@ public abstract class TypeUtils {
         // Add current class
         allTypes.add(rawClass);
         // Add all super classes
-        allTypes.addAll(getAllSuperClasses(rawClass, NON_OBJECT_TYPE_FILTER));
+        allTypes.addAll(getAllSuperClasses(rawClass, NON_OBJECT_CLASS_FILTER));
 
-        List<ParameterizedType> allGenericSuperClasses = allTypes.stream().map(Class::getGenericSuperclass).filter(TypeUtils::isParameterizedType).map(ParameterizedType.class::cast).collect(Collectors.toList());
+        List<ParameterizedType> allGenericSuperClasses = allTypes.stream()
+                .map(Class::getGenericSuperclass)
+                .filter(TypeUtils::isParameterizedType)
+                .map(ParameterizedType.class::cast)
+                .collect(Collectors.toList());
 
         return unmodifiableList(filterAll(allGenericSuperClasses, typeFilters));
     }
@@ -222,7 +390,7 @@ public abstract class TypeUtils {
         // Add current class
         allTypes.add(rawClass);
         // Add all super classes
-        allTypes.addAll(getAllSuperClasses(rawClass, NON_OBJECT_TYPE_FILTER));
+        allTypes.addAll(getAllSuperClasses(rawClass, NON_OBJECT_CLASS_FILTER));
         // Add all super interfaces
         allTypes.addAll(ClassUtils.getAllInterfaces(rawClass));
 
@@ -298,12 +466,12 @@ public abstract class TypeUtils {
     public static Class<?> asClass(Type type) {
         if (type instanceof Class) {
             return (Class<?>) type;
-        } else if (type instanceof TypeVariable) {
-            TypeVariable typeVariable = (TypeVariable) type;
-            return asClass(typeVariable.getBounds()[0]);
         } else if (type instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             return asClass(parameterizedType.getRawType());
+        } else if (type instanceof TypeVariable) {
+            TypeVariable typeVariable = (TypeVariable) type;
+            return asClass(typeVariable.getBounds()[0]);
         }
         return null;
     }

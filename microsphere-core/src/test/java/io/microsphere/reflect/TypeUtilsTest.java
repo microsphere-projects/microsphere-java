@@ -16,18 +16,27 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.convert.Converter;
+import io.microsphere.convert.StringToIntegerConverter;
 import org.junit.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Iterator;
+import java.util.List;
 import java.util.RandomAccess;
 import java.util.Set;
 
+import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
+import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
+import static io.microsphere.reflect.TypeUtils.PARAMETERIZED_TYPE_FILTER;
+import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
+import static io.microsphere.reflect.TypeUtils.asClass;
+import static io.microsphere.reflect.TypeUtils.findActualTypeArguments;
+import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
-
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -40,6 +49,79 @@ import static org.junit.Assert.assertTrue;
  * @since 1.0.0
  */
 public class TypeUtilsTest {
+
+    @Test
+    public void testConstantFilters() {
+        assertFalse(NON_OBJECT_TYPE_FILTER.test(null));
+        assertFalse(NON_OBJECT_CLASS_FILTER.test(null));
+
+        assertFalse(NON_OBJECT_TYPE_FILTER.test(Object.class));
+        assertFalse(NON_OBJECT_CLASS_FILTER.test(Object.class));
+
+        assertTrue(NON_OBJECT_TYPE_FILTER.test(String.class));
+        assertTrue(NON_OBJECT_CLASS_FILTER.test(String.class));
+
+        assertFalse(PARAMETERIZED_TYPE_FILTER.test(null));
+        assertFalse(PARAMETERIZED_TYPE_FILTER.test(Object.class));
+        assertFalse(PARAMETERIZED_TYPE_FILTER.test(D.class));
+
+        assertTrue(PARAMETERIZED_TYPE_FILTER.test(D.class.getGenericSuperclass()));
+
+        assertFalse(TYPE_VARIABLE_FILTER.test(null));
+        assertFalse(TYPE_VARIABLE_FILTER.test(null));
+        assertFalse(TYPE_VARIABLE_FILTER.test(Object.class));
+        assertFalse(TYPE_VARIABLE_FILTER.test(D.class));
+        assertFalse(TYPE_VARIABLE_FILTER.test(D.class.getGenericSuperclass()));
+
+        assertTrue(TYPE_VARIABLE_FILTER.test(Comparable.class.getTypeParameters()[0]));
+    }
+
+    @Test
+    public void testFindAllHierarchicalTypes() {
+        List<Type> types = findAllHierarchicalTypes(A.class);
+        assertTypes(types, Object.class, Serializable.class);
+
+        types = findAllHierarchicalTypes(B.class);
+        assertTypes(types, A.class, Comparable.class, Object.class, Serializable.class);
+
+        types = findAllHierarchicalTypes(C.class);
+        assertTypes(types, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+
+        types = findAllHierarchicalTypes(D.class);
+        assertTypes(types, C.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+
+        types = findAllHierarchicalTypes(D.class);
+        assertTypes(types, C.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+
+        types = findAllHierarchicalTypes(E.class);
+        assertTypes(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+    }
+
+    @Test
+    public void testFindActualTypeArguments() {
+        List<Type> actualTypeArguments = findActualTypeArguments(B.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = findActualTypeArguments(StringToIntegerConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
+    }
+
+
+    private void assertTypes(List<Type> types, Type... expectedTypes) {
+        assertTypes(types, expectedTypes.length, expectedTypes);
+    }
+
+    private void assertTypes(List<Type> types, int expectedSize, Type... expectedTypes) {
+        assertEquals(expectedSize, types.size());
+        for (int i = 0; i < expectedSize; i++) {
+            assertType(expectedTypes[i], types.get(i));
+        }
+    }
+
+    private void assertType(Type expect, Type actual) {
+        assertEquals(asClass(expect), asClass(actual));
+    }
+
 
     @Test
     public void testGetAllSuperTypes() {
@@ -130,7 +212,7 @@ public class TypeUtilsTest {
     class D extends C<String> {
     }
 
-    class E extends C {
+    class E extends C implements Serializable {
     }
 
 
