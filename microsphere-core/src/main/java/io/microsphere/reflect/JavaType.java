@@ -28,7 +28,14 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+
+import static io.microsphere.reflect.TypeUtils.EMPTY_TYPE;
+import static io.microsphere.reflect.TypeUtils.asParameterizedType;
+import static io.microsphere.reflect.TypeUtils.asTypeVariable;
+import static io.microsphere.reflect.TypeUtils.asWildcardType;
+import static io.microsphere.util.ArrayUtils.asArray;
 
 /**
  * Encapsulates a Java Type(Immutable), providing the features:
@@ -213,7 +220,7 @@ public class JavaType implements Serializable {
         return genericTypes;
     }
 
-    private JavaType resolveArgumentGenericType(Type[] typeArguments, JavaType argumentType, int index) {
+    private static JavaType resolveArgumentGenericType(Type[] typeArguments, JavaType argumentType, int index) {
         JavaType genericType = argumentType;
         TypeVariable typeVariable = argumentType.toTypeVariable();
         if (typeVariable != null) {
@@ -255,17 +262,17 @@ public class JavaType implements Serializable {
 
     @Nullable
     public ParameterizedType toParameterizedType() {
-        return isParameterizedType() ? (ParameterizedType) type : null;
+        return asParameterizedType(this.type);
     }
 
     @Nullable
     public TypeVariable toTypeVariable() {
-        return isTypeVariable() ? (TypeVariable) type : null;
+        return asTypeVariable(this.type);
     }
 
     @Nullable
     public WildcardType toWildcardType() {
-        return isWildCardType() ? (WildcardType) type : null;
+        return asWildcardType(this.type);
     }
 
     @Override
@@ -461,6 +468,22 @@ public class JavaType implements Serializable {
                 return rawTypeKind.getInterfaces(rawType);
             }
 
+            @Override
+            public Type[] getGenericTypes(JavaType javaType) {
+                Type type = resolveType(javaType);
+                Type baseType = javaType.type;
+                List<Type> genericTypes = TypeUtils.resolveActualTypeArguments(type, baseType);
+                return asArray(genericTypes, Type.class);
+            }
+
+            private Type resolveType(JavaType javaType) {
+                JavaType source = javaType.getRootSource();
+                if (source == null) {
+                    source = javaType.getSource();
+                }
+                return source == null ? javaType.type : source.type;
+            }
+
             private ParameterizedType as(Type type) {
                 return (ParameterizedType) type;
             }
@@ -512,9 +535,12 @@ public class JavaType implements Serializable {
             return null;
         }
 
-
         public Type[] getInterfaces(Type type) {
-            return new Type[0];
+            return EMPTY_TYPE;
+        }
+
+        public Type[] getGenericTypes(JavaType javaType) {
+            return EMPTY_TYPE;
         }
 
         public static Kind valueOf(Type type) {

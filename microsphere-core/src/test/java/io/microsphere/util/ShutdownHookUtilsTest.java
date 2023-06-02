@@ -18,9 +18,13 @@ package io.microsphere.util;
 
 import org.junit.Test;
 
-import static io.microsphere.util.ShutdownHookUtils.*;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static io.microsphere.util.ShutdownHookUtils.getShutdownHookCallbacks;
-import static org.junit.Assert.*;
+import static io.microsphere.util.ShutdownHookUtils.getShutdownHookThreads;
+import static io.microsphere.util.ShutdownHookUtils.removeShutdownHookCallback;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link ShutdownHookUtils} Test

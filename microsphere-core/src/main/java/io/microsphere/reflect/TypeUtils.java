@@ -43,7 +43,11 @@ import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static java.util.Arrays.asList;
-import static java.util.Collections.*;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.StreamSupport.stream;
@@ -66,6 +70,11 @@ public abstract class TypeUtils {
     public static final Predicate<Type> WILDCARD_TYPE_FILTER = TypeUtils::isWildcardType;
 
     public static final Predicate<Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
+
+    /**
+     * Empty {@link Type} array
+     */
+    public static final Type[] EMPTY_TYPE = new Type[0];
 
     public static boolean isClass(Object type) {
         return type instanceof Class;
