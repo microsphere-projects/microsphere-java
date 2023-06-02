@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.collection.CollectionUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -32,9 +34,12 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.microsphere.reflect.TypeUtils.EMPTY_TYPE;
+import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
+import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.asArray;
 
 /**
@@ -472,7 +477,7 @@ public class JavaType implements Serializable {
             public Type[] getGenericTypes(JavaType javaType) {
                 Type type = resolveType(javaType);
                 Type baseType = javaType.type;
-                List<Type> genericTypes = TypeUtils.resolveActualTypeArguments(type, baseType);
+                List<Type> genericTypes = resolveActualTypeArguments(type, baseType);
                 return asArray(genericTypes, Type.class);
             }
 

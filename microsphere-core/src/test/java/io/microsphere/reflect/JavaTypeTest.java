@@ -64,8 +64,15 @@ public class JavaTypeTest {
     @Test
     public void testFromField() {
         Field field = FieldUtils.findField(getClass(), "mapField");
-        JavaType fieldJavaType = JavaType.from(field);
-        assertJavaType(fieldJavaType);
+        JavaType javaType = JavaType.from(field);
+        assertJavaType(javaType);
+
+        Type[] types = javaType.getKind().getGenericTypes(javaType);
+        assertTrue(types.length == 2);
+
+        javaType = javaType.as(Map.class);
+        types = javaType.getKind().getGenericTypes(javaType);
+        assertTrue(types.length == 2);
     }
 
     private static void assertJavaType(JavaType javaType) {

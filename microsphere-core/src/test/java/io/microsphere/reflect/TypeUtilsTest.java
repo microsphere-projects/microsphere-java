@@ -24,8 +24,10 @@ import org.junit.Test;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
 
@@ -116,6 +118,9 @@ public class TypeUtilsTest {
         assertTypes(actualTypeArguments, String.class, String.class);
 
         actualTypeArguments = resolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
+
+        actualTypeArguments = resolveActualTypeArguments(StringIntegerHashMap.class, Map.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
     }
@@ -210,24 +215,32 @@ public class TypeUtilsTest {
 
     }
 
-    class A implements Serializable {
-    }
+}
 
-    class B extends A implements Comparable<B> {
-        @Override
-        public int compareTo(B o) {
-            return 0;
-        }
-    }
+class A implements Serializable {
+}
 
-    class C<T> extends B implements RandomAccess {
+class B extends A implements Comparable<B> {
+    @Override
+    public int compareTo(B o) {
+        return 0;
     }
+}
 
-    class D extends C<String> {
-    }
+class C<T> extends B implements RandomAccess {
+}
 
-    class E extends C implements Serializable {
-    }
+class D extends C<String> {
+}
 
+class E extends C implements Serializable {
+}
+
+class StringIntegerHashMap extends MyHashMap<String, Integer, Boolean> {
+
+}
+// MyHashMap<A, B> -> HashMap<A, B>
+
+class MyHashMap<A, B extends Serializable, C> extends HashMap<A, B> {
 
 }
