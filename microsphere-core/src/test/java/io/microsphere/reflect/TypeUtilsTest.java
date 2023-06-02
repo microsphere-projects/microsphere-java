@@ -120,7 +120,7 @@ public class TypeUtilsTest {
         actualTypeArguments = resolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
-        actualTypeArguments = resolveActualTypeArguments(StringIntegerHashMap.class, Map.class);
+        actualTypeArguments = resolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
     }
@@ -236,11 +236,17 @@ class D extends C<String> {
 class E extends C implements Serializable {
 }
 
-class StringIntegerHashMap extends MyHashMap<String, Integer, Boolean> {
-
-}
-// MyHashMap<A, B> -> HashMap<A, B>
-
 class MyHashMap<A, B extends Serializable, C> extends HashMap<A, B> {
 
 }
+
+class StringIntegerHashMap extends HashMap<String, Integer> {
+
+}
+
+class StringIntegerBooleanHashMap extends MyHashMap<String, Integer, Boolean> {
+
+}
+
+
+// MyHashMap<A, B> -> HashMap<A, B>

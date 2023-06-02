@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.collection.CollectionUtils;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;

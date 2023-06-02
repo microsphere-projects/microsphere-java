@@ -246,6 +246,35 @@ public abstract class TypeUtils {
         return actualTypeArguments;
     }
 
+    private static List<Type> doResolveActualTypeArgumentsLocally(Type type,
+                                                                  Class klass,
+                                                                  Class baseClass,
+                                                                  TypeVariable<Class>[] baseTypeParameters) {
+        TypeVariable<Class>[] typeParameters = klass.getTypeParameters();
+        int typeParametersLength = typeParameters.length;
+        ParameterizedType pType = asParameterizedType(type);
+        if (pType != null) {
+            if (Arrays.deepEquals(baseTypeParameters, typeParameters)) {
+                Type[] actualTypeArguments = pType.getActualTypeArguments();
+                int actualTypeArgumentsLength = actualTypeArguments.length;
+                if (actualTypeArgumentsLength == typeParametersLength) {
+                    boolean matched = true;
+                    for (int i = 0; i < actualTypeArgumentsLength; i++) {
+                        Type actualTypeArgument = actualTypeArguments[i];
+                        if (!isActualType(actualTypeArgument)) {
+                            matched = false;
+                            break;
+                        }
+                    }
+                    if (matched) {
+                        return Arrays.asList(pType.getActualTypeArguments());
+                    }
+                }
+            }
+        }
+        return emptyList();
+    }
+
     protected static List<Type> doResolveActualTypeArguments(Type type,
                                                              Class klass,
                                                              Class baseClass,
@@ -261,7 +290,7 @@ public abstract class TypeUtils {
                     boolean matched = true;
                     for (int i = 0; i < actualTypeArgumentsLength; i++) {
                         Type actualTypeArgument = actualTypeArguments[i];
-                        if (!isActualTypeArgument(actualTypeArgument)) {
+                        if (!isActualType(actualTypeArgument)) {
                             matched = false;
                             break;
                         }
@@ -295,7 +324,7 @@ public abstract class TypeUtils {
         return false;
     }
 
-    protected static boolean isActualTypeArgument(Type type) {
+    public static boolean isActualType(Type type) {
         return isClass(type) || isParameterizedType(type);
     }
 
@@ -320,7 +349,7 @@ public abstract class TypeUtils {
 
         for (TypeArgument typeArgument : typeArguments) {
             Type actualTypeArgument = typeArgument.getType();
-            if (isActualTypeArgument(actualTypeArgument)) {
+            if (isActualType(actualTypeArgument)) {
                 actualTypeArguments.add(typeArgument);
             }
         }

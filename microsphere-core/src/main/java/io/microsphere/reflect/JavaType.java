@@ -16,7 +16,7 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.collection.CollectionUtils;
+import io.microsphere.reflect.generics.TypeArgument;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,11 +34,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.microsphere.reflect.TypeUtils.EMPTY_TYPE;
-import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.asArray;
 
@@ -62,7 +62,7 @@ public class JavaType implements Serializable {
 
     public static final JavaType[] EMPTY_ARRAY = new JavaType[0];
 
-    public static final JavaType OBJECT = new JavaType(Object.class, Kind.CLASS);
+    public static final JavaType OBJECT_TYPE = new JavaType(Object.class, Kind.CLASS);
 
     private final Type type;
 
@@ -207,22 +207,12 @@ public class JavaType implements Serializable {
 
     @Nonnull
     protected JavaType[] resolveGenericTypes() {
-        JavaType[] genericTypes = null;
-        ParameterizedType pType = toParameterizedType();
-        if (pType != null) {
-            Type[] typeArguments = pType.getActualTypeArguments();
-            int length = typeArguments.length;
-            genericTypes = new JavaType[length];
-            for (int i = 0; i < length; i++) {
-                Type typeArgument = typeArguments[i];
-                JavaType argumentType = from(typeArgument, this);
-                genericTypes[i] = resolveArgumentGenericType(typeArguments, argumentType, i);
-            }
-        } else {
-            // Can't resolve the generic types
-            genericTypes = EMPTY_ARRAY;
+        if (!OBJECT_TYPE.equals(this)) {
+            Kind kind = this.kind;
+            Type[] genericTypes = kind.getGenericTypes(this);
+            return from(genericTypes, this);
         }
-        return genericTypes;
+        return EMPTY_ARRAY;
     }
 
     private static JavaType resolveArgumentGenericType(Type[] typeArguments, JavaType argumentType, int index) {
@@ -232,7 +222,8 @@ public class JavaType implements Serializable {
             JavaType source = argumentType.getRootSource();
             GenericDeclaration declaration = typeVariable.getGenericDeclaration();
             if (matches(typeArguments, declaration)) {
-                genericType = source.getGenericType(index);
+                JavaType[] genericTypes = source.getGenericTypes();
+                genericType = index <= genericTypes.length - 1 ? genericTypes[index] : null;
             }
         }
         return genericType;
@@ -432,7 +423,7 @@ public class JavaType implements Serializable {
         CLASS(Class.class) {
             @Override
             public Type getSuperType(Type type) {
-                Class klass = (Class) type;
+                Class klass = as(type);
                 return klass.getGenericSuperclass();
             }
 
@@ -443,8 +434,20 @@ public class JavaType implements Serializable {
 
             @Override
             public Type[] getInterfaces(Type type) {
-                Class klass = (Class) type;
+                Class klass = as(type);
                 return klass.getGenericInterfaces();
+            }
+
+            @Override
+            public Type[] getGenericTypes(JavaType javaType) {
+                Class klass = as(javaType.type);
+                TypeVariable<Class>[] typeParameters = klass.getTypeParameters();
+                int length = typeParameters.length;
+                return length == 0 ? super.getGenericTypes(javaType) : new Type[length];
+            }
+
+            private Class<?> as(Type type) {
+                return (Class) type;
             }
         },
 
@@ -477,8 +480,26 @@ public class JavaType implements Serializable {
             public Type[] getGenericTypes(JavaType javaType) {
                 Type type = resolveType(javaType);
                 Type baseType = javaType.type;
-                List<Type> genericTypes = resolveActualTypeArguments(type, baseType);
-                return asArray(genericTypes, Type.class);
+                final Type[] genericTypes;
+                List<Type> genericTypesList = resolveActualTypeArguments(type, baseType);
+                if (genericTypesList.isEmpty()) {
+                    genericTypes = as(baseType).getActualTypeArguments();
+                    toActualTypes(genericTypes);
+                } else {
+                    genericTypes = asArray(genericTypesList, Type.class);
+                }
+                return genericTypes;
+            }
+
+            private void toActualTypes(Type[] genericTypes) {
+                int length = genericTypes.length;
+                for (int i = 0; i < length; i++) {
+                    Type genericType = genericTypes[i];
+                    if (!isActualType(genericType)) {
+                        // set null if type is not an actual type
+                        genericTypes[i] = null;
+                    }
+                }
             }
 
             private Type resolveType(JavaType javaType) {

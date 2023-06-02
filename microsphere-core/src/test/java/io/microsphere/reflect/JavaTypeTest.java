@@ -17,6 +17,7 @@
 package io.microsphere.reflect;
 
 import org.junit.Test;
+import org.springframework.core.ResolvableType;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -52,6 +53,28 @@ public class JavaTypeTest {
     }
 
     @Test
+    public void testFromType() {
+        JavaType javaType = JavaType.from(StringIntegerBooleanHashMap.class);
+        assertGenericTypes(javaType);
+
+        javaType = javaType.getSuperType();
+        assertGenericTypes(javaType, String.class, Integer.class, Boolean.class);
+
+        javaType = JavaType.from(StringIntegerHashMap.class);
+        assertGenericTypes(javaType);
+
+        javaType = javaType.getSuperType();
+        assertGenericTypes(javaType, String.class, Integer.class);
+
+        javaType = JavaType.from(HashMap.class);
+        assertGenericTypes(javaType, null, null);
+
+        javaType = javaType.getSuperType();
+        assertGenericTypes(javaType, null, null);
+    }
+
+
+    @Test
     public void testFromMethod() {
         Method method = MethodUtils.findMethod(getClass(), "fromValue", HashMap.class);
         JavaType methodReturnType = JavaType.fromMethodReturnType(method);
@@ -66,13 +89,20 @@ public class JavaTypeTest {
         Field field = FieldUtils.findField(getClass(), "mapField");
         JavaType javaType = JavaType.from(field);
         assertJavaType(javaType);
+    }
 
-        Type[] types = javaType.getKind().getGenericTypes(javaType);
-        assertTrue(types.length == 2);
-
-        javaType = javaType.as(Map.class);
-        types = javaType.getKind().getGenericTypes(javaType);
-        assertTrue(types.length == 2);
+    private static void assertGenericTypes(JavaType javaType, Class<?>... expectedClasses) {
+        int length = expectedClasses.length;
+        // Compare with Spring ResolvableType
+        ResolvableType resolvableType = ResolvableType.forType(javaType.getType());
+        JavaType[] genericTypes = javaType.getGenericTypes();
+        Class[] genericsClasses = resolvableType.resolveGenerics();
+        assertEquals(length, genericTypes.length);
+        assertEquals(genericsClasses.length, genericTypes.length);
+        for (int i = 0; i < length; i++) {
+            assertEquals(expectedClasses[i], genericsClasses[i]);
+            assertEquals(expectedClasses[i], genericTypes[i].getType());
+        }
     }
 
     private static void assertJavaType(JavaType javaType) {
