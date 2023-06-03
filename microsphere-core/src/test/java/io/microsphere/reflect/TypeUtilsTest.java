@@ -140,14 +140,17 @@ public class TypeUtilsTest {
         actualTypeArguments = doResolveActualTypeArguments(E.class, Comparable.class);
         assertTypes(actualTypeArguments, B.class);
 
-        actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, String.class);
+        actualTypeArguments = doResolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
 
         actualTypeArguments = doResolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
-        actualTypeArguments = doResolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
+        actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, String.class);
+
+
+
 
     }
 
