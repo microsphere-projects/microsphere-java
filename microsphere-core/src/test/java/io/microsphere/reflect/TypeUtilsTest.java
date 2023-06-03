@@ -36,6 +36,7 @@ import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.PARAMETERIZED_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
+import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
@@ -121,6 +122,31 @@ public class TypeUtilsTest {
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
         actualTypeArguments = resolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
+
+    }
+
+    @Test
+    public void testDoResolveActualTypeArguments() {
+        List<Type> actualTypeArguments = doResolveActualTypeArguments(B.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(C.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(D.class, C.class);
+        assertTypes(actualTypeArguments, String.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(E.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, String.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
     }
