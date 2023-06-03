@@ -118,9 +118,6 @@ public class TypeUtilsTest {
         actualTypeArguments = resolveActualTypeArguments(StringToStringConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, String.class);
 
-        actualTypeArguments = resolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
-
         actualTypeArguments = resolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
@@ -128,7 +125,12 @@ public class TypeUtilsTest {
 
     @Test
     public void testDoResolveActualTypeArguments() {
-        List<Type> actualTypeArguments = doResolveActualTypeArguments(B.class, Comparable.class);
+        List<Type> actualTypeArguments = null;
+
+        actualTypeArguments = doResolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(B.class, Comparable.class);
         assertTypes(actualTypeArguments, B.class);
 
         actualTypeArguments = doResolveActualTypeArguments(C.class, Comparable.class);
@@ -143,13 +145,9 @@ public class TypeUtilsTest {
         actualTypeArguments = doResolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
 
-        actualTypeArguments = doResolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
 
         actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, String.class);
-
-
 
 
     }
@@ -265,7 +263,7 @@ class D extends C<String> {
 class E extends C implements Serializable {
 }
 
-class MyHashMap<A, B extends Serializable, C> extends HashMap<A, B> {
+class MyHashMap<A, B extends Serializable, C> extends HashMap<A, B> implements Map<A, B> {
 
 }
 
