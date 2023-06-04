@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
@@ -126,6 +127,12 @@ public class TypeUtilsTest {
     @Test
     public void testDoResolveActualTypeArguments() {
         List<Type> actualTypeArguments = null;
+
+        actualTypeArguments = doResolveActualTypeArguments(StringIntegerToBoolean.class, BiFunction.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class, Boolean.class);
+
+        actualTypeArguments = doResolveActualTypeArguments(StringBooleanToInteger.class, BiFunction.class);
+        assertTypes(actualTypeArguments, String.class, Boolean.class, Integer.class);
 
         actualTypeArguments = doResolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, Integer.class);
@@ -272,6 +279,30 @@ class StringIntegerHashMap extends HashMap<String, Integer> {
 }
 
 class StringIntegerBooleanHashMap extends MyHashMap<String, Integer, Boolean> {
+
+}
+
+interface BF3<T, U, R> extends BiFunction<T, U, R> {
+
+}
+
+interface StringBF2<U, R> extends BF3<String, U, R> {
+
+}
+
+interface StringIntegerF1<R> extends StringBF2<Integer, R> {
+
+}
+
+interface StringToIntegerF1<U> extends StringBF2<U, Integer> {
+
+}
+
+interface StringBooleanToInteger extends StringToIntegerF1<Boolean> {
+
+}
+
+interface StringIntegerToBoolean extends StringIntegerF1<Boolean> {
 
 }
 

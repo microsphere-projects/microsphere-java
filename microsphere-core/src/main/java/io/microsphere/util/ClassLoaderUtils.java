@@ -4,6 +4,7 @@
 package io.microsphere.util;
 
 import io.microsphere.collection.CollectionUtils;
+import io.microsphere.collection.ListUtils;
 import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
@@ -29,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
-
-import static io.microsphere.reflect.ReflectionUtils.toList;
 
 
 /**
@@ -300,7 +299,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Set<URL> getResources(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
         String normalizedResourceName = resourceType.resolve(resourceName);
         Enumeration<URL> resources = classLoader.getResources(normalizedResourceName);
-        return resources != null && resources.hasMoreElements() ? new LinkedHashSet(toList(resources)) : Collections.emptySet();
+        return resources != null && resources.hasMoreElements() ? new LinkedHashSet(ListUtils.toList(resources)) : Collections.emptySet();
     }
 
     /**
