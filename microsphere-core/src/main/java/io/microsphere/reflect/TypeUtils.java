@@ -36,6 +36,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
@@ -43,7 +44,6 @@ import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
-import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static java.lang.Integer.getInteger;
 import static java.util.Arrays.asList;
@@ -222,17 +222,28 @@ public abstract class TypeUtils {
     protected static List<Type> doResolveActualTypeArguments(Type type, Class baseClass) {
         return genericTypesCache.computeIfAbsent(MultipleType.of(type, baseClass), mt -> {
 
-            Class klass = asClass(type);
+            if (type == null) { // the raw class of type
+                return emptyList();
+            }
 
-            if (!isAssignableFrom(baseClass, klass)) {
-                // No hierarchical relationship between type and baseType
-                // or the raw classes of type and baseType are null
+            if (baseClass == null) { // baseType are null
                 return emptyList();
             }
 
             TypeVariable<Class>[] baseTypeParameters = baseClass.getTypeParameters();
             int baseTypeParametersLength = baseTypeParameters.length;
             if (baseTypeParametersLength == 0) { // No type-parameter in the base class
+                return emptyList();
+            }
+
+            Class klass = asClass(type);
+
+            boolean sameClass = baseClass.equals(klass);
+
+            if (sameClass) { // Fast Path
+                return doResolveActualTypeArgumentsInFastPath(type);
+            } else if (!baseClass.isAssignableFrom(klass)) {
+                // No hierarchical relationship between type and baseType
                 return emptyList();
             }
 
@@ -264,6 +275,23 @@ public abstract class TypeUtils {
 
             return Arrays.asList(actualTypeArguments);
         });
+    }
+
+    private static List<Type> doResolveActualTypeArgumentsInFastPath(Type type) {
+        ParameterizedType pType = asParameterizedType(type);
+        if (pType != null) {
+            Type[] actualTypeArguments = pType.getActualTypeArguments();
+            int actualTypeArgumentsLength = actualTypeArguments.length;
+            List<Type> actualTypeArgumentsList = newArrayList();
+            for (int i = 0; i < actualTypeArgumentsLength; i++) {
+                Type actualTypeArgument = actualTypeArguments[i];
+                if (isActualType(actualTypeArgument)) {
+                    actualTypeArgumentsList.add(actualTypeArgument);
+                }
+            }
+            return actualTypeArgumentsList;
+        }
+        return emptyList();
     }
 
     private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type,
@@ -327,11 +355,11 @@ public abstract class TypeUtils {
             }
         }
 
-        if (klass.equals(baseClass)) { // klass is same as baseClass
+        if (klass.equals(baseClass)) { // 'klass' is same as baseClass
             return;
         }
 
-        if (actualTypesCount < baseTypeArgumentsLength) { // To find actual types from hierarchical types
+        if (actualTypesCount < baseTypeArgumentsLength) { // To find actual types from the hierarchical types of 'type'
             TypeVariable<Class>[] typeParameters = klass.getTypeParameters();
             int typeParametersLength = typeParameters.length;
             for (int superTypeIndex = index + 1; superTypeIndex < hierarchicalTypesSize; superTypeIndex++) {
