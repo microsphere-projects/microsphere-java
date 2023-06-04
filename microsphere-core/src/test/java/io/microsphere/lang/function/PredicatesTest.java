@@ -18,11 +18,16 @@ package io.microsphere.lang.function;
 
 import org.junit.Test;
 
+import java.util.function.Predicate;
+
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.lang.function.Predicates.emptyArray;
 import static io.microsphere.lang.function.Predicates.or;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -31,6 +36,16 @@ import static org.junit.Assert.assertTrue;
  * @since 1.0.0
  */
 public class PredicatesTest {
+
+    @Test
+    public void testEmptyArray() {
+        assertEmptyArray(emptyArray());
+    }
+
+    private void assertEmptyArray(Predicate<?>[] predicates) {
+        assertNotNull(predicates);
+        assertEquals(0, predicates.length);
+    }
 
     @Test
     public void testAlwaysTrue() {

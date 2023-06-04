@@ -30,7 +30,7 @@ import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
 import static io.microsphere.annotation.processor.util.MemberUtils.matches;
 import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
-import static io.microsphere.lang.function.Predicates.EMPTY_ARRAY;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static java.util.Collections.emptyList;
@@ -51,7 +51,7 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> getDeclaredFields(Element element) {
-        return getDeclaredFields(element, EMPTY_ARRAY);
+        return getDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<VariableElement> getDeclaredFields(TypeMirror type, Predicate<VariableElement>... fieldFilters) {
@@ -59,7 +59,7 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> getDeclaredFields(TypeMirror type) {
-        return getDeclaredFields(type, EMPTY_ARRAY);
+        return getDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<VariableElement> getAllDeclaredFields(Element element, Predicate<VariableElement>... fieldFilters) {
@@ -67,7 +67,7 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> getAllDeclaredFields(Element element) {
-        return getAllDeclaredFields(element, EMPTY_ARRAY);
+        return getAllDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<VariableElement> getAllDeclaredFields(TypeMirror type, Predicate<VariableElement>... fieldFilters) {
@@ -79,7 +79,7 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> getAllDeclaredFields(TypeMirror type) {
-        return getAllDeclaredFields(type, EMPTY_ARRAY);
+        return getAllDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static VariableElement getDeclaredField(Element element, String fieldName) {

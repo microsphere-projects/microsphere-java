@@ -36,7 +36,7 @@ import static io.microsphere.annotation.processor.util.MemberUtils.matchParamete
 import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static io.microsphere.filter.FilterUtils.filter;
-import static io.microsphere.lang.function.Predicates.EMPTY_ARRAY;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static java.util.Arrays.asList;
@@ -64,7 +64,7 @@ public interface MethodUtils {
     }
 
     static List<ExecutableElement> getAllDeclaredMethods(TypeElement type) {
-        return getAllDeclaredMethods(type, EMPTY_ARRAY);
+        return getAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<ExecutableElement> getAllDeclaredMethods(TypeMirror type, Predicate<ExecutableElement>... methodFilters) {
@@ -72,7 +72,7 @@ public interface MethodUtils {
     }
 
     static List<ExecutableElement> getAllDeclaredMethods(TypeMirror type) {
-        return getAllDeclaredMethods(type, EMPTY_ARRAY);
+        return getAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<ExecutableElement> getAllDeclaredMethods(TypeElement type, Type... excludedTypes) {

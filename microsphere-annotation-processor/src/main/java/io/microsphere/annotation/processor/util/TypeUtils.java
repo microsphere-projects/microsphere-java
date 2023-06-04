@@ -38,7 +38,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static io.microsphere.lang.function.Predicates.EMPTY_ARRAY;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
@@ -144,7 +144,7 @@ public interface TypeUtils {
     }
 
     static Set<DeclaredType> getHierarchicalTypes(TypeMirror type) {
-        return getHierarchicalTypes(type, EMPTY_ARRAY);
+        return getHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static Set<DeclaredType> getHierarchicalTypes(TypeMirror type, Predicate<DeclaredType>... typeFilters) {
@@ -255,7 +255,7 @@ public interface TypeUtils {
     }
 
     static Set<TypeElement> getAllSuperTypes(TypeElement type) {
-        return getAllSuperTypes(type, EMPTY_ARRAY);
+        return getAllSuperTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static Set<TypeElement> getAllSuperTypes(TypeElement type, Predicate<TypeElement>... typeFilters) {
@@ -275,7 +275,7 @@ public interface TypeUtils {
     }
 
     static Set<DeclaredType> getAllSuperTypes(TypeMirror type) {
-        return getAllSuperTypes(type, EMPTY_ARRAY);
+        return getAllSuperTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static Set<DeclaredType> getAllSuperTypes(TypeMirror type, Predicate<DeclaredType>... typeFilters) {

@@ -34,7 +34,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.microsphere.lang.function.Predicates.EMPTY_ARRAY;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static java.lang.Enum.valueOf;
@@ -65,7 +65,7 @@ public abstract class AnnotationUtils {
     }
 
     public static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct) {
-        return getAnnotations(annotatedConstruct, EMPTY_ARRAY);
+        return getAnnotations(annotatedConstruct, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, Predicate<AnnotationMirror>... annotationFilters) {
@@ -84,7 +84,7 @@ public abstract class AnnotationUtils {
     }
 
     public static List<AnnotationMirror> getAllAnnotations(Element element) {
-        return getAllAnnotations(element, EMPTY_ARRAY);
+        return getAllAnnotations(element, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<AnnotationMirror> getAllAnnotations(TypeMirror type, Class<? extends Annotation> annotationClass) {
@@ -115,7 +115,7 @@ public abstract class AnnotationUtils {
     }
 
     public static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType) {
-        return getAllAnnotations(processingEnv, annotatedType, EMPTY_ARRAY);
+        return getAllAnnotations(processingEnv, annotatedType, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType, Predicate<AnnotationMirror>... annotationFilters) {

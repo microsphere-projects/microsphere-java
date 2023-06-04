@@ -25,7 +25,12 @@ import java.util.function.Predicate;
  */
 public interface Predicates {
 
-    Predicate[] EMPTY_ARRAY = new Predicate[0];
+    Predicate[] EMPTY_PREDICATE_ARRAY = new Predicate[0];
+
+
+    static <T> Predicate<T>[] emptyArray() {
+        return (Predicate<T>[]) EMPTY_PREDICATE_ARRAY;
+    }
 
     /**
      * {@link Predicate} always return <code>true</code>
