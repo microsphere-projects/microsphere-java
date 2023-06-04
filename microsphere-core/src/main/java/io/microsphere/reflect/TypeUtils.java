@@ -80,8 +80,9 @@ public abstract class TypeUtils {
      */
     public static final Type[] EMPTY_TYPE = new Type[0];
 
-    private static final ConcurrentMap<MultipleType, List<Type>> genericTypesCache = newConcurrentHashMap(getInteger("microsphere.reflect.generic-types.cache.size", 256));
+    public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = "microsphere.reflect.resolved-generic-types.cache.size";
 
+    private static final ConcurrentMap<MultipleType, List<Type>> resolvedGenericTypesCache = newConcurrentHashMap(getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, 256));
 
     public static boolean isClass(Object type) {
         return type instanceof Class;
@@ -220,7 +221,7 @@ public abstract class TypeUtils {
     }
 
     protected static List<Type> doResolveActualTypeArguments(Type type, Class baseClass) {
-        return genericTypesCache.computeIfAbsent(MultipleType.of(type, baseClass), mt -> {
+        return resolvedGenericTypesCache.computeIfAbsent(MultipleType.of(type, baseClass), mt -> {
 
             if (type == null) { // the raw class of type
                 return emptyList();
