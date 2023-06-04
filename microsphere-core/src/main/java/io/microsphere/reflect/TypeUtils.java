@@ -39,6 +39,7 @@ import java.util.stream.Collectors;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
@@ -408,7 +409,7 @@ public abstract class TypeUtils {
     }
 
     public static List<Type> findHierarchicalTypes(Type type) {
-        return findHierarchicalTypes(type, of());
+        return findHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<Type> findHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
@@ -446,7 +447,7 @@ public abstract class TypeUtils {
 
 
     public static List<Type> findAllHierarchicalTypes(Type type) {
-        return findAllHierarchicalTypes(type, of());
+        return findAllHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<Type> findAllHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
