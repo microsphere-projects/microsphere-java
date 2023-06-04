@@ -16,8 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.reflect.generics.TypeArgument;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -37,7 +35,6 @@ import static io.microsphere.reflect.TypeUtils.EMPTY_TYPE;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
-import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.asArray;
