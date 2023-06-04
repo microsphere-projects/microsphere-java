@@ -16,8 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.collection.CollectionUtils;
-
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -189,7 +187,7 @@ public abstract class ArrayUtils extends BaseUtils {
         return combineArray(one, others);
     }
 
-    private static <E> E[] combineArray(E[] one, E[]... others) {
+    public static <E> E[] combineArray(E[] one, E[]... others) {
         int othersSize = length(others);
         if (othersSize < 1) {
             return one;
