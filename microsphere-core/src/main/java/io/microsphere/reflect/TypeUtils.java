@@ -638,16 +638,18 @@ public abstract class TypeUtils {
     }
 
     public static Class<?> asClass(Type type) {
-        if (type instanceof Class) {
-            return (Class<?>) type;
-        } else if (type instanceof ParameterizedType) {
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-            return asClass(parameterizedType.getRawType());
-        } else if (type instanceof TypeVariable) {
-            TypeVariable typeVariable = (TypeVariable) type;
-            return asClass(typeVariable.getBounds()[0]);
+        Class targetClass = asClass(type);
+        if (targetClass == null) { // try to cast a ParameterizedType if possible
+            ParameterizedType parameterizedType = asParameterizedType(type);
+            if (parameterizedType != null) {
+                targetClass = asClass(parameterizedType.getRawType());
+            }
         }
-        return null;
+        if (targetClass == null) { // try to cast a component type of GenericArrayType if possible
+            GenericArrayType genericArrayType = asGenericArrayType(type);
+            targetClass = asClass(genericArrayType.getGenericComponentType());
+        }
+        return targetClass;
     }
 
     public static GenericArrayType asGenericArrayType(Type type) {
