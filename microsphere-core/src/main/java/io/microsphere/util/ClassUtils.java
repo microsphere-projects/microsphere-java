@@ -206,7 +206,7 @@ public abstract class ClassUtils extends BaseUtils {
     /**
      * The specified type is array or not?
      * <p>
-     * It's an optimized implementation for {@link Class#isArray()}).
+     * It's an optimized alternative for {@link Class#isArray()}).
      *
      * @param type the type to test
      * @return <code>true</code> if the specified type is an array class,
