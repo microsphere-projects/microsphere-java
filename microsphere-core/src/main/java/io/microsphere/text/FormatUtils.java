@@ -17,6 +17,9 @@ public abstract class FormatUtils {
     public static String formatWithPlaceholder(String pattern, String placeholder, Object... args) {
         int offset = placeholder.length();
         int argsLength = args == null ? 0 : args.length;
+        if (argsLength == 0) {
+            return pattern;
+        }
         StringBuilder stringBuilder = new StringBuilder(pattern);
         int index = -1;
         for (int i = 0; i < argsLength; i++) {
