@@ -205,10 +205,7 @@ public abstract class TypeUtils {
     }
 
     protected static List<Class> doResolveActualTypeArgumentClasses(Type type, Type baseType) {
-        return doResolveActualTypeArguments(type, baseType).stream()
-                .map(TypeUtils::asClass)
-                .filter(Objects::nonNull)
-                .collect(toList());
+        return doResolveActualTypeArguments(type, baseType).stream().map(TypeUtils::asClass).filter(Objects::nonNull).collect(toList());
     }
 
     protected static List<Type> doResolveActualTypeArguments(Type type, Type baseType) {
@@ -295,11 +292,7 @@ public abstract class TypeUtils {
         return emptyList();
     }
 
-    private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type,
-                                                                      List<Type> hierarchicalTypes,
-                                                                      int hierarchicalTypesSize,
-                                                                      Class baseClass,
-                                                                      TypeVariable<Class>[] baseTypeParameters) {
+    private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int hierarchicalTypesSize, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
 
         int size = hierarchicalTypesSize + 1;
 
@@ -316,26 +309,14 @@ public abstract class TypeUtils {
         return typeArgumentsMap;
     }
 
-    private static void resolveTypeArgumentsMap(Type type,
-                                                List<Type> hierarchicalTypes,
-                                                int index,
-                                                int hierarchicalTypesSize,
-                                                Map<Class, TypeArgument[]> typeArgumentsMap,
-                                                Class baseClass,
-                                                TypeVariable<Class>[] baseTypeParameters) {
+    private static void resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int index, int hierarchicalTypesSize, Map<Class, TypeArgument[]> typeArgumentsMap, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
         ParameterizedType pType = asParameterizedType(type);
         if (pType != null) {
             resolveTypeArgumentsMap(pType, hierarchicalTypes, index, hierarchicalTypesSize, typeArgumentsMap, baseClass, baseTypeParameters);
         }
     }
 
-    private static void resolveTypeArgumentsMap(ParameterizedType type,
-                                                List<Type> hierarchicalTypes,
-                                                int index,
-                                                int hierarchicalTypesSize,
-                                                Map<Class, TypeArgument[]> typeArgumentsMap,
-                                                Class baseClass,
-                                                TypeVariable<Class>[] baseTypeParameters) {
+    private static void resolveTypeArgumentsMap(ParameterizedType type, List<Type> hierarchicalTypes, int index, int hierarchicalTypesSize, Map<Class, TypeArgument[]> typeArgumentsMap, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
         Class klass = asClass(type);
 
         int baseTypeArgumentsLength = baseTypeParameters.length;
@@ -386,14 +367,11 @@ public abstract class TypeUtils {
         }
     }
 
-    private static TypeArgument[] newTypeArguments(Class klass,
-                                                   Map<Class, TypeArgument[]> typeArgumentsMap,
-                                                   int typeArgumentsLength) {
+    private static TypeArgument[] newTypeArguments(Class klass, Map<Class, TypeArgument[]> typeArgumentsMap, int typeArgumentsLength) {
         return typeArgumentsMap.computeIfAbsent(klass, t -> new TypeArgument[typeArgumentsLength]);
     }
 
-    private static TypeArgument[] getTypeArguments(Class klass,
-                                                   Map<Class, TypeArgument[]> typeArgumentsMap) {
+    private static TypeArgument[] getTypeArguments(Class klass, Map<Class, TypeArgument[]> typeArgumentsMap) {
         return typeArgumentsMap.get(klass);
     }
 
@@ -638,7 +616,7 @@ public abstract class TypeUtils {
     }
 
     public static Class<?> asClass(Type type) {
-        Class targetClass = asClass(type);
+        Class targetClass = asClass0(type);
         if (targetClass == null) { // try to cast a ParameterizedType if possible
             ParameterizedType parameterizedType = asParameterizedType(type);
             if (parameterizedType != null) {
@@ -650,6 +628,10 @@ public abstract class TypeUtils {
             targetClass = asClass(genericArrayType.getGenericComponentType());
         }
         return targetClass;
+    }
+
+    private static Class<?> asClass0(Type type) {
+        return isClass(type) ? (Class<?>) type : null;
     }
 
     public static GenericArrayType asGenericArrayType(Type type) {
