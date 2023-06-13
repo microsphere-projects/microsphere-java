@@ -1057,4 +1057,19 @@ public abstract class ClassUtils extends BaseUtils {
 
         return targetType;
     }
+
+    /**
+     * Cast the given object to the specified type
+     * @param object   the object
+     * @param castType the type to cast
+     * @param <T> the type to cast
+     * @return the casted instance if and only if <code>object</code> is an instance of <code>castType</code> ,
+     * <code>null</code> otherwise
+     */
+    public static <T> T cast(Object object, Class<T> castType) {
+        if (object == null || castType == null) {
+            return null;
+        }
+        return castType.isInstance(object) ? castType.cast(object) : null;
+    }
 }
