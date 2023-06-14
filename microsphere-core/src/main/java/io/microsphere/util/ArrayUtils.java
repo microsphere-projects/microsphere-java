@@ -17,6 +17,7 @@
 package io.microsphere.util;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Parameter;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.function.BiConsumer;
@@ -49,6 +50,11 @@ public abstract class ArrayUtils extends BaseUtils {
      * An empty immutable {@code String} array.
      */
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /**
+     * An empty immutable {@code Parameter} array.
+     */
+    public static final Parameter[] EMPTY_PARAMETER_ARRAY = new Parameter[0];
 
     /**
      * An empty immutable {@code long} array.

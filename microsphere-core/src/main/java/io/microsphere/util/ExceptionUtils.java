@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.newInstance;
 
 /**
@@ -59,7 +60,29 @@ public abstract class ExceptionUtils extends BaseUtils {
         return execute(() -> (T) constructor.newInstance(parameters));
     }
 
-    public <T extends Throwable> T newThrowable(Class<T> throwableClass, Object... args) {
+    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
+        String message = format(messagePattern, args);
+        return newThrowable(throwableClass, message, cause);
+    }
+
+    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause, String message) {
+        return newInstance(throwableClass, message, cause);
+    }
+
+    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause) {
+        return newInstance(throwableClass, cause);
+    }
+
+    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, String message) {
+        return newInstance(throwableClass, message);
+    }
+
+
+    public static <T extends Throwable> T newThrowable(Class<T> throwableClass) {
+        return newInstance(throwableClass);
+    }
+
+    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Object... args) {
         return newInstance(throwableClass, args);
     }
 }
