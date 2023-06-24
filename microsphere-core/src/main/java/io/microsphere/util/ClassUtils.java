@@ -1030,14 +1030,6 @@ public abstract class ClassUtils extends BaseUtils {
         return execute(() -> constructor.newInstance(args));
     }
 
-    public static Class<?> resolveClass(String className, ClassLoader classLoader) {
-        return ClassLoaderUtils.resolveClass(className, classLoader);
-    }
-
-    public static Class<?> forName(String className, ClassLoader classLoader) throws ClassNotFoundException {
-        return ClassLoaderUtils.forName(className, classLoader);
-    }
-
     public static Class<?> getTopComponentType(Object array) {
         return array == null ? null : getTopComponentType(array.getClass());
     }
@@ -1060,9 +1052,10 @@ public abstract class ClassUtils extends BaseUtils {
 
     /**
      * Cast the given object to the specified type
+     *
      * @param object   the object
      * @param castType the type to cast
-     * @param <T> the type to cast
+     * @param <T>      the type to cast
      * @return the casted instance if and only if <code>object</code> is an instance of <code>castType</code> ,
      * <code>null</code> otherwise
      */

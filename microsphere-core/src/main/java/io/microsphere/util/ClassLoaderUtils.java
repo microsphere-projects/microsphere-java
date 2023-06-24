@@ -29,7 +29,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
+
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 
 
 /**
@@ -46,6 +51,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final Method findLoadedClassMethod = initFindLoadedClassMethod();
 
+    private static final ConcurrentMap<String, Class<?>> loadedClassesCache = initLoadedClassesCache();
+
     /**
      * Initializes {@link Method} for {@link ClassLoader#findLoadedClass(String)}
      *
@@ -60,6 +67,12 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             throw jvmUnsupportedOperationException(e);
         }
         return findLoadedClassMethod;
+    }
+
+    private static ConcurrentMap<String, Class<?>> initLoadedClassesCache() {
+        ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
+        addShutdownHookCallback(loadedClassesCache::clear);
+        return loadedClassesCache;
     }
 
     private static UnsupportedOperationException jvmUnsupportedOperationException(Throwable throwable) {
@@ -161,8 +174,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     /**
      * Get the ClassLoader from the loaded class if present.
      *
-     * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
      * @param loadedClass the optional class was loaded by some {@link ClassLoader}
+     * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
      * @see #getDefaultClassLoader()
      */
     @Nullable
@@ -270,17 +283,36 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     /**
      * Loaded specified class name under {@link ClassLoader}
      *
-     * @param classLoader {@link ClassLoader}
      * @param className   the name of {@link Class}
+     * @param classLoader {@link ClassLoader}
      * @return {@link Class} if can be loaded
      */
     @Nullable
-    public static Class<?> loadClass(@Nonnull ClassLoader classLoader, @Nonnull String className) {
+    public static Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) {
         try {
             return classLoader.loadClass(className);
         } catch (Throwable ignored) {
         }
         return null;
+    }
+
+    /**
+     * Loaded specified class name under {@link ClassLoader}
+     *
+     * @param className   the name of {@link Class}
+     * @param classLoader {@link ClassLoader}
+     * @param cached      the resolved class is required to be cached or not
+     * @return {@link Class} if can be loaded
+     */
+    public static Class<?> loadClass(String className, ClassLoader classLoader, boolean cached) {
+        Class loadedClass = null;
+        if (cached) {
+            String cacheKey = buildCacheKey(className, classLoader);
+            loadedClass = loadedClassesCache.computeIfAbsent(cacheKey, k -> execute(() -> loadClass(className, classLoader)));
+        } else {
+            loadedClass = loadClass(className, classLoader);
+        }
+        return loadedClass;
     }
 
     /**
@@ -545,19 +577,34 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return If can't be resolved , return <code>null</code>
      */
     public static Class<?> resolveClass(@Nullable String className, @Nullable ClassLoader classLoader) {
+        return resolveClass(className, classLoader, false);
+    }
+
+    /**
+     * Resolve the {@link Class} by the specified name and {@link ClassLoader}
+     *
+     * @param className   the name of {@link Class}
+     * @param classLoader {@link ClassLoader}
+     * @param cached      the resolved class is required to be cached or not
+     * @return If can't be resolved , return <code>null</code>
+     */
+    public static Class<?> resolveClass(@Nullable String className, @Nullable ClassLoader classLoader, boolean cached) {
+        if (className == null) {
+            return null;
+        }
+
         Class<?> targetClass = null;
         try {
-            if (className != null) {
-                ClassLoader targetClassLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
-                targetClass = forName(className, targetClassLoader);
-            }
+            ClassLoader targetClassLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
+            targetClass = loadClass(className, targetClassLoader, cached);
         } catch (Throwable ignored) { // Ignored
         }
         return targetClass;
     }
 
-    public static Class<?> forName(String className, ClassLoader classLoader) throws ClassNotFoundException {
-        return Class.forName(className, false, classLoader);
+    private static String buildCacheKey(String className, ClassLoader classLoader) {
+        String cacheKey = className + classLoader.hashCode();
+        return cacheKey;
     }
 
     /**
