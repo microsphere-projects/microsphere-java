@@ -625,7 +625,9 @@ public abstract class TypeUtils {
         }
         if (targetClass == null) { // try to cast a component type of GenericArrayType if possible
             GenericArrayType genericArrayType = asGenericArrayType(type);
-            targetClass = asClass(genericArrayType.getGenericComponentType());
+            if (genericArrayType != null) {
+                targetClass = asClass(genericArrayType.getGenericComponentType());
+            }
         }
         return targetClass;
     }
