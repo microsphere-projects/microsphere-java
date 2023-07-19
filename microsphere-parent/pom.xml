@@ -34,6 +34,7 @@
         <resilience4j.version>1.7.0</resilience4j.version>
 
         <junit.version>4.7</junit.version>
+        <jmh.version>1.36</jmh.version>
     </properties>
 
 
@@ -120,7 +121,17 @@
             </dependency>
 
             <!-- Testing -->
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
 
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+            </dependency>
 
         </dependencies>
 
