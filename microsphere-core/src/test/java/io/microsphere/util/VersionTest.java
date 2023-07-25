@@ -82,6 +82,19 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
+    public void testGe() {
+        Version version = of("1.2.3");
+        assertTrue(version.ge(of("1.2.3")));
+        assertTrue(version.gt(of("1.2.2")));
+        assertTrue(version.gt(of("1.2.1")));
+        assertTrue(version.gt(of("1.2.0")));
+        assertTrue(version.gt(of("1.2")));
+        assertTrue(version.gt(of("1.1.0")));
+        assertTrue(version.gt(of("1.1")));
+        assertTrue(version.gt(of("1")));
+    }
+
+    @Test
     public void testLt() {
         Version version = of("1.2.3");
         assertFalse(version.lt(of("1.2.3")));
@@ -92,6 +105,19 @@ public class VersionTest extends AbstractTestCase {
         assertFalse(version.lt(of("1.1.0")));
         assertFalse(version.lt(of("1.1")));
         assertFalse(version.lt(of("1")));
+    }
+
+    @Test
+    public void testLe() {
+        Version version = of("1.2.3");
+        assertTrue(version.le(of("1.2.3")));
+        assertFalse(version.le(of("1.2.2")));
+        assertFalse(version.le(of("1.2.1")));
+        assertFalse(version.le(of("1.2.0")));
+        assertFalse(version.le(of("1.2")));
+        assertFalse(version.le(of("1.1.0")));
+        assertFalse(version.le(of("1.1")));
+        assertFalse(version.le(of("1")));
     }
 
     @Test

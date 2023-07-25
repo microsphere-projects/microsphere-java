@@ -130,6 +130,7 @@ public class Version implements Comparable<Version> {
      *
      * @param that the version to be compared
      * @return <code>true</code> if greater than, or <code>false</code>
+     * @see #isGreaterThan(Version)
      */
     public boolean gt(Version that) {
         return isGreaterThan(that);
@@ -140,9 +141,32 @@ public class Version implements Comparable<Version> {
      *
      * @param that the version to be compared
      * @return <code>true</code> if greater than, or <code>false</code>
+     * @see #gt(Version)
      */
     public boolean isGreaterThan(Version that) {
         return this.compareTo(that) > 0;
+    }
+
+    /**
+     * Current {@link Version} is greater than or equal to that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if greater than, or <code>false</code>
+     * @see #isGreaterOrEqual(Version)
+     */
+    public boolean ge(Version that) {
+        return isGreaterOrEqual(that);
+    }
+
+    /**
+     * Current {@link Version} is greater than or equal to that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if greater than, or <code>false</code>
+     * @see #ge(Version)
+     */
+    public boolean isGreaterOrEqual(Version that) {
+        return this.compareTo(that) >= 0;
     }
 
     /**
@@ -163,6 +187,28 @@ public class Version implements Comparable<Version> {
      */
     public boolean isLessThan(Version that) {
         return this.compareTo(that) < 0;
+    }
+
+    /**
+     * Current {@link Version} is less than or equal to that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if less than, or <code>false</code>
+     * @see #isLessOrEqual(Version)
+     */
+    public boolean le(Version that) {
+        return isLessOrEqual(that);
+    }
+
+    /**
+     * Current {@link Version} is less than or equal to that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if less than, or <code>false</code>
+     * @see #le(Version)
+     */
+    public boolean isLessOrEqual(Version that) {
+        return this.compareTo(that) <= 0;
     }
 
     /**
