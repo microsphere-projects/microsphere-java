@@ -64,7 +64,8 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testEquals() {
         Version version = of("1.2.3");
-        assertEquals(version, of("1.2.3"));
+        assertTrue(version.eq(of("1.2.3")));
+        assertTrue(version.equals((Object) of("1.2.3")));
     }
 
     @Test
@@ -91,5 +92,10 @@ public class VersionTest extends AbstractTestCase {
         assertFalse(version.lt(of("1.1.0")));
         assertFalse(version.lt(of("1.1")));
         assertFalse(version.lt(of("1")));
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("Version{major=1, minor=2, patch=3}", of("1.2.3").toString());
     }
 }

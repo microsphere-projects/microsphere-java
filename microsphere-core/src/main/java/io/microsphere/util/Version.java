@@ -125,16 +125,81 @@ public class Version implements Comparable<Version> {
         return patch;
     }
 
+    /**
+     * Current {@link Version} is greater than that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if greater than, or <code>false</code>
+     */
+    public boolean gt(Version that) {
+        return isGreaterThan(that);
+    }
+
+    /**
+     * Current {@link Version} is greater than that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if greater than, or <code>false</code>
+     */
+    public boolean isGreaterThan(Version that) {
+        return this.compareTo(that) > 0;
+    }
+
+    /**
+     * Current {@link Version} is less than that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if less than, or <code>false</code>
+     */
+    public boolean lt(Version that) {
+        return isLessThan(that);
+    }
+
+    /**
+     * Current {@link Version} is less than that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if less than, or <code>false</code>
+     */
+    public boolean isLessThan(Version that) {
+        return this.compareTo(that) < 0;
+    }
+
+    /**
+     * Current {@link Version} is equal to that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if equals, or <code>false</code>
+     */
+    public boolean eq(Version that) {
+        return this.equals(that);
+    }
+
+    /**
+     * Current {@link Version} is equal to that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if equals, or <code>false</code>
+     */
+    public boolean equals(Version that) {
+        if (this.major != that.major) return false;
+        if (this.minor != that.minor) return false;
+        return patch == that.patch;
+    }
+
+    /**
+     * Current {@link Version} is equal to that
+     *
+     * @param o the version to be compared
+     * @return <code>true</code> if equals, or <code>false</code>
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Version)) return false;
 
         Version version = (Version) o;
-
-        if (major != version.major) return false;
-        if (minor != version.minor) return false;
-        return patch == version.patch;
+        return equals(version);
     }
 
     @Override
@@ -143,16 +208,6 @@ public class Version implements Comparable<Version> {
         result = 31 * result + minor;
         result = 31 * result + patch;
         return result;
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("Version{");
-        sb.append("major=").append(major);
-        sb.append(", minor=").append(minor);
-        sb.append(", patch=").append(patch);
-        sb.append('}');
-        return sb.toString();
     }
 
     @Override
@@ -174,24 +229,14 @@ public class Version implements Comparable<Version> {
         return result;
     }
 
-    /**
-     * Current {@link Version} is greater than that
-     *
-     * @param that the version to be compared
-     * @return <code>true</code> if greater than, or <code>false</code>
-     */
-    public boolean gt(Version that) {
-        return this.compareTo(that) > 0;
-    }
 
-    /**
-     * Current {@link Version} is less than that
-     *
-     * @param that the version to be compared
-     * @return <code>true</code> if less than, or <code>false</code>
-     */
-    public boolean lt(Version that) {
-        return this.compareTo(that) < 0;
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Version{");
+        sb.append("major=").append(major);
+        sb.append(", minor=").append(minor);
+        sb.append(", patch=").append(patch);
+        sb.append('}');
+        return sb.toString();
     }
-
 }
