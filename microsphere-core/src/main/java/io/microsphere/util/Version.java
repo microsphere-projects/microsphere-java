@@ -174,4 +174,24 @@ public class Version implements Comparable<Version> {
         return result;
     }
 
+    /**
+     * Current {@link Version} is greater than that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if greater than, or <code>false</code>
+     */
+    public boolean gt(Version that) {
+        return this.compareTo(that) > 0;
+    }
+
+    /**
+     * Current {@link Version} is less than that
+     *
+     * @param that the version to be compared
+     * @return <code>true</code> if less than, or <code>false</code>
+     */
+    public boolean lt(Version that) {
+        return this.compareTo(that) < 0;
+    }
+
 }

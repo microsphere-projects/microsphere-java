@@ -22,6 +22,8 @@ import org.junit.Test;
 import static io.microsphere.util.Version.getValue;
 import static io.microsphere.util.Version.of;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link Version} Test
@@ -57,5 +59,37 @@ public class VersionTest extends AbstractTestCase {
         assertEquals(1, version.getMajor());
         assertEquals(2, version.getMinor());
         assertEquals(3, version.getPatch());
+    }
+
+    @Test
+    public void testEquals() {
+        Version version = of("1.2.3");
+        assertEquals(version, of("1.2.3"));
+    }
+
+    @Test
+    public void testGt() {
+        Version version = of("1.2.3");
+        assertFalse(version.gt(of("1.2.3")));
+        assertTrue(version.gt(of("1.2.2")));
+        assertTrue(version.gt(of("1.2.1")));
+        assertTrue(version.gt(of("1.2.0")));
+        assertTrue(version.gt(of("1.2")));
+        assertTrue(version.gt(of("1.1.0")));
+        assertTrue(version.gt(of("1.1")));
+        assertTrue(version.gt(of("1")));
+    }
+
+    @Test
+    public void testLt() {
+        Version version = of("1.2.3");
+        assertFalse(version.lt(of("1.2.3")));
+        assertFalse(version.lt(of("1.2.2")));
+        assertFalse(version.lt(of("1.2.1")));
+        assertFalse(version.lt(of("1.2.0")));
+        assertFalse(version.lt(of("1.2")));
+        assertFalse(version.lt(of("1.1.0")));
+        assertFalse(version.lt(of("1.1")));
+        assertFalse(version.lt(of("1")));
     }
 }
