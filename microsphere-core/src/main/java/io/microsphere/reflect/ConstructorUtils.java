@@ -71,4 +71,16 @@ public abstract class ConstructorUtils extends BaseUtils {
     public static <T> Constructor<T> getDeclaredConstructor(Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getDeclaredConstructor(parameterTypes));
     }
+
+    /**
+     * Create an instance by the specified {@link Constructor} and arguments
+     *
+     * @param constructor {@link Constructor}
+     * @param args        the {@link Constructor Constructors} arguments
+     * @param <T>         the type of instance
+     * @return non-null
+     */
+    public static <T> T newInstance(Constructor<T> constructor, Object... args) {
+        return AccessibleObjectUtils.execute(constructor, () -> constructor.newInstance(args));
+    }
 }
