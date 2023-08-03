@@ -54,6 +54,16 @@ public abstract class MethodHandleUtils extends BaseUtils {
 
     private static final ConcurrentMap<LookupKey, MethodHandles.Lookup> lookupCache = new ConcurrentHashMap<>();
 
+    /**
+     * The allowed {@link MethodHandles.Lookup} modes enumeration
+     *
+     * @see MethodHandles.Lookup#PUBLIC
+     * @see MethodHandles.Lookup#PRIVATE
+     * @see MethodHandles.Lookup#PROTECTED
+     * @see MethodHandles.Lookup#PACKAGE
+     * @see MethodHandles.Lookup#TRUSTED
+     * @see MethodHandles.Lookup#ALL_MODES
+     */
     public static enum LookupMode {
 
 
@@ -89,7 +99,12 @@ public abstract class MethodHandleUtils extends BaseUtils {
          * A single-bit mask representing all accesses (public, private, protected and package)
          * The value, 0x0f
          */
-        ALL(ALL_MODES);
+        ALL(ALL_MODES),
+
+        /**
+         * -1
+         */
+        TRUSTED(-1);
 
         private final int value;
 
