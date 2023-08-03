@@ -86,10 +86,15 @@ public enum Modifier {
     STRICT(java.lang.reflect.Modifier.STRICT),
 
     BRIDGE(0x00000040),
+
     VARARGS(0x00000080),
+
     SYNTHETIC(0x00001000),
+
     ANNOTATION(0x00002000),
+
     ENUM(0x00004000),
+    
     MANDATED(0x00008000);
 
     private final int value;
