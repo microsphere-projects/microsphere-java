@@ -104,6 +104,15 @@ public enum Modifier {
     }
 
     /**
+     * The bit value of modifier
+     *
+     * @return the bit value of modifier
+     */
+    public int getValue() {
+        return value;
+    }
+
+    /**
      * matches the specified modifier
      *
      * @param mod the bit of modifier
