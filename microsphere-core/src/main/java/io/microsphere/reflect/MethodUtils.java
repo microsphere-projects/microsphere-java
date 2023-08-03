@@ -16,14 +16,19 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.util.BaseUtils;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.SetUtils.of;
@@ -34,13 +39,13 @@ import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
+import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * The Java Reflection {@link Method} Utility class
@@ -48,7 +53,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodUtils {
+public abstract class MethodUtils extends BaseUtils {
 
     /**
      * The {@link Predicate} reference to {@link MethodUtils#isObjectMethod(Method)}
@@ -57,7 +62,48 @@ public abstract class MethodUtils {
 
     public final static Set<Method> OBJECT_METHODS = of(Object.class.getMethods());
 
-    private MethodUtils() {
+    private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>();
+
+    static class MethodKey {
+
+        private final Class<?> declaredClass;
+
+        private final String methodName;
+
+        private final Class<?>[] parameterTypes;
+
+        MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
+            this.declaredClass = declaredClass;
+            this.methodName = methodName;
+            this.parameterTypes = parameterTypes;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MethodKey methodKey = (MethodKey) o;
+
+            if (!Objects.equals(declaredClass, methodKey.declaredClass))
+                return false;
+            if (!Objects.equals(methodName, methodKey.methodName))
+                return false;
+            // Probably incorrect - comparing Object[] arrays with Arrays.equals
+            return Arrays.equals(parameterTypes, methodKey.parameterTypes);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = declaredClass != null ? declaredClass.hashCode() : 0;
+            result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
+            result = 31 * result + Arrays.hashCode(parameterTypes);
+            return result;
+        }
+
+        static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
+            return new MethodKey(declaredClass, methodName, parameterTypes);
+        }
     }
 
     /**
@@ -158,7 +204,8 @@ public abstract class MethodUtils {
     }
 
     /**
-     * Find the {@link Method} by the the specified type and method name without the parameter types
+     * Find the {@link Method} by the the specified type(including inherited types) and method name without the
+     * parameter type.
      *
      * @param type       the target type
      * @param methodName the specified method name
@@ -169,7 +216,7 @@ public abstract class MethodUtils {
     }
 
     /**
-     * Find the {@link Method} by the the specified type, method name and parameter types
+     * Find the {@link Method} by the the specified type(including inherited types) and method name and parameter types
      *
      * @param type           the target type
      * @param methodName     the method name
@@ -177,11 +224,35 @@ public abstract class MethodUtils {
      * @return if not found, return <code>null</code>
      */
     public static Method findMethod(Class type, String methodName, Class<?>... parameterTypes) {
+        MethodKey key = buildKey(type, methodName, parameterTypes);
+        return methodsCache.computeIfAbsent(key, MethodUtils::findMethod);
+    }
+
+    static Method findMethod(MethodKey key) {
+        Class<?> declaredClass = key.declaredClass;
+        String methodName = key.methodName;
+        Class<?>[] parameterTypes = key.parameterTypes;
+        return findDeclaredMethod(declaredClass, methodName, parameterTypes);
+    }
+
+    public static Method findDeclaredMethod(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        Method method = getDeclaredMethod(declaredClass, methodName, parameterTypes);
+        if (method == null) {
+            Set<Class<?>> inheritedTypes = getAllInheritedTypes(declaredClass);
+            for (Class<?> inheritedType : inheritedTypes) {
+                method = getDeclaredMethod(inheritedType, methodName, parameterTypes);
+                if (method != null) {
+                    break;
+                }
+            }
+        }
+        return method;
+    }
+
+    public static Method getDeclaredMethod(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
         Method method = null;
         try {
-            if (type != null && isNotEmpty(methodName)) {
-                method = type.getDeclaredMethod(methodName, parameterTypes);
-            }
+            method = declaredClass.getDeclaredMethod(methodName, parameterTypes);
         } catch (NoSuchMethodException e) {
         }
         return method;
@@ -313,7 +384,7 @@ public abstract class MethodUtils {
      * @param overrider the overrider {@link Method method}
      * @return if found, the overrider <code>method</code>, or <code>null</code>
      */
-    static Method findNearestOverriddenMethod(Method overrider) {
+    public static Method findNearestOverriddenMethod(Method overrider) {
         Class<?> declaringClass = overrider.getDeclaringClass();
         Method overriddenMethod = null;
         for (Class<?> inheritedType : getAllInheritedTypes(declaringClass)) {
@@ -332,7 +403,7 @@ public abstract class MethodUtils {
      * @param declaringClass the class that is declaring the overridden {@link Method method}
      * @return if found, the overrider <code>method</code>, or <code>null</code>
      */
-    static Method findOverriddenMethod(Method overrider, Class<?> declaringClass) {
+    public static Method findOverriddenMethod(Method overrider, Class<?> declaringClass) {
         List<Method> matchedMethods = getAllMethods(declaringClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
     }
