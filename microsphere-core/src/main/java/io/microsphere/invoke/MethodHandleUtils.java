@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.lang.invoke;
+package io.microsphere.invoke;
 
 import io.microsphere.util.BaseUtils;
 
@@ -25,8 +25,8 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static io.microsphere.lang.invoke.MethodHandleUtils.LookupKey.of;
-import static io.microsphere.lang.invoke.MethodHandleUtils.LookupMode.getModes;
+import static io.microsphere.invoke.MethodHandleUtils.LookupKey.of;
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static java.lang.invoke.MethodHandles.Lookup.PUBLIC;
