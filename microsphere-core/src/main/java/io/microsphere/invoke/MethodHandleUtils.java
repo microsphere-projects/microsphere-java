@@ -20,19 +20,24 @@ import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import static io.microsphere.invoke.MethodHandleUtils.LookupKey.of;
+import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
-import static java.lang.invoke.MethodHandles.Lookup.PUBLIC;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static java.lang.invoke.MethodHandles.Lookup.PACKAGE;
 import static java.lang.invoke.MethodHandles.Lookup.PRIVATE;
 import static java.lang.invoke.MethodHandles.Lookup.PROTECTED;
-import static java.lang.invoke.MethodHandles.Lookup.PACKAGE;
+import static java.lang.invoke.MethodHandles.Lookup.PUBLIC;
+import static java.lang.invoke.MethodType.methodType;
 
 /**
  * The utilities class for {@link MethodHandle}
@@ -149,7 +154,7 @@ public abstract class MethodHandleUtils extends BaseUtils {
             return Objects.hash(lookupClass, allowedModes);
         }
 
-        static LookupKey of(Class<?> lookupClass, int allowedModes) {
+        static LookupKey buildKey(Class<?> lookupClass, int allowedModes) {
             return new LookupKey(lookupClass, allowedModes);
         }
     }
@@ -174,8 +179,23 @@ public abstract class MethodHandleUtils extends BaseUtils {
      */
     public static MethodHandles.Lookup lookup(Class<?> lookupClass, LookupMode... lookupModes) {
         int allowedModes = getModes(lookupModes);
-        LookupKey key = of(lookupClass, allowedModes);
+        LookupKey key = buildKey(lookupClass, allowedModes);
         return lookupCache.computeIfAbsent(key, MethodHandleUtils::newLookup);
+    }
+
+    /**
+     * The convenient method to find {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+     *
+     * @param lookupClass
+     * @param methodName
+     * @param parameterTypes
+     * @return
+     */
+    public static MethodHandle findVirtual(Class<?> lookupClass, String methodName, Class... parameterTypes) {
+        Method method = findMethod(lookupClass, methodName, parameterTypes);
+        MethodType methodType = methodType(method.getReturnType(), parameterTypes);
+        MethodHandles.Lookup lookup = lookup(lookupClass);
+        return execute(() -> lookup.findVirtual(lookupClass, methodName, methodType));
     }
 
     private static MethodHandles.Lookup newLookup(LookupKey key) {
