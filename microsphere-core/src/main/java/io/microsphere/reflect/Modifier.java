@@ -94,7 +94,7 @@ public enum Modifier {
     ANNOTATION(0x00002000),
 
     ENUM(0x00004000),
-    
+
     MANDATED(0x00008000);
 
     private final int value;
