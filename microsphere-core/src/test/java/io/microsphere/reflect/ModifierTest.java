@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * {@link Modifier} Test
@@ -33,6 +34,13 @@ public class ModifierTest {
     public void testGetValue() {
         for (Modifier modifier : Modifier.values()) {
             assertEquals(modifier.getValue(), findModifierValue(modifier.name()));
+        }
+    }
+
+    @Test
+    public void testMatches() {
+        for (Modifier modifier : Modifier.values()) {
+            assertTrue(modifier.matches(modifier.getValue()));
         }
     }
 
