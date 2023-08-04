@@ -19,7 +19,7 @@ package io.microsphere.event;
 import java.util.EventObject;
 
 /**
- * An event object of Dubbo is based on the Java standard {@link EventObject event}
+ * An event object is based on the Java standard {@link EventObject event}
  *
  * @since 1.0.0
  */

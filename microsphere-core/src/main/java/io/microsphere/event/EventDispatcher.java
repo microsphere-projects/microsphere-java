@@ -19,7 +19,7 @@ package io.microsphere.event;
 import java.util.concurrent.Executor;
 
 /**
- * {@link Event Dubbo Event} Dispatcher
+ * {@link Event Event} Dispatcher
  *
  * @see Event
  * @see EventListener
@@ -34,14 +34,23 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
     Executor DIRECT_EXECUTOR = Runnable::run;
 
     /**
-     * Dispatch a Dubbo event to the registered {@link EventListener Dubbo event listeners}
+     * The default implementation of {@link EventDispatcher}
      *
-     * @param event a {@link Event Dubbo event}
+     * @return the default implementation of {@link EventDispatcher}
+     */
+    static EventDispatcher getDefault() {
+        return new DirectEventDispatcher();
+    }
+
+    /**
+     * Dispatch a event to the registered {@link EventListener event listeners}
+     *
+     * @param event a {@link Event event}
      */
     void dispatch(Event event);
 
     /**
-     * The {@link Executor} to dispatch a {@link Event Dubbo event}
+     * The {@link Executor} to dispatch a {@link Event event}
      *
      * @return default implementation directly invoke {@link Runnable#run()} method, rather than multiple-threaded
      * {@link Executor}. If the return value is <code>null</code>, the behavior is same as default.
@@ -49,14 +58,5 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
      */
     default Executor getExecutor() {
         return DIRECT_EXECUTOR;
-    }
-
-    /**
-     * The default implementation of {@link EventDispatcher}
-     *
-     * @return the default implementation of {@link EventDispatcher}
-     */
-    static EventDispatcher getDefault() {
-        return new DirectEventDispatcher();
     }
 }

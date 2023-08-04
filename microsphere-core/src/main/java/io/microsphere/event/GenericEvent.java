@@ -17,7 +17,7 @@
 package io.microsphere.event;
 
 /**
- * Generic {@link Event Dubbo event}
+ * Generic {@link Event event}
  *
  * @param <S> the type of event source
  * @since 1.0.0

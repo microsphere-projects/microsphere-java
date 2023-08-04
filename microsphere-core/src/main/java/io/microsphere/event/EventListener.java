@@ -25,43 +25,24 @@ import java.util.Objects;
 import static io.microsphere.reflect.ReflectionUtils.findParameterizedTypes;
 
 /**
- * The {@link Event Dubbo Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
+ * The {@link Event Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
  * the generic {@link Event}.
  * <p>
- * The {@link #onEvent(Event) handle method} will be notified when the matched-type {@link Event Dubbo Event} is
+ * The {@link #onEvent(Event) handle method} will be notified when the matched-type {@link Event Event} is
  * published, whose priority could be changed by {@link #getPriority()} method.
  *
- * @param <E> the concrete class of {@link Event Dubbo Event}
+ * @param <E> the concrete class of {@link Event Event}
  * @see Event
  * @see java.util.EventListener
  * @since 1.0.0
  */
-
 @FunctionalInterface
 public interface EventListener<E extends Event> extends java.util.EventListener, Prioritized {
 
     /**
-     * Handle a {@link Event Dubbo Event} when it's be published
+     * Find the {@link Class type} {@link Event event} from the specified {@link EventListener event listener}
      *
-     * @param event a {@link Event Dubbo Event}
-     */
-    void onEvent(E event);
-
-    /**
-     * The priority of {@link EventListener current listener}.
-     *
-     * @return the value is more greater, the priority is more lower.
-     * {@link Integer#MIN_VALUE} indicates the highest priority. The default value is {@link Integer#MAX_VALUE}.
-     * The comparison rule , refer to {@link #compareTo}.
-     */
-    default int getPriority() {
-        return NORMAL_PRIORITY;
-    }
-
-    /**
-     * Find the {@link Class type} {@link Event Dubbo event} from the specified {@link EventListener Dubbo event listener}
-     *
-     * @param listener the {@link Class class} of {@link EventListener Dubbo event listener}
+     * @param listener the {@link Class class} of {@link EventListener event listener}
      * @return <code>null</code> if not found
      */
     static Class<? extends Event> findEventType(EventListener<?> listener) {
@@ -69,9 +50,9 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
     }
 
     /**
-     * Find the {@link Class type} {@link Event Dubbo event} from the specified {@link EventListener Dubbo event listener}
+     * Find the {@link Class type} {@link Event event} from the specified {@link EventListener event listener}
      *
-     * @param listenerClass the {@link Class class} of {@link EventListener Dubbo event listener}
+     * @param listenerClass the {@link Class class} of {@link EventListener event listener}
      * @return <code>null</code> if not found
      */
     static Class<? extends Event> findEventType(Class<?> listenerClass) {
@@ -90,10 +71,10 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
     }
 
     /**
-     * Find the type {@link Event Dubbo event} from the specified {@link ParameterizedType} presents
-     * a class of {@link EventListener Dubbo event listener}
+     * Find the type {@link Event event} from the specified {@link ParameterizedType} presents
+     * a class of {@link EventListener event listener}
      *
-     * @param parameterizedType the {@link ParameterizedType} presents a class of {@link EventListener Dubbo event listener}
+     * @param parameterizedType the {@link ParameterizedType} presents a class of {@link EventListener event listener}
      * @return <code>null</code> if not found
      */
     static Class<? extends Event> findEventType(ParameterizedType parameterizedType) {
@@ -114,5 +95,23 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
         }
 
         return eventType;
+    }
+
+    /**
+     * Handle a {@link Event Event} when it's be published
+     *
+     * @param event a {@link Event Event}
+     */
+    void onEvent(E event);
+
+    /**
+     * The priority of {@link EventListener current listener}.
+     *
+     * @return the value is more greater, the priority is more lower.
+     * {@link Integer#MIN_VALUE} indicates the highest priority. The default value is {@link Integer#MAX_VALUE}.
+     * The comparison rule , refer to {@link #compareTo}.
+     */
+    default int getPriority() {
+        return NORMAL_PRIORITY;
     }
 }

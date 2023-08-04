@@ -119,10 +119,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
             return false;
         }
 
-        if (!Event.class.isAssignableFrom(paramTypes[0])) { // not Event type argument
-            return false;
-        }
-
-        return true;
+        // not Event type argument
+        return Event.class.isAssignableFrom(paramTypes[0]);
     }
 }
