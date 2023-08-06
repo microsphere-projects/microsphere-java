@@ -75,10 +75,9 @@ public interface SymbolConstants {
     char SEMICOLON_CHAR = ';';
 
     /**
-     * The Sharp char : ':'
+     * The sharp char : ':'
      */
     char SHARP_CHAR = '#';
-
 
     /**
      * The question mark char : '?'
@@ -91,98 +90,108 @@ public interface SymbolConstants {
     char QUERY_STRING_CHAR = QUESTION_MARK_CHAR;
 
     /**
-     * Left parenthesis char : '('
+     * The left parenthesis char : '('
      */
     char LEFT_PARENTHESIS_CHAR = '(';
 
     /**
-     * Right parenthesis char : '('
+     * The right parenthesis char : '('
      */
     char RIGHT_PARENTHESIS_CHAR = ')';
 
     /**
-     * Underscore char : '_'
+     * The underscore char : '_'
      */
     char UNDER_SCORE_CHAR = '_';
 
     /**
-     * The comma : ","
+     * The hyphen char : '-'
      */
-    String COMMA = String.valueOf(COMMA_CHAR);
+    char HYPHEN_CHAR = '-';
 
     /**
-     * The space : " "
+     * The comma symbol : ","
+     */
+    String COMMA = ",";
+
+    /**
+     * The space symbol : " "
      */
     String SPACE = " ";
 
     /**
-     * The exclamation : "!"
+     * The exclamation symbol : "!"
      */
     String EXCLAMATION = "!";
 
     /**
-     * The exclamation : """
+     * The double quotation symbol : """
      */
     String DOUBLE_QUOTATION = "\"";
 
     /**
-     * The dollar : '$'
+     * The dollar symbol : '$'
      */
     String DOLLAR = "$";
 
     /**
-     * Dot : "."
+     * The dot symbol : "."
      */
     String DOT = ".";
 
     /**
-     * And : "&"
+     * The and symbol : "&"
      */
     String AND = "&";
 
     /**
-     * Equal : "="
+     * The equal symbol : "="
      */
     String EQUAL = "=";
 
     /**
-     * Colon : ":"
+     * The colon symbol : ":"
      */
     String COLON = ":";
 
     /**
-     * Semicolon : ";"
+     * The semicolon symbol: ";"
      */
     String SEMICOLON = ";";
 
     /**
-     * Sharp : "#"
+     * The sharp symbol : "#"
      */
     String SHARP = "#";
 
 
     /**
-     * Question mark : "?"
+     * The question mark symbol : "?"
      */
     String QUESTION_MARK = "?";
 
     /**
-     * Query String : "?"
+     * Tne query string symbol : "?"
      */
     String QUERY_STRING = QUESTION_MARK;
 
     /**
-     * Left parenthesis String : "("
+     * The left parenthesis symbol : "("
      */
     String LEFT_PARENTHESIS = "(";
 
     /**
-     * Right parenthesis String : ")"
+     * The right parenthesis symbol : ")"
      */
     String RIGHT_PARENTHESIS = ")";
 
     /**
-     * Underscore String : "_"
+     * The underscore symbol : "_"
      */
     String UNDER_SCORE = "_";
+
+    /**
+     * The hyphen symbol : "-"
+     */
+    String HYPHEN = "-";
 }

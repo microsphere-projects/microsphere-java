@@ -46,6 +46,7 @@ public class SymbolConstantsTest {
         assertEquals('(', SymbolConstants.LEFT_PARENTHESIS_CHAR);
         assertEquals(')', SymbolConstants.RIGHT_PARENTHESIS_CHAR);
         assertEquals('_', SymbolConstants.UNDER_SCORE_CHAR);
+        assertEquals('-', SymbolConstants.HYPHEN_CHAR);
 
         assertEquals(",", SymbolConstants.COMMA);
         assertEquals(" ", SymbolConstants.SPACE);
@@ -63,5 +64,6 @@ public class SymbolConstantsTest {
         assertEquals("(", SymbolConstants.LEFT_PARENTHESIS);
         assertEquals(")", SymbolConstants.RIGHT_PARENTHESIS);
         assertEquals("_", SymbolConstants.UNDER_SCORE);
+        assertEquals("-", SymbolConstants.HYPHEN);
     }
 }
