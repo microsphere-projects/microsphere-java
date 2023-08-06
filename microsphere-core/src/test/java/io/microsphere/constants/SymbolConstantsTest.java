@@ -38,6 +38,8 @@ public class SymbolConstantsTest {
         assertEquals('.', SymbolConstants.DOT_CHAR);
         assertEquals('&', SymbolConstants.AND_CHAR);
         assertEquals('=', SymbolConstants.EQUAL_CHAR);
+        assertEquals('<', SymbolConstants.LESS_THAN_CHAR);
+        assertEquals('>', SymbolConstants.GREATER_THAN_CHAR);
         assertEquals(':', SymbolConstants.COLON_CHAR);
         assertEquals(';', SymbolConstants.SEMICOLON_CHAR);
         assertEquals('#', SymbolConstants.SHARP_CHAR);
@@ -56,6 +58,10 @@ public class SymbolConstantsTest {
         assertEquals(".", SymbolConstants.DOT);
         assertEquals("&", SymbolConstants.AND);
         assertEquals("=", SymbolConstants.EQUAL);
+        assertEquals("<", SymbolConstants.LESS_THAN);
+        assertEquals("<=", SymbolConstants.LESS_THAN_OR_EQUAL_TO);
+        assertEquals(">", SymbolConstants.GREATER_THAN);
+        assertEquals(">=", SymbolConstants.GREATER_THAN_OR_EQUAL_TO);
         assertEquals(":", SymbolConstants.COLON);
         assertEquals(";", SymbolConstants.SEMICOLON);
         assertEquals("#", SymbolConstants.SHARP);
