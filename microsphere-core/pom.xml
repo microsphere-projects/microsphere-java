@@ -30,6 +30,7 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Apache Commons Dependencies -->
