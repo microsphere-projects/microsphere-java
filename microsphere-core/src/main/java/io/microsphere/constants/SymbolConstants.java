@@ -65,6 +65,16 @@ public interface SymbolConstants {
     char EQUAL_CHAR = '=';
 
     /**
+     * The less than char : '<'
+     */
+    char LESS_THAN_CHAR = '<';
+
+    /**
+     * The greater than char : '>'
+     */
+    char GREATER_THAN_CHAR = '>';
+
+    /**
      * The colon char : ':'
      */
     char COLON_CHAR = ':';
@@ -148,6 +158,26 @@ public interface SymbolConstants {
      * The equal symbol : "="
      */
     String EQUAL = "=";
+
+    /**
+     * The less than symbol : "<"
+     */
+    String LESS_THAN = "<";
+
+    /**
+     * The less than or equal to symbol : "<="
+     */
+    String LESS_THAN_OR_EQUAL_TO = "<=";
+
+    /**
+     * The greater than symbol : ">"
+     */
+    String GREATER_THAN = ">";
+
+    /**
+     * The greater than or equal to symbol : ">="
+     */
+    String GREATER_THAN_OR_EQUAL_TO = ">=";
 
     /**
      * The colon symbol : ":"
