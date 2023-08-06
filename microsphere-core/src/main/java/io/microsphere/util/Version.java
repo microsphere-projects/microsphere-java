@@ -16,8 +16,25 @@
  */
 package io.microsphere.util;
 
-import java.util.StringTokenizer;
+import io.microsphere.util.jar.JarUtils;
 
+import javax.annotation.Nonnull;
+import java.net.URL;
+import java.util.Objects;
+import java.util.StringTokenizer;
+import java.util.function.BiPredicate;
+
+import static io.microsphere.constants.SymbolConstants.EQUAL;
+import static io.microsphere.constants.SymbolConstants.GREATER_THAN;
+import static io.microsphere.constants.SymbolConstants.GREATER_THAN_OR_EQUAL_TO;
+import static io.microsphere.constants.SymbolConstants.LESS_THAN;
+import static io.microsphere.constants.SymbolConstants.LESS_THAN_OR_EQUAL_TO;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.Version.Operator.EQ;
+import static io.microsphere.util.Version.Operator.GE;
+import static io.microsphere.util.Version.Operator.GT;
+import static io.microsphere.util.Version.Operator.LE;
+import static io.microsphere.util.Version.Operator.LT;
 import static java.lang.Integer.compare;
 
 /**
@@ -79,6 +96,26 @@ public class Version implements Comparable<Version> {
         int patch = getValue(st);
 
         return of(major, minor, patch);
+    }
+
+
+    /**
+     * Class that exposes the version. Fetches the "Implementation-Version" manifest attribute from the jar file.
+     *
+     * @param targetClass the class to exposes the version
+     * @return non-null
+     */
+    @Nonnull
+    public static Version getVersion(Class<?> targetClass) {
+        Package targetPackage = targetClass.getPackage();
+        String version = targetPackage.getImplementationVersion();
+        if (version == null) {
+            URL classResource = ClassUtils.getCodeSourceLocation(targetClass);
+            String jarFilePath = JarUtils.resolveRelativePath(classResource);
+            String errorMessage = format("The \"Implementation-Version\" manifest attribute can't be fetched from " + "the jar file[path : '{}'] by the target class[name :'{}']", jarFilePath, targetClass.getName());
+            throw new IllegalArgumentException(errorMessage);
+        }
+        return of(version);
     }
 
     static int getValue(StringTokenizer st) {
@@ -144,8 +181,8 @@ public class Version implements Comparable<Version> {
      * @see #gt(Version)
      */
     public boolean isGreaterThan(Version that) {
-        if (that == null) return false;
-        return this.compareTo(that) > 0;
+        return GT.test(this, that);
+
     }
 
     /**
@@ -167,8 +204,7 @@ public class Version implements Comparable<Version> {
      * @see #ge(Version)
      */
     public boolean isGreaterOrEqual(Version that) {
-        if (that == null) return false;
-        return this.compareTo(that) >= 0;
+        return GE.test(this, that);
     }
 
     /**
@@ -188,8 +224,7 @@ public class Version implements Comparable<Version> {
      * @return <code>true</code> if less than, or <code>false</code>
      */
     public boolean isLessThan(Version that) {
-        if (that == null) return false;
-        return this.compareTo(that) < 0;
+        return LT.test(this, that);
     }
 
     /**
@@ -211,8 +246,7 @@ public class Version implements Comparable<Version> {
      * @see #le(Version)
      */
     public boolean isLessOrEqual(Version that) {
-        if (that == null) return false;
-        return this.compareTo(that) <= 0;
+        return LE.test(this, that);
     }
 
     /**
@@ -232,10 +266,7 @@ public class Version implements Comparable<Version> {
      * @return <code>true</code> if equals, or <code>false</code>
      */
     public boolean equals(Version that) {
-        if (that == null) return false;
-        if (this.major != that.major) return false;
-        if (this.minor != that.minor) return false;
-        return patch == that.patch;
+        return EQ.test(this, that);
     }
 
     /**
@@ -289,5 +320,102 @@ public class Version implements Comparable<Version> {
         sb.append(", patch=").append(patch);
         sb.append('}');
         return sb.toString();
+    }
+
+    public static enum Operator implements BiPredicate<Version, Version> {
+
+        /**
+         * The Operator : "Equal to"
+         */
+        EQ(EQUAL) {
+            @Override
+            public boolean test(Version v1, Version v2) {
+                if (v1 == v2) {
+                    return true;
+                }
+                if (v2 == null) return false;
+                if (v1.major != v2.major) return false;
+                if (v1.minor != v2.minor) return false;
+                return v1.patch == v2.patch;
+            }
+        },
+
+        /**
+         * The Operator : "Less than"
+         */
+        LT(LESS_THAN) {
+            @Override
+            public boolean test(Version v1, Version v2) {
+                if (v1 == v2) {
+                    return true;
+                }
+                if (v2 == null) return false;
+                return v1.compareTo(v2) < 0;
+            }
+        },
+
+        /**
+         * The Operator : "Less than or equal to"
+         */
+        LE(LESS_THAN_OR_EQUAL_TO) {
+            @Override
+            public boolean test(Version v1, Version v2) {
+                if (v1 == v2) {
+                    return true;
+                }
+                if (v2 == null) return false;
+                return v1.compareTo(v2) <= 0;
+            }
+        },
+
+        /**
+         * The Operator : "Greater than"
+         */
+        GT(GREATER_THAN) {
+            @Override
+            public boolean test(Version v1, Version v2) {
+                if (v1 == v2) {
+                    return true;
+                }
+                if (v2 == null) return false;
+                return v1.compareTo(v2) > 0;
+            }
+        },
+
+        /**
+         * The Operator : "Greater than or equal to"
+         */
+        GE(GREATER_THAN_OR_EQUAL_TO) {
+            @Override
+            public boolean test(Version v1, Version v2) {
+                if (v1 == v2) {
+                    return true;
+                }
+                if (v2 == null) return false;
+                return v1.compareTo(v2) >= 0;
+            }
+        };
+
+        private final String symbol;
+
+        Operator(String symbol) {
+            this.symbol = symbol;
+        }
+
+        /**
+         * Find the symbol to an {@link Operator} member if possible
+         *
+         * @param symbol the operators' symbol
+         * @return <code>null</code> if can't be found
+         */
+        public static Operator of(String symbol) {
+            for (Operator operator : values()) {
+                if (Objects.equals(symbol, operator.symbol)) {
+                    return operator;
+                }
+            }
+            return null;
+        }
+
     }
 }
