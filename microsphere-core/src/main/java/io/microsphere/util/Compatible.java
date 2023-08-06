@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -71,6 +72,10 @@ public class Compatible<T, R> {
             result = conditionalFunction.apply(version);
         }
         return Optional.ofNullable(result);
+    }
+
+    public void accept(Consumer<R> resultConsumer) {
+        call().ifPresent(resultConsumer);
     }
 
     /**
