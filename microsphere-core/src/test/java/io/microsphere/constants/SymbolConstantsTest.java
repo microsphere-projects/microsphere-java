@@ -41,9 +41,11 @@ public class SymbolConstantsTest {
         assertEquals(':', SymbolConstants.COLON_CHAR);
         assertEquals(';', SymbolConstants.SEMICOLON_CHAR);
         assertEquals('#', SymbolConstants.SHARP_CHAR);
+        assertEquals('?', SymbolConstants.QUESTION_MARK_CHAR);
         assertEquals('?', SymbolConstants.QUERY_STRING_CHAR);
         assertEquals('(', SymbolConstants.LEFT_PARENTHESIS_CHAR);
         assertEquals(')', SymbolConstants.RIGHT_PARENTHESIS_CHAR);
+        assertEquals('_', SymbolConstants.UNDER_SCORE_CHAR);
 
         assertEquals(",", SymbolConstants.COMMA);
         assertEquals(" ", SymbolConstants.SPACE);
@@ -56,8 +58,10 @@ public class SymbolConstantsTest {
         assertEquals(":", SymbolConstants.COLON);
         assertEquals(";", SymbolConstants.SEMICOLON);
         assertEquals("#", SymbolConstants.SHARP);
+        assertEquals("?", SymbolConstants.QUESTION_MARK);
         assertEquals("?", SymbolConstants.QUERY_STRING);
         assertEquals("(", SymbolConstants.LEFT_PARENTHESIS);
         assertEquals(")", SymbolConstants.RIGHT_PARENTHESIS);
+        assertEquals("_", SymbolConstants.UNDER_SCORE);
     }
 }

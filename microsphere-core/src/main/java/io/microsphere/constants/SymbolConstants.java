@@ -20,7 +20,7 @@ package io.microsphere.constants;
  * Symbols
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since
+ * @since 1.0.0
  */
 public interface SymbolConstants {
 
@@ -79,10 +79,16 @@ public interface SymbolConstants {
      */
     char SHARP_CHAR = '#';
 
+
+    /**
+     * The question mark char : '?'
+     */
+    char QUESTION_MARK_CHAR = '?';
+
     /**
      * The query string char : '?'
      */
-    char QUERY_STRING_CHAR = '?';
+    char QUERY_STRING_CHAR = QUESTION_MARK_CHAR;
 
     /**
      * Left parenthesis char : '('
@@ -95,6 +101,11 @@ public interface SymbolConstants {
     char RIGHT_PARENTHESIS_CHAR = ')';
 
     /**
+     * Underscore char : '_'
+     */
+    char UNDER_SCORE_CHAR = '_';
+
+    /**
      * The comma : ","
      */
     String COMMA = String.valueOf(COMMA_CHAR);
@@ -102,65 +113,76 @@ public interface SymbolConstants {
     /**
      * The space : " "
      */
-    String SPACE = String.valueOf(SPACE_CHAR);
+    String SPACE = " ";
 
     /**
-     * The exclamation : '!'
+     * The exclamation : "!"
      */
-    String EXCLAMATION = String.valueOf(EXCLAMATION_CHAR);
+    String EXCLAMATION = "!";
 
     /**
      * The exclamation : """
      */
-    String DOUBLE_QUOTATION = String.valueOf(DOUBLE_QUOTATION_CHAR);
+    String DOUBLE_QUOTATION = "\"";
 
     /**
      * The dollar : '$'
      */
-    String DOLLAR = String.valueOf(DOLLAR_CHAR);
+    String DOLLAR = "$";
 
     /**
      * Dot : "."
      */
-    String DOT = String.valueOf(DOT_CHAR);
+    String DOT = ".";
 
     /**
      * And : "&"
      */
-    String AND = String.valueOf(AND_CHAR);
+    String AND = "&";
 
     /**
      * Equal : "="
      */
-    String EQUAL = String.valueOf(EQUAL_CHAR);
+    String EQUAL = "=";
 
     /**
      * Colon : ":"
      */
-    String COLON = String.valueOf(COLON_CHAR);
+    String COLON = ":";
 
     /**
      * Semicolon : ";"
      */
-    String SEMICOLON = String.valueOf(SEMICOLON_CHAR);
+    String SEMICOLON = ";";
 
     /**
      * Sharp : "#"
      */
-    String SHARP = String.valueOf(SHARP_CHAR);
+    String SHARP = "#";
+
+
+    /**
+     * Question mark : "?"
+     */
+    String QUESTION_MARK = "?";
 
     /**
      * Query String : "?"
      */
-    String QUERY_STRING = String.valueOf(QUERY_STRING_CHAR);
+    String QUERY_STRING = QUESTION_MARK;
 
     /**
      * Left parenthesis String : "("
      */
-    String LEFT_PARENTHESIS = String.valueOf(LEFT_PARENTHESIS_CHAR);
+    String LEFT_PARENTHESIS = "(";
 
     /**
-     * Right parenthesis String : "("
+     * Right parenthesis String : ")"
      */
-    String RIGHT_PARENTHESIS = String.valueOf(RIGHT_PARENTHESIS_CHAR);
+    String RIGHT_PARENTHESIS = ")";
+
+    /**
+     * Underscore String : "_"
+     */
+    String UNDER_SCORE = "_";
 }
