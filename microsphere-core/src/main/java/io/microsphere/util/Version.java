@@ -144,6 +144,7 @@ public class Version implements Comparable<Version> {
      * @see #gt(Version)
      */
     public boolean isGreaterThan(Version that) {
+        if (that == null) return false;
         return this.compareTo(that) > 0;
     }
 
@@ -166,6 +167,7 @@ public class Version implements Comparable<Version> {
      * @see #ge(Version)
      */
     public boolean isGreaterOrEqual(Version that) {
+        if (that == null) return false;
         return this.compareTo(that) >= 0;
     }
 
@@ -186,6 +188,7 @@ public class Version implements Comparable<Version> {
      * @return <code>true</code> if less than, or <code>false</code>
      */
     public boolean isLessThan(Version that) {
+        if (that == null) return false;
         return this.compareTo(that) < 0;
     }
 
@@ -208,6 +211,7 @@ public class Version implements Comparable<Version> {
      * @see #le(Version)
      */
     public boolean isLessOrEqual(Version that) {
+        if (that == null) return false;
         return this.compareTo(that) <= 0;
     }
 
@@ -228,6 +232,7 @@ public class Version implements Comparable<Version> {
      * @return <code>true</code> if equals, or <code>false</code>
      */
     public boolean equals(Version that) {
+        if (that == null) return false;
         if (this.major != that.major) return false;
         if (this.minor != that.minor) return false;
         return patch == that.patch;
