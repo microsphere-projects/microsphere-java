@@ -414,7 +414,7 @@ public class Version implements Comparable<Version> {
                     return operator;
                 }
             }
-            return null;
+            throw new IllegalArgumentException(format("The Operator can't be parsed by the symbol '{}'!", symbol));
         }
 
     }
