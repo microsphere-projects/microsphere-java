@@ -121,6 +121,23 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
+    public void testGetVersion() {
+        Version version = Version.getVersion(Test.class);
+        assertEquals(4, version.getMajor());
+        assertEquals(13, version.getMinor());
+        assertEquals(2, version.getPatch());
+    }
+
+    @Test
+    public void testOperator() {
+        assertEquals(Version.Operator.EQ, Version.Operator.of("="));
+        assertEquals(Version.Operator.LT, Version.Operator.of("<"));
+        assertEquals(Version.Operator.LE, Version.Operator.of("<="));
+        assertEquals(Version.Operator.GT, Version.Operator.of(">"));
+        assertEquals(Version.Operator.GE, Version.Operator.of(">="));
+    }
+
+    @Test
     public void testToString() {
         assertEquals("Version{major=1, minor=2, patch=3}", of("1.2.3").toString());
     }
