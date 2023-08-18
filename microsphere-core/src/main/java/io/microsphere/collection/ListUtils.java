@@ -23,7 +23,10 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
+import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterator;
 import static java.util.Collections.unmodifiableList;
 
@@ -96,4 +99,15 @@ public abstract class ListUtils extends BaseUtils {
         return new LinkedList<>();
     }
 
+    public static <T> void forEach(List<T> values, BiConsumer<Integer, T> indexedElementConsumer) {
+        int length = size(values);
+        for (int i = 0; i < length; i++) {
+            T value = values.get(i);
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(List<T> values, Consumer<T> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
 }

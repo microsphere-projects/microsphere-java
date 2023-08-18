@@ -18,6 +18,7 @@ package io.microsphere.invoke;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
 import static io.microsphere.invoke.MethodHandleUtils.lookup;
@@ -42,5 +43,44 @@ public class MethodHandleUtilsTest {
     public void testFindVirtual() {
         MethodHandles.Lookup lookup = lookup(String.class);
 
+    }
+
+
+    @Test
+    public void test() {
+
+        B b = new B();
+
+        // b.execute(new A());
+        b.execute2(new A());
+    }
+
+    class A {
+
+        private String name = "Hello,World";
+
+    }
+
+    class B {
+
+        public void execute(A a) {
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            try {
+                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
+                System.out.println(methodHandle.invokeExact(a));
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        public void execute2(A a) {
+            MethodHandles.Lookup lookup = lookup(A.class);
+            try {
+                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
+                System.out.println(methodHandle.invokeExact(a));
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

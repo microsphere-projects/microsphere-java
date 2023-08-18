@@ -225,7 +225,7 @@ public abstract class ArrayUtils extends BaseUtils {
         return newArray;
     }
 
-    public static <T> void iterate(T[] values, BiConsumer<Integer, T> indexedElementConsumer) {
+    public static <T> void forEach(T[] values, BiConsumer<Integer, T> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             T value = values[i];
@@ -233,8 +233,8 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void iterate(T[] values, Consumer<T> consumer) {
-        iterate(values, (i, e) -> consumer.accept(e));
+    public static <T> void forEach(T[] values, Consumer<T> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
     }
 
 }

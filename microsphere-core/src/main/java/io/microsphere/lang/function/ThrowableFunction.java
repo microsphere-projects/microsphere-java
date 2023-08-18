@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang.function;
 
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -81,9 +82,49 @@ public interface ThrowableFunction<T, R> {
     }
 
     /**
+     * Returns a composed throwable-function that first applies the {@code before}
+     * throwable-function to its input, and then applies this throwable-function to the result.
+     * If evaluation of either throwable-function throws an exception, it is relayed to
+     * the caller of the composed throwable-function.
+     *
+     * @param <V> the type of input to the {@code before} throwable-function, and to the
+     *           composed throwable-function
+     * @param before the throwable-function to apply before this throwable-function is applied
+     * @return a composed throwable-function that first applies the {@code before}
+     * throwable-function and then applies this throwable-function
+     * @throws NullPointerException if before is null
+     *
+     * @see #andThen(ThrowableFunction)
+     */
+    default <V> ThrowableFunction<V, R> compose(ThrowableFunction<? super V, ? extends T> before) {
+        Objects.requireNonNull(before);
+        return (V v) -> apply(before.apply(v));
+    }
+
+    /**
+     * Returns a composed throwable-function that first applies this throwable-function to
+     * its input, and then applies the {@code after} throwable-function to the result.
+     * If evaluation of either throwable-function throws an exception, it is relayed to
+     * the caller of the composed throwable-function.
+     *
+     * @param <V> the type of output of the {@code after} throwable-function, and of the
+     *           composed throwable-function
+     * @param after the throwable-function to apply after this throwable-function is applied
+     * @return a composed throwable-function that first applies this throwable-function and then
+     * applies the {@code after} throwable-function
+     * @throws NullPointerException if after is null
+     *
+     * @see #compose(ThrowableFunction)
+     */
+    default <V> ThrowableFunction<T, V> andThen(ThrowableFunction<? super R, ? extends V> after) {
+        Objects.requireNonNull(after);
+        return (T t) -> after.apply(apply(t));
+    }
+
+    /**
      * Executes {@link ThrowableFunction} with {@link #handleException(T, Throwable) the default exception handling}
      *
-     * @param t        the function argument
+     * @param t        the throwable-function argument
      * @param function {@link ThrowableFunction}
      * @param <T>      the source type
      * @param <R>      the return type
