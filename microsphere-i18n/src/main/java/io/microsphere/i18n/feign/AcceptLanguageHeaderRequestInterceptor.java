@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AcceptLanguageHeaderRequestInterceptor implements RequestInterceptor {
 
     public static final String HEADER_NAME = "Accept-Language";
+
     private static final Logger logger = LoggerFactory.getLogger(AcceptLanguageHeaderRequestInterceptor.class);
 
     @Override
