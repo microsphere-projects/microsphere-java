@@ -35,6 +35,7 @@ import static io.microsphere.reflect.TypeUtils.EMPTY_TYPE;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
+import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.asArray;
@@ -444,7 +445,7 @@ public class JavaType implements Serializable {
             }
 
             private Class<?> as(Type type) {
-                return (Class) type;
+                return getRawClass(type);
             }
         },
 
