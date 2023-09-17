@@ -19,7 +19,6 @@ package io.microsphere.io.event;
 import io.microsphere.event.Event;
 
 import java.io.File;
-import java.util.EventObject;
 
 /**
  * The event raised when the {@link File file} is changed
@@ -63,6 +62,9 @@ public class FileChangedEvent extends Event {
         return kind;
     }
 
+    /**
+     * The Kind of File Changed Event
+     */
     public static enum Kind {
 
         /**
