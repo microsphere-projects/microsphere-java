@@ -21,9 +21,13 @@ import io.microsphere.io.event.FileChangedListener;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
 
 import static io.microsphere.util.ClassLoaderUtils.getResource;
@@ -50,6 +54,13 @@ public class StandardFileWatchServiceTest {
         File resourceFile = new File(resourceFilePath);
         countDownLatch = new CountDownLatch(1);
         fileWatchService.watch(resourceFile, new MyFileChangedListener(countDownLatch));
+        new Thread(() -> {
+            try {
+                Thread.sleep(3 * 1000);
+                Files.write(resourceFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
+            } catch (Throwable e) {
+            }
+        }).start();
     }
 
     @After
@@ -65,6 +76,8 @@ public class StandardFileWatchServiceTest {
 
     private static class MyFileChangedListener implements FileChangedListener {
 
+        private static final Logger logger = LoggerFactory.getLogger(MyFileChangedListener.class);
+
         private CountDownLatch countDownLatch;
 
         public MyFileChangedListener(CountDownLatch countDownLatch) {
@@ -74,19 +87,19 @@ public class StandardFileWatchServiceTest {
         @Override
         public void onFileCreated(FileChangedEvent event) {
             countDownLatch.countDown();
-            System.out.println(event);
+            logger.info(event::toString);
         }
 
         @Override
         public void onFileModified(FileChangedEvent event) {
             countDownLatch.countDown();
-            System.out.println(event);
+            logger.info(event::toString);
         }
 
         @Override
         public void onFileDeleted(FileChangedEvent event) {
             countDownLatch.countDown();
-            System.out.println(event);
+            logger.info(event::toString);
         }
     }
 
