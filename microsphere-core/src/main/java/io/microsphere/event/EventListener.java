@@ -17,10 +17,12 @@
 package io.microsphere.event;
 
 import io.microsphere.lang.Prioritized;
-import io.microsphere.reflect.JavaType;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Objects;
+
+import static io.microsphere.reflect.ReflectionUtils.findParameterizedTypes;
 
 /**
  * The {@link Event Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
@@ -53,11 +55,19 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * @param listenerClass the {@link Class class} of {@link EventListener event listener}
      * @return <code>null</code> if not found
      */
-    static Class<? extends Event> findEventType(Class<? extends EventListener> listenerClass) {
-        return JavaType.from(listenerClass)
-                .as(EventListener.class)
-                .getGenericType(0)
-                .toClass();
+    static Class<? extends Event> findEventType(Class<?> listenerClass) {
+        Class<? extends Event> eventType = null;
+
+        if (listenerClass != null && EventListener.class.isAssignableFrom(listenerClass)) {
+            eventType = findParameterizedTypes(listenerClass)
+                    .stream()
+                    .map(EventListener::findEventType)
+                    .filter(Objects::nonNull)
+                    .findAny()
+                    .orElse((Class) findEventType(listenerClass.getSuperclass()));
+        }
+
+        return eventType;
     }
 
     /**

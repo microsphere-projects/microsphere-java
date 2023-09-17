@@ -62,6 +62,15 @@ public class FileChangedEvent extends Event {
         return kind;
     }
 
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("FileChangedEvent{");
+        sb.append("kind=").append(kind);
+        sb.append(", file=").append(getFile());
+        sb.append('}');
+        return sb.toString();
+    }
+
     /**
      * The Kind of File Changed Event
      */
