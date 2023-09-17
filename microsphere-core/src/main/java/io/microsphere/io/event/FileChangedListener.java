@@ -30,24 +30,43 @@ import io.microsphere.event.EventListener;
  */
 public interface FileChangedListener extends EventListener<FileChangedEvent> {
 
+    default void onEvent(FileChangedEvent event) {
+        // DO NOTHING
+        FileChangedEvent.Kind kind = event.getKind();
+        switch (kind) {
+            case CREATED:
+                onFileCreated(event);
+                break;
+            case MODIFIED:
+                onFileModified(event);
+                break;
+            case DELETED:
+                onFileDeleted(event);
+                break;
+        }
+    }
+
     /**
      * Invoked when the file has been created
      *
      * @param event the {@link FileChangedEvent.Kind#CREATED created} {@link FileChangedEvent event}
      */
-    void onFileCreated(FileChangedEvent event);
+    default void onFileCreated(FileChangedEvent event) {
+    }
 
     /**
      * Invoked when the file has been modified
      *
      * @param event the {@link FileChangedEvent.Kind#MODIFIED modified} {@link FileChangedEvent event}
      */
-    void onFileModified(FileChangedEvent event);
+    default void onFileModified(FileChangedEvent event) {
+    }
 
     /**
      * Invoked when the file has been deleted
      *
      * @param event the {@link FileChangedEvent.Kind#DELETED deleted} {@link FileChangedEvent event}
      */
-    void onFileDeleted(FileChangedEvent event);
+    default void onFileDeleted(FileChangedEvent event) {
+    }
 }
