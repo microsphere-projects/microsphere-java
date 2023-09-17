@@ -26,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 1.0.0
  */
 public class CustomizedThreadFactory implements ThreadFactory {
+
     private final ThreadGroup group;
 
     private final AtomicInteger threadNumber;
@@ -38,19 +39,19 @@ public class CustomizedThreadFactory implements ThreadFactory {
 
     private final long stackSize;
 
-    public CustomizedThreadFactory(String namePrefix) {
+    protected CustomizedThreadFactory(String namePrefix) {
         this(namePrefix, false);
     }
 
-    public CustomizedThreadFactory(String namePrefix, boolean daemon) {
+    protected CustomizedThreadFactory(String namePrefix, boolean daemon) {
         this(namePrefix, daemon, Thread.NORM_PRIORITY);
     }
 
-    public CustomizedThreadFactory(String namePrefix, boolean daemon, int priority) {
+    protected CustomizedThreadFactory(String namePrefix, boolean daemon, int priority) {
         this(namePrefix, daemon, priority, 0);
     }
 
-    public CustomizedThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
+    protected CustomizedThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
         SecurityManager s = System.getSecurityManager();
         this.group = (s != null) ? s.getThreadGroup() :
                 Thread.currentThread().getThreadGroup();
@@ -61,10 +62,24 @@ public class CustomizedThreadFactory implements ThreadFactory {
         this.stackSize = stackSize;
     }
 
+    public static ThreadFactory newThreadFactory(String namePrefix) {
+        return new CustomizedThreadFactory(namePrefix);
+    }
+
+    public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon) {
+        return new CustomizedThreadFactory(namePrefix, daemon);
+    }
+
+    public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon, int priority) {
+        return new CustomizedThreadFactory(namePrefix, daemon, priority);
+    }
+
+    public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
+        return new CustomizedThreadFactory(namePrefix, daemon, priority, stackSize);
+    }
+
     public Thread newThread(Runnable r) {
-        Thread t = new Thread(group, r,
-                namePrefix + threadNumber.getAndIncrement(),
-                stackSize);
+        Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), stackSize);
         t.setDaemon(daemon);
         t.setPriority(priority);
         return t;
