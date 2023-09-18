@@ -33,6 +33,7 @@ import java.nio.file.Watchable;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
@@ -104,10 +105,12 @@ public class StandardFileWatchService implements FileWatchService {
 
                             FileChangedMetadata metadata = fileChangedMetadataMap.get(dirPath);
                             if (metadata != null) {
-                                EventDispatcher eventDispatcher = metadata.eventDispatcher;
-                                WatchEvent.Kind watchEventKind = event.kind();
                                 Path filePath = dirPath.resolve(fileRelativePath);
-                                dispatchFileChangedEvent(filePath, watchEventKind, eventDispatcher);
+                                if (metadata.filePaths.contains(filePath)) {
+                                    EventDispatcher eventDispatcher = metadata.eventDispatcher;
+                                    WatchEvent.Kind watchEventKind = event.kind();
+                                    dispatchFileChangedEvent(filePath, watchEventKind, eventDispatcher);
+                                }
                             }
                         }
                     }
@@ -144,11 +147,11 @@ public class StandardFileWatchService implements FileWatchService {
 
         FileChangedMetadata fileChangedMetadata = fileChangedMetadataMap.computeIfAbsent(dirPath, k -> {
             FileChangedMetadata metadata = new FileChangedMetadata();
-            metadata.eventDispatcher = newDefault();
             metadata.watchEventKinds = toWatchEventKinds(kinds);
             return metadata;
         });
 
+        fileChangedMetadata.filePaths.add(filePath);
         fileChangedMetadata.eventDispatcher.addEventListener(listener);
 
     }
@@ -213,9 +216,9 @@ public class StandardFileWatchService implements FileWatchService {
 
     private static class FileChangedMetadata {
 
-        private Set<Path> filePaths;
+        private Set<Path> filePaths = new TreeSet<>();
 
-        private EventDispatcher eventDispatcher;
+        private EventDispatcher eventDispatcher = newDefault();
 
         private WatchEvent.Kind<?>[] watchEventKinds;
     }
