@@ -31,11 +31,12 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.nio.file.Watchable;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
-import static io.microsphere.event.EventDispatcher.getDefault;
+import static io.microsphere.event.EventDispatcher.newDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
@@ -143,7 +144,7 @@ public class StandardFileWatchService implements FileWatchService {
 
         FileChangedMetadata fileChangedMetadata = fileChangedMetadataMap.computeIfAbsent(dirPath, k -> {
             FileChangedMetadata metadata = new FileChangedMetadata();
-            metadata.eventDispatcher = getDefault();
+            metadata.eventDispatcher = newDefault();
             metadata.watchEventKinds = toWatchEventKinds(kinds);
             return metadata;
         });
@@ -211,6 +212,8 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     private static class FileChangedMetadata {
+
+        private Set<Path> filePaths;
 
         private EventDispatcher eventDispatcher;
 

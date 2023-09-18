@@ -38,7 +38,7 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
      *
      * @return the default implementation of {@link EventDispatcher}
      */
-    static EventDispatcher getDefault() {
+    static EventDispatcher newDefault() {
         return new DirectEventDispatcher();
     }
 

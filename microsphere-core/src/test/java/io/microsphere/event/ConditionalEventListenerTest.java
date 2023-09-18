@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public class ConditionalEventListenerTest {
 
-    private final EventDispatcher eventDispatcher = EventDispatcher.getDefault();
+    private final EventDispatcher eventDispatcher = EventDispatcher.newDefault();
 
     @BeforeEach
     public void init() {

@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class EventDispatcherTest {
 
-    private EventDispatcher defaultInstance = EventDispatcher.getDefault();
+    private EventDispatcher defaultInstance = EventDispatcher.newDefault();
 
     @Test
     public void testDefaultInstance() {
