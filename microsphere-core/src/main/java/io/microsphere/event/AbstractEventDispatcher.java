@@ -162,9 +162,12 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
      */
     protected void loadEventListenerInstances() {
         ClassLoader classLoader = getClass().getClassLoader();
-        loadServicesList(EventListener.class, classLoader)
-                .stream()
-                .sorted()
-                .forEach(this::addEventListener);
+        try {
+            loadServicesList(EventListener.class, classLoader)
+                    .stream()
+                    .sorted()
+                    .forEach(this::addEventListener);
+        } catch (Throwable ignored) {
+        }
     }
 }
