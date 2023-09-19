@@ -44,6 +44,8 @@ public class StandardFileWatchServiceTest {
 
     private StandardFileWatchService fileWatchService;
 
+    private File resourceFile;
+
     private CountDownLatch countDownLatch;
 
     @Before
@@ -51,16 +53,9 @@ public class StandardFileWatchServiceTest {
         fileWatchService = new StandardFileWatchService();
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
         String resourceFilePath = resource.getFile();
-        File resourceFile = new File(resourceFilePath);
-        countDownLatch = new CountDownLatch(1);
-        fileWatchService.watch(resourceFile, new MyFileChangedListener(countDownLatch));
-        new Thread(() -> {
-            try {
-                Thread.sleep(3 * 1000);
-                Files.write(resourceFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
-            } catch (Throwable e) {
-            }
-        }).start();
+        this.resourceFile = new File(resourceFilePath);
+        this.countDownLatch = new CountDownLatch(1);
+        this.fileWatchService.watch(this.resourceFile, new MyFileChangedListener(countDownLatch));
     }
 
     @After
@@ -71,6 +66,15 @@ public class StandardFileWatchServiceTest {
     @Test
     public void test() throws Exception {
         fileWatchService.start();
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(1 * 100);
+                Files.write(resourceFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
+            } catch (Throwable e) {
+            }
+        });
+        thread.start();
+        thread.join();
         countDownLatch.await();
     }
 

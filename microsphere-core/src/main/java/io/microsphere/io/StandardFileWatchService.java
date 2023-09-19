@@ -40,6 +40,7 @@ import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory
 import static io.microsphere.event.EventDispatcher.newDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.util.concurrent.Executors.newCachedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
@@ -62,12 +63,12 @@ public class StandardFileWatchService implements FileWatchService {
 
     private final ExecutorService executorService;
 
-    private final Map<Path, FileChangedMetadata> fileChangedMetadataMap = new TreeMap<>();
+    private final Map<Path, FileChangedMetadata> fileChangedMetadataCache = new TreeMap<>();
 
     private volatile boolean started;
 
     public StandardFileWatchService() {
-        this(newSingleThreadExecutor(newThreadFactory("FileWatchService", true)));
+        this(newCachedThreadPool(newThreadFactory("FileWatchService", true)));
     }
 
     public StandardFileWatchService(ExecutorService executorService) {
@@ -103,7 +104,7 @@ public class StandardFileWatchService implements FileWatchService {
                             Path dirPath = (Path) watchable;
                             Path fileRelativePath = (Path) event.context();
 
-                            FileChangedMetadata metadata = fileChangedMetadataMap.get(dirPath);
+                            FileChangedMetadata metadata = fileChangedMetadataCache.get(dirPath);
                             if (metadata != null) {
                                 Path filePath = dirPath.resolve(fileRelativePath);
                                 if (metadata.filePaths.contains(filePath)) {
@@ -131,7 +132,7 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     private void registerDirectoriesToWatchService(WatchService watchService) throws Exception {
-        for (Map.Entry<Path, FileChangedMetadata> entry : fileChangedMetadataMap.entrySet()) {
+        for (Map.Entry<Path, FileChangedMetadata> entry : fileChangedMetadataCache.entrySet()) {
             Path directoryPath = entry.getKey();
             FileChangedMetadata metadata = entry.getValue();
             WatchEvent.Kind[] kinds = metadata.watchEventKinds;
@@ -142,18 +143,18 @@ public class StandardFileWatchService implements FileWatchService {
     @Override
     public void watch(File file, FileChangedListener listener, FileChangedEvent.Kind... kinds) {
         Path filePath = file.toPath();
+        FileChangedMetadata metadata = getMetadata(filePath, kinds);
+        metadata.filePaths.add(filePath);
+        metadata.eventDispatcher.addEventListener(listener);
+    }
 
+    private FileChangedMetadata getMetadata(Path filePath, FileChangedEvent.Kind... kinds) {
         final Path dirPath = isDirectory(filePath, NOFOLLOW_LINKS) ? filePath : filePath.getParent();
-
-        FileChangedMetadata fileChangedMetadata = fileChangedMetadataMap.computeIfAbsent(dirPath, k -> {
+        return fileChangedMetadataCache.computeIfAbsent(dirPath, k -> {
             FileChangedMetadata metadata = new FileChangedMetadata();
             metadata.watchEventKinds = toWatchEventKinds(kinds);
             return metadata;
         });
-
-        fileChangedMetadata.filePaths.add(filePath);
-        fileChangedMetadata.eventDispatcher.addEventListener(listener);
-
     }
 
     @Nonnull
@@ -210,15 +211,15 @@ public class StandardFileWatchService implements FileWatchService {
             if (executorService != null) {
                 executorService.shutdown();
             }
-            fileChangedMetadataMap.clear();
+            fileChangedMetadataCache.clear();
         }
     }
 
     private static class FileChangedMetadata {
 
-        private Set<Path> filePaths = new TreeSet<>();
+        private final Set<Path> filePaths = new TreeSet<>();
 
-        private EventDispatcher eventDispatcher = newDefault();
+        private final EventDispatcher eventDispatcher = newDefault();
 
         private WatchEvent.Kind<?>[] watchEventKinds;
     }
