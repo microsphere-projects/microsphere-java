@@ -43,6 +43,16 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
     }
 
     /**
+     * The parallel implementation of {@link EventDispatcher} with the specified {@link Executor}
+     *
+     * @param executor {@link Executor}
+     * @return the default implementation of {@link EventDispatcher}
+     */
+    static EventDispatcher parallel(Executor executor) {
+        return new ParallelEventDispatcher(executor);
+    }
+
+    /**
      * Dispatch a event to the registered {@link EventListener event listeners}
      *
      * @param event a {@link Event event}

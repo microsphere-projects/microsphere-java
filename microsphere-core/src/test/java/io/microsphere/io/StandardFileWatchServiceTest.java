@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ForkJoinPool;
 
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 
@@ -50,7 +51,7 @@ public class StandardFileWatchServiceTest {
 
     @Before
     public void init() throws Exception {
-        fileWatchService = new StandardFileWatchService();
+        fileWatchService = new StandardFileWatchService(ForkJoinPool.commonPool());
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
         String resourceFilePath = resource.getFile();
         this.resourceFile = new File(resourceFilePath);
