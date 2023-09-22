@@ -42,13 +42,13 @@ public abstract class ShutdownHookUtils extends BaseUtils {
 
     private static final String TARGET_CLASS_NAME = "java.lang.ApplicationShutdownHooks";
 
+    private static final NavigableSet<Runnable> shutdownHookCallbacks = new ConcurrentSkipListSet<>(Prioritized.COMPARATOR);
+
     private static final Class<?> TARGET_CLASS = resolveClass(TARGET_CLASS_NAME, getSystemClassLoader());
 
     private static final Field HOOKS_FIELD = FieldUtils.findField(TARGET_CLASS, "hooks");
 
     private static final IdentityHashMap<Thread, Thread> hooksRef = findHooks();
-
-    private static NavigableSet<Runnable> shutdownHookCallbacks = new ConcurrentSkipListSet<>(Prioritized.COMPARATOR);
 
     private static IdentityHashMap<Thread, Thread> findHooks() {
         return FieldUtils.getStaticFieldValue(HOOKS_FIELD);
