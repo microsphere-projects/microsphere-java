@@ -50,6 +50,7 @@
         <module>microsphere-logging</module>
         <module>microsphere-i18n</module>
         <module>microsphere-jdbc</module>
+        <module>microsphere-mybatis</module>
         <module>microsphere-micrometer</module>
         <module>microsphere-tools</module>
     </modules>
