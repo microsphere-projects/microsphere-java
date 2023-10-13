@@ -32,7 +32,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
  */
 public abstract class MicrometerUtils extends BaseUtils {
 
-    private static ExecutorService asyncExecutor = newSingleThreadExecutor(new NamedThreadFactory("Micrometer-Async-"));
+    private static final ExecutorService asyncExecutor = newSingleThreadExecutor(new NamedThreadFactory("Micrometer-Async-"));
 
     static {
         addShutdownHookCallback(asyncExecutor::shutdownNow);
