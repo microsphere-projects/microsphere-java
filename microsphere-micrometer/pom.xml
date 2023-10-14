@@ -45,6 +45,7 @@
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-core</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Alibaba Sentinel -->
@@ -65,6 +66,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Testing -->
