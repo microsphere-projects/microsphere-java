@@ -35,6 +35,7 @@
 
         <junit.version>4.7</junit.version>
         <jmh.version>1.36</jmh.version>
+        <antlr.version>4.13.1</antlr.version>
     </properties>
 
 
