@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere Project :: i18n</name>
+    <name>Microsphere :: i18n</name>
     <description>Microsphere i18n</description>
 
     <dependencies>

@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere Project :: Annotation Processor</name>
+    <name>Microsphere :: Annotation Processor</name>
     <description>Microsphere Annotation Processor</description>
 
     <dependencies>

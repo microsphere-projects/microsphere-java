@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>Microsphere Project :: Dependencies</name>
+    <name>Microsphere :: Dependencies</name>
     <description>Microsphere Dependencies</description>
 
     <dependencyManagement>

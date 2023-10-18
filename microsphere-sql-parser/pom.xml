@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere Project :: SQL Parser</name>
+    <name>Microsphere :: SQL Parser</name>
     <description>Microsphere SQL Parser</description>
 
     <dependencies>

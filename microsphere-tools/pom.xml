@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere Project :: Tools</name>
+    <name>Microsphere :: Tools</name>
     <description>Microsphere Tools</description>
 
     <profiles>
