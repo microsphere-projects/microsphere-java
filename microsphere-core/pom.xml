@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere :: Core</name>
+    <name>Microsphere :: Java :: Core</name>
     <description>Microsphere Core</description>
 
     <dependencies>

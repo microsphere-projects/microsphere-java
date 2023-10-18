@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere :: JDBC</name>
+    <name>Microsphere :: Java :: JDBC</name>
     <description>Microsphere JDBC</description>
 
     <dependencies>

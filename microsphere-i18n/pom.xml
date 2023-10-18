@@ -15,7 +15,7 @@
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere :: i18n</name>
+    <name>Microsphere :: Java :: i18n</name>
     <description>Microsphere i18n</description>
 
     <dependencies>
