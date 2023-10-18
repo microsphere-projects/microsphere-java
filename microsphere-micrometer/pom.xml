@@ -27,13 +27,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Microsphere Core -->
-        <dependency>
-            <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
         <!-- Microsphere JDBC -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
