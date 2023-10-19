@@ -30,7 +30,7 @@
         <p6spy.version>3.9.1</p6spy.version>
         <alibaba.sentinel.version>1.8.6</alibaba.sentinel.version>
 
-        <spring-boot.version>2.7.12</spring-boot.version>
+        <spring-boot.version>2.7.17</spring-boot.version>
         <resilience4j.version>1.7.0</resilience4j.version>
 
         <junit.version>4.7</junit.version>
