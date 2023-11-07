@@ -27,6 +27,10 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
 
     public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
 
+    public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = "microsphere.artifact-id.manifest-attribute-names";
+
+    public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = "microsphere.artifact-version.manifest-attribute-names";
+
     private static final String[] DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES = {
             "Bundle-Name",
             "Automatic-Module-Name",
@@ -38,23 +42,19 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
             "Implementation-Version"
     };
 
-    private static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = "manifest.artifact-id.attribute-names";
-
-    private static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = "manifest.version.attribute-names";
-
     private static final String[] ARTIFACT_ID_ATTRIBUTE_NAMES = getArtifactIdAttributeNames();
 
     private static final String[] VERSION_ATTRIBUTE_NAMES = getVersionAttributeNames();
 
     private static String[] getArtifactIdAttributeNames() {
-        return getValues(ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES);
+        return getPropertyValues(ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES);
     }
 
     private static String[] getVersionAttributeNames() {
-        return getValues(VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_VERSION_ATTRIBUTE_NAMES);
+        return getPropertyValues(VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_VERSION_ATTRIBUTE_NAMES);
     }
 
-    private static String[] getValues(String propertyName, String[] defaultValues) {
+    private static String[] getPropertyValues(String propertyName, String... defaultValues) {
         String propertyValue = getProperty(propertyName);
         String[] values = split(propertyValue, ",");
         return isNotEmpty(values) ? values : defaultValues;
