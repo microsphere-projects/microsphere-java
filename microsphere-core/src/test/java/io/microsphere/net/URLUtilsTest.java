@@ -109,7 +109,7 @@ public class URLUtilsTest {
     public void testResolveArchiveFile() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        File archiveFile = URLUtils.resolveArchiveFile(resourceURL, FileConstants.JAR_EXTENSION);
+        File archiveFile = URLUtils.resolveArchiveFile(resourceURL);
         assertTrue(archiveFile.exists());
     }
 

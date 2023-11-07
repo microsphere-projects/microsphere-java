@@ -33,7 +33,6 @@ import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARAT
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
-import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
@@ -122,20 +121,39 @@ public abstract class URLUtils {
         return null;
     }
 
+
     /**
      * Resolve archive file
      *
-     * @param archiveFileURL           archive file  URL
-     * @param archiveFileExtensionName archive file extension name
+     * @param resourceURL the URL of resource
      * @return Resolve archive file If exists
      * @throws NullPointerException
      */
-    public static File resolveArchiveFile(URL archiveFileURL, String archiveFileExtensionName) throws NullPointerException {
-        String archiveFilePath = archiveFileURL.getPath();
+    public static File resolveArchiveFile(URL resourceURL) throws NullPointerException {
+        String protocol = resourceURL.getProtocol();
+        if (FILE_PROTOCOL.equals(protocol)) {
+            return resolveArchiveDirectory(resourceURL);
+        } else {
+            return doResolveArchiveFile(resourceURL);
+        }
+    }
+
+    private static File doResolveArchiveFile(URL archiveFileURL) throws NullPointerException {
+        String archiveFilePath = archiveFileURL.toString();
         String prefix = ":/";
-        boolean hasJarEntryPath = archiveFilePath.contains(ARCHIVE_ENTITY_SEPARATOR);
-        String suffix = hasJarEntryPath ? ARCHIVE_ENTITY_SEPARATOR : archiveFileExtensionName;
-        String jarPath = StringUtils.substringBetween(archiveFilePath, prefix, suffix);
+
+        int beginIndex = archiveFilePath.indexOf(prefix);
+        if (beginIndex == -1) {
+            return null;
+        }
+        beginIndex += prefix.length();
+
+        int endIndex = archiveFilePath.lastIndexOf(ARCHIVE_ENTITY_SEPARATOR);
+        if (endIndex == -1) {
+            endIndex = archiveFilePath.length();
+        }
+
+        String jarPath = archiveFilePath.substring(beginIndex, endIndex);
         File archiveFile = null;
         if (StringUtils.isNotBlank(jarPath)) {
             jarPath = SLASH + URLUtils.decode(jarPath);
@@ -143,15 +161,6 @@ public abstract class URLUtils {
             archiveFile = archiveFile.exists() ? archiveFile : null;
         }
         return archiveFile;
-    }
-
-    public static File resolveArchiveFile(URL resourceURL) throws NullPointerException {
-        String protocol = resourceURL.getProtocol();
-        if (FILE_PROTOCOL.equals(protocol)) {
-            return resolveArchiveDirectory(resourceURL);
-        } else {
-            return resolveArchiveFile(resourceURL, DOT + protocol);
-        }
     }
 
     private static File resolveArchiveDirectory(URL resourceURL) {

@@ -24,8 +24,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.ListUtils.toList;
-import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -82,7 +82,7 @@ public class JarUtils {
      * @throws NullPointerException     see {@link #assertJarURLProtocol(URL)}
      * @throws IllegalArgumentException see {@link #assertJarURLProtocol(URL)}
      * @version 1.0.0
-     * @since 1.0.0 2012-3-20 下午02:37:25
+     * @since 1.0.0 2012-3-20 02:37:25
      */
     @Nonnull
     public static String resolveRelativePath(URL jarURL) throws NullPointerException, IllegalArgumentException {
@@ -107,7 +107,7 @@ public class JarUtils {
     @Nonnull
     public static String resolveJarAbsolutePath(URL jarURL) throws NullPointerException, IllegalArgumentException {
         assertJarURLProtocol(jarURL);
-        File archiveFile = URLUtils.resolveArchiveFile(jarURL, JAR_EXTENSION);
+        File archiveFile = resolveArchiveFile(jarURL);
         return archiveFile == null ? null : archiveFile.getAbsolutePath();
     }
 

@@ -14,14 +14,20 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -46,6 +52,8 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
  * @since 1.0.0
  */
 public abstract class ClassLoaderUtils extends BaseUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClassLoaderUtils.class);
 
     protected static final ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
 
@@ -600,6 +608,46 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         } catch (Throwable ignored) { // Ignored
         }
         return targetClass;
+    }
+
+    public static Set<URL> getClassPathURLs(ClassLoader classLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        if (urlClassLoader == null) {
+            logger.warn("The ClassLoader[{}] or its' possible parent(s) is not a URLClassLoader,", classLoader);
+            return Collections.emptySet();
+        }
+
+        URL[] classPathURLs = urlClassLoader.getURLs();
+        Set<URL> allClassPathURLs = new LinkedHashSet<>(Arrays.asList(classPathURLs));
+
+        ClassLoader parentClassLoader = urlClassLoader.getParent();
+        if (parentClassLoader != null) {
+            allClassPathURLs.addAll(getClassPathURLs(parentClassLoader));
+        }
+        return allClassPathURLs;
+    }
+
+    public static URLClassLoader findURLClassLoader(ClassLoader classLoader) {
+        if (classLoader == null) {
+            return null;
+        }
+        URLClassLoader urlClassLoader = null;
+        if (classLoader instanceof URLClassLoader) {
+            urlClassLoader = (URLClassLoader) classLoader;
+        } else {
+            urlClassLoader = findURLClassLoader(classLoader.getParent());
+        }
+        return urlClassLoader;
+    }
+
+    private static URL toURL(String path) {
+        URL url = null;
+        try {
+            URI uri = new File(path).toURI();
+            url = uri.toURL();
+        } catch (Exception ignored) {
+        }
+        return url;
     }
 
     private static String buildCacheKey(String className, ClassLoader classLoader) {

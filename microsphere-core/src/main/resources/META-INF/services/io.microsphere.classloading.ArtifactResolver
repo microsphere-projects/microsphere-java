@@ -1,0 +1,2 @@
+io.microsphere.classloading.MavenArtifactResolver
+io.microsphere.classloading.ManifestArtifactResolver

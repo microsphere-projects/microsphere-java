@@ -17,7 +17,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.lang.function.ThrowableConsumer;
-import io.microsphere.lang.function.ThrowableFunction;
 import io.microsphere.lang.function.ThrowableSupplier;
 import io.microsphere.util.BaseUtils;
 
