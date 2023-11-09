@@ -26,9 +26,9 @@ import static io.microsphere.util.jar.JarUtils.toJarFile;
  */
 public class MavenArtifactResolver extends AbstractArtifactResolver {
 
-    public static final String MAVEN_POM_PROPERTIES_RESOURCE_PREFIX = "META-INF/maven/";
+    private static final String MAVEN_POM_PROPERTIES_RESOURCE_PREFIX = "META-INF/maven/";
 
-    public static final String MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX = "/pom.properties";
+    private static final String MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX = "/pom.properties";
 
     private static final MavenPomPropertiesFilter MAVEN_POM_PROPERTIES_FILTER = new MavenPomPropertiesFilter();
 
