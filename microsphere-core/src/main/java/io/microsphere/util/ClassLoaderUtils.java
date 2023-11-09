@@ -23,24 +23,31 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
+import static io.microsphere.util.StringUtils.substringBetween;
 
 
 /**
@@ -60,6 +67,57 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     private static final Method findLoadedClassMethod = initFindLoadedClassMethod();
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = initLoadedClassesCache();
+
+    private static final String[] URL_CLASS_PATH_CLASS_NAME_OPTIONS = {
+            "sun.misc.URLClassPath",
+            "jdk.internal.loader.URLClassPath", // JDK 9+
+    };
+
+    private static final Class<?> URL_CLASS_PATH_CLASS;
+
+    private static final Field ucpField;
+
+    private static final Field loadersFields;
+
+    private static final Class<?> loaderClass;
+
+    private static final Field baseField;
+
+    private static final boolean SUN_JDK_SUPPORTED;
+
+    static {
+        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
+
+        URL_CLASS_PATH_CLASS = resolveURLClassPathClass(classLoader);
+        if (URL_CLASS_PATH_CLASS != null) {
+            ucpField = findField(URLClassLoader.class, "ucp");
+            loadersFields = findField(URL_CLASS_PATH_CLASS, "loaders");
+            loaderClass = resolveClass(URL_CLASS_PATH_CLASS.getName() + "$Loader", classLoader);
+            baseField = findField(loaderClass, "base");
+        } else {
+            ucpField = null;
+            loadersFields = null;
+            loaderClass = null;
+            baseField = null;
+        }
+
+        SUN_JDK_SUPPORTED = URL_CLASS_PATH_CLASS != null &&
+                ucpField != null &&
+                loadersFields != null &&
+                loaderClass != null &&
+                baseField != null;
+    }
+
+    private static Class<?> resolveURLClassPathClass(ClassLoader classLoader) {
+        Class<?> urlClassPathClass = null;
+        for (String className : URL_CLASS_PATH_CLASS_NAME_OPTIONS) {
+            urlClassPathClass = resolveClass(className, classLoader);
+            if (urlClassPathClass != null) {
+                break;
+            }
+        }
+        return urlClassPathClass;
+    }
 
     /**
      * Initializes {@link Method} for {@link ClassLoader#findLoadedClass(String)}
@@ -333,8 +391,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
      * @throws IOException
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static Set<URL> getResources(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
         String normalizedResourceName = resourceType.resolve(resourceName);
@@ -351,8 +407,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
      * @throws IOException
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static Set<URL> getResources(ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
         Set<URL> resourceURLs = Collections.emptySet();
@@ -373,8 +427,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static URL getResource(ClassLoader classLoader, String resourceName) throws NullPointerException {
         URL resourceURL = null;
@@ -396,8 +448,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static URL getResource(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
@@ -412,8 +462,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param className   class name
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static URL getClassResource(ClassLoader classLoader, String className) {
         final String resourceName = className + FileConstants.CLASS_EXTENSION;
@@ -610,7 +658,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return targetClass;
     }
 
-    public static Set<URL> getClassPathURLs(ClassLoader classLoader) {
+    public static Set<URL> getAllClassPathURLs(ClassLoader classLoader) {
         URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
         if (urlClassLoader == null) {
             logger.warn("The ClassLoader[{}] or its' possible parent(s) is not a URLClassLoader,", classLoader);
@@ -622,9 +670,32 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         ClassLoader parentClassLoader = urlClassLoader.getParent();
         if (parentClassLoader != null) {
-            allClassPathURLs.addAll(getClassPathURLs(parentClassLoader));
+            allClassPathURLs.addAll(getAllClassPathURLs(parentClassLoader));
         }
         return allClassPathURLs;
+    }
+
+    public static boolean removeClassPathURL(ClassLoader classLoader, URL url) {
+        Object urlClassPath = getFieldValue(classLoader, ucpField);
+        String targetPath = url.getPath();
+        ArrayList<Object> loaders = getFieldValue(urlClassPath, loadersFields);
+        Iterator<Object> iterator = loaders.iterator();
+        boolean removed = false;
+        while (iterator.hasNext()) {
+            Object loader = iterator.next();
+            URL base = getFieldValue(loader, baseField);
+            String protocol = base.getProtocol();
+            if ("jar".equals(protocol)) {
+                String path = "/" + substringBetween(base.toString(), ":/", "!/");
+                if (Objects.equals(targetPath, path)) {
+                    logger.debug("Remove the artifact resource：{}", base);
+                    iterator.remove();
+                    removed = true;
+                    break;
+                }
+            }
+        }
+        return removed;
     }
 
     public static URLClassLoader findURLClassLoader(ClassLoader classLoader) {

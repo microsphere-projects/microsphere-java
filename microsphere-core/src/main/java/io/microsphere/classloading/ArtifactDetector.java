@@ -1,5 +1,6 @@
 package io.microsphere.classloading;
 
+import io.microsphere.collection.CollectionUtils;
 import io.microsphere.util.ClassLoaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +14,11 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 import static io.microsphere.net.URLUtils.normalizePath;
-import static io.microsphere.util.ClassLoaderUtils.getClassPathURLs;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.lang.System.getProperty;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -28,9 +31,9 @@ public class ArtifactDetector {
 
     private static final Logger logger = LoggerFactory.getLogger(ArtifactDetector.class);
 
-    private static final String JAVA_HOME_PATH = normalizePath(System.getProperty("java.home"));
+    private static final String JAVA_HOME_PATH = normalizePath(getProperty("java.home"));
 
-    private static final ClassLoader DEFAULT_CLASS_LOADER = ClassLoaderUtils.getDefaultClassLoader();
+    private static final ClassLoader DEFAULT_CLASS_LOADER = getDefaultClassLoader();
 
     private static final List<ArtifactResolver> ARTIFACT_INFO_RESOLVERS = loadServicesList(ArtifactResolver.class, DEFAULT_CLASS_LOADER);
 
@@ -49,8 +52,15 @@ public class ArtifactDetector {
     }
 
     public List<Artifact> detect(boolean includedJdkLibraries) {
+        Set<URL> classPathURLs = getClassPathURLs(includedJdkLibraries);
+        return detect(classPathURLs);
+    }
+
+    protected List<Artifact> detect(Set<URL> classPathURLs) {
+        if (CollectionUtils.isEmpty(classPathURLs)) {
+            return emptyList();
+        }
         List<Artifact> artifactList = new LinkedList<>();
-        Set<URL> classPathURLs = getActualURLs(includedJdkLibraries);
         for (ArtifactResolver artifactResolver : ARTIFACT_INFO_RESOLVERS) {
             Set<Artifact> artifactSet = artifactResolver.resolve(classPathURLs);
             for (Artifact artifact : artifactSet) {
@@ -61,8 +71,8 @@ public class ArtifactDetector {
         return unmodifiableList(artifactList);
     }
 
-    Set<URL> getActualURLs(boolean includedJdkLibraries) {
-        Set<URL> urls = getClassPathURLs(classLoader);
+    protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
+        Set<URL> urls = ClassLoaderUtils.getAllClassPathURLs(classLoader);
         Set<URL> classPathURLs = new LinkedHashSet<>(urls);
         if (!includedJdkLibraries) {
             removeJdkClassPathURLs(classPathURLs);

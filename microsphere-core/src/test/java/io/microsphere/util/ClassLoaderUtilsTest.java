@@ -24,6 +24,9 @@ import java.util.TreeSet;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.util.ClassLoaderUtils.getAllClassPathURLs;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -272,21 +275,28 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testGetClassLoader() {
         Thread currentThread = Thread.currentThread();
         ClassLoader classLoader = currentThread.getContextClassLoader();
-        assertEquals(classLoader, ClassLoaderUtils.getDefaultClassLoader());
+        assertEquals(classLoader, getDefaultClassLoader());
 
         currentThread.setContextClassLoader(null);
-        assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
+        assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
 
         currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
-        TestSecurityManager.denyRuntimePermission("getClassLoader", () -> {
-            new Runnable() {
-                @Override
-                public void run() {
-                    assertEquals(ClassLoaderUtils.class.getClassLoader(), ClassLoaderUtils.getDefaultClassLoader());
-                }
-            }.run();
+        TestSecurityManager.denyRuntimePermission("getClassLoader", new Runnable() {
+            @Override
+            public void run() {
+                assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
+            }
         });
 
+    }
+
+    @Test
+    public void testRemoveClassPathURL() {
+        ClassLoader classLoader = getDefaultClassLoader();
+        Set<URL> urls = getAllClassPathURLs(classLoader);
+        for (URL url : urls) {
+            removeClassPathURL(classLoader, url);
+        }
     }
 
 

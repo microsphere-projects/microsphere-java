@@ -24,18 +24,17 @@ import java.util.Map;
 import static org.junit.Assert.assertFalse;
 
 /**
- * {@link ArtifactCollisionResourceDetector} Test
+ * {@link BannedArtifactClassLoadingExecutor} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ArtifactCollisionResourceDetectorTest {
+public class BannedArtifactClassLoadingExecutorTest {
 
-    private ArtifactCollisionResourceDetector detector = new ArtifactCollisionResourceDetector();
+    private BannedArtifactClassLoadingExecutor detector = new BannedArtifactClassLoadingExecutor();
 
     @Test
     public void testDetect() {
-        Map<URL, String> collisionResources = detector.detect();
-        assertFalse(collisionResources.isEmpty());
+        detector.execute();
     }
 }
