@@ -32,7 +32,7 @@ public class SeparatorConstantsTest {
 
     @Test
     public void test() {
-        assertEquals("!/", SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR);
+        assertEquals("!/", SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR);
         assertEquals(File.separator, SeparatorConstants.FILE_SEPARATOR);
         assertEquals(File.pathSeparator, SeparatorConstants.PATH_SEPARATOR);
         assertEquals(System.lineSeparator(), SeparatorConstants.LINE_SEPARATOR);

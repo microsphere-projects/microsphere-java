@@ -20,9 +20,9 @@ import static io.microsphere.constants.SymbolConstants.EXCLAMATION;
 public interface SeparatorConstants {
 
     /**
-     * Archive Entity Separator : "!/"
+     * Archive Entry Separator : "!/"
      */
-    String ARCHIVE_ENTITY_SEPARATOR = EXCLAMATION + SLASH;
+    String ARCHIVE_ENTRY_SEPARATOR = EXCLAMATION + SLASH;
 
     /**
      * File Separator : {@link File#separator}
