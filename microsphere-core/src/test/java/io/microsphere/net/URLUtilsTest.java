@@ -3,7 +3,6 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.constants.FileConstants;
 import io.microsphere.util.ClassLoaderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -96,12 +95,12 @@ public class URLUtilsTest {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
         String expectedPath = "java/lang/String.class";
-        String relativePath = URLUtils.resolveRelativePath(resourceURL);
+        String relativePath = URLUtils.resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
 
         File rtJarFile = new File(SystemUtils.JAVA_HOME, "lib/rt.jar");
         resourceURL = rtJarFile.toURI().toURL();
-        relativePath = URLUtils.resolveRelativePath(resourceURL);
+        relativePath = URLUtils.resolveArchiveEntryPath(resourceURL);
         assertNull(relativePath);
     }
 
