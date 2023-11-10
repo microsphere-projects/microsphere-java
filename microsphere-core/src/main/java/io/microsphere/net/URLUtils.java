@@ -27,9 +27,11 @@ import java.util.jar.JarFile;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
-import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static io.microsphere.constants.ProtocolConstants.WAR_PROTOCOL;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
@@ -40,6 +42,10 @@ import static io.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.substringAfterLast;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -65,6 +71,10 @@ public abstract class URLUtils {
      */
     private static final String DEFAULT_ENCODING = "UTF-8";
 
+    /**
+     * The length of {@link #ARCHIVE_ENTRY_SEPARATOR_LENGTH}
+     */
+    private static final int ARCHIVE_ENTRY_SEPARATOR_LENGTH = ARCHIVE_ENTRY_SEPARATOR.length();
 
     /**
      * The property which specifies the package prefix list to be scanned
@@ -103,20 +113,25 @@ public abstract class URLUtils {
     public static final String SUB_PROTOCOL_MATRIX_NAME = "_sp";
 
     /**
-     * Resolve Relative path from Archive File URL
+     * Resolve the entry path from Archive File URL
      *
      * @param archiveFileURL Archive File URL
      * @return Relative path in archive
      * @throws NullPointerException <code>archiveFileURL</code> is <code>null</code>
      */
-    public static String resolveRelativePath(URL archiveFileURL) throws NullPointerException {
+    public static String resolveArchiveEntryPath(URL archiveFileURL) throws NullPointerException {
         // NPE check
         String path = archiveFileURL.getPath();
-        if (path.contains(ARCHIVE_ENTITY_SEPARATOR)) {
-            String relativePath = StringUtils.substringAfterLast(path, ARCHIVE_ENTITY_SEPARATOR);
+        int beginIndex = getArchiveEntryIndex(path);
+        if (beginIndex > -1) {
+            String relativePath = path.substring(beginIndex);
             return decode(relativePath);
         }
         return null;
+    }
+
+    private static int getArchiveEntryIndex(String path) {
+        return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
     /**
@@ -133,14 +148,13 @@ public abstract class URLUtils {
             return path;
         }
         beginIndex += 1;
-        int endIndex = path.indexOf(ARCHIVE_ENTITY_SEPARATOR);
+        int endIndex = getArchiveEntryIndex(path);
         if (endIndex == -1) {
             return path.substring(beginIndex);
         } else {
             return path.substring(beginIndex, endIndex);
         }
     }
-
 
     /**
      * Resolve archive file
@@ -158,32 +172,18 @@ public abstract class URLUtils {
         }
     }
 
-    private static File doResolveArchiveFile(URL archiveFileURL) throws NullPointerException {
-        String archiveFilePath = archiveFileURL.toString();
-        String prefix = ":/";
-
-        int beginIndex = archiveFilePath.indexOf(prefix);
-        if (beginIndex == -1) {
-            return null;
+    protected static File doResolveArchiveFile(URL url) throws NullPointerException {
+        if (isArchiveURL(url)) {
+            String basePath = resolveBasePath(url);
+            File archiveFile = new File(basePath);
+            if (archiveFile.exists()) {
+                return archiveFile;
+            }
         }
-        beginIndex += prefix.length();
-
-        int endIndex = archiveFilePath.lastIndexOf(ARCHIVE_ENTITY_SEPARATOR);
-        if (endIndex == -1) {
-            endIndex = archiveFilePath.length();
-        }
-
-        String jarPath = archiveFilePath.substring(beginIndex, endIndex);
-        File archiveFile = null;
-        if (StringUtils.isNotBlank(jarPath)) {
-            jarPath = SLASH + URLUtils.decode(jarPath);
-            archiveFile = new File(jarPath);
-            archiveFile = archiveFile.exists() ? archiveFile : null;
-        }
-        return archiveFile;
+        return null;
     }
 
-    private static File resolveArchiveDirectory(URL resourceURL) {
+    protected static File resolveArchiveDirectory(URL resourceURL) {
         String resourcePath = new File(resourceURL.getFile()).toString();
         Set<String> classPaths = ClassPathUtils.getClassPaths();
         File archiveDirectory = null;
@@ -196,7 +196,6 @@ public abstract class URLUtils {
         return archiveDirectory;
     }
 
-
     /**
      * Resolve the query parameters {@link Map} from specified URL，The parameter name as key ，parameter value list as key
      *
@@ -205,7 +204,7 @@ public abstract class URLUtils {
      */
     @Nonnull
     public static Map<String, List<String>> resolveQueryParameters(String url) {
-        String queryString = StringUtils.substringAfterLast(url, QUERY_STRING);
+        String queryString = substringAfterLast(url, QUERY_STRING);
         return resolveParameters(queryString, AND_CHAR);
     }
 
@@ -246,18 +245,18 @@ public abstract class URLUtils {
      */
     public static String normalizePath(final String path) {
 
-        if (StringUtils.isBlank(path)) {
+        if (isBlank(path)) {
             return path;
         }
 
         String resolvedPath = path.trim();
 
         while (resolvedPath.contains(BACK_SLASH)) {
-            resolvedPath = StringUtils.replace(resolvedPath, BACK_SLASH, SLASH);
+            resolvedPath = replace(resolvedPath, BACK_SLASH, SLASH);
         }
 
         while (resolvedPath.contains(DOUBLE_SLASH)) {
-            resolvedPath = StringUtils.replace(resolvedPath, DOUBLE_SLASH, SLASH);
+            resolvedPath = replace(resolvedPath, DOUBLE_SLASH, SLASH);
         }
         return resolvedPath;
     }
@@ -344,7 +343,7 @@ public abstract class URLUtils {
                 if (JAR_PROTOCOL.equals(protocol)) {
                     JarFile jarFile = JarUtils.toJarFile(url); // Test whether valid jar or not
                     final String relativePath = JarUtils.resolveRelativePath(url);
-                    if (StringUtils.EMPTY.equals(relativePath)) { // root directory in jar
+                    if (EMPTY.equals(relativePath)) { // root directory in jar
                         isDirectory = true;
                     } else {
                         JarEntry jarEntry = jarFile.getJarEntry(relativePath);
@@ -379,6 +378,32 @@ public abstract class URLUtils {
             }
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
+        }
+        return flag;
+    }
+
+    /**
+     * Is an archive URL?
+     *
+     * @param url URL
+     * @return If an archive , return <code>true</code>
+     */
+    public static boolean isArchiveURL(URL url) {
+        String protocol = url.getProtocol();
+        boolean flag = false;
+        switch (protocol) {
+            case JAR_PROTOCOL:
+            case WAR_PROTOCOL:
+            case EAR_PROTOCOL:
+                flag = true;
+                break;
+            case FILE_PROTOCOL:
+                try {
+                    File file = new File(url.toURI());
+                    JarFile jarFile = new JarFile(file);
+                    flag = jarFile != null;
+                } catch (Exception e) {
+                }
         }
         return flag;
     }
