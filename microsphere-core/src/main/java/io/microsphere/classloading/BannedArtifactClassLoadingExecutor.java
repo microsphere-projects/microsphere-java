@@ -1,8 +1,5 @@
 package io.microsphere.classloading;
 
-import com.alibaba.fastjson.JSON;
-import io.microsphere.util.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,24 +7,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.StringJoiner;
 import java.util.function.Function;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
-import static io.microsphere.reflect.FieldUtils.findField;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
-import static io.microsphere.util.ClassLoaderUtils.isPresent;
-import static io.microsphere.util.ClassLoaderUtils.resolveClass;
-import static io.microsphere.util.ClassUtils.resolveClassName;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 
