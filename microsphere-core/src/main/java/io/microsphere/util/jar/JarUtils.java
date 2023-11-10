@@ -5,9 +5,6 @@ package io.microsphere.util.jar;
 
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
-import io.microsphere.net.URLUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -24,9 +21,16 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.ListUtils.toList;
-import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
+import static io.microsphere.net.URLUtils.decode;
+import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
+import static io.microsphere.util.StringUtils.substringAfter;
 import static java.util.Collections.unmodifiableList;
+import static org.apache.commons.io.IOUtils.closeQuietly;
+import static org.apache.commons.io.IOUtils.copy;
 
 /**
  * Jar Utility class
@@ -68,8 +72,8 @@ public class JarUtils {
      */
     protected static void assertJarURLProtocol(URL jarURL) throws NullPointerException, IllegalArgumentException {
         final String protocol = jarURL.getProtocol(); //NPE check
-        if (!ProtocolConstants.JAR_PROTOCOL.equals(protocol) && !ProtocolConstants.FILE_PROTOCOL.equals(protocol)) {
-            String message = String.format("jarURL Protocol[%s] is unsupported ,except %s and %s ", protocol, ProtocolConstants.JAR_PROTOCOL, ProtocolConstants.FILE_PROTOCOL);
+        if (!JAR_PROTOCOL.equals(protocol) && !FILE_PROTOCOL.equals(protocol)) {
+            String message = String.format("jarURL Protocol[%s] is unsupported ,except %s and %s ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
             throw new IllegalArgumentException(message);
         }
     }
@@ -81,16 +85,14 @@ public class JarUtils {
      * @return Non-null
      * @throws NullPointerException     see {@link #assertJarURLProtocol(URL)}
      * @throws IllegalArgumentException see {@link #assertJarURLProtocol(URL)}
-     * @version 1.0.0
-     * @since 1.0.0 2012-3-20 02:37:25
      */
     @Nonnull
     public static String resolveRelativePath(URL jarURL) throws NullPointerException, IllegalArgumentException {
         assertJarURLProtocol(jarURL);
         String form = jarURL.toExternalForm();
-        String relativePath = StringUtils.substringAfter(form, ARCHIVE_ENTITY_SEPARATOR);
-        relativePath = URLUtils.normalizePath(relativePath);
-        return URLUtils.decode(relativePath);
+        String relativePath = substringAfter(form, ARCHIVE_ENTRY_SEPARATOR);
+        relativePath = normalizePath(relativePath);
+        return decode(relativePath);
     }
 
     /**
@@ -145,8 +147,8 @@ public class JarUtils {
      * @return If found , return {@link JarEntry}
      */
     public static JarEntry findJarEntry(URL jarURL) throws IOException {
-        JarFile jarFile = JarUtils.toJarFile(jarURL);
-        final String relativePath = JarUtils.resolveRelativePath(jarURL);
+        JarFile jarFile = toJarFile(jarURL);
+        final String relativePath = resolveRelativePath(jarURL);
         JarEntry jarEntry = jarFile.getJarEntry(relativePath);
         return jarEntry;
     }
@@ -200,8 +202,8 @@ public class JarUtils {
      * @throws IOException When the source jar file is an invalid {@link JarFile}
      */
     public static void extract(URL jarResourceURL, File targetDirectory, JarEntryFilter jarEntryFilter) throws IOException {
-        final JarFile jarFile = JarUtils.toJarFile(jarResourceURL);
-        final String relativePath = JarUtils.resolveRelativePath(jarResourceURL);
+        final JarFile jarFile = toJarFile(jarResourceURL);
+        final String relativePath = resolveRelativePath(jarResourceURL);
         final JarEntry jarEntry = jarFile.getJarEntry(relativePath);
         final boolean isDirectory = jarEntry.isDirectory();
         List<JarEntry> jarEntriesList = filter(jarFile, new JarEntryFilter() {
@@ -237,11 +239,11 @@ public class JarUtils {
                                 parentFile.mkdirs();
                             }
                             outputStream = new FileOutputStream(targetFile);
-                            IOUtils.copy(inputStream, outputStream);
+                            copy(inputStream, outputStream);
                         }
                     } finally {
-                        IOUtils.closeQuietly(outputStream);
-                        IOUtils.closeQuietly(inputStream);
+                        closeQuietly(outputStream);
+                        closeQuietly(inputStream);
                     }
                 }
             }
