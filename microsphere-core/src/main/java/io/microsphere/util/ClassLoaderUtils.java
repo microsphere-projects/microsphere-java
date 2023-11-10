@@ -10,7 +10,6 @@ import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
-import io.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -30,7 +29,6 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -45,13 +43,12 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
-import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
-import static io.microsphere.util.StringUtils.substringBetween;
 
 
 /**
@@ -693,7 +690,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         final String basePath;
         String protocol = url.getProtocol();
         String file = url.getFile();
-        int nestIndex = file.indexOf(ARCHIVE_ENTITY_SEPARATOR);
+        int nestIndex = file.indexOf(ARCHIVE_ENTRY_SEPARATOR);
 
         if (JAR_EXTENSION.equals(protocol) && nestIndex > 0) {
             basePath = file.substring(0, nestIndex);
