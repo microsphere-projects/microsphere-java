@@ -10,6 +10,7 @@ import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
+import io.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -43,7 +44,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
+import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTITY_SEPARATOR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
@@ -666,7 +670,13 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         }
 
         URL[] classPathURLs = urlClassLoader.getURLs();
-        Set<URL> allClassPathURLs = new LinkedHashSet<>(Arrays.asList(classPathURLs));
+        int length = classPathURLs.length;
+
+        Set<URL> allClassPathURLs = new LinkedHashSet<>(length);
+        for (int i = 0; i < length; i++) {
+            URL classPathURL = classPathURLs[i];
+            allClassPathURLs.add(classPathURL);
+        }
 
         ClassLoader parentClassLoader = urlClassLoader.getParent();
         if (parentClassLoader != null) {
@@ -676,23 +686,34 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     public static boolean removeClassPathURL(ClassLoader classLoader, URL url) {
+        if (!(classLoader instanceof URLClassLoader)) {
+            return false;
+        }
+
+        final String basePath;
+        String protocol = url.getProtocol();
+        String file = url.getFile();
+        int nestIndex = file.indexOf(ARCHIVE_ENTITY_SEPARATOR);
+
+        if (JAR_EXTENSION.equals(protocol) && nestIndex > 0) {
+            basePath = file.substring(0, nestIndex);
+        } else {
+            basePath = file;
+        }
+
         Object urlClassPath = getFieldValue(classLoader, ucpField);
-        String targetPath = url.getPath();
         ArrayList<Object> loaders = getFieldValue(urlClassPath, loadersFields);
         Iterator<Object> iterator = loaders.iterator();
         boolean removed = false;
         while (iterator.hasNext()) {
             Object loader = iterator.next();
             URL base = getFieldValue(loader, baseField);
-            String protocol = base.getProtocol();
-            if ("jar".equals(protocol)) {
-                String path = "/" + substringBetween(base.toString(), ":/", "!/");
-                if (Objects.equals(targetPath, path)) {
-                    logger.debug("Remove the artifact resource：{}", base);
-                    iterator.remove();
-                    removed = true;
-                    break;
-                }
+            String basePath_ = resolveBasePath(base);
+            if (Objects.equals(basePath_, basePath)) {
+                logger.debug("Remove the artifact resource：{}", base);
+                iterator.remove();
+                removed = true;
+                break;
             }
         }
         return removed;

@@ -108,8 +108,6 @@ public abstract class URLUtils {
      * @param archiveFileURL Archive File URL
      * @return Relative path in archive
      * @throws NullPointerException <code>archiveFileURL</code> is <code>null</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static String resolveRelativePath(URL archiveFileURL) throws NullPointerException {
         // NPE check
@@ -119,6 +117,28 @@ public abstract class URLUtils {
             return decode(relativePath);
         }
         return null;
+    }
+
+    /**
+     * Resolve base path from the specified URL
+     *
+     * @param url the specified URL
+     * @return base path
+     * @throws NullPointerException <code>archiveFileURL</code> is <code>null</code>
+     */
+    public static String resolveBasePath(URL url) throws NullPointerException {
+        String path = url.getPath();
+        int beginIndex = path.lastIndexOf(COLON_CHAR);
+        if (beginIndex == -1) {
+            return path;
+        }
+        beginIndex += 1;
+        int endIndex = path.indexOf(ARCHIVE_ENTITY_SEPARATOR);
+        if (endIndex == -1) {
+            return path.substring(beginIndex);
+        } else {
+            return path.substring(beginIndex, endIndex);
+        }
     }
 
 
@@ -223,8 +243,6 @@ public abstract class URLUtils {
      *
      * @param path Path
      * @return a newly resolved path
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static String normalizePath(final String path) {
 
@@ -257,7 +275,6 @@ public abstract class URLUtils {
      * @return the translated <code>String</code>.
      * @throws IllegalArgumentException If the named encoding is not supported
      * @see URLDecoder#decode(String, String)
-     * @since 1.4
      */
     public static String encode(String value, String encoding) throws IllegalArgumentException {
         String encodedValue = null;

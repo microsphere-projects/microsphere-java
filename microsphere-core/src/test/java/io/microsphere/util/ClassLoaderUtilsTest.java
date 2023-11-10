@@ -297,6 +297,8 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         for (URL url : urls) {
             removeClassPathURL(classLoader, url);
         }
+        urls = getAllClassPathURLs(classLoader);
+        assertTrue(urls.isEmpty());
     }
 
 
