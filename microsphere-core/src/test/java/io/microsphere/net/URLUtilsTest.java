@@ -21,9 +21,14 @@ import java.util.Map;
 
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
+import static io.microsphere.net.URLUtils.decode;
+import static io.microsphere.net.URLUtils.encode;
 import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
+import static java.util.Collections.emptyMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
@@ -50,12 +55,12 @@ public class URLUtilsTest {
     public void testEncodeAndDecode() {
         String path = "/abc/def";
 
-        String encodedPath = URLUtils.encode(path);
-        String decodedPath = URLUtils.decode(encodedPath);
+        String encodedPath = encode(path);
+        String decodedPath = decode(encodedPath);
         assertEquals(path, decodedPath);
 
-        encodedPath = URLUtils.encode(path, "GBK");
-        decodedPath = URLUtils.decode(encodedPath, "GBK");
+        encodedPath = encode(path, "GBK");
+        decodedPath = decode(encodedPath, "GBK");
         assertEquals(path, decodedPath);
     }
 
@@ -65,28 +70,28 @@ public class URLUtilsTest {
         String expectedPath = null;
         String resolvedPath = null;
 
-        resolvedPath = URLUtils.normalizePath(path);
+        resolvedPath = normalizePath(path);
         assertEquals(expectedPath, resolvedPath);
 
         path = "";
         expectedPath = "";
-        resolvedPath = URLUtils.normalizePath(path);
+        resolvedPath = normalizePath(path);
         assertEquals(expectedPath, resolvedPath);
 
         path = "/abc/";
         expectedPath = "/abc/";
-        resolvedPath = URLUtils.normalizePath(path);
+        resolvedPath = normalizePath(path);
         assertEquals(expectedPath, resolvedPath);
 
         path = "//abc///";
         expectedPath = "/abc/";
-        resolvedPath = URLUtils.normalizePath(path);
+        resolvedPath = normalizePath(path);
         assertEquals(expectedPath, resolvedPath);
 
 
         path = "//\\abc///";
         expectedPath = "/abc/";
-        resolvedPath = URLUtils.normalizePath(path);
+        resolvedPath = normalizePath(path);
         assertEquals(expectedPath, resolvedPath);
     }
 
@@ -95,12 +100,12 @@ public class URLUtilsTest {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
         String expectedPath = "java/lang/String.class";
-        String relativePath = URLUtils.resolveArchiveEntryPath(resourceURL);
+        String relativePath = resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
 
         File rtJarFile = new File(SystemUtils.JAVA_HOME, "lib/rt.jar");
         resourceURL = rtJarFile.toURI().toURL();
-        relativePath = URLUtils.resolveArchiveEntryPath(resourceURL);
+        relativePath = resolveArchiveEntryPath(resourceURL);
         assertNull(relativePath);
     }
 
@@ -127,12 +132,12 @@ public class URLUtilsTest {
 
         url = "https://www.google.com.hk/search";
         parametersMap = resolveQueryParameters(url);
-        expectedParametersMap = Collections.emptyMap();
+        expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
 
         url = "https://www.google.com.hk/search?";
         parametersMap = resolveQueryParameters(url);
-        expectedParametersMap = Collections.emptyMap();
+        expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
     }
 
@@ -151,12 +156,12 @@ public class URLUtilsTest {
 
         url = "https://www.google.com.hk/search";
         parametersMap = resolveMatrixParameters(url);
-        expectedParametersMap = Collections.emptyMap();
+        expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
 
         url = "https://www.google.com.hk/search;";
         parametersMap = resolveMatrixParameters(url);
-        expectedParametersMap = Collections.emptyMap();
+        expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
     }
 

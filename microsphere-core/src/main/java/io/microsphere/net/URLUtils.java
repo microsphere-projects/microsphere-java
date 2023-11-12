@@ -46,6 +46,7 @@ import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.substringAfterLast;
+import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -69,7 +70,7 @@ public abstract class URLUtils {
     /**
      * The default encoding : "UTF-8"
      */
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = FILE_ENCODING;
 
     /**
      * The length of {@link #ARCHIVE_ENTRY_SEPARATOR_LENGTH}
@@ -121,17 +122,16 @@ public abstract class URLUtils {
      */
     public static String resolveArchiveEntryPath(URL archiveFileURL) throws NullPointerException {
         // NPE check
-        String path = archiveFileURL.getPath();
-        int beginIndex = getArchiveEntryIndex(path);
+        return doResolveArchiveEntryPath(archiveFileURL.getPath());
+    }
+
+    protected static String doResolveArchiveEntryPath(String path) {
+        int beginIndex = indexOfArchiveEntry(path);
         if (beginIndex > -1) {
-            String relativePath = path.substring(beginIndex);
+            String relativePath = path.substring(beginIndex + ARCHIVE_ENTRY_SEPARATOR_LENGTH);
             return decode(relativePath);
         }
         return null;
-    }
-
-    private static int getArchiveEntryIndex(String path) {
-        return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
     /**
@@ -139,16 +139,20 @@ public abstract class URLUtils {
      *
      * @param url the specified URL
      * @return base path
-     * @throws NullPointerException <code>archiveFileURL</code> is <code>null</code>
+     * @throws NullPointerException if <code>url</code> is <code>null</code>
      */
     public static String resolveBasePath(URL url) throws NullPointerException {
-        String path = url.getPath();
+        // NPE check
+        return doResolveBasePath(url.getPath());
+    }
+
+    protected static String doResolveBasePath(String path) {
         int beginIndex = path.lastIndexOf(COLON_CHAR);
         if (beginIndex == -1) {
             return path;
         }
         beginIndex += 1;
-        int endIndex = getArchiveEntryIndex(path);
+        int endIndex = indexOfArchiveEntry(path);
         if (endIndex == -1) {
             return path.substring(beginIndex);
         } else {
@@ -749,6 +753,10 @@ public abstract class URLUtils {
     protected static String getFirst(Map<String, List<String>> parameters, String name) {
         List<String> values = parameters.get(name);
         return values == null || values.isEmpty() ? null : values.get(0);
+    }
+
+    private static int indexOfArchiveEntry(String path) {
+        return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
 }
