@@ -3,8 +3,6 @@
  */
 package io.microsphere.util;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 
 import javax.annotation.Nonnull;
 import java.lang.management.ManagementFactory;
@@ -12,10 +10,14 @@ import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.Set;
+
+import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.SystemUtils.PATH_SEPARATOR;
+import static java.util.Collections.emptySet;
 
 /**
  * {@link ClassPathUtils}
@@ -33,13 +35,11 @@ public abstract class ClassPathUtils extends BaseUtils {
 
     private static final Set<String> classPaths = initClassPaths();
 
-
     private static Set<String> initBootstrapClassPaths() {
-        Set<String> bootstrapClassPaths = Collections.emptySet();
         if (runtimeMXBean.isBootClassPathSupported()) {
-            bootstrapClassPaths = resolveClassPaths(runtimeMXBean.getBootClassPath());
+            return resolveClassPaths(runtimeMXBean.getBootClassPath());
         }
-        return Collections.unmodifiableSet(bootstrapClassPaths);
+        return emptySet();
     }
 
     private static Set<String> initClassPaths() {
@@ -47,10 +47,8 @@ public abstract class ClassPathUtils extends BaseUtils {
     }
 
     private static Set<String> resolveClassPaths(String classPath) {
-        Set<String> classPaths = new LinkedHashSet<>();
-        String[] classPathsArray = StringUtils.split(classPath, SystemUtils.PATH_SEPARATOR);
-        classPaths.addAll(Arrays.asList(classPathsArray));
-        return Collections.unmodifiableSet(classPaths);
+        String[] classPathsArray = split(classPath, PATH_SEPARATOR);
+        return of(classPathsArray);
     }
 
 
@@ -81,8 +79,7 @@ public abstract class ClassPathUtils extends BaseUtils {
     /**
      * Get Class Location URL from specified class name at runtime
      *
-     * @param className
-     *         class name
+     * @param className class name
      * @return If <code>className</code> associated class is loaded on {@link Thread#getContextClassLoader() Thread
      * context ClassLoader} , return class location URL, or return <code>null</code>
      * @see #getRuntimeClassLocation(Class)
@@ -91,7 +88,7 @@ public abstract class ClassPathUtils extends BaseUtils {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         URL location = null;
         if (classLoader != null) {
-            if (ClassLoaderUtils.isLoadedClass(classLoader, className)) {
+            if (isLoadedClass(classLoader, className)) {
                 try {
                     location = getRuntimeClassLocation(classLoader.loadClass(className));
                 } catch (ClassNotFoundException ignored) {
@@ -104,8 +101,7 @@ public abstract class ClassPathUtils extends BaseUtils {
     /**
      * Get Class Location URL from specified {@link Class} at runtime
      *
-     * @param type
-     *         {@link Class}
+     * @param type {@link Class}
      * @return If <code>type</code> is <code>{@link Class#isPrimitive() primitive type}</code>, <code>{@link
      * Class#isArray() array type}</code>, <code>{@link Class#isSynthetic() synthetic type}</code> or {a security
      * manager exists and its <code>checkPermission</code> method doesn't allow getting the ProtectionDomain., return
@@ -124,7 +120,7 @@ public abstract class ClassPathUtils extends BaseUtils {
             }
         } else if (!type.isPrimitive() && !type.isArray() && !type.isSynthetic()) { // Bootstrap ClassLoader
             // Class was loaded by Bootstrap ClassLoader
-            location = ClassLoaderUtils.getClassResource(ClassLoader.getSystemClassLoader(), type.getName());
+            location = getClassResource(ClassLoader.getSystemClassLoader(), type.getName());
         }
         return location;
     }
