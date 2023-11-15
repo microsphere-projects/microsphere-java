@@ -15,7 +15,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.net.URLUtils.isJarURL;
-import static io.microsphere.util.ClassLoaderUtils.getAllClassPathURLs;
+import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.jar.JarUtils.toJarFile;
 
 /**
@@ -47,7 +47,7 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
     @Override
     protected void doResolve(Collection<Artifact> artifactSet, URLClassLoader urlClassLoader) {
 
-        Set<URL> classPathURLs = getAllClassPathURLs(urlClassLoader);
+        Set<URL> classPathURLs = findAllClassPathURLs(urlClassLoader);
 
         for (URL classPathURL : classPathURLs) {
             URL mavenPomPropertiesResource = null;
