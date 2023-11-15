@@ -58,7 +58,7 @@ public abstract class FieldUtils {
      * @return null if not found
      */
     public static Field findField(Class<?> klass, String fieldName) {
-        if (Object.class.equals(klass)) {
+        if (klass == null || Object.class.equals(klass)) {
             return null;
         }
         Field field = null;
