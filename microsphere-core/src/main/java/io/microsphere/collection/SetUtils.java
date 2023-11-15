@@ -62,7 +62,7 @@ public abstract class SetUtils extends BaseUtils {
             return singleton(elements[0]);
         }
 
-        Set<E> set = new LinkedHashSet<>(size, MIN_LOAD_FACTOR);
+        Set<E> set = new LinkedHashSet<>(size);
 
         for (int i = 0; i < size; i++) {
             set.add(elements[i]);
