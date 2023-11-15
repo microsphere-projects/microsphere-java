@@ -72,7 +72,7 @@ public class ArtifactDetector {
     }
 
     protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
-        Set<URL> urls = ClassLoaderUtils.getAllClassPathURLs(classLoader);
+        Set<URL> urls = ClassLoaderUtils.findAllClassPathURLs(classLoader);
         Set<URL> classPathURLs = new LinkedHashSet<>(urls);
         if (!includedJdkLibraries) {
             removeJdkClassPathURLs(classPathURLs);
