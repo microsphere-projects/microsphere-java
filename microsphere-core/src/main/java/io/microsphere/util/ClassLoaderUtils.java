@@ -3,6 +3,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.classloading.URLClassPathHandle;
 import io.microsphere.collection.CollectionUtils;
 import io.microsphere.collection.ListUtils;
 import io.microsphere.constants.Constants;
@@ -23,31 +24,23 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
-import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
-import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.microsphere.net.URLUtils.resolveBasePath;
-import static io.microsphere.reflect.FieldUtils.findField;
-import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 
 
@@ -69,56 +62,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = initLoadedClassesCache();
 
-    private static final String[] URL_CLASS_PATH_CLASS_NAME_OPTIONS = {
-            "sun.misc.URLClassPath",
-            "jdk.internal.loader.URLClassPath", // JDK 9+
-    };
-
-    private static final Class<?> URL_CLASS_PATH_CLASS;
-
-    private static final Field ucpField;
-
-    private static final Field loadersFields;
-
-    private static final Class<?> loaderClass;
-
-    private static final Field baseField;
-
-    private static final boolean SUN_JDK_SUPPORTED;
-
-    static {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-
-        URL_CLASS_PATH_CLASS = resolveURLClassPathClass(classLoader);
-        if (URL_CLASS_PATH_CLASS != null) {
-            ucpField = findField(URLClassLoader.class, "ucp");
-            loadersFields = findField(URL_CLASS_PATH_CLASS, "loaders");
-            loaderClass = resolveClass(URL_CLASS_PATH_CLASS.getName() + "$Loader", classLoader);
-            baseField = findField(loaderClass, "base");
-        } else {
-            ucpField = null;
-            loadersFields = null;
-            loaderClass = null;
-            baseField = null;
-        }
-
-        SUN_JDK_SUPPORTED = URL_CLASS_PATH_CLASS != null &&
-                ucpField != null &&
-                loadersFields != null &&
-                loaderClass != null &&
-                baseField != null;
-    }
-
-    private static Class<?> resolveURLClassPathClass(ClassLoader classLoader) {
-        Class<?> urlClassPathClass = null;
-        for (String className : URL_CLASS_PATH_CLASS_NAME_OPTIONS) {
-            urlClassPathClass = resolveClass(className, classLoader);
-            if (urlClassPathClass != null) {
-                break;
-            }
-        }
-        return urlClassPathClass;
-    }
+    private static URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
 
     /**
      * Initializes {@link Method} for {@link ClassLoader#findLoadedClass(String)}
@@ -140,6 +84,16 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
         addShutdownHookCallback(loadedClassesCache::clear);
         return loadedClassesCache;
+    }
+
+    private static URLClassPathHandle initURLClassPathHandle() {
+        List<URLClassPathHandle> urlClassPathHandles = ServiceLoaderUtils.loadServicesList(URLClassPathHandle.class);
+        for (URLClassPathHandle urlClassPathHandle : urlClassPathHandles) {
+            if (urlClassPathHandle.supports()) {
+                return urlClassPathHandle;
+            }
+        }
+        throw new IllegalStateException("No URLClassPathHandle found, Please check the META-INF/services/io.microsphere.classloading.URLClassPathHandle");
     }
 
     private static UnsupportedOperationException jvmUnsupportedOperationException(Throwable throwable) {
@@ -601,7 +555,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @see #findLoadedClass(ClassLoader, String)
      */
     public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
-        Set<String> classNames = ClassUtils.getClassNamesInClassPath(classPath, true);
+        Set<String> classNames = getClassNamesInClassPath(classPath, true);
         return findLoadedClasses(classLoader, classNames);
     }
 
@@ -659,7 +613,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return targetClass;
     }
 
-    public static Set<URL> getAllClassPathURLs(ClassLoader classLoader) {
+    public static Set<URL> findAllClassPathURLs(ClassLoader classLoader) {
         URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
         if (urlClassLoader == null) {
             logger.warn("The ClassLoader[{}] or its' possible parent(s) is not a URLClassLoader,", classLoader);
@@ -677,7 +631,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         ClassLoader parentClassLoader = urlClassLoader.getParent();
         if (parentClassLoader != null) {
-            allClassPathURLs.addAll(getAllClassPathURLs(parentClassLoader));
+            allClassPathURLs.addAll(findAllClassPathURLs(parentClassLoader));
         }
         return allClassPathURLs;
     }
@@ -686,34 +640,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         if (!(classLoader instanceof URLClassLoader)) {
             return false;
         }
-
-        final String basePath;
-        String protocol = url.getProtocol();
-        String file = url.getFile();
-        int nestIndex = file.indexOf(ARCHIVE_ENTRY_SEPARATOR);
-
-        if (JAR_EXTENSION.equals(protocol) && nestIndex > 0) {
-            basePath = file.substring(0, nestIndex);
-        } else {
-            basePath = file;
-        }
-
-        Object urlClassPath = getFieldValue(classLoader, ucpField);
-        ArrayList<Object> loaders = getFieldValue(urlClassPath, loadersFields);
-        Iterator<Object> iterator = loaders.iterator();
-        boolean removed = false;
-        while (iterator.hasNext()) {
-            Object loader = iterator.next();
-            URL base = getFieldValue(loader, baseField);
-            String basePath_ = resolveBasePath(base);
-            if (Objects.equals(basePath_, basePath)) {
-                logger.debug("Remove the artifact resource：{}", base);
-                iterator.remove();
-                removed = true;
-                break;
-            }
-        }
-        return removed;
+        return urlClassPathHandle.removeURL((URLClassLoader) classLoader, url);
     }
 
     public static URLClassLoader findURLClassLoader(ClassLoader classLoader) {
