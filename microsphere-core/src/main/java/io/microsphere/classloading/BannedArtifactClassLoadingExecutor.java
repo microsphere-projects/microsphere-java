@@ -1,5 +1,7 @@
 package io.microsphere.classloading;
 
+import io.microsphere.util.ClassLoaderUtils;
+import io.microsphere.util.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,7 @@ import java.util.List;
 import java.util.function.Function;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
+import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 
@@ -41,7 +44,7 @@ public class BannedArtifactClassLoadingExecutor {
 
     private static final Logger logger = LoggerFactory.getLogger(BannedArtifactClassLoadingExecutor.class);
 
-    private static final String ENCODING = System.getProperty("file.encoding", "UTF-8");
+    private static final String ENCODING = SystemUtils.FILE_ENCODING;
 
     private final ClassLoader classLoader;
 
@@ -59,7 +62,16 @@ public class BannedArtifactClassLoadingExecutor {
     public void execute() {
         List<BannedArtifactConfig> bannedArtifactConfigs = loadBannedArtifactConfigs();
         List<Artifact> artifacts = artifactDetector.detect(false);
-
+        for (Artifact artifact : artifacts) {
+            URL classPathURL = artifact.getLocation();
+            if (classPathURL != null) {
+                for (BannedArtifactConfig bannedArtifactConfig : bannedArtifactConfigs) {
+                    if (bannedArtifactConfig.matches(artifact)) {
+                        removeClassPathURL(classLoader, classPathURL);
+                    }
+                }
+            }
+        }
     }
 
     private List<BannedArtifactConfig> loadBannedArtifactConfigs() {
