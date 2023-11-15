@@ -24,8 +24,15 @@ import java.util.TreeSet;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
-import static io.microsphere.util.ClassLoaderUtils.getAllClassPathURLs;
+import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
+import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
+import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPaths;
+import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClasses;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getLoadedClassCount;
+import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
+import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static java.util.Collections.emptySet;
 import static org.junit.Assert.assertFalse;
@@ -138,8 +145,8 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testClassLoadingMXBean() {
         ClassLoadingMXBean classLoadingMXBean = ClassLoaderUtils.classLoadingMXBean;
-        assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), ClassLoaderUtils.getTotalLoadedClassCount());
-        assertEquals(classLoadingMXBean.getLoadedClassCount(), ClassLoaderUtils.getLoadedClassCount());
+        assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), getTotalLoadedClassCount());
+        assertEquals(classLoadingMXBean.getLoadedClassCount(), getLoadedClassCount());
         assertEquals(classLoadingMXBean.getUnloadedClassCount(), ClassLoaderUtils.getUnloadedClassCount());
         assertEquals(classLoadingMXBean.isVerbose(), ClassLoaderUtils.isVerbose());
 
@@ -170,12 +177,12 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetAllLoadedClasses() {
-        Set<Class<?>> classesSet = ClassLoaderUtils.getAllLoadedClasses(classLoader);
+        Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
         assertNotNull(classesSet);
         assertFalse(classesSet.isEmpty());
 
 
-        classesSet = ClassLoaderUtils.getAllLoadedClasses(ClassLoader.getSystemClassLoader());
+        classesSet = getAllLoadedClasses(ClassLoader.getSystemClassLoader());
         assertNotNull(classesSet);
         assertFalse(classesSet.isEmpty());
         info(classesSet);
@@ -193,32 +200,32 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFindLoadedClass() {
 
         Class<?> type = null;
-        for (Class<?> class_ : ClassLoaderUtils.getAllLoadedClasses(classLoader)) {
-            type = ClassLoaderUtils.findLoadedClass(classLoader, class_.getName());
+        for (Class<?> class_ : getAllLoadedClasses(classLoader)) {
+            type = findLoadedClass(classLoader, class_.getName());
             assertEquals(class_, type);
         }
 
-        type = ClassLoaderUtils.findLoadedClass(classLoader, String.class.getName());
+        type = findLoadedClass(classLoader, String.class.getName());
         assertEquals(String.class, type);
 
-        type = ClassLoaderUtils.findLoadedClass(classLoader, Double.class.getName());
+        type = findLoadedClass(classLoader, Double.class.getName());
         assertEquals(Double.class, type);
     }
 
     @Test
     public void testIsLoadedClass() {
-        assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, String.class));
-        assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, Double.class));
-        assertTrue(ClassLoaderUtils.isLoadedClass(classLoader, Double.class.getName()));
+        assertTrue(isLoadedClass(classLoader, String.class));
+        assertTrue(isLoadedClass(classLoader, Double.class));
+        assertTrue(isLoadedClass(classLoader, Double.class.getName()));
     }
 
 
     @Test
     public void testFindLoadedClassesInClassPath() {
         Double d = null;
-        Set<Class<?>> allLoadedClasses = ClassLoaderUtils.findLoadedClassesInClassPath(classLoader);
+        Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPath(classLoader);
 
-        Set<Class<?>> classesSet = ClassLoaderUtils.getAllLoadedClasses(classLoader);
+        Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
 
         Set<Class<?>> remainingClasses = new LinkedHashSet<>(allLoadedClasses);
 
@@ -231,7 +238,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
         int loadedClassesSize = allLoadedClasses.size() + classesSet.size();
 
-        int loadedClassCount = ClassLoaderUtils.getLoadedClassCount();
+        int loadedClassCount = getLoadedClassCount();
 
         info(loadedClassesSize);
         info(loadedClassCount);
@@ -239,10 +246,10 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetCount() {
-        long count = ClassLoaderUtils.getTotalLoadedClassCount();
+        long count = getTotalLoadedClassCount();
         assertTrue(count > 0);
 
-        count = ClassLoaderUtils.getLoadedClassCount();
+        count = getLoadedClassCount();
         assertTrue(count > 0);
 
         count = ClassLoaderUtils.getUnloadedClassCount();
@@ -251,7 +258,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testFindLoadedClassesInClassPaths() {
-        Set<Class<?>> allLoadedClasses = ClassLoaderUtils.findLoadedClassesInClassPaths(classLoader, ClassPathUtils.getClassPaths());
+        Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPaths(classLoader, ClassPathUtils.getClassPaths());
         assertFalse(allLoadedClasses.isEmpty());
     }
 
@@ -293,12 +300,15 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testRemoveClassPathURL() {
         ClassLoader classLoader = getDefaultClassLoader();
-        Set<URL> urls = getAllClassPathURLs(classLoader);
+        Set<URL> urls = findAllClassPathURLs(classLoader);
         for (URL url : urls) {
-            removeClassPathURL(classLoader, url);
+            String path = url.getPath();
+            if (path.contains("jmh-generator-annprocess")) {
+                assertTrue(removeClassPathURL(classLoader, url));
+            }
         }
-        urls = getAllClassPathURLs(classLoader);
-        assertTrue(urls.isEmpty());
+        Set<URL> urls2 = findAllClassPathURLs(classLoader);
+        assertEquals(urls.size(), urls2.size() + 1);
     }
 
 
