@@ -16,15 +16,19 @@
  */
 package io.microsphere.classloading;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
+
+import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 
 /**
  * The handle interface for URL Class-Path
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see sun.misc.URLClassPath
- * @see jdk.internal.loader.URLClassPath
+ * @see ClassicURLClassPathHandle
+ * @see ModernURLClassPathHandle
  * @since 1.0.0
  */
 public interface URLClassPathHandle {
@@ -37,11 +41,25 @@ public interface URLClassPathHandle {
     boolean supports();
 
     /**
-     * Remove the Class-Path {@link URL} from the specified {@link URLClassLoader}
+     * Get the Class-Path URLs from the specified {@link ClassLoader}
      *
-     * @param urlClassLoader the specified {@link URLClassLoader}
-     * @param url            the Class-Path {@link URL}
+     * @param classLoader the specified {@link ClassLoader}
+     * @return the non-null array of {@link URL URLs}
+     */
+    @Nonnull
+    default URL[] getURLs(ClassLoader classLoader) {
+        if (classLoader instanceof URLClassLoader) {
+            return ((URLClassLoader) classLoader).getURLs();
+        }
+        return EMPTY_URL_ARRAY;
+    }
+
+    /**
+     * Remove the Class-Path {@link URL} from the specified {@link ClassLoader}
+     *
+     * @param classLoader the specified {@link ClassLoader}
+     * @param url         the Class-Path {@link URL}
      * @return if removed, return <code>true</code>, otherwise <code>false</code>
      */
-    boolean removeURL(URLClassLoader urlClassLoader, URL url);
+    boolean removeURL(ClassLoader classLoader, URL url);
 }
