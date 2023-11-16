@@ -73,6 +73,11 @@ public abstract class URLUtils {
     public static final String DEFAULT_ENCODING = FILE_ENCODING;
 
     /**
+     * The empty array of {@link URL}
+     */
+    public static final URL[] EMPTY_URL_ARRAY = new URL[0];
+
+    /**
      * The length of {@link #ARCHIVE_ENTRY_SEPARATOR_LENGTH}
      */
     private static final int ARCHIVE_ENTRY_SEPARATOR_LENGTH = ARCHIVE_ENTRY_SEPARATOR.length();
