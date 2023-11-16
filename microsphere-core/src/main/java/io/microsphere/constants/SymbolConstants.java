@@ -120,6 +120,11 @@ public interface SymbolConstants {
     char HYPHEN_CHAR = '-';
 
     /**
+     * The wildcard char : '*'
+     */
+    char WILDCARD_CHAR = '*';
+
+    /**
      * The comma symbol : ","
      */
     String COMMA = ",";
@@ -224,4 +229,9 @@ public interface SymbolConstants {
      * The hyphen symbol : "-"
      */
     String HYPHEN = "-";
+
+    /**
+     * The wildcard symbol : "*"
+     */
+    String WILDCARD = "*";
 }
