@@ -43,8 +43,8 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * @param <A>      The type or subtype of {@link AccessibleObject}
      */
     public static <A extends AccessibleObject> void execute(A object, ThrowableConsumer<A> callback) {
-        execute(object, () -> {
-            callback.accept(object);
+        execute(object, a -> {
+            callback.accept(a);
             return null;
         });
     }
