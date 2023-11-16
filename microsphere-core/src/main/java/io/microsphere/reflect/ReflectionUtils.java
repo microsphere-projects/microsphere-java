@@ -138,8 +138,6 @@ public abstract class ReflectionUtils {
      * Get Caller class
      *
      * @return Get the Class name that called the method
-     * @version 1.0.0
-     * @since 1.0.0
      */
     @Nonnull
     public static String getCallerClassName() {
@@ -152,9 +150,7 @@ public abstract class ReflectionUtils {
      * @param invocationFrame invocation frame
      * @return Class name under specified invocation frame
      * @throws IndexOutOfBoundsException If the <code>invocation Frame<code> value is negative or exceeds the actual level
-     * @version 1.0.0
      * @see Thread#getStackTrace()
-     * @since 1.0.0
      */
     @Nonnull
     protected static String getCallerClassName(int invocationFrame) throws IndexOutOfBoundsException {
@@ -237,8 +233,6 @@ public abstract class ReflectionUtils {
      *
      * @return Get caller class
      * @throws IllegalStateException If the caller class cannot be found
-     * @version 1.0.0
-     * @since 1.0.0 2012-2-28 下午07:42:26
      */
     @Nonnull
     public static Class<?> getCallerClass() throws IllegalStateException {
@@ -250,9 +244,7 @@ public abstract class ReflectionUtils {
      *
      * @return Caller Class
      * @throws UnsupportedOperationException If JRE is not a SUN HotSpot JVM
-     * @version 1.0.0
      * @see #getCallerClassInSunJVM(int)
-     * @since 1.0.0
      */
     static Class<?> getCallerClassInSunJVM() throws UnsupportedOperationException {
         return getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
@@ -263,9 +255,7 @@ public abstract class ReflectionUtils {
      *
      * @return Caller Class
      * @throws UnsupportedOperationException If JRE is not a SUN HotSpot JVM
-     * @version 1.0.0
      * @see #getCallerClassInSunJVM(int)
-     * @since 1.0.0
      */
     static String getCallerClassNameInSunJVM() throws UnsupportedOperationException {
         Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
@@ -293,9 +283,7 @@ public abstract class ReflectionUtils {
      * Get caller class in General JVM
      *
      * @return Caller Class
-     * @version 1.0.0
      * @see #getCallerClassInGeneralJVM(int)
-     * @since 1.0.0
      */
     static Class<?> getCallerClassInGeneralJVM() {
         return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
@@ -306,9 +294,7 @@ public abstract class ReflectionUtils {
      *
      * @return caller class's {@link Package}
      * @throws IllegalStateException see {@link #getCallerClass()}
-     * @version 1.0.0
      * @see #getCallerClass()
-     * @since 1.0.0
      */
     public static Package getCallerPackage() throws IllegalStateException {
         return getCallerClass().getPackage();
