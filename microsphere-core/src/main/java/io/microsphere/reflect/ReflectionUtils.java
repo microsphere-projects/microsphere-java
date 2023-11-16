@@ -1,7 +1,5 @@
 package io.microsphere.reflect;
 
-import io.microsphere.lang.function.ThrowableConsumer;
-import io.microsphere.lang.function.ThrowableFunction;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.reflect.ConstructorUtils;
@@ -11,7 +9,6 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -547,43 +544,4 @@ public abstract class ReflectionUtils {
         return types;
     }
 
-    /**
-     * Execute an {@link AccessibleObject} instance
-     *
-     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback the call back to execute {@link AccessibleObject} object
-     * @param <A>      The type or subtype of {@link AccessibleObject}
-     */
-    public static <A extends AccessibleObject> void execute(A object, ThrowableConsumer<A> callback) {
-        execute(object, a -> {
-            callback.accept(a);
-            return null;
-        });
-    }
-
-    /**
-     * Execute an {@link AccessibleObject} instance
-     *
-     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback the call back to execute {@link AccessibleObject} object
-     * @param <A>      The type or subtype of {@link AccessibleObject}
-     * @param <T>      The type of execution result
-     * @return The execution result
-     * @throws NullPointerException If <code>object</code> is <code>null</code>
-     */
-    public static <A extends AccessibleObject, T> T execute(A object, ThrowableFunction<A, T> callback) throws NullPointerException {
-        boolean accessible = object.isAccessible();
-        final T result;
-        try {
-            if (!accessible) {
-                object.setAccessible(true);
-            }
-            result = callback.execute(object);
-        } finally {
-            if (!accessible) {
-                object.setAccessible(accessible);
-            }
-        }
-        return result;
-    }
 }

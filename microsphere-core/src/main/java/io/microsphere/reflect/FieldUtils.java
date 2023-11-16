@@ -205,8 +205,7 @@ public abstract class FieldUtils {
      * @return the value of  the specified {@link Field}
      */
     public static <T> T getFieldValue(Object object, Field field) {
-        return (T) execute(() -> {
-            enableAccessible(field);
+        return (T) AccessibleObjectUtils.execute(field, () -> {
             return field.get(object);
         });
     }
@@ -232,16 +231,17 @@ public abstract class FieldUtils {
      * @return the previous value of the specified {@link Field}
      */
     public static <T> T setFieldValue(Object object, Field field, T value) {
-        Object previousValue = null;
-        try {
-            enableAccessible(field);
-            previousValue = field.get(object);
-            if (!Objects.equals(previousValue, value)) {
-                field.set(object, value);
+        return AccessibleObjectUtils.execute(field, () -> {
+            Object previousValue = null;
+            try {
+                previousValue = field.get(object);
+                if (!Objects.equals(previousValue, value)) {
+                    field.set(object, value);
+                }
+            } catch (IllegalAccessException ignored) {
             }
-        } catch (IllegalAccessException ignored) {
-        }
-        return (T) previousValue;
+            return (T) previousValue;
+        });
     }
 
     /**

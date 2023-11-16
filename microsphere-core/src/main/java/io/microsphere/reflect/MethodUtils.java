@@ -37,6 +37,7 @@ import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.reflect.AccessibleObjectUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
@@ -297,16 +298,8 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     public static <T> T invokeMethod(Object instance, Method method, Object... parameters) {
-        T value = null;
-        try {
-            method.setAccessible(true);
-            value = (T) method.invoke(instance, parameters);
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-        return value;
+        return execute(method, () -> (T) method.invoke(instance, parameters));
     }
-
 
     /**
      * Tests whether one method, as a member of a given type,

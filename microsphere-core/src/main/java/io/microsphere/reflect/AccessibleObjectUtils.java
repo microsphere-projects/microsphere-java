@@ -17,10 +17,14 @@
 package io.microsphere.reflect;
 
 import io.microsphere.lang.function.ThrowableConsumer;
+import io.microsphere.lang.function.ThrowableFunction;
 import io.microsphere.lang.function.ThrowableSupplier;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * The utilities class of {@link AccessibleObject}
@@ -32,20 +36,52 @@ import java.lang.reflect.AccessibleObject;
 public abstract class AccessibleObjectUtils extends BaseUtils {
 
     /**
+     * Execute an {@link AccessibleObject} instance
+     *
+     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
+     * @param callback the call back to execute {@link AccessibleObject} object
+     * @param <A>      The type or subtype of {@link AccessibleObject}
+     */
+    public static <A extends AccessibleObject> void execute(A object, ThrowableConsumer<A> callback) {
+        execute(object, () -> {
+            callback.accept(object);
+            return null;
+        });
+    }
+
+    /**
      * Executes the {@link AccessibleObject}
      *
      * @param accessibleObject {@link AccessibleObject}
      * @param supplier         {@link ThrowableConsumer}
      * @throws RuntimeException if execution failed
      */
-    public static <R> R execute(AccessibleObject accessibleObject, ThrowableSupplier<R> supplier) {
+    public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableSupplier<R> supplier) {
+        return execute(accessibleObject, (ThrowableFunction<A, R>) a -> supplier.execute());
+    }
+
+    /**
+     * Execute an {@link AccessibleObject} instance
+     *
+     * @param accessibleObject {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
+     * @param callback         the call back to execute {@link AccessibleObject} accessibleObject
+     * @param <A>              The type or subtype of {@link AccessibleObject}
+     * @param <R>              The type of execution result
+     * @return The execution result
+     * @throws NullPointerException If <code>accessibleObject</code> is <code>null</code>
+     */
+    public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableFunction<A, R> callback) throws NullPointerException {
         boolean accessible = accessibleObject.isAccessible();
-        R result = null;
+        final R result;
         try {
-            accessibleObject.setAccessible(true);
-            result = supplier.execute();
+            if (!accessible) {
+                accessibleObject.setAccessible(true);
+            }
+            result = callback.execute(accessibleObject);
         } finally {
-            accessibleObject.setAccessible(accessible);
+            if (!accessible) {
+                accessibleObject.setAccessible(accessible);
+            }
         }
         return result;
     }
