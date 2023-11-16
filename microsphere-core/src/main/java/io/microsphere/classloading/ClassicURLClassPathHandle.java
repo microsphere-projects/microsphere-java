@@ -34,10 +34,11 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
 /**
- * Classic {@link URLClassPathHandle} for {@link sun.misc.URLClassPath}
+ * Classic {@link URLClassPathHandle} for {@link sun.misc.URLClassPath} since JDK 1 to 8
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see sun.misc.URLClassPath
+ * @see ModernURLClassPathHandle
  * @see URLClassPathHandle
  * @since 1.0.0
  */
@@ -102,8 +103,8 @@ public class ClassicURLClassPathHandle implements URLClassPathHandle, Prioritize
     }
 
     @Override
-    public boolean removeURL(URLClassLoader urlClassLoader, URL url) {
-        Object urlClassPath = getFieldValue(urlClassLoader, ucpField);
+    public boolean removeURL(ClassLoader classLoader, URL url) {
+        Object urlClassPath = getFieldValue(classLoader, ucpField);
         List<URL> urls = getFieldValue(urlClassPath, urlsField);
         List<URL> path = getFieldValue(urlClassPath, pathField);
         List<Object> loaders = getFieldValue(urlClassPath, loadersField);
