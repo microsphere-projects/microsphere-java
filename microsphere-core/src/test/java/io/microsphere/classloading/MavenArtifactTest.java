@@ -53,6 +53,6 @@ public class MavenArtifactTest {
         assertFalse(create("-", "microsphere-core", "1.0.0").matches(artifact));
         assertFalse(create("io.github.microsphere-projects", "-", "1.0.0").matches(artifact));
         assertFalse(create("io.github.microsphere-projects", "microsphere-core", "-").matches(artifact));
-        
+
     }
 }
