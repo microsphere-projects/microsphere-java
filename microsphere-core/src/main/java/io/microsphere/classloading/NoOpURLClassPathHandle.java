@@ -18,8 +18,10 @@ package io.microsphere.classloading;
 
 import io.microsphere.lang.Prioritized;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
-import java.net.URLClassLoader;
+
+import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 
 /**
  * No-Operation {@link URLClassPathHandle}
@@ -36,7 +38,12 @@ public class NoOpURLClassPathHandle implements URLClassPathHandle, Prioritized {
     }
 
     @Override
-    public boolean removeURL(URLClassLoader urlClassLoader, URL url) {
+    public URL[] getURLs(ClassLoader classLoader) {
+        return EMPTY_URL_ARRAY;
+    }
+
+    @Override
+    public boolean removeURL(ClassLoader classLoader, URL url) {
         return false;
     }
 
