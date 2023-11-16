@@ -60,12 +60,12 @@ public class BannedArtifactClassLoadingExecutor {
     }
 
     public void execute() {
-        List<BannedArtifactConfig> bannedArtifactConfigs = loadBannedArtifactConfigs();
+        List<MavenArtifact> bannedArtifactConfigs = loadBannedArtifactConfigs();
         List<Artifact> artifacts = artifactDetector.detect(false);
         for (Artifact artifact : artifacts) {
             URL classPathURL = artifact.getLocation();
             if (classPathURL != null) {
-                for (BannedArtifactConfig bannedArtifactConfig : bannedArtifactConfigs) {
+                for (MavenArtifact bannedArtifactConfig : bannedArtifactConfigs) {
                     if (bannedArtifactConfig.matches(artifact)) {
                         removeClassPathURL(classLoader, classPathURL);
                     }
@@ -74,13 +74,13 @@ public class BannedArtifactClassLoadingExecutor {
         }
     }
 
-    private List<BannedArtifactConfig> loadBannedArtifactConfigs() {
-        List<BannedArtifactConfig> bannedArtifactConfigs = new LinkedList<>();
+    private List<MavenArtifact> loadBannedArtifactConfigs() {
+        List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try {
             Enumeration<URL> configResources = classLoader.getResources(CONFIG_LOCATION);
             while (configResources.hasMoreElements()) {
                 URL configResource = configResources.nextElement();
-                List<BannedArtifactConfig> configs = loadBannedArtifactConfigs(configResource);
+                List<MavenArtifact> configs = loadBannedArtifactConfigs(configResource);
                 bannedArtifactConfigs.addAll(configs);
             }
         } catch (IOException e) {
@@ -89,8 +89,8 @@ public class BannedArtifactClassLoadingExecutor {
         return bannedArtifactConfigs;
     }
 
-    private List<BannedArtifactConfig> loadBannedArtifactConfigs(URL configResource) throws IOException {
-        List<BannedArtifactConfig> bannedArtifactConfigs = new LinkedList<>();
+    private List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
+        List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try (InputStream inputStream = configResource.openStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING));
         ) {
@@ -99,7 +99,7 @@ public class BannedArtifactClassLoadingExecutor {
                 if (isBlank(definition)) {
                     break;
                 }
-                BannedArtifactConfig bannedArtifactConfig = loadBannedArtifactConfig(definition);
+                MavenArtifact bannedArtifactConfig = loadBannedArtifactConfig(definition);
                 bannedArtifactConfigs.add(bannedArtifactConfig);
             }
         }
@@ -110,7 +110,7 @@ public class BannedArtifactClassLoadingExecutor {
      * @param definition
      * @return
      */
-    private BannedArtifactConfig loadBannedArtifactConfig(String definition) {
+    private MavenArtifact loadBannedArtifactConfig(String definition) {
         String[] gav = split(definition.trim(), COLON);
         if (gav.length != 3) {
             throw new RuntimeException("The definition of the banned artifact must contain groupId, artifactId and version : " + definition);
@@ -118,49 +118,7 @@ public class BannedArtifactClassLoadingExecutor {
         String groupId = gav[0];
         String artifactId = gav[1];
         String version = gav[2];
-        BannedArtifactConfig bannedArtifactConfig = new BannedArtifactConfig();
-        bannedArtifactConfig.setGroupId(groupId);
-        bannedArtifactConfig.setArtifactId(artifactId);
-        bannedArtifactConfig.setVersion(version);
-        return bannedArtifactConfig;
+        return MavenArtifact.create(groupId, artifactId, version);
     }
 
-    static class BannedArtifactConfig extends MavenArtifact {
-
-        private static final String WILDCARD = "*";
-
-        public boolean matches(Artifact artifact) {
-            return matchesGroupId(artifact)
-                    && matchesArtifactId(artifact)
-                    && matchesVersion(artifact);
-        }
-
-        private boolean matchesGroupId(Artifact artifact) {
-            return matches(artifact, this::getGroupId);
-        }
-
-        private boolean matchesArtifactId(Artifact artifact) {
-            return matches(artifact, Artifact::getArtifactId);
-        }
-
-        private boolean matchesVersion(Artifact artifact) {
-            return matches(artifact, Artifact::getVersion);
-        }
-
-        private boolean matches(Artifact artifact, Function<Artifact, String> getterFunction) {
-            String configuredValue = getterFunction.apply(this);
-            if (WILDCARD.equals(configuredValue)) {
-                return true;
-            }
-            String value = getterFunction.apply(artifact);
-            return configuredValue.equals(value);
-        }
-
-        private String getGroupId(Artifact artifact) {
-            if (artifact instanceof MavenArtifact) {
-                return ((MavenArtifact) artifact).getGroupId();
-            }
-            return null;
-        }
-    }
 }

@@ -1,7 +1,12 @@
 package io.microsphere.classloading;
 
+import io.microsphere.constants.SymbolConstants;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Artifact entity
@@ -11,22 +16,32 @@ import java.util.Objects;
  */
 public class Artifact {
 
-    private String artifactId;
+    public static final String WILDCARD = SymbolConstants.WILDCARD;
 
-    private String version = "?";
+    public static final String UNKNOWN = SymbolConstants.QUESTION_MARK;
 
-    private URL location;
+    private final String artifactId;
 
-    public void setArtifactId(String artifactId) {
+    private final String version;
+
+    private final URL location;
+
+    public Artifact(@Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
         this.artifactId = artifactId;
-    }
-
-    public void setVersion(String version) {
         this.version = version;
+        this.location = location;
     }
 
-    public void setLocation(URL location) {
-        this.location = location;
+    public static Artifact create(@Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
+        return new Artifact(artifactId, version, location);
+    }
+
+    public static Artifact create(@Nonnull String artifactId, @Nullable String version) {
+        return create(artifactId, version, null);
+    }
+
+    public static Artifact create(@Nonnull String artifactId) {
+        return create(artifactId, UNKNOWN);
     }
 
     public String getArtifactId() {
@@ -39,6 +54,28 @@ public class Artifact {
 
     public URL getLocation() {
         return location;
+    }
+
+    public boolean matches(Artifact artifact) {
+        return matchesArtifactId(artifact)
+                && matchesVersion(artifact);
+    }
+
+    protected boolean matchesArtifactId(Artifact artifact) {
+        return matches(artifact, Artifact::getArtifactId);
+    }
+
+    protected boolean matchesVersion(Artifact artifact) {
+        return matches(artifact, Artifact::getVersion);
+    }
+
+    protected boolean matches(Artifact artifact, Function<Artifact, String> getterFunction) {
+        String configuredValue = getterFunction.apply(this);
+        if (WILDCARD.equals(configuredValue)) {
+            return true;
+        }
+        String value = getterFunction.apply(artifact);
+        return configuredValue.equals(value);
     }
 
     @Override

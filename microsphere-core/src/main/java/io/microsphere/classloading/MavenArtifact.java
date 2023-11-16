@@ -1,5 +1,8 @@
 package io.microsphere.classloading;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.net.URL;
 import java.util.Objects;
 
 /**
@@ -10,14 +13,46 @@ import java.util.Objects;
  */
 public class MavenArtifact extends Artifact {
 
-    private String groupId;
+    private final String groupId;
 
-    public void setGroupId(String groupId) {
+    public MavenArtifact(@Nonnull String groupId, @Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
+        super(artifactId, version, location);
         this.groupId = groupId;
+    }
+
+    public static MavenArtifact create(@Nonnull String groupId, @Nonnull String artifactId,
+                                       @Nullable String version, @Nullable URL location) {
+        return new MavenArtifact(groupId, artifactId, version, location);
+    }
+
+    public static MavenArtifact create(@Nonnull String groupId, @Nonnull String artifactId,
+                                       @Nullable String version) {
+        return create(groupId, artifactId, version, null);
+    }
+
+    public static MavenArtifact create(@Nonnull String groupId, @Nonnull String artifactId) {
+        return create(groupId, artifactId, UNKNOWN);
     }
 
     public String getGroupId() {
         return groupId;
+    }
+
+    @Override
+    public boolean matches(Artifact artifact) {
+        return matchesGroupId(artifact)
+                && super.matches(artifact);
+    }
+
+    private boolean matchesGroupId(Artifact artifact) {
+        return matches(artifact, this::getGroupId);
+    }
+
+    private String getGroupId(Artifact artifact) {
+        if (artifact instanceof MavenArtifact) {
+            return ((MavenArtifact) artifact).getGroupId();
+        }
+        return null;
     }
 
     @Override

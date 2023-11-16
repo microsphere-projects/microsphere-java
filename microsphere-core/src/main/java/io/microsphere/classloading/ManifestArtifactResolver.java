@@ -94,7 +94,6 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
 
     private Artifact resolveArtifactMetaInfoInManifest(Manifest manifest, URL manifestResourceURL)
             throws MalformedURLException {
-        Artifact artifact = new Artifact();
         Attributes mainAttributes = manifest.getMainAttributes();
         URL artifactResourceURL = resolveArtifactResourceURL(manifestResourceURL);
         if (artifactResourceURL == null) {
@@ -107,10 +106,7 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
             return null;
         }
         String version = resolveVersion(mainAttributes, artifactId, artifactResourceURL, isArchiveURL);
-        artifact.setArtifactId(artifactId);
-        artifact.setVersion(version);
-        artifact.setLocation(artifactResourceURL);
-        return artifact;
+        return Artifact.create(artifactId, version, artifactResourceURL);
     }
 
     private String resolveArtifactId(Attributes attributes, URL artifactResourceURL, boolean isArchiveURL) {

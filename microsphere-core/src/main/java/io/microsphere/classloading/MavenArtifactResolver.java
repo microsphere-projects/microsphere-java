@@ -104,12 +104,7 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
         String groupId = properties.getProperty(GROUP_ID_PROPERTY_NAME);
         String artifactId = properties.getProperty(ARTIFACT_ID_PROPERTY_NAME);
         String version = properties.getProperty(VERSION_PROPERTY_NAME);
-        MavenArtifact artifactMetaInfo = new MavenArtifact();
-        artifactMetaInfo.setGroupId(groupId);
-        artifactMetaInfo.setArtifactId(artifactId);
-        artifactMetaInfo.setVersion(version);
-        artifactMetaInfo.setLocation(artifactResourceURL);
-        return artifactMetaInfo;
+        return MavenArtifact.create(groupId, artifactId, version, artifactResourceURL);
     }
 
     private static class MavenPomPropertiesFilter implements JarEntryFilter {
