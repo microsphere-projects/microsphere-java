@@ -19,7 +19,6 @@ package io.microsphere.classloading;
 import io.microsphere.lang.Prioritized;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.misc.URLClassPath;
 
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -104,7 +103,7 @@ public class ClassicURLClassPathHandle implements URLClassPathHandle, Prioritize
 
     @Override
     public boolean removeURL(URLClassLoader urlClassLoader, URL url) {
-        URLClassPath urlClassPath = getFieldValue(urlClassLoader, ucpField);
+        Object urlClassPath = getFieldValue(urlClassLoader, ucpField);
         List<URL> urls = getFieldValue(urlClassPath, urlsField);
         List<URL> path = getFieldValue(urlClassPath, pathField);
         List<Object> loaders = getFieldValue(urlClassPath, loadersField);
