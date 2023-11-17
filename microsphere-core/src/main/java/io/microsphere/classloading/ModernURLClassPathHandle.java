@@ -30,6 +30,7 @@ import java.util.Objects;
 import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
@@ -42,99 +43,19 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  * @see URLClassPathHandle
  * @since 1.0.0
  */
-public class ModernURLClassPathHandle implements URLClassPathHandle, Prioritized {
+public class ModernURLClassPathHandle extends AbstractURLClassPathHandle {
 
-    private static final Logger logger = LoggerFactory.getLogger(ModernURLClassPathHandle.class);
-
-    private static final String URL_CLASS_PATH_CLASS_NAME = "jdk.internal.loader.URLClassPath";
-
-    private static final Class<?> URL_CLASS_PATH_CLASS;
-
-    /**
-     * {@link URLClassLoader#ucp}
-     */
-    private static final Field ucpField;
-
-    /**
-     * {@link jdk.internal.loader.URLClassPath#path}
-     */
-    private static final Field pathField;
-
-    /**
-     * {@link jdk.internal.loader.URLClassPath#unopenedUrls}
-     */
-    private static final Field unopenedUrlsField;
-
-    /**
-     * {@link jdk.internal.loader.URLClassPath#loaders}
-     */
-    private static final Field loadersField;
-
-    private static final Class<?> loaderClass;
-
-    private static final Field baseField;
-
-    private static final boolean supported;
-
-    static {
-
-        ClassLoader classLoader = getSystemClassLoader();
-
-        URL_CLASS_PATH_CLASS = resolveClass(URL_CLASS_PATH_CLASS_NAME, classLoader);
-        ucpField = findField(URLClassLoader.class, "ucp");
-        pathField = findField(URL_CLASS_PATH_CLASS, "path");
-        unopenedUrlsField = findField(URL_CLASS_PATH_CLASS, "unopenedUrls");
-        loadersField = findField(URL_CLASS_PATH_CLASS, "loaders");
-        loaderClass = URL_CLASS_PATH_CLASS == null ? null : resolveClass(URL_CLASS_PATH_CLASS.getName() + "$Loader", classLoader);
-        baseField = findField(loaderClass, "base");
-
-        supported = URL_CLASS_PATH_CLASS != null &&
-                ucpField != null &&
-                pathField != null &&
-                unopenedUrlsField != null &&
-                loadersField != null &&
-                loaderClass != null &&
-                baseField != null;
+    public ModernURLClassPathHandle() {
+        setPriority(MAX_PRIORITY + 99999);
     }
 
     @Override
-    public boolean supports() {
-        return supported;
+    protected String getURLClassPathClassName() {
+        return "jdk.internal.loader.URLClassPath";
     }
 
     @Override
-    public boolean removeURL(ClassLoader classLoader, URL url) {
-        Object urlClassPath = getFieldValue(classLoader, ucpField);
-        List<URL> unopenedUrls = getFieldValue(urlClassPath, unopenedUrlsField);
-        List<URL> path = getFieldValue(urlClassPath, pathField);
-        List<Object> loaders = getFieldValue(urlClassPath, loadersField);
-
-        String basePath = resolveBasePath(url);
-
-        boolean removed = false;
-
-        synchronized (unopenedUrls) {
-            unopenedUrls.remove(url);
-            path.remove(url);
-
-            Iterator<Object> iterator = loaders.iterator();
-            while (iterator.hasNext()) {
-                Object loader = iterator.next();
-                URL base = getFieldValue(loader, baseField);
-                String basePath_ = resolveBasePath(base);
-                if (Objects.equals(basePath_, basePath)) {
-                    logger.debug("Remove the Class-Path URL：{}", url);
-                    iterator.remove();
-                    removed = true;
-                    break;
-                }
-            }
-        }
-        return removed;
-    }
-
-    @Override
-    public int getPriority() {
-        return MAX_PRIORITY + 99999;
+    protected String getUrlsFieldName() {
+        return "unopenedUrls";
     }
 }

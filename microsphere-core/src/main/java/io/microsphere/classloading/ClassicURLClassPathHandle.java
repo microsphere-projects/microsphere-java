@@ -42,99 +42,19 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  * @see URLClassPathHandle
  * @since 1.0.0
  */
-public class ClassicURLClassPathHandle implements URLClassPathHandle, Prioritized {
+public class ClassicURLClassPathHandle extends AbstractURLClassPathHandle {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClassicURLClassPathHandle.class);
-
-    private static final String URL_CLASS_PATH_CLASS_NAME = "sun.misc.URLClassPath";
-
-    private static final Class<?> URL_CLASS_PATH_CLASS;
-
-    /**
-     * {@link URLClassLoader#ucp}
-     */
-    private static final Field ucpField;
-
-    /**
-     * {@link sun.misc.URLClassPath#path}
-     */
-    private static final Field pathField;
-
-    /**
-     * {@link sun.misc.URLClassPath#urls}
-     */
-    private static final Field urlsField;
-
-    /**
-     * {@link sun.misc.URLClassPath#loaders}
-     */
-    private static final Field loadersField;
-
-    private static final Class<?> loaderClass;
-
-    private static final Field baseField;
-
-    private static final boolean supported;
-
-    static {
-
-        ClassLoader classLoader = getSystemClassLoader();
-
-        URL_CLASS_PATH_CLASS = resolveClass(URL_CLASS_PATH_CLASS_NAME, classLoader);
-        ucpField = findField(URLClassLoader.class, "ucp");
-        pathField = findField(URL_CLASS_PATH_CLASS, "path");
-        urlsField = findField(URL_CLASS_PATH_CLASS, "urls");
-        loadersField = findField(URL_CLASS_PATH_CLASS, "loaders");
-        loaderClass = URL_CLASS_PATH_CLASS == null ? null : resolveClass(URL_CLASS_PATH_CLASS.getName() + "$Loader", classLoader);
-        baseField = findField(loaderClass, "base");
-
-        supported = URL_CLASS_PATH_CLASS != null &&
-                ucpField != null &&
-                pathField != null &&
-                urlsField != null &&
-                loadersField != null &&
-                loaderClass != null &&
-                baseField != null;
+    public ClassicURLClassPathHandle() {
+        setPriority(MAX_PRIORITY + 99999);
     }
 
     @Override
-    public boolean supports() {
-        return supported;
+    protected String getURLClassPathClassName() {
+        return "sun.misc.URLClassPath";
     }
 
     @Override
-    public boolean removeURL(ClassLoader classLoader, URL url) {
-        Object urlClassPath = getFieldValue(classLoader, ucpField);
-        List<URL> urls = getFieldValue(urlClassPath, urlsField);
-        List<URL> path = getFieldValue(urlClassPath, pathField);
-        List<Object> loaders = getFieldValue(urlClassPath, loadersField);
-
-        String basePath = resolveBasePath(url);
-
-        boolean removed = false;
-
-        synchronized (urls) {
-            urls.remove(url);
-            path.remove(url);
-
-            Iterator<Object> iterator = loaders.iterator();
-            while (iterator.hasNext()) {
-                Object loader = iterator.next();
-                URL base = getFieldValue(loader, baseField);
-                String basePath_ = resolveBasePath(base);
-                if (Objects.equals(basePath_, basePath)) {
-                    logger.debug("Remove the Class-Path URL：{}", url);
-                    iterator.remove();
-                    removed = true;
-                    break;
-                }
-            }
-        }
-        return removed;
-    }
-
-    @Override
-    public int getPriority() {
-        return MAX_PRIORITY + 99999;
+    protected String getUrlsFieldName() {
+        return "urls";
     }
 }

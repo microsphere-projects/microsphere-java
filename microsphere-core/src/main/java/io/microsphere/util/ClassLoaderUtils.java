@@ -41,6 +41,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 
 
@@ -87,7 +88,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     private static URLClassPathHandle initURLClassPathHandle() {
-        List<URLClassPathHandle> urlClassPathHandles = ServiceLoaderUtils.loadServicesList(URLClassPathHandle.class);
+        List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
         for (URLClassPathHandle urlClassPathHandle : urlClassPathHandles) {
             if (urlClassPathHandle.supports()) {
                 return urlClassPathHandle;
@@ -614,22 +615,18 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     public static Set<URL> findAllClassPathURLs(ClassLoader classLoader) {
-        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
-        if (urlClassLoader == null) {
-            logger.warn("The ClassLoader[{}] or its' possible parent(s) is not a URLClassLoader,", classLoader);
-            return Collections.emptySet();
-        }
 
-        URL[] classPathURLs = urlClassLoader.getURLs();
+        Set<URL> allClassPathURLs = new LinkedHashSet<>();
+
+        URL[] classPathURLs = urlClassPathHandle.getURLs(classLoader);
         int length = classPathURLs.length;
 
-        Set<URL> allClassPathURLs = new LinkedHashSet<>(length);
         for (int i = 0; i < length; i++) {
             URL classPathURL = classPathURLs[i];
             allClassPathURLs.add(classPathURL);
         }
 
-        ClassLoader parentClassLoader = urlClassLoader.getParent();
+        ClassLoader parentClassLoader = classLoader.getParent();
         if (parentClassLoader != null) {
             allClassPathURLs.addAll(findAllClassPathURLs(parentClassLoader));
         }

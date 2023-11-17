@@ -43,7 +43,7 @@ public class ModernURLClassPathHandleTest {
             for (URL url : urls) {
                 String path = url.getPath();
                 if (path.contains("jmh-generator-annprocess")) {
-                    assertTrue(handle.removeURL((URLClassLoader) classLoader, url));
+                    assertTrue(handle.removeURL(classLoader, url));
                 }
             }
         }

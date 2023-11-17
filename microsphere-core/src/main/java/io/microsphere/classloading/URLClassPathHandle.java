@@ -22,6 +22,7 @@ import java.net.URLClassLoader;
 import java.util.List;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
+import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
 
 /**
  * The handle interface for URL Class-Path
@@ -48,10 +49,11 @@ public interface URLClassPathHandle {
      */
     @Nonnull
     default URL[] getURLs(ClassLoader classLoader) {
-        if (classLoader instanceof URLClassLoader) {
-            return ((URLClassLoader) classLoader).getURLs();
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        if (urlClassLoader == null) {
+            return EMPTY_URL_ARRAY;
         }
-        return EMPTY_URL_ARRAY;
+        return urlClassLoader.getURLs();
     }
 
     /**
