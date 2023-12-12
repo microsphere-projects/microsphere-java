@@ -87,7 +87,7 @@ public class StopWatchTest {
 
     @Test
     public void testStartOnAlreadyRunning() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(IllegalStateException.class, () -> {
             stopWatch.start("1");
             stopWatch.start("1");
         });
@@ -101,6 +101,6 @@ public class StopWatchTest {
 
     @Test
     public void testStopOnNoTaskRunning() {
-        assertThrows(IllegalArgumentException.class, stopWatch::stop);
+        assertThrows(IllegalStateException.class, stopWatch::stop);
     }
 }

@@ -22,7 +22,7 @@ public class ServiceLoaderUtilsTest {
     @Test
     public void testLoadServicesList() throws Exception {
 
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = getClass().getClassLoader();
         List<CharSequence> charSequenceList = ServiceLoaderUtils.loadServicesList(CharSequence.class, classLoader);
         assertEquals(1, charSequenceList.size());
 

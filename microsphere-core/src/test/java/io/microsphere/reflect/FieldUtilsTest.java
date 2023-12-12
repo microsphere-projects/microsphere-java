@@ -61,7 +61,7 @@ public class FieldUtilsTest {
 
     @Test
     public void testSetFieldValue() {
-        Integer value = 1;
+        Integer value = 999;
         setFieldValue(value, "value", 2);
         assertEquals(value.intValue(), 2);
     }

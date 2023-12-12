@@ -5,9 +5,6 @@ package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.security.TestSecurityManager;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -17,18 +14,20 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.reflect.FieldUtils.getAllDeclaredFields;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPaths;
 import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClasses;
+import static io.microsphere.util.ClassLoaderUtils.getCallerClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getLoadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
@@ -38,6 +37,7 @@ import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -56,7 +56,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFields() throws Exception {
 
 
-        List<Field> allFields = FieldUtils.getAllFieldsList(ClassLoader.class);
+        Set<Field> allFields = getAllDeclaredFields(ClassLoader.class);
 
 //        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
         Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
@@ -65,7 +65,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             for (Field field : allFields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(true);
-                    String message = String.format("Field name : %s , value : %s", field.getName(), ToStringBuilder.reflectionToString(field.get(classLoader), ToStringStyle.NO_CLASS_NAME_STYLE));
+                    String message = String.format("Field name : %s , value : %s", field.getName(), field.get(classLoader));
                     info(message);
                 }
             }
@@ -280,6 +280,18 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetClassLoader() {
+        Class<?> currentClass = getClass();
+        ClassLoader classLoader = currentClass.getClassLoader();
+        // Caller Class -> ClassLoaderUtilsTest.class -> classLoader
+        assertSame(classLoader, getClassLoader(null));
+        // ClassLoaderUtilsTest.class -> classLoader
+        assertSame(classLoader, getClassLoader(currentClass));
+        // String.class -> Bootstrap ClassLoader(null)
+        assertSame(getDefaultClassLoader(), getClassLoader(String.class));
+    }
+
+    @Test
+    public void testGetDefaultClassLoader() {
         Thread currentThread = Thread.currentThread();
         ClassLoader classLoader = currentThread.getContextClassLoader();
         assertEquals(classLoader, getDefaultClassLoader());
@@ -295,6 +307,14 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             }
         });
 
+        // recovery
+        currentThread.setContextClassLoader(classLoader);
+    }
+
+    @Test
+    public void testGetCallerClassLoader() {
+        ClassLoader classLoader = getCallerClassLoader();
+        assertNotNull(classLoader);
     }
 
     @Test
@@ -308,7 +328,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             }
         }
         Set<URL> urls2 = findAllClassPathURLs(classLoader);
-        assertEquals(urls.size(), urls2.size() + 1);
+        assertEquals(urls.size(), urls2.size());
     }
 
 

@@ -18,7 +18,6 @@ package io.microsphere.classloading;
 
 import io.microsphere.lang.Prioritized;
 
-import javax.annotation.Nonnull;
 import java.net.URL;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;

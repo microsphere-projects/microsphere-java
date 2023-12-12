@@ -16,24 +16,6 @@
  */
 package io.microsphere.classloading;
 
-import io.microsphere.lang.Prioritized;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-
-import static io.microsphere.net.URLUtils.resolveBasePath;
-import static io.microsphere.reflect.FieldUtils.findField;
-import static io.microsphere.reflect.FieldUtils.getFieldValue;
-import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.ClassLoaderUtils.resolveClass;
-import static java.lang.ClassLoader.getSystemClassLoader;
-
 /**
  * Modern {@link URLClassPathHandle} for {@link jdk.internal.loader.URLClassPath} since JDK 9
  *

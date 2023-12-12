@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
@@ -34,7 +33,7 @@ public class ConverterTest {
 
     @Test
     public void testGetConverter() {
-        loadServicesList(Converter.class, ClassLoaderUtils.getDefaultClassLoader()).stream().sorted().forEach(converter -> {
+        loadServicesList(Converter.class, Converter.class.getClassLoader()).stream().sorted().forEach(converter -> {
             assertSame(converter.getClass(), getConverter(converter.getSourceType(), converter.getTargetType()).getClass());
         });
     }

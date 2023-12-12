@@ -1,6 +1,5 @@
 package io.microsphere.classloading;
 
-import io.microsphere.util.ClassLoaderUtils;
 import io.microsphere.util.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Function;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;

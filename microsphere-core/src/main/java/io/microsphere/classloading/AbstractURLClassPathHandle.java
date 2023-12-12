@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;

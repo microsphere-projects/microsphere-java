@@ -14,7 +14,6 @@ import io.microsphere.reflect.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +39,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
@@ -204,15 +204,14 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static ClassLoader getClassLoader(@Nullable Class<?> loadedClass) {
         ClassLoader classLoader = null;
         try {
-            if (loadedClass != null) {
+            if (loadedClass == null) {
+                classLoader = getCallerClassLoader(4);
+            } else {
                 classLoader = loadedClass.getClassLoader();
             }
         } catch (SecurityException ignored) {
         }
-        if (classLoader != null) {
-            return classLoader;
-        }
-        return getDefaultClassLoader();
+        return classLoader == null ? getDefaultClassLoader() : classLoader;
     }
 
     /**
@@ -222,7 +221,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @see ReflectionUtils#getCallerClass()
      */
     public static ClassLoader getCallerClassLoader() {
-        return getCallerClassLoader(2);
+        return getCallerClassLoader(4);
     }
 
     /**
@@ -231,9 +230,9 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return the ClassLoader (only {@code null} if the caller class was absent
      * @see ReflectionUtils#getCallerClass()
      */
-    static ClassLoader getCallerClassLoader(int invocationFrame) {
+    private static ClassLoader getCallerClassLoader(int invocationFrame) {
         ClassLoader classLoader = null;
-        Class<?> callerClass = ReflectionUtils.getCallerClass();
+        Class<?> callerClass = ReflectionUtils.getCallerClass(invocationFrame);
         if (callerClass != null) {
             classLoader = callerClass.getClassLoader();
         }
@@ -509,9 +508,9 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Set<Class<?>> getLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
         final Set<Class<?>> classesSet;
         try {
-            List<Class<?>> classes = (List<Class<?>>) FieldUtils.readField(classLoader, "classes", true);
+            List<Class<?>> classes = getFieldValue(classLoader, "classes");
             classesSet = new LinkedHashSet(classes);
-        } catch (IllegalAccessException e) {
+        } catch (Throwable e) {
             throw jvmUnsupportedOperationException(e);
         }
         return Collections.unmodifiableSet(new LinkedHashSet(classesSet));

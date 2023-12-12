@@ -21,7 +21,6 @@ import io.microsphere.lang.Prioritized;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -30,6 +29,7 @@ import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.util.Collections.emptyMap;
 
 /**
  * Decorating {@link URLStreamHandlerFactory} class delegates the composite of {@link URLStreamHandlerFactory} and
@@ -72,11 +72,8 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
 
         int size = handlers.size();
         if (size < 1) {
-            return Collections.emptyMap();
+            return emptyMap();
         }
-
-        // sort
-        Collections.sort(handlers, Prioritized.COMPARATOR);
 
         Map<String, ExtendableProtocolURLStreamHandler> handlersMap = toFixedMap(
                 handlers, handler -> ofEntry(handler.getProtocol(), handler));

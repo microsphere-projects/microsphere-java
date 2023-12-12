@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 import static io.microsphere.net.URLUtils.normalizePath;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.lang.System.getProperty;
@@ -33,7 +32,7 @@ public class ArtifactDetector {
 
     private static final String JAVA_HOME_PATH = normalizePath(getProperty("java.home"));
 
-    private static final ClassLoader DEFAULT_CLASS_LOADER = getDefaultClassLoader();
+    private static final ClassLoader DEFAULT_CLASS_LOADER = ArtifactDetector.class.getClassLoader();
 
     private static final List<ArtifactResolver> ARTIFACT_INFO_RESOLVERS = loadServicesList(ArtifactResolver.class, DEFAULT_CLASS_LOADER);
 

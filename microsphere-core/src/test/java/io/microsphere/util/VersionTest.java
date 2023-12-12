@@ -126,8 +126,8 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testGetVersion() {
         Version version = Version.getVersion(Test.class);
-        assertEquals(4, version.getMajor());
-        assertEquals(13, version.getMinor());
+        assertEquals(5, version.getMajor());
+        assertEquals(8, version.getMinor());
         assertEquals(2, version.getPatch());
     }
 

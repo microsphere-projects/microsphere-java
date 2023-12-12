@@ -3,6 +3,8 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.collection.CollectionUtils;
+import io.microsphere.collection.MapUtils;
 import io.microsphere.util.ClassPathUtils;
 import io.microsphere.util.jar.JarUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +26,7 @@ import java.util.StringJoiner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
@@ -43,6 +46,7 @@ import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.substringAfterLast;
@@ -444,6 +448,28 @@ public abstract class URLUtils {
     /**
      * Build the Matrix String
      *
+     * @param matrixParameters the {@link Map} of matrix parameters
+     * @return the Matrix String
+     */
+    public static String buildMatrixString(Map<String, List<String>> matrixParameters) {
+        if (MapUtils.isEmpty(matrixParameters)) {
+            return null;
+        }
+        StringBuilder matrixStringBuilder = new StringBuilder();
+        for (Map.Entry<String, List<String>> entry : matrixParameters.entrySet()) {
+            String name = entry.getKey();
+            if (SUB_PROTOCOL_MATRIX_NAME.equals(name)) {
+                continue;
+            }
+            List<String> values = entry.getValue();
+            matrixStringBuilder.append(buildMatrixString(name, values.toArray(EMPTY_STRING_ARRAY)));
+        }
+        return matrixStringBuilder.toString();
+    }
+
+    /**
+     * Build the Matrix String
+     *
      * @param name   the name of matrix parameter
      * @param values the values of matrix parameter
      * @return the Matrix String
@@ -477,6 +503,7 @@ public abstract class URLUtils {
         String path = url.getPath();
         String query = url.getQuery();
         String ref = url.getRef();
+        String matrix = null;
 
         int authorityLen = length(authority);
         int pathLen = length(path);
@@ -487,6 +514,7 @@ public abstract class URLUtils {
         boolean hasPath = pathLen > 0;
         boolean hasQuery = queryLen > 0;
         boolean hasRef = refLen > 0;
+        boolean hasMatrix = false;
 
         int len = 1;
 
@@ -497,8 +525,15 @@ public abstract class URLUtils {
         }
 
         if (hasPath) {
-            protocol = reformProtocol(protocol, path);
-            path = resolvePath(path);
+            int indexOfMatrixString = indexOfMatrixString(path);
+            if (indexOfMatrixString > -1) {
+                hasMatrix = true;
+                Map<String, List<String>> matrixParameters = resolveMatrixParameters(path);
+                List<String> subProtocols = matrixParameters.getOrDefault(SUB_PROTOCOL_MATRIX_NAME, emptyList());
+                protocol = reformProtocol(protocol, subProtocols);
+                matrix = buildMatrixString(matrixParameters);
+                path = resolvePath(path, indexOfMatrixString);
+            }
         }
 
         len += length(path);
@@ -512,6 +547,10 @@ public abstract class URLUtils {
             len += 1 + refLen;
         }
 
+        if (hasMatrix) {
+            len += length(matrix);
+        }
+
         StringBuilder result = new StringBuilder(len);
         result.append(protocol);
         result.append(COLON_CHAR);
@@ -523,6 +562,10 @@ public abstract class URLUtils {
 
         if (hasPath) {
             result.append(path);
+        }
+
+        if (hasMatrix) {
+            result.append(matrix);
         }
 
         if (hasQuery) {
@@ -583,13 +626,22 @@ public abstract class URLUtils {
         return resolvePath(url.getPath());
     }
 
-    public static String resolvePath(String path) {
-        return truncateMatrixString(path);
+    public static String resolvePath(String value) {
+        int indexOfMatrixString = indexOfMatrixString(value);
+        return resolvePath(value, indexOfMatrixString);
+    }
+
+    public static String resolvePath(String value, int indexOfMatrixString) {
+        return indexOfMatrixString > -1 ? value.substring(0, indexOfMatrixString) : value;
     }
 
     protected static String truncateMatrixString(String value) {
-        int lastIndex = value.indexOf(SEMICOLON_CHAR);
+        int lastIndex = indexOfMatrixString(value);
         return lastIndex > -1 ? value.substring(0, lastIndex) : value;
+    }
+
+    protected static int indexOfMatrixString(String value) {
+        return value == null ? -1 : value.indexOf(SEMICOLON_CHAR);
     }
 
     /**
@@ -689,7 +741,11 @@ public abstract class URLUtils {
 
     protected static String reformProtocol(String protocol, String spec) {
         List<String> subProtocols = resolveSubProtocols(spec);
-        int size = subProtocols.size();
+        return reformProtocol(protocol, subProtocols);
+    }
+
+    protected static String reformProtocol(String protocol, List<String> subProtocols) {
+        int size = size(subProtocols);
         if (size < 1) { // the matrix of sub-protocols was not found
             return protocol;
         }

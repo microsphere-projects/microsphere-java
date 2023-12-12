@@ -1,5 +1,7 @@
 package io.microsphere.util;
 
+import io.microsphere.lang.Prioritized;
+
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -12,6 +14,8 @@ import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static java.lang.Boolean.getBoolean;
+import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -25,6 +29,8 @@ import static java.util.Collections.unmodifiableList;
 public abstract class ServiceLoaderUtils extends BaseUtils {
 
     private static final Map<ClassLoader, Map<Class<?>, ServiceLoader<?>>> serviceLoadersCache = new ConcurrentHashMap<>();
+
+    private static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
 
     static {
         // Clear cache on JVM shutdown
@@ -62,7 +68,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      *                                  in the configuration file /META-INF/services/<code>serviceType</code>
      */
     public static <S> List<S> loadServicesList(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
-        return loadServicesList(serviceType, classLoader, false);
+        return loadServicesList(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
@@ -131,7 +137,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      *                                  in the configuration file /META-INF/services/<code>serviceType</code>
      */
     public static <S> S[] loadServices(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
-        return loadServices(serviceType, classLoader, false);
+        return loadServices(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
@@ -221,7 +227,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      *                                  META-INF/services/<code>serviceType<code>, IllegalArgumentException will be thrown
      */
     public static <S> S loadFirstService(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
-        return loadFirstService(serviceType, classLoader, false);
+        return loadFirstService(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
@@ -293,7 +299,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
      */
     public static <S> S loadLastService(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
-        return loadLastService(serviceType, classLoader, false);
+        return loadLastService(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
@@ -354,6 +360,8 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
             IllegalArgumentException e = new IllegalArgumentException(message);
             throw e;
         }
+
+        sort(serviceList, Prioritized.COMPARATOR);
 
         return serviceList;
     }

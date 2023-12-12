@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 
 /**
  * The "classpath" protocol {@link URLStreamHandler} based on {@link ClassLoader}
@@ -52,7 +53,7 @@ public class Handler extends ExtendableProtocolURLStreamHandler {
             classPath = classPath.substring(1);
         }
 
-        ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+        ClassLoader classLoader = getClassLoader(Handler.class);
         URL url = classLoader.getResource(classPath);
         if (url == null) {
             throw new IOException("No Resource[classpath='" + classPath + "'] was not found!");

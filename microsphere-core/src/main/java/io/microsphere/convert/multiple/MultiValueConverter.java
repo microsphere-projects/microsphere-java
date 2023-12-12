@@ -17,12 +17,12 @@
 package io.microsphere.convert.multiple;
 
 import io.microsphere.lang.Prioritized;
-import io.microsphere.util.ClassLoaderUtils;
 
 import java.util.Collection;
 import java.util.ServiceLoader;
 
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
@@ -71,7 +71,7 @@ public interface MultiValueConverter<S> extends Prioritized {
      * @return <code>null</code> if not found
      */
     static MultiValueConverter<?> find(Class<?> sourceType, Class<?> targetType) {
-        ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+        ClassLoader classLoader = getClassLoader(MultiValueConverter.class);
         return loadServicesList(MultiValueConverter.class, classLoader)
                 .stream()
                 .sorted()

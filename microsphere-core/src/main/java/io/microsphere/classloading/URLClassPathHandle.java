@@ -19,7 +19,6 @@ package io.microsphere.classloading;
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;

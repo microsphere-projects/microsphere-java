@@ -1,10 +1,5 @@
 package io.microsphere.reflect;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.reflect.ConstructorUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
@@ -27,6 +22,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.ClassUtils.isWrapperType;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -345,7 +342,7 @@ public abstract class ReflectionUtils {
      */
     public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
         Class<?> type = object.getClass();
-        Field field = FieldUtils.getDeclaredField(type, fieldName, true);
+        Field field = FieldUtils.getDeclaredField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
             String message = String.format("The type[%s] of field[%s] in Class[%s] can't match expected type[%s]", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
@@ -408,7 +405,7 @@ public abstract class ReflectionUtils {
                 Object fieldValue = field.get(object);
                 if (fieldValue != null) {
                     Class<?> fieldValueType = fieldValue.getClass();
-                    if (ClassUtils.isPrimitiveOrWrapper(fieldValueType)) {
+                    if (isPrimitive(fieldValueType) || isWrapperType(fieldValueType)) {
                     } else if (fieldValueType.isArray()) {
                         fieldValue = toList(fieldValue);
                     } else if ("java.lang".equals(fieldValueType.getPackage().getName())) {

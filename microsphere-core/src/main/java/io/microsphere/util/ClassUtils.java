@@ -391,6 +391,10 @@ public abstract class ClassUtils extends BaseUtils {
         return WRAPPER_PRIMITIVE_TYPE_MAP.get(primitiveType);
     }
 
+    public static boolean isWrapperType(Class<?> type) {
+        return WRAPPER_PRIMITIVE_TYPE_MAP.containsKey(type);
+    }
+
     public static boolean arrayTypeEquals(Class<?> oneArrayType, Class<?> anotherArrayType) {
         if (!isArray(oneArrayType) || !isArray(anotherArrayType)) {
             return false;
