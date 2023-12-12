@@ -8,7 +8,7 @@ import io.microsphere.security.TestSecurityManager;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
@@ -35,10 +35,10 @@ import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static java.util.Collections.emptySet;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ClassLoaderUtils} {@link Test}

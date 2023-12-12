@@ -16,17 +16,18 @@
  */
 package io.microsphere.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -41,7 +42,7 @@ public class StopWatchTest {
 
     private StopWatch stopWatch;
 
-    @Before
+    @BeforeEach
     public void init() {
         stopWatch = new StopWatch("test");
     }
@@ -69,25 +70,27 @@ public class StopWatchTest {
         logger.info(stopWatch.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testStartOnNullTaskName() {
-        stopWatch.start(null);
+        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testStartOnEmptyTaskName() {
-        stopWatch.start("");
+        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(""));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testStartOnBlankTaskName() {
-        stopWatch.start(" ");
+        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(" "));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testStartOnAlreadyRunning() {
-        stopWatch.start("1");
-        stopWatch.start("1");
+        assertThrows(IllegalArgumentException.class, () -> {
+            stopWatch.start("1");
+            stopWatch.start("1");
+        });
     }
 
     @Test
@@ -96,9 +99,8 @@ public class StopWatchTest {
         stopWatch.start("1");
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void testStopOnNoTaskRunning() {
-        stopWatch.stop();
+        assertThrows(IllegalArgumentException.class, stopWatch::stop);
     }
-
 }

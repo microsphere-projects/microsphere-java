@@ -7,14 +7,16 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.ClassLoaderUtils;
 import io.microsphere.util.jar.JarUtils;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link SimpleJarEntryScanner} {@link Test}
@@ -34,12 +36,11 @@ public class SimpleJarEntryScannerTest extends AbstractTestCase {
     public void testScan() throws IOException {
         URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(resourceURL, true);
-        Assert.assertEquals(1, jarEntrySet.size());
+        assertEquals(1, jarEntrySet.size());
 
         JarFile jarFile = JarUtils.toJarFile(resourceURL);
         jarEntrySet = simpleJarEntryScanner.scan(jarFile, true);
-        Assert.assertTrue(jarEntrySet.size() > 1000);
-
+        assertTrue(jarEntrySet.size() > 1000);
 
         jarEntrySet = simpleJarEntryScanner.scan(jarFile, true, new JarEntryFilter() {
             @Override
@@ -48,7 +49,7 @@ public class SimpleJarEntryScannerTest extends AbstractTestCase {
             }
         });
 
-        Assert.assertEquals(1, jarEntrySet.size());
+        assertEquals(1, jarEntrySet.size());
 
     }
 }

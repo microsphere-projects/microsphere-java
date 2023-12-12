@@ -16,7 +16,7 @@
  */
 package io.microsphere.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_OBJECT_ARRAY;

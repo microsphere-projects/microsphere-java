@@ -16,14 +16,14 @@
  */
 package io.microsphere.io;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link Serializers} and {@link Deserializers} Test
@@ -37,7 +37,7 @@ public class SerializersAndDeserializersTest {
 
     private Deserializers deserializers;
 
-    @Before
+    @BeforeEach
     public void init() {
         serializers = new Serializers();
         deserializers = new Deserializers();

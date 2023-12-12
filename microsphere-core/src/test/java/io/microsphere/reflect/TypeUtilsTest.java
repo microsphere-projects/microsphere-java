@@ -19,7 +19,7 @@ package io.microsphere.reflect;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -43,9 +43,9 @@ import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link TypeUtils} Test

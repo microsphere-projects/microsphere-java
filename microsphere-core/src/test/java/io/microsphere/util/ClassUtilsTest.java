@@ -5,9 +5,7 @@ package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -27,13 +25,14 @@ import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isTopLevelClass;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link ClassUtils} {@link TestCase}
+ * {@link ClassUtils} Test
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
  * @version 1.0.0
@@ -205,7 +204,7 @@ public class ClassUtilsTest extends AbstractTestCase {
         Set<String> classPaths = ClassPathUtils.getClassPaths();
         for (String classPath : classPaths) {
             Set<String> classNames = ClassUtils.getClassNamesInClassPath(classPath, true);
-            Assert.assertNotNull(classNames);
+            assertNotNull(classNames);
         }
     }
 
@@ -214,8 +213,8 @@ public class ClassUtilsTest extends AbstractTestCase {
         Set<String> packageNames = ClassUtils.getAllPackageNamesInClassPaths();
         for (String packageName : packageNames) {
             Set<String> classNames = ClassUtils.getClassNamesInPackage(packageName);
-            Assert.assertFalse(classNames.isEmpty());
-            Assert.assertNotNull(classNames);
+            assertFalse(classNames.isEmpty());
+            assertNotNull(classNames);
             info(packageName);
             info("\t" + classNames);
         }
@@ -225,43 +224,43 @@ public class ClassUtilsTest extends AbstractTestCase {
     @Test
     public void testGetAllPackageNamesInClassPaths() {
         Set<String> packageNames = ClassUtils.getAllPackageNamesInClassPaths();
-        Assert.assertNotNull(packageNames);
+        assertNotNull(packageNames);
         info(packageNames);
     }
 
     @Test
     public void testFindClassPath() {
         String classPath = ClassUtils.findClassPath(ReflectionUtils.class);
-        Assert.assertNotNull(classPath);
+        assertNotNull(classPath);
 
         classPath = ClassUtils.findClassPath(String.class);
-        Assert.assertNotNull(classPath);
+        assertNotNull(classPath);
     }
 
     @Test
     public void testGetAllClassNamesMapInClassPath() {
         Map<String, Set<String>> allClassNamesMapInClassPath = ClassUtils.getClassPathToClassNamesMap();
-        Assert.assertFalse(allClassNamesMapInClassPath.isEmpty());
+        assertFalse(allClassNamesMapInClassPath.isEmpty());
     }
 
     @Test
     public void testGetAllClassNamesInClassPath() {
         Set<String> allClassNames = ClassUtils.getAllClassNamesInClassPaths();
-        Assert.assertFalse(allClassNames.isEmpty());
+        assertFalse(allClassNames.isEmpty());
     }
 
     @Test
     public void testGetCodeSourceLocation() throws IOException {
         URL codeSourceLocation = null;
-        Assert.assertNull(codeSourceLocation);
+        assertNull(codeSourceLocation);
 
         codeSourceLocation = ClassUtils.getCodeSourceLocation(ClassUtilsTest.class);
         info("codeSourceLocation : " + codeSourceLocation);
-        Assert.assertNotNull(codeSourceLocation);
+        assertNotNull(codeSourceLocation);
 
         codeSourceLocation = ClassUtils.getCodeSourceLocation(String.class);
         info("codeSourceLocation : " + codeSourceLocation);
-        Assert.assertNotNull(codeSourceLocation);
+        assertNotNull(codeSourceLocation);
 
 
     }

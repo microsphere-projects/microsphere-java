@@ -1,14 +1,15 @@
 /**
- * 
+ *
  */
 package io.microsphere.filter;
 
 import io.microsphere.AbstractTestCase;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link FilterUtils} Test Case
@@ -31,7 +32,7 @@ public class FilterUtilsTest extends AbstractTestCase {
             }
         });
 
-        Assert.assertEquals(Arrays.asList(0, 2, 4, 6, 8), result);
+        assertEquals(Arrays.asList(0, 2, 4, 6, 8), result);
 
         result = FilterUtils.filter(integerList, new Filter<Integer>() {
             @Override
@@ -40,7 +41,7 @@ public class FilterUtilsTest extends AbstractTestCase {
             }
         });
 
-        Assert.assertEquals(Arrays.asList(0, 2, 4, 6, 8), result);
+        assertEquals(Arrays.asList(0, 2, 4, 6, 8), result);
 
         result = FilterUtils.filter(integerList, FilterOperator.OR, new Filter<Integer>() {
             @Override
@@ -49,6 +50,6 @@ public class FilterUtilsTest extends AbstractTestCase {
             }
         });
 
-        Assert.assertEquals(Arrays.asList(1, 3, 5, 7, 9), result);
+        assertEquals(Arrays.asList(1, 3, 5, 7, 9), result);
     }
 }

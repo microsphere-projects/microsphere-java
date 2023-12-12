@@ -1,9 +1,7 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * {@link ReflectionUtils} {@link TestCase}
+ * {@link ReflectionUtils} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @version 1.0.0
@@ -44,7 +43,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
                 exception = e;
                 System.err.println(e.getMessage());
             }
-            Assert.assertNotNull(exception);
+            assertNotNull(exception);
         }
     }
 
@@ -57,7 +56,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             exception = e;
             System.err.println(e.getMessage());
         }
-        Assert.assertNotNull(exception);
+        assertNotNull(exception);
     }
 
     @Test
@@ -87,9 +86,9 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         Class<?> callerClassInSunJVM = ReflectionUtils.getCallerClassInSunJVM();
         Class<?> callerClassInGeneralJVM = ReflectionUtils.getCallerClassInGeneralJVM();
 
-        Assert.assertEquals(expectedClass, callerClass);
-        Assert.assertEquals(callerClassInSunJVM, callerClass);
-        Assert.assertEquals(callerClassInGeneralJVM, callerClass);
+        assertEquals(expectedClass, callerClass);
+        assertEquals(callerClassInSunJVM, callerClass);
+        assertEquals(callerClassInGeneralJVM, callerClass);
 
     }
 
@@ -100,9 +99,9 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         String callerClassNameInSunJVM = ReflectionUtils.getCallerClassNameInSunJVM();
         String callerClassNameInGeneralJVM = ReflectionUtils.getCallerClassNameInGeneralJVM();
 
-        Assert.assertEquals(expectedClassName, callerClassName);
-        Assert.assertEquals(callerClassNameInSunJVM, callerClassName);
-        Assert.assertEquals(callerClassNameInGeneralJVM, callerClassName);
+        assertEquals(expectedClassName, callerClassName);
+        assertEquals(callerClassNameInSunJVM, callerClassName);
+        assertEquals(callerClassNameInGeneralJVM, callerClassName);
     }
 
     @Test
@@ -110,7 +109,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         Class<?> expectedClass = ReflectionUtilsTest.class;
         Package expectedPackage = expectedClass.getPackage();
 
-        Assert.assertEquals(expectedPackage, ReflectionUtils.getCallerPackage());
+        assertEquals(expectedPackage, ReflectionUtils.getCallerPackage());
     }
 
     @Test

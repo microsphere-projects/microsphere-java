@@ -1,7 +1,7 @@
 package io.microsphere.performance;
 
 import io.microsphere.AbstractTestCase;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * {@link AbstractPerformanceTest}
@@ -11,7 +11,7 @@ import org.junit.Ignore;
  * @see AbstractPerformanceTest
  * @since 1.0.0
  */
-@Ignore
+@Disabled
 public abstract class AbstractPerformanceTest extends AbstractTestCase {
 
 

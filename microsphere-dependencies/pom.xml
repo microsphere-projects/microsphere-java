@@ -20,6 +20,7 @@
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-annotation-processor</artifactId>
@@ -41,18 +42,6 @@
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-jdbc</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-logging</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-micrometer</artifactId>
                 <version>${revision}</version>
             </dependency>
 

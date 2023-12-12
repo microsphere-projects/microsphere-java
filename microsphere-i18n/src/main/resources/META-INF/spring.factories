@@ -1,6 +1,0 @@
-io.microsphere.i18n.AbstractServiceMessageSource=\
-io.microsphere.i18n.spring.PropertySourcesServiceMessageSource,\
-io.microsphere.i18n.DefaultServiceMessageSource
-
-org.springframework.context.ApplicationContextInitializer=\
-io.microsphere.i18n.spring.context.I18nInitializer

@@ -3,9 +3,10 @@
  */
 package io.microsphere.util.os.windows;
 
-import junit.framework.Assert;
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link WindowsRegistry} {@link Test}
@@ -26,7 +27,7 @@ public class WindowsRegistryTest {
             String value = "value.exe";
             user.set(key, name, value);
             user.flush(key);
-            Assert.assertEquals(value, user.get(key, name));
+            assertEquals(value, user.get(key, name));
             user.remove(key, name);
         }
     }

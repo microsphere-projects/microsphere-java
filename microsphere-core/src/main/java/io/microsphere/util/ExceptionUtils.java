@@ -21,6 +21,7 @@ import java.util.Arrays;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.newInstance;
 
 /**
@@ -31,11 +32,15 @@ import static io.microsphere.util.ClassUtils.newInstance;
  */
 public abstract class ExceptionUtils extends BaseUtils {
 
-    public static <T extends Throwable> T wrapThrowable(Throwable source, Class<T> exceptionType) {
+    public static <T extends Throwable, TT extends Throwable> TT wrap(T source, Class<TT> thrownType) {
+        if (isAssignableFrom(thrownType, thrownType.getClass())) {
+            return (TT) source;
+        }
+
         String message = source.getMessage();
         Throwable cause = source.getCause();
 
-        Constructor[] constructors = exceptionType.getConstructors();
+        Constructor[] constructors = thrownType.getConstructors();
 
         if (constructors.length == 0) {
             throw new IllegalArgumentException("The exceptionType must have one public constructor.");
@@ -57,7 +62,7 @@ public abstract class ExceptionUtils extends BaseUtils {
                 parameters[i] = cause;
             }
         }
-        return execute(() -> (T) constructor.newInstance(parameters));
+        return execute(() -> (TT) constructor.newInstance(parameters));
     }
 
     public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
@@ -84,5 +89,9 @@ public abstract class ExceptionUtils extends BaseUtils {
 
     public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Object... args) {
         return newInstance(throwableClass, args);
+    }
+
+    public static <T extends Throwable, TT extends Throwable> TT throwTarget(T source, Class<TT> thrownType) throws TT {
+        throw wrap(source, thrownType);
     }
 }

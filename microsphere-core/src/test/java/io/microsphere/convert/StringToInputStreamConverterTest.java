@@ -18,12 +18,12 @@ package io.microsphere.convert;
 
 import io.microsphere.io.FastByteArrayInputStream;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link StringToInputStreamConverter} Test

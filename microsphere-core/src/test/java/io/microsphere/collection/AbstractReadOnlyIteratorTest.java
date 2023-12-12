@@ -17,13 +17,14 @@
 package io.microsphere.collection;
 
 import io.microsphere.AbstractTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract Read-only {@link Iterator} Test
@@ -43,16 +44,18 @@ public abstract class AbstractReadOnlyIteratorTest extends AbstractTestCase {
         assertTrue(instance.hasNext());
     }
 
-    @Test(expected = NoSuchElementException.class)
+    @Test
     public void testNext() {
-        assertEquals(TEST_ELEMENT, instance.next());
-        // throws exception
-        instance.next();
+        assertThrows(NoSuchElementException.class, () -> {
+            assertEquals(TEST_ELEMENT, instance.next());
+            // throws exception
+            instance.next();
+        });
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void remove() {
-        instance.remove();
+        assertThrows(UnsupportedOperationException.class, instance::remove);
     }
 
     @Test

@@ -16,12 +16,7 @@
  */
 package io.microsphere.classloading;
 
-import org.junit.Test;
-
-import java.net.URL;
-import java.util.Map;
-
-import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link BannedArtifactClassLoadingExecutor} Test

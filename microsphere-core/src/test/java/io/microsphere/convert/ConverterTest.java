@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.Converter.convertIfPossible;
 import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**

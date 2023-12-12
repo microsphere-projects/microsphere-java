@@ -1,12 +1,13 @@
 package io.microsphere.management;
 
 import io.microsphere.AbstractTestCase;
-import junit.framework.TestCase;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link ManagementUtils} {@link TestCase}
+ * {@link ManagementUtils} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @version 1.0.0
@@ -17,14 +18,13 @@ public class ManagementUtilsTest extends AbstractTestCase {
 
     @Test
     public void testStaticFields() {
-        Assert.assertNotNull(ManagementUtils.jvm);
-        Assert.assertNotNull(ManagementUtils.getProcessIdMethod);
+        assertNotNull(ManagementUtils.jvm);
+        assertNotNull(ManagementUtils.getProcessIdMethod);
     }
 
     @Test
     public void testGetCurrentProcessId() {
         int currentProcessId = ManagementUtils.getCurrentProcessId();
-        Assert.assertTrue(currentProcessId > 0);
+        assertTrue(currentProcessId > 0);
     }
-
 }

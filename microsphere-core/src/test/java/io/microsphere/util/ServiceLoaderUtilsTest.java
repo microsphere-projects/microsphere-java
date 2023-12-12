@@ -1,10 +1,13 @@
 package io.microsphere.util;
 
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ServiceLoaderUtilsTest}
@@ -21,19 +24,19 @@ public class ServiceLoaderUtilsTest {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         List<CharSequence> charSequenceList = ServiceLoaderUtils.loadServicesList(CharSequence.class, classLoader);
-        Assert.assertEquals(1, charSequenceList.size());
+        assertEquals(1, charSequenceList.size());
 
         CharSequence charSequence = charSequenceList.get(0);
         CharSequence firstService = ServiceLoaderUtils.loadFirstService(CharSequence.class, classLoader);
         CharSequence lastService = ServiceLoaderUtils.loadLastService(CharSequence.class, classLoader);
 
-        Assert.assertNotNull(charSequence);
-        Assert.assertEquals(charSequence, firstService);
-        Assert.assertEquals(charSequence, lastService);
-        Assert.assertEquals(firstService, lastService);
+        assertNotNull(charSequence);
+        assertEquals(charSequence, firstService);
+        assertEquals(charSequence, lastService);
+        assertEquals(firstService, lastService);
 
         String string = charSequence.toString();
-        Assert.assertTrue(string.isEmpty());
+        assertTrue(string.isEmpty());
 
         IllegalArgumentException e = null;
 
@@ -44,7 +47,7 @@ public class ServiceLoaderUtilsTest {
             e.printStackTrace();
         }
 
-        Assert.assertNotNull(e);
+        assertNotNull(e);
 
     }
 }

@@ -5,8 +5,7 @@ package io.microsphere;
 
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.util.ClassLoaderUtils;
-import junit.framework.TestCase;
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,18 +25,18 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Abstract {@link TestCase}
+ * Abstract Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @version 1.0.0
  * @see AbstractTestCase
  * @since 1.0.0
  */
-@Ignore
+@Disabled
 public abstract class AbstractTestCase {
 
     public static final String TEST_ELEMENT = "test";

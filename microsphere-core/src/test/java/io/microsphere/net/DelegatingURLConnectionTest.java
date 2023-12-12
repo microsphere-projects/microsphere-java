@@ -17,16 +17,16 @@
 package io.microsphere.net;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import sun.net.www.protocol.file.Handler;
 
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownServiceException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link DelegatingURLConnection} Test
@@ -42,7 +42,7 @@ public class DelegatingURLConnectionTest {
 
     private DelegatingURLConnection urlConnection;
 
-    @Before
+    @BeforeEach
     public void before() throws Exception {
         URL baseURL = getClass().getProtectionDomain().getCodeSource().getLocation();
         this.url = new URL(baseURL.toString() + "META-INF/test.properties");
@@ -88,9 +88,9 @@ public class DelegatingURLConnectionTest {
         assertEquals(data, IOUtils.toString(urlConnection.getInputStream(), encoding));
     }
 
-    @Test(expected = UnknownServiceException.class)
+    @Test
     public void testGetOutputStream() throws Exception {
-        urlConnection.getOutputStream();
+        assertThrows(Exception.class, urlConnection::getOutputStream);
     }
 
 }

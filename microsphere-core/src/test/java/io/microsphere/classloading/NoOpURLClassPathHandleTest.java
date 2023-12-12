@@ -16,15 +16,10 @@
  */
 package io.microsphere.classloading;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Set;
-
-import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link NoOpURLClassPathHandle} Test

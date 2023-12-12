@@ -18,9 +18,9 @@ package io.microsphere.io;
 
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class StandardFileWatchServiceTest {
 
     private CountDownLatch countDownLatch;
 
-    @Before
+    @BeforeEach
     public void init() throws Exception {
         fileWatchService = new StandardFileWatchService(ForkJoinPool.commonPool());
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
@@ -59,7 +59,7 @@ public class StandardFileWatchServiceTest {
         this.fileWatchService.watch(this.resourceFile, new MyFileChangedListener(countDownLatch));
     }
 
-    @After
+    @AfterEach
     public void destroy() throws Exception {
         fileWatchService.stop();
     }

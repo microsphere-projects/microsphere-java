@@ -17,7 +17,7 @@
 package io.microsphere.lang.function;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,7 +29,7 @@ import static io.microsphere.lang.function.Streams.filterSet;
 import static io.microsphere.lang.function.Streams.filterStream;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link Streams} Test

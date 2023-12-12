@@ -1,8 +1,8 @@
 package io.microsphere.performance;
 
 import io.microsphere.util.ClassLoaderUtils;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
@@ -14,7 +14,7 @@ import java.util.Set;
  * @see ClassLoaderUtilsPerformanceTest
  * @since 1.0.0
  */
-@Ignore
+@Disabled
 public class ClassLoaderUtilsPerformanceTest extends AbstractPerformanceTest {
 
 

@@ -16,7 +16,7 @@
  */
 package io.microsphere.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING_PROPERTY_KEY;
@@ -76,7 +76,7 @@ import static io.microsphere.util.SystemUtils.USER_HOME;
 import static io.microsphere.util.SystemUtils.USER_HOME_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.USER_NAME;
 import static io.microsphere.util.SystemUtils.USER_NAME_PROPERTY_KEY;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link SystemUtils} Test

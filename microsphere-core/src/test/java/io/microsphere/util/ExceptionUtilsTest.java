@@ -16,7 +16,7 @@
  */
 package io.microsphere.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ExceptionUtils.newThrowable;

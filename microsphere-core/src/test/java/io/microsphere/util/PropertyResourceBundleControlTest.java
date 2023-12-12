@@ -3,13 +3,15 @@
  */
 package io.microsphere.util;
 
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.ResourceBundle;
 import java.util.SortedMap;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link PropertyResourceBundleControl} {@link Test}
@@ -26,12 +28,12 @@ public class PropertyResourceBundleControlTest {
         SortedMap<String, Charset> charsetsSortedMap = Charset.availableCharsets();
         for (String encoding : charsetsSortedMap.keySet()) {
             ResourceBundle.Control control = PropertyResourceBundleControl.newControl(encoding);
-            Assert.assertNotNull(control);
+            assertNotNull(control);
         }
     }
 
-    @Test(expected = UnsupportedCharsetException.class)
+    @Test
     public void testNewControlOnException() {
-        PropertyResourceBundleControl.newControl("NON-SUPPORTED-ENCODING");
+        assertThrows(UnsupportedCharsetException.class, () -> PropertyResourceBundleControl.newControl("NON-SUPPORTED-ENCODING"));
     }
 }

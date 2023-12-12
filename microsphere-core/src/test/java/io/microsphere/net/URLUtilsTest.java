@@ -6,15 +6,14 @@ package io.microsphere.net;
 import io.microsphere.util.ClassLoaderUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +28,12 @@ import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static java.util.Collections.emptyMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link URLUtils} Test
@@ -46,7 +45,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class URLUtilsTest {
 
-    @After
+    @AfterEach
     public void after() {
         URLUtils.clearURLStreamHandlerFactory();
     }

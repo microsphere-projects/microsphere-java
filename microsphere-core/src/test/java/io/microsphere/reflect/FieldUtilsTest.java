@@ -16,16 +16,16 @@
  */
 package io.microsphere.reflect;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link FieldUtils} Test

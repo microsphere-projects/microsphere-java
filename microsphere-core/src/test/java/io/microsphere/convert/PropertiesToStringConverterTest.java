@@ -16,11 +16,11 @@
  */
 package io.microsphere.convert;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Properties;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * {@link PropertiesToStringConverter} Test

@@ -4,10 +4,11 @@
 package io.microsphere.io.scanner;
 
 import io.microsphere.AbstractTestCase;
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * {@link SimpleClassScannerTest}
@@ -24,11 +25,11 @@ public class SimpleClassScannerTest extends AbstractTestCase {
     @Test
     public void testScan() {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.commons");
-        Assert.assertFalse(classesSet.isEmpty());
+        assertFalse(classesSet.isEmpty());
         info(classesSet);
 
         classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.io.scanner");
-        Assert.assertFalse(classesSet.isEmpty());
+        assertFalse(classesSet.isEmpty());
         info(classesSet);
     }
 }

@@ -19,7 +19,7 @@ package io.microsphere.event;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.event.EventListener.findEventType;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**

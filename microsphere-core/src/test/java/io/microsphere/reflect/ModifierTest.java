@@ -19,8 +19,8 @@ package io.microsphere.reflect;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link Modifier} Test

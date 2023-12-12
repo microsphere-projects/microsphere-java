@@ -17,7 +17,7 @@
 package io.microsphere.net;
 
 import io.microsphere.net.console.ConsoleURLConnection;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -26,8 +26,8 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * {@link CompositeSubProtocolURLConnectionFactory} Test
@@ -36,7 +36,6 @@ import static org.junit.Assert.assertFalse;
  * @since 1.0.0
  */
 public class CompositeSubProtocolURLConnectionFactoryTest {
-
 
     @Test
     public void test() throws IOException {

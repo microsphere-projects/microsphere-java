@@ -16,7 +16,7 @@
  */
 package io.microsphere.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.xml.ws.ServiceMode;
 import java.lang.annotation.Annotation;
@@ -31,9 +31,9 @@ import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link AnnotationUtils} Test

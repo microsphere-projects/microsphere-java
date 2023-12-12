@@ -1,6 +1,8 @@
 package io.microsphere.classloading;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link WindowsRedefinedClassLoader} Test
@@ -20,9 +22,11 @@ public class WindowsRedefinedClassLoaderTest {
         classLoader.loadClass(TEST_CLASS_NAME1);
     }
 
-    @Test(expected = ClassNotFoundException.class)
-    public void testLoadAbsentClass() throws ClassNotFoundException {
-        WindowsRedefinedClassLoader classLoader = new WindowsRedefinedClassLoader(getClass().getClassLoader());
-        classLoader.loadClass(TEST_CLASS_NAME2);
+    @Test
+    public void testLoadAbsentClass() {
+        assertThrows(ClassNotFoundException.class, () -> {
+            WindowsRedefinedClassLoader classLoader = new WindowsRedefinedClassLoader(getClass().getClassLoader());
+            classLoader.loadClass(TEST_CLASS_NAME2);
+        });
     }
 }

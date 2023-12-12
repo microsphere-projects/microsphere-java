@@ -22,7 +22,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
 import static io.microsphere.invoke.MethodHandleUtils.lookup;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link MethodHandleUtils} Test

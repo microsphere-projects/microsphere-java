@@ -18,7 +18,7 @@ package io.microsphere.net;
 
 import io.microsphere.collection.SetUtils;
 import io.microsphere.net.console.Handler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,9 +26,10 @@ import java.net.Proxy;
 import java.net.URL;
 import java.util.Properties;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ExtendableProtocolURLStreamHandler} Test
@@ -112,10 +113,12 @@ public class ExtendableProtocolURLStreamHandlerTest {
         assertEquals("classpath", handler.getProtocol());
     }
 
-    @Test(expected = IOException.class)
-    public void testClassPathProtocolOnResourceNotFound() throws Throwable {
-        new io.microsphere.net.classpath.Handler();
-        URL url = new URL("classpath://META-INF/not-found.res");
-        url.openStream();
+    @Test
+    public void testClassPathProtocolOnResourceNotFound() {
+        assertThrows(IOException.class, () -> {
+            new io.microsphere.net.classpath.Handler();
+            URL url = new URL("classpath://META-INF/not-found.res");
+            url.openStream();
+        });
     }
 }

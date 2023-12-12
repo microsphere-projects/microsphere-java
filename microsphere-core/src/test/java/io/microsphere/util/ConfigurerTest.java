@@ -1,6 +1,6 @@
 package io.microsphere.util;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * {@link Configurer} Test

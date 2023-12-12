@@ -4,14 +4,16 @@
 package io.microsphere.io.scanner;
 
 import io.microsphere.AbstractTestCase;
-import junit.framework.Assert;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * {@link SimpleFileScanner} {@link Test}
@@ -29,9 +31,9 @@ public class SimpleFileScannerTest extends AbstractTestCase {
     public void testScan() {
         File jarHome = new File(SystemUtils.JAVA_HOME);
         Set<File> directories = simpleFileScanner.scan(jarHome, true, DirectoryFileFilter.INSTANCE);
-        Assert.assertFalse(directories.isEmpty());
+        assertFalse(directories.isEmpty());
 
         directories = simpleFileScanner.scan(jarHome, false, new NameFileFilter("bin"));
-        Assert.assertEquals(1, directories.size());
+        assertEquals(1, directories.size());
     }
 }

@@ -3,10 +3,11 @@
  */
 package io.microsphere.util;
 
-import junit.framework.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ResourceBundle;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link PropertyResourceBundleUtils} {@link Test}
@@ -23,7 +24,7 @@ public class PropertyResourceBundleUtilsTest {
         ResourceBundle resourceBundle = PropertyResourceBundleUtils.getBundle("META-INF.test", "UTF-8");
         String expected = "测试名称";
         String value = resourceBundle.getString("name");
-        Assert.assertEquals(expected, value);
+        assertEquals(expected, value);
     }
 
 }

@@ -16,7 +16,7 @@
  */
 package io.microsphere.lang.function;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.function.Predicate;
 
@@ -25,10 +25,10 @@ import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Predicates.emptyArray;
 import static io.microsphere.lang.function.Predicates.or;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link Predicates} Test

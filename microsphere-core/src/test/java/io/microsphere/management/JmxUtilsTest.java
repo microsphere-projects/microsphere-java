@@ -17,8 +17,8 @@
 package io.microsphere.management;
 
 import io.microsphere.AbstractTestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -27,8 +27,8 @@ import java.util.Map;
 import static io.microsphere.management.JmxUtils.getMBeanAttributesMap;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 import static javax.management.ObjectName.getInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link JmxUtils} Test
@@ -42,7 +42,7 @@ public class JmxUtilsTest extends AbstractTestCase {
 
     private ObjectName objectName;
 
-    @Before
+    @BeforeEach
     public void init() throws Throwable {
         this.mBeanServer = getPlatformMBeanServer();
         this.objectName = getInstance("java.lang:type=ClassLoading");

@@ -22,7 +22,7 @@ import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link PropertiesUtils} Test

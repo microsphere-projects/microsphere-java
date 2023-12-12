@@ -17,13 +17,14 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.Version.getValue;
 import static io.microsphere.util.Version.of;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link Version} Test
@@ -38,19 +39,21 @@ public class VersionTest extends AbstractTestCase {
         assertEquals(1, getValue("1"));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGetValueOnFailed() {
-        assertEquals(1, getValue("a"));
+        assertThrows(IllegalArgumentException.class, () -> {
+            assertEquals(1, getValue("a"));
+        });
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void testOfOnNullPointException() {
-        of(null);
+        assertThrows(NullPointerException.class, () -> of(null));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testOfOnIllegalArgumentException() {
-        of(" ");
+        assertThrows(IllegalArgumentException.class, () -> of(" "));
     }
 
     @Test
