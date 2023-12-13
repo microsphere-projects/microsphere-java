@@ -33,38 +33,17 @@ import static io.microsphere.util.ClassUtils.newInstance;
 public abstract class ExceptionUtils extends BaseUtils {
 
     public static <T extends Throwable, TT extends Throwable> TT wrap(T source, Class<TT> thrownType) {
-        if (isAssignableFrom(thrownType, thrownType.getClass())) {
+        if (isAssignableFrom(thrownType, source.getClass())) {
             return (TT) source;
         }
+        Object[] args = resolveArguments(source);
+        return ClassUtils.newInstance(thrownType, args);
+    }
 
+    private static <T extends Throwable> Object[] resolveArguments(T source) {
         String message = source.getMessage();
-        Throwable cause = source.getCause();
-
-        Constructor[] constructors = thrownType.getConstructors();
-
-        if (constructors.length == 0) {
-            throw new IllegalArgumentException("The exceptionType must have one public constructor.");
-        }
-
-        Arrays.sort(constructors, (o1, o2) -> Integer.compare(o2.getParameterCount(), o1.getParameterCount()));
-
-
-
-        // find the longest arguments constructor
-        Constructor constructor = constructors[0];
-        Class[] parameterTypes = constructor.getParameterTypes();
-        int parameterTypesLength = parameterTypes.length;
-        Object[] parameters = new Object[parameterTypesLength];
-        for (int i = 0; i < parameterTypesLength; i++) {
-            Class parameterType = parameterTypes[i];
-            if (String.class.isAssignableFrom(parameterType)) {
-                parameters[i] = message;
-            }
-            if (Throwable.class.isAssignableFrom(parameterType)) {
-                parameters[i] = cause;
-            }
-        }
-        return execute(() -> (TT) constructor.newInstance(parameters));
+        Throwable cause = source.getCause() == null ? source : source.getCause();
+        return message == null ? new Object[]{cause} : new Object[]{message, cause};
     }
 
     public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
