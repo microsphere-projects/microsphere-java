@@ -48,6 +48,8 @@ public abstract class ExceptionUtils extends BaseUtils {
 
         Arrays.sort(constructors, (o1, o2) -> Integer.compare(o2.getParameterCount(), o1.getParameterCount()));
 
+
+
         // find the longest arguments constructor
         Constructor constructor = constructors[0];
         Class[] parameterTypes = constructor.getParameterTypes();
@@ -65,29 +67,28 @@ public abstract class ExceptionUtils extends BaseUtils {
         return execute(() -> (TT) constructor.newInstance(parameters));
     }
 
-    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
+    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
         String message = format(messagePattern, args);
-        return newThrowable(throwableClass, message, cause);
+        return create(throwableClass, message, cause);
     }
 
-    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause, String message) {
+    public static <T extends Throwable> T create(Class<T> throwableClass, String message, Throwable cause) {
         return newInstance(throwableClass, message, cause);
     }
 
-    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Throwable cause) {
+    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause) {
         return newInstance(throwableClass, cause);
     }
 
-    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, String message) {
+    public static <T extends Throwable> T create(Class<T> throwableClass, String message) {
         return newInstance(throwableClass, message);
     }
 
-
-    public static <T extends Throwable> T newThrowable(Class<T> throwableClass) {
+    public static <T extends Throwable> T create(Class<T> throwableClass) {
         return newInstance(throwableClass);
     }
 
-    public static <T extends Throwable> T newThrowable(Class<T> throwableClass, Object... args) {
+    public static <T extends Throwable> T create(Class<T> throwableClass, Object... args) {
         return newInstance(throwableClass, args);
     }
 

@@ -19,7 +19,7 @@ package io.microsphere.util;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.text.FormatUtils.format;
-import static io.microsphere.util.ExceptionUtils.newThrowable;
+import static io.microsphere.util.ExceptionUtils.create;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -36,19 +36,19 @@ public class ExceptionUtilsTest {
         assertThrowable(RuntimeException.class);
         assertThrowable(RuntimeException.class, "Hello,World");
         assertThrowable(RuntimeException.class, "Hello,{}", "World");
-        assertThrowable(RuntimeException.class, new Throwable());
-        assertThrowable(RuntimeException.class, new Throwable(), "Hello,{}", "World");
-        assertThrowable(RuntimeException.class, new Throwable(), "Hello,World");
+        assertThrowable(RuntimeException.class, new NullPointerException());
+        assertThrowable(RuntimeException.class, new NullPointerException(), "Hello,{}", "World");
+        assertThrowable(RuntimeException.class, new NullPointerException(), "Hello,World");
     }
 
     private <T extends Throwable> void assertThrowable(Class<T> throwableClass) {
-        T t = newThrowable(throwableClass);
+        T t = ExceptionUtils.create(throwableClass);
         assertNull(t.getMessage());
         assertNull(t.getCause());
     }
 
     private <T extends Throwable> void assertThrowable(Class<T> throwableClass, String message) {
-        T t = newThrowable(throwableClass, message);
+        T t = ExceptionUtils.create(throwableClass, message);
         assertEquals(message, t.getMessage());
         assertNull(t.getCause());
     }
@@ -59,8 +59,8 @@ public class ExceptionUtilsTest {
     }
 
     private <T extends Throwable> void assertThrowable(Class<T> throwableClass, Throwable cause) {
-        T t = newThrowable(throwableClass, cause);
-        assertNull(t.getMessage());
+        T t = ExceptionUtils.create(throwableClass, cause);
+        assertEquals(cause.getClass().getName(), t.getMessage());
         assertEquals(cause, t.getCause());
     }
 
@@ -70,7 +70,7 @@ public class ExceptionUtilsTest {
     }
 
     private <T extends Throwable> void assertThrowable(Class<T> throwableClass, Throwable cause, String message) {
-        T t = newThrowable(throwableClass, cause, message);
+        T t = ExceptionUtils.create(throwableClass, message, cause);
         assertEquals(message, t.getMessage());
         assertEquals(cause, t.getCause());
     }
