@@ -52,9 +52,12 @@ import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
+import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructors;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.ArrayUtils.length;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
@@ -689,7 +692,6 @@ public abstract class ClassUtils extends BaseUtils {
         return classNames;
     }
 
-
     protected static String resolveClassName(File classesDirectory, File classFile) {
         String classFileRelativePath = FileUtils.resolveRelativePath(classesDirectory, classFile);
         return resolveClassName(classFileRelativePath);
@@ -1029,8 +1031,29 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     public static <T> T newInstance(Class<T> type, Object... args) {
-        Class[] parameterTypes = getTypes(args);
-        Constructor<T> constructor = getDeclaredConstructor(type, parameterTypes);
+        int length = length(args);
+
+        List<Constructor<?>> constructors = getDeclaredConstructors(type, constructor -> {
+            Class<?>[] parameterTypes = constructor.getParameterTypes();
+            if (length != parameterTypes.length) {
+                return false;
+            }
+            for (int i = 0; i < length; i++) {
+                Object arg = args[i];
+                Class<?> parameterType = parameterTypes[i];
+                if (!parameterType.isInstance(arg)) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        if (constructors.isEmpty()) {
+            String message = format("No constructor[class : '{}'] matches the arguments : {}", getTypeName(type), Arrays.asList(args));
+            throw new IllegalArgumentException(message);
+        }
+
+        Constructor<T> constructor = (Constructor<T>) constructors.get(0);
         return execute(() -> constructor.newInstance(args));
     }
 
