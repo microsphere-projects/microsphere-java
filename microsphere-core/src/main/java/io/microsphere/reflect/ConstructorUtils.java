@@ -64,6 +64,12 @@ public abstract class ConstructorUtils extends BaseUtils {
         return filterAll(constructors, constructorFilters);
     }
 
+    public static List<Constructor<?>> getDeclaredConstructors(Class<?> type,
+                                                               Predicate<? super Constructor<?>>... constructorFilters) {
+        List<Constructor<?>> constructors = asList(type.getDeclaredConstructors());
+        return filterAll(constructors, constructorFilters);
+    }
+
     public static <T> Constructor<T> getConstructor(Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getConstructor(parameterTypes));
     }
