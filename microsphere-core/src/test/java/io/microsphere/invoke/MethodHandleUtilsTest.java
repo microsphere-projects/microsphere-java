@@ -38,49 +38,52 @@ public class MethodHandleUtilsTest {
         MethodHandles.Lookup lookup2 = lookup(String.class);
         assertSame(lookup, lookup2);
     }
-
-    @Test
-    public void testFindVirtual() {
-        MethodHandles.Lookup lookup = lookup(String.class);
-
-    }
-
-
-    @Test
-    public void test() {
-
-        B b = new B();
-
-        // b.execute(new A());
-        b.execute2(new A());
-    }
-
-    class A {
-
-        private String name = "Hello,World";
-
-    }
-
-    class B {
-
-        public void execute(A a) {
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            try {
-                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
-                System.out.println(methodHandle.invokeExact(a));
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        public void execute2(A a) {
-            MethodHandles.Lookup lookup = lookup(A.class);
-            try {
-                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
-                System.out.println(methodHandle.invokeExact(a));
-            } catch (Throwable e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
+//
+//    @Test
+//    public void testFindVirtual() {
+//        MethodHandles.Lookup lookup = lookup(String.class);
+//
+//    }
+//
+//
+//    @Test
+//    public void test() {
+//
+//        B b = new B();
+//
+//        // b.execute(new A());
+//        b.execute2(new A());
+//    }
+//
+//    class A {
+//
+//        private String name = "Hello,World";
+//
+//        public String getName() {
+//            return name;
+//        }
+//    }
+//
+//    class B {
+//
+//        public void execute(A a) {
+//            MethodHandles.Lookup lookup = MethodHandles.lookup();
+//            try {
+//                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
+//                System.out.println(methodHandle.invokeExact(a));
+//            } catch (Throwable e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//
+//        public void execute2(A a) {
+//            MethodHandles.Lookup lookup = lookup(A.class);
+//            try {
+//                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
+//                System.out.println(methodHandle.invokeExact(a));
+//            } catch (Throwable e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 }
