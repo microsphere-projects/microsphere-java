@@ -115,7 +115,21 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = of(Void.class, Boolean.class, Character.class, Byte.class, Short.class, Integer.class, Long.class, Float.class, Double.class, String.class, BigDecimal.class, BigInteger.class, Date.class, Object.class);
+    public static final Set<Class<?>> SIMPLE_TYPES = of(
+            Void.class,
+            Boolean.class,
+            Character.class,
+            Byte.class,
+            Short.class,
+            Integer.class,
+            Long.class,
+            Float.class,
+            Double.class,
+            String.class,
+            BigDecimal.class,
+            BigInteger.class,
+            Date.class,
+            Object.class);
 
     public static final Set<Class<?>> PRIMITIVE_TYPES = of(
             Void.TYPE,
