@@ -169,10 +169,5 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         map = ReflectionUtils.readFieldsAsMap(value);
         info(map);
 
-        map = ReflectionUtils.readFieldsAsMap(String.class);
-        info(map);
-
-        map = ReflectionUtils.readFieldsAsMap(Class.class);
-        info(map);
     }
 }
