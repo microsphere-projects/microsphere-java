@@ -1,6 +1,8 @@
 package io.microsphere.reflect;
 
 
+import io.microsphere.util.ClassUtils;
+
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -18,11 +20,14 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.ClassUtils.isSimpleType;
 import static io.microsphere.util.ClassUtils.isWrapperType;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
@@ -403,20 +408,17 @@ public abstract class ReflectionUtils {
             try {
                 String fieldName = field.getName();
                 Object fieldValue = field.get(object);
-                if (fieldValue != null) {
+                if (fieldValue != null && fieldValue != object) {
                     Class<?> fieldValueType = fieldValue.getClass();
-                    if (isPrimitive(fieldValueType) || isWrapperType(fieldValueType)) {
-                    } else if (fieldValueType.isArray()) {
-                        fieldValue = toList(fieldValue);
-                    } else if ("java.lang".equals(fieldValueType.getPackage().getName())) {
-
-                    } else {
+                    if (!isPrimitive(fieldValueType)
+                            && !isSimpleType(fieldValueType)
+                            && !Objects.equals(object.getClass(), fieldValueType)) {
                         fieldValue = readFieldsAsMap(fieldValue);
                     }
+                    fieldsAsMap.put(fieldName, fieldValue);
                 }
-                fieldsAsMap.put(fieldName, fieldValue);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                throw new IllegalStateException(e);
             }
         }
         return fieldsAsMap;
