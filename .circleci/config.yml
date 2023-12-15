@@ -11,22 +11,8 @@ jobs:
       # Run tests
       - run: mvn clean package
 
-  document-lint:
-    docker:
-      # this image is build from Dockerfile
-      # https://github.com/pouchcontainer/pouchlinter/blob/master/Dockerfile
-      - image: pouchcontainer/pouchlinter:v0.1.2
-    working_directory: ~/microsphere-java
-    steps:
-      - checkout
-      - run:
-          name: use markdownlint v0.5.0 to lint markdown file (https://github.com/markdownlint/markdownlint)
-          command: |
-            find  ./ -name  "*.md" | grep -v vendor | grep -v commandline |  grep -v .github |  grep -v swagger |  grep -v api |  xargs mdl -r ~MD010,~MD013,~MD024,~MD029,~MD033,~MD036
-
 workflows:
   version: 2
   ci:
     jobs:
       - integration-test
-      - document-lint
