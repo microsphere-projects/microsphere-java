@@ -68,7 +68,7 @@ public class ShutdownHookUtilsTest {
             }
         });
 
-        assertEquals(1, getShutdownHookCallbacks().size());
+        assertEquals(3, getShutdownHookCallbacks().size());
 
         thread.start();
     }
