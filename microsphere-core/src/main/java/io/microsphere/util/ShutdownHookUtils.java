@@ -31,6 +31,7 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * The utilities class for ShutdownHook
@@ -88,7 +89,7 @@ public abstract class ShutdownHookUtils extends BaseUtils {
             return emptySet();
         }
 
-        Set<Thread> hookThreads = hooksRef.keySet().stream().filter(hookThreadFilter).collect(Collectors.toSet());
+        Set<Thread> hookThreads = hooksRef.keySet().stream().filter(hookThreadFilter).collect(toSet());
         if (removed) {
             hookThreads.forEach(hooksRef::remove);
         }
