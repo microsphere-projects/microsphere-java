@@ -23,7 +23,6 @@ import static io.microsphere.util.ExceptionUtils.create;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
