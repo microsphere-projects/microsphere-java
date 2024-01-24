@@ -54,7 +54,7 @@ public class ExecutableElementComparator implements Comparator<ExecutableElement
         if (value == 0) { // Step 2
 
             List<? extends VariableElement> ps1 = e1.getParameters();
-            List<? extends VariableElement> ps2 = e1.getParameters();
+            List<? extends VariableElement> ps2 = e2.getParameters();
 
             value = ps1.size() - ps2.size();
 
@@ -67,6 +67,6 @@ public class ExecutableElementComparator implements Comparator<ExecutableElement
                 }
             }
         }
-        return Integer.compare(value, 0);
+        return value;
     }
 }
