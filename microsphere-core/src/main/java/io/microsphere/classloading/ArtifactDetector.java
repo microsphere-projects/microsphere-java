@@ -5,6 +5,8 @@ import io.microsphere.util.ClassLoaderUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -14,6 +16,7 @@ import java.util.Set;
 import java.util.StringJoiner;
 
 import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.lang.System.getProperty;
@@ -36,14 +39,14 @@ public class ArtifactDetector {
 
     private static final List<ArtifactResolver> ARTIFACT_INFO_RESOLVERS = loadServicesList(ArtifactResolver.class, DEFAULT_CLASS_LOADER);
 
-    private final ClassLoader classLoader;
+    private final @Nonnull ClassLoader classLoader;
 
     public ArtifactDetector() {
         this(DEFAULT_CLASS_LOADER);
     }
 
-    public ArtifactDetector(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+    public ArtifactDetector(@Nullable ClassLoader classLoader) {
+        this.classLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
     }
 
     public List<Artifact> detect() {
