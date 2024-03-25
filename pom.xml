@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
@@ -16,6 +16,7 @@
 
     <name>Microsphere :: Java</name>
     <description>Microsphere Projects for Java</description>
+    <url>https://github.com/microsphere-projects/microsphere-java</url>
 
     <scm>
         <url>https://github.com/microsphere-projects/microsphere-java</url>
