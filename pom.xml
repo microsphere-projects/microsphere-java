@@ -18,6 +18,11 @@
     <description>Microsphere Projects for Java</description>
     <url>https://github.com/microsphere-projects/microsphere-java</url>
 
+    <organization>
+        <name>Microsphere</name>
+        <url>https://github.com/microsphere-projects</url>
+    </organization>
+
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -45,7 +50,7 @@
         <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-java.git
         </developerConnection>
     </scm>
-    
+
     <properties>
         <revision>0.0.1-SNAPSHOT</revision>
     </properties>
