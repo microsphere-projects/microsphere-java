@@ -22,7 +22,10 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +33,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
@@ -146,10 +150,17 @@ public abstract class MethodUtils extends BaseUtils {
         List<Method> allMethods = new LinkedList<>();
 
         for (Class<?> classToSearch : declaredClasses) {
-            Method[] methods = publicOnly ? classToSearch.getMethods() : classToSearch.getDeclaredMethods();
+            // Method[] methods = publicOnly ? classToSearch.getMethods() : classToSearch.getDeclaredMethods();
+            Method[] methods = classToSearch.getDeclaredMethods();
             // Add the declared methods or public methods
             for (Method method : methods) {
-                allMethods.add(method);
+                if (publicOnly) {
+                    if (Modifier.isPublic(method.getModifiers())) {
+                        allMethods.add(method);
+                    }
+                } else {
+                    allMethods.add(method);
+                }
             }
         }
 
