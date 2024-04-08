@@ -11,12 +11,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-parent</artifactId>
+    <artifactId>microsphere-java-parent</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
     <name>Microsphere :: Java :: Parent</name>
-    <description>Microsphere Parent</description>
+    <description>Microsphere Java Parent</description>
 
     <properties>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
