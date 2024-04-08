@@ -11,7 +11,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-dependencies</artifactId>
+    <artifactId>microsphere-java-dependencies</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
 
