@@ -52,17 +52,15 @@
     </scm>
 
     <properties>
-        <revision>0.0.1</revision>
+        <revision>0.0.2</revision>
     </properties>
 
     <modules>
         <module>microsphere-parent</module>
         <module>microsphere-dependencies</module>
         <module>microsphere-annotation-processor</module>
-        <module>microsphere-core</module>
-        <module>microsphere-sql-parser</module>
-        <module>microsphere-jdbc</module>
-        <module>microsphere-tools</module>
+        <module>microsphere-java-core</module>
+        <module>microsphere-jdk-tools</module>
     </modules>
 
     <distributionManagement>

@@ -11,25 +11,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-core</artifactId>
+    <artifactId>microsphere-java-core</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
     <name>Microsphere :: Java :: Core</name>
-    <description>Microsphere Core</description>
+    <description>Microsphere Java Core</description>
 
     <dependencies>
 
-        <!-- Java API Dependencies -->
+        <!-- Java Common Annotations -->
         <dependency>
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- Java API Dependencies -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- Apache Commons Dependencies -->
@@ -96,5 +98,21 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>jigsaw</id>
+            <activation>
+                <jdk>[1.9,)</jdk>
+            </activation>
+            <dependencies>
+                <!-- Java Common Annotations -->
+                <dependency>
+                    <groupId>javax.annotation</groupId>
+                    <artifactId>javax.annotation-api</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 
 </project>

@@ -11,12 +11,29 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-tools</artifactId>
+    <artifactId>microsphere-jdk-tools</artifactId>
     <version>${revision}</version>
     <packaging>jar</packaging>
 
-    <name>Microsphere :: Java :: Tools</name>
-    <description>Microsphere Tools</description>
+    <name>Microsphere :: Java :: JDK Tools</name>
+    <description>Microsphere JDK Tools</description>
+
+    <dependencies>
+
+        <!-- Testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
     <profiles>
         <profile>
@@ -62,21 +79,4 @@
             </dependencies>
         </profile>
     </profiles>
-
-    <dependencies>
-
-        <!-- Testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-    </dependencies>
 </project>
