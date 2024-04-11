@@ -16,8 +16,6 @@ jobs:
     steps:
       - run: |
          echo "Release version ${{ github.event.inputs.releaseversion }}!"
-         echo "OSS_SONATYPE_USERNAME : ${{ secrets.OSS_SONATYPE_USERNAME }}"
-         echo "OSS_SONATYPE_PASSWORD : ${{ secrets.OSS_SONATYPE_PASSWORD }}"
 
       - uses: actions/checkout@v4
 
@@ -28,12 +26,14 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
           server-id: ossrh
-          server-username: ${{ secrets.OSS_SONATYPE_USERNAME }}
-          server-password: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          gpg-private-key: ${{ secrets.GPG_KEY }}
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Release to Maven Central Repository
         run: mvn --batch-mode clean deploy -P release -DskipTests=true -Drevision=${{ github.event.inputs.releaseversion }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
