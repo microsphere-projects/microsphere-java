@@ -15,8 +15,7 @@ jobs:
         java: [ '8' ]
     steps:
       - run: |
-          echo "Will start a Maven Central upload with version ${{ github.event.inputs.releaseversion }}"
-          sudo apt-get --assume-yes --force-yes install gnupg
+         sudo apt-get --assume-yes --force-yes install gnupg
 
       - uses: actions/checkout@v4
 
