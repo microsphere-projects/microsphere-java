@@ -1,0 +1,14 @@
+name: Maven Central Release
+on:
+  workflow_dispatch:
+    inputs:
+      releaseversion:
+        description: 'Release version'
+        required: true
+        default: '0.0.1'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Release version ${{ github.event.inputs.releaseversion }}!"
