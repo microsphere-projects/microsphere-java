@@ -15,7 +15,9 @@ jobs:
         java: [ '8' ]
     steps:
       - run: |
-         sudo apt-get --assume-yes --force-yes install gnupg
+         echo "Release version ${{ github.event.inputs.releaseversion }}!"
+         echo "OSS_SONATYPE_USERNAME : ${{ secrets.OSS_SONATYPE_USERNAME }}"
+         echo "OSS_SONATYPE_PASSWORD : ${{ secrets.OSS_SONATYPE_PASSWORD }}"
 
       - uses: actions/checkout@v4
 
