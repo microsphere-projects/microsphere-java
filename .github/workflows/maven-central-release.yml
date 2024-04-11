@@ -1,34 +1,36 @@
 name: Release To Maven Central Repository
 
 on:
-  push:
-    branches: [ "release" ]
-  pull_request:
-    branches: [ "release" ]
-
+  workflow_dispatch:
+    inputs:
+      releaseversion:
+        description: 'Release version'
+        required: true
+        default: '0.0.1'
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, '[CI Skip]')"
-
+    strategy:
+      matrix:
+        java: [ '8' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - run: echo "Will start a Maven Central upload with version ${{ github.event.inputs.releaseversion }}"
 
-      - name: Java Maven Release
-        uses: qcastel/github-actions-maven-release@v1.12.32
-        env:
-          JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+      - uses: actions/checkout@v4
+
+      - name: Set up Maven Central Repository
+        uses: actions/setup-java@v4
         with:
-          git-release-bot-name: "release-bot"
-          git-release-bot-email: "release-bot@microsphere.io"
-          release-branch-name: "release"
+          distribution: 'temurin'
+          java-version: ${{ matrix.java }}
+          cache: maven
+          server-id: ossrh
+          server-username: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          server-password: ${{ secrets.OSS_SONATYPE_PASSWORD }}
+          gpg-private-key: ${{ secrets.GPG_KEY }}
 
-          maven-args: "--batch-mode --update-snapshots -P release clean install"
-          maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
-
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-          gpg-enabled: true
-          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
-          gpg-key: ${{ secrets.GPG_KEY }}
+      - name: Release to Maven Central Repository
+        run: mvn --batch-mode clean deploy -P release -DskipTests=true -Drevision=${{ github.event.inputs.releaseversion }}
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
