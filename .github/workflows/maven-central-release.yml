@@ -1,14 +1,34 @@
-name: Maven Central Release
+name: Release To Maven Central Repository
+
 on:
-  workflow_dispatch:
-    inputs:
-      releaseversion:
-        description: 'Release version'
-        required: true
-        default: '0.0.1'
+  push:
+    branches: [ "release" ]
+  pull_request:
+    branches: [ "release" ]
+
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[CI Skip]')"
+
     steps:
-      - run: |
-          echo "Release version ${{ github.event.inputs.releaseversion }}!"
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Java Maven Release
+        uses: qcastel/github-actions-maven-release@v1.12.32
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-1.8-openjdk/
+        with:
+          git-release-bot-name: "release-bot"
+          git-release-bot-email: "release-bot@microsphere.io"
+          release-branch-name: "release"
+
+          maven-args: "--batch-mode --update-snapshots -P release"
+          maven-servers: ${{ secrets.MVN_REPO_SERVERS }}
+
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+          gpg-enabled: true
+          gpg-key-id: ${{ secrets.GPG_KEY_ID }}
+          gpg-key: ${{ secrets.GPG_KEY }}
