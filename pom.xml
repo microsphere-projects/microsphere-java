@@ -45,10 +45,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/microsphere-projects/microsphere-java</url>
-        <connection>scm:git:git://github.com/microsphere-projects/microsphere-java.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-java.git
-        </developerConnection>
+        <url>git@github.com/microsphere-projects/microsphere-java.git</url>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:ssh://${project.scm.url}</developerConnection>
     </scm>
 
     <properties>
