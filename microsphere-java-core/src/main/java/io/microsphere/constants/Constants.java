@@ -11,6 +11,7 @@ package io.microsphere.constants;
  * @see Constants
  * @since 1.0.0
  */
-public interface Constants extends FileConstants, PathConstants, ProtocolConstants, SeparatorConstants, SymbolConstants {
+public interface Constants extends FileConstants, PathConstants, PropertyConstants,
+        ProtocolConstants, SeparatorConstants, SymbolConstants {
 
 }
