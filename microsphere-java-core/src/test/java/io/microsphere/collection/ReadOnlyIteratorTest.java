@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReadOnlyIterator
  * @since 1.0.0
  */
-public abstract class AbstractReadOnlyIteratorTest extends AbstractTestCase {
+public abstract class ReadOnlyIteratorTest extends AbstractTestCase {
 
     Iterator instance = createIterator();
 
