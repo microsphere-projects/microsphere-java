@@ -61,5 +61,9 @@ public class ListUtilsTest {
         Set<String> rawSet = singleton("A");
         list = toList(rawSet);
         assertEquals(newArrayList(rawSet), list);
+
+        list = toList((List) null);
+        assertSame(emptyList(), list);
+        assertEquals(emptyList(), list);
     }
 }
