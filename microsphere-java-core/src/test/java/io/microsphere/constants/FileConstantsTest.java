@@ -18,6 +18,16 @@ package io.microsphere.constants;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.FileConstants.CLASS;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.FileConstants.EAR;
+import static io.microsphere.constants.FileConstants.EAR_EXTENSION;
+import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.FileConstants.WAR;
+import static io.microsphere.constants.FileConstants.WAR_EXTENSION;
+import static io.microsphere.constants.FileConstants.ZIP;
+import static io.microsphere.constants.FileConstants.ZIP_EXTENSION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -30,16 +40,16 @@ public class FileConstantsTest {
 
     @Test
     public void test() {
-        assertEquals("zip", FileConstants.ZIP);
-        assertEquals("jar", FileConstants.JAR);
-        assertEquals("war", FileConstants.WAR);
-        assertEquals("ear", FileConstants.EAR);
-        assertEquals("class", FileConstants.CLASS);
+        assertEquals("zip", ZIP);
+        assertEquals("jar", JAR);
+        assertEquals("war", WAR);
+        assertEquals("ear", EAR);
+        assertEquals("class", CLASS);
 
-        assertEquals(".zip", FileConstants.ZIP_EXTENSION);
-        assertEquals(".jar", FileConstants.JAR_EXTENSION);
-        assertEquals(".war", FileConstants.WAR_EXTENSION);
-        assertEquals(".ear", FileConstants.EAR_EXTENSION);
-        assertEquals(".class", FileConstants.CLASS_EXTENSION);
+        assertEquals(".zip", ZIP_EXTENSION);
+        assertEquals(".jar", JAR_EXTENSION);
+        assertEquals(".war", WAR_EXTENSION);
+        assertEquals(".ear", EAR_EXTENSION);
+        assertEquals(".class", CLASS_EXTENSION);
     }
 }
