@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterator;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -44,6 +45,9 @@ public abstract class ListUtils extends BaseUtils {
     }
 
     public static <E> List<E> toList(Iterable<E> iterable) {
+        if (isList(iterable)) {
+            return (List) iterable;
+        }
         return toList(iterable.iterator());
     }
 
@@ -52,6 +56,9 @@ public abstract class ListUtils extends BaseUtils {
     }
 
     public static <E> List<E> toList(Iterator<E> iterator) {
+        if (iterator == null) {
+            return emptyList();
+        }
         List<E> list = newLinkedList();
         while (iterator.hasNext()) {
             list.add(iterator.next());
