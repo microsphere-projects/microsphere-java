@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static io.microsphere.util.ArrayUtils.length;
+import static java.util.Collections.emptyIterator;
 
 /**
  * The utilities class for Java Collection
@@ -53,7 +54,7 @@ public abstract class CollectionUtils extends BaseUtils {
     }
 
     public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
-        return new EnumerationIteratorAdapter(enumeration);
+        return enumeration == null ? emptyIterator() : new EnumerationIteratorAdapter(enumeration);
     }
 
     public static <E> Iterable<E> toIterable(Enumeration<E> enumeration) {
