@@ -30,6 +30,8 @@ public class PathConstantsTest {
 
     @Test
     public void test() {
+        assertEquals('/',PathConstants.SLASH_CHAR);
+        assertEquals('\\',PathConstants.BACK_SLASH_CHAR);
         assertEquals("/", PathConstants.SLASH);
         assertEquals("//", PathConstants.DOUBLE_SLASH);
         assertEquals("\\", PathConstants.BACK_SLASH);
