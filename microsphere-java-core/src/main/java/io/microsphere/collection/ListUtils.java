@@ -69,18 +69,6 @@ public abstract class ListUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> List<E> asList(Iterable<E> iterable) {
-        return asList(iterable.iterator());
-    }
-
-    public static <E> List<E> asList(Enumeration<E> enumeration) {
-        return asList(toIterator(enumeration));
-    }
-
-    public static <E> List<E> asList(Iterator<E> iterator) {
-        return unmodifiableList(toList(iterator));
-    }
-
     public static <E> ArrayList<E> newArrayList(int size) {
         return new ArrayList<>(size);
     }
