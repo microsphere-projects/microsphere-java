@@ -45,10 +45,13 @@ public abstract class ListUtils extends BaseUtils {
     }
 
     public static <E> List<E> toList(Iterable<E> iterable) {
-        if (isList(iterable)) {
+        if (iterable == null) {
+            return emptyList();
+        } else if (isList(iterable)) {
             return (List) iterable;
+        } else {
+            return toList(iterable.iterator());
         }
-        return toList(iterable.iterator());
     }
 
     public static <E> List<E> toList(Enumeration<E> enumeration) {
