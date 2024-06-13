@@ -25,7 +25,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
+import static java.util.Collections.emptyList;
 
 /**
  * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}
@@ -39,7 +40,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     private final List<URLStreamHandlerFactory> factories;
 
     public CompositeURLStreamHandlerFactory() {
-        this(Collections.emptyList());
+        this(emptyList());
     }
 
     public CompositeURLStreamHandlerFactory(Collection<URLStreamHandlerFactory> factories) {
@@ -47,7 +48,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
-        List<URLStreamHandlerFactory> newFactories = toList(factories);
+        List<URLStreamHandlerFactory> newFactories = newLinkedList(factories);
         sortFactories(newFactories);
         this.factories = newFactories;
     }
