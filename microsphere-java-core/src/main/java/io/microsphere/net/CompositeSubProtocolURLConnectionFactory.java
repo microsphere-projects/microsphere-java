@@ -25,6 +25,7 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.toList;
 import static java.util.Collections.emptyList;
 
@@ -39,7 +40,7 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     private final List<SubProtocolURLConnectionFactory> factories;
 
     public CompositeSubProtocolURLConnectionFactory() {
-        this(emptyList());
+        this(newLinkedList());
     }
 
     public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
