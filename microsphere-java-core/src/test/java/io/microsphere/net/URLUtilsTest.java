@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -203,6 +204,9 @@ public class URLUtilsTest {
         URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
         assertSame(factory, getURLStreamHandlerFactory());
+
+        URLStreamHandler handler = factory.createURLStreamHandler("http");
+        assertEquals("sun.net.www.protocol.http.Handler", handler.getClass().getName());
 
         attachURLStreamHandlerFactory(factory);
         CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();

@@ -16,27 +16,48 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.util.ClassLoaderUtils;
+import io.microsphere.invoke.MethodHandleUtils;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+
+import static io.microsphere.invoke.MethodHandleUtils.lookup;
+import static java.lang.invoke.MethodType.methodType;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see java.net.URL#getURLStreamHandler(String)
  * @since 1.0.0
  */
 public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
+    private static final MethodHandle methodHandle;
+
+    static {
+        // Lookup the method : java.net.URL#getURLStreamHandler(String)
+        MethodHandles.Lookup lookup = lookup(URL.class, MethodHandleUtils.LookupMode.ALL);
+        MethodType methodType = methodType(URLStreamHandler.class, String.class);
+        try {
+            methodHandle = lookup.findStatic(URL.class, "getURLStreamHandler", methodType);
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        String className = "sun.net.www.protocol." + protocol + ".Handler";
-        Class<?> handlerClass = ClassLoaderUtils.resolveClass(className, ClassLoaderUtils.getDefaultClassLoader());
+        URLStreamHandler handler = null;
         try {
-            return (URLStreamHandler) handlerClass.newInstance();
+            handler = (URLStreamHandler) methodHandle.invokeExact(protocol);
         } catch (Throwable e) {
         }
-        return null;
+        return handler;
     }
 }
