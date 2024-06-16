@@ -276,8 +276,7 @@ public abstract class UnsafeUtils {
      * @return The cache key of offset
      */
     protected static String createOffsetCacheKey(Class<?> type, String fieldName) {
-        StringBuilder keyBuilder = new StringBuilder(type.getName()).append("#").append(fieldName);
-        return keyBuilder.toString();
+        return type.getName() + "#" + fieldName;
     }
 
     /**
