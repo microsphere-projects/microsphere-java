@@ -22,10 +22,8 @@ public abstract class FileUtils {
     /**
      * Resolve Relative Path
      *
-     * @param parentDirectory
-     *         Parent Directory
-     * @param targetFile
-     *         Target File
+     * @param parentDirectory Parent Directory
+     * @param targetFile      Target File
      * @return If <code>targetFile</code> is a sub-file of <code>parentDirectory</code> , resolve relative path, or
      * <code>null</code>
      * @since 1.0.0
