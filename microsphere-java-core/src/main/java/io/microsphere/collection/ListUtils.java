@@ -29,7 +29,6 @@ import java.util.function.Consumer;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterator;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
 
 /**
  * The utilities class for Java {@link List}
