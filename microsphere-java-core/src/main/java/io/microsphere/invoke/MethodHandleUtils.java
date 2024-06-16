@@ -73,7 +73,7 @@ public abstract class MethodHandleUtils extends BaseUtils {
      * @see MethodHandles.Lookup#TRUSTED
      * @see MethodHandles.Lookup#ALL_MODES
      */
-    public static enum LookupMode {
+    public enum LookupMode {
 
 
         /**
