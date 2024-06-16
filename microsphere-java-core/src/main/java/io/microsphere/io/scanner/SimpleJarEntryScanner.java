@@ -36,17 +36,12 @@ public class SimpleJarEntryScanner {
     }
 
     /**
-     * @param jarURL
-     *         {@link URL} of {@link JarFile} or {@link JarEntry}
-     * @param recursive
-     *         recursive
+     * @param jarURL    {@link URL} of {@link JarFile} or {@link JarEntry}
+     * @param recursive recursive
      * @return Read-only {@link Set}
-     * @throws NullPointerException
-     *         If argument <code>null</code>
-     * @throws IllegalArgumentException
-     *         <ul> <li>{@link JarUtils#resolveRelativePath(URL)}
-     * @throws IOException
-     *         <ul> <li>{@link JarUtils#toJarFile(URL)}
+     * @throws NullPointerException     If argument <code>null</code>
+     * @throws IllegalArgumentException <ul> <li>{@link JarUtils#resolveRelativePath(URL)}
+     * @throws IOException              <ul> <li>{@link JarUtils#toJarFile(URL)}
      * @since 1.0.0
      */
     @Nonnull
@@ -55,19 +50,13 @@ public class SimpleJarEntryScanner {
     }
 
     /**
-     * @param jarURL
-     *         {@link URL} of {@link JarFile} or {@link JarEntry}
-     * @param recursive
-     *         recursive
-     * @param jarEntryFilter
-     *         {@link JarEntryFilter}
+     * @param jarURL         {@link URL} of {@link JarFile} or {@link JarEntry}
+     * @param recursive      recursive
+     * @param jarEntryFilter {@link JarEntryFilter}
      * @return Read-only {@link Set}
-     * @throws NullPointerException
-     *         If argument <code>null</code>
-     * @throws IllegalArgumentException
-     *         {@link JarUtils#resolveJarAbsolutePath(URL)}
-     * @throws IOException
-     *         {@link JarUtils#toJarFile(URL)}
+     * @throws NullPointerException     If argument <code>null</code>
+     * @throws IllegalArgumentException {@link JarUtils#resolveJarAbsolutePath(URL)}
+     * @throws IOException              {@link JarUtils#toJarFile(URL)}
      * @see JarEntryFilter
      * @since 1.0.0
      */
