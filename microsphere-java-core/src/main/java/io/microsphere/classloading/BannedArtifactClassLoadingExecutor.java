@@ -90,7 +90,7 @@ public class BannedArtifactClassLoadingExecutor {
     private List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
         List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try (InputStream inputStream = configResource.openStream();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING));
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING))
         ) {
             while (true) {
                 String definition = reader.readLine();
