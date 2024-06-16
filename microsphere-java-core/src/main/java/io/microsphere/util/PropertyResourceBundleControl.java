@@ -74,11 +74,9 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
     /**
      * Creates a new instance of {@link PropertyResourceBundleControl} if absent.
      *
-     * @param encoding
-     *         Encoding
+     * @param encoding Encoding
      * @return Control
-     * @throws UnsupportedCharsetException
-     *         If <code>encoding</code> is not supported
+     * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
      * @version 1.0.0
      * @since 1.0.0
      */
