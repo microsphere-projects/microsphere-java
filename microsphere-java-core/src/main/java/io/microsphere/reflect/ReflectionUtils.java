@@ -434,11 +434,11 @@ public abstract class ReflectionUtils {
         genericTypes.add(sourceClass.getGenericSuperclass());
 
         Set<ParameterizedType> parameterizedTypes = genericTypes.stream().filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
-                .map(type -> ParameterizedType.class.cast(type))  // cast to ParameterizedType
+                .map(type -> (ParameterizedType) type)  // cast to ParameterizedType
                 .collect(Collectors.toSet());
 
         if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
-            genericTypes.stream().filter(type -> type instanceof Class).map(type -> Class.class.cast(type)).forEach(superClass -> {
+            genericTypes.stream().filter(type -> type instanceof Class).map(type -> (Class) type).forEach(superClass -> {
                 parameterizedTypes.addAll(findParameterizedTypes(superClass));
             });
         }
