@@ -16,17 +16,12 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.invoke.MethodHandleUtils;
-
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
-import static io.microsphere.invoke.MethodHandleUtils.lookup;
-import static java.lang.invoke.MethodType.methodType;
+import static io.microsphere.invoke.MethodHandleUtils.findStatic;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
@@ -40,16 +35,8 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
     private static final MethodHandle methodHandle;
 
     static {
-        // Lookup the method : java.net.URL#getURLStreamHandler(String)
-        MethodHandles.Lookup lookup = lookup(URL.class, MethodHandleUtils.LookupMode.ALL);
-        MethodType methodType = methodType(URLStreamHandler.class, String.class);
-        try {
-            methodHandle = lookup.findStatic(URL.class, "getURLStreamHandler", methodType);
-        } catch (NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        methodHandle = findStatic(URL.class, "getURLStreamHandler", String.class);
     }
-
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
