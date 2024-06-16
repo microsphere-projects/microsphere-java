@@ -16,6 +16,7 @@
  */
 package io.microsphere.invoke;
 
+import io.microsphere.lang.function.ThrowableBiFunction;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
@@ -29,14 +30,17 @@ import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.lang.function.ThrowableBiFunction.execute;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
+import static io.microsphere.reflect.MemberUtils.isPublic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static java.lang.invoke.MethodHandles.Lookup.PACKAGE;
 import static java.lang.invoke.MethodHandles.Lookup.PRIVATE;
 import static java.lang.invoke.MethodHandles.Lookup.PROTECTED;
 import static java.lang.invoke.MethodHandles.Lookup.PUBLIC;
+import static java.lang.invoke.MethodHandles.publicLookup;
 import static java.lang.invoke.MethodType.methodType;
 
 /**
@@ -186,16 +190,36 @@ public abstract class MethodHandleUtils extends BaseUtils {
     /**
      * The convenient method to find {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
      *
-     * @param lookupClass
-     * @param methodName
-     * @param parameterTypes
-     * @return
+     * @param lookupClass    the class to be looked up
+     * @param methodName     the target method name
+     * @param parameterTypes the types of target method parameters
+     * @return {@link MethodHandle}
      */
     public static MethodHandle findVirtual(Class<?> lookupClass, String methodName, Class... parameterTypes) {
+        return find(lookupClass, methodName, parameterTypes,
+                (lookup, methodType) -> lookup.findVirtual(lookupClass, methodName, methodType));
+    }
+
+    /**
+     * The convenient method to find {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+     *
+     * @param lookupClass    the class to be looked up
+     * @param methodName     the target method name
+     * @param parameterTypes the types of target method parameters
+     * @return {@link MethodHandle}
+     */
+    public static MethodHandle findStatic(Class<?> lookupClass, String methodName, Class... parameterTypes) {
+        return find(lookupClass, methodName, parameterTypes,
+                (lookup, methodType) -> lookup.findStatic(lookupClass, methodName, methodType));
+    }
+
+    protected static MethodHandle find(Class<?> lookupClass, String methodName, Class[] parameterTypes,
+                                       ThrowableBiFunction<MethodHandles.Lookup, MethodType, MethodHandle> function) {
         Method method = findMethod(lookupClass, methodName, parameterTypes);
-        MethodType methodType = methodType(method.getReturnType(), parameterTypes);
-        MethodHandles.Lookup lookup = lookup(lookupClass);
-        return execute(() -> lookup.findVirtual(lookupClass, methodName, methodType));
+        Class<?> returnType = method.getReturnType();
+        MethodType methodType = isEmpty(parameterTypes) ? methodType(returnType) : methodType(returnType, parameterTypes);
+        MethodHandles.Lookup lookup = isPublic(method) ? publicLookup() : lookup(lookupClass);
+        return execute(lookup, methodType, function);
     }
 
     private static MethodHandles.Lookup newLookup(LookupKey key) {
