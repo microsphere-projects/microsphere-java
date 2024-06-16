@@ -18,7 +18,6 @@ package io.microsphere.reflect;
 
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
-import io.microsphere.util.ClassUtils;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -380,13 +379,9 @@ public abstract class MethodUtils extends BaseUtils {
         }
 
         // Method comparison: The return type of overrider must be inherit from the overridden's
-        if (!overridden.getReturnType().isAssignableFrom(overrider.getReturnType())) {
-            return false;
-        }
+        return overridden.getReturnType().isAssignableFrom(overrider.getReturnType());
 
         // Throwable comparison: "throws" Throwable list will be ignored, trust the compiler verify
-
-        return true;
     }
 
     /**
