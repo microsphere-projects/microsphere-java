@@ -296,11 +296,10 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(getClass().getName());
-        sb.append("{defaultPort=").append(getDefaultPort());
-        sb.append(",protocol=").append(getProtocol());
-        sb.append('}');
-        return sb.toString();
+        String sb = getClass().getName() + "{defaultPort=" + getDefaultPort() +
+                ",protocol=" + getProtocol() +
+                '}';
+        return sb;
     }
 
     private static String resolveConventionProtocol(String packageName) {
