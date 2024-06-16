@@ -16,7 +16,9 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
+import io.microsphere.util.ClassUtils;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -28,6 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -101,6 +104,13 @@ public abstract class MethodUtils extends BaseUtils {
             result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
             result = 31 * result + Arrays.hashCode(parameterTypes);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            StringJoiner stringJoiner = new StringJoiner(",", "(", ") ");
+            ArrayUtils.forEach(parameterTypes, parameterType -> stringJoiner.add(getTypeName(parameterType)));
+            return getTypeName(declaredClass) + "#" + methodName + stringJoiner;
         }
 
         static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
