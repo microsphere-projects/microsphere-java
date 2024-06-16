@@ -317,11 +317,7 @@ public abstract class ClassUtils extends BaseUtils {
             return false;
         }
 
-        if (type.isLocalClass() || type.isMemberClass()) {
-            return false;
-        }
-
-        return true;
+        return !type.isLocalClass() && !type.isMemberClass();
     }
 
 
@@ -442,7 +438,7 @@ public abstract class ClassUtils extends BaseUtils {
         // SHOULD sit in a package, so a length check is worthwhile.
         if (name != null && name.length() <= 8) {
             // Could be a primitive - likely.
-            result = (Class<?>) PRIMITIVE_TYPE_NAME_MAP.get(name);
+            result = PRIMITIVE_TYPE_NAME_MAP.get(name);
         }
         return result;
     }
