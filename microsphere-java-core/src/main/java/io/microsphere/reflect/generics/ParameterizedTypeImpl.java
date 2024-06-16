@@ -161,12 +161,8 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             Type thatRawType = that.getRawType();
 
             if (false) { // Debugging
-                boolean ownerEquality = (ownerType == null ?
-                        thatOwner == null :
-                        ownerType.equals(thatOwner));
-                boolean rawEquality = (rawType == null ?
-                        thatRawType == null :
-                        rawType.equals(thatRawType));
+                boolean ownerEquality = (Objects.equals(ownerType, thatOwner));
+                boolean rawEquality = (Objects.equals(rawType, thatRawType));
 
                 boolean typeArgEquality = Arrays.equals(actualTypeArguments, // avoid clone
                         that.getActualTypeArguments());
@@ -202,7 +198,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             if (ownerType instanceof Class)
                 sb.append(((Class) ownerType).getName());
             else
-                sb.append(ownerType.toString());
+                sb.append(ownerType);
 
             sb.append("$");
 
