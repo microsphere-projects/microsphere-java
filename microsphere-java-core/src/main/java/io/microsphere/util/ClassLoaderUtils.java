@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
@@ -63,7 +64,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = initLoadedClassesCache();
 
-    private static URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
+    private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
 
     /**
      * Initializes {@link Method} for {@link ClassLoader#findLoadedClass(String)}
@@ -620,10 +621,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         URL[] classPathURLs = urlClassPathHandle.getURLs(classLoader);
         int length = classPathURLs.length;
 
-        for (int i = 0; i < length; i++) {
-            URL classPathURL = classPathURLs[i];
-            allClassPathURLs.add(classPathURL);
-        }
+        allClassPathURLs.addAll(Arrays.asList(classPathURLs).subList(0, length));
 
         ClassLoader parentClassLoader = classLoader.getParent();
         if (parentClassLoader != null) {
@@ -636,7 +634,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         if (!(classLoader instanceof URLClassLoader)) {
             return false;
         }
-        return urlClassPathHandle.removeURL((URLClassLoader) classLoader, url);
+        return urlClassPathHandle.removeURL(classLoader, url);
     }
 
     public static URLClassLoader findURLClassLoader(ClassLoader classLoader) {
