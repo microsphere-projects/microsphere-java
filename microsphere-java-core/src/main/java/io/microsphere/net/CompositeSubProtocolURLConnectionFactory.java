@@ -27,7 +27,6 @@ import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.toList;
-import static java.util.Collections.emptyList;
 
 /**
  * The composite {@link SubProtocolURLConnectionFactory} class supports modified dynamically at runtime.
