@@ -23,9 +23,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +31,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
@@ -45,12 +42,12 @@ import static io.microsphere.reflect.AccessibleObjectUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
-import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
 
 /**
  * The Java Reflection {@link Method} Utility class
@@ -80,7 +77,7 @@ public abstract class MethodUtils extends BaseUtils {
         MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
             this.declaredClass = declaredClass;
             this.methodName = methodName;
-            this.parameterTypes = parameterTypes;
+            this.parameterTypes = parameterTypes == null ? EMPTY_CLASS_ARRAY : parameterTypes;
         }
 
         @Override
