@@ -75,10 +75,6 @@ public abstract class ProxyUtils {
 
         List<Method> methods = getAllDeclaredMethods(type, predicate);
 
-        if (!methods.isEmpty()) {
-            return false;
-        }
-
-        return true;
+        return methods.isEmpty();
     }
 }
