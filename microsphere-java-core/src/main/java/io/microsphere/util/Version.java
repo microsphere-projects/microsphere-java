@@ -314,15 +314,14 @@ public class Version implements Comparable<Version> {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Version{");
-        sb.append("major=").append(major);
-        sb.append(", minor=").append(minor);
-        sb.append(", patch=").append(patch);
-        sb.append('}');
-        return sb.toString();
+        String sb = "Version{" + "major=" + major +
+                ", minor=" + minor +
+                ", patch=" + patch +
+                '}';
+        return sb;
     }
 
-    public static enum Operator implements BiPredicate<Version, Version> {
+    public enum Operator implements BiPredicate<Version, Version> {
 
         /**
          * The Operator : "Equal to"
