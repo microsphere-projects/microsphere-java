@@ -17,7 +17,7 @@
 package io.microsphere.convert;
 
 import io.microsphere.io.FastByteArrayInputStream;
-import org.apache.commons.io.IOUtils;
+import io.microsphere.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
