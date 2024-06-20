@@ -16,7 +16,7 @@
  */
 package io.microsphere.net;
 
-import org.apache.commons.io.IOUtils;
+import io.microsphere.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sun.net.www.protocol.file.Handler;
