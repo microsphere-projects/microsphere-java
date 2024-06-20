@@ -98,7 +98,7 @@ public class JarUtilsTest {
 
     @Test
     public void testExtractWithURL() throws IOException {
-        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, "org.apache.commons.lang3");
+        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, "io.microsphere");
         JarUtils.extract(resourceURL, targetDirectory, new JarEntryFilter() {
             @Override
             public boolean accept(JarEntry filteredObject) {
