@@ -1,7 +1,6 @@
 package io.microsphere.misc;
 
 import io.microsphere.reflect.ReflectionUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
@@ -10,6 +9,8 @@ import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
 import static io.microsphere.reflect.ReflectionUtils.assertFieldMatchType;
 
@@ -313,7 +314,7 @@ public abstract class UnsafeUtils {
      * @return the <code>long<code> value
      */
     public static long getLongFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         long offset = longArrayIndexOffset(index);
         return unsafe.getLongVolatile(array, offset);
     }
@@ -327,7 +328,7 @@ public abstract class UnsafeUtils {
      * @return the <code>int<code> value
      */
     public static int getIntFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = intArrayIndexOffset(index);
         return unsafe.getIntVolatile(array, offset);
@@ -342,7 +343,7 @@ public abstract class UnsafeUtils {
      * @return the <code>short<code> value
      */
     public static short getShortFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = shortArrayIndexOffset(index);
         return unsafe.getShortVolatile(array, offset);
@@ -357,7 +358,7 @@ public abstract class UnsafeUtils {
      * @return the <code>byte<code> value
      */
     public static byte getByteFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = byteArrayIndexOffset(index);
         return unsafe.getByteVolatile(array, offset);
@@ -372,7 +373,7 @@ public abstract class UnsafeUtils {
      * @return the <code>boolean<code> value
      */
     public static boolean getBooleanFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = booleanArrayIndexOffset(index);
         return unsafe.getBooleanVolatile(array, offset);
@@ -387,7 +388,7 @@ public abstract class UnsafeUtils {
      * @return the <code>double<code> value
      */
     public static double getDoubleFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = doubleArrayIndexOffset(index);
         return unsafe.getDoubleVolatile(array, offset);
@@ -402,7 +403,7 @@ public abstract class UnsafeUtils {
      * @return the target index
      */
     public static float getFloatFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = floatArrayIndexOffset(index);
         return unsafe.getFloatVolatile(array, offset);
@@ -419,7 +420,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static char getCharFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = charArrayIndexOffset(index);
         return unsafe.getCharVolatile(array, offset);
@@ -436,7 +437,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static Object getObjectFromArrayVolatile(Object object, String fieldName, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
         return unsafe.getObjectVolatile(array, offset);
@@ -729,7 +730,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putLongIntoArrayVolatile(Object object, String fieldName, int index, long value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         ReflectionUtils.assertArrayIndex(array, index);
         long offset = longArrayIndexOffset(index);
         unsafe.putLongVolatile(array, offset, value);
@@ -746,7 +747,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putOrderedLongIntoArray(Object object, String fieldName, int index, long value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = longArrayIndexOffset(index);
         unsafe.putOrderedLong(array, offset, value);
@@ -763,7 +764,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putIntIntoArrayVolatile(Object object, String fieldName, int index, int value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = intArrayIndexOffset(index);
         unsafe.putIntVolatile(array, offset, value);
@@ -780,7 +781,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putOrderedIntIntoArray(Object object, String fieldName, int index, int value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = intArrayIndexOffset(index);
         unsafe.putOrderedInt(array, offset, value);
@@ -797,7 +798,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putShortIntoArrayVolatile(Object object, String fieldName, int index, short value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = shortArrayIndexOffset(index);
         unsafe.putShortVolatile(array, offset, value);
@@ -814,7 +815,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putByteIntoArrayVolatile(Object object, String fieldName, int index, byte value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = byteArrayIndexOffset(index);
         unsafe.putByteVolatile(array, offset, value);
@@ -831,7 +832,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putBooleanIntoArrayVolatile(Object object, String fieldName, int index, boolean value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = booleanArrayIndexOffset(index);
         unsafe.putBooleanVolatile(array, offset, value);
@@ -848,7 +849,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putDoubleIntoArrayVolatile(Object object, String fieldName, int index, double value) throws IllegalArgumentException, ArrayIndexOutOfBoundsException, IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = doubleArrayIndexOffset(index);
         unsafe.putDoubleVolatile(array, offset, value);
@@ -865,7 +866,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putFloatIntoArrayVolatile(Object object, String fieldName, int index, float value) throws IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = floatArrayIndexOffset(index);
         unsafe.putFloatVolatile(array, offset, value);
@@ -882,7 +883,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putCharIntoArrayVolatile(Object object, String fieldName, int index, char value) throws IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = charArrayIndexOffset(index);
         unsafe.putCharVolatile(array, offset, value);
@@ -899,7 +900,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putObjectIntoArrayVolatile(Object object, String fieldName, int index, Object value) throws IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
         unsafe.putObjectVolatile(array, offset, value);
@@ -917,7 +918,7 @@ public abstract class UnsafeUtils {
      * @throws ArrayIndexOutOfBoundsException If <code>index<code> is less than 0, or greater than or equal to the Array length
      */
     public static void putOrderedObjectIntoArray(Object object, String fieldName, int index, Object value) throws IllegalAccessException {
-        Object array = FieldUtils.readDeclaredField(object, fieldName, true);
+        Object array = getFieldValue(object, fieldName);
         assertArrayIndex(array, index);
         long offset = objectArrayIndexOffset(index);
         unsafe.putOrderedObject(array, offset, value);
@@ -1154,7 +1155,7 @@ public abstract class UnsafeUtils {
         if (offsetFromCache != null) {
             return offsetFromCache;
         }
-        Field field = FieldUtils.getField(type, fieldName, true);
+        Field field = findField(type, fieldName);
         long offset = unsafe.objectFieldOffset(field);
         putOffsetFromCache(type, fieldName, offset);
         return offset;
@@ -1168,7 +1169,7 @@ public abstract class UnsafeUtils {
      * @return offset
      */
     public static long getStaticFieldOffset(Class<?> type, String fieldName) {
-        Field field = FieldUtils.getField(type, fieldName, true);
+        Field field = findField(type, fieldName);
         return unsafe.staticFieldOffset(field);
     }
 }
