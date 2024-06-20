@@ -5,6 +5,7 @@ package io.microsphere.io;
 
 import java.io.File;
 
+import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.util.StringUtils.replace;
@@ -35,5 +36,19 @@ public abstract class FileUtils {
             return null;
         }
         return normalizePath(replace(targetFilePath, parentDirectoryPath, FILE_SEPARATOR));
+    }
+
+    /**
+     * Get File Extension
+     *
+     * @param fileName the name of {@link File}
+     * @return the file extension if found
+     */
+    public static String getFileExtension(String fileName) {
+        if (fileName == null) {
+            return null;
+        }
+        int index = fileName.lastIndexOf(FILE_EXTENSION_CHAR);
+        return fileName.substring(index);
     }
 }
