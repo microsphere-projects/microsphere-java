@@ -1,13 +1,14 @@
 package io.microsphere.management;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+
+import static io.microsphere.util.StringUtils.substringBefore;
+import static java.lang.Integer.parseInt;
 
 /**
  * Management Utility class
@@ -98,10 +99,8 @@ public abstract class ManagementUtils {
         } else {
             // no guarantee
             String name = runtimeMXBean.getName();
-            String processIdValue = StringUtils.substringBefore(name, "@");
-            if (NumberUtils.isNumber(processIdValue)) {
-                processId = Integer.parseInt(processIdValue);
-            }
+            String processIdValue = substringBefore(name, "@");
+            processId = parseInt(processIdValue);
         }
         return processId;
     }
