@@ -22,6 +22,8 @@ import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.EAR;
 import static io.microsphere.constants.FileConstants.EAR_EXTENSION;
+import static io.microsphere.constants.FileConstants.EXTENSION_SEPARATOR;
+import static io.microsphere.constants.FileConstants.EXTENSION_SEPARATOR_CHAR;
 import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.FileConstants.WAR;
@@ -45,6 +47,9 @@ public class FileConstantsTest {
         assertEquals("war", WAR);
         assertEquals("ear", EAR);
         assertEquals("class", CLASS);
+
+        assertEquals('.', EXTENSION_SEPARATOR_CHAR);
+        assertEquals(".", EXTENSION_SEPARATOR);
 
         assertEquals(".zip", ZIP_EXTENSION);
         assertEquals(".jar", JAR_EXTENSION);
