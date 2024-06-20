@@ -3,8 +3,6 @@
  */
 package io.microsphere.util;
 
-import org.apache.commons.lang3.SystemUtils;
-
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
