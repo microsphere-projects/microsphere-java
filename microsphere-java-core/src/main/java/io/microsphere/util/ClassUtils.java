@@ -45,6 +45,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.collection.SetUtils.asSet;
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.lang.function.Streams.filterAll;
@@ -664,7 +665,7 @@ public abstract class ClassUtils extends BaseUtils {
     protected static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
         Set<String> classNames = new LinkedHashSet();
         SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS_EXTENSION));
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS));
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
