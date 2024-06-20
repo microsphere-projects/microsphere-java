@@ -18,6 +18,7 @@ package io.microsphere.io.filter;
 
 import io.microsphere.filter.Filter;
 
+import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 
@@ -31,4 +32,12 @@ import java.io.FilenameFilter;
  * @since 1.0.0
  */
 public interface IOFileFilter extends FileFilter, FilenameFilter {
+
+    @Override
+    boolean accept(File pathname);
+
+    @Override
+    default boolean accept(File dir, String name) {
+        return accept(new File(dir, name));
+    }
 }
