@@ -3,11 +3,11 @@
  */
 package io.microsphere.io;
 
-import io.microsphere.net.URLUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-
 import java.io.File;
+
+import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
+import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.util.StringUtils.replace;
 
 /**
  * {@link File} Utility
@@ -34,6 +34,6 @@ public abstract class FileUtils {
         if (!targetFilePath.contains(parentDirectoryPath)) {
             return null;
         }
-        return URLUtils.normalizePath(StringUtils.replace(targetFilePath, parentDirectoryPath, SystemUtils.FILE_SEPARATOR));
+        return normalizePath(replace(targetFilePath, parentDirectoryPath, FILE_SEPARATOR));
     }
 }
