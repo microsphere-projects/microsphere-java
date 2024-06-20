@@ -52,7 +52,7 @@ public abstract class FileUtils {
             return null;
         }
         int index = fileName.lastIndexOf(FILE_EXTENSION_CHAR);
-        return fileName.substring(index);
+        return index > -1 ? fileName.substring(index + 1) : null;
     }
 
     /**
