@@ -26,6 +26,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -33,6 +35,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Integer.getInteger;
+import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -77,9 +80,23 @@ public abstract class IOUtils extends BaseUtils {
      * @throws IOException in case of I/O errors
      */
     public static String toString(InputStream in, String encoding) throws IOException {
-        byte[] bytes = toByteArray(in);
         String charset = isBlank(encoding) ? FILE_ENCODING : encoding;
-        return EMPTY_BYTE_ARRAY.equals(bytes) ? null : new String(bytes, charset);
+        return toString(in, forName(charset));
+    }
+
+    /**
+     * Copy the contents of the given InputStream into a new {@link String}.
+     * <p>Leaves the stream open when done.
+     *
+     * @param in      the stream to copy from (may be {@code null} or empty)
+     * @param charset the charset to use, if it's <code>null</code>, take the {@link SystemUtils#FILE_ENCODING} as default
+     * @return the new byte array that has been copied to (possibly empty)
+     * @throws IOException in case of I/O errors
+     */
+    public static String toString(InputStream in, Charset charset) throws IOException {
+        byte[] bytes = toByteArray(in);
+        Charset actualCharset = charset == null ? StandardCharsets.UTF_8 : charset;
+        return EMPTY_BYTE_ARRAY.equals(bytes) ? null : new String(bytes, actualCharset);
     }
 
     /**
