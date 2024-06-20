@@ -40,9 +40,9 @@ import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
 import static io.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.registerURLStreamHandler;
+import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.split;
 import static java.net.Proxy.NO_PROXY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,
