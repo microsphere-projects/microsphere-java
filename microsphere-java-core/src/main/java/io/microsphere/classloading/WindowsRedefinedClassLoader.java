@@ -1,7 +1,6 @@
 package io.microsphere.classloading;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import io.microsphere.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +22,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import static io.microsphere.collection.MapUtils.isEmpty;
+import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
+import static io.microsphere.io.IOUtils.toByteArray;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.StringUtils.split;
 
 /**
  * The customized ClassLoader under Windows operating system to solve the case-insensitive
@@ -77,7 +80,7 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
                 logger.debug("Class[name: {}] file [name: {}] found in Package directory [path: {}], about to execute ClassLoader.defineClass",
                         className, classFileName, packageDirectory.getAbsolutePath());
                 try (FileInputStream inputStream = new FileInputStream(classFile)) {
-                    byte[] byteCodes = IOUtils.toByteArray(inputStream);
+                    byte[] byteCodes = toByteArray(inputStream);
                     result = super.defineClass(className, byteCodes, 0, byteCodes.length);
                 } catch (IOException e) {
                     logger.error("Class[name: {}] file [path: {}] cannot be read!", className, classFile.getAbsolutePath());
@@ -154,12 +157,12 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
                 URL resource = resources.nextElement();
                 try (InputStream inputStream = resource.openStream()) {
                     String configContent = IOUtils.toString(inputStream, charset);
-                    String[] classNames = StringUtils.split(configContent, System.lineSeparator());
+                    String[] classNames = split(configContent, LINE_SEPARATOR);
                     redefinedClassNames.addAll(Arrays.asList(classNames));
                 }
             }
         } catch (IOException e) {
-            throw new IllegalStateException(String.format("Windows redefinition class manifest file] [- S] read failed!", resourceName), e);
+            throw new IllegalStateException(format("Windows redefinition class manifest file] [- {}] read failed!", resourceName), e);
         }
         return redefinedClassNames;
     }
