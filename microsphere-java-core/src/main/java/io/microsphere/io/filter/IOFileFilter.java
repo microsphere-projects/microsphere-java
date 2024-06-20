@@ -34,7 +34,7 @@ import java.io.FilenameFilter;
 public interface IOFileFilter extends FileFilter, FilenameFilter {
 
     @Override
-    boolean accept(File pathname);
+    boolean accept(File file);
 
     @Override
     default boolean accept(File dir, String name) {
