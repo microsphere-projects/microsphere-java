@@ -31,6 +31,7 @@ import java.io.FilenameFilter;
  * @see Filter
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface IOFileFilter extends FileFilter, FilenameFilter {
 
     @Override
