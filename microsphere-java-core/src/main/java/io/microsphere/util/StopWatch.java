@@ -16,8 +16,6 @@
  */
 package io.microsphere.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
