@@ -17,7 +17,7 @@
 package io.microsphere.convert;
 
 
-import static org.apache.commons.lang3.StringUtils.length;
+import static io.microsphere.util.StringUtils.length;
 
 /**
  * The class to convert {@link String} to {@link Character}
