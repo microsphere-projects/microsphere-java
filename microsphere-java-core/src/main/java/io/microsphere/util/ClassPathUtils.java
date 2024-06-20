@@ -13,10 +13,10 @@ import java.security.ProtectionDomain;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.StringUtils.split;
-import static io.microsphere.util.SystemUtils.PATH_SEPARATOR;
 import static java.util.Collections.emptySet;
 
 /**
