@@ -41,37 +41,37 @@ public interface FileConstants {
     String CLASS = "class";
 
     /**
-     * File extension separator character
+     * File extension character
      */
-    char EXTENSION_SEPARATOR_CHAR = DOT_CHAR;
+    char FILE_EXTENSION_CHAR = DOT_CHAR;
 
     /**
      * File extension separator
      */
-    String EXTENSION_SEPARATOR = DOT;
+    String FILE_EXTENSION = DOT;
 
     /**
      * Zip File extension : ".zip"
      */
-    String ZIP_EXTENSION = EXTENSION_SEPARATOR + ZIP;
+    String ZIP_EXTENSION = FILE_EXTENSION + ZIP;
 
     /**
      * Jar File extension : ".jar"
      */
-    String JAR_EXTENSION = EXTENSION_SEPARATOR + JAR;
+    String JAR_EXTENSION = FILE_EXTENSION + JAR;
 
     /**
      * War File extension : ".jar"
      */
-    String WAR_EXTENSION = EXTENSION_SEPARATOR + WAR;
+    String WAR_EXTENSION = FILE_EXTENSION + WAR;
 
     /**
      * Ear File extension : ".jar"
      */
-    String EAR_EXTENSION = EXTENSION_SEPARATOR + EAR;
+    String EAR_EXTENSION = FILE_EXTENSION + EAR;
 
     /**
      * Class File extension : ".class"
      */
-    String CLASS_EXTENSION = EXTENSION_SEPARATOR + CLASS;
+    String CLASS_EXTENSION = FILE_EXTENSION + CLASS;
 }
