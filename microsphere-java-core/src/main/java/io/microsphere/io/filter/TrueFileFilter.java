@@ -36,7 +36,7 @@ public class TrueFileFilter implements IOFileFilter {
     }
 
     @Override
-    public boolean accept(File pathname) {
+    public boolean accept(File file) {
         return true;
     }
 
