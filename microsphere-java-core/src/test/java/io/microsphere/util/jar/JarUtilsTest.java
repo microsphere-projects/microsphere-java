@@ -98,7 +98,7 @@ public class JarUtilsTest {
 
     @Test
     public void testExtractWithURL() throws IOException {
-        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, "io.microsphere");
+        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, "javax.annotation");
         JarUtils.extract(resourceURL, targetDirectory, new JarEntryFilter() {
             @Override
             public boolean accept(JarEntry filteredObject) {
