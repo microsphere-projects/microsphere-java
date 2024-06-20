@@ -14,25 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.convert;
+package io.microsphere.io.filter;
 
-import static io.microsphere.util.StringUtils.isNotEmpty;
-import static java.lang.Float.valueOf;
+import io.microsphere.filter.Filter;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 
 /**
- * The class to convert {@link String} to {@link Float}
+ * An interface which brings the {@link FileFilter} and {@link FilenameFilter}
+ * interfaces together.
  *
+ * @see FileFilter
+ * @see FilenameFilter
+ * @see Filter
  * @since 1.0.0
  */
-public class StringToFloatConverter implements StringConverter<Float> {
+@FunctionalInterface
+public interface IOFileFilter extends FileFilter, FilenameFilter {
 
     @Override
-    public Float convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
-    }
+    boolean accept(File file);
 
     @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 4;
+    default boolean accept(File dir, String name) {
+        return accept(new File(dir, name));
     }
 }

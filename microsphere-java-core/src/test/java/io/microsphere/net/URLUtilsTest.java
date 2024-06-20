@@ -4,8 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.util.ClassLoaderUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
+import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +27,8 @@ import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
+import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -103,7 +104,7 @@ public class URLUtilsTest {
         String relativePath = resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
 
-        File rtJarFile = new File(SystemUtils.JAVA_HOME, "lib/rt.jar");
+        File rtJarFile = new File(JAVA_HOME, "lib/rt.jar");
         resourceURL = rtJarFile.toURI().toURL();
         relativePath = resolveArchiveEntryPath(resourceURL);
         assertNull(relativePath);
@@ -184,7 +185,7 @@ public class URLUtilsTest {
         assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
         String externalForm = null;
-        externalForm = StringUtils.substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
         resourceURL = new URL(externalForm);
         assertTrue(URLUtils.isDirectoryURL(resourceURL));
 
@@ -194,7 +195,7 @@ public class URLUtilsTest {
         resourceURL = ClassLoaderUtils.getClassResource(classLoader, getClass());
         assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
-        externalForm = StringUtils.substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
         resourceURL = new URL(externalForm);
         assertTrue(URLUtils.isDirectoryURL(resourceURL));
     }

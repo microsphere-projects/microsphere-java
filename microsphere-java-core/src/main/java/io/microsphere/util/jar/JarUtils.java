@@ -24,13 +24,13 @@ import static io.microsphere.collection.ListUtils.toList;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
+import static io.microsphere.io.IOUtils.close;
+import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static java.util.Collections.unmodifiableList;
-import static org.apache.commons.io.IOUtils.closeQuietly;
-import static org.apache.commons.io.IOUtils.copy;
 
 /**
  * Jar Utility class
@@ -242,8 +242,8 @@ public class JarUtils {
                             copy(inputStream, outputStream);
                         }
                     } finally {
-                        closeQuietly(outputStream);
-                        closeQuietly(inputStream);
+                        close(outputStream);
+                        close(inputStream);
                     }
                 }
             }

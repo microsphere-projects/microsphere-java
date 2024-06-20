@@ -7,7 +7,6 @@ import io.microsphere.filter.FilterUtils;
 import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.util.ClassLoaderUtils;
 import io.microsphere.util.ClassUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +25,7 @@ import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
+import static io.microsphere.util.StringUtils.substringBefore;
 
 /**
  * Simple {@link Class} Scanner
@@ -165,7 +165,7 @@ public class SimpleClassScanner {
 
     private URL resolveClassPathURL(URL resourceURL, String packageResourceName) {
         String resource = resourceURL.toExternalForm();
-        String classPath = StringUtils.substringBefore(resource, packageResourceName);
+        String classPath = substringBefore(resource, packageResourceName);
         URL classPathURL = null;
         try {
             classPathURL = new URL(classPath);

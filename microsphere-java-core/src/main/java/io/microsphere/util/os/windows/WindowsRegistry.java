@@ -4,8 +4,6 @@
 package io.microsphere.util.os.windows;
 
 import io.microsphere.constants.PathConstants;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,6 +11,11 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
+
+import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static io.microsphere.util.SystemUtils.JAVA_SPECIFICATION_VERSION;
 
 /**
  * {@link WindowsRegistry}
@@ -108,7 +111,7 @@ public final class WindowsRegistry {
             WindowsRegDeleteValue = findMethod("WindowsRegDeleteValue", int.class, byte[].class);
             WindowsRegQueryInfoKey = findMethod("WindowsRegQueryInfoKey", int.class);
         } catch (Throwable e) {
-            String message = String.format("Current JVM ", SystemUtils.JAVA_SPECIFICATION_VERSION);
+            String message = String.format("Current JVM ", JAVA_SPECIFICATION_VERSION);
             throw new InstantiationError(message);
         }
     }
@@ -612,7 +615,7 @@ public final class WindowsRegistry {
      */
     @Nonnull
     public static WindowsRegistry currentUser() throws UnsupportedOperationException {
-        if (!SystemUtils.IS_OS_WINDOWS) {
+        if (!IS_OS_WINDOWS) {
             String message = "Non Windows System";
             throw new UnsupportedOperationException(message);
         }
@@ -626,10 +629,10 @@ public final class WindowsRegistry {
      * @see Preferences#absolutePath()
      */
     private byte[] windowsAbsolutePath(String relativePath) {
-        String resolvedPath = StringUtils.replace(relativePath, PathConstants.SLASH, PathConstants.BACK_SLASH);
-        resolvedPath = StringUtils.replace(relativePath, PathConstants.BACK_SLASH + PathConstants.BACK_SLASH, PathConstants.BACK_SLASH);
+        String resolvedPath = replace(relativePath, PathConstants.SLASH, PathConstants.BACK_SLASH);
+        resolvedPath = replace(relativePath, PathConstants.BACK_SLASH + PathConstants.BACK_SLASH, PathConstants.BACK_SLASH);
         if (resolvedPath.startsWith(PathConstants.BACK_SLASH)) {
-            resolvedPath = StringUtils.substringAfter(resolvedPath, PathConstants.BACK_SLASH);
+            resolvedPath = substringAfter(resolvedPath, PathConstants.BACK_SLASH);
         }
         byte[] relativePathHandle = stringToByteArray(resolvedPath);
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();

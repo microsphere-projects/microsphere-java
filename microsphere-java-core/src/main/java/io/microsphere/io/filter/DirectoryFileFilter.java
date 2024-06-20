@@ -14,25 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.convert;
+package io.microsphere.io.filter;
 
-import static io.microsphere.util.StringUtils.isNotEmpty;
-import static java.lang.Float.valueOf;
+import java.io.File;
 
 /**
- * The class to convert {@link String} to {@link Float}
+ * This filter accepts Files that are directories.
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see IOFileFilter
  * @since 1.0.0
  */
-public class StringToFloatConverter implements StringConverter<Float> {
+public class DirectoryFileFilter implements IOFileFilter {
 
-    @Override
-    public Float convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
+    /**
+     * Singleton instance of {@link DirectoryFileFilter}.
+     */
+    public static final DirectoryFileFilter INSTANCE = new DirectoryFileFilter();
+
+
+    protected DirectoryFileFilter() {
     }
 
     @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 4;
+    public boolean accept(File file) {
+        return file.isDirectory();
     }
 }

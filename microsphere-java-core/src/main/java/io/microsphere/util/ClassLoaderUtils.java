@@ -11,9 +11,6 @@ import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +39,7 @@ import java.util.jar.JarFile;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
+import static io.microsphere.util.ExceptionUtils.getStackTrace;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 
@@ -99,7 +97,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     private static UnsupportedOperationException jvmUnsupportedOperationException(Throwable throwable) {
-        String stackTrace = ExceptionUtils.getStackTrace(throwable);
+        String stackTrace = getStackTrace(throwable);
         String message = String.format("Current JVM[ Implementation : %s , Version : %s ] does not supported ! " + "Stack Trace : %s", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
         throw new UnsupportedOperationException(message);
     }

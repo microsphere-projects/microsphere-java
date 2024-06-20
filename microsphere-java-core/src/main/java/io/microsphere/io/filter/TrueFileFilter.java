@@ -14,25 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.convert;
+package io.microsphere.io.filter;
 
-import static io.microsphere.util.StringUtils.isNotEmpty;
-import static java.lang.Float.valueOf;
+import java.io.File;
 
 /**
- * The class to convert {@link String} to {@link Float}
+ * {@link IOFileFilter} implementation always returns <code>true</code>
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see IOFileFilter
  * @since 1.0.0
  */
-public class StringToFloatConverter implements StringConverter<Float> {
+public class TrueFileFilter implements IOFileFilter {
 
-    @Override
-    public Float convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
+    /**
+     * Singleton instance
+     */
+    public static final TrueFileFilter INSTANCE = new TrueFileFilter();
+
+    protected TrueFileFilter() {
     }
 
     @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 4;
+    public boolean accept(File file) {
+        return true;
+    }
+
+    @Override
+    public boolean accept(File dir, String name) {
+        return true;
     }
 }
