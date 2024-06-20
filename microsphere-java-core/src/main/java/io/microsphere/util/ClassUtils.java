@@ -10,11 +10,9 @@ import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.FileUtils;
+import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.io.scanner.SimpleJarEntryScanner;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -47,7 +45,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.collection.SetUtils.asSet;
 import static io.microsphere.collection.SetUtils.of;
-import static io.microsphere.constants.FileConstants.CLASS;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -575,7 +573,7 @@ public abstract class ClassUtils extends BaseUtils {
     protected static Set<String> findClassNamesInArchiveDirectory(File classesDirectory, boolean recursive) {
         Set<String> classNames = new LinkedHashSet<>();
         SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(CLASS));
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS_EXTENSION));
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
@@ -666,7 +664,7 @@ public abstract class ClassUtils extends BaseUtils {
     protected static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
         Set<String> classNames = new LinkedHashSet();
         SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(FileConstants.CLASS_EXTENSION));
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS_EXTENSION));
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
@@ -714,7 +712,7 @@ public abstract class ClassUtils extends BaseUtils {
      */
     public static String resolveClassName(String resourceName) {
         String className = StringUtils.replace(resourceName, PathConstants.SLASH, Constants.DOT);
-        className = StringUtils.substringBefore(className, FileConstants.CLASS_EXTENSION);
+        className = StringUtils.substringBefore(className, CLASS_EXTENSION);
         while (StringUtils.startsWith(className, Constants.DOT)) {
             className = StringUtils.substringAfter(className, Constants.DOT);
         }
