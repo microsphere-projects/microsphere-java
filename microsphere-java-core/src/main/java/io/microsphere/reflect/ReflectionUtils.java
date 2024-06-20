@@ -1,6 +1,8 @@
 package io.microsphere.reflect;
 
 
+import io.microsphere.util.ArrayUtils;
+
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -23,12 +25,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
-import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 
 /**
  * Reflection Utility class , generic methods are defined from {@link FieldUtils} , {@link MethodUtils} , {@link
