@@ -71,7 +71,7 @@ public class LoggerFactoryTest {
     }
 
     private void assertLevel(Logger logger) {
-        assertFalse(logger.isTraceEnabled());
+        assertTrue(logger.isTraceEnabled());
         assertTrue(logger.isDebugEnabled());
         assertTrue(logger.isInfoEnabled());
         assertTrue(logger.isWarnEnabled());
