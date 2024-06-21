@@ -34,7 +34,6 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 public abstract class LoggerFactory {
 
 
-
     private static final ClassLoader classLoader = getClassLoader(LoggerFactory.class);
 
     @Nullable
@@ -60,7 +59,7 @@ public abstract class LoggerFactory {
      * @return non-null
      */
     @Nonnull
-    static Logger getLogger(Class<?> type) {
+    public static Logger getLogger(Class<?> type) {
         return getLogger(getClassName(type));
     }
 
@@ -71,7 +70,7 @@ public abstract class LoggerFactory {
      * @return {@link Logger}
      */
     @Nonnull
-    static Logger getLogger(String name) {
+    public static Logger getLogger(String name) {
         if (factory == null) {
             return new NoOpLogger(name);
         }
