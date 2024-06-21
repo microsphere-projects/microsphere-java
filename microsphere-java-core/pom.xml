@@ -28,9 +28,17 @@
         </dependency>
 
         <!-- Third-Party Dependencies -->
+        <!-- SLF4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Apache Commons Logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
             <optional>true</optional>
         </dependency>
 
