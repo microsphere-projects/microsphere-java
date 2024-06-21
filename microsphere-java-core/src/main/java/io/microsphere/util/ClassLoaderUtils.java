@@ -11,8 +11,6 @@ import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,8 +51,6 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
  * @since 1.0.0
  */
 public abstract class ClassLoaderUtils extends BaseUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(ClassLoaderUtils.class);
 
     protected static final ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
 

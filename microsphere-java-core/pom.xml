@@ -20,13 +20,6 @@
 
     <dependencies>
 
-        <!-- Java Common Annotations -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
-            <optional>true</optional>
-        </dependency>
-
         <!-- Java API Dependencies -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -35,9 +28,17 @@
         </dependency>
 
         <!-- Third-Party Dependencies -->
+        <!-- SLF4j -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- Apache Commons Logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
             <optional>true</optional>
         </dependency>
 
@@ -67,6 +68,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Java Common Annotations -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>

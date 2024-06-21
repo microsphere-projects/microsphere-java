@@ -27,6 +27,7 @@
         <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
         <apache.commons.io.version>2.4</apache.commons.io.version>
         <apache.commons.collections.version>3.2.2</apache.commons.collections.version>
+        <apache.commons.logging.version>1.3.2</apache.commons.logging.version>
 
         <spring.version>5.3.31</spring.version>
 
@@ -90,6 +91,12 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${apache.commons.io.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${apache.commons.logging.version}</version>
             </dependency>
 
             <!-- JDBC -->

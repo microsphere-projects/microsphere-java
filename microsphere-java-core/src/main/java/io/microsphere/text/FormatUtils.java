@@ -1,5 +1,7 @@
 package io.microsphere.text;
 
+import static io.microsphere.util.StringUtils.isEmpty;
+
 /**
  * The utility class of text format
  *
@@ -15,6 +17,9 @@ public abstract class FormatUtils {
     }
 
     public static String formatWithPlaceholder(String pattern, String placeholder, Object... args) {
+        if (isEmpty(pattern)) {
+            return pattern;
+        }
         int offset = placeholder.length();
         int argsLength = args == null ? 0 : args.length;
         if (argsLength == 0) {
