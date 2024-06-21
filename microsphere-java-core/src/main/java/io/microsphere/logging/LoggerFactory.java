@@ -42,16 +42,20 @@ public abstract class LoggerFactory {
 
     @Nullable
     private static LoggerFactory loadFactory() {
+        List<LoggerFactory> availableFactories = loadAvailableFactories();
+        return availableFactories.isEmpty() ? null : availableFactories.get(0);
+    }
+
+    static List<LoggerFactory> loadAvailableFactories() {
+        List<LoggerFactory> factories = loadFactories();
+        factories.removeIf(factory -> !factory.isAvailable());
+        return factories;
+    }
+
+    static List<LoggerFactory> loadFactories() {
         List<LoggerFactory> factories = toList(load(LoggerFactory.class, classLoader));
         sort(factories, Prioritized.COMPARATOR);
-        LoggerFactory availableFactory = null;
-        for (LoggerFactory factory : factories) {
-            if (factory.isAvailable()) {
-                availableFactory = factory;
-                break;
-            }
-        }
-        return availableFactory;
+        return factories;
     }
 
     /**
