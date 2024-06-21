@@ -19,7 +19,7 @@ package io.microsphere.logging;
 import io.microsphere.lang.Prioritized;
 
 /**
- * Slf4j {@link LoggerFactory}
+ * The {@link LoggerFactory} class for Slf4j
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see LoggerFactory
@@ -104,8 +104,8 @@ public class Sfl4jLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void info(String message, Object... arguments) {
-            logger.info(message, arguments);
+        public void info(String format, Object... arguments) {
+            logger.info(format, arguments);
         }
 
         @Override
