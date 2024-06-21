@@ -121,10 +121,10 @@ public interface Logger {
      * Log a message at the INFO level according to the specified format
      * and arguments.
      *
-     * @param message    the format string
+     * @param format    the format string
      * @param arguments the arguments
      */
-    void info(String message, Object... arguments);
+    void info(String format, Object... arguments);
 
     /**
      * Log an exception (throwable) at the INFO level with an
