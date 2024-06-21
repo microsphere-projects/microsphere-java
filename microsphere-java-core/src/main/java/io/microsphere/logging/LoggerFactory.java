@@ -20,9 +20,11 @@ import io.microsphere.lang.Prioritized;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
+import static io.microsphere.collection.ListUtils.toList;
+import static java.util.Collections.sort;
 import static java.util.ServiceLoader.load;
-import static jdk.nashorn.internal.objects.NativeArray.sort;
 
 /**
  * The factory class for {@link Logger}
@@ -40,7 +42,7 @@ public abstract class LoggerFactory {
 
     @Nullable
     private static LoggerFactory loadFactory() {
-        Iterable<LoggerFactory> factories = load(LoggerFactory.class, classLoader);
+        List<LoggerFactory> factories = toList(load(LoggerFactory.class, classLoader));
         sort(factories, Prioritized.COMPARATOR);
         LoggerFactory availableFactory = null;
         for (LoggerFactory factory : factories) {
