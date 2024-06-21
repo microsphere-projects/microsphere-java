@@ -20,8 +20,6 @@ import io.microsphere.lang.Prioritized;
 
 import java.util.logging.Level;
 
-import static io.microsphere.text.FormatUtils.format;
-
 /**
  * {@link LoggerFactory} for JDK Logging
  *
@@ -68,11 +66,6 @@ public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void trace(String format, Object... arguments) {
-            log(Level.ALL, format, arguments);
-        }
-
-        @Override
         public void trace(String message, Throwable t) {
             log(Level.ALL, message, t);
         }
@@ -85,11 +78,6 @@ public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
         @Override
         public void debug(String message) {
             log(Level.FINE, message);
-        }
-
-        @Override
-        public void debug(String format, Object... arguments) {
-            log(Level.FINE, format, arguments);
         }
 
         @Override
@@ -108,11 +96,6 @@ public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void info(String message, Object... arguments) {
-            log(Level.INFO, message, arguments);
-        }
-
-        @Override
         public void info(String message, Throwable t) {
             log(Level.INFO, message, t);
         }
@@ -125,11 +108,6 @@ public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
         @Override
         public void warn(String message) {
             log(Level.WARNING, message);
-        }
-
-        @Override
-        public void warn(String format, Object... arguments) {
-            log(Level.WARNING, format, arguments);
         }
 
         @Override
@@ -148,11 +126,6 @@ public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void error(String format, Object... arguments) {
-            log(Level.SEVERE, format, arguments);
-        }
-
-        @Override
         public void error(String message, Throwable t) {
             log(Level.SEVERE, message, t);
         }
@@ -161,8 +134,7 @@ public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
             return this.logger.isLoggable(level);
         }
 
-        void log(Level level, String format, Object... arguments) {
-            String message = format(format, arguments);
+        void log(Level level, String message) {
             logger.log(level, message);
         }
 
