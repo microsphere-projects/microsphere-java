@@ -1,7 +1,7 @@
 package io.microsphere.classloading;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
