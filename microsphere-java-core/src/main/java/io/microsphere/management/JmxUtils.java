@@ -17,8 +17,8 @@
 package io.microsphere.management;
 
 import io.microsphere.util.BaseUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
