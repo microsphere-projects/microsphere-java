@@ -16,7 +16,19 @@
  */
 package io.microsphere.logging;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.logging.LogManager;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.logging.LoggerFactory.loadAvailableFactories;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link LoggerFactory}
@@ -27,13 +39,66 @@ import org.junit.jupiter.api.Test;
  */
 public class LoggerFactoryTest {
 
+    @BeforeAll
+    public static void init() throws IOException {
+        URL resource = LoggerFactoryTest.class.getResource("/META-INF/logging.properties");
+        try (InputStream inputStream = resource.openStream()) {
+            LogManager.getLogManager().readConfiguration(inputStream);
+        }
+    }
+
     @Test
     public void testGetLogger() {
-        Logger logger = LoggerFactory.getLogger("test");
-        logger.trace("Hello,World");
-        logger.debug("Hello,World");
-        logger.info("Hello,World");
-        logger.warn("Hello,World");
-        logger.error("Hello,World");
+        Logger logger = getLogger("test");
+        log(logger);
+    }
+
+    @Test
+    public void testLoadAvailableFactories() {
+        loadAvailableFactories().forEach(this::testLoggerFactory);
+    }
+
+    private void testLoggerFactory(LoggerFactory loggerFactory) {
+        Logger logger = loggerFactory.createLogger("test");
+        log(logger);
+    }
+
+    private void log(Logger logger) {
+        assertLevel(logger);
+        log(logger, "Hello,World");
+        log(logger, "Hello,World {}", Calendar.getInstance().get(Calendar.YEAR));
+        log(logger, "Hello,World", new Throwable("Testing"));
+    }
+
+    private void assertLevel(Logger logger) {
+        assertFalse(logger.isTraceEnabled());
+        assertTrue(logger.isDebugEnabled());
+        assertTrue(logger.isInfoEnabled());
+        assertTrue(logger.isWarnEnabled());
+        assertTrue(logger.isErrorEnabled());
+    }
+
+    private void log(Logger logger, String message) {
+        logger.trace(message);
+        logger.debug(message);
+        logger.info(message);
+        logger.warn(message);
+        logger.error(message);
+    }
+
+    private void log(Logger logger, String format, Object... arguments) {
+        logger.trace(format, arguments);
+        logger.debug(format, arguments);
+        logger.info(format, arguments);
+        logger.warn(format, arguments);
+        logger.error(format, arguments);
+    }
+
+    private void log(Logger logger, String message, Throwable t) {
+        logger.trace(message, t);
+        logger.debug(message, t);
+        logger.info(message, t);
+        logger.warn(message, t);
+        logger.error(message, t);
     }
 }
