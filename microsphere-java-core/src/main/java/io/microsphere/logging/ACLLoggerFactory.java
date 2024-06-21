@@ -66,12 +66,6 @@ public class ACLLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void trace(String format, Object... arguments) {
-            String message = format(format, arguments);
-            trace(message);
-        }
-
-        @Override
         public void trace(String message, Throwable t) {
             logger.trace(message, t);
         }
@@ -84,12 +78,6 @@ public class ACLLoggerFactory extends LoggerFactory implements Prioritized {
         @Override
         public void debug(String message) {
             logger.debug(message);
-        }
-
-        @Override
-        public void debug(String format, Object... arguments) {
-            String message = format(format, arguments);
-            debug(message);
         }
 
         @Override
@@ -108,12 +96,6 @@ public class ACLLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void info(String format, Object... arguments) {
-            String message = format(format, arguments);
-            info(message);
-        }
-
-        @Override
         public void info(String message, Throwable t) {
             logger.info(message, t);
         }
@@ -129,12 +111,6 @@ public class ACLLoggerFactory extends LoggerFactory implements Prioritized {
         }
 
         @Override
-        public void warn(String format, Object... arguments) {
-            String message = format(format, arguments);
-            warn(message);
-        }
-
-        @Override
         public void warn(String message, Throwable t) {
             logger.warn(message, t);
         }
@@ -147,12 +123,6 @@ public class ACLLoggerFactory extends LoggerFactory implements Prioritized {
         @Override
         public void error(String message) {
             logger.error(message);
-        }
-
-        @Override
-        public void error(String format, Object... arguments) {
-            String message = format(format, arguments);
-            error(message);
         }
 
         @Override
