@@ -16,9 +16,9 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.text.FormatUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import io.microsphere.text.FormatUtils;
 
 import java.util.Objects;
 import java.util.function.Consumer;

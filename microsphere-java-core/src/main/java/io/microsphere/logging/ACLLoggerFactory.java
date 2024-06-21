@@ -18,8 +18,6 @@ package io.microsphere.logging;
 
 import io.microsphere.lang.Prioritized;
 
-import static io.microsphere.text.FormatUtils.format;
-
 /**
  * {@link LoggerFactory} for Apache Commons Logging
  *

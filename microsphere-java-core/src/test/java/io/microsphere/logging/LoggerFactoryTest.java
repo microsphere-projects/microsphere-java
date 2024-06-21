@@ -27,7 +27,6 @@ import java.util.logging.LogManager;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.logging.LoggerFactory.loadAvailableFactories;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**

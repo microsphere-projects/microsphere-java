@@ -1,9 +1,9 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
-import org.junit.jupiter.api.Test;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;

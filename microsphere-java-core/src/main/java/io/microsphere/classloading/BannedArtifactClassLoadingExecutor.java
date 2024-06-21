@@ -1,8 +1,8 @@
 package io.microsphere.classloading;
 
-import io.microsphere.util.SystemUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import io.microsphere.util.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
