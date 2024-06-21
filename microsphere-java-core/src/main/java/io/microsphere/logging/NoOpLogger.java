@@ -73,7 +73,7 @@ final class NoOpLogger extends AbstractLogger {
     }
 
     @Override
-    public void info(String message, Object... arguments) {
+    public void info(String format, Object... arguments) {
     }
 
     @Override
