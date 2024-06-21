@@ -6,8 +6,8 @@ package io.microsphere;
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Disabled;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Deque;
