@@ -16,6 +16,12 @@
  */
 package io.microsphere.logging;
 
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.length;
+
 /**
  * The abstract class of {@link Logger}
  *
@@ -34,5 +40,62 @@ public abstract class AbstractLogger implements Logger {
     @Override
     public final String getName() {
         return this.name;
+    }
+
+    @Override
+    public void trace(String format, Object... arguments) {
+        log(this::trace, this::trace, format, arguments);
+    }
+
+    @Override
+    public void debug(String format, Object... arguments) {
+        log(this::debug, this::debug, format, arguments);
+    }
+
+    @Override
+    public void info(String format, Object... arguments) {
+        log(this::info, this::info, format, arguments);
+    }
+
+    @Override
+    public void warn(String format, Object... arguments) {
+        log(this::warn, this::warn, format, arguments);
+    }
+
+    @Override
+    public void error(String format, Object... arguments) {
+        log(this::error, this::error, format, arguments);
+    }
+
+    /**
+     * @param messageHandler          only message to log
+     * @param messageThrowableHandler message and {@link Throwable} to log
+     * @param format                  the format message or regular message
+     * @param arguments               zero or more arguments for the format pattern
+     */
+    protected void log(Consumer<String> messageHandler, BiConsumer<String, Throwable> messageThrowableHandler, String format, Object... arguments) {
+        final String message;
+        int length = length(arguments);
+        if (length < 1) {
+            message = format;
+        } else {
+            message = resolveMessage(format, arguments);
+            Object lastArgument = arguments[length - 1];
+            if (lastArgument instanceof Throwable) {
+                messageThrowableHandler.accept(message, (Throwable) lastArgument);
+            }
+        }
+        messageHandler.accept(message);
+    }
+
+    /**
+     * Resolve the format message
+     *
+     * @param format    the format message
+     * @param arguments zero or more arguments for the format pattern
+     * @return non-null
+     */
+    protected String resolveMessage(String format, Object... arguments) {
+        return format(format, arguments);
     }
 }
