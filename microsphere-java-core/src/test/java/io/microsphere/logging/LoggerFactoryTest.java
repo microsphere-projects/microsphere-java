@@ -49,7 +49,7 @@ public class LoggerFactoryTest {
 
     @Test
     public void testGetLogger() {
-        Logger logger = getLogger("test");
+        Logger logger = getLogger(LoggerFactoryTest.class);
         log(logger);
     }
 
