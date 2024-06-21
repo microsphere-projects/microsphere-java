@@ -16,13 +16,13 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.lang.Prioritized;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static io.microsphere.reflect.TypeUtils.getClassName;
-import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
-import static io.microsphere.util.ClassLoaderUtils.resolveClass;
-import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.util.ServiceLoader.load;
+import static jdk.nashorn.internal.objects.NativeArray.sort;
 
 /**
  * The factory class for {@link Logger}
@@ -33,15 +33,15 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  */
 public abstract class LoggerFactory {
 
-
-    private static final ClassLoader classLoader = getClassLoader(LoggerFactory.class);
+    private static final ClassLoader classLoader = LoggerFactory.class.getClassLoader();
 
     @Nullable
     private static final LoggerFactory factory = loadFactory();
 
     @Nullable
     private static LoggerFactory loadFactory() {
-        Iterable<LoggerFactory> factories = loadServicesList(LoggerFactory.class, classLoader, false);
+        Iterable<LoggerFactory> factories = load(LoggerFactory.class, classLoader);
+        sort(factories, Prioritized.COMPARATOR);
         LoggerFactory availableFactory = null;
         for (LoggerFactory factory : factories) {
             if (factory.isAvailable()) {
@@ -60,7 +60,7 @@ public abstract class LoggerFactory {
      */
     @Nonnull
     public static Logger getLogger(Class<?> type) {
-        return getLogger(getClassName(type));
+        return getLogger(type.getName());
     }
 
     /**
@@ -92,7 +92,13 @@ public abstract class LoggerFactory {
      * @return <code>null</code> if not found
      */
     private Class<?> getDelegateLoggerClass() {
-        return resolveClass(getDelegateLoggerClassName(), classLoader);
+        String className = getDelegateLoggerClassName();
+        Class<?> delegateLoggerClass = null;
+        try {
+            delegateLoggerClass = classLoader.loadClass(className);
+        } catch (Throwable e) {
+        }
+        return delegateLoggerClass;
     }
 
     /**
