@@ -2,6 +2,8 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.Configurer.configure;
+
 /**
  * {@link Configurer} Test
  *
@@ -13,15 +15,43 @@ public class ConfigurerTest {
     @Test
     public void test() {
 
-        Configurer.configure("test")
-                .value(() -> 1)
+        configure("test", 1)
+                .compare(() -> 2)
+                .on(value -> value > 0)
+                .as(String::valueOf)
+                .apply(value -> {
+                });
+
+        configure("test", 1)
+                .compare(2)
+                .on(value -> value > 0)
+                .as(String::valueOf)
+                .apply(value -> {
+                });
+
+        configure("test", () -> 1)
+                .compare(() -> 2)
+                .on(value -> value > 0)
+                .as(String::valueOf)
+                .apply(value -> {
+                });
+
+        configure("test", () -> 1)
+                .compare(2)
+                .on(value -> value > 0)
+                .as(String::valueOf)
+                .apply(value -> {
+                });
+
+        configure("test")
+                .value(1)
                 .compare(() -> 1)
                 .on(value -> value > 0)
                 .as(String::valueOf)
                 .apply(value -> {
                 });
 
-        Configurer.configure("test")
+        configure("test")
                 .value(() -> -1)
                 .compare(() -> 1)
                 .on(value -> value > 0)
@@ -29,22 +59,21 @@ public class ConfigurerTest {
                 .apply(value -> {
                 });
 
-        Configurer.configure("test")
-                .value(() -> 1)
+        configure(() -> 1)
                 .compare(() -> 2)
                 .on(value -> value > 0)
                 .as(value -> null)
                 .apply(value -> {
                 });
 
-        Configurer.configure("test", () -> 1)
+        configure(1)
                 .compare(() -> 2)
                 .on(value -> value > 0)
-                .as(String::valueOf)
+                .as(value -> null)
                 .apply(value -> {
                 });
 
-        Configurer.configure("test")
+        configure("test")
                 .value(() -> 1)
                 .apply(value -> {
                 });
