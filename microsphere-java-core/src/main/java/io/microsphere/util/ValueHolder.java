@@ -44,6 +44,10 @@ public class ValueHolder<V> {
         this.value = value;
     }
 
+    public void reset() {
+        setValue(null);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
