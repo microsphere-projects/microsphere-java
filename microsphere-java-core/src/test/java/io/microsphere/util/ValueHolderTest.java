@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.ValueHolder.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -58,5 +59,25 @@ public class ValueHolderTest {
         ValueHolder valueHolder = ValueHolder.of("initial value");
         // Assert that the value is equal to the initial value
         assertEquals("initial value", valueHolder.getValue());
+    }
+
+    @Test
+    public void testToString() {
+        ValueHolder valueHolder = of(1);
+        assertEquals("ValueHolder{value=1}", valueHolder.toString());
+    }
+
+    @Test
+    public void testEquals() {
+        assertEquals(of(1), of(1));
+        assertEquals(of("A"), of("A"));
+        assertEquals(of(null), of(null));
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(1, of(1).hashCode());
+        assertEquals("A".hashCode(), of("A").hashCode());
+        assertEquals(0, of(null).hashCode());
     }
 }
