@@ -62,6 +62,14 @@ public class ValueHolderTest {
     }
 
     @Test
+    public void testReset() {
+        ValueHolder valueHolder = ValueHolder.of(1);
+        valueHolder.reset();
+        assertNull(valueHolder.getValue());
+    }
+
+
+    @Test
     public void testToString() {
         ValueHolder valueHolder = of(1);
         assertEquals("ValueHolder{value=1}", valueHolder.toString());
