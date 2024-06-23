@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
@@ -24,6 +25,7 @@ import java.util.function.Predicate;
 
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static java.util.Arrays.asList;
 
@@ -34,6 +36,10 @@ import static java.util.Arrays.asList;
  * @since 1.0.0
  */
 public abstract class ConstructorUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(ConstructorUtils.class);
+
+    public static final Constructor NOT_FOUND_CONSTRUCTOR = null;
 
     /**
      * Is a non-private constructor without parameters
@@ -76,6 +82,15 @@ public abstract class ConstructorUtils extends BaseUtils {
 
     public static <T> Constructor<T> getDeclaredConstructor(Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getDeclaredConstructor(parameterTypes));
+    }
+
+    public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
+        return execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, asList(parameterTypes));
+            }
+            return NOT_FOUND_CONSTRUCTOR;
+        });
     }
 
     /**
