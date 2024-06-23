@@ -18,6 +18,8 @@ package io.microsphere.util;
 
 import javax.lang.model.SourceVersion;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.util.StringUtils.substringBetween;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static io.microsphere.util.Version.of;
 import static javax.lang.model.SourceVersion.latest;
@@ -39,7 +41,7 @@ public abstract class VersionUtils extends BaseUtils {
     /**
      * The {@link Version} instance for current Java Version
      */
-    public static final Version CURRENT_JAVA_VERSION = of(JAVA_VERSION);
+    public static final Version CURRENT_JAVA_VERSION = of(currentJavaVersion());
 
     /**
      * The {@link Version} instance for Java 8
@@ -126,5 +128,11 @@ public abstract class VersionUtils extends BaseUtils {
      */
     public static boolean testCurrentJavaVersion(Version comparedVersion, Version.Operator versionOperator) {
         return versionOperator.test(CURRENT_JAVA_VERSION, comparedVersion);
+    }
+
+    private static String currentJavaVersion() {
+        String javaVersion = JAVA_VERSION;
+        String majorVersion = substringBetween(javaVersion, "1" + DOT, DOT);
+        return majorVersion == null ? javaVersion : majorVersion;
     }
 }
