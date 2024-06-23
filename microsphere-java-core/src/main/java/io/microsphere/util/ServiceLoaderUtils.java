@@ -11,9 +11,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static io.microsphere.collection.ListUtils.toList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.lang.Boolean.getBoolean;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
@@ -34,7 +36,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
 
     static {
         // Clear cache on JVM shutdown
-        ShutdownHookUtils.addShutdownHookCallback(serviceLoadersCache::clear);
+        addShutdownHookCallback(serviceLoadersCache::clear);
     }
 
     /**
@@ -356,9 +358,8 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
 
         if (serviceList.isEmpty()) {
             String className = serviceType.getName();
-            String message = String.format("No Service interface[type : %s] implementation was defined in service loader configuration file[/META-INF/services/%s] under ClassLoader[%s]", className, className, classLoader);
-            IllegalArgumentException e = new IllegalArgumentException(message);
-            throw e;
+            String message = format("No Service interface[type : %s] implementation was defined in service loader configuration file[/META-INF/services/%s] under ClassLoader[%s]", className, className, classLoader);
+            throw new IllegalArgumentException(message);
         }
 
         sort(serviceList, Prioritized.COMPARATOR);
