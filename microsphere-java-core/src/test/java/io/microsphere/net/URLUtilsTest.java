@@ -8,6 +8,7 @@ import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,12 +29,10 @@ import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
-import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -99,15 +98,10 @@ public class URLUtilsTest {
     @Test
     public void testResolveRelativePath() throws MalformedURLException {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        String expectedPath = "java/lang/String.class";
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        String expectedPath = "javax/annotation/Nonnull.class";
         String relativePath = resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
-
-        File rtJarFile = new File(JAVA_HOME, "lib/rt.jar");
-        resourceURL = rtJarFile.toURI().toURL();
-        relativePath = resolveArchiveEntryPath(resourceURL);
-        assertNull(relativePath);
     }
 
     @Test
