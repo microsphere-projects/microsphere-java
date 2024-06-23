@@ -16,9 +16,9 @@
  */
 package io.microsphere.util;
 
-import java.util.logging.Logger;
+import io.microsphere.logging.Logger;
 
-import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StringUtils.startsWith;
 
 /**
@@ -30,7 +30,7 @@ import static io.microsphere.util.StringUtils.startsWith;
  */
 public abstract class SystemUtils extends BaseUtils {
 
-    private static final Logger logger = Logger.getLogger(SystemUtils.class.getName());
+    private static final Logger logger = getLogger(SystemUtils.class);
 
     public static final String OS_NAME_WINDOWS_PREFIX = "Windows";
 
@@ -321,6 +321,161 @@ public abstract class SystemUtils extends BaseUtils {
 
     /**
      * <p>
+     * Is {@code true} if this is Java 8
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     **/
+    public static final boolean IS_JAVA_8 = matchesJavaVersion("1.8");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 9.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     **/
+    public static final boolean IS_JAVA_9 = matchesJavaVersion("9");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 10.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_10 = matchesJavaVersion("10");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 11.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_11 = matchesJavaVersion("11");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 12.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_12 = matchesJavaVersion("12");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 13.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_13 = matchesJavaVersion("13");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 14.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_14 = matchesJavaVersion("14");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 15.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_15 = matchesJavaVersion("15");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 16.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_16 = matchesJavaVersion("16");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 17.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_17 = matchesJavaVersion("17");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 18.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_18 = matchesJavaVersion("18");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 19.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_19 = matchesJavaVersion("19");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 20.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_20 = matchesJavaVersion("20");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 21.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_21 = matchesJavaVersion("21");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 22.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_22 = matchesJavaVersion("22");
+
+    /**
+     * Is <code>true</code> if current Java version is Long Term Supported(LTS)
+     */
+    public static final boolean IS_LTS_JAVA_VERSION = IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21;
+
+    /**
+     * <p>
      * Gets a System property, defaulting to {@code null} if the property cannot be read.
      * </p>
      * <p>
@@ -352,10 +507,12 @@ public abstract class SystemUtils extends BaseUtils {
         try {
             return System.getProperty(key, defaultValue);
         } catch (final SecurityException ex) {
-            String errorMessage = format("Caught a SecurityException reading the system property '{}'; " +
-                    "the SystemUtils property value will be : '{}'", key, defaultValue);
-            logger.warning(errorMessage);
+            logger.warn("Caught a SecurityException reading the system property '{}'; " + "the SystemUtils property value will be : '{}'", key, defaultValue);
             return defaultValue;
         }
+    }
+
+    private static boolean matchesJavaVersion(final String versionPrefix) {
+        return startsWith(JAVA_SPECIFICATION_VERSION, versionPrefix);
     }
 }
