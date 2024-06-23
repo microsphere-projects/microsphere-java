@@ -55,7 +55,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             ReflectionUtils.assertArrayType(new Object());
         } catch (IllegalArgumentException e) {
             exception = e;
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         assertNotNull(exception);
     }
