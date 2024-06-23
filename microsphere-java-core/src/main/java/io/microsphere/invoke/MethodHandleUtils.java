@@ -161,17 +161,17 @@ public abstract class MethodHandleUtils extends BaseUtils {
     public static final MethodHandle NOT_FOUND_METHOD_HANDLE = null;
 
     /**
-     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class)}
+     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class)} since JDK 7
      */
     private static final Constructor<MethodHandles.Lookup> lookupConstructor1 = getDeclaredConstructor(MethodHandles.Lookup.class, Class.class);
 
     /**
-     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class, int)}
+     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class, int)} since JDK 7
      */
     private static final Constructor<MethodHandles.Lookup> lookupConstructor2 = findConstructor(MethodHandles.Lookup.class, Class.class, int.class);
 
     /**
-     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class, Class, int)} since JDK 11
+     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class, Class, int)} since JDK 14
      */
     private static final Constructor<MethodHandles.Lookup> lookupConstructor3 = findConstructor(MethodHandles.Lookup.class, Class.class, Class.class, int.class);
 
