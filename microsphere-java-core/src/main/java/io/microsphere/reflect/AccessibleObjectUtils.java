@@ -31,6 +31,8 @@ import java.lang.reflect.Method;
 
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.MemberUtils.asMember;
+import static io.microsphere.reflect.MemberUtils.isPublic;
 
 /**
  * The utilities class of {@link AccessibleObject}
@@ -117,6 +119,12 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * @return {@code true} if the caller can access this reflected object.
      */
     public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
+
+        Member member = asMember(accessibleObject);
+
+        if (isPublic(member)) {
+            return true;
+        }
 
         Boolean access = tryCanAccess(object, accessibleObject);
 
