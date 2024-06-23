@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -32,16 +33,16 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         Object array = Array.newInstance(int.class, size);
 
         for (int i = 0; i < size; i++) {
-            ReflectionUtils.assertArrayIndex(array, i);
+            assertArrayIndex(array, i);
         }
 
         for (int i = size; i < size * 2; i++) {
             ArrayIndexOutOfBoundsException exception = null;
             try {
-                ReflectionUtils.assertArrayIndex(array, i);
+                assertArrayIndex(array, i);
             } catch (ArrayIndexOutOfBoundsException e) {
                 exception = e;
-                System.err.println(e.getMessage());
+                logger.error(e.getMessage());
             }
             assertNotNull(exception);
         }
@@ -54,7 +55,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             ReflectionUtils.assertArrayType(new Object());
         } catch (IllegalArgumentException e) {
             exception = e;
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         assertNotNull(exception);
     }

@@ -19,7 +19,6 @@ public class ManagementUtilsTest extends AbstractTestCase {
     @Test
     public void testStaticFields() {
         assertNotNull(ManagementUtils.jvm);
-        assertNotNull(ManagementUtils.getProcessIdMethod);
     }
 
     @Test

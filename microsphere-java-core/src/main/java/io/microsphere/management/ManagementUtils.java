@@ -1,14 +1,16 @@
 package io.microsphere.management;
 
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Arrays;
+import io.microsphere.logging.Logger;
 
+import java.lang.management.RuntimeMXBean;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.Integer.parseInt;
+import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
 /**
  * Management Utility class
@@ -20,10 +22,12 @@ import static java.lang.Integer.parseInt;
  */
 public abstract class ManagementUtils {
 
+    private static final Logger logger = getLogger(ManagementUtils.class);
+
     /**
      * {@link RuntimeMXBean}
      */
-    private final static RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+    private final static RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
 
     /**
      * "jvm" Field name
@@ -35,55 +39,21 @@ public abstract class ManagementUtils {
     final static Object jvm = initJvm();
     /**
      * "getProcessId" Method name
+     *
+     * @see sun.management.VMManagementImpl#getProcessId()
      */
     private final static String GET_PROCESS_ID_METHOD_NAME = "getProcessId";
-    /**
-     * "getProcessId" Method
-     */
-    final static Method getProcessIdMethod = initGetProcessIdMethod();
-
 
     private static Object initJvm() {
         Object jvm = null;
-        Field jvmField = null;
         if (runtimeMXBean != null) {
             try {
-                jvmField = runtimeMXBean.getClass().getDeclaredField(JVM_FIELD_NAME);
-                jvmField.setAccessible(true);
-                jvm = jvmField.get(runtimeMXBean);
-            } catch (Exception ignored) {
-                System.err.printf("The Field[name : %s] can't be found in RuntimeMXBean Class[%s]!\n", JVM_FIELD_NAME, runtimeMXBean.getClass());
+                jvm = getFieldValue(runtimeMXBean, JVM_FIELD_NAME);
+            } catch (Throwable e) {
+                logger.error("The Field[name : '{}'] can't be found in RuntimeMXBean class : '{}'!", JVM_FIELD_NAME, runtimeMXBean.getClass(), e);
             }
         }
         return jvm;
-    }
-
-    private static Method initGetProcessIdMethod() {
-        Class<?> jvmClass = jvm.getClass();
-
-        Method getProcessIdMethod = null;
-        try {
-            getProcessIdMethod = jvmClass.getDeclaredMethod(GET_PROCESS_ID_METHOD_NAME);
-            getProcessIdMethod.setAccessible(true);
-        } catch (Exception ignored) {
-            System.err.printf("%s method can't be found in class[%s]!\n", GET_PROCESS_ID_METHOD_NAME, jvmClass.getName());
-        }
-        return getProcessIdMethod;
-    }
-
-    private static Object invoke(Method method, Object object, Object... arguments) {
-        Object result = null;
-        try {
-            if (!method.isAccessible()) {
-                method.setAccessible(true);
-            }
-            result = method.invoke(object, arguments);
-        } catch (Exception ignored) {
-            System.err.printf("%s method[arguments : %s] can't be invoked in object[%s]!\n",
-                    method.getName(), Arrays.asList(arguments), object);
-        }
-
-        return result;
     }
 
     /**
@@ -93,7 +63,14 @@ public abstract class ManagementUtils {
      */
     public static int getCurrentProcessId() {
         int processId = -1;
-        Object result = invoke(getProcessIdMethod, jvm);
+        Object result = null;
+
+        try {
+            result = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
+        } catch (Throwable e) {
+            logger.error("The method 'sun.management.VMManagementImpl#getProcessId()' can't be invoked!", e);
+        }
+
         if (result instanceof Integer) {
             processId = (Integer) result;
         } else {
