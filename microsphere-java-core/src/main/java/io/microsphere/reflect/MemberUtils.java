@@ -106,4 +106,13 @@ public abstract class MemberUtils {
     public static boolean isNonPrivate(Member member) {
         return member != null && !Modifier.isPrivate(member.getModifiers());
     }
+
+    /**
+     * Try to cast to be an instance of {@link Member}
+     * @param object the object to be casted
+     * @return {@link Member} if <code>object</code> is {@link Member}
+     */
+    public static Member asMember(Object object) {
+       return object instanceof Member ? (Member)object : null;
+    }
 }
