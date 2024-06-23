@@ -19,7 +19,6 @@ package io.microsphere.net;
 import io.microsphere.io.IOUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import sun.net.www.protocol.file.Handler;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -46,8 +45,7 @@ public class DelegatingURLConnectionTest {
     public void before() throws Exception {
         URL baseURL = getClass().getProtectionDomain().getCodeSource().getLocation();
         this.url = new URL(baseURL.toString() + "META-INF/test.properties");
-        Handler handler = new Handler();
-        this.delegate = handler.openConnection(url);
+        this.delegate = url.openConnection();
         this.urlConnection = new DelegatingURLConnection(this.delegate);
     }
 

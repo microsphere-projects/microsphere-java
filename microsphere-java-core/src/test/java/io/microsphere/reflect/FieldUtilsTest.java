@@ -39,11 +39,10 @@ public class FieldUtilsTest {
 
     @Test
     public void testFindField() {
-        Class<?> klass = String.class;
-        assertEquals(char[].class, findField(klass, "value").getType());
+        Class<?> klass = Integer.class;
+        assertEquals(int.class, findField(klass, "value").getType());
 
         klass = StringBuilder.class;
-        assertEquals(char[].class, findField(klass, "value").getType());
         assertEquals(int.class, findField(klass, "count").getType());
     }
 

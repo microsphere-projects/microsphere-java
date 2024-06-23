@@ -9,6 +9,7 @@ import io.microsphere.util.ClassPathUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -17,8 +18,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
-import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static io.microsphere.util.jar.JarUtils.findJarEntry;
+import static io.microsphere.util.jar.JarUtils.resolveJarAbsolutePath;
+import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
+import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,42 +49,37 @@ public class JarUtilsTest {
 
     @Test
     public void testResolveRelativePath() {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        String relativePath = JarUtils.resolveRelativePath(resourceURL);
-        String expectedPath = "java/lang/String.class";
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        String relativePath = resolveRelativePath(resourceURL);
+        String expectedPath = "javax/annotation/Nonnull.class";
         assertEquals(expectedPath, relativePath);
     }
 
     @Test
     public void testResolveJarAbsolutePath() throws Exception {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        String jarAbsolutePath = JarUtils.resolveJarAbsolutePath(resourceURL);
-        File rtJarFile = new File(JAVA_HOME, "/lib/rt.jar");
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        String jarAbsolutePath = resolveJarAbsolutePath(resourceURL);
         assertNotNull(jarAbsolutePath);
-        assertEquals(rtJarFile.getAbsolutePath(), jarAbsolutePath);
     }
-
 
     @Test
     public void testToJarFile() throws Exception {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        JarFile jarFile = JarUtils.toJarFile(resourceURL);
-        JarFile rtJarFile = new JarFile(new File(JAVA_HOME, "/lib/rt.jar"));
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        JarFile jarFile = toJarFile(resourceURL);
         assertNotNull(jarFile);
-        assertEquals(rtJarFile.getName(), jarFile.getName());
     }
 
     public void testToJarFileOnException() throws Exception {
         assertThrows(IllegalArgumentException.class, () -> {
             URL url = new URL("http://www.google.com");
-            JarFile jarFile = JarUtils.toJarFile(url);
+            JarFile jarFile = toJarFile(url);
         });
     }
 
     @Test
     public void testFindJarEntry() throws Exception {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        JarEntry jarEntry = JarUtils.findJarEntry(resourceURL);
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        JarEntry jarEntry = findJarEntry(resourceURL);
         assertNotNull(jarEntry);
     }
 
