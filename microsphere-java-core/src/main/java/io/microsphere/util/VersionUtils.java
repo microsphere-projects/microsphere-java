@@ -116,4 +116,15 @@ public abstract class VersionUtils extends BaseUtils {
      */
     public static final Version JAVA_VERSION_22 = of(22);
 
+    /**
+     * Determine whether the current Java version matches the specified version
+     *
+     * @param comparedVersion the {@link Version} to be compared
+     * @param versionOperator the {@link Version.Operator}
+     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     * {@link #CURRENT_JAVA_VERSION current version} and <code>comparedVersion</code>
+     */
+    public static boolean testCurrentJavaVersion(Version comparedVersion, Version.Operator versionOperator) {
+        return versionOperator.test(CURRENT_JAVA_VERSION, comparedVersion);
+    }
 }
