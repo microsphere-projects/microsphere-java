@@ -51,6 +51,11 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
     private static final String canAccessMethodName = "canAccess";
 
     /**
+     * The method name of {@link AccessibleObject#trySetAccessible()} since Java 9
+     */
+    private static final String trySetAccessibleMethodName = "trySetAccessible";
+
+    /**
      * The {@link MethodHandle} of {@link AccessibleObject#canAccess(Object)} since Java 9
      * if <code>canAccessMethodHandle == null</code>, it indicates the version of Java is less than 9
      */
@@ -92,17 +97,11 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * @throws NullPointerException If <code>accessibleObject</code> is <code>null</code>
      */
     public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableFunction<A, R> callback) throws NullPointerException {
-        boolean accessible = accessibleObject.isAccessible();
         final R result;
         try {
-            if (!accessible) {
-                accessibleObject.setAccessible(true);
-            }
+            accessibleObject.setAccessible(true);
             result = callback.execute(accessibleObject);
         } finally {
-            if (!accessible) {
-                accessibleObject.setAccessible(accessible);
-            }
         }
         return result;
     }
