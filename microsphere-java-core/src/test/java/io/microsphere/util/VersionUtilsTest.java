@@ -20,6 +20,21 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_10;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_11;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_12;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_13;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_14;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_15;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_16;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_17;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_18;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_19;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_20;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_21;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_22;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.LATEST_JAVA_VERSION;
 import static java.lang.String.valueOf;
 import static javax.lang.model.SourceVersion.latest;
@@ -46,5 +61,24 @@ public class VersionUtilsTest {
         String version = substringAfter(releaseVersion, "RELEASE_");
         assertEquals(LATEST_JAVA_VERSION.ordinal(), CURRENT_JAVA_VERSION.getMajor());
         assertEquals(version, valueOf(CURRENT_JAVA_VERSION.getMajor()));
+    }
+
+    @Test
+    public void testJavaVersions() {
+        assertEquals(8, JAVA_VERSION_8.getMajor());
+        assertEquals(9, JAVA_VERSION_9.getMajor());
+        assertEquals(10, JAVA_VERSION_10.getMajor());
+        assertEquals(11, JAVA_VERSION_11.getMajor());
+        assertEquals(12, JAVA_VERSION_12.getMajor());
+        assertEquals(13, JAVA_VERSION_13.getMajor());
+        assertEquals(14, JAVA_VERSION_14.getMajor());
+        assertEquals(15, JAVA_VERSION_15.getMajor());
+        assertEquals(16, JAVA_VERSION_16.getMajor());
+        assertEquals(17, JAVA_VERSION_17.getMajor());
+        assertEquals(18, JAVA_VERSION_18.getMajor());
+        assertEquals(19, JAVA_VERSION_19.getMajor());
+        assertEquals(20, JAVA_VERSION_20.getMajor());
+        assertEquals(21, JAVA_VERSION_21.getMajor());
+        assertEquals(22, JAVA_VERSION_22.getMajor());
     }
 }
