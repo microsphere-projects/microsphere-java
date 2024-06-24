@@ -118,7 +118,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         assertNotNull(resourceURL);
         info(resourceURL);
 
-        resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/java.lang.CharSequence");
+        resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURL);
         info(resourceURL);
     }
@@ -135,7 +135,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
 
-        resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/java.lang.CharSequence");
+        resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
