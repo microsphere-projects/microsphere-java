@@ -2,6 +2,7 @@ package io.microsphere.reflect;
 
 
 import io.microsphere.util.ArrayUtils;
+import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
@@ -48,7 +49,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ConstructorUtils
  * @since 1.0.0
  */
-public abstract class ReflectionUtils {
+public abstract class ReflectionUtils extends BaseUtils {
 
     /**
      * Sun JDK implementation class: full name of sun.reflect.Reflection
