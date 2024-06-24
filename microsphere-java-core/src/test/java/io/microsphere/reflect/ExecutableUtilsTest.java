@@ -42,7 +42,7 @@ public class ExecutableUtilsTest {
     @Test
     public void testExecute() {
         Method method = getMethod("privateMethod");
-        assertEquals("privateField", execute(method, (ThrowableFunction<Method, Object>) m -> method.invoke(test)));
+        assertEquals("test", execute(method, (ThrowableFunction<Method, Object>) m -> method.invoke(test)));
     }
 
     private Method getMethod(String methodName) {
