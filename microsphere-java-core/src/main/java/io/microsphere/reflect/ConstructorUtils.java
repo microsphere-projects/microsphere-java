@@ -64,14 +64,14 @@ public abstract class ConstructorUtils extends BaseUtils {
         return has;
     }
 
-    public static List<Constructor<?>> getConstructors(Class<?> type,
-                                                       Predicate<? super Constructor<?>>... constructorFilters) {
+    public static List<Constructor<?>> findConstructors(Class<?> type,
+                                                        Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = asList(type.getConstructors());
         return filterAll(constructors, constructorFilters);
     }
 
-    public static List<Constructor<?>> getDeclaredConstructors(Class<?> type,
-                                                               Predicate<? super Constructor<?>>... constructorFilters) {
+    public static List<Constructor<?>> findDeclaredConstructors(Class<?> type,
+                                                                Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = asList(type.getDeclaredConstructors());
         return filterAll(constructors, constructorFilters);
     }
@@ -102,6 +102,6 @@ public abstract class ConstructorUtils extends BaseUtils {
      * @return non-null
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
-        return AccessibleObjectUtils.execute(constructor, () -> constructor.newInstance(args));
+        return ExecutableUtils.execute(constructor, () -> constructor.newInstance(args));
     }
 }
