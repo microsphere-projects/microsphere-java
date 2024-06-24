@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.util.BaseUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -28,7 +30,7 @@ import java.util.function.Predicate;
  *
  * @since 1.0.0
  */
-public abstract class MemberUtils {
+public abstract class MemberUtils extends BaseUtils {
 
     public final static Predicate<Method> STATIC_METHOD_PREDICATE = MemberUtils::isStatic;
 
@@ -39,9 +41,6 @@ public abstract class MemberUtils {
     public final static Predicate<Member> PUBLIC_METHOD_PREDICATE = MemberUtils::isPublic;
 
     public final static Predicate<Member> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
-
-    private MemberUtils() {
-    }
 
     /**
      * check the specified {@link Member member} is static or not ?
@@ -109,10 +108,11 @@ public abstract class MemberUtils {
 
     /**
      * Try to cast to be an instance of {@link Member}
+     *
      * @param object the object to be casted
      * @return {@link Member} if <code>object</code> is {@link Member}
      */
     public static Member asMember(Object object) {
-       return object instanceof Member ? (Member)object : null;
+        return object instanceof Member ? (Member) object : null;
     }
 }
