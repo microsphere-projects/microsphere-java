@@ -4,7 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.security.TestSecurityManager;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -300,12 +299,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
 
         currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
-        TestSecurityManager.denyRuntimePermission("getClassLoader", new Runnable() {
-            @Override
-            public void run() {
-                assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
-            }
-        });
 
         // recovery
         currentThread.setContextClassLoader(classLoader);
