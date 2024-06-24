@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.isPrimitive;
@@ -310,13 +311,13 @@ public abstract class ReflectionUtils {
      */
     public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
         if (index < 0) {
-            String message = String.format("The index argument must be positive , actual is %s", index);
+            String message = format("The index argument must be positive , actual is {}", index);
             throw new ArrayIndexOutOfBoundsException(message);
         }
         ReflectionUtils.assertArrayType(array);
         int length = Array.getLength(array);
         if (index > length - 1) {
-            String message = String.format("The index must be less than %s , actual is %s", length, index);
+            String message = format("The index must be less than {} , actual is {}", length, index);
             throw new ArrayIndexOutOfBoundsException(message);
         }
     }
@@ -330,7 +331,7 @@ public abstract class ReflectionUtils {
     public static void assertArrayType(Object array) throws IllegalArgumentException {
         Class<?> type = array.getClass();
         if (!type.isArray()) {
-            String message = String.format("The argument is not an array object, its type is %s", type.getName());
+            String message = format("The argument is not an array object, its type is {}", type.getName());
             throw new IllegalArgumentException(message);
         }
     }
@@ -348,7 +349,7 @@ public abstract class ReflectionUtils {
         Field field = FieldUtils.getDeclaredField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
-            String message = String.format("The type[%s] of field[%s] in Class[%s] can't match expected type[%s]", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
+            String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
             throw new IllegalArgumentException(message);
         }
     }
