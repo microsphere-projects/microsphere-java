@@ -9,6 +9,7 @@ import io.microsphere.collection.ListUtils;
 import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
+import io.microsphere.logging.Logger;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
 
@@ -17,7 +18,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
-import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.text.FormatUtils.format;
@@ -53,6 +54,8 @@ import static java.lang.management.ManagementFactory.getClassLoadingMXBean;
  * @since 1.0.0
  */
 public abstract class ClassLoaderUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(ClassLoaderUtils.class);
 
     protected static final ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
 
@@ -304,6 +307,10 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) {
         try {
             return classLoader.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", classLoader);
+            }
         } catch (Throwable ignored) {
         }
         return null;
