@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.util.BaseUtils;
+
 import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -35,10 +37,7 @@ import static java.util.Arrays.asList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class FieldUtils {
-
-    private FieldUtils() {
-    }
+public abstract class FieldUtils extends BaseUtils {
 
     /**
      * Find the specified objects' declared {@link Field} by its' name
@@ -165,7 +164,7 @@ public abstract class FieldUtils {
      * @param fieldName the name of {@link Field}
      * @return the value of  the specified {@link Field}
      */
-    public static <T> T getFieldValue(Object object, String fieldName) {
+    public static <V> V getFieldValue(Object object, String fieldName) {
         return getFieldValue(object, findField(object, fieldName));
     }
 
@@ -175,12 +174,12 @@ public abstract class FieldUtils {
      *
      * @param object       the object whose field should be modified
      * @param fieldName    field name
-     * @param <T>          field type
+     * @param <V>          field type
      * @param defaultValue default value
      * @return {@link Field} Value
      */
-    public static <T> T getFieldValue(Object object, String fieldName, T defaultValue) {
-        T value = getFieldValue(object, fieldName);
+    public static <V> V getFieldValue(Object object, String fieldName, V defaultValue) {
+        V value = getFieldValue(object, fieldName);
         return value != null ? value : defaultValue;
     }
 
@@ -190,10 +189,10 @@ public abstract class FieldUtils {
      * @param object    the object whose field should be modified
      * @param fieldName field name
      * @param fieldType field type
-     * @param <T>       field type
+     * @param <V>       field type
      * @return {@link Field} Value
      */
-    public static <T> T getFieldValue(Object object, String fieldName, Class<T> fieldType) {
+    public static <V> V getFieldValue(Object object, String fieldName, Class<V> fieldType) {
         Field field = findField(object.getClass(), fieldName, fieldType);
         return getFieldValue(object, field);
     }
@@ -205,8 +204,8 @@ public abstract class FieldUtils {
      * @param field  {@link Field}
      * @return the value of  the specified {@link Field}
      */
-    public static <T> T getFieldValue(Object object, Field field) {
-        return (T) AccessibleObjectUtils.execute(field, () -> {
+    public static <V> V getFieldValue(Object object, Field field) {
+        return (V) AccessibleObjectUtils.execute(field, () -> {
             return field.get(object);
         });
     }
@@ -219,7 +218,7 @@ public abstract class FieldUtils {
      * @param value     the value of field to be set
      * @return the previous value of the specified {@link Field}
      */
-    public static <T> T setFieldValue(Object object, String fieldName, T value) {
+    public static <V> V setFieldValue(Object object, String fieldName, V value) {
         return setFieldValue(object, findField(object, fieldName), value);
     }
 
@@ -231,7 +230,7 @@ public abstract class FieldUtils {
      * @param value  the value of field to be set
      * @return the previous value of the specified {@link Field}
      */
-    public static <T> T setFieldValue(Object object, Field field, T value) {
+    public static <V> V setFieldValue(Object object, Field field, V value) {
         return AccessibleObjectUtils.execute(field, () -> {
             Object previousValue = null;
             try {
@@ -241,7 +240,7 @@ public abstract class FieldUtils {
                 }
             } catch (IllegalAccessException ignored) {
             }
-            return (T) previousValue;
+            return (V) previousValue;
         });
     }
 
