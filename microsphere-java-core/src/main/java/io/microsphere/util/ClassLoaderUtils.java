@@ -36,6 +36,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ExceptionUtils.getStackTrace;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
@@ -94,7 +95,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static UnsupportedOperationException jvmUnsupportedOperationException(Throwable throwable) {
         String stackTrace = getStackTrace(throwable);
-        String message = String.format("Current JVM[ Implementation : %s , Version : %s ] does not supported ! " + "Stack Trace : %s", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
+        String message = format("Current JVM[ Implementation : '{}' , Version : '{}' ] does not supported ! "
+                + "Stack Trace : '{}'", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
         throw new UnsupportedOperationException(message);
     }
 
