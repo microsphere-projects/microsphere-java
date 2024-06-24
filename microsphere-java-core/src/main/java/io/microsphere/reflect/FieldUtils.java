@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Field;
@@ -27,6 +28,7 @@ import java.util.function.Predicate;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
@@ -39,6 +41,8 @@ import static java.util.Arrays.asList;
  * @since 1.0.0
  */
 public abstract class FieldUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(FieldUtils.class);
 
     /**
      * Find the specified objects' declared {@link Field} by its' name
@@ -68,6 +72,11 @@ public abstract class FieldUtils extends BaseUtils {
         } catch (NoSuchFieldException e) {
             // ignore, try the super class
             field = findField(klass.getSuperclass(), fieldName);
+        }
+        if (field == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The field[name :'{}'] not found in class : '{}'", fieldName, klass);
+            }
         }
         return field;
     }
