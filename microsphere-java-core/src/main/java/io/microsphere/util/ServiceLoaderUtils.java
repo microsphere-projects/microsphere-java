@@ -15,7 +15,6 @@ import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
-import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.lang.Boolean.getBoolean;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
@@ -33,12 +32,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
     private static final Map<ClassLoader, Map<Class<?>, ServiceLoader<?>>> serviceLoadersCache = new ConcurrentHashMap<>();
 
     private static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
-
-    static {
-        // Clear cache on JVM shutdown
-        addShutdownHookCallback(serviceLoadersCache::clear);
-    }
-
+    
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
      * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
