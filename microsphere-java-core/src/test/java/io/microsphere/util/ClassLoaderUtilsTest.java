@@ -20,7 +20,7 @@ import java.util.TreeSet;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
-import static io.microsphere.reflect.FieldUtils.getAllDeclaredFields;
+import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
@@ -56,7 +56,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFields() throws Exception {
 
 
-        Set<Field> allFields = getAllDeclaredFields(ClassLoader.class);
+        Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
 //        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
         Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
