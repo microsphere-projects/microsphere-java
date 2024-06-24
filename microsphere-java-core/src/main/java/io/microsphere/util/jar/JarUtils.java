@@ -29,6 +29,7 @@ import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static java.util.Collections.unmodifiableList;
 
@@ -73,7 +74,7 @@ public class JarUtils {
     protected static void assertJarURLProtocol(URL jarURL) throws NullPointerException, IllegalArgumentException {
         final String protocol = jarURL.getProtocol(); //NPE check
         if (!JAR_PROTOCOL.equals(protocol) && !FILE_PROTOCOL.equals(protocol)) {
-            String message = String.format("jarURL Protocol[%s] is unsupported ,except %s and %s ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
+            String message = format("jarURL Protocol['{}'] is unsupported ,except '{}' and '{}' ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
             throw new IllegalArgumentException(message);
         }
     }
