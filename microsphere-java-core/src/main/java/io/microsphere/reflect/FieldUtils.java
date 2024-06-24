@@ -25,6 +25,7 @@ import java.util.function.Predicate;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static java.util.Arrays.asList;
 
@@ -257,7 +258,7 @@ public abstract class FieldUtils {
         Field field = findField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
-            String message = String.format("The type[%s] of field[%s] in Class[%s] can't match expected type[%s]", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
+            String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
             throw new IllegalArgumentException(message);
         }
     }
