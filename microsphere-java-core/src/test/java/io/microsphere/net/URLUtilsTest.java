@@ -107,7 +107,7 @@ public class URLUtilsTest {
     @Test
     public void testResolveArchiveFile() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
         File archiveFile = URLUtils.resolveArchiveFile(resourceURL);
         assertTrue(archiveFile.exists());
     }
