@@ -16,18 +16,12 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.lang.function.ThrowableConsumer;
-import io.microsphere.lang.function.ThrowableFunction;
-import io.microsphere.lang.function.ThrowableSupplier;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Member;
-import java.lang.reflect.Method;
 
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -66,51 +60,6 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
     private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
-
-    /**
-     * Execute an {@link AccessibleObject} instance
-     *
-     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback the call back to execute {@link AccessibleObject} object
-     * @param <A>      The type or subtype of {@link AccessibleObject}
-     */
-    public static <A extends AccessibleObject> void execute(A object, ThrowableConsumer<A> callback) {
-        execute(object, a -> {
-            callback.accept(a);
-            return null;
-        });
-    }
-
-    /**
-     * Executes the {@link AccessibleObject}
-     *
-     * @param accessibleObject {@link AccessibleObject}
-     * @param supplier         {@link ThrowableConsumer}
-     * @throws RuntimeException if execution failed
-     */
-    public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableSupplier<R> supplier) {
-        return execute(accessibleObject, (ThrowableFunction<A, R>) a -> supplier.execute());
-    }
-
-    /**
-     * Execute an {@link AccessibleObject} instance
-     *
-     * @param accessibleObject {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback         the call back to execute {@link AccessibleObject} accessibleObject
-     * @param <A>              The type or subtype of {@link AccessibleObject}
-     * @param <R>              The type of execution result
-     * @return The execution result
-     * @throws NullPointerException If <code>accessibleObject</code> is <code>null</code>
-     */
-    public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableFunction<A, R> callback) throws NullPointerException {
-        final R result;
-        try {
-            trySetAccessible(accessibleObject);
-            result = callback.execute(accessibleObject);
-        } finally {
-        }
-        return result;
-    }
 
     /**
      * Try to set the {@link AccessibleObject} accessible.
