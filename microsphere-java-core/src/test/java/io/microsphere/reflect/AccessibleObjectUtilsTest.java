@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 
 import static io.microsphere.reflect.AccessibleObjectUtils.canAccess;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,17 +34,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class AccessibleObjectUtilsTest {
 
+    private static final String test = "test";
+
+    private static Method[] methods = test.getClass().getDeclaredMethods();
+
     @Test
     public void testCanAccess() {
-        String test = "test";
-        Method[] methods = test.getClass().getMethods();
-
-        assertTrue(methods.length > 0);
-
         for (Method method : methods) {
             if (!isStatic(method)) {
                 assertTrue(canAccess(test, method));
             }
+        }
+    }
+
+    @Test
+    public void testTrySetAccessible() {
+        for (Method method : methods) {
+            assertTrue(trySetAccessible(method));
         }
     }
 }
