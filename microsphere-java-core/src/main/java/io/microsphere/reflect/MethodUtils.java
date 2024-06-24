@@ -54,7 +54,6 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
-import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -77,10 +76,6 @@ public abstract class MethodUtils extends BaseUtils {
     public final static Set<Method> OBJECT_METHODS = of(Object.class.getMethods());
 
     private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>();
-
-    static {
-        addShutdownHookCallback(methodsCache::clear);
-    }
 
     static class MethodKey {
 
