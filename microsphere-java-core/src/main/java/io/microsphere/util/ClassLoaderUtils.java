@@ -35,12 +35,13 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ExceptionUtils.getStackTrace;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
+import static java.lang.management.ManagementFactory.getClassLoadingMXBean;
 
 
 /**
@@ -53,11 +54,11 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
  */
 public abstract class ClassLoaderUtils extends BaseUtils {
 
-    protected static final ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+    protected static final ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
 
     private static final Method findLoadedClassMethod = initFindLoadedClassMethod();
 
-    private static final ConcurrentMap<String, Class<?>> loadedClassesCache = initLoadedClassesCache();
+    private static final ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
 
     private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
 
@@ -70,17 +71,11 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         final Method findLoadedClassMethod;
         try {
             findLoadedClassMethod = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
-            findLoadedClassMethod.setAccessible(true);
+            trySetAccessible(findLoadedClassMethod);
         } catch (NoSuchMethodException e) {
             throw jvmUnsupportedOperationException(e);
         }
         return findLoadedClassMethod;
-    }
-
-    private static ConcurrentMap<String, Class<?>> initLoadedClassesCache() {
-        ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
-        addShutdownHookCallback(loadedClassesCache::clear);
-        return loadedClassesCache;
     }
 
     private static URLClassPathHandle initURLClassPathHandle() {
