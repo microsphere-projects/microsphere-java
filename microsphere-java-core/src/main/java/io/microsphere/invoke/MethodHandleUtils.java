@@ -37,7 +37,6 @@ import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.ArrayUtils.isEmpty;
-import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.lang.invoke.MethodType.methodType;
 
 /**
@@ -176,10 +175,6 @@ public abstract class MethodHandleUtils extends BaseUtils {
     private static final Constructor<MethodHandles.Lookup> lookupConstructor3 = findConstructor(MethodHandles.Lookup.class, Class.class, Class.class, int.class);
 
     private static final ConcurrentMap<LookupKey, MethodHandles.Lookup> lookupCache = new ConcurrentHashMap<>();
-
-    static {
-        addShutdownHookCallback(lookupCache::clear);
-    }
 
     /**
      * The allowed {@link MethodHandles.Lookup} modes enumeration
