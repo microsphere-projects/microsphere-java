@@ -44,10 +44,12 @@ import static io.microsphere.reflect.AccessibleObjectUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -67,6 +69,10 @@ public abstract class MethodUtils extends BaseUtils {
     public final static Set<Method> OBJECT_METHODS = of(Object.class.getMethods());
 
     private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>();
+
+    static {
+        addShutdownHookCallback(methodsCache::clear);
+    }
 
     static class MethodKey {
 
@@ -303,12 +309,24 @@ public abstract class MethodUtils extends BaseUtils {
         return invokeMethod(null, type, methodName, parameters);
     }
 
+    /**
+     * Invoke the target classes' static method
+     *
+     * @param method     the method
+     * @param parameters the method parameters
+     * @param <T>        the return type
+     * @return the target method's execution result
+     */
+    public static <T> T invokeStaticMethod(Method method, Object... parameters) {
+        return invokeMethod(null, method, parameters);
+    }
+
     public static <T> T invokeMethod(Object instance, Class<?> type, String methodName, Object... parameters) {
         Class[] parameterTypes = getTypes(parameters);
         Method method = findMethod(type, methodName, parameterTypes);
 
         if (method == null) {
-            throw new IllegalStateException(String.format("cannot find method %s,class: %s", methodName, type.getName()));
+            throw new IllegalStateException(format("cannot find method[name : '{}'], class: '{}'", methodName, type.getName()));
         }
 
         return invokeMethod(instance, method, parameters);
