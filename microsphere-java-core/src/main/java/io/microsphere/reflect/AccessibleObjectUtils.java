@@ -57,9 +57,15 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
 
     /**
      * The {@link MethodHandle} of {@link AccessibleObject#canAccess(Object)} since Java 9
-     * if <code>canAccessMethodHandle == null</code>, it indicates the version of Java is less than 9
+     * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
     private static final MethodHandle canAccessMethodHandle = findVirtual(AccessibleObject.class, canAccessMethodName, Object.class);
+
+    /**
+     * The {@link MethodHandle} of {@link AccessibleObject#trySetAccessible()} since Java 9
+     * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
+     */
+    private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
 
     /**
      * Execute an {@link AccessibleObject} instance
@@ -99,11 +105,36 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
     public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableFunction<A, R> callback) throws NullPointerException {
         final R result;
         try {
-            accessibleObject.setAccessible(true);
+            trySetAccessible(accessibleObject);
             result = callback.execute(accessibleObject);
         } finally {
         }
         return result;
+    }
+
+    /**
+     * Try to set the {@link AccessibleObject} accessible.
+     * <p>
+     * If JDK >=9 , {@link AccessibleObject#trySetAccessible()} method will be invoked,
+     * or {@link AccessibleObject#setAccessible(boolean)} method will be invoked if
+     * {@link AccessibleObject#isAccessible()} is <code>false</code>.
+     *
+     * @param accessibleObject {@link AccessibleObject}
+     * @return
+     * @see AccessibleObject#trySetAccessible()
+     * @see AccessibleObject#setAccessible(boolean)
+     * @see AccessibleObject#isAccessible()
+     */
+    public static boolean trySetAccessible(AccessibleObject accessibleObject) {
+        MethodHandle methodHandle = trySetAccessibleMethodHandle;
+        if (methodHandle == null) { // JDK < 9
+            if (!accessibleObject.isAccessible()) {
+                accessibleObject.setAccessible(true);
+            }
+            return true;
+        } else { // JDK 9+
+            return trySetAccessible(methodHandle, accessibleObject);
+        }
     }
 
     /**
@@ -130,9 +161,20 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
         return access == null ? accessibleObject.isAccessible() : access;
     }
 
+    private static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {
+        boolean accessible = false;
+        try {
+            accessible = (boolean) methodHandle.invokeExact(accessibleObject);
+        } catch (Throwable e) {
+            logger.error("java.lang.reflect.AccessibleObject#trySetAccessible() can't be invoked, accessible object : {}",
+                    accessibleObject, e);
+        }
+        return accessible;
+    }
+
     private static Boolean tryCanAccess(Object object, AccessibleObject accessibleObject) {
         Boolean access = null;
-        if (canAccessMethodHandle != null) { // Java 9+
+        if (canAccessMethodHandle != null) { // JDK 9+
             try {
                 access = (boolean) canAccessMethodHandle.invokeExact(accessibleObject, object);
             } catch (Throwable e) {
