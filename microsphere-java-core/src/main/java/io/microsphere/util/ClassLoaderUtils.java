@@ -4,7 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.classloading.URLClassPathHandle;
-import io.microsphere.collection.CollectionUtils;
 import io.microsphere.collection.ListUtils;
 import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
@@ -18,6 +17,7 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
@@ -34,15 +34,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.isNotEmpty;
+import static io.microsphere.collection.SetUtils.asSet;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
-import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
-import static io.microsphere.util.ExceptionUtils.getStackTrace;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
+import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static java.lang.management.ManagementFactory.getClassLoadingMXBean;
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableMap;
+import static java.util.Collections.unmodifiableSet;
 
 
 /**
@@ -57,29 +64,17 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final Logger logger = getLogger(ClassLoaderUtils.class);
 
-    protected static final ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
+    private static final Class<ClassLoader> classLoaderClass = ClassLoader.class;
 
-    private static final Method findLoadedClassMethod = initFindLoadedClassMethod();
+    private static final String findLoadedClassMethodName = "findLoadedClass";
+
+    private static final String classesFieldName = "classes";
+
+    protected static final ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
 
     private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
-
-    /**
-     * Initializes {@link Method} for {@link ClassLoader#findLoadedClass(String)}
-     *
-     * @return {@link Method} for {@link ClassLoader#findLoadedClass(String)}
-     */
-    private static Method initFindLoadedClassMethod() {
-        final Method findLoadedClassMethod;
-        try {
-            findLoadedClassMethod = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
-            trySetAccessible(findLoadedClassMethod);
-        } catch (NoSuchMethodException e) {
-            throw jvmUnsupportedOperationException(e);
-        }
-        return findLoadedClassMethod;
-    }
 
     private static URLClassPathHandle initURLClassPathHandle() {
         List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
@@ -89,13 +84,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             }
         }
         throw new IllegalStateException("No URLClassPathHandle found, Please check the META-INF/services/io.microsphere.classloading.URLClassPathHandle");
-    }
-
-    private static UnsupportedOperationException jvmUnsupportedOperationException(Throwable throwable) {
-        String stackTrace = getStackTrace(throwable);
-        String message = format("Current JVM[ Implementation : '{}' , Version : '{}' ] does not supported ! "
-                + "Stack Trace : '{}'", SystemUtils.JAVA_VENDOR, SystemUtils.JAVA_VERSION, stackTrace);
-        throw new UnsupportedOperationException(message);
     }
 
     /**
@@ -249,7 +237,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
                 loadedClasses.add(class_);
             }
         }
-        return Collections.unmodifiableSet(loadedClasses);
+        return unmodifiableSet(loadedClasses);
     }
 
     /**
@@ -282,16 +270,34 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return {@link Class} if loaded , or <code>null</code>
      */
     public static Class<?> findLoadedClass(ClassLoader classLoader, String className) {
-        Class<?> loadedClass = null;
-        Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
-        try {
+        Class<?> loadedClass = invokeFindLoadedClassMethod(classLoader, className);
+        if (loadedClass == null) {
+            Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
             for (ClassLoader loader : classLoaders) {
-                loadedClass = (Class<?>) findLoadedClassMethod.invoke(loader, className);
+                loadedClass = (Class<?>) invokeFindLoadedClassMethod(loader, className);
                 if (loadedClass != null) {
                     break;
                 }
             }
-        } catch (Exception ignored) {
+        }
+        return loadedClass;
+    }
+
+    /**
+     * Invoke the {@link Method} of {@link ClassLoader#findLoadedClass(String)}
+     *
+     * @param classLoader {@link ClassLoader}
+     * @param className   the class name
+     * @return <code>null</code> if not loaded or can't be loaded
+     */
+    private static Class<?> invokeFindLoadedClassMethod(ClassLoader classLoader, String className) {
+        Class<?> loadedClass = null;
+        try {
+            Method findLoadedClassMethod = findMethod(classLoaderClass, findLoadedClassMethodName, String.class);
+            loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
+        } catch (Throwable e) {
+            logger.error("The java.lang.ClassLoader#findLoadedClasss(String) method can't be invoked in the current JVM[vendor : {} , version : {}]",
+                    JAVA_VENDOR, JAVA_VERSION, e.getCause());
         }
         return loadedClass;
     }
@@ -366,7 +372,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         Set<URL> resourceURLs = Collections.emptySet();
         for (ResourceType resourceType : ResourceType.values()) {
             resourceURLs = getResources(classLoader, resourceType, resourceName);
-            if (CollectionUtils.isNotEmpty(resourceURLs)) {
+            if (isNotEmpty(resourceURLs)) {
                 break;
             }
         }
@@ -453,7 +459,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             classLoadersSet.add(parentClassLoader);
             parentClassLoader = parentClassLoader.getParent();
         }
-        return Collections.unmodifiableSet(classLoadersSet);
+        return unmodifiableSet(classLoadersSet);
     }
 
     /**
@@ -472,7 +478,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         for (ClassLoader loader : classLoadersSet) {
             allLoadedClassesMap.put(loader, getLoadedClasses(loader));
         }
-        return Collections.unmodifiableMap(allLoadedClassesMap);
+        return unmodifiableMap(allLoadedClassesMap);
     }
 
     /**
@@ -490,7 +496,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         for (Set<Class<?>> loadedClassesSet : allLoadedClassesMap.values()) {
             allLoadedClassesSet.addAll(loadedClassesSet);
         }
-        return Collections.unmodifiableSet(allLoadedClassesSet);
+        return unmodifiableSet(allLoadedClassesSet);
     }
 
     /**
@@ -505,14 +511,9 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     @Nonnull
     public static Set<Class<?>> getLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
-        final Set<Class<?>> classesSet;
-        try {
-            List<Class<?>> classes = getFieldValue(classLoader, "classes");
-            classesSet = new LinkedHashSet(classes);
-        } catch (Throwable e) {
-            throw jvmUnsupportedOperationException(e);
-        }
-        return Collections.unmodifiableSet(new LinkedHashSet(classesSet));
+        Field field = findField(classLoaderClass, classesFieldName);
+        List<Class<?>> classes = getFieldValue(classLoader, field);
+        return classes == null ? emptySet() : asSet(classes);
     }
 
     /**
