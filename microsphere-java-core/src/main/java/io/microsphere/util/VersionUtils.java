@@ -132,15 +132,16 @@ public abstract class VersionUtils extends BaseUtils {
     private static String currentJavaVersion() {
         String javaVersion = JAVA_VERSION;
         int firstDotIndex = javaVersion.indexOf(DOT_CHAR);
-        String majorVersion = javaVersion.substring(0, firstDotIndex);
-        if ("1".equals(majorVersion)) { // JDK Version is like "1.x.y"
-            // it takes 'x' as the major version
-            int startIndex = firstDotIndex + 1;
-            int endIndex = javaVersion.indexOf(DOT_CHAR, startIndex);
-            majorVersion = javaVersion.substring(startIndex, endIndex);
-            return majorVersion;
-        } else {
-            return javaVersion;
+        if (firstDotIndex > -1) {
+            String majorVersion = javaVersion.substring(0, firstDotIndex);
+            if ("1".equals(majorVersion)) { // JDK Version is like "1.x.y"
+                // it takes 'x' as the major version
+                int startIndex = firstDotIndex + 1;
+                int endIndex = javaVersion.indexOf(DOT_CHAR, startIndex);
+                majorVersion = javaVersion.substring(startIndex, endIndex);
+                return majorVersion;
+            }
         }
+        return javaVersion;
     }
 }
