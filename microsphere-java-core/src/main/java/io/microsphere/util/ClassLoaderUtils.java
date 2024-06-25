@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.security.SecureClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -630,7 +631,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     public static boolean removeClassPathURL(ClassLoader classLoader, URL url) {
-        if (!(classLoader instanceof URLClassLoader)) {
+        if (!(classLoader instanceof SecureClassLoader)) {
             return false;
         }
         return urlClassPathHandle.removeURL(classLoader, url);
