@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static io.microsphere.collection.ListUtils.toList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
@@ -31,12 +32,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
     private static final Map<ClassLoader, Map<Class<?>, ServiceLoader<?>>> serviceLoadersCache = new ConcurrentHashMap<>();
 
     private static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
-
-    static {
-        // Clear cache on JVM shutdown
-        ShutdownHookUtils.addShutdownHookCallback(serviceLoadersCache::clear);
-    }
-
+    
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
      * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
@@ -356,9 +352,8 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
 
         if (serviceList.isEmpty()) {
             String className = serviceType.getName();
-            String message = String.format("No Service interface[type : %s] implementation was defined in service loader configuration file[/META-INF/services/%s] under ClassLoader[%s]", className, className, classLoader);
-            IllegalArgumentException e = new IllegalArgumentException(message);
-            throw e;
+            String message = format("No Service interface[type : %s] implementation was defined in service loader configuration file[/META-INF/services/%s] under ClassLoader[%s]", className, className, classLoader);
+            throw new IllegalArgumentException(message);
         }
 
         sort(serviceList, Prioritized.COMPARATOR);

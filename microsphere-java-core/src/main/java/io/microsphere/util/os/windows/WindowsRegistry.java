@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
 
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
@@ -111,7 +112,7 @@ public final class WindowsRegistry {
             WindowsRegDeleteValue = findMethod("WindowsRegDeleteValue", int.class, byte[].class);
             WindowsRegQueryInfoKey = findMethod("WindowsRegQueryInfoKey", int.class);
         } catch (Throwable e) {
-            String message = String.format("Current JVM ", JAVA_SPECIFICATION_VERSION);
+            String message = format("Current JVM : {}", JAVA_SPECIFICATION_VERSION);
             throw new InstantiationError(message);
         }
     }

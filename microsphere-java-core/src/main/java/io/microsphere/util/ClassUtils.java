@@ -50,7 +50,7 @@ import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructors;
+import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
@@ -1041,7 +1041,7 @@ public abstract class ClassUtils extends BaseUtils {
     public static <T> T newInstance(Class<T> type, Object... args) {
         int length = length(args);
 
-        List<Constructor<?>> constructors = getDeclaredConstructors(type, constructor -> {
+        List<Constructor<?>> constructors = findDeclaredConstructors(type, constructor -> {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             if (length != parameterTypes.length) {
                 return false;

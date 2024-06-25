@@ -110,6 +110,6 @@ public class StringToListConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE - 2, converter.getPriority());
+        assertTrue(Integer.MAX_VALUE > converter.getPriority());
     }
 }

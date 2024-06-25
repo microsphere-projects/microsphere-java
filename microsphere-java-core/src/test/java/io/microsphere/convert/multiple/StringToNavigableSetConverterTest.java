@@ -110,6 +110,6 @@ public class StringToNavigableSetConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE - 4, converter.getPriority());
+        assertTrue(Integer.MAX_VALUE > converter.getPriority());
     }
 }

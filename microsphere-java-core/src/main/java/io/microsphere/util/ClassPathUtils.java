@@ -17,6 +17,8 @@ import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.StringUtils.split;
+import static java.lang.Thread.currentThread;
+import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 import static java.util.Collections.emptySet;
 
 /**
@@ -29,7 +31,7 @@ import static java.util.Collections.emptySet;
  */
 public abstract class ClassPathUtils extends BaseUtils {
 
-    protected static final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+    protected static final RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
 
     private static final Set<String> bootstrapClassPaths = initBootstrapClassPaths();
 
@@ -85,7 +87,7 @@ public abstract class ClassPathUtils extends BaseUtils {
      * @see #getRuntimeClassLocation(Class)
      */
     public static URL getRuntimeClassLocation(String className) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = currentThread().getContextClassLoader();
         URL location = null;
         if (classLoader != null) {
             if (isLoadedClass(classLoader, className)) {

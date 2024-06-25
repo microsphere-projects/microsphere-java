@@ -16,15 +16,17 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.lang.function.ThrowableConsumer;
-import io.microsphere.lang.function.ThrowableFunction;
-import io.microsphere.lang.function.ThrowableSupplier;
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
+import java.lang.reflect.Member;
+
+import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.MemberUtils.asMember;
+import static io.microsphere.reflect.MemberUtils.isPublic;
 
 /**
  * The utilities class of {@link AccessibleObject}
@@ -35,54 +37,100 @@ import java.lang.reflect.Method;
  */
 public abstract class AccessibleObjectUtils extends BaseUtils {
 
-    /**
-     * Execute an {@link AccessibleObject} instance
-     *
-     * @param object   {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback the call back to execute {@link AccessibleObject} object
-     * @param <A>      The type or subtype of {@link AccessibleObject}
-     */
-    public static <A extends AccessibleObject> void execute(A object, ThrowableConsumer<A> callback) {
-        execute(object, a -> {
-            callback.accept(a);
-            return null;
-        });
-    }
+    private static final Logger logger = getLogger(AccessibleObjectUtils.class);
 
     /**
-     * Executes the {@link AccessibleObject}
+     * The method name of {@link AccessibleObject#canAccess(Object)} since Java 9
+     */
+    private static final String canAccessMethodName = "canAccess";
+
+    /**
+     * The method name of {@link AccessibleObject#trySetAccessible()} since Java 9
+     */
+    private static final String trySetAccessibleMethodName = "trySetAccessible";
+
+    /**
+     * The {@link MethodHandle} of {@link AccessibleObject#canAccess(Object)} since Java 9
+     * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
+     */
+    private static final MethodHandle canAccessMethodHandle = findVirtual(AccessibleObject.class, canAccessMethodName, Object.class);
+
+    /**
+     * The {@link MethodHandle} of {@link AccessibleObject#trySetAccessible()} since Java 9
+     * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
+     */
+    private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
+
+    /**
+     * Try to set the {@link AccessibleObject} accessible.
+     * <p>
+     * If JDK >=9 , {@link AccessibleObject#trySetAccessible()} method will be invoked,
+     * or {@link AccessibleObject#setAccessible(boolean)} method will be invoked if
+     * {@link AccessibleObject#isAccessible()} is <code>false</code>.
      *
      * @param accessibleObject {@link AccessibleObject}
-     * @param supplier         {@link ThrowableConsumer}
-     * @throws RuntimeException if execution failed
+     * @return
+     * @see AccessibleObject#trySetAccessible()
+     * @see AccessibleObject#setAccessible(boolean)
+     * @see AccessibleObject#isAccessible()
      */
-    public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableSupplier<R> supplier) {
-        return execute(accessibleObject, (ThrowableFunction<A, R>) a -> supplier.execute());
+    public static boolean trySetAccessible(AccessibleObject accessibleObject) {
+        MethodHandle methodHandle = trySetAccessibleMethodHandle;
+        if (methodHandle == null) { // JDK < 9
+            if (!accessibleObject.isAccessible()) {
+                accessibleObject.setAccessible(true);
+            }
+            return true;
+        } else { // JDK 9+
+            return trySetAccessible(methodHandle, accessibleObject);
+        }
     }
 
     /**
-     * Execute an {@link AccessibleObject} instance
+     * Test if the caller can access this reflected object. If this reflected
+     * object corresponds to an instance method or field then this method tests
+     * if the caller can access the given {@code obj} with the reflected object.
+     * For instance methods or fields then the {@code obj} argument must be an
+     * instance of the {@link Member#getDeclaringClass() declaring class}. For
+     * static members and constructors then {@code obj} must be {@code null}.
      *
-     * @param accessibleObject {@link AccessibleObject} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback         the call back to execute {@link AccessibleObject} accessibleObject
-     * @param <A>              The type or subtype of {@link AccessibleObject}
-     * @param <R>              The type of execution result
-     * @return The execution result
-     * @throws NullPointerException If <code>accessibleObject</code> is <code>null</code>
+     * @param object an instance object of the declaring class of this reflected object if it is an instance method or field
+     * @return {@code true} if the caller can access this reflected object.
      */
-    public static <A extends AccessibleObject, R> R execute(A accessibleObject, ThrowableFunction<A, R> callback) throws NullPointerException {
-        boolean accessible = accessibleObject.isAccessible();
-        final R result;
+    public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
+
+        Member member = asMember(accessibleObject);
+
+        if (isPublic(member)) {
+            return true;
+        }
+
+        Boolean access = tryCanAccess(object, accessibleObject);
+
+        return access == null ? accessibleObject.isAccessible() : access;
+    }
+
+    private static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {
+        boolean accessible = false;
         try {
-            if (!accessible) {
-                accessibleObject.setAccessible(true);
-            }
-            result = callback.execute(accessibleObject);
-        } finally {
-            if (!accessible) {
-                accessibleObject.setAccessible(accessible);
+            accessible = (boolean) methodHandle.invokeExact(accessibleObject);
+        } catch (Throwable e) {
+            logger.error("java.lang.reflect.AccessibleObject#trySetAccessible() can't be invoked, accessible object : {}",
+                    accessibleObject, e);
+        }
+        return accessible;
+    }
+
+    private static Boolean tryCanAccess(Object object, AccessibleObject accessibleObject) {
+        Boolean access = null;
+        if (canAccessMethodHandle != null) { // JDK 9+
+            try {
+                access = (boolean) canAccessMethodHandle.invokeExact(accessibleObject, object);
+            } catch (Throwable e) {
+                logger.error("java.lang.reflect.AccessibleObject#canAccess(Object) can't be invoked, object : {} , accessible object : {}",
+                        object, accessibleObject, e);
             }
         }
-        return result;
+        return access;
     }
 }

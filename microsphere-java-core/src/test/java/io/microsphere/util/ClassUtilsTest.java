@@ -7,6 +7,7 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -233,7 +234,7 @@ public class ClassUtilsTest extends AbstractTestCase {
         String classPath = ClassUtils.findClassPath(ReflectionUtils.class);
         assertNotNull(classPath);
 
-        classPath = ClassUtils.findClassPath(String.class);
+        classPath = ClassUtils.findClassPath(Nonnull.class);
         assertNotNull(classPath);
     }
 
@@ -258,7 +259,7 @@ public class ClassUtilsTest extends AbstractTestCase {
         info("codeSourceLocation : " + codeSourceLocation);
         assertNotNull(codeSourceLocation);
 
-        codeSourceLocation = ClassUtils.getCodeSourceLocation(String.class);
+        codeSourceLocation = ClassUtils.getCodeSourceLocation(Nonnull.class);
         info("codeSourceLocation : " + codeSourceLocation);
         assertNotNull(codeSourceLocation);
 

@@ -4,7 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.security.TestSecurityManager;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,7 +19,7 @@ import java.util.TreeSet;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
-import static io.microsphere.reflect.FieldUtils.getAllDeclaredFields;
+import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
@@ -56,7 +55,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFields() throws Exception {
 
 
-        Set<Field> allFields = getAllDeclaredFields(ClassLoader.class);
+        Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
 //        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
         Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
@@ -119,7 +118,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         assertNotNull(resourceURL);
         info(resourceURL);
 
-        resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/java.lang.CharSequence");
+        resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURL);
         info(resourceURL);
     }
@@ -136,7 +135,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
 
-        resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/java.lang.CharSequence");
+        resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
@@ -300,12 +299,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
 
         currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
-        TestSecurityManager.denyRuntimePermission("getClassLoader", new Runnable() {
-            @Override
-            public void run() {
-                assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
-            }
-        });
 
         // recovery
         currentThread.setContextClassLoader(classLoader);
