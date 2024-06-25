@@ -135,8 +135,9 @@ public abstract class VersionUtils extends BaseUtils {
         String majorVersion = javaVersion.substring(0, firstDotIndex);
         if ("1".equals(majorVersion)) { // JDK Version is like "1.x.y"
             // it takes 'x' as the major version
-            int endIndex = javaVersion.indexOf(DOT_CHAR, firstDotIndex);
-            majorVersion = javaVersion.substring(firstDotIndex, endIndex);
+            int startIndex = firstDotIndex + 1;
+            int endIndex = javaVersion.indexOf(DOT_CHAR, startIndex);
+            majorVersion = javaVersion.substring(startIndex, endIndex);
             return majorVersion;
         } else {
             return javaVersion;
