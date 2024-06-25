@@ -153,24 +153,11 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     @Nonnull
     public static String getCallerClassName() {
-        return getCallerClassName(sunReflectReflectionInvocationFrame);
-    }
-
-    /**
-     * Get Caller Class name
-     *
-     * @param invocationFrame invocation frame
-     * @return Class name under specified invocation frame
-     * @throws IndexOutOfBoundsException If the <code>invocation Frame<code> value is negative or exceeds the actual level
-     * @see Thread#getStackTrace()
-     */
-    @Nonnull
-    protected static String getCallerClassName(int invocationFrame) throws IndexOutOfBoundsException {
         if (supportedSunReflectReflection) {
-            Class<?> callerClass = getCallerClassInSunJVM(invocationFrame + 1);
+            Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
             if (callerClass != null) return callerClass.getName();
         }
-        return getCallerClassNameInGeneralJVM(invocationFrame + 1);
+        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
     }
 
     /**
@@ -248,7 +235,13 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     @Nonnull
     public static Class<?> getCallerClass() throws IllegalStateException {
-        return getCallerClass(sunReflectReflectionInvocationFrame);
+        if (supportedSunReflectReflection) {
+            Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
+            if (callerClass != null) {
+                return callerClass;
+            }
+        }
+        return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
     }
 
     /**
@@ -274,7 +267,6 @@ public abstract class ReflectionUtils extends BaseUtils {
         return callerClass.getName();
     }
 
-
     /**
      * Get the caller class
      *
@@ -299,17 +291,6 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     static Class<?> getCallerClassInGeneralJVM() {
         return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
-    }
-
-    /**
-     * Get caller class's {@link Package}
-     *
-     * @return caller class's {@link Package}
-     * @throws IllegalStateException see {@link #getCallerClass()}
-     * @see #getCallerClass()
-     */
-    public static Package getCallerPackage() throws IllegalStateException {
-        return getCallerClass().getPackage();
     }
 
     /**
