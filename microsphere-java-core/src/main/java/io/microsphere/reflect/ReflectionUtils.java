@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
@@ -134,6 +135,15 @@ public abstract class ReflectionUtils extends BaseUtils {
         // Plugs 1 , because Invocation getCallerClass() method was considered as increment invocation frame
         // Plugs 1 , because Invocation getCallerClass(int) method was considered as increment invocation frame
         stackTraceElementInvocationFrame = invocationFrame + 2;
+    }
+
+    /**
+     * Is supported sun.reflect.Reflection or not
+     *
+     * @return <code>true</code> if supported
+     */
+    public static boolean isSupportedSunReflectReflection() {
+        return supportedSunReflectReflection;
     }
 
     /**
@@ -315,7 +325,7 @@ public abstract class ReflectionUtils extends BaseUtils {
             String message = format("The index argument must be positive , actual is {}", index);
             throw new ArrayIndexOutOfBoundsException(message);
         }
-        ReflectionUtils.assertArrayType(array);
+        assertArrayType(array);
         int length = Array.getLength(array);
         if (index > length - 1) {
             String message = format("The index must be less than {} , actual is {}", length, index);
@@ -347,7 +357,7 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
         Class<?> type = object.getClass();
-        Field field = FieldUtils.getDeclaredField(type, fieldName);
+        Field field = getDeclaredField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
             String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
