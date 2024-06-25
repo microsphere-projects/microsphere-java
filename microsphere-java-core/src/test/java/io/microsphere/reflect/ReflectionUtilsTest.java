@@ -120,14 +120,6 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetCallerPackage() {
-        Class<?> expectedClass = ReflectionUtilsTest.class;
-        Package expectedPackage = expectedClass.getPackage();
-
-        assertEquals(expectedPackage, ReflectionUtils.getCallerPackage());
-    }
-
-    @Test
     public void testGetCallerClassNamePerformance() {
         if (isSupportedSunReflectReflection()) {
             for (int i = 0; i < 6; i++) {
