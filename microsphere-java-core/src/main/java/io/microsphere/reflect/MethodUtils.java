@@ -398,9 +398,7 @@ public abstract class MethodUtils extends BaseUtils {
         boolean accessible = false;
         RuntimeException failure = null;
         try {
-            if (!isPublic(method)) {
-                accessible = trySetAccessible(method);
-            }
+            trySetAccessible(method);
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException e) {
             String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
