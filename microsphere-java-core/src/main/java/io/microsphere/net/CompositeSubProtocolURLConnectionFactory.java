@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Collections;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static java.util.Collections.sort;
 
 /**
  * The composite {@link SubProtocolURLConnectionFactory} class supports modified dynamically at runtime.
@@ -44,12 +44,12 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
         List<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
         this.factories = newFactories;
-        sort();
+        sortFactories();
     }
 
     public CompositeSubProtocolURLConnectionFactory add(SubProtocolURLConnectionFactory factory) {
         addInternal(factory);
-        sort();
+        sortFactories();
         return this;
     }
 
@@ -57,7 +57,7 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
         for (int i = 0; i < factories.length; i++) {
             addInternal(factories[i]);
         }
-        sort();
+        sortFactories();
         return this;
     }
 
@@ -71,14 +71,14 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     public boolean remove(SubProtocolURLConnectionFactory factory) {
         boolean result = this.factories.remove(factory);
         if (result) {
-            sort();
+            sortFactories();
         }
         return result;
     }
 
-    private void sort() {
+    private void sortFactories() {
         List<SubProtocolURLConnectionFactory> factories = this.factories;
-        Collections.sort(factories, Prioritized.COMPARATOR);
+        sort(factories, Prioritized.COMPARATOR);
     }
 
     @Override

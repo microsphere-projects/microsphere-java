@@ -61,6 +61,7 @@ import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.reverse;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -480,7 +481,7 @@ public abstract class ClassUtils extends BaseUtils {
             Set<String> classNames = findClassNamesInClassPath(classPath, true);
             classPathToClassNamesMap.put(classPath, classNames);
         }
-        return Collections.unmodifiableMap(classPathToClassNamesMap);
+        return unmodifiableMap(classPathToClassNamesMap);
     }
 
     private static Map<String, String> initClassNameToClassPathsMap() {
@@ -494,7 +495,7 @@ public abstract class ClassUtils extends BaseUtils {
             }
         }
 
-        return Collections.unmodifiableMap(classNameToClassPathsMap);
+        return unmodifiableMap(classNameToClassPathsMap);
     }
 
     private static Map<String, Set<String>> initPackageNameToClassNamesMap() {
@@ -510,7 +511,7 @@ public abstract class ClassUtils extends BaseUtils {
             classNamesInPackage.add(className);
         }
 
-        return Collections.unmodifiableMap(packageNameToClassNamesMap);
+        return unmodifiableMap(packageNameToClassNamesMap);
     }
 
     /**
@@ -550,7 +551,7 @@ public abstract class ClassUtils extends BaseUtils {
         } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
             return findClassNamesInJarFile(classesFileHolder, recursive);
         }
-        return Collections.emptySet();
+        return `emptySet();
     }
 
     /**
@@ -659,7 +660,7 @@ public abstract class ClassUtils extends BaseUtils {
     @Nonnull
     public static Set<String> getClassNamesInPackage(String packageName) {
         Set<String> classNames = packageNameToClassNamesMap.get(packageName);
-        return classNames == null ? Collections.emptySet() : classNames;
+        return classNames == null ? emptySet() : classNames;
     }
 
 
@@ -676,7 +677,7 @@ public abstract class ClassUtils extends BaseUtils {
 
     protected static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
         if (!jarFile.exists()) {
-            return Collections.emptySet();
+            return emptySet();
         }
 
         Set<String> classNames = new LinkedHashSet();
@@ -743,7 +744,7 @@ public abstract class ClassUtils extends BaseUtils {
         for (Set<String> classNames : classPathToClassNamesMap.values()) {
             allClassNames.addAll(classNames);
         }
-        return Collections.unmodifiableSet(allClassNames);
+        return unmodifiableSet(allClassNames);
     }
 
 
@@ -1006,7 +1007,7 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         // FIFO -> FILO
-        Collections.reverse(allClasses);
+        reverse(allClasses);
 
         if (includedSelf) {
             allClasses.add(type);

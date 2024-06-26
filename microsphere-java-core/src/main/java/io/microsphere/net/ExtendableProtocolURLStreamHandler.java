@@ -43,6 +43,7 @@ import static io.microsphere.net.URLUtils.registerURLStreamHandler;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 import static java.net.Proxy.NO_PROXY;
+import static java.util.Collections.sort;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,
@@ -133,7 +134,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     private void initSubProtocolURLConnectionFactories() {
         List<SubProtocolURLConnectionFactory> factories = this.factories;
         initSubProtocolURLConnectionFactories(factories);
-        Collections.sort(factories, Prioritized.COMPARATOR);
+        sort(factories, Prioritized.COMPARATOR);
     }
 
     /**

@@ -369,7 +369,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws IOException
      */
     public static Set<URL> getResources(ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
-        Set<URL> resourceURLs = Collections.emptySet();
+        Set<URL> resourceURLs = emptySet();
         for (ResourceType resourceType : ResourceType.values()) {
             resourceURLs = getResources(classLoader, resourceType, resourceName);
             if (isNotEmpty(resourceURLs)) {

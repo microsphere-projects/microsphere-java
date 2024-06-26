@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static java.util.Collections.unmodifiableMap;
+
 /**
  * {@link Process} Manager
  *
@@ -44,6 +46,6 @@ public class ProcessManager {
      */
     @Nonnull
     public Map<Process, String> unfinishedProcessesMap() {
-        return Collections.unmodifiableMap(unfinishedProcessesCache);
+        return unmodifiableMap(unfinishedProcessesCache);
     }
 }

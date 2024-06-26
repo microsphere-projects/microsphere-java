@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import static java.util.Collections.unmodifiableList;
+
 /**
  * {@link Filter} utility class
  *
@@ -56,6 +58,6 @@ public abstract class FilterUtils {
                 list.add(element);
             }
         }
-        return Collections.unmodifiableList(list);
+        return unmodifiableList(list);
     }
 }

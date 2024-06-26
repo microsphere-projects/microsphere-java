@@ -27,6 +27,7 @@ import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.sort;
 
 /**
  * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}
@@ -107,7 +108,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     private void sortFactories(List<URLStreamHandlerFactory> factories) {
-        Collections.sort(factories, getComparator());
+        sort(factories, getComparator());
     }
 
     @Override

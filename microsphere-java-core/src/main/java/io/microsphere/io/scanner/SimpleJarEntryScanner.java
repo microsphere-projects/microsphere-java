@@ -18,6 +18,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.util.StringUtils.EMPTY;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Simple {@link JarEntry} Scanner
@@ -118,6 +119,6 @@ public class SimpleJarEntryScanner {
                 jarEntriesSet.add(jarEntry);
             }
         }
-        return Collections.unmodifiableSet(jarEntriesSet);
+        return unmodifiableSet(jarEntriesSet);
     }
 }

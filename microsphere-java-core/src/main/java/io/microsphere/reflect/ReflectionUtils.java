@@ -33,6 +33,7 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -452,7 +453,7 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     public static <T> Set<Class<T>> findHierarchicalTypes(Class<?> sourceClass, Class<T> matchType) {
         if (sourceClass == null) {
-            return Collections.emptySet();
+            return emptySet();
         }
 
         Set<Class<T>> hierarchicalTypes = new LinkedHashSet<>();
