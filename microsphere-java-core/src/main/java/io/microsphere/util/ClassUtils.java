@@ -47,6 +47,8 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
@@ -55,6 +57,12 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.StringUtils.isNotBlank;
+import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.startsWith;
+import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.StringUtils.substringBefore;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
@@ -530,7 +538,7 @@ public abstract class ClassUtils extends BaseUtils {
      */
     @Nullable
     public static String resolvePackageName(String className) {
-        return StringUtils.substringBeforeLast(className, ".");
+        return substringBeforeLast(className, ".");
     }
 
 
@@ -591,7 +599,7 @@ public abstract class ClassUtils extends BaseUtils {
             for (JarEntry jarEntry : jarEntries) {
                 String jarEntryName = jarEntry.getName();
                 String className = resolveClassName(jarEntryName);
-                if (StringUtils.isNotBlank(className)) {
+                if (isNotBlank(className)) {
                     classNames.add(className);
                 }
             }
@@ -688,7 +696,7 @@ public abstract class ClassUtils extends BaseUtils {
             for (JarEntry jarEntry : jarEntries) {
                 String jarEntryName = jarEntry.getName();
                 String className = resolveClassName(jarEntryName);
-                if (StringUtils.isNotBlank(className)) {
+                if (isNotBlank(className)) {
                     classNames.add(className);
                 }
             }
@@ -712,10 +720,10 @@ public abstract class ClassUtils extends BaseUtils {
      * @return class name
      */
     public static String resolveClassName(String resourceName) {
-        String className = StringUtils.replace(resourceName, PathConstants.SLASH, Constants.DOT);
-        className = StringUtils.substringBefore(className, CLASS_EXTENSION);
-        while (StringUtils.startsWith(className, Constants.DOT)) {
-            className = StringUtils.substringAfter(className, Constants.DOT);
+        String className = replace(resourceName, SLASH, DOT);
+        className = substringBefore(className, CLASS_EXTENSION);
+        while (startsWith(className, DOT)) {
+            className = substringAfter(className, DOT);
         }
         return className;
     }
@@ -760,7 +768,7 @@ public abstract class ClassUtils extends BaseUtils {
 
         if (classLoader == null) { // Bootstrap ClassLoader or type is primitive or void
             String path = findClassPath(type);
-            if (StringUtils.isNotBlank(path)) {
+            if (isNotBlank(path)) {
                 try {
                     codeSourceLocation = new File(path).toURI().toURL();
                 } catch (MalformedURLException ignored) {

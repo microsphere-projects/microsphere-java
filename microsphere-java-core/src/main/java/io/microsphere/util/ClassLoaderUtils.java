@@ -35,6 +35,10 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.PathConstants.BACK_SLASH;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findField;
@@ -43,6 +47,10 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.util.StringUtils.contains;
+import static io.microsphere.util.StringUtils.endsWith;
+import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static java.lang.management.ManagementFactory.getClassLoadingMXBean;
@@ -423,7 +431,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException If any argument is <code>null</code>
      */
     public static URL getClassResource(ClassLoader classLoader, String className) {
-        final String resourceName = className + FileConstants.CLASS_EXTENSION;
+        final String resourceName = className + CLASS_EXTENSION;
         return getResource(classLoader, ResourceType.CLASS, resourceName);
     }
 
@@ -683,13 +691,13 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         }, CLASS {
             @Override
             boolean supported(String name) {
-                return StringUtils.endsWith(name, FileConstants.CLASS_EXTENSION);
+                return endsWith(name, CLASS_EXTENSION);
             }
 
             @Override
             public String normalize(String name) {
-                String className = StringUtils.replace(name, FileConstants.CLASS_EXTENSION, StringUtils.EMPTY);
-                return StringUtils.replace(className, Constants.DOT, PathConstants.SLASH) + FileConstants.CLASS_EXTENSION;
+                String className = replace(name, CLASS_EXTENSION, EMPTY);
+                return replace(className, DOT, SLASH) + CLASS_EXTENSION;
             }
 
 
@@ -697,12 +705,12 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             @Override
             boolean supported(String name) {
                 //TODO: use regexp to match more precise
-                return !CLASS.supported(name) && !StringUtils.contains(name, PathConstants.SLASH) && !StringUtils.contains(name, PathConstants.BACK_SLASH);
+                return !CLASS.supported(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
             }
 
             @Override
             String normalize(String name) {
-                return StringUtils.replace(name, Constants.DOT, PathConstants.SLASH) + PathConstants.SLASH;
+                return replace(name, DOT, SLASH) + SLASH;
             }
 
 
