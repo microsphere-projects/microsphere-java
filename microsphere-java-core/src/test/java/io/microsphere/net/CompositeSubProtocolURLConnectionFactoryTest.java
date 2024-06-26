@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -44,7 +45,7 @@ public class CompositeSubProtocolURLConnectionFactoryTest {
         composite.add(instance);
 
         URL url = new URL("ftp://...");
-        List<String> subProtocols = Collections.emptyList();
+        List<String> subProtocols = emptyList();
         if (composite.supports(url, subProtocols)) {
             URLConnection urlConnection = composite.create(url, subProtocols, Proxy.NO_PROXY);
             assertEquals(ConsoleURLConnection.class, urlConnection.getClass());

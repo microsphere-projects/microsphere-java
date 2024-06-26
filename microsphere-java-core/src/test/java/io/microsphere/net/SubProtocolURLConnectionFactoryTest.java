@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -39,7 +40,7 @@ public class SubProtocolURLConnectionFactoryTest {
     @Test
     public void test() throws IOException {
         URL url = new URL("ftp://...");
-        List<String> subProtocols = Collections.emptyList();
+        List<String> subProtocols = emptyList();
         ConsoleSubProtocolURLConnectionFactory instance = new ConsoleSubProtocolURLConnectionFactory();
         if (instance.supports(url, subProtocols)) {
             URLConnection urlConnection = instance.create(url, subProtocols, Proxy.NO_PROXY);

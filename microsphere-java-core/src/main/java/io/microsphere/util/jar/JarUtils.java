@@ -31,6 +31,7 @@ import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.substringAfter;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -124,7 +125,7 @@ public class JarUtils {
     @Nonnull
     public static List<JarEntry> filter(JarFile jarFile, JarEntryFilter jarEntryFilter) {
         if (jarFile == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
         Enumeration<JarEntry> jarEntries = jarFile.entries();
         List<JarEntry> jarEntriesList = ofList(jarEntries);
