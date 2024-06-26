@@ -15,7 +15,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -26,13 +25,16 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
+import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -390,11 +392,11 @@ public abstract class ReflectionUtils extends BaseUtils {
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
 
-            if (Modifier.isStatic(field.getModifiers())) { // To filter static fields
+            if (isStatic(field.getModifiers())) { // To filter static fields
                 continue;
             }
 
-            field.setAccessible(true);
+            trySetAccessible(field);
 
             try {
                 String fieldName = field.getName();
@@ -452,7 +454,7 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     public static <T> Set<Class<T>> findHierarchicalTypes(Class<?> sourceClass, Class<T> matchType) {
         if (sourceClass == null) {
-            return Collections.emptySet();
+            return emptySet();
         }
 
         Set<Class<T>> hierarchicalTypes = new LinkedHashSet<>();

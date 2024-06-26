@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,6 +25,7 @@ import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
 import static io.microsphere.util.StringUtils.substringBefore;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Simple {@link Class} Scanner
@@ -126,7 +126,7 @@ public class SimpleClassScanner {
         } catch (IOException e) {
 
         }
-        return Collections.unmodifiableSet(classesSet);
+        return unmodifiableSet(classesSet);
     }
 
     public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,

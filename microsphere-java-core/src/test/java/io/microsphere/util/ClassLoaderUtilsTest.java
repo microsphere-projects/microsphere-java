@@ -20,18 +20,31 @@ import java.util.TreeSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.CLASS;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPaths;
 import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClasses;
+import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClassesMap;
 import static io.microsphere.util.ClassLoaderUtils.getCallerClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getInheritableClassLoaders;
 import static io.microsphere.util.ClassLoaderUtils.getLoadedClassCount;
+import static io.microsphere.util.ClassLoaderUtils.getLoadedClasses;
+import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.ClassLoaderUtils.getResources;
 import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
+import static io.microsphere.util.ClassLoaderUtils.getUnloadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.isVerbose;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_12;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -51,6 +64,8 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
+    private static final boolean isLessThanJava12 = CURRENT_JAVA_VERSION.isLessThan(JAVA_VERSION_12);
+
     @Test
     public void testFields() throws Exception {
 
@@ -58,7 +73,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
 //        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
-        Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
+        Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
         for (ClassLoader classLoader : classLoaders) {
             info(String.format("ClassLoader : %s", classLoader));
             for (Field field : allFields) {
@@ -77,65 +92,65 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testResolve() {
         String resourceName = "META-INF/abc/def";
         String expectedResourceName = "META-INF/abc/def";
-        String resolvedResourceName = ClassLoaderUtils.ResourceType.DEFAULT.resolve(resourceName);
+        String resolvedResourceName = DEFAULT.resolve(resourceName);
         assertEquals(expectedResourceName, resolvedResourceName);
 
         resourceName = "///////META-INF//abc\\/def";
-        resolvedResourceName = ClassLoaderUtils.ResourceType.DEFAULT.resolve(resourceName);
+        resolvedResourceName = DEFAULT.resolve(resourceName);
         assertEquals(expectedResourceName, resolvedResourceName);
 
         resourceName = "java.lang.String.class";
 
         expectedResourceName = "java/lang/String.class";
-        resolvedResourceName = ClassLoaderUtils.ResourceType.CLASS.resolve(resourceName);
+        resolvedResourceName = CLASS.resolve(resourceName);
         assertEquals(expectedResourceName, resolvedResourceName);
 
         resourceName = "java.lang";
         expectedResourceName = "java/lang/";
-        resolvedResourceName = ClassLoaderUtils.ResourceType.PACKAGE.resolve(resourceName);
+        resolvedResourceName = PACKAGE.resolve(resourceName);
         assertEquals(expectedResourceName, resolvedResourceName);
 
     }
 
     @Test
     public void testGetClassResource() {
-        URL classResourceURL = ClassLoaderUtils.getClassResource(classLoader, ClassLoaderUtilsTest.class);
+        URL classResourceURL = getClassResource(classLoader, ClassLoaderUtilsTest.class);
         assertNotNull(classResourceURL);
         info(classResourceURL);
 
-        classResourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class.getName());
+        classResourceURL = getClassResource(classLoader, String.class.getName());
         assertNotNull(classResourceURL);
         info(classResourceURL);
     }
 
     @Test
     public void testGetResource() {
-        URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
+        URL resourceURL = getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURL);
         info(resourceURL);
 
-        resourceURL = ClassLoaderUtils.getResource(classLoader, "///java/lang/CharSequence.class");
+        resourceURL = getResource(classLoader, "///java/lang/CharSequence.class");
         assertNotNull(resourceURL);
         info(resourceURL);
 
-        resourceURL = ClassLoaderUtils.getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
+        resourceURL = getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURL);
         info(resourceURL);
     }
 
     @Test
     public void testGetResources() throws IOException {
-        Set<URL> resourceURLs = ClassLoaderUtils.getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
+        Set<URL> resourceURLs = getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
 
-        resourceURLs = ClassLoaderUtils.getResources(classLoader, "///java/lang/CharSequence.class");
+        resourceURLs = getResources(classLoader, "///java/lang/CharSequence.class");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
 
-        resourceURLs = ClassLoaderUtils.getResources(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
+        resourceURLs = getResources(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         info(resourceURLs);
@@ -146,16 +161,16 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         ClassLoadingMXBean classLoadingMXBean = ClassLoaderUtils.classLoadingMXBean;
         assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), getTotalLoadedClassCount());
         assertEquals(classLoadingMXBean.getLoadedClassCount(), getLoadedClassCount());
-        assertEquals(classLoadingMXBean.getUnloadedClassCount(), ClassLoaderUtils.getUnloadedClassCount());
-        assertEquals(classLoadingMXBean.isVerbose(), ClassLoaderUtils.isVerbose());
+        assertEquals(classLoadingMXBean.getUnloadedClassCount(), getUnloadedClassCount());
+        assertEquals(classLoadingMXBean.isVerbose(), isVerbose());
 
         ClassLoaderUtils.setVerbose(true);
-        assertTrue(ClassLoaderUtils.isVerbose());
+        assertTrue(isVerbose());
     }
 
     @Test
     public void testGetInheritableClassLoaders() {
-        Set<ClassLoader> classLoaders = ClassLoaderUtils.getInheritableClassLoaders(classLoader);
+        Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
         assertNotNull(classLoaders);
         assertTrue(classLoaders.size() > 1);
         info(classLoaders);
@@ -163,35 +178,41 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetLoadedClasses() {
-        Set<Class<?>> classesSet = ClassLoaderUtils.getLoadedClasses(classLoader);
-        assertNotNull(classesSet);
-        assertFalse(classesSet.isEmpty());
+        if (isLessThanJava12) {
+            Set<Class<?>> classesSet = getLoadedClasses(classLoader);
+            assertNotNull(classesSet);
+            assertFalse(classesSet.isEmpty());
 
 
-        classesSet = ClassLoaderUtils.getLoadedClasses(ClassLoader.getSystemClassLoader());
-        assertNotNull(classesSet);
-        assertFalse(classesSet.isEmpty());
-        info(classesSet);
+            classesSet = getLoadedClasses(ClassLoader.getSystemClassLoader());
+            assertNotNull(classesSet);
+            assertFalse(classesSet.isEmpty());
+            info(classesSet);
+        }
     }
 
     @Test
     public void testGetAllLoadedClasses() {
-        Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
-        assertNotNull(classesSet);
-        assertFalse(classesSet.isEmpty());
+        if (isLessThanJava12) {
+            Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
+            assertNotNull(classesSet);
+            assertFalse(classesSet.isEmpty());
 
 
-        classesSet = getAllLoadedClasses(ClassLoader.getSystemClassLoader());
-        assertNotNull(classesSet);
-        assertFalse(classesSet.isEmpty());
-        info(classesSet);
+            classesSet = getAllLoadedClasses(ClassLoader.getSystemClassLoader());
+            assertNotNull(classesSet);
+            assertFalse(classesSet.isEmpty());
+            info(classesSet);
+        }
     }
 
     @Test
     public void testGetAllLoadedClassesMap() {
-        Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = ClassLoaderUtils.getAllLoadedClassesMap(classLoader);
-        assertNotNull(allLoadedClassesMap);
-        assertFalse(allLoadedClassesMap.isEmpty());
+        if (isLessThanJava12) {
+            Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
+            assertNotNull(allLoadedClassesMap);
+            assertFalse(allLoadedClassesMap.isEmpty());
+        }
     }
 
 
@@ -199,9 +220,11 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFindLoadedClass() {
 
         Class<?> type = null;
-        for (Class<?> class_ : getAllLoadedClasses(classLoader)) {
-            type = findLoadedClass(classLoader, class_.getName());
-            assertEquals(class_, type);
+        if (isLessThanJava12) {
+            for (Class<?> class_ : getAllLoadedClasses(classLoader)) {
+                type = findLoadedClass(classLoader, class_.getName());
+                assertEquals(class_, type);
+            }
         }
 
         type = findLoadedClass(classLoader, String.class.getName());
@@ -251,7 +274,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         count = getLoadedClassCount();
         assertTrue(count > 0);
 
-        count = ClassLoaderUtils.getUnloadedClassCount();
+        count = getUnloadedClassCount();
         assertTrue(count > -1);
     }
 

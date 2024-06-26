@@ -78,8 +78,8 @@ public abstract class SetUtils extends BaseUtils {
      * @return non-null read-only {@link Set}
      */
     @Nonnull
-    public static <E> Set<E> asSet(Enumeration<E> elements) {
-        return asSet(toIterable(elements));
+    public static <E> Set<E> ofSet(Enumeration<E> elements) {
+        return ofSet(toIterable(elements));
     }
 
     /**
@@ -89,7 +89,7 @@ public abstract class SetUtils extends BaseUtils {
      * @param <E>      the type of <code>elements</code>
      * @return read-only {@link Set}
      */
-    public static <E> Set<E> asSet(Iterable<E> elements) {
+    public static <E> Set<E> ofSet(Iterable<E> elements) {
         return unmodifiableSet(newLinkedHashSet(elements));
     }
 
@@ -101,7 +101,7 @@ public abstract class SetUtils extends BaseUtils {
      * @param <E>    the type of <code>elements</code>
      * @return read-only {@link Set}
      */
-    public static <E> Set<E> asSet(E one, E... others) {
+    public static <E> Set<E> ofSet(E one, E... others) {
         int othersSize = length(others);
         if (othersSize < 1) {
             return singleton(one);
@@ -118,7 +118,7 @@ public abstract class SetUtils extends BaseUtils {
         return unmodifiableSet(elements);
     }
 
-    public static <T> Set<T> asSet(Collection<T> elements, T... others) {
+    public static <T> Set<T> ofSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
         if (valuesSize < 1) {
@@ -128,7 +128,7 @@ public abstract class SetUtils extends BaseUtils {
         int othersSize = length(others);
 
         if (othersSize < 1) {
-            return asSet(elements);
+            return ofSet(elements);
         }
 
         int size = valuesSize + othersSize;

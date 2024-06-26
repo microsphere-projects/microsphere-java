@@ -24,7 +24,7 @@ import java.util.Set;
 
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.collection.ListUtils.newArrayList;
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.ofList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyList;
@@ -52,17 +52,17 @@ public class ListUtilsTest {
     }
 
     @Test
-    public void testToList() {
+    public void testOfList() {
         List<String> rawList = asList("A", "B", "C");
-        List<String> list = toList(rawList);
+        List<String> list = ofList(rawList);
         assertSame(rawList, list);
         assertEquals(rawList, list);
 
         Set<String> rawSet = singleton("A");
-        list = toList(rawSet);
+        list = ofList(rawSet);
         assertEquals(newArrayList(rawSet), list);
 
-        list = toList((List) null);
+        list = ofList((List) null);
         assertSame(emptyList(), list);
         assertEquals(emptyList(), list);
     }

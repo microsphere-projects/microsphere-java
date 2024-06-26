@@ -5,9 +5,7 @@ package io.microsphere.util;
 
 import io.microsphere.collection.CollectionUtils;
 import io.microsphere.collection.MapUtils;
-import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
-import io.microsphere.constants.PathConstants;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.FileUtils;
 import io.microsphere.io.filter.FileExtensionFilter;
@@ -27,7 +25,6 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -43,11 +40,13 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.SetUtils.asSet;
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
@@ -56,10 +55,17 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.StringUtils.isNotBlank;
+import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.startsWith;
+import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.StringUtils.substringBefore;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.reverse;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -479,7 +485,7 @@ public abstract class ClassUtils extends BaseUtils {
             Set<String> classNames = findClassNamesInClassPath(classPath, true);
             classPathToClassNamesMap.put(classPath, classNames);
         }
-        return Collections.unmodifiableMap(classPathToClassNamesMap);
+        return unmodifiableMap(classPathToClassNamesMap);
     }
 
     private static Map<String, String> initClassNameToClassPathsMap() {
@@ -493,7 +499,7 @@ public abstract class ClassUtils extends BaseUtils {
             }
         }
 
-        return Collections.unmodifiableMap(classNameToClassPathsMap);
+        return unmodifiableMap(classNameToClassPathsMap);
     }
 
     private static Map<String, Set<String>> initPackageNameToClassNamesMap() {
@@ -509,7 +515,7 @@ public abstract class ClassUtils extends BaseUtils {
             classNamesInPackage.add(className);
         }
 
-        return Collections.unmodifiableMap(packageNameToClassNamesMap);
+        return unmodifiableMap(packageNameToClassNamesMap);
     }
 
     /**
@@ -530,7 +536,7 @@ public abstract class ClassUtils extends BaseUtils {
      */
     @Nullable
     public static String resolvePackageName(String className) {
-        return StringUtils.substringBeforeLast(className, ".");
+        return substringBeforeLast(className, ".");
     }
 
 
@@ -549,7 +555,7 @@ public abstract class ClassUtils extends BaseUtils {
         } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
             return findClassNamesInJarFile(classesFileHolder, recursive);
         }
-        return Collections.emptySet();
+        return emptySet();
     }
 
     /**
@@ -591,7 +597,7 @@ public abstract class ClassUtils extends BaseUtils {
             for (JarEntry jarEntry : jarEntries) {
                 String jarEntryName = jarEntry.getName();
                 String className = resolveClassName(jarEntryName);
-                if (StringUtils.isNotBlank(className)) {
+                if (isNotBlank(className)) {
                     classNames.add(className);
                 }
             }
@@ -658,7 +664,7 @@ public abstract class ClassUtils extends BaseUtils {
     @Nonnull
     public static Set<String> getClassNamesInPackage(String packageName) {
         Set<String> classNames = packageNameToClassNamesMap.get(packageName);
-        return classNames == null ? Collections.emptySet() : classNames;
+        return classNames == null ? emptySet() : classNames;
     }
 
 
@@ -675,7 +681,7 @@ public abstract class ClassUtils extends BaseUtils {
 
     protected static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
         if (!jarFile.exists()) {
-            return Collections.emptySet();
+            return emptySet();
         }
 
         Set<String> classNames = new LinkedHashSet();
@@ -688,7 +694,7 @@ public abstract class ClassUtils extends BaseUtils {
             for (JarEntry jarEntry : jarEntries) {
                 String jarEntryName = jarEntry.getName();
                 String className = resolveClassName(jarEntryName);
-                if (StringUtils.isNotBlank(className)) {
+                if (isNotBlank(className)) {
                     classNames.add(className);
                 }
             }
@@ -712,10 +718,10 @@ public abstract class ClassUtils extends BaseUtils {
      * @return class name
      */
     public static String resolveClassName(String resourceName) {
-        String className = StringUtils.replace(resourceName, PathConstants.SLASH, Constants.DOT);
-        className = StringUtils.substringBefore(className, CLASS_EXTENSION);
-        while (StringUtils.startsWith(className, Constants.DOT)) {
-            className = StringUtils.substringAfter(className, Constants.DOT);
+        String className = replace(resourceName, SLASH, DOT);
+        className = substringBefore(className, CLASS_EXTENSION);
+        while (startsWith(className, DOT)) {
+            className = substringAfter(className, DOT);
         }
         return className;
     }
@@ -742,7 +748,7 @@ public abstract class ClassUtils extends BaseUtils {
         for (Set<String> classNames : classPathToClassNamesMap.values()) {
             allClassNames.addAll(classNames);
         }
-        return Collections.unmodifiableSet(allClassNames);
+        return unmodifiableSet(allClassNames);
     }
 
 
@@ -760,7 +766,7 @@ public abstract class ClassUtils extends BaseUtils {
 
         if (classLoader == null) { // Bootstrap ClassLoader or type is primitive or void
             String path = findClassPath(type);
-            if (StringUtils.isNotBlank(path)) {
+            if (isNotBlank(path)) {
                 try {
                     codeSourceLocation = new File(path).toURI().toURL();
                 } catch (MalformedURLException ignored) {
@@ -1005,14 +1011,14 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         // FIFO -> FILO
-        Collections.reverse(allClasses);
+        reverse(allClasses);
 
         if (includedSelf) {
             allClasses.add(type);
         }
 
         // Keep the same order from List
-        return asSet(filterAll(allClasses, classFilters));
+        return ofSet(filterAll(allClasses, classFilters));
     }
 
     /**

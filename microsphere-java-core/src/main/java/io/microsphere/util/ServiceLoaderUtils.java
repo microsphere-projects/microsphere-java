@@ -9,7 +9,8 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
@@ -32,7 +33,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
     private static final Map<ClassLoader, Map<Class<?>, ServiceLoader<?>>> serviceLoadersCache = new ConcurrentHashMap<>();
 
     private static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
-    
+
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
      * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
@@ -348,7 +349,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
         }
         ServiceLoader<S> serviceLoader = load(serviceType, classLoader, cached);
         Iterator<S> iterator = serviceLoader.iterator();
-        List<S> serviceList = toList(iterator);
+        List<S> serviceList = newLinkedList(toIterable(iterator));
 
         if (serviceList.isEmpty()) {
             String className = serviceType.getName();

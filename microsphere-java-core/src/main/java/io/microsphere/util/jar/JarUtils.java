@@ -13,14 +13,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
@@ -31,6 +30,7 @@ import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.substringAfter;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -124,10 +124,10 @@ public class JarUtils {
     @Nonnull
     public static List<JarEntry> filter(JarFile jarFile, JarEntryFilter jarEntryFilter) {
         if (jarFile == null) {
-            return Collections.emptyList();
+            return emptyList();
         }
         Enumeration<JarEntry> jarEntries = jarFile.entries();
-        List<JarEntry> jarEntriesList = toList(jarEntries);
+        List<JarEntry> jarEntriesList = ofList(jarEntries);
         return doFilter(jarEntriesList, jarEntryFilter);
     }
 

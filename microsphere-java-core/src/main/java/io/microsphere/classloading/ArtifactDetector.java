@@ -2,7 +2,6 @@ package io.microsphere.classloading;
 
 import io.microsphere.collection.CollectionUtils;
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import io.microsphere.util.ClassLoaderUtils;
 
 import javax.annotation.Nonnull;
@@ -15,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
@@ -31,7 +31,7 @@ import static java.util.Collections.unmodifiableList;
  */
 public class ArtifactDetector {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArtifactDetector.class);
+    private static final Logger logger = getLogger(ArtifactDetector.class);
 
     private static final String JAVA_HOME_PATH = normalizePath(getProperty("java.home"));
 

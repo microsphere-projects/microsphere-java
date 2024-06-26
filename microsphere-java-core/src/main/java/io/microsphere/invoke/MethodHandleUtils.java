@@ -35,8 +35,11 @@ import static io.microsphere.lang.function.ThrowableBiFunction.execute;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
+import static io.microsphere.reflect.MemberUtils.isPublic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.isCallerSensitiveMethod;
 import static io.microsphere.util.ArrayUtils.isEmpty;
+import static java.lang.invoke.MethodHandles.publicLookup;
 import static java.lang.invoke.MethodType.methodType;
 
 /**
@@ -342,9 +345,12 @@ public abstract class MethodHandleUtils extends BaseUtils {
         }
         Class<?> returnType = method.getReturnType();
         MethodType methodType = isEmpty(parameterTypes) ? methodType(returnType) : methodType(returnType, parameterTypes);
-//        MethodHandles.Lookup lookup = isPublic(method) ? publicLookup() : lookup(lookupClass);
-        MethodHandles.Lookup lookup = lookup(lookupClass);
+        MethodHandles.Lookup lookup = isiCandidateMethod(method) ? publicLookup() : lookup(lookupClass);
         return execute(lookup, methodType, function);
+    }
+
+    private static boolean isiCandidateMethod(Method method) {
+        return isPublic(method) && !isCallerSensitiveMethod(method);
     }
 
     private static MethodHandles.Lookup newLookup(LookupKey key) {

@@ -4,10 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.classloading.URLClassPathHandle;
-import io.microsphere.collection.ListUtils;
-import io.microsphere.constants.Constants;
-import io.microsphere.constants.FileConstants;
-import io.microsphere.constants.PathConstants;
 import io.microsphere.logging.Logger;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
@@ -24,7 +20,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -36,7 +31,11 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
-import static io.microsphere.collection.SetUtils.asSet;
+import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.PathConstants.BACK_SLASH;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findField;
@@ -45,6 +44,11 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.util.StringUtils.contains;
+import static io.microsphere.util.StringUtils.endsWith;
+import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static java.lang.management.ManagementFactory.getClassLoadingMXBean;
@@ -316,7 +320,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             return classLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
             if (logger.isTraceEnabled()) {
-                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", classLoader);
+                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", className, classLoader);
             }
         } catch (Throwable ignored) {
         }
@@ -356,7 +360,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Set<URL> getResources(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
         String normalizedResourceName = resourceType.resolve(resourceName);
         Enumeration<URL> resources = classLoader.getResources(normalizedResourceName);
-        return resources != null && resources.hasMoreElements() ? new LinkedHashSet(ListUtils.toList(resources)) : Collections.emptySet();
+        return resources != null && resources.hasMoreElements() ? ofSet(resources) : emptySet();
     }
 
     /**
@@ -370,7 +374,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws IOException
      */
     public static Set<URL> getResources(ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
-        Set<URL> resourceURLs = Collections.emptySet();
+        Set<URL> resourceURLs = emptySet();
         for (ResourceType resourceType : ResourceType.values()) {
             resourceURLs = getResources(classLoader, resourceType, resourceName);
             if (isNotEmpty(resourceURLs)) {
@@ -425,7 +429,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException If any argument is <code>null</code>
      */
     public static URL getClassResource(ClassLoader classLoader, String className) {
-        final String resourceName = className + FileConstants.CLASS_EXTENSION;
+        final String resourceName = className + CLASS_EXTENSION;
         return getResource(classLoader, ResourceType.CLASS, resourceName);
     }
 
@@ -514,7 +518,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Set<Class<?>> getLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
         Field field = findField(classLoaderClass, classesFieldName);
         List<Class<?>> classes = getFieldValue(classLoader, field);
-        return classes == null ? emptySet() : asSet(classes);
+        return classes == null ? emptySet() : ofSet(classes);
     }
 
     /**
@@ -561,18 +565,28 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
+     * Test the specified class name is present in the {@link #getDefaultClassLoader() default ClassLoader}
+     *
+     * @param className the name of {@link Class}
+     * @return If found, return <code>true</code>
+     */
+    public static boolean isPresent(@Nullable String className) {
+        return resolveClass(className) != null;
+    }
+
+    /**
      * Test the specified class name is present in the {@link ClassLoader}
      *
      * @param className   the name of {@link Class}
      * @param classLoader {@link ClassLoader}
      * @return If found, return <code>true</code>
      */
-    public static boolean isPresent(String className, ClassLoader classLoader) {
+    public static boolean isPresent(@Nullable String className, @Nullable ClassLoader classLoader) {
         return resolveClass(className, classLoader) != null;
     }
 
     /**
-     * Resolve the {@link Class} by the specified name using {@link #getDefaultClassLoader()}
+     * Resolve the {@link Class} by the specified name in the {@link #getDefaultClassLoader() default ClassLoader}
      *
      * @param className the name of {@link Class}
      * @return If can't be resolved , return <code>null</code>
@@ -601,7 +615,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return If can't be resolved , return <code>null</code>
      */
     public static Class<?> resolveClass(@Nullable String className, @Nullable ClassLoader classLoader, boolean cached) {
-        if (className == null) {
+        if (isBlank(className)) {
             return null;
         }
 
@@ -685,13 +699,13 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         }, CLASS {
             @Override
             boolean supported(String name) {
-                return StringUtils.endsWith(name, FileConstants.CLASS_EXTENSION);
+                return endsWith(name, CLASS_EXTENSION);
             }
 
             @Override
             public String normalize(String name) {
-                String className = StringUtils.replace(name, FileConstants.CLASS_EXTENSION, StringUtils.EMPTY);
-                return StringUtils.replace(className, Constants.DOT, PathConstants.SLASH) + FileConstants.CLASS_EXTENSION;
+                String className = replace(name, CLASS_EXTENSION, EMPTY);
+                return replace(className, DOT, SLASH) + CLASS_EXTENSION;
             }
 
 
@@ -699,12 +713,12 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             @Override
             boolean supported(String name) {
                 //TODO: use regexp to match more precise
-                return !CLASS.supported(name) && !StringUtils.contains(name, PathConstants.SLASH) && !StringUtils.contains(name, PathConstants.BACK_SLASH);
+                return !CLASS.supported(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
             }
 
             @Override
             String normalize(String name) {
-                return StringUtils.replace(name, Constants.DOT, PathConstants.SLASH) + PathConstants.SLASH;
+                return replace(name, DOT, SLASH) + SLASH;
             }
 
 

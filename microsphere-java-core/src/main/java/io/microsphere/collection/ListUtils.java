@@ -27,8 +27,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.CollectionUtils.toIterator;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * The utilities class for Java {@link List}
@@ -43,21 +46,25 @@ public abstract class ListUtils extends BaseUtils {
         return values instanceof List;
     }
 
-    public static <E> List<E> toList(Iterable<E> iterable) {
+    public static <E> List<E> ofList(E... elements) {
+        return asList(elements);
+    }
+
+    public static <E> List<E> ofList(Iterable<E> iterable) {
         if (iterable == null) {
             return emptyList();
         } else if (isList(iterable)) {
             return (List) iterable;
         } else {
-            return toList(iterable.iterator());
+            return ofList(iterable.iterator());
         }
     }
 
-    public static <E> List<E> toList(Enumeration<E> enumeration) {
-        return toList(toIterator(enumeration));
+    public static <E> List<E> ofList(Enumeration<E> enumeration) {
+        return ofList(toIterator(enumeration));
     }
 
-    public static <E> List<E> toList(Iterator<E> iterator) {
+    public static <E> List<E> ofList(Iterator<E> iterator) {
         if (iterator == null) {
             return emptyList();
         }
@@ -65,17 +72,25 @@ public abstract class ListUtils extends BaseUtils {
         while (iterator.hasNext()) {
             list.add(iterator.next());
         }
-        return list;
+        return unmodifiableList(list);
     }
 
     public static <E> ArrayList<E> newArrayList(int size) {
         return new ArrayList<>(size);
     }
 
+    public static <E> LinkedList<E> newArrayList(Enumeration<E> values) {
+        return newLinkedList(toIterable(values));
+    }
+
     public static <E> ArrayList<E> newArrayList(Iterable<E> values) {
+        return newArrayList(values.iterator());
+    }
+
+    public static <E> ArrayList<E> newArrayList(Iterator<E> iterator) {
         ArrayList<E> list = newArrayList();
-        for (E value : values) {
-            list.add(value);
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
         return list;
     }
@@ -84,10 +99,18 @@ public abstract class ListUtils extends BaseUtils {
         return new ArrayList<>();
     }
 
+    public static <E> LinkedList<E> newLinkedList(Enumeration<E> values) {
+        return newLinkedList(toIterable(values));
+    }
+
     public static <E> LinkedList<E> newLinkedList(Iterable<E> values) {
+        return newLinkedList(values.iterator());
+    }
+
+    public static <E> LinkedList<E> newLinkedList(Iterator<E> iterator) {
         LinkedList<E> list = newLinkedList();
-        for (E value : values) {
-            list.add(value);
+        while (iterator.hasNext()) {
+            list.add(iterator.next());
         }
         return list;
     }

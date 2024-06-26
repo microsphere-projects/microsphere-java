@@ -31,7 +31,6 @@ import java.lang.reflect.Method;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
-import static io.microsphere.reflect.MemberUtils.isPublic;
 import static io.microsphere.text.FormatUtils.format;
 
 /**
@@ -134,10 +133,8 @@ public abstract class ExecutableUtils extends BaseUtils {
         boolean accessible = false;
         RuntimeException failure = null;
         try {
-            if (!isPublic(executableMember)) {
-                accessible = trySetAccessible(executableMember);
-            }
-            result = (R) callback.apply(executableMember);
+            accessible = trySetAccessible(executableMember);
+            result = callback.apply(executableMember);
         } catch (IllegalAccessException e) {
             String errorMessage = format("The executable member['{}'] can't be accessed[accessible : {}]", executableMember, accessible);
             failure = new IllegalStateException(errorMessage, e);
@@ -147,6 +144,8 @@ public abstract class ExecutableUtils extends BaseUtils {
         } catch (InvocationTargetException e) {
             String errorMessage = format("It's failed to invoke the executable member['{}']", executableMember);
             failure = new RuntimeException(errorMessage, e.getTargetException());
+        } catch (RuntimeException e) {
+            failure = e;
         } catch (Throwable e) {
             failure = new RuntimeException(e);
         }

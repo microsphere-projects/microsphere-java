@@ -25,9 +25,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.List;
 
+import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
+import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS_NAME;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
+import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
+import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
@@ -61,6 +65,12 @@ public class AnnotationUtilsTest {
         List<Annotation> annotations = getDeclaredAnnotations(B.class);
         assertEquals(1, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
+    }
+
+    @Test
+    public void testIsCallerSensitivePresent() {
+        assertEquals(isPresent(CALLER_SENSITIVE_ANNOTATION_CLASS_NAME), isCallerSensitivePresent());
+        assertEquals(CALLER_SENSITIVE_ANNOTATION_CLASS != null, isCallerSensitivePresent());
     }
 
 

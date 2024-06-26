@@ -2,7 +2,6 @@ package io.microsphere.classloading;
 
 import io.microsphere.io.IOUtils;
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -24,6 +23,7 @@ import java.util.TreeSet;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.io.IOUtils.toByteArray;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.split;
 
@@ -38,7 +38,7 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
 
     private static final String WINDOWS_REDEFINED_CLASSES_RESOURCE_NAME = "META-INF/windows-redefined-classes";
 
-    private static final Logger logger = LoggerFactory.getLogger(WindowsRedefinedClassLoader.class);
+    private static final Logger logger = getLogger(WindowsRedefinedClassLoader.class);
 
     private static final Charset charset = StandardCharsets.UTF_8;
 
