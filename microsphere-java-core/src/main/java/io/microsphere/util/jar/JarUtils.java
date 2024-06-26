@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
@@ -127,7 +127,7 @@ public class JarUtils {
             return Collections.emptyList();
         }
         Enumeration<JarEntry> jarEntries = jarFile.entries();
-        List<JarEntry> jarEntriesList = toList(jarEntries);
+        List<JarEntry> jarEntriesList = ofList(jarEntries);
         return doFilter(jarEntriesList, jarEntryFilter);
     }
 

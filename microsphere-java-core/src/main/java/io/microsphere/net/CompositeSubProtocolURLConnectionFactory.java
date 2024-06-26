@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
-import static io.microsphere.collection.ListUtils.toList;
 
 /**
  * The composite {@link SubProtocolURLConnectionFactory} class supports modified dynamically at runtime.
@@ -43,7 +42,7 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     }
 
     public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
-        List<SubProtocolURLConnectionFactory> newFactories = toList(factories);
+        List<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
         this.factories = newFactories;
         sort();
     }

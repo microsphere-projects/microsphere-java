@@ -22,7 +22,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static java.util.Collections.sort;
 import static java.util.ServiceLoader.load;
 
@@ -53,7 +53,7 @@ public abstract class LoggerFactory {
     }
 
     static List<LoggerFactory> loadFactories() {
-        List<LoggerFactory> factories = toList(load(LoggerFactory.class, classLoader));
+        List<LoggerFactory> factories = newLinkedList(load(LoggerFactory.class, classLoader));
         sort(factories, Prioritized.COMPARATOR);
         return factories;
     }
