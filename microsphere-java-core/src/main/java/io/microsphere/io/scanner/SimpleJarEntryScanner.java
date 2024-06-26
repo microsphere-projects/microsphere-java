@@ -10,7 +10,6 @@ import io.microsphere.util.jar.JarUtils;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;

@@ -5,7 +5,6 @@ package io.microsphere.util;
 
 import io.microsphere.collection.CollectionUtils;
 import io.microsphere.collection.MapUtils;
-import io.microsphere.collection.SetUtils;
 import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
@@ -28,7 +27,6 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -44,8 +42,8 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
@@ -551,7 +549,7 @@ public abstract class ClassUtils extends BaseUtils {
         } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
             return findClassNamesInJarFile(classesFileHolder, recursive);
         }
-        return `emptySet();
+        return emptySet();
     }
 
     /**
