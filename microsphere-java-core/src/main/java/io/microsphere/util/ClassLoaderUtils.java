@@ -47,6 +47,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
+import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
@@ -319,7 +320,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             return classLoader.loadClass(className);
         } catch (ClassNotFoundException e) {
             if (logger.isTraceEnabled()) {
-                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", classLoader);
+                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", className, classLoader);
             }
         } catch (Throwable ignored) {
         }
@@ -564,18 +565,28 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
+     * Test the specified class name is present in the {@link #getDefaultClassLoader() default ClassLoader}
+     *
+     * @param className the name of {@link Class}
+     * @return If found, return <code>true</code>
+     */
+    public static boolean isPresent(@Nullable String className) {
+        return resolveClass(className) != null;
+    }
+
+    /**
      * Test the specified class name is present in the {@link ClassLoader}
      *
      * @param className   the name of {@link Class}
      * @param classLoader {@link ClassLoader}
      * @return If found, return <code>true</code>
      */
-    public static boolean isPresent(String className, ClassLoader classLoader) {
+    public static boolean isPresent(@Nullable String className, @Nullable ClassLoader classLoader) {
         return resolveClass(className, classLoader) != null;
     }
 
     /**
-     * Resolve the {@link Class} by the specified name using {@link #getDefaultClassLoader()}
+     * Resolve the {@link Class} by the specified name in the {@link #getDefaultClassLoader() default ClassLoader}
      *
      * @param className the name of {@link Class}
      * @return If can't be resolved , return <code>null</code>
@@ -604,7 +615,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return If can't be resolved , return <code>null</code>
      */
     public static Class<?> resolveClass(@Nullable String className, @Nullable ClassLoader classLoader, boolean cached) {
-        if (className == null) {
+        if (isBlank(className)) {
             return null;
         }
 
