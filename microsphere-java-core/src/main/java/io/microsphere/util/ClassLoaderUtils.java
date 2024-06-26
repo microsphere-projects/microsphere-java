@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
-import static io.microsphere.collection.SetUtils.asSet;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findField;
@@ -514,7 +514,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static Set<Class<?>> getLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
         Field field = findField(classLoaderClass, classesFieldName);
         List<Class<?>> classes = getFieldValue(classLoader, field);
-        return classes == null ? emptySet() : asSet(classes);
+        return classes == null ? emptySet() : ofSet(classes);
     }
 
     /**

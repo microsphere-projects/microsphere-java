@@ -5,6 +5,7 @@ package io.microsphere.util;
 
 import io.microsphere.collection.CollectionUtils;
 import io.microsphere.collection.MapUtils;
+import io.microsphere.collection.SetUtils;
 import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
 import io.microsphere.constants.PathConstants;
@@ -43,7 +44,7 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.SetUtils.asSet;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
@@ -1012,7 +1013,7 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         // Keep the same order from List
-        return asSet(filterAll(allClasses, classFilters));
+        return ofSet(filterAll(allClasses, classFilters));
     }
 
     /**
