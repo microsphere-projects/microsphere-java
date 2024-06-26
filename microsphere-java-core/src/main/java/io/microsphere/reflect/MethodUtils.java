@@ -24,6 +24,7 @@ import javax.annotation.Nullable;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -49,7 +50,10 @@ import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
+import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
@@ -563,5 +567,16 @@ public abstract class MethodUtils extends BaseUtils {
             return Objects.equals(Object.class, method.getDeclaringClass());
         }
         return false;
+    }
+
+    /**
+     * Test whether the specified {@link Method method} annotates {@linkplain jdk.internal.reflect.CallerSensitive} or not
+     *
+     * @param method {@link Method}
+     * @return <code>true</code> if the specified {@link Method method} annotates {@linkplain jdk.internal.reflect.CallerSensitive}
+     * @see jdk.internal.reflect.CallerSensitive
+     */
+    public static boolean isCallerSensitiveMethod(Method method) {
+        return isAnnotationPresent(method, CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
 }
