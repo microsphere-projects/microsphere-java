@@ -17,7 +17,6 @@
 package io.microsphere.management;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
@@ -35,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 
@@ -47,7 +47,7 @@ import static java.util.Collections.unmodifiableMap;
  */
 public abstract class JmxUtils extends BaseUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(JmxUtils.class);
+    private static final Logger logger = getLogger(JmxUtils.class);
 
     private static final MBeanAttribute[] EMPTY_MBEAN_ATTRIBUTE_ARRAY = new MBeanAttribute[0];
 

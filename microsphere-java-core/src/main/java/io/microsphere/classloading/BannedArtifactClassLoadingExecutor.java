@@ -1,7 +1,6 @@
 package io.microsphere.classloading;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import io.microsphere.util.SystemUtils;
 
 import java.io.BufferedReader;
@@ -14,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
@@ -40,7 +40,7 @@ public class BannedArtifactClassLoadingExecutor {
 
     public static final String CONFIG_LOCATION = "META-INF/banned-artifacts";
 
-    private static final Logger logger = LoggerFactory.getLogger(BannedArtifactClassLoadingExecutor.class);
+    private static final Logger logger = getLogger(BannedArtifactClassLoadingExecutor.class);
 
     private static final String ENCODING = SystemUtils.FILE_ENCODING;
 
