@@ -30,7 +30,7 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.AccessibleObjectUtils.setAccessible;
 import static io.microsphere.text.FormatUtils.format;
 
 /**
@@ -133,7 +133,7 @@ public abstract class ExecutableUtils extends BaseUtils {
         boolean accessible = false;
         RuntimeException failure = null;
         try {
-            accessible = trySetAccessible(executableMember);
+            accessible = setAccessible(executableMember);
             result = callback.apply(executableMember);
         } catch (IllegalAccessException e) {
             String errorMessage = format("The executable member['{}'] can't be accessed[accessible : {}]", executableMember, accessible);

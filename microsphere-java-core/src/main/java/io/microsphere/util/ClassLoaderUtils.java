@@ -4,6 +4,7 @@
 package io.microsphere.util;
 
 import io.microsphere.classloading.URLClassPathHandle;
+import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.logging.Logger;
 import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
@@ -42,7 +43,6 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.ClassUtils.getClassNamesInClassPath;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.contains;
@@ -529,7 +529,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws UnsupportedOperationException If JVM does not support
      */
     public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader) throws UnsupportedOperationException {
-        Set<String> classNames = ClassUtils.getAllClassNamesInClassPaths();
+        Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
         return findLoadedClasses(classLoader, classNames);
     }
 
@@ -560,7 +560,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @see #findLoadedClass(ClassLoader, String)
      */
     public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
-        Set<String> classNames = getClassNamesInClassPath(classPath, true);
+        Set<String> classNames = ClassDataRepository.INSTANCE.getClassNamesInClassPath(classPath, true);
         return findLoadedClasses(classLoader, classNames);
     }
 
