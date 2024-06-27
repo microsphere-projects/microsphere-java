@@ -4,6 +4,7 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.lang.ClassDataRepository;
 import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
@@ -14,7 +15,6 @@ import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.ClassPathUtils.getRuntimeClassLocation;
-import static io.microsphere.util.ClassUtils.getAllClassNamesInClassPaths;
 import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -68,7 +68,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         assertNull(location);
 
 
-        Set<String> classNames = getAllClassNamesInClassPaths();
+        Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
             if (!isLoadedClass(classLoader, className)) {
                 location = getRuntimeClassLocation(className);

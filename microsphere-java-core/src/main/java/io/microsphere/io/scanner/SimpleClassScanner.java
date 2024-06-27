@@ -5,8 +5,8 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.filter.FilterUtils;
 import io.microsphere.filter.PackageNameClassNameFilter;
+import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.util.ClassLoaderUtils;
-import io.microsphere.util.ClassUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +21,9 @@ import java.util.function.Predicate;
 
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.getResources;
 import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
 import static io.microsphere.util.StringUtils.substringBefore;
@@ -90,19 +92,20 @@ public class SimpleClassScanner {
     public Set<Class<?>> scan(ClassLoader classLoader, String packageName, final boolean recursive, boolean requiredLoad) throws IllegalArgumentException, IllegalStateException {
         Set<Class<?>> classesSet = new LinkedHashSet();
 
-        final String packageResourceName = ClassLoaderUtils.ResourceType.PACKAGE.resolve(packageName);
+        final String packageResourceName = PACKAGE.resolve(packageName);
 
         try {
             Set<String> classNames = new LinkedHashSet();
             // Find in class loader
-            Set<URL> resourceURLs = ClassLoaderUtils.getResources(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, packageName);
+            Set<URL> resourceURLs = getResources(classLoader, PACKAGE, packageName);
 
             if (resourceURLs.isEmpty()) {
                 //Find in class path
-                List<String> classNamesInPackage = new ArrayList<>(ClassUtils.getClassNamesInPackage(packageName));
+                ClassDataRepository repository = ClassDataRepository.INSTANCE;
+                List<String> classNamesInPackage = new ArrayList<>(repository.getClassNamesInPackage(packageName));
 
                 if (!classNamesInPackage.isEmpty()) {
-                    String classPath = ClassUtils.findClassPath(classNamesInPackage.get(0));
+                    String classPath = repository.findClassPath(classNamesInPackage.get(0));
                     URL resourceURL = new File(classPath).toURI().toURL();
                     resourceURLs = new HashSet();
                     resourceURLs.add(resourceURL);
