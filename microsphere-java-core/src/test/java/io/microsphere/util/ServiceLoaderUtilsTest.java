@@ -1,13 +1,18 @@
 package io.microsphere.util;
 
+import io.microsphere.event.EchoEventListener;
+import io.microsphere.event.EchoEventListener2;
+import io.microsphere.event.EventListener;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
+import static io.microsphere.util.ServiceLoaderUtils.loadLastService;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ServiceLoaderUtilsTest}
@@ -23,28 +28,24 @@ public class ServiceLoaderUtilsTest {
     public void testLoadServicesList() throws Exception {
 
         ClassLoader classLoader = getClass().getClassLoader();
-        List<CharSequence> charSequenceList = ServiceLoaderUtils.loadServicesList(CharSequence.class, classLoader);
-        assertEquals(1, charSequenceList.size());
+        List<EventListener> eventListeners = loadServicesList(EventListener.class, classLoader);
+        assertEquals(2, eventListeners.size());
 
-        CharSequence charSequence = charSequenceList.get(0);
-        CharSequence firstService = ServiceLoaderUtils.loadFirstService(CharSequence.class, classLoader);
-        CharSequence lastService = ServiceLoaderUtils.loadLastService(CharSequence.class, classLoader);
+        EventListener eventListener = eventListeners.get(0);
+        EventListener firstService = loadFirstService(EventListener.class, classLoader);
+        EventListener lastService = loadLastService(EventListener.class, classLoader);
 
-        assertNotNull(charSequence);
-        assertEquals(charSequence, firstService);
-        assertEquals(charSequence, lastService);
-        assertEquals(firstService, lastService);
-
-        String string = charSequence.toString();
-        assertTrue(string.isEmpty());
+        assertNotNull(eventListener);
+        assertEquals(eventListener, firstService);
+        assertEquals(EchoEventListener2.class, firstService.getClass());
+        assertEquals(EchoEventListener.class, lastService.getClass());
 
         IllegalArgumentException e = null;
 
         try {
-            ServiceLoaderUtils.loadServicesList(Set.class, classLoader);
+            loadServicesList(Set.class, classLoader);
         } catch (IllegalArgumentException e_) {
             e = e_;
-            e.printStackTrace();
         }
 
         assertNotNull(e);

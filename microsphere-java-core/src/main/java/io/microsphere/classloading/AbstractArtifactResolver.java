@@ -1,7 +1,6 @@
 package io.microsphere.classloading;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 
 /**
@@ -21,7 +21,7 @@ import static io.microsphere.net.URLUtils.resolveArchiveFile;
  */
 public abstract class AbstractArtifactResolver implements ArtifactResolver {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     private int priority;
 

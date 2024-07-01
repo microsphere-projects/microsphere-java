@@ -16,12 +16,25 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.collection.MapUtils;
+import io.microsphere.reflect.MemberUtils;
 import org.junit.jupiter.api.Test;
 
+import javax.lang.model.SourceVersion;
+import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING_PROPERTY_KEY;
-import static io.microsphere.util.SystemUtils.FILE_SEPARATOR;
 import static io.microsphere.util.SystemUtils.FILE_SEPARATOR_PROPERTY_KEY;
+import static io.microsphere.util.SystemUtils.IS_JAVA_11;
+import static io.microsphere.util.SystemUtils.IS_JAVA_17;
+import static io.microsphere.util.SystemUtils.IS_JAVA_21;
+import static io.microsphere.util.SystemUtils.IS_JAVA_8;
+import static io.microsphere.util.SystemUtils.IS_LTS_JAVA_VERSION;
 import static io.microsphere.util.SystemUtils.JAVA_CLASS_PATH;
 import static io.microsphere.util.SystemUtils.JAVA_CLASS_PATH_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.JAVA_CLASS_VERSION;
@@ -60,7 +73,6 @@ import static io.microsphere.util.SystemUtils.JAVA_VM_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VENDOR_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VERSION;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VERSION_PROPERTY_KEY;
-import static io.microsphere.util.SystemUtils.LINE_SEPARATOR;
 import static io.microsphere.util.SystemUtils.LINE_SEPARATOR_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.OS_ARCH;
 import static io.microsphere.util.SystemUtils.OS_ARCH_PROPERTY_KEY;
@@ -68,7 +80,6 @@ import static io.microsphere.util.SystemUtils.OS_NAME;
 import static io.microsphere.util.SystemUtils.OS_NAME_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.OS_VERSION;
 import static io.microsphere.util.SystemUtils.OS_VERSION_PROPERTY_KEY;
-import static io.microsphere.util.SystemUtils.PATH_SEPARATOR;
 import static io.microsphere.util.SystemUtils.PATH_SEPARATOR_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.USER_DIR;
 import static io.microsphere.util.SystemUtils.USER_DIR_PROPERTY_KEY;
@@ -76,6 +87,8 @@ import static io.microsphere.util.SystemUtils.USER_HOME;
 import static io.microsphere.util.SystemUtils.USER_HOME_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.USER_NAME;
 import static io.microsphere.util.SystemUtils.USER_NAME_PROPERTY_KEY;
+import static java.lang.System.getProperty;
+import static javax.lang.model.SourceVersion.latest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -86,6 +99,39 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 public class SystemUtilsTest {
+
+    private static final Class<SystemUtils> CLASS = SystemUtils.class;
+
+    private static final String IS_JAVA_VERSION_FIELD_NAME_PREFIX = "IS_JAVA_";
+
+    private static final Field[] IS_JAVA_VERSION_FIELDS = findIsJavaVersionFields();
+
+    private static final Map<Integer, String> versionedClassNames = MapUtils.of(
+            22, "java.lang.foreign.Arena",
+            21, "java.util.SequencedSet",
+            20, "java.lang.reflect.ClassFileFormatVersion",
+            19, "java.util.concurrent.Future.State",
+            18, "java.net.spi.InetAddressResolverProvider",
+            17, "java.util.random.RandomGenerator",
+            16, "java.lang.Record",
+            15, "java.lang.invoke.MethodHandles.Lookup.ClassOption",
+            14, "java.io.Serial",
+            13, "com.sun.source.tree.YieldTree",
+            12, "java.lang.invoke.TypeDescriptor",
+            11, "java.net.http.HttpClient",
+            10, "",
+            9, "java.lang.ProcessHandle",
+            8, "java.util.concurrent.CompletableFuture"
+    );
+
+    private static final SourceVersion[] versions = SourceVersion.values();
+
+    private static Field[] findIsJavaVersionFields() {
+        return Stream.of(CLASS.getFields())
+                .filter(MemberUtils::isStatic)
+                .filter(field -> field.getName().startsWith(IS_JAVA_VERSION_FIELD_NAME_PREFIX))
+                .toArray(Field[]::new);
+    }
 
     @Test
     public void testSystemPropertyKeys() {
@@ -122,34 +168,48 @@ public class SystemUtilsTest {
 
     @Test
     public void testSystemProperties() {
-        assertEquals(System.getProperty("java.version"), JAVA_VERSION);
-        assertEquals(System.getProperty("java.vendor"), JAVA_VENDOR);
-        assertEquals(System.getProperty("java.vendor.url"), JAVA_VENDOR_URL);
-        assertEquals(System.getProperty("java.home"), JAVA_HOME);
-        assertEquals(System.getProperty("java.vm.specification.version"), JAVA_VM_SPECIFICATION_VERSION);
-        assertEquals(System.getProperty("java.vm.specification.vendor"), JAVA_VM_SPECIFICATION_VENDOR);
-        assertEquals(System.getProperty("java.vm.specification.name"), JAVA_VM_SPECIFICATION_NAME);
-        assertEquals(System.getProperty("java.vm.version"), JAVA_VM_VERSION);
-        assertEquals(System.getProperty("java.vm.vendor"), JAVA_VM_VENDOR);
-        assertEquals(System.getProperty("java.vm.name"), JAVA_VM_NAME);
-        assertEquals(System.getProperty("java.specification.version"), JAVA_SPECIFICATION_VERSION);
-        assertEquals(System.getProperty("java.specification.vendor"), JAVA_SPECIFICATION_VENDOR);
-        assertEquals(System.getProperty("java.specification.name"), JAVA_SPECIFICATION_NAME);
-        assertEquals(System.getProperty("java.class.version"), JAVA_CLASS_VERSION);
-        assertEquals(System.getProperty("java.class.path"), JAVA_CLASS_PATH);
-        assertEquals(System.getProperty("java.library.path"), JAVA_LIBRARY_PATH);
-        assertEquals(System.getProperty("java.io.tmpdir"), JAVA_IO_TMPDIR);
-        assertEquals(System.getProperty("java.compiler"), JAVA_COMPILER);
-        assertEquals(System.getProperty("java.ext.dirs"), JAVA_EXT_DIRS);
-        assertEquals(System.getProperty("os.name"), OS_NAME);
-        assertEquals(System.getProperty("os.arch"), OS_ARCH);
-        assertEquals(System.getProperty("os.version"), OS_VERSION);
-        assertEquals(System.getProperty("file.separator"), FILE_SEPARATOR);
-        assertEquals(System.getProperty("path.separator"), PATH_SEPARATOR);
-        assertEquals(System.getProperty("line.separator"), LINE_SEPARATOR);
-        assertEquals(System.getProperty("user.name"), USER_NAME);
-        assertEquals(System.getProperty("user.home"), USER_HOME);
-        assertEquals(System.getProperty("user.dir"), USER_DIR);
-        assertEquals(System.getProperty("file.encoding"), FILE_ENCODING);
+        assertEquals(getProperty("java.version"), JAVA_VERSION);
+        assertEquals(getProperty("java.vendor"), JAVA_VENDOR);
+        assertEquals(getProperty("java.vendor.url"), JAVA_VENDOR_URL);
+        assertEquals(getProperty("java.home"), JAVA_HOME);
+        assertEquals(getProperty("java.vm.specification.version"), JAVA_VM_SPECIFICATION_VERSION);
+        assertEquals(getProperty("java.vm.specification.vendor"), JAVA_VM_SPECIFICATION_VENDOR);
+        assertEquals(getProperty("java.vm.specification.name"), JAVA_VM_SPECIFICATION_NAME);
+        assertEquals(getProperty("java.vm.version"), JAVA_VM_VERSION);
+        assertEquals(getProperty("java.vm.vendor"), JAVA_VM_VENDOR);
+        assertEquals(getProperty("java.vm.name"), JAVA_VM_NAME);
+        assertEquals(getProperty("java.specification.version"), JAVA_SPECIFICATION_VERSION);
+        assertEquals(getProperty("java.specification.vendor"), JAVA_SPECIFICATION_VENDOR);
+        assertEquals(getProperty("java.specification.name"), JAVA_SPECIFICATION_NAME);
+        assertEquals(getProperty("java.class.version"), JAVA_CLASS_VERSION);
+        assertEquals(getProperty("java.class.path"), JAVA_CLASS_PATH);
+        assertEquals(getProperty("java.library.path"), JAVA_LIBRARY_PATH);
+        assertEquals(getProperty("java.io.tmpdir"), JAVA_IO_TMPDIR);
+        assertEquals(getProperty("java.compiler"), JAVA_COMPILER);
+        assertEquals(getProperty("java.ext.dirs"), JAVA_EXT_DIRS);
+        assertEquals(getProperty("os.name"), OS_NAME);
+        assertEquals(getProperty("os.arch"), OS_ARCH);
+        assertEquals(getProperty("os.version"), OS_VERSION);
+        assertEquals(getProperty("user.name"), USER_NAME);
+        assertEquals(getProperty("user.home"), USER_HOME);
+        assertEquals(getProperty("user.dir"), USER_DIR);
+        assertEquals(getProperty("file.encoding"), FILE_ENCODING);
+    }
+
+    @Test
+    public void testJavaVersion() throws Throwable {
+        assertEquals(IS_LTS_JAVA_VERSION, IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21);
+        assertJavaVersion();
+    }
+
+    private void assertJavaVersion() throws Throwable {
+        SourceVersion currentVersion = latest();
+        String javaMajorVersion = substringAfter(currentVersion.name(), "RELEASE_");
+        String targetFiledName = IS_JAVA_VERSION_FIELD_NAME_PREFIX + javaMajorVersion;
+        for (Field field : IS_JAVA_VERSION_FIELDS) {
+            String fieldName = field.getName();
+            Object fieldValue = field.get(null);
+            assertEquals(Objects.equals(targetFiledName, fieldName), fieldValue);
+        }
     }
 }

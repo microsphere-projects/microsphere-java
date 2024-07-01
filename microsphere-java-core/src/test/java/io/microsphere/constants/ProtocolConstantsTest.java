@@ -18,6 +18,15 @@ package io.microsphere.constants;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.ProtocolConstants.CLASSPATH_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.FTP_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.HTTPS_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.HTTP_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.WAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.ZIP_PROTOCOL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -30,14 +39,14 @@ public class ProtocolConstantsTest {
 
     @Test
     public void test() {
-        assertEquals("file", ProtocolConstants.FILE_PROTOCOL);
-        assertEquals("http", ProtocolConstants.HTTP_PROTOCOL);
-        assertEquals("https", ProtocolConstants.HTTPS_PROTOCOL);
-        assertEquals("ftp", ProtocolConstants.FTP_PROTOCOL);
-        assertEquals("zip", ProtocolConstants.ZIP_PROTOCOL);
-        assertEquals("jar", ProtocolConstants.JAR_PROTOCOL);
-        assertEquals("war", ProtocolConstants.WAR_PROTOCOL);
-        assertEquals("ear", ProtocolConstants.EAR_PROTOCOL);
-        assertEquals("classpath", ProtocolConstants.CLASSPATH_PROTOCOL);
+        assertEquals("file", FILE_PROTOCOL);
+        assertEquals("http", HTTP_PROTOCOL);
+        assertEquals("https", HTTPS_PROTOCOL);
+        assertEquals("ftp", FTP_PROTOCOL);
+        assertEquals("zip", ZIP_PROTOCOL);
+        assertEquals("jar", JAR_PROTOCOL);
+        assertEquals("war", WAR_PROTOCOL);
+        assertEquals("ear", EAR_PROTOCOL);
+        assertEquals("classpath", CLASSPATH_PROTOCOL);
     }
 }

@@ -14,22 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.tools;
+package io.microsphere.io.filter;
 
-import io.microsphere.tools.attach.LocalVirtualMachineTemplateTest;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
+import java.io.File;
 
 /**
- * The Compiler test case
+ * Filters filenames for a certain name.
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see IOFileFilter
+ * @since 1.0.0
  */
-public class CompilerTest {
+public class NameFileFilter implements IOFileFilter {
 
-    @Test
-    public void testCompile() throws IOException {
-        Compiler compiler = new Compiler();
-        compiler.compile(LocalVirtualMachineTemplateTest.class);
+    private final String name;
+
+    private final boolean caseSensitive;
+
+    public NameFileFilter(String name) {
+        this(name, true);
+    }
+
+    public NameFileFilter(String name, boolean caseSensitive) {
+        this.name = name;
+        this.caseSensitive = caseSensitive;
+    }
+
+    @Override
+    public boolean accept(File file) {
+        String fileName = file.getName();
+        String name = this.name;
+        return caseSensitive ? fileName.equals(name) : fileName.equalsIgnoreCase(name);
     }
 }
-

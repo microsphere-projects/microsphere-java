@@ -18,9 +18,13 @@ package io.microsphere.invoke;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
+import static io.microsphere.invoke.MethodHandleUtils.findStatic;
+import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.invoke.MethodHandleUtils.lookup;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -37,52 +41,17 @@ public class MethodHandleUtilsTest {
         MethodHandles.Lookup lookup2 = lookup(String.class);
         assertSame(lookup, lookup2);
     }
-//
-//    @Test
-//    public void testFindVirtual() {
-//        MethodHandles.Lookup lookup = lookup(String.class);
-//
-//    }
-//
-//
-//    @Test
-//    public void test() {
-//
-//        B b = new B();
-//
-//        // b.execute(new A());
-//        b.execute2(new A());
-//    }
-//
-//    class A {
-//
-//        private String name = "Hello,World";
-//
-//        public String getName() {
-//            return name;
-//        }
-//    }
-//
-//    class B {
-//
-//        public void execute(A a) {
-//            MethodHandles.Lookup lookup = MethodHandles.lookup();
-//            try {
-//                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
-//                System.out.println(methodHandle.invokeExact(a));
-//            } catch (Throwable e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//
-//        public void execute2(A a) {
-//            MethodHandles.Lookup lookup = lookup(A.class);
-//            try {
-//                MethodHandle methodHandle = lookup.findGetter(A.class, "name", String.class);
-//                System.out.println(methodHandle.invokeExact(a));
-//            } catch (Throwable e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
+
+    //
+    @Test
+    public void testFindVirtual() throws Throwable {
+        MethodHandle methodHandle = findVirtual(String.class, "length");
+        assertEquals(1, (int) methodHandle.invokeExact("A"));
+    }
+
+    @Test
+    public void testFindStatic() throws Throwable {
+        MethodHandle methodHandle = findStatic(String.class, "valueOf", int.class);
+        assertEquals("1", (String) methodHandle.invokeExact(1));
+    }
 }

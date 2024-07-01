@@ -21,11 +21,12 @@ import io.microsphere.lang.Prioritized;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static io.microsphere.collection.ListUtils.toList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.sort;
 
 /**
  * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}
@@ -39,7 +40,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     private final List<URLStreamHandlerFactory> factories;
 
     public CompositeURLStreamHandlerFactory() {
-        this(Collections.emptyList());
+        this(emptyList());
     }
 
     public CompositeURLStreamHandlerFactory(Collection<URLStreamHandlerFactory> factories) {
@@ -47,7 +48,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
-        List<URLStreamHandlerFactory> newFactories = toList(factories);
+        List<URLStreamHandlerFactory> newFactories = newLinkedList(factories);
         sortFactories(newFactories);
         this.factories = newFactories;
     }
@@ -106,14 +107,13 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     private void sortFactories(List<URLStreamHandlerFactory> factories) {
-        Collections.sort(factories, getComparator());
+        sort(factories, getComparator());
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CompositeURLStreamHandlerFactory{");
-        sb.append("factories=").append(factories);
-        sb.append('}');
-        return sb.toString();
+        String sb = "CompositeURLStreamHandlerFactory{" + "factories=" + factories +
+                '}';
+        return sb;
     }
 }

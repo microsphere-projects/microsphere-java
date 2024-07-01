@@ -4,17 +4,11 @@
 package io.microsphere.util;
 
 import io.microsphere.collection.CollectionUtils;
-import io.microsphere.collection.MapUtils;
-import io.microsphere.constants.Constants;
 import io.microsphere.constants.FileConstants;
-import io.microsphere.constants.PathConstants;
 import io.microsphere.filter.ClassFileJarEntryFilter;
-import io.microsphere.io.FileUtils;
+import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.io.scanner.SimpleJarEntryScanner;
-import org.apache.commons.io.filefilter.SuffixFileFilter;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +23,6 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -45,22 +38,36 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.SetUtils.asSet;
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructors;
+import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
+import static io.microsphere.util.ClassPathUtils.getClassPaths;
+import static io.microsphere.util.StringUtils.isNotBlank;
+import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.startsWith;
+import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.StringUtils.substringBefore;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static java.util.Collections.reverse;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -167,14 +174,8 @@ public abstract class ClassUtils extends BaseUtils {
 
     static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
 
-    private static final Map<String, Set<String>> classPathToClassNamesMap = initClassPathToClassNamesMap();
-
-    private static final Map<String, String> classNameToClassPathsMap = initClassNameToClassPathsMap();
-
-    private static final Map<String, Set<String>> packageNameToClassNamesMap = initPackageNameToClassNamesMap();
-
     static {
-        PRIMITIVE_WRAPPER_TYPE_MAP = MapUtils.of(
+        PRIMITIVE_WRAPPER_TYPE_MAP = ofMap(
                 Void.class, Void.TYPE,
                 Boolean.class, Boolean.TYPE,
                 Byte.class, Byte.TYPE,
@@ -188,7 +189,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     static {
-        WRAPPER_PRIMITIVE_TYPE_MAP = MapUtils.of(
+        WRAPPER_PRIMITIVE_TYPE_MAP = ofMap(
                 Void.TYPE, Void.class,
                 Boolean.TYPE, Boolean.class,
                 Byte.TYPE, Byte.class,
@@ -213,10 +214,6 @@ public abstract class ClassUtils extends BaseUtils {
             typeNamesMap.put(primitiveTypeName.getName(), primitiveTypeName);
         }
         PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(typeNamesMap);
-    }
-
-    private ClassUtils() {
-
     }
 
     /**
@@ -317,11 +314,7 @@ public abstract class ClassUtils extends BaseUtils {
             return false;
         }
 
-        if (type.isLocalClass() || type.isMemberClass()) {
-            return false;
-        }
-
-        return true;
+        return !type.isLocalClass() && !type.isMemberClass();
     }
 
 
@@ -442,7 +435,7 @@ public abstract class ClassUtils extends BaseUtils {
         // SHOULD sit in a package, so a length check is worthwhile.
         if (name != null && name.length() <= 8) {
             // Could be a primitive - likely.
-            result = (Class<?>) PRIMITIVE_TYPE_NAME_MAP.get(name);
+            result = PRIMITIVE_TYPE_NAME_MAP.get(name);
         }
         return result;
     }
@@ -474,59 +467,6 @@ public abstract class ClassUtils extends BaseUtils {
         return (modifiers & SYNTHETIC) != 0;
     }
 
-
-    private static Map<String, Set<String>> initClassPathToClassNamesMap() {
-        Map<String, Set<String>> classPathToClassNamesMap = new LinkedHashMap<>();
-        Set<String> classPaths = new LinkedHashSet<>();
-        classPaths.addAll(ClassPathUtils.getBootstrapClassPaths());
-        classPaths.addAll(ClassPathUtils.getClassPaths());
-        for (String classPath : classPaths) {
-            Set<String> classNames = findClassNamesInClassPath(classPath, true);
-            classPathToClassNamesMap.put(classPath, classNames);
-        }
-        return Collections.unmodifiableMap(classPathToClassNamesMap);
-    }
-
-    private static Map<String, String> initClassNameToClassPathsMap() {
-        Map<String, String> classNameToClassPathsMap = new LinkedHashMap<>();
-
-        for (Map.Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
-            String classPath = entry.getKey();
-            Set<String> classNames = entry.getValue();
-            for (String className : classNames) {
-                classNameToClassPathsMap.put(className, classPath);
-            }
-        }
-
-        return Collections.unmodifiableMap(classNameToClassPathsMap);
-    }
-
-    private static Map<String, Set<String>> initPackageNameToClassNamesMap() {
-        Map<String, Set<String>> packageNameToClassNamesMap = new LinkedHashMap();
-        for (Map.Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
-            String className = entry.getKey();
-            String packageName = resolvePackageName(className);
-            Set<String> classNamesInPackage = packageNameToClassNamesMap.get(packageName);
-            if (classNamesInPackage == null) {
-                classNamesInPackage = new LinkedHashSet();
-                packageNameToClassNamesMap.put(packageName, classNamesInPackage);
-            }
-            classNamesInPackage.add(className);
-        }
-
-        return Collections.unmodifiableMap(packageNameToClassNamesMap);
-    }
-
-    /**
-     * Get all package names in {@link ClassPathUtils#getClassPaths() class paths}
-     *
-     * @return all package names in class paths
-     */
-    @Nonnull
-    public static Set<String> getAllPackageNamesInClassPaths() {
-        return packageNameToClassNamesMap.keySet();
-    }
-
     /**
      * Resolve package name under specified class name
      *
@@ -535,9 +475,8 @@ public abstract class ClassUtils extends BaseUtils {
      */
     @Nullable
     public static String resolvePackageName(String className) {
-        return StringUtils.substringBeforeLast(className, ".");
+        return substringBeforeLast(className, ".");
     }
-
 
     /**
      * Find all class names in class path
@@ -554,7 +493,7 @@ public abstract class ClassUtils extends BaseUtils {
         } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
             return findClassNamesInJarFile(classesFileHolder, recursive);
         }
-        return Collections.emptySet();
+        return emptySet();
     }
 
     /**
@@ -579,7 +518,7 @@ public abstract class ClassUtils extends BaseUtils {
     protected static Set<String> findClassNamesInArchiveDirectory(File classesDirectory, boolean recursive) {
         Set<String> classNames = new LinkedHashSet<>();
         SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(CLASS));
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS_EXTENSION));
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
@@ -596,7 +535,7 @@ public abstract class ClassUtils extends BaseUtils {
             for (JarEntry jarEntry : jarEntries) {
                 String jarEntryName = jarEntry.getName();
                 String className = resolveClassName(jarEntryName);
-                if (StringUtils.isNotBlank(className)) {
+                if (isNotBlank(className)) {
                     classNames.add(className);
                 }
             }
@@ -605,72 +544,10 @@ public abstract class ClassUtils extends BaseUtils {
         return classNames;
     }
 
-    /**
-     * Find class path under specified class name
-     *
-     * @param type class
-     * @return class path
-     */
-    @Nullable
-    public static String findClassPath(Class<?> type) {
-        return findClassPath(type.getName());
-    }
-
-    /**
-     * Find class path under specified class name
-     *
-     * @param className class name
-     * @return class path
-     */
-    @Nullable
-    public static String findClassPath(String className) {
-        return classNameToClassPathsMap.get(className);
-    }
-
-    /**
-     * Gets class name {@link Set} under specified class path
-     *
-     * @param classPath class path
-     * @param recursive is recursive on sub directories
-     * @return non-null {@link Set}
-     */
-    @Nonnull
-    public static Set<String> getClassNamesInClassPath(String classPath, boolean recursive) {
-        Set<String> classNames = classPathToClassNamesMap.get(classPath);
-        if (CollectionUtils.isEmpty(classNames)) {
-            classNames = findClassNamesInClassPath(classPath, recursive);
-        }
-        return classNames;
-    }
-
-    /**
-     * Gets class name {@link Set} under specified package
-     *
-     * @param onePackage one package
-     * @return non-null {@link Set}
-     */
-    @Nonnull
-    public static Set<String> getClassNamesInPackage(Package onePackage) {
-        return getClassNamesInPackage(onePackage.getName());
-    }
-
-    /**
-     * Gets class name {@link Set} under specified package name
-     *
-     * @param packageName package name
-     * @return non-null {@link Set}
-     */
-    @Nonnull
-    public static Set<String> getClassNamesInPackage(String packageName) {
-        Set<String> classNames = packageNameToClassNamesMap.get(packageName);
-        return classNames == null ? Collections.emptySet() : classNames;
-    }
-
-
     protected static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
         Set<String> classNames = new LinkedHashSet();
         SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, new SuffixFileFilter(FileConstants.CLASS_EXTENSION));
+        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS));
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
@@ -680,7 +557,7 @@ public abstract class ClassUtils extends BaseUtils {
 
     protected static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
         if (!jarFile.exists()) {
-            return Collections.emptySet();
+            return emptySet();
         }
 
         Set<String> classNames = new LinkedHashSet();
@@ -693,7 +570,7 @@ public abstract class ClassUtils extends BaseUtils {
             for (JarEntry jarEntry : jarEntries) {
                 String jarEntryName = jarEntry.getName();
                 String className = resolveClassName(jarEntryName);
-                if (StringUtils.isNotBlank(className)) {
+                if (isNotBlank(className)) {
                     classNames.add(className);
                 }
             }
@@ -706,7 +583,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     protected static String resolveClassName(File classesDirectory, File classFile) {
-        String classFileRelativePath = FileUtils.resolveRelativePath(classesDirectory, classFile);
+        String classFileRelativePath = resolveRelativePath(classesDirectory, classFile);
         return resolveClassName(classFileRelativePath);
     }
 
@@ -717,67 +594,12 @@ public abstract class ClassUtils extends BaseUtils {
      * @return class name
      */
     public static String resolveClassName(String resourceName) {
-        String className = StringUtils.replace(resourceName, PathConstants.SLASH, Constants.DOT);
-        className = StringUtils.substringBefore(className, FileConstants.CLASS_EXTENSION);
-        while (StringUtils.startsWith(className, Constants.DOT)) {
-            className = StringUtils.substringAfter(className, Constants.DOT);
+        String className = replace(resourceName, SLASH, DOT);
+        className = substringBefore(className, CLASS_EXTENSION);
+        while (startsWith(className, DOT)) {
+            className = substringAfter(className, DOT);
         }
         return className;
-    }
-
-    /**
-     * The map of all class names in {@link ClassPathUtils#getClassPaths() class path} , the class path for one {@link
-     * JarFile} or classes directory as key , the class names set as value
-     *
-     * @return Read-only
-     */
-    @Nonnull
-    public static Map<String, Set<String>> getClassPathToClassNamesMap() {
-        return classPathToClassNamesMap;
-    }
-
-    /**
-     * The set of all class names in {@link ClassPathUtils#getClassPaths() class path}
-     *
-     * @return Read-only
-     */
-    @Nonnull
-    public static Set<String> getAllClassNamesInClassPaths() {
-        Set<String> allClassNames = new LinkedHashSet();
-        for (Set<String> classNames : classPathToClassNamesMap.values()) {
-            allClassNames.addAll(classNames);
-        }
-        return Collections.unmodifiableSet(allClassNames);
-    }
-
-
-    /**
-     * Get {@link Class}'s code source location URL
-     *
-     * @param type
-     * @return If , return <code>null</code>.
-     * @throws NullPointerException If <code>type</code> is <code>null</code> , {@link NullPointerException} will be thrown.
-     */
-    public static URL getCodeSourceLocation(Class<?> type) throws NullPointerException {
-
-        URL codeSourceLocation = null;
-        ClassLoader classLoader = type.getClassLoader();
-
-        if (classLoader == null) { // Bootstrap ClassLoader or type is primitive or void
-            String path = findClassPath(type);
-            if (StringUtils.isNotBlank(path)) {
-                try {
-                    codeSourceLocation = new File(path).toURI().toURL();
-                } catch (MalformedURLException ignored) {
-                    codeSourceLocation = null;
-                }
-            }
-        } else {
-            ProtectionDomain protectionDomain = type.getProtectionDomain();
-            CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
-            codeSourceLocation = codeSource == null ? null : codeSource.getLocation();
-        }
-        return codeSourceLocation;
     }
 
     /**
@@ -1010,14 +832,14 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         // FIFO -> FILO
-        Collections.reverse(allClasses);
+        reverse(allClasses);
 
         if (includedSelf) {
             allClasses.add(type);
         }
 
         // Keep the same order from List
-        return asSet(filterAll(allClasses, classFilters));
+        return ofSet(filterAll(allClasses, classFilters));
     }
 
     /**
@@ -1046,7 +868,7 @@ public abstract class ClassUtils extends BaseUtils {
     public static <T> T newInstance(Class<T> type, Object... args) {
         int length = length(args);
 
-        List<Constructor<?>> constructors = getDeclaredConstructors(type, constructor -> {
+        List<Constructor<?>> constructors = findDeclaredConstructors(type, constructor -> {
             Class<?>[] parameterTypes = constructor.getParameterTypes();
             if (length != parameterTypes.length) {
                 return false;

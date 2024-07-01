@@ -17,7 +17,7 @@
 package io.microsphere.convert;
 
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static io.microsphere.util.StringUtils.isNotEmpty;
 
 /**
  * The class to convert {@link String} to <code>char[]</code>

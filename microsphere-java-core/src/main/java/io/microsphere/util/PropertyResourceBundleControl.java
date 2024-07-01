@@ -3,8 +3,6 @@
  */
 package io.microsphere.util;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.SystemUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,6 +22,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static io.microsphere.io.IOUtils.close;
 
 /**
  * {@link PropertyResourceBundle} {@link ResourceBundle.Control} Implementation which supports encoding {@link
@@ -74,11 +74,9 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
     /**
      * Creates a new instance of {@link PropertyResourceBundleControl} if absent.
      *
-     * @param encoding
-     *         Encoding
+     * @param encoding Encoding
      * @return Control
-     * @throws UnsupportedCharsetException
-     *         If <code>encoding</code> is not supported
+     * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
      * @version 1.0.0
      * @since 1.0.0
      */
@@ -138,8 +136,8 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
                 reader = new InputStreamReader(stream, this.getEncoding());
                 bundle = new PropertyResourceBundle(reader);
             } finally {
-                IOUtils.closeQuietly(stream);
-                IOUtils.closeQuietly(reader);
+                close(stream);
+                close(reader);
             }
         }
 

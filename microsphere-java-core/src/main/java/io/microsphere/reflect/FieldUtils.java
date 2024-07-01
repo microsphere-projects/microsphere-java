@@ -16,6 +16,9 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.logging.Logger;
+import io.microsphere.util.BaseUtils;
+
 import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -25,6 +28,9 @@ import java.util.function.Predicate;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static java.util.Arrays.asList;
 
@@ -34,10 +40,9 @@ import static java.util.Arrays.asList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class FieldUtils {
+public abstract class FieldUtils extends BaseUtils {
 
-    private FieldUtils() {
-    }
+    private static final Logger logger = getLogger(FieldUtils.class);
 
     /**
      * Find the specified objects' declared {@link Field} by its' name
@@ -67,6 +72,11 @@ public abstract class FieldUtils {
         } catch (NoSuchFieldException e) {
             // ignore, try the super class
             field = findField(klass.getSuperclass(), fieldName);
+        }
+        if (field == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The field[name :'{}'] not found in class : '{}'", fieldName, klass);
+            }
         }
         return field;
     }
@@ -130,7 +140,7 @@ public abstract class FieldUtils {
         setFieldValue(null, field, fieldValue);
     }
 
-    public static Set<Field> getAllFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
+    public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
         Set<Field> allFields = new LinkedHashSet<>(asList(declaredClass.getFields()));
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             allFields.addAll(asList(superType.getFields()));
@@ -138,7 +148,7 @@ public abstract class FieldUtils {
         return filter(allFields, and(fieldFilters));
     }
 
-    public static Set<Field> getAllDeclaredFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
+    public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
         Set<Field> allDeclaredFields = new LinkedHashSet<>(asList(declaredClass.getDeclaredFields()));
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             allDeclaredFields.addAll(asList(superType.getDeclaredFields()));
@@ -160,116 +170,154 @@ public abstract class FieldUtils {
     /**
      * Get the value of the specified {@link Field}
      *
-     * @param object    the object whose field should be modified
+     * @param instance  the instance whose field should be modified
      * @param fieldName the name of {@link Field}
      * @return the value of  the specified {@link Field}
+     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
+     *                                  field is inaccessible.
+     * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
+     *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public static <T> T getFieldValue(Object object, String fieldName) {
-        return getFieldValue(object, findField(object, fieldName));
+    public static <V> V getFieldValue(Object instance, String fieldName) throws IllegalStateException, IllegalArgumentException {
+        return getFieldValue(instance, findField(instance, fieldName));
     }
 
 
     /**
      * Get {@link Field} Value
      *
-     * @param object       the object whose field should be modified
+     * @param instance     the instance whose field should be modified
      * @param fieldName    field name
-     * @param <T>          field type
+     * @param <V>          field type
      * @param defaultValue default value
      * @return {@link Field} Value
+     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
+     *                                  field is inaccessible.
+     * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
+     *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public static <T> T getFieldValue(Object object, String fieldName, T defaultValue) {
-        T value = getFieldValue(object, fieldName);
+    public static <V> V getFieldValue(Object instance, String fieldName, V defaultValue) throws IllegalStateException, IllegalArgumentException {
+        V value = getFieldValue(instance, fieldName);
         return value != null ? value : defaultValue;
     }
 
     /**
      * Get {@link Field} Value
      *
-     * @param object    the object whose field should be modified
+     * @param instance  the instance whose field should be modified
      * @param fieldName field name
      * @param fieldType field type
-     * @param <T>       field type
+     * @param <V>       field type
      * @return {@link Field} Value
+     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
+     *                                  field is inaccessible.
+     * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
+     *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public static <T> T getFieldValue(Object object, String fieldName, Class<T> fieldType) {
-        Field field = findField(object.getClass(), fieldName, fieldType);
-        return getFieldValue(object, field);
+    public static <V> V getFieldValue(Object instance, String fieldName, Class<V> fieldType) throws IllegalStateException, IllegalArgumentException {
+        Field field = findField(instance.getClass(), fieldName, fieldType);
+        return getFieldValue(instance, field);
     }
 
     /**
      * Get the value of the specified {@link Field}
      *
-     * @param object the object whose field should be modified
-     * @param field  {@link Field}
+     * @param instance the instance whose field should be modified
+     * @param field    {@link Field}
      * @return the value of  the specified {@link Field}
+     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
+     *                                  field is inaccessible.
+     * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
+     *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public static <T> T getFieldValue(Object object, Field field) {
-        return (T) AccessibleObjectUtils.execute(field, () -> {
-            return field.get(object);
-        });
+    public static <V> V getFieldValue(Object instance, Field field) throws IllegalStateException, IllegalArgumentException {
+        if (field == null) {
+            return null;
+        }
+
+        V fieldValue = null;
+        boolean accessible = false;
+        try {
+            accessible = trySetAccessible(field);
+            fieldValue = (V) field.get(instance);
+        } catch (IllegalAccessException e) {
+            String errorMessage = format("The field[name : '{}' , type : '{}' , instance : {}] can't be accessed[accessible : {}]",
+                    field.getName(), field.getType(), instance, accessible);
+            throw new IllegalStateException(errorMessage, e);
+        }
+
+        return fieldValue;
     }
 
     /**
      * Set the value for the specified {@link Field}
      *
-     * @param object    the object whose field should be modified
+     * @param instance  the instance whose field should be modified
      * @param fieldName the name of {@link Field}
      * @param value     the value of field to be set
      * @return the previous value of the specified {@link Field}
+     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
+     *                                  field is inaccessible.
+     * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
+     *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public static <T> T setFieldValue(Object object, String fieldName, T value) {
-        return setFieldValue(object, findField(object, fieldName), value);
+    public static <V> V setFieldValue(Object instance, String fieldName, V value) throws IllegalStateException, IllegalArgumentException {
+        return setFieldValue(instance, findField(instance, fieldName), value);
     }
 
     /**
      * Set the value for the specified {@link Field}
      *
-     * @param object the object whose field should be modified
-     * @param field  {@link Field}
-     * @param value  the value of field to be set
+     * @param instance the instance whose field should be modified
+     * @param field    {@link Field}
+     * @param value    the value of field to be set
      * @return the previous value of the specified {@link Field}
+     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
+     *                                  field is inaccessible.
+     * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
+     *                                  the underlying field (or a subclass or implementor thereof).
      */
-    public static <T> T setFieldValue(Object object, Field field, T value) {
-        return AccessibleObjectUtils.execute(field, () -> {
-            Object previousValue = null;
-            try {
-                previousValue = field.get(object);
-                if (!Objects.equals(previousValue, value)) {
-                    field.set(object, value);
-                }
-            } catch (IllegalAccessException ignored) {
+    public static <V> V setFieldValue(Object instance, Field field, V value) throws IllegalStateException, IllegalArgumentException {
+        if (field == null) {
+            return null;
+        }
+
+        V previousValue = null;
+        boolean accessible = false;
+        try {
+            accessible = trySetAccessible(field);
+            previousValue = (V) field.get(instance);
+            if (!Objects.equals(previousValue, value)) {
+                field.set(instance, value);
             }
-            return (T) previousValue;
-        });
+        } catch (IllegalAccessException e) {
+            String errorMessage = format("The field[name : '{}' , type : '{}' , instance : {}] can't be accessed[accessible : {}]",
+                    field.getName(), field.getType(), instance, accessible);
+            throw new IllegalStateException(errorMessage, e);
+        } catch (IllegalArgumentException e) {
+            String errorMessage = format("The instance[{}] can't match the field[name : '{}' , type : '{}']",
+                    instance, field.getName(), field.getType());
+            throw new IllegalArgumentException(errorMessage, e);
+        }
+
+        return previousValue;
     }
 
     /**
      * Assert Field type match
      *
-     * @param object       Object
+     * @param instance     Object
      * @param fieldName    field name
      * @param expectedType expected type
      * @throws IllegalArgumentException if type is not matched
      */
-    public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
-        Class<?> type = object.getClass();
+    public static void assertFieldMatchType(Object instance, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
+        Class<?> type = instance.getClass();
         Field field = findField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
-            String message = String.format("The type[%s] of field[%s] in Class[%s] can't match expected type[%s]", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
+            String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
             throw new IllegalArgumentException(message);
-        }
-    }
-
-    /**
-     * Enable field to be accessible
-     *
-     * @param field {@link Field}
-     */
-    public static void enableAccessible(Field field) {
-        if (!field.isAccessible()) {
-            field.setAccessible(true);
         }
     }
 }

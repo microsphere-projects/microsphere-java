@@ -95,19 +95,19 @@ public class ExtendableProtocolURLStreamHandlerTest {
         properties.load(new InputStreamReader(url.openStream(), "UTF-8"));
         assertEquals("测试名称", properties.get("name"));
 
-        url = new URL("classpath:////META-INF/services/java.lang.CharSequence");
+        url = new URL("classpath:////META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(url.openStream());
 
-        url = new URL("classpath:///META-INF/services/java.lang.CharSequence");
+        url = new URL("classpath:///META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(url.openStream());
 
-        url = new URL("classpath://META-INF/services/java.lang.CharSequence");
+        url = new URL("classpath://META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(url.openStream());
 
-        url = new URL("classpath:/META-INF/services/java.lang.CharSequence");
+        url = new URL("classpath:/META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(url.openConnection());
 
-        url = new URL("classpath:META-INF/services/java.lang.CharSequence");
+        url = new URL("classpath:META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(url.openConnection(Proxy.NO_PROXY));
 
         assertEquals("classpath", handler.getProtocol());

@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
@@ -24,6 +25,7 @@ import java.util.function.Predicate;
 
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static java.util.Arrays.asList;
 
@@ -34,6 +36,10 @@ import static java.util.Arrays.asList;
  * @since 1.0.0
  */
 public abstract class ConstructorUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(ConstructorUtils.class);
+
+    public static final Constructor NOT_FOUND_CONSTRUCTOR = null;
 
     /**
      * Is a non-private constructor without parameters
@@ -58,14 +64,14 @@ public abstract class ConstructorUtils extends BaseUtils {
         return has;
     }
 
-    public static List<Constructor<?>> getConstructors(Class<?> type,
-                                                       Predicate<? super Constructor<?>>... constructorFilters) {
+    public static List<Constructor<?>> findConstructors(Class<?> type,
+                                                        Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = asList(type.getConstructors());
         return filterAll(constructors, constructorFilters);
     }
 
-    public static List<Constructor<?>> getDeclaredConstructors(Class<?> type,
-                                                               Predicate<? super Constructor<?>>... constructorFilters) {
+    public static List<Constructor<?>> findDeclaredConstructors(Class<?> type,
+                                                                Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = asList(type.getDeclaredConstructors());
         return filterAll(constructors, constructorFilters);
     }
@@ -78,6 +84,15 @@ public abstract class ConstructorUtils extends BaseUtils {
         return execute(() -> type.getDeclaredConstructor(parameterTypes));
     }
 
+    public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
+        return execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, asList(parameterTypes));
+            }
+            return NOT_FOUND_CONSTRUCTOR;
+        });
+    }
+
     /**
      * Create an instance by the specified {@link Constructor} and arguments
      *
@@ -87,6 +102,6 @@ public abstract class ConstructorUtils extends BaseUtils {
      * @return non-null
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
-        return AccessibleObjectUtils.execute(constructor, () -> constructor.newInstance(args));
+        return ExecutableUtils.execute(constructor, () -> constructor.newInstance(args));
     }
 }

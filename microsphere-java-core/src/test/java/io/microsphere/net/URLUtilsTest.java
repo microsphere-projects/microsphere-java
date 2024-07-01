@@ -4,14 +4,15 @@
 package io.microsphere.net;
 
 import io.microsphere.util.ClassLoaderUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
+import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -27,11 +28,11 @@ import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -97,21 +98,16 @@ public class URLUtilsTest {
     @Test
     public void testResolveRelativePath() throws MalformedURLException {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        String expectedPath = "java/lang/String.class";
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        String expectedPath = "javax/annotation/Nonnull.class";
         String relativePath = resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
-
-        File rtJarFile = new File(SystemUtils.JAVA_HOME, "lib/rt.jar");
-        resourceURL = rtJarFile.toURI().toURL();
-        relativePath = resolveArchiveEntryPath(resourceURL);
-        assertNull(relativePath);
     }
 
     @Test
     public void testResolveArchiveFile() {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
         File archiveFile = URLUtils.resolveArchiveFile(resourceURL);
         assertTrue(archiveFile.exists());
     }
@@ -183,7 +179,7 @@ public class URLUtilsTest {
         assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
         String externalForm = null;
-        externalForm = StringUtils.substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
         resourceURL = new URL(externalForm);
         assertTrue(URLUtils.isDirectoryURL(resourceURL));
 
@@ -193,7 +189,7 @@ public class URLUtilsTest {
         resourceURL = ClassLoaderUtils.getClassResource(classLoader, getClass());
         assertFalse(URLUtils.isDirectoryURL(resourceURL));
 
-        externalForm = StringUtils.substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
         resourceURL = new URL(externalForm);
         assertTrue(URLUtils.isDirectoryURL(resourceURL));
     }
@@ -203,6 +199,9 @@ public class URLUtilsTest {
         URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
         assertSame(factory, getURLStreamHandlerFactory());
+
+        URLStreamHandler handler = factory.createURLStreamHandler("http");
+        assertEquals("sun.net.www.protocol.http.Handler", handler.getClass().getName());
 
         attachURLStreamHandlerFactory(factory);
         CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();

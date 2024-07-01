@@ -1,13 +1,15 @@
 package io.microsphere.io.scanner;
 
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
+
+import io.microsphere.io.filter.IOFileFilter;
+import io.microsphere.io.filter.TrueFileFilter;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Simple File Scanner (Single-Thread)
@@ -72,7 +74,7 @@ public class SimpleFileScanner {
                 }
             }
         }
-        return Collections.unmodifiableSet(filesSet);
+        return unmodifiableSet(filesSet);
     }
 
 }

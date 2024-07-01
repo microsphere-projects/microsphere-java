@@ -17,8 +17,7 @@
 package io.microsphere.classloading;
 
 import io.microsphere.lang.Prioritized;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
@@ -27,6 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.reflect.FieldUtils.findField;
@@ -46,7 +46,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  */
 public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, Prioritized {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = getLogger(getClass());
 
     private Class<?> urlClassPathClass;
 

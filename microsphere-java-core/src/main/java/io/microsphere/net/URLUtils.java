@@ -6,7 +6,6 @@ package io.microsphere.net;
 import io.microsphere.collection.MapUtils;
 import io.microsphere.util.ClassPathUtils;
 import io.microsphere.util.jar.JarUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -47,7 +46,9 @@ import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.length;
 import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.reflect.Array.getLength;
@@ -55,8 +56,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
-import static org.apache.commons.lang3.StringUtils.length;
-import static org.apache.commons.lang3.StringUtils.split;
 
 /**
  * {@link URL} Utility class
@@ -773,7 +772,7 @@ public abstract class URLUtils {
             int len = nameAndValue.length;
             if (len > 0) {
                 String name = nameAndValue[0];
-                String value = len > 1 ? nameAndValue[1] : StringUtils.EMPTY;
+                String value = len > 1 ? nameAndValue[1] : EMPTY;
                 List<String> paramValueList = parametersMap.get(name);
                 if (paramValueList == null) {
                     paramValueList = new LinkedList();

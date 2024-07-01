@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeoutException;
 
+import static io.microsphere.text.FormatUtils.format;
+
 /**
  * {@link Process} Executor
  *
@@ -77,7 +79,7 @@ public class ProcessExecutor {
             if (costTime > timeoutInMilliseconds) {
                 finished = true;
                 process.destroy();
-                String message = String.format("Execution is timeout[%d ms]!", timeoutInMilliseconds);
+                String message = format("Execution is timeout[{} ms]!", timeoutInMilliseconds);
                 throw new TimeoutException(message);
             }
             try {

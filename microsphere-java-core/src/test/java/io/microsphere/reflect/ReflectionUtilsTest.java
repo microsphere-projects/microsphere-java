@@ -1,9 +1,9 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -11,6 +11,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassInGeneralJVM;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunJVM;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassName;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInGeneralJVM;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInSunJVM;
+import static io.microsphere.reflect.ReflectionUtils.isSupportedSunReflectReflection;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -32,16 +40,16 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         Object array = Array.newInstance(int.class, size);
 
         for (int i = 0; i < size; i++) {
-            ReflectionUtils.assertArrayIndex(array, i);
+            assertArrayIndex(array, i);
         }
 
         for (int i = size; i < size * 2; i++) {
             ArrayIndexOutOfBoundsException exception = null;
             try {
-                ReflectionUtils.assertArrayIndex(array, i);
+                assertArrayIndex(array, i);
             } catch (ArrayIndexOutOfBoundsException e) {
                 exception = e;
-                System.err.println(e.getMessage());
+                logger.error(e.getMessage());
             }
             assertNotNull(exception);
         }
@@ -54,7 +62,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
             ReflectionUtils.assertArrayType(new Object());
         } catch (IllegalArgumentException e) {
             exception = e;
-            System.err.println(e.getMessage());
+            logger.error(e.getMessage());
         }
         assertNotNull(exception);
     }
@@ -82,12 +90,15 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     public void testGetCallerClassX() throws Exception {
         Class<?> expectedClass = ReflectionUtilsTest.class;
 
-        Class<?> callerClass = ReflectionUtils.getCallerClass();
-        Class<?> callerClassInSunJVM = ReflectionUtils.getCallerClassInSunJVM();
-        Class<?> callerClassInGeneralJVM = ReflectionUtils.getCallerClassInGeneralJVM();
-
+        Class<?> callerClass = getCallerClass();
         assertEquals(expectedClass, callerClass);
-        assertEquals(callerClassInSunJVM, callerClass);
+
+        if (isSupportedSunReflectReflection()) {
+            Class<?> callerClassInSunJVM = getCallerClassInSunJVM();
+            assertEquals(callerClassInSunJVM, callerClass);
+        }
+
+        Class<?> callerClassInGeneralJVM = getCallerClassInGeneralJVM();
         assertEquals(callerClassInGeneralJVM, callerClass);
 
     }
@@ -95,37 +106,34 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     @Test
     public void testGetCallerClassName() {
         String expectedClassName = ReflectionUtilsTest.class.getName();
-        String callerClassName = ReflectionUtils.getCallerClassName();
-        String callerClassNameInSunJVM = ReflectionUtils.getCallerClassNameInSunJVM();
-        String callerClassNameInGeneralJVM = ReflectionUtils.getCallerClassNameInGeneralJVM();
 
+        String callerClassName = getCallerClassName();
         assertEquals(expectedClassName, callerClassName);
-        assertEquals(callerClassNameInSunJVM, callerClassName);
+
+        if (isSupportedSunReflectReflection()) {
+            String callerClassNameInSunJVM = getCallerClassNameInSunJVM();
+            assertEquals(callerClassNameInSunJVM, callerClassName);
+        }
+
+        String callerClassNameInGeneralJVM = getCallerClassNameInGeneralJVM();
         assertEquals(callerClassNameInGeneralJVM, callerClassName);
     }
 
     @Test
-    public void testGetCallerPackage() {
-        Class<?> expectedClass = ReflectionUtilsTest.class;
-        Package expectedPackage = expectedClass.getPackage();
-
-        assertEquals(expectedPackage, ReflectionUtils.getCallerPackage());
-    }
-
-    @Test
     public void testGetCallerClassNamePerformance() {
-
-        for (int i = 0; i < 6; i++) {
-            int times = (int) Math.pow(10 + .0, i + .0);
-            testGetCallerClassNameInSunJVMPerformance(times);
-            testGetCallerClassNameInGeneralJVMPerformance(times);
+        if (isSupportedSunReflectReflection()) {
+            for (int i = 0; i < 6; i++) {
+                int times = (int) Math.pow(10 + .0, i + .0);
+                testGetCallerClassNameInSunJVMPerformance(times);
+                testGetCallerClassNameInGeneralJVMPerformance(times);
+            }
         }
     }
 
     private void testGetCallerClassNameInSunJVMPerformance(int times) {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < times; i++) {
-            ReflectionUtils.getCallerClassNameInSunJVM();
+            getCallerClassNameInSunJVM();
         }
         long costTime = System.currentTimeMillis() - startTime;
         logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInSunJVM() {} times : {} ms！", times, costTime);
@@ -134,7 +142,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     private void testGetCallerClassNameInGeneralJVMPerformance(int times) {
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < times; i++) {
-            ReflectionUtils.getCallerClassNameInGeneralJVM();
+            getCallerClassNameInGeneralJVM();
         }
         long costTime = System.currentTimeMillis() - startTime;
         logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInGeneralJVM() {} times : {} ms！", times, costTime);

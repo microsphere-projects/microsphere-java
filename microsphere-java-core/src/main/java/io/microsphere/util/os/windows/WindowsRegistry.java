@@ -4,8 +4,6 @@
 package io.microsphere.util.os.windows;
 
 import io.microsphere.constants.PathConstants;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -13,6 +11,12 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 import java.util.prefs.Preferences;
+
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.StringUtils.replace;
+import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static io.microsphere.util.SystemUtils.JAVA_SPECIFICATION_VERSION;
 
 /**
  * {@link WindowsRegistry}
@@ -83,16 +87,16 @@ public final class WindowsRegistry {
     private static Method WindowsRegSetValueEx = null;
     private static Method WindowsRegDeleteValue = null;
     private static Method WindowsRegQueryInfoKey = null;
-    private static Class<?> windowsPreferencesType;
+    private static final Class<?> windowsPreferencesType;
     /**
      * Initial time between registry access attempts, in ms. The time is doubled after each failing attempt (except the
      * first).
      */
-    private static int INIT_SLEEP_TIME = 50;
+    private static final int INIT_SLEEP_TIME = 50;
     /**
      * Maximum number of registry access attempts.
      */
-    private static int MAX_ATTEMPTS = 5;
+    private static final int MAX_ATTEMPTS = 5;
 
     static {
         String className = "java.util.prefs.WindowsPreferences";
@@ -108,7 +112,7 @@ public final class WindowsRegistry {
             WindowsRegDeleteValue = findMethod("WindowsRegDeleteValue", int.class, byte[].class);
             WindowsRegQueryInfoKey = findMethod("WindowsRegQueryInfoKey", int.class);
         } catch (Throwable e) {
-            String message = String.format("Current JVM ", SystemUtils.JAVA_SPECIFICATION_VERSION);
+            String message = format("Current JVM : {}", JAVA_SPECIFICATION_VERSION);
             throw new InstantiationError(message);
         }
     }
@@ -406,14 +410,13 @@ public final class WindowsRegistry {
      * altBase64 are used. See {@link #toWindowsName(String) toWindowsName()} for a detailed description of encoding
      * conventions.
      *
-     * @param windowsNameArray
-     *         Null-terminated byte array.
+     * @param windowsNameArray Null-terminated byte array.
      */
     private static String toJavaName(byte[] windowsNameArray) {
         String windowsName = byteArrayToString(windowsNameArray);
         // check if Alt64
         if ((windowsName.length() > 1) &&
-                (windowsName.substring(0, 2).equals("/!"))) {
+                (windowsName.startsWith("/!"))) {
             return toJavaAlt64Name(windowsName);
         }
         StringBuffer javaName = new StringBuffer();
@@ -609,13 +612,12 @@ public final class WindowsRegistry {
      * Get Windows Registry <tt>HKEY_CURRENT_USER</tt> Singleton
      *
      * @return non-null return
-     * @throws UnsupportedOperationException
-     *         If Non-Windows OS executes current method
+     * @throws UnsupportedOperationException If Non-Windows OS executes current method
      */
     @Nonnull
     public static WindowsRegistry currentUser() throws UnsupportedOperationException {
-        if (!SystemUtils.IS_OS_WINDOWS) {
-            String message = String.format("Non Windows System");
+        if (!IS_OS_WINDOWS) {
+            String message = "Non Windows System";
             throw new UnsupportedOperationException(message);
         }
         return CURRENT_USER;
@@ -627,11 +629,11 @@ public final class WindowsRegistry {
      *
      * @see Preferences#absolutePath()
      */
-    protected byte[] windowsAbsolutePath(String relativePath) {
-        String resolvedPath = StringUtils.replace(relativePath, PathConstants.SLASH, PathConstants.BACK_SLASH);
-        resolvedPath = StringUtils.replace(relativePath, PathConstants.BACK_SLASH + PathConstants.BACK_SLASH, PathConstants.BACK_SLASH);
+    private byte[] windowsAbsolutePath(String relativePath) {
+        String resolvedPath = replace(relativePath, PathConstants.SLASH, PathConstants.BACK_SLASH);
+        resolvedPath = replace(relativePath, PathConstants.BACK_SLASH + PathConstants.BACK_SLASH, PathConstants.BACK_SLASH);
         if (resolvedPath.startsWith(PathConstants.BACK_SLASH)) {
-            resolvedPath = StringUtils.substringAfter(resolvedPath, PathConstants.BACK_SLASH);
+            resolvedPath = substringAfter(resolvedPath, PathConstants.BACK_SLASH);
         }
         byte[] relativePathHandle = stringToByteArray(resolvedPath);
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();
@@ -650,16 +652,13 @@ public final class WindowsRegistry {
     /**
      * Opens Windows registry key at a given absolute relativePath using a given security mask.
      *
-     * @param relativePath
-     *         Windows absolute relativePath of the key
-     * @param mask1
-     *         Preferred Windows security mask.
-     * @param mask2
-     *         Alternate Windows security mask.
+     * @param relativePath Windows absolute relativePath of the key
+     * @param mask1        Preferred Windows security mask.
+     * @param mask2        Alternate Windows security mask.
      * @return Windows registry key's handle.
      * @see #closeKey(int)
      */
-    protected int openKey(String relativePath, int mask1, int mask2) {
+    private int openKey(String relativePath, int mask1, int mask2) {
         byte[] windowsAbsolutePath = windowsAbsolutePath(relativePath);
         /*  Check if key's relativePath is short enough be opened at once
             otherwise use a relativePath-splitting procedure */
@@ -685,14 +684,10 @@ public final class WindowsRegistry {
     /**
      * Opens Windows registry key at a given relative relativePath with respect to a given Windows registry key.
      *
-     * @param windowsRelativePath
-     *         Windows relative relativePath of the key as a byte-encoded string.
-     * @param nativeHandle
-     *         handle to the base Windows key.
-     * @param mask1
-     *         Preferred Windows security mask.
-     * @param mask2
-     *         Alternate Windows security mask.
+     * @param windowsRelativePath Windows relative relativePath of the key as a byte-encoded string.
+     * @param nativeHandle        handle to the base Windows key.
+     * @param mask1               Preferred Windows security mask.
+     * @param mask2               Alternate Windows security mask.
      * @return Windows registry key's handle.
      * @see #closeKey(int)
      */
@@ -743,8 +738,7 @@ public final class WindowsRegistry {
     /**
      * Closes Windows registry key. Logs a warning if Windows registry is unavailable.
      *
-     * @param nativeHandle
-     *         key's Windows registry handle.
+     * @param nativeHandle key's Windows registry handle.
      */
     private void closeKey(int nativeHandle) {
         int result = WindowsRegCloseKey(nativeHandle);
@@ -755,12 +749,9 @@ public final class WindowsRegistry {
     /**
      * Set specified registry item in relative path
      *
-     * @param relativePath
-     *         relative path
-     * @param name
-     *         registry item name
-     * @param value
-     *         the value of registry item
+     * @param relativePath relative path
+     * @param name         registry item name
+     * @param value        the value of registry item
      */
     public void set(String relativePath, String name, String value) {
         int nativeHandle = openKey(relativePath, KEY_SET_VALUE, KEY_SET_VALUE);
@@ -778,10 +769,8 @@ public final class WindowsRegistry {
     /**
      * Get the value of  registry item in  specified relative path
      *
-     * @param relativePath
-     *         relative path
-     * @param name
-     *         registry item name
+     * @param relativePath relative path
+     * @param name         registry item name
      * @return <code>null</code> if not found
      */
     @Nullable
@@ -802,10 +791,8 @@ public final class WindowsRegistry {
     /**
      * remove specified registry item in relative path
      *
-     * @param relativePath
-     *         relative path
-     * @param name
-     *         registry item name
+     * @param relativePath relative path
+     * @param name         registry item name
      */
     public void remove(String relativePath, String name) {
         int nativeHandle = openKey(relativePath, KEY_SET_VALUE, KEY_SET_VALUE);
@@ -822,8 +809,7 @@ public final class WindowsRegistry {
     /**
      * Flush specified registry item in relative path
      *
-     * @param relativePath
-     *         路径
+     * @param relativePath 路径
      */
     public void flush(String relativePath) {
         int nativeHandle = openKey(relativePath, KEY_SET_VALUE, KEY_SET_VALUE);

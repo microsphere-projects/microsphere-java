@@ -1,6 +1,9 @@
 package io.microsphere.reflect;
 
 
+import io.microsphere.util.ArrayUtils;
+import io.microsphere.util.BaseUtils;
+
 import javax.annotation.Nonnull;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -8,11 +11,9 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -23,12 +24,17 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.FieldUtils.getDeclaredField;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
+import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
-import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 
 /**
  * Reflection Utility class , generic methods are defined from {@link FieldUtils} , {@link MethodUtils} , {@link
@@ -45,7 +51,7 @@ import static org.apache.commons.lang3.ArrayUtils.isEmpty;
  * @see ConstructorUtils
  * @since 1.0.0
  */
-public abstract class ReflectionUtils {
+public abstract class ReflectionUtils extends BaseUtils {
 
     /**
      * Sun JDK implementation class: full name of sun.reflect.Reflection
@@ -133,30 +139,26 @@ public abstract class ReflectionUtils {
     }
 
     /**
+     * Is supported sun.reflect.Reflection or not
+     *
+     * @return <code>true</code> if supported
+     */
+    public static boolean isSupportedSunReflectReflection() {
+        return supportedSunReflectReflection;
+    }
+
+    /**
      * Get Caller class
      *
      * @return Get the Class name that called the method
      */
     @Nonnull
     public static String getCallerClassName() {
-        return getCallerClassName(sunReflectReflectionInvocationFrame);
-    }
-
-    /**
-     * Get Caller Class name
-     *
-     * @param invocationFrame invocation frame
-     * @return Class name under specified invocation frame
-     * @throws IndexOutOfBoundsException If the <code>invocation Frame<code> value is negative or exceeds the actual level
-     * @see Thread#getStackTrace()
-     */
-    @Nonnull
-    protected static String getCallerClassName(int invocationFrame) throws IndexOutOfBoundsException {
         if (supportedSunReflectReflection) {
-            Class<?> callerClass = getCallerClassInSunJVM(invocationFrame + 1);
+            Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
             if (callerClass != null) return callerClass.getName();
         }
-        return getCallerClassNameInGeneralJVM(invocationFrame + 1);
+        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
     }
 
     /**
@@ -234,7 +236,13 @@ public abstract class ReflectionUtils {
      */
     @Nonnull
     public static Class<?> getCallerClass() throws IllegalStateException {
-        return getCallerClass(sunReflectReflectionInvocationFrame);
+        if (supportedSunReflectReflection) {
+            Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
+            if (callerClass != null) {
+                return callerClass;
+            }
+        }
+        return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
     }
 
     /**
@@ -259,7 +267,6 @@ public abstract class ReflectionUtils {
         Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
         return callerClass.getName();
     }
-
 
     /**
      * Get the caller class
@@ -288,17 +295,6 @@ public abstract class ReflectionUtils {
     }
 
     /**
-     * Get caller class's {@link Package}
-     *
-     * @return caller class's {@link Package}
-     * @throws IllegalStateException see {@link #getCallerClass()}
-     * @see #getCallerClass()
-     */
-    public static Package getCallerPackage() throws IllegalStateException {
-        return getCallerClass().getPackage();
-    }
-
-    /**
      * Assert array index
      *
      * @param array Array object
@@ -308,13 +304,13 @@ public abstract class ReflectionUtils {
      */
     public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
         if (index < 0) {
-            String message = String.format("The index argument must be positive , actual is %s", index);
+            String message = format("The index argument must be positive , actual is {}", index);
             throw new ArrayIndexOutOfBoundsException(message);
         }
-        ReflectionUtils.assertArrayType(array);
+        assertArrayType(array);
         int length = Array.getLength(array);
         if (index > length - 1) {
-            String message = String.format("The index must be less than %s , actual is %s", length, index);
+            String message = format("The index must be less than {} , actual is {}", length, index);
             throw new ArrayIndexOutOfBoundsException(message);
         }
     }
@@ -328,7 +324,7 @@ public abstract class ReflectionUtils {
     public static void assertArrayType(Object array) throws IllegalArgumentException {
         Class<?> type = array.getClass();
         if (!type.isArray()) {
-            String message = String.format("The argument is not an array object, its type is %s", type.getName());
+            String message = format("The argument is not an array object, its type is {}", type.getName());
             throw new IllegalArgumentException(message);
         }
     }
@@ -343,10 +339,10 @@ public abstract class ReflectionUtils {
      */
     public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
         Class<?> type = object.getClass();
-        Field field = FieldUtils.getDeclaredField(type, fieldName);
+        Field field = getDeclaredField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
-            String message = String.format("The type[%s] of field[%s] in Class[%s] can't match expected type[%s]", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
+            String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
             throw new IllegalArgumentException(message);
         }
     }
@@ -395,11 +391,11 @@ public abstract class ReflectionUtils {
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
 
-            if (Modifier.isStatic(field.getModifiers())) { // To filter static fields
+            if (isStatic(field.getModifiers())) { // To filter static fields
                 continue;
             }
 
-            field.setAccessible(true);
+            trySetAccessible(field);
 
             try {
                 String fieldName = field.getName();
@@ -434,11 +430,11 @@ public abstract class ReflectionUtils {
         genericTypes.add(sourceClass.getGenericSuperclass());
 
         Set<ParameterizedType> parameterizedTypes = genericTypes.stream().filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
-                .map(type -> ParameterizedType.class.cast(type))  // cast to ParameterizedType
+                .map(type -> (ParameterizedType) type)  // cast to ParameterizedType
                 .collect(Collectors.toSet());
 
         if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
-            genericTypes.stream().filter(type -> type instanceof Class).map(type -> Class.class.cast(type)).forEach(superClass -> {
+            genericTypes.stream().filter(type -> type instanceof Class).map(type -> (Class) type).forEach(superClass -> {
                 parameterizedTypes.addAll(findParameterizedTypes(superClass));
             });
         }
@@ -457,7 +453,7 @@ public abstract class ReflectionUtils {
      */
     public static <T> Set<Class<T>> findHierarchicalTypes(Class<?> sourceClass, Class<T> matchType) {
         if (sourceClass == null) {
-            return Collections.emptySet();
+            return emptySet();
         }
 
         Set<Class<T>> hierarchicalTypes = new LinkedHashSet<>();

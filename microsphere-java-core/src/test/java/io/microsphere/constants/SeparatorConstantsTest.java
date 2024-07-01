@@ -20,6 +20,10 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
+import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
+import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
+import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -32,9 +36,9 @@ public class SeparatorConstantsTest {
 
     @Test
     public void test() {
-        assertEquals("!/", SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR);
-        assertEquals(File.separator, SeparatorConstants.FILE_SEPARATOR);
-        assertEquals(File.pathSeparator, SeparatorConstants.PATH_SEPARATOR);
-        assertEquals(System.lineSeparator(), SeparatorConstants.LINE_SEPARATOR);
+        assertEquals("!/", ARCHIVE_ENTRY_SEPARATOR);
+        assertEquals(File.separator, FILE_SEPARATOR);
+        assertEquals(File.pathSeparator, PATH_SEPARATOR);
+        assertEquals(System.lineSeparator(), LINE_SEPARATOR);
     }
 }

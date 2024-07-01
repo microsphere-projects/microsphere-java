@@ -16,10 +16,11 @@
  */
 package io.microsphere.convert.multiple;
 
-import org.apache.commons.lang3.ArrayUtils;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.split;
+import io.microsphere.util.ArrayUtils;
+
+import static io.microsphere.util.StringUtils.isEmpty;
+import static io.microsphere.util.StringUtils.split;
 
 /**
  * The class to convert {@link String} to multiple value object

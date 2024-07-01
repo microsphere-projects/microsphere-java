@@ -18,6 +18,11 @@ package io.microsphere.constants;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.PathConstants.BACK_SLASH;
+import static io.microsphere.constants.PathConstants.BACK_SLASH_CHAR;
+import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -30,8 +35,10 @@ public class PathConstantsTest {
 
     @Test
     public void test() {
-        assertEquals("/", PathConstants.SLASH);
-        assertEquals("//", PathConstants.DOUBLE_SLASH);
-        assertEquals("\\", PathConstants.BACK_SLASH);
+        assertEquals('/', SLASH_CHAR);
+        assertEquals('\\', BACK_SLASH_CHAR);
+        assertEquals("/", SLASH);
+        assertEquals("//", DOUBLE_SLASH);
+        assertEquals("\\", BACK_SLASH);
     }
 }

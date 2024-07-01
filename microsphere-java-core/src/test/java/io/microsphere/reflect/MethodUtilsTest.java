@@ -22,7 +22,12 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -41,55 +46,72 @@ public class MethodUtilsTest {
         Method method = null;
 
         // Test non-argument Method
-        method = MethodUtils.findMethod(this.getClass(), "testGetSignature");
+        method = findMethod(this.getClass(), "testGetSignature");
         assertEquals("io.microsphere.reflect.MethodUtilsTest#testGetSignature()", getSignature(method));
 
         // Test one-argument Method
-        method = MethodUtils.findMethod(Object.class, "equals", Object.class);
+        method = findMethod(Object.class, "equals", Object.class);
         assertEquals("java.lang.Object#equals(java.lang.Object)", getSignature(method));
 
         // Test two-argument Method
-        method = MethodUtils.findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
+        method = findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
         assertEquals("io.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
 
     }
 
     @Test
     void testGetMethodsFromClass() {
-        List<Method> objectMethods = MethodUtils.getMethods(Object.class, true, true);
+        List<Method> objectMethods = getMethods(Object.class, true, true);
 
-        List<Method> methods = MethodUtils.getMethods(TestClass.class, true, true);
+        List<Method> methods = getMethods(TestClass.class, true, true);
         assertEquals(1 + objectMethods.size(), methods.size());
 
-        methods = MethodUtils.getMethods(TestClass.class, false, true);
+        methods = getMethods(TestClass.class, false, true);
         assertEquals(1, methods.size());
 
-        methods = MethodUtils.getMethods(TestClass.class, false, false);
-        assertEquals(4, methods.size());
+        methods = getMethods(TestClass.class, false, false);
+        assertEquals(7, methods.size());
 
-        methods = MethodUtils.getMethods(TestClass.class, true, false);
-        objectMethods = MethodUtils.getMethods(Object.class, true, false);
+        methods = getMethods(TestClass.class, true, false);
+        objectMethods = getMethods(Object.class, true, false);
 
-        assertEquals(4 + objectMethods.size(), methods.size());
+        assertEquals(7 + objectMethods.size(), methods.size());
     }
 
     @Test
     void testGetMethodsFromInterface() {
-        List<Method> methods = MethodUtils.getMethods(TestInterface.class, true, true);
+        List<Method> methods = getMethods(TestInterface.class, true, true);
         assertEquals(2, methods.size()); // method + useLambda
 
-        methods = MethodUtils.getMethods(TestInterface.class, true, false);
+        methods = getMethods(TestInterface.class, true, false);
         assertEquals(3, methods.size()); // method + useLambda + 合成的lambda方法Object[]::new
-                                                 // NOTE:需不需要把合成的方法计算在内？ 应该是要算的
+        // NOTE:需不需要把合成的方法计算在内？ 应该是要算的
 
-        List<Method> subMethods = MethodUtils.getMethods(TestSubInterface.class, false, true);
+        List<Method> subMethods = getMethods(TestSubInterface.class, false, true);
         assertEquals(1, subMethods.size()); // subMethod
 
-        subMethods = MethodUtils.getMethods(TestSubInterface.class, true, true);
+        subMethods = getMethods(TestSubInterface.class, true, true);
         assertEquals(3, subMethods.size()); // method + useLambda + subMethod
     }
 
-    class TestClass {
+    @Test
+    public void testInvokeMethod() {
+        String test = "test";
+        assertEquals(test, invokeMethod(test, "toString"));
+
+        TestClass testClass = new TestClass();
+        assertEquals(valueOf(0), invokeMethod(testClass, "intMethod"));
+        assertEquals(testClass, invokeMethod(testClass, "objectMethod"));
+    }
+
+    @Test
+    public void testInvokeStaticMethod() {
+        Method method = findMethod(Integer.class, "valueOf", int.class);
+        assertEquals(valueOf(0), (Integer) invokeStaticMethod(method, 0));
+        assertEquals(valueOf(0), (Integer) invokeStaticMethod(TestClass.class, "value", 0));
+    }
+
+    static class TestClass {
         public void method1() {
         }
 
@@ -100,6 +122,18 @@ public class MethodUtilsTest {
         }
 
         private void method4() {
+        }
+
+        private int intMethod() {
+            return 0;
+        }
+
+        private Object objectMethod() {
+            return this;
+        }
+
+        private static int value(Integer value) {
+            return value;
         }
     }
 

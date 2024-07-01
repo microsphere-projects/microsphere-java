@@ -45,6 +45,7 @@ import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.MethodUtils.OBJECT_METHODS;
 import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -71,6 +72,16 @@ public abstract class AnnotationUtils extends BaseUtils {
     private static final Predicate<Method> ANNOTATION_METHOD_PREDICATE = AnnotationUtils::isAnnotationMethod;
 
     private static final Predicate<Method> NON_ANNOTATION_METHOD_PREDICATE = ANNOTATION_METHOD_PREDICATE.negate();
+
+    /**
+     * The annotation class name of {@linkplain jdk.internal.reflect.CallerSensitive}
+     */
+    public static final String CALLER_SENSITIVE_ANNOTATION_CLASS_NAME = "jdk.internal.reflect.CallerSensitive";
+
+    /**
+     * The annotation {@link Class} of {@linkplain jdk.internal.reflect.CallerSensitive} that may be <code>null</code>
+     */
+    public static final Class<? extends Annotation> CALLER_SENSITIVE_ANNOTATION_CLASS = (Class<? extends Annotation>) resolveClass(CALLER_SENSITIVE_ANNOTATION_CLASS_NAME);
 
     /**
      * Is the specified type a generic {@link Class type}
@@ -389,6 +400,16 @@ public abstract class AnnotationUtils extends BaseUtils {
 
     public static boolean isAnnotationMethod(Method attributeMethod) {
         return attributeMethod != null && Objects.equals(Annotation.class, attributeMethod.getDeclaringClass());
+    }
+
+    /**
+     * Is {@linkplain jdk.internal.reflect.CallerSensitive} class present or not
+     *
+     * @return <code>true</code> if {@linkplain jdk.internal.reflect.CallerSensitive} presents
+     * @see #CALLER_SENSITIVE_ANNOTATION_CLASS
+     */
+    public static boolean isCallerSensitivePresent() {
+        return CALLER_SENSITIVE_ANNOTATION_CLASS != null;
     }
 
     private static boolean isInheritedObjectMethod(Method attributeMethod) {

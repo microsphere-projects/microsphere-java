@@ -9,6 +9,7 @@ import io.microsphere.util.ClassLoaderUtils;
 import io.microsphere.util.jar.JarUtils;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
@@ -34,18 +35,18 @@ public class SimpleJarEntryScannerTest extends AbstractTestCase {
 
     @Test
     public void testScan() throws IOException {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
+        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(resourceURL, true);
         assertEquals(1, jarEntrySet.size());
 
         JarFile jarFile = JarUtils.toJarFile(resourceURL);
         jarEntrySet = simpleJarEntryScanner.scan(jarFile, true);
-        assertTrue(jarEntrySet.size() > 1000);
+        assertTrue(jarEntrySet.size() > 1);
 
         jarEntrySet = simpleJarEntryScanner.scan(jarFile, true, new JarEntryFilter() {
             @Override
             public boolean accept(JarEntry jarEntry) {
-                return jarEntry.getName().equals("java/lang/String.class");
+                return jarEntry.getName().equals("javax/annotation/Nonnull.class");
             }
         });
 

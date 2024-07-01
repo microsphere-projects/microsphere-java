@@ -95,11 +95,10 @@ public class Artifact {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Artifact{");
-        sb.append("artifactId='").append(artifactId).append('\'');
-        sb.append(", version='").append(version).append('\'');
-        sb.append(", location='").append(location).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "Artifact{" + "artifactId='" + artifactId + '\'' +
+                ", version='" + version + '\'' +
+                ", location='" + location + '\'' +
+                '}';
+        return sb;
     }
 }

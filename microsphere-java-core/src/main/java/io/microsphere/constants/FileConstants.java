@@ -4,6 +4,7 @@
 package io.microsphere.constants;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 
 /**
  * File Constants
@@ -39,29 +40,38 @@ public interface FileConstants {
      */
     String CLASS = "class";
 
+    /**
+     * File extension character
+     */
+    char FILE_EXTENSION_CHAR = DOT_CHAR;
+
+    /**
+     * File extension separator
+     */
+    String FILE_EXTENSION = DOT;
 
     /**
      * Zip File extension : ".zip"
      */
-    String ZIP_EXTENSION = DOT + ZIP;
+    String ZIP_EXTENSION = FILE_EXTENSION + ZIP;
 
     /**
      * Jar File extension : ".jar"
      */
-    String JAR_EXTENSION = DOT + JAR;
+    String JAR_EXTENSION = FILE_EXTENSION + JAR;
 
     /**
      * War File extension : ".jar"
      */
-    String WAR_EXTENSION = DOT + WAR;
+    String WAR_EXTENSION = FILE_EXTENSION + WAR;
 
     /**
      * Ear File extension : ".jar"
      */
-    String EAR_EXTENSION = DOT + EAR;
+    String EAR_EXTENSION = FILE_EXTENSION + EAR;
 
     /**
      * Class File extension : ".class"
      */
-    String CLASS_EXTENSION = DOT + CLASS;
+    String CLASS_EXTENSION = FILE_EXTENSION + CLASS;
 }

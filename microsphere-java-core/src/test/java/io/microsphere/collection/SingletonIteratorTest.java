@@ -26,7 +26,7 @@ import static io.microsphere.collection.CollectionUtils.singletonIterator;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SingletonIteratorTest extends AbstractReadOnlyIteratorTest {
+public class SingletonIteratorTest extends ReadOnlyIteratorTest {
 
     @Override
     protected Iterator<?> createIterator() {

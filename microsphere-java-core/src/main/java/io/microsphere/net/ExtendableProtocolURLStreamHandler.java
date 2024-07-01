@@ -24,7 +24,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -40,9 +39,10 @@ import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
 import static io.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.registerURLStreamHandler;
+import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.split;
 import static java.net.Proxy.NO_PROXY;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.split;
+import static java.util.Collections.sort;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,
@@ -133,7 +133,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     private void initSubProtocolURLConnectionFactories() {
         List<SubProtocolURLConnectionFactory> factories = this.factories;
         initSubProtocolURLConnectionFactories(factories);
-        Collections.sort(factories, Prioritized.COMPARATOR);
+        sort(factories, Prioritized.COMPARATOR);
     }
 
     /**
@@ -296,11 +296,10 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(getClass().getName());
-        sb.append("{defaultPort=").append(getDefaultPort());
-        sb.append(",protocol=").append(getProtocol());
-        sb.append('}');
-        return sb.toString();
+        String sb = getClass().getName() + "{defaultPort=" + getDefaultPort() +
+                ",protocol=" + getProtocol() +
+                '}';
+        return sb;
     }
 
     private static String resolveConventionProtocol(String packageName) {

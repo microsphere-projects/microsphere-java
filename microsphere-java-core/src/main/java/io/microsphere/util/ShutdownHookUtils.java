@@ -16,18 +16,20 @@
  */
 package io.microsphere.util;
 
-import java.lang.reflect.Field;
+import io.microsphere.logging.Logger;
+
 import java.util.Collection;
-import java.util.IdentityHashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.function.Predicate;
 
 import static io.microsphere.lang.Prioritized.COMPARATOR;
-import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableCollection;
 import static java.util.stream.Collectors.toSet;
@@ -40,6 +42,8 @@ import static java.util.stream.Collectors.toSet;
  * @since 1.0.0
  */
 public abstract class ShutdownHookUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(ShutdownHookUtils.class);
 
     /**
      * The System property name of the capacity of ShutdownHook callbacks
@@ -55,16 +59,7 @@ public abstract class ShutdownHookUtils extends BaseUtils {
 
     private static final String TARGET_CLASS_NAME = "java.lang.ApplicationShutdownHooks";
 
-
-    private static final Class<?> TARGET_CLASS = resolveClass(TARGET_CLASS_NAME, getSystemClassLoader());
-
-    private static final Field HOOKS_FIELD = findField(TARGET_CLASS, "hooks");
-
-    private static final IdentityHashMap<Thread, Thread> hooksRef = findHooks();
-
-    private static IdentityHashMap<Thread, Thread> findHooks() {
-        return getStaticFieldValue(HOOKS_FIELD);
-    }
+    private static final String HOOKS_FIELD_NAME = "hooks";
 
     static {
         Runtime.getRuntime().addShutdownHook(new ShutdownHookCallbacksThread());
@@ -84,6 +79,8 @@ public abstract class ShutdownHookUtils extends BaseUtils {
     }
 
     public static Set<Thread> filterShutdownHookThreads(Predicate<Thread> hookThreadFilter, boolean removed) {
+        Map<Thread, Thread> hooksRef = findHooks();
+
         if (hooksRef == null || hooksRef.isEmpty()) {
             return emptySet();
         }
@@ -93,6 +90,14 @@ public abstract class ShutdownHookUtils extends BaseUtils {
             hookThreads.forEach(hooksRef::remove);
         }
         return hookThreads;
+    }
+
+    private static Map<Thread, Thread> findHooks() {
+        Class<?> applicationShutdownHooksClass = resolveClass(TARGET_CLASS_NAME, getSystemClassLoader());
+        if (applicationShutdownHooksClass == null) {
+            return emptyMap();
+        }
+        return getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);
     }
 
     /**
@@ -146,6 +151,9 @@ public abstract class ShutdownHookUtils extends BaseUtils {
 
         private void executeShutdownHookCallbacks() {
             for (Runnable callback : shutdownHookCallbacks) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The ShutdownHook Callback is about to run : {}", callback);
+                }
                 callback.run();
             }
         }

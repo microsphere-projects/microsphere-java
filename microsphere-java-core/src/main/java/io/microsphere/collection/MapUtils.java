@@ -130,7 +130,7 @@ public abstract class MapUtils extends BaseUtils {
     }
 
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Map<? extends K, ? extends V> map) {
-        return newLinkedHashMap(map);
+        return new LinkedHashMap(map);
     }
 
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
