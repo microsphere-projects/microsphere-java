@@ -37,9 +37,8 @@ jobs:
           cache: maven
 
       - name: Publish package
-        run: mvn --batch-mode --update-snapshots -Drevision=${{ inputs.revision }} -Prelease clean deploy
+        run: mvn --batch-mode --update-snapshots -Drevision=${{ inputs.revision }} -Dgpg.keyname=${{ secrets.OSS_SIGNING_KEY_ID }} -Dgpg.passphrase=${{ secrets.OSS_SIGNING_PASSWORD }} -Prelease clean deploy
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_KEY: ${{ secrets.OSS_SIGNING_KEY }}
-          MAVEN_GPG_PASSPHRASE : ${{ secrets.OSS_SIGNING_PASSWORD }}
