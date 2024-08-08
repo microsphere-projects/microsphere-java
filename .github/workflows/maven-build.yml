@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
+name: Maven Build
 
 on:
   push:
@@ -21,8 +21,9 @@ jobs:
       matrix:
         java: [ '8', '11' , '17' , '21' ]
     steps:
-      - uses: actions/checkout@v4
-      - name: Java ${{ matrix.Java }}
+      - name: Checkout Source
+        uses: actions/checkout@v4
+      - name: Setup JDK ${{ matrix.Java }}
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
