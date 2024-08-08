@@ -41,6 +41,6 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          SIGN_KEY_ID:  ${{ secrets.OSS_SIGNING_KEY_ID }}
+          SIGN_KEY_ID:  ${{ secrets.OSS_SIGNING_KEY_ID_LONG }}
           SIGN_KEY: ${{ secrets.OSS_SIGNING_KEY }}
           SIGN_KEY_PASS: ${{ secrets.OSS_SIGNING_PASSWORD }}
