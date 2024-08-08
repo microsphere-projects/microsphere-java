@@ -42,3 +42,4 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
           MAVEN_GPG_KEY: ${{ secrets.OSS_SIGNING_KEY }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSS_SIGNING_PASSWORD }}
