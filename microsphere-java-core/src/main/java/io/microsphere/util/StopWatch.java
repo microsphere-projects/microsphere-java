@@ -16,14 +16,13 @@
  */
 package io.microsphere.util;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
+import static io.microsphere.util.StringUtils.isBlank;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -68,7 +67,7 @@ public class StopWatch {
     }
 
     public void start(String taskName, boolean reentrant) throws IllegalArgumentException, IllegalStateException {
-        if (StringUtils.isBlank(taskName)) {
+        if (isBlank(taskName)) {
             throw new IllegalArgumentException("The 'taskName' argument must not be blank");
         }
 

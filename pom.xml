@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>0.0.6</version>
+        <version>0.0.15</version>
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
@@ -45,14 +45,13 @@
     </developers>
 
     <scm>
-        <url>https://github.com/microsphere-projects/microsphere-java</url>
-        <connection>scm:git:git://github.com/microsphere-projects/microsphere-java.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-java.git
-        </developerConnection>
+        <url>git@github.com/microsphere-projects/microsphere-java.git</url>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:ssh://${project.scm.url}</developerConnection>
     </scm>
 
     <properties>
-        <revision>0.0.6-SNAPSHOT</revision>
+        <revision>0.0.7-SNAPSHOT</revision>
     </properties>
 
     <modules>
@@ -60,7 +59,6 @@
         <module>microsphere-java-dependencies</module>
         <module>microsphere-annotation-processor</module>
         <module>microsphere-java-core</module>
-        <module>microsphere-jdk-tools</module>
     </modules>
 
     <distributionManagement>
@@ -73,5 +71,18 @@
             <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>snapshot</id>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+    </repositories>
 
 </project>

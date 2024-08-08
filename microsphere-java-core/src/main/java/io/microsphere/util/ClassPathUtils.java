@@ -5,7 +5,6 @@ package io.microsphere.util;
 
 
 import javax.annotation.Nonnull;
-import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.security.CodeSource;
@@ -13,10 +12,12 @@ import java.security.ProtectionDomain;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.StringUtils.split;
-import static io.microsphere.util.SystemUtils.PATH_SEPARATOR;
+import static java.lang.Thread.currentThread;
+import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 import static java.util.Collections.emptySet;
 
 /**
@@ -29,7 +30,7 @@ import static java.util.Collections.emptySet;
  */
 public abstract class ClassPathUtils extends BaseUtils {
 
-    protected static final RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+    protected static final RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
 
     private static final Set<String> bootstrapClassPaths = initBootstrapClassPaths();
 
@@ -85,7 +86,7 @@ public abstract class ClassPathUtils extends BaseUtils {
      * @see #getRuntimeClassLocation(Class)
      */
     public static URL getRuntimeClassLocation(String className) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = currentThread().getContextClassLoader();
         URL location = null;
         if (classLoader != null) {
             if (isLoadedClass(classLoader, className)) {

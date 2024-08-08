@@ -1,8 +1,7 @@
 package io.microsphere.classloading;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.SystemUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
@@ -40,7 +40,7 @@ public class BannedArtifactClassLoadingExecutor {
 
     public static final String CONFIG_LOCATION = "META-INF/banned-artifacts";
 
-    private static final Logger logger = LoggerFactory.getLogger(BannedArtifactClassLoadingExecutor.class);
+    private static final Logger logger = getLogger(BannedArtifactClassLoadingExecutor.class);
 
     private static final String ENCODING = SystemUtils.FILE_ENCODING;
 
@@ -90,7 +90,7 @@ public class BannedArtifactClassLoadingExecutor {
     private List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
         List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try (InputStream inputStream = configResource.openStream();
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING));
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING))
         ) {
             while (true) {
                 String definition = reader.readLine();

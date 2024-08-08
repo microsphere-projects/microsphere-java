@@ -16,24 +16,26 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.logging.Logger;
+import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
+import javax.annotation.Nullable;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
@@ -41,16 +43,21 @@ import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.lang.function.Streams.filterAll;
-import static io.microsphere.reflect.AccessibleObjectUtils.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
+import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
-import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
 
 /**
  * The Java Reflection {@link Method} Utility class
@@ -59,6 +66,8 @@ import static org.apache.commons.lang3.ArrayUtils.EMPTY_CLASS_ARRAY;
  * @since 1.0.0
  */
 public abstract class MethodUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(MethodUtils.class);
 
     /**
      * The {@link Predicate} reference to {@link MethodUtils#isObjectMethod(Method)}
@@ -80,7 +89,7 @@ public abstract class MethodUtils extends BaseUtils {
         MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
             this.declaredClass = declaredClass;
             this.methodName = methodName;
-            this.parameterTypes = parameterTypes;
+            this.parameterTypes = parameterTypes == null ? EMPTY_CLASS_ARRAY : parameterTypes;
         }
 
         @Override
@@ -90,10 +99,8 @@ public abstract class MethodUtils extends BaseUtils {
 
             MethodKey methodKey = (MethodKey) o;
 
-            if (!Objects.equals(declaredClass, methodKey.declaredClass))
-                return false;
-            if (!Objects.equals(methodName, methodKey.methodName))
-                return false;
+            if (!Objects.equals(declaredClass, methodKey.declaredClass)) return false;
+            if (!Objects.equals(methodName, methodKey.methodName)) return false;
             // Probably incorrect - comparing Object[] arrays with Arrays.equals
             return Arrays.equals(parameterTypes, methodKey.parameterTypes);
         }
@@ -104,6 +111,13 @@ public abstract class MethodUtils extends BaseUtils {
             result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
             result = 31 * result + Arrays.hashCode(parameterTypes);
             return result;
+        }
+
+        @Override
+        public String toString() {
+            StringJoiner stringJoiner = new StringJoiner(",", "(", ") ");
+            ArrayUtils.forEach(parameterTypes, parameterType -> stringJoiner.add(getTypeName(parameterType)));
+            return getTypeName(declaredClass) + "#" + methodName + stringJoiner;
         }
 
         static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
@@ -130,8 +144,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    public static List<Method> getMethods(Class<?> declaringClass, boolean includeInheritedTypes, boolean publicOnly,
-                                          Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> getMethods(Class<?> declaringClass, boolean includeInheritedTypes, boolean publicOnly, Predicate<? super Method>... methodsToFilter) {
 
         if (declaringClass == null || declaringClass.isPrimitive()) {
             return emptyList();
@@ -258,6 +271,13 @@ public abstract class MethodUtils extends BaseUtils {
                 }
             }
         }
+        if (method == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The declared method was not found in the declared class[name : '{}'] by name['{}'] and parameter types['']",
+                        declaredClass, methodName, asList(parameterTypes));
+            }
+        }
+
         return method;
     }
 
@@ -275,13 +295,13 @@ public abstract class MethodUtils extends BaseUtils {
      *
      * @param object     the target object
      * @param methodName the method name
-     * @param parameters the method parameters
-     * @param <T>        the return type
+     * @param arguments  the method arguments
+     * @param <R>        the return type
      * @return the target method's execution result
      */
-    public static <T> T invokeMethod(Object object, String methodName, Object... parameters) {
+    public static <R> R invokeMethod(Object object, String methodName, Object... arguments) {
         Class type = object.getClass();
-        return invokeMethod(object, type, methodName, parameters);
+        return invokeMethod(object, type, methodName, arguments);
     }
 
     /**
@@ -289,27 +309,115 @@ public abstract class MethodUtils extends BaseUtils {
      *
      * @param type       the target class
      * @param methodName the method name
-     * @param parameters the method parameters
-     * @param <T>        the return type
+     * @param arguments  the method arguments
+     * @param <R>        the return type
      * @return the target method's execution result
      */
-    public static <T> T invokeStaticMethod(Class<?> type, String methodName, Object... parameters) {
-        return invokeMethod(null, type, methodName, parameters);
+    public static <R> R invokeStaticMethod(Class<?> type, String methodName, Object... arguments) {
+        return invokeMethod(null, type, methodName, arguments);
     }
 
-    public static <T> T invokeMethod(Object instance, Class<?> type, String methodName, Object... parameters) {
-        Class[] parameterTypes = getTypes(parameters);
+    /**
+     * Invoke the target classes' static method
+     *
+     * @param method    the method
+     * @param arguments the method arguments
+     * @param <R>       the return type
+     * @return the target method's execution result
+     */
+    public static <R> R invokeStaticMethod(Method method, Object... arguments) {
+        return invokeMethod(null, method, arguments);
+    }
+
+    public static <R> R invokeMethod(Object instance, Class<?> type, String methodName, Object... arguments) {
+        Class[] parameterTypes = getTypes(arguments);
         Method method = findMethod(type, methodName, parameterTypes);
 
         if (method == null) {
-            throw new IllegalStateException(String.format("cannot find method %s,class: %s", methodName, type.getName()));
+            throw new IllegalStateException(format("cannot find method[name : '{}'], class: '{}'", methodName, type.getName()));
         }
 
-        return invokeMethod(instance, method, parameters);
+        return invokeMethod(instance, method, arguments);
     }
 
-    public static <T> T invokeMethod(Object instance, Method method, Object... parameters) {
-        return execute(method, () -> (T) method.invoke(instance, parameters));
+    /**
+     * Invokes the underlying method represented by this {@code Method}
+     * object, on the specified object with the specified parameters.
+     * Individual parameters are automatically unwrapped to match
+     * primitive formal parameters, and both primitive and reference
+     * parameters are subject to method invocation conversions as
+     * necessary.
+     *
+     * <p>If the underlying method is static, then the specified {@code instance}
+     * argument is ignored. It may be null.
+     *
+     * <p>If the number of formal parameters required by the underlying method is
+     * 0, the supplied {@code args} array may be of length 0 or null.
+     *
+     * <p>If the underlying method is an instance method, it is invoked
+     * using dynamic method lookup as documented in The Java Language
+     * Specification, section {@jls 15.12.4.4}; in particular,
+     * overriding based on the runtime type of the target object may occur.
+     *
+     * <p>If the underlying method is static, the class that declared
+     * the method is initialized if it has not already been initialized.
+     *
+     * <p>If the method completes normally, the value it returns is
+     * returned to the caller of invoke; if the value has a primitive
+     * type, it is first appropriately wrapped in an object. However,
+     * if the value has the type of an array of a primitive type, the
+     * elements of the array are <i>not</i> wrapped in objects; in
+     * other words, an array of primitive type is returned.  If the
+     * underlying method return type is void, the invocation returns
+     * null.
+     *
+     * @param instance  the object the underlying method is invoked from
+     * @param method    the underlying method
+     * @param arguments the arguments used for the method call
+     * @param <R>
+     * @return the result of dispatching the method represented by
+     * this object on {@code instance} with parameters
+     * {@code arguments}
+     * @throws IllegalStateException    if this {@code Method} object
+     *                                  is enforcing Java language access control and the underlying
+     *                                  method is inaccessible.
+     * @throws IllegalArgumentException if the method is an
+     *                                  instance method and the specified object argument
+     *                                  is not an instance of the class or interface
+     *                                  declaring the underlying method (or of a subclass
+     *                                  or implementor thereof); if the number of actual
+     *                                  and formal parameters differ; if an unwrapping
+     *                                  conversion for primitive arguments fails; or if,
+     *                                  after possible unwrapping, a parameter value
+     *                                  cannot be converted to the corresponding formal
+     *                                  parameter type by a method invocation conversion.
+     * @throws RuntimeException         if the underlying method
+     *                                  throws an exception.
+     */
+    public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
+        R result = null;
+        boolean accessible = false;
+        RuntimeException failure = null;
+        try {
+            trySetAccessible(method);
+            result = (R) method.invoke(instance, arguments);
+        } catch (IllegalAccessException e) {
+            String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
+            failure = new IllegalStateException(errorMessage, e);
+        } catch (IllegalArgumentException e) {
+            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, asList(arguments));
+            failure = new IllegalArgumentException(errorMessage, e);
+        } catch (InvocationTargetException e) {
+            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, asList(arguments));
+            failure = new RuntimeException(errorMessage, e.getTargetException());
+        }
+
+        if (failure != null) {
+            logger.error(failure.getMessage(), failure.getCause());
+            throw failure;
+        }
+
+        return result;
     }
 
     /**
@@ -373,13 +481,9 @@ public abstract class MethodUtils extends BaseUtils {
         }
 
         // Method comparison: The return type of overrider must be inherit from the overridden's
-        if (!overridden.getReturnType().isAssignableFrom(overrider.getReturnType())) {
-            return false;
-        }
+        return overridden.getReturnType().isAssignableFrom(overrider.getReturnType());
 
         // Throwable comparison: "throws" Throwable list will be ignored, trust the compiler verify
-
-        return true;
     }
 
     /**
@@ -461,5 +565,16 @@ public abstract class MethodUtils extends BaseUtils {
             return Objects.equals(Object.class, method.getDeclaringClass());
         }
         return false;
+    }
+
+    /**
+     * Test whether the specified {@link Method method} annotates {@linkplain jdk.internal.reflect.CallerSensitive} or not
+     *
+     * @param method {@link Method}
+     * @return <code>true</code> if the specified {@link Method method} annotates {@linkplain jdk.internal.reflect.CallerSensitive}
+     * @see jdk.internal.reflect.CallerSensitive
+     */
+    public static boolean isCallerSensitiveMethod(Method method) {
+        return isAnnotationPresent(method, CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
 }

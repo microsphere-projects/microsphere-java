@@ -71,12 +71,11 @@ public class MavenArtifact extends Artifact {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("MavenArtifact{");
-        sb.append("groupId='").append(groupId).append('\'');
-        sb.append(", artifactId='").append(getArtifactId()).append('\'');
-        sb.append(", version='").append(getVersion()).append('\'');
-        sb.append(", location='").append(getLocation()).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "MavenArtifact{" + "groupId='" + groupId + '\'' +
+                ", artifactId='" + getArtifactId() + '\'' +
+                ", version='" + getVersion() + '\'' +
+                ", location='" + getLocation() + '\'' +
+                '}';
+        return sb;
     }
 }

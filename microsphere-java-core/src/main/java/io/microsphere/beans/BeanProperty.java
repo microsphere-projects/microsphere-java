@@ -92,12 +92,11 @@ public class BeanProperty {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("BeanProperty{");
-        sb.append("name='").append(name).append('\'');
-        sb.append(", value=").append(value);
-        sb.append(", declaringClass=").append(declaringClass);
-        sb.append(", descriptor=").append(descriptor);
-        sb.append('}');
-        return sb.toString();
+        String sb = "BeanProperty{" + "name='" + name + '\'' +
+                ", value=" + value +
+                ", declaringClass=" + declaringClass +
+                ", descriptor=" + descriptor +
+                '}';
+        return sb;
     }
 }

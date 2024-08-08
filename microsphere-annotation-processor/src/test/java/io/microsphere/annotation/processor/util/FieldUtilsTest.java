@@ -87,7 +87,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllDeclaredFields() {
+    public void testFindAllDeclaredFields() {
         TypeElement type = getType(Model.class);
 
         List<VariableElement> fields = getAllDeclaredFields(type);

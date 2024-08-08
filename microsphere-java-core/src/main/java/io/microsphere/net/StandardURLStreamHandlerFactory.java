@@ -16,27 +16,35 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.util.ClassLoaderUtils;
-
+import java.lang.invoke.MethodHandle;
+import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+
+import static io.microsphere.invoke.MethodHandleUtils.findStatic;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see java.net.URL#getURLStreamHandler(String)
  * @since 1.0.0
  */
 public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
+    private static final MethodHandle methodHandle;
+
+    static {
+        methodHandle = findStatic(URL.class, "getURLStreamHandler", String.class);
+    }
+
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        String className = "sun.net.www.protocol." + protocol + ".Handler";
-        Class<?> handlerClass = ClassLoaderUtils.resolveClass(className, ClassLoaderUtils.getDefaultClassLoader());
+        URLStreamHandler handler = null;
         try {
-            return (URLStreamHandler) handlerClass.newInstance();
+            handler = (URLStreamHandler) methodHandle.invokeExact(protocol);
         } catch (Throwable e) {
         }
-        return null;
+        return handler;
     }
 }

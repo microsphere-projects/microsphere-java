@@ -6,17 +6,18 @@ package io.microsphere.io.scanner;
 import io.microsphere.constants.PathConstants;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.jar.JarUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import static io.microsphere.util.StringUtils.EMPTY;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * Simple {@link JarEntry} Scanner
@@ -36,17 +37,12 @@ public class SimpleJarEntryScanner {
     }
 
     /**
-     * @param jarURL
-     *         {@link URL} of {@link JarFile} or {@link JarEntry}
-     * @param recursive
-     *         recursive
+     * @param jarURL    {@link URL} of {@link JarFile} or {@link JarEntry}
+     * @param recursive recursive
      * @return Read-only {@link Set}
-     * @throws NullPointerException
-     *         If argument <code>null</code>
-     * @throws IllegalArgumentException
-     *         <ul> <li>{@link JarUtils#resolveRelativePath(URL)}
-     * @throws IOException
-     *         <ul> <li>{@link JarUtils#toJarFile(URL)}
+     * @throws NullPointerException     If argument <code>null</code>
+     * @throws IllegalArgumentException <ul> <li>{@link JarUtils#resolveRelativePath(URL)}
+     * @throws IOException              <ul> <li>{@link JarUtils#toJarFile(URL)}
      * @since 1.0.0
      */
     @Nonnull
@@ -55,19 +51,13 @@ public class SimpleJarEntryScanner {
     }
 
     /**
-     * @param jarURL
-     *         {@link URL} of {@link JarFile} or {@link JarEntry}
-     * @param recursive
-     *         recursive
-     * @param jarEntryFilter
-     *         {@link JarEntryFilter}
+     * @param jarURL         {@link URL} of {@link JarFile} or {@link JarEntry}
+     * @param recursive      recursive
+     * @param jarEntryFilter {@link JarEntryFilter}
      * @return Read-only {@link Set}
-     * @throws NullPointerException
-     *         If argument <code>null</code>
-     * @throws IllegalArgumentException
-     *         {@link JarUtils#resolveJarAbsolutePath(URL)}
-     * @throws IOException
-     *         {@link JarUtils#toJarFile(URL)}
+     * @throws NullPointerException     If argument <code>null</code>
+     * @throws IllegalArgumentException {@link JarUtils#resolveJarAbsolutePath(URL)}
+     * @throws IOException              {@link JarUtils#toJarFile(URL)}
      * @see JarEntryFilter
      * @since 1.0.0
      */
@@ -101,7 +91,7 @@ public class SimpleJarEntryScanner {
      * @throws IOException
      */
     public Set<JarEntry> scan(JarFile jarFile, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
-        return scan(jarFile, StringUtils.EMPTY, recursive, jarEntryFilter);
+        return scan(jarFile, EMPTY, recursive, jarEntryFilter);
     }
 
     protected Set<JarEntry> scan(JarFile jarFile, String relativePath, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
@@ -128,6 +118,6 @@ public class SimpleJarEntryScanner {
                 jarEntriesSet.add(jarEntry);
             }
         }
-        return Collections.unmodifiableSet(jarEntriesSet);
+        return unmodifiableSet(jarEntriesSet);
     }
 }

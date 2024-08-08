@@ -7,6 +7,7 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -197,72 +198,6 @@ public class ClassUtilsTest extends AbstractTestCase {
         oneArrayType = int[][][].class;
         anotherArrayType = int[].class;
         assertFalse(arrayTypeEquals(oneArrayType, anotherArrayType));
-    }
-
-    @Test
-    public void testGetClassNamesInClassPath() {
-        Set<String> classPaths = ClassPathUtils.getClassPaths();
-        for (String classPath : classPaths) {
-            Set<String> classNames = ClassUtils.getClassNamesInClassPath(classPath, true);
-            assertNotNull(classNames);
-        }
-    }
-
-    @Test
-    public void testGetClassNamesInPackage() {
-        Set<String> packageNames = ClassUtils.getAllPackageNamesInClassPaths();
-        for (String packageName : packageNames) {
-            Set<String> classNames = ClassUtils.getClassNamesInPackage(packageName);
-            assertFalse(classNames.isEmpty());
-            assertNotNull(classNames);
-            info(packageName);
-            info("\t" + classNames);
-        }
-    }
-
-
-    @Test
-    public void testGetAllPackageNamesInClassPaths() {
-        Set<String> packageNames = ClassUtils.getAllPackageNamesInClassPaths();
-        assertNotNull(packageNames);
-        info(packageNames);
-    }
-
-    @Test
-    public void testFindClassPath() {
-        String classPath = ClassUtils.findClassPath(ReflectionUtils.class);
-        assertNotNull(classPath);
-
-        classPath = ClassUtils.findClassPath(String.class);
-        assertNotNull(classPath);
-    }
-
-    @Test
-    public void testGetAllClassNamesMapInClassPath() {
-        Map<String, Set<String>> allClassNamesMapInClassPath = ClassUtils.getClassPathToClassNamesMap();
-        assertFalse(allClassNamesMapInClassPath.isEmpty());
-    }
-
-    @Test
-    public void testGetAllClassNamesInClassPath() {
-        Set<String> allClassNames = ClassUtils.getAllClassNamesInClassPaths();
-        assertFalse(allClassNames.isEmpty());
-    }
-
-    @Test
-    public void testGetCodeSourceLocation() throws IOException {
-        URL codeSourceLocation = null;
-        assertNull(codeSourceLocation);
-
-        codeSourceLocation = ClassUtils.getCodeSourceLocation(ClassUtilsTest.class);
-        info("codeSourceLocation : " + codeSourceLocation);
-        assertNotNull(codeSourceLocation);
-
-        codeSourceLocation = ClassUtils.getCodeSourceLocation(String.class);
-        info("codeSourceLocation : " + codeSourceLocation);
-        assertNotNull(codeSourceLocation);
-
-
     }
 
     @Test

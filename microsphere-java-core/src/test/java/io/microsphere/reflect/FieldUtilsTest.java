@@ -23,6 +23,8 @@ import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -39,18 +41,21 @@ public class FieldUtilsTest {
 
     @Test
     public void testFindField() {
-        Class<?> klass = String.class;
-        assertEquals(char[].class, findField(klass, "value").getType());
+        Class<?> klass = Integer.class;
+        assertEquals(int.class, findField(klass, "value").getType());
 
         klass = StringBuilder.class;
-        assertEquals(char[].class, findField(klass, "value").getType());
         assertEquals(int.class, findField(klass, "count").getType());
     }
 
     @Test
     public void testGetFieldValue() {
         String value = "Hello,World";
-        assertArrayEquals(value.toCharArray(), getFieldValue(value, "value", char[].class));
+        if (CURRENT_JAVA_VERSION.le(JAVA_VERSION_8)) {
+            assertArrayEquals(value.toCharArray(), getFieldValue(value, "value", char[].class));
+        } else {
+            assertArrayEquals(value.getBytes(), getFieldValue(value, "value", byte[].class));
+        }
     }
 
     @Test

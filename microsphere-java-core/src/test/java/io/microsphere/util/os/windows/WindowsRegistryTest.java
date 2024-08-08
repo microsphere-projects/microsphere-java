@@ -3,9 +3,9 @@
  */
 package io.microsphere.util.os.windows;
 
-import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -20,7 +20,7 @@ public class WindowsRegistryTest {
 
     @Test
     public void testInit() {
-        if (SystemUtils.IS_OS_WINDOWS) {
+        if (IS_OS_WINDOWS) {
             WindowsRegistry user = WindowsRegistry.currentUser();
             String key = "\\Software\\Microsoft\\Windows\\CurrentVersion\\Run";
             String name = "ABC";

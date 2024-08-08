@@ -16,15 +16,16 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.text.FormatUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.text.FormatUtils.format;
 
 /**
  * {@link FunctionalInterface} Configurer (No Thread-Safe)
@@ -35,7 +36,9 @@ import java.util.function.Supplier;
  */
 public class Configurer<T> {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = getLogger(Configurer.class);
+
+    private static final String UNNAMED = "UNNAMED";
 
     private final String name;
 
@@ -47,36 +50,52 @@ public class Configurer<T> {
         this.name = name;
     }
 
+    protected Configurer(Supplier<T> valueSupplier) {
+        this(valueSupplier.get());
+    }
+
+    protected Configurer(T value) {
+        this(UNNAMED, value);
+    }
+
     protected Configurer(String name, Supplier<T> valueSupplier) {
         this(name, valueSupplier.get());
     }
 
-    private Configurer(String name, T value) {
+    protected Configurer(String name, T value) {
         this.name = name;
         this.value = value;
         this.logBuilder = new StringBuilder();
-        logBuilder.append(FormatUtils.format("'{}' the config value is initialized ：'{}'", name, value));
+        logBuilder.append(format("'{}' the config value is initialized ：'{}'", name, value));
     }
 
-    public <R> Configurer<R> value(Supplier<R> valueSupplier) {
+    public <T> Configurer<T> value(T value) {
+        return new Configurer<>(name, value);
+    }
+
+    public <T> Configurer<T> value(Supplier<T> valueSupplier) {
         return new Configurer<>(name, valueSupplier);
     }
 
     public Configurer<T> compare(Supplier<T> comparedValueSupplier) {
+        return compare(comparedValueSupplier.get());
+    }
+
+    public Configurer<T> compare(T comparedValue) {
         if (value != null) {
-            T comparedValue = comparedValueSupplier.get();
             if (Objects.equals(value, comparedValue)) {
-                logBuilder.append(FormatUtils.format(", the config value is not changed[current：'{}'，compared：'{}']", value, comparedValue));
+                logBuilder.append(format(", the config value is not changed[current：'{}'，compared：'{}']", value, comparedValue));
                 value = null;
             }
         }
         return this;
     }
 
+
     public Configurer<T> on(Predicate<T> predicate) {
         if (value != null) {
             if (!predicate.test(value)) {
-                logBuilder.append(FormatUtils.format(", the config value[current：'{}'] does not match", value));
+                logBuilder.append(format(", the config value[current：'{}'] does not match", value));
                 value = null;
             }
         }
@@ -87,7 +106,7 @@ public class Configurer<T> {
         final R result;
         if (value != null) {
             result = function.apply(value);
-            logBuilder.append(FormatUtils.format(", the config value is converted[current：'{}'，target：'{}']", value, result));
+            logBuilder.append(format(", the config value is converted[current：'{}'，target：'{}']", value, result));
         } else {
             result = null;
         }
@@ -116,7 +135,19 @@ public class Configurer<T> {
         return new Configurer<>(name);
     }
 
+    public static <T> Configurer<T> configure(String name, T value) {
+        return new Configurer<>(name, value);
+    }
+
     public static <T> Configurer<T> configure(String name, Supplier<T> valueSupplier) {
         return new Configurer<>(name, valueSupplier);
+    }
+
+    public static <T> Configurer<T> configure(T value) {
+        return new Configurer<>(value);
+    }
+
+    public static <T> Configurer<T> configure(Supplier<T> valueSupplier) {
+        return new Configurer<>(valueSupplier);
     }
 }

@@ -64,17 +64,16 @@ public class FileChangedEvent extends Event {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("FileChangedEvent{");
-        sb.append("kind=").append(kind);
-        sb.append(", file=").append(getFile());
-        sb.append('}');
-        return sb.toString();
+        String sb = "FileChangedEvent{" + "kind=" + kind +
+                ", file=" + getFile() +
+                '}';
+        return sb;
     }
 
     /**
      * The Kind of File Changed Event
      */
-    public static enum Kind {
+    public enum Kind {
 
         /**
          * The file or directory entry created
@@ -89,6 +88,6 @@ public class FileChangedEvent extends Event {
         /**
          * The file or directory entry deleted
          */
-        DELETED;
+        DELETED
     }
 }

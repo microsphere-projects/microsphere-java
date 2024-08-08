@@ -39,7 +39,7 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
      *
      * @param buf the input buffer.
      */
-    public FastByteArrayInputStream(byte buf[]) {
+    public FastByteArrayInputStream(byte[] buf) {
         super(buf);
     }
 
@@ -57,7 +57,7 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
      * @param offset the offset in the buffer of the first byte to read.
      * @param length the maximum number of bytes to read from the buffer.
      */
-    public FastByteArrayInputStream(byte buf[], int offset, int length) {
+    public FastByteArrayInputStream(byte[] buf, int offset, int length) {
         super(buf, offset, length);
     }
 
@@ -67,7 +67,7 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
     }
 
     @Override
-    public int read(byte b[], int off, int len) {
+    public int read(byte[] b, int off, int len) {
         if (b == null) {
             throw new NullPointerException();
         } else if (off < 0 || len < 0 || len > b.length - off) {

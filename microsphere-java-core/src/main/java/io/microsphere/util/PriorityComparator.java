@@ -16,24 +16,24 @@
  */
 package io.microsphere.util;
 
-import javax.annotation.Priority;
 import java.util.Comparator;
 import java.util.Objects;
 
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
 
 /**
- * The {@link Comparator} for the annotation {@link Priority}
+ * The {@link Comparator} for the annotation {@link javax.annotation.Priority}
  * <p>
- * The less value of {@link Priority}, the more priority
+ * The less value of {@link javax.annotation.Priority}, the more priority
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see Priority
+ * @see javax.annotation.Priority
  * @since 1.0.0
  */
 public class PriorityComparator implements Comparator<Object> {
 
-    private static final Class<Priority> PRIORITY_CLASS = Priority.class;
+    private static final Class PRIORITY_CLASS = ClassLoaderUtils.resolveClass("javax.annotation.Priority");
 
     private static final int UNDEFINED_VALUE = -1;
 
@@ -48,12 +48,12 @@ public class PriorityComparator implements Comparator<Object> {
     }
 
     public static int compare(Class<?> type1, Class<?> type2) {
-        if (Objects.equals(type1, type2)) {
+        if (Objects.equals(type1, type2) || PRIORITY_CLASS == null) {
             return 0;
         }
 
-        Priority priority1 = findAnnotation(type1, PRIORITY_CLASS);
-        Priority priority2 = findAnnotation(type2, PRIORITY_CLASS);
+        Object priority1 = findAnnotation(type1, PRIORITY_CLASS);
+        Object priority2 = findAnnotation(type2, PRIORITY_CLASS);
 
         int priorityValue1 = getValue(priority1);
         int priorityValue2 = getValue(priority2);
@@ -65,8 +65,8 @@ public class PriorityComparator implements Comparator<Object> {
         return object instanceof Class ? (Class) object : object.getClass();
     }
 
-    private static int getValue(Priority priority) {
-        int value = priority == null ? UNDEFINED_VALUE : priority.value();
+    private static int getValue(Object priority) {
+        int value = priority == null ? UNDEFINED_VALUE : invokeMethod(priority, "value");
         return value < 0 ? UNDEFINED_VALUE : value;
     }
 

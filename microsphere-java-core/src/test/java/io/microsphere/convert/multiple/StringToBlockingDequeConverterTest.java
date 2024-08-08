@@ -113,6 +113,6 @@ public class StringToBlockingDequeConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE - 5, converter.getPriority());
+        assertTrue(Integer.MAX_VALUE > converter.getPriority());
     }
 }

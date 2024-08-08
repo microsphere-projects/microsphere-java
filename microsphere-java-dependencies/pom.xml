@@ -33,11 +33,6 @@
                 <version>${revision}</version>
             </dependency>
 
-            <dependency>
-                <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-jdk-tools</artifactId>
-                <version>${revision}</version>
-            </dependency>
         </dependencies>
 
     </dependencyManagement>

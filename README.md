@@ -1,2 +1,2 @@
 # microsphere-framework
-The common feautres used in the other microsphere sub-projects
+The common features used in the other microsphere sub-projects

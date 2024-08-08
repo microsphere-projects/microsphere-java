@@ -4,11 +4,19 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.lang.ClassDataRepository;
 import org.junit.jupiter.api.Test;
 
+import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Set;
 
+import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
+import static io.microsphere.util.ClassPathUtils.getClassPaths;
+import static io.microsphere.util.ClassPathUtils.getRuntimeClassLocation;
+import static java.lang.management.ManagementFactory.getRuntimeMXBean;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,45 +33,45 @@ public class ClassPathUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetBootstrapClassPaths() {
-        Set<String> bootstrapClassPaths = ClassPathUtils.getBootstrapClassPaths();
+        Set<String> bootstrapClassPaths = getBootstrapClassPaths();
         assertNotNull(bootstrapClassPaths);
-        assertFalse(bootstrapClassPaths.isEmpty());
+        RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
+        assertEquals(runtimeMXBean.isBootClassPathSupported(), !bootstrapClassPaths.isEmpty());
         info(bootstrapClassPaths);
     }
 
-
     @Test
     public void testGetClassPaths() {
-        Set<String> classPaths = ClassPathUtils.getClassPaths();
+        Set<String> classPaths = getClassPaths();
         assertNotNull(classPaths);
         assertFalse(classPaths.isEmpty());
         info(classPaths);
     }
 
     @Test
-    public void getRuntimeClassLocation() {
+    public void testGetRuntimeClassLocation() {
         URL location = null;
-        location = ClassPathUtils.getRuntimeClassLocation(String.class);
+        location = getRuntimeClassLocation(String.class);
         assertNotNull(location);
         info(location);
 
-        location = ClassPathUtils.getRuntimeClassLocation(getClass());
+        location = getRuntimeClassLocation(getClass());
         assertNotNull(location);
         info(location);
 
         //Primitive type
-        location = ClassPathUtils.getRuntimeClassLocation(int.class);
+        location = getRuntimeClassLocation(int.class);
         assertNull(location);
 
         //Array type
-        location = ClassPathUtils.getRuntimeClassLocation(int[].class);
+        location = getRuntimeClassLocation(int[].class);
         assertNull(location);
 
 
-        Set<String> classNames = ClassUtils.getAllClassNamesInClassPaths();
+        Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
-            if (!ClassLoaderUtils.isLoadedClass(classLoader, className)) {
-                location = ClassPathUtils.getRuntimeClassLocation(className);
+            if (!isLoadedClass(classLoader, className)) {
+                location = getRuntimeClassLocation(className);
                 assertNull(location);
             }
         }
