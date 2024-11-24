@@ -108,6 +108,17 @@ public final class Deprecation implements Serializable {
         return Objects.hash(since, replacement, reason, link, level);
     }
 
+    @Override
+    public String toString() {
+        return "Deprecation{" +
+                "since='" + since + '\'' +
+                ", replacement='" + replacement + '\'' +
+                ", reason='" + reason + '\'' +
+                ", link='" + link + '\'' +
+                ", level=" + level +
+                '}';
+    }
+
     /**
      * Deprecation Level
      */
