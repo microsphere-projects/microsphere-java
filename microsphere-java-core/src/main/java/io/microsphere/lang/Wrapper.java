@@ -65,14 +65,14 @@ public interface Wrapper {
      * @param <T>    target type
      * @return unwrapped instance if possible, or the original object
      */
-    static <T> T tryUnwrap(T object, Class<T> type) {
+    static <T> T tryUnwrap(Object object, Class<T> type) {
         if (object instanceof Wrapper) {
             Wrapper wrapper = (Wrapper) object;
             if (wrapper.isWrapperFor(type)) {
                 return wrapper.unwrap(type);
             }
         }
-        return object;
+        return null;
     }
 }
 
