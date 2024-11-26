@@ -32,14 +32,13 @@ public interface Wrapper {
      * If the receiver extends or implements the type then the result is the receiver
      * or a proxy for the receiver. If the receiver is a wrapper
      * and the wrapped object extends or implements the type then the result is the
-     * wrapped object or a proxy for the wrapped object. Otherwise return the
-     * the result of calling <code>unwrap</code> recursively on the wrapped object
-     * or a proxy for that result. If the receiver is not a
+     * wrapped object or a proxy for the wrapped object. Otherwise return the result of calling <code>unwrap</code>
+     * recursively on the wrapped object or a proxy for that result. If the receiver is not a
      * wrapper and does not implement the type, then an {@link IllegalArgumentException} is thrown.
      *
      * @param type the wrapped type
      * @param <T>  the wrapped type
-     * @return an object of the given class. May be a proxy for the actual implementing object.
+     * @return an object of the given class. Maybe a proxy for the actual implementing object.
      * @throws IllegalArgumentException
      */
     <T> T unwrap(Class<T> type) throws IllegalArgumentException;
