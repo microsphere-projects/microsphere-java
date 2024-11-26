@@ -16,8 +16,14 @@
  */
 package io.microsphere.beans;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.Objects;
+
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * The class presenting the Property of Bean
@@ -27,20 +33,25 @@ import java.util.Objects;
  */
 public class BeanProperty {
 
-    private String name;
+    @Nonnull
+    private final String name;
 
     private Object value;
 
-    private Class<?> declaringClass;
+    @Nonnull
+    private final Class<?> beanClass;
 
-    private PropertyDescriptor descriptor;
+    @Nonnull
+    private final PropertyDescriptor descriptor;
+
+    public BeanProperty(@Nonnull String name, Class<?> beanClass, PropertyDescriptor descriptor) {
+        this.name = name;
+        this.beanClass = beanClass;
+        this.descriptor = descriptor;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Object getValue() {
@@ -51,20 +62,12 @@ public class BeanProperty {
         this.value = value;
     }
 
-    public Class<?> getDeclaringClass() {
-        return declaringClass;
-    }
-
-    public void setDeclaringClass(Class<?> declaringClass) {
-        this.declaringClass = declaringClass;
+    public Class<?> getBeanClass() {
+        return beanClass;
     }
 
     public PropertyDescriptor getDescriptor() {
         return descriptor;
-    }
-
-    public void setDescriptor(PropertyDescriptor descriptor) {
-        this.descriptor = descriptor;
     }
 
     @Override
@@ -76,7 +79,7 @@ public class BeanProperty {
 
         if (!Objects.equals(name, that.name)) return false;
         if (!Objects.equals(value, that.value)) return false;
-        if (!Objects.equals(declaringClass, that.declaringClass))
+        if (!Objects.equals(beanClass, that.beanClass))
             return false;
         return Objects.equals(descriptor, that.descriptor);
     }
@@ -85,7 +88,7 @@ public class BeanProperty {
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (declaringClass != null ? declaringClass.hashCode() : 0);
+        result = 31 * result + (beanClass != null ? beanClass.hashCode() : 0);
         result = 31 * result + (descriptor != null ? descriptor.hashCode() : 0);
         return result;
     }
@@ -94,9 +97,31 @@ public class BeanProperty {
     public String toString() {
         String sb = "BeanProperty{" + "name='" + name + '\'' +
                 ", value=" + value +
-                ", declaringClass=" + declaringClass +
+                ", declaringClass=" + beanClass +
                 ", descriptor=" + descriptor +
                 '}';
         return sb;
+    }
+
+    /**
+     * Create a {@link BeanProperty} instance
+     *
+     * @param bean         bean instance
+     * @param propertyName the name of bean property
+     * @return a {@link BeanProperty} instance
+     */
+    public static BeanProperty of(@Nonnull Object bean, @Nonnull String propertyName) {
+        assertNotNull(bean, "The 'bean' argument must not be null");
+        assertNotNull(propertyName, "The 'propertyName' argument must not be null");
+        Class<?> beanClass = bean.getClass();
+
+        return execute(() -> {
+            PropertyDescriptor descriptor = new PropertyDescriptor(propertyName, beanClass);
+            BeanProperty beanProperty = new BeanProperty(propertyName, beanClass, descriptor);
+            Method getterMethod = descriptor.getReadMethod();
+            Object propertyValue = invokeMethod(bean, getterMethod);
+            beanProperty.value = (propertyValue);
+            return beanProperty;
+        });
     }
 }
