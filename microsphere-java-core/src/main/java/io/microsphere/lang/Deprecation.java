@@ -33,27 +33,40 @@ import static io.microsphere.lang.Deprecation.Level.DEFAULT;
 public final class Deprecation implements Serializable {
 
     @Nullable
-    private String since;
+    private final String since;
 
     @Nullable
-    private String replacement;
+    private final String replacement;
 
     @Nullable
-    private String reason;
+    private final String reason;
 
     @Nullable
-    private String link;
+    private final String link;
 
     @Nonnull
-    private Level level = DEFAULT;
+    private final Level level;
+
+    Deprecation(Deprecation source) {
+        this.since = source.since;
+        this.replacement = source.replacement;
+        this.reason = source.reason;
+        this.link = source.link;
+        this.level = source.level;
+    }
+
+    Deprecation(@Nullable String since, @Nullable String replacement, @Nullable String reason,
+                @Nullable String link, @Nullable Level level) {
+        this.since = since;
+        this.replacement = replacement;
+        this.reason = reason;
+        this.link = link;
+        this.level = level == null ? DEFAULT : level;
+    }
 
     @Nullable
     public String getSince() {
         return since;
-    }
-
-    public void setSince(@Nullable String since) {
-        this.since = since;
     }
 
     @Nullable
@@ -61,17 +74,9 @@ public final class Deprecation implements Serializable {
         return replacement;
     }
 
-    public void setReplacement(@Nullable String replacement) {
-        this.replacement = replacement;
-    }
-
     @Nullable
     public String getReason() {
         return reason;
-    }
-
-    public void setReason(@Nullable String reason) {
-        this.reason = reason;
     }
 
     @Nullable
@@ -79,18 +84,11 @@ public final class Deprecation implements Serializable {
         return link;
     }
 
-    public void setLink(@Nullable String link) {
-        this.link = link;
-    }
-
     @Nonnull
     public Level getLevel() {
         return level;
     }
 
-    public void setLevel(@Nonnull Level level) {
-        this.level = level;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -133,5 +131,25 @@ public final class Deprecation implements Serializable {
          * Removal
          */
         REMOVAL,
+    }
+
+    public static Deprecation of(String since) {
+        return of(since, null);
+    }
+
+    public static Deprecation of(String since, String replacement) {
+        return of(since, replacement, null);
+    }
+
+    public static Deprecation of(String since, String replacement, String reason) {
+        return of(since, replacement, reason, null);
+    }
+
+    public static Deprecation of(String since, String replacement, String reason, String link) {
+        return of(since, replacement, reason, link, DEFAULT);
+    }
+
+    public static Deprecation of(String since, String replacement, String reason, String link, Level level) {
+        return new Deprecation(since, replacement, reason, link, level);
     }
 }
