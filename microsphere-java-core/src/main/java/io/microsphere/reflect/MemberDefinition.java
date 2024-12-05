@@ -65,24 +65,38 @@ public abstract class MemberDefinition {
     }
 
     @Nonnull
-    public Version getSince() {
+    public final Version getSince() {
         return since;
     }
 
     @Nullable
-    public Deprecation getDeprecation() {
+    public final Deprecation getDeprecation() {
         return deprecation;
     }
 
     @Nonnull
-    public Class<?> getDeclaredClass() {
+    public final Class<?> getDeclaredClass() {
         return declaredClass;
     }
 
     @Nonnull
-    public String getName() {
+    public final String getName() {
         return name;
     }
+
+    /**
+     * Whether the member is deprecated
+     */
+    public final boolean isDeprecated() {
+        return deprecation != null;
+    }
+
+    /**
+     * Whether the member is present
+     *
+     * @return <code>true</code> if present
+     */
+    public abstract boolean isPresent();
 
     @Override
     public boolean equals(Object o) {
