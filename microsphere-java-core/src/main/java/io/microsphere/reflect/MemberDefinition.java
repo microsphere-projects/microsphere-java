@@ -51,7 +51,7 @@ public abstract class MemberDefinition {
     /**
      * @param since         the 'since' version
      * @param deprecation   the deprecation
-     * @param declaredClass The declared class of the method
+     * @param declaredClass The declared class
      * @param name          the member name
      */
     public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull Class<?> declaredClass, @Nonnull String name) {
