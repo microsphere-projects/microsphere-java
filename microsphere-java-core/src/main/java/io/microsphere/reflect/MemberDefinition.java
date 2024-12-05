@@ -37,16 +37,16 @@ import static io.microsphere.util.Assert.assertNotNull;
 public abstract class MemberDefinition {
 
     @Nonnull
-    private final Version since;
+    protected final Version since;
 
     @Nullable
-    private final Deprecation deprecation;
+    protected final Deprecation deprecation;
 
     @Nonnull
-    private final Class<?> declaredClass;
+    protected final Class<?> declaredClass;
 
     @Nonnull
-    private final String name;
+    protected final String name;
 
     public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull Class<?> declaredClass, @Nonnull String name) {
         assertNotNull(since, () -> "The 'since' version must not be null.");
@@ -79,7 +79,7 @@ public abstract class MemberDefinition {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof MemberDefinition)) return false;
 
         MemberDefinition that = (MemberDefinition) o;
