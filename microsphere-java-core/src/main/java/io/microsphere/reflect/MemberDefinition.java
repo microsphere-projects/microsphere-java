@@ -48,6 +48,13 @@ public abstract class MemberDefinition {
     @Nonnull
     protected final String name;
 
+    /**
+     *
+     * @param since
+     * @param deprecation
+     * @param declaredClass
+     * @param name
+     */
     public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull Class<?> declaredClass, @Nonnull String name) {
         assertNotNull(since, () -> "The 'since' version must not be null.");
         assertNotNull(declaredClass, () -> "The declared class must not be null.");
