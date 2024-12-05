@@ -56,10 +56,23 @@ public class MethodDefinition {
     @Nullable
     private final Method resolvedMethod;
 
+    /**
+     * @param since          the 'since' version
+     * @param declaredClass  The declared class of the method
+     * @param methodName     the method name
+     * @param parameterTypes the parameter types
+     */
     protected MethodDefinition(Version since, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
         this(since, null, declaredClass, methodName, parameterTypes);
     }
 
+    /**
+     * @param since          the 'since' version
+     * @param deprecation    the deprecation
+     * @param declaredClass  The declared class of the method
+     * @param methodName     the method name
+     * @param parameterTypes the parameter types
+     */
     protected MethodDefinition(Version since, Deprecation deprecation, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
         assertNotNull(since, () -> "The 'since' version of method must not be null.");
         assertNotNull(declaredClass, () -> "The declared class of method must not be null.");
@@ -89,7 +102,7 @@ public class MethodDefinition {
     /**
      * Create a new {@link MethodDefinition}
      *
-     * @param since          the since version
+     * @param since          the 'since' version
      * @param declaredClass  The declared class of the method
      * @param methodName     the method name
      * @param parameterTypes the parameter types
@@ -102,7 +115,7 @@ public class MethodDefinition {
     /**
      * Create a new {@link MethodDefinition}
      *
-     * @param since          the since version
+     * @param since          the 'since' version
      * @param deprecation    the deprecation
      * @param declaredClass  The declared class of the method
      * @param methodName     the method name
