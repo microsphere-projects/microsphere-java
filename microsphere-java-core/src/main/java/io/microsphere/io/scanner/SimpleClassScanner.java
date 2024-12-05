@@ -6,7 +6,6 @@ package io.microsphere.io.scanner;
 import io.microsphere.filter.FilterUtils;
 import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.lang.ClassDataRepository;
-import io.microsphere.util.ClassLoaderUtils;
 
 import java.io.File;
 import java.io.IOException;
