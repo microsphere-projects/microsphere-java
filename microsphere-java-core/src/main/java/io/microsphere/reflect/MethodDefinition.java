@@ -22,10 +22,11 @@ import io.microsphere.util.Version;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Objects;
 
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
@@ -36,19 +37,7 @@ import static io.microsphere.util.Assert.assertNotNull;
  * @see Version
  * @since 1.0.0
  */
-public class MethodDefinition {
-
-    @Nonnull
-    private final Version since;
-
-    @Nullable
-    private final Deprecation deprecation;
-
-    @Nonnull
-    private final Class<?> declaredClass;
-
-    @Nonnull
-    private final String methodName;
+public class MethodDefinition extends MemberDefinition {
 
     @Nonnull
     private final Class<?>[] parameterTypes;
@@ -74,14 +63,8 @@ public class MethodDefinition {
      * @param parameterTypes the parameter types
      */
     protected MethodDefinition(Version since, Deprecation deprecation, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        assertNotNull(since, () -> "The 'since' version of method must not be null.");
-        assertNotNull(declaredClass, () -> "The declared class of method must not be null.");
-        assertNotBlank(methodName, () -> "The name of method must not be blank.");
+        super(since, deprecation, declaredClass, methodName);
         assertNotNull(parameterTypes, () -> "The parameter types of method must not be null.");
-        this.since = since;
-        this.deprecation = deprecation;
-        this.declaredClass = declaredClass;
-        this.methodName = methodName;
         this.parameterTypes = parameterTypes;
         this.resolvedMethod = findMethod(declaredClass, methodName, parameterTypes);
     }
@@ -127,43 +110,13 @@ public class MethodDefinition {
     }
 
     /**
-     * The 'since' version of the method
-     *
-     * @return non-null
-     */
-    @Nonnull
-    public Version getSince() {
-        return since;
-    }
-
-    /**
-     * The deprecation of the method
-     *
-     * @return <code>null</code> if not deprecated
-     */
-    @Nullable
-    public Deprecation getDeprecation() {
-        return deprecation;
-    }
-
-    /**
-     * The declared class of the method
-     *
-     * @return non-null
-     */
-    @Nonnull
-    public Class<?> getDeclaredClass() {
-        return declaredClass;
-    }
-
-    /**
      * The method name
      *
      * @return non-null
      */
     @Nonnull
     public String getMethodName() {
-        return methodName;
+        return super.getName();
     }
 
     /**
@@ -191,6 +144,7 @@ public class MethodDefinition {
      *
      * @return {@code true} if the method definition is present
      */
+    @Override
     public boolean isPresent() {
         return resolvedMethod != null;
     }
@@ -225,5 +179,34 @@ public class MethodDefinition {
      */
     public <R> R invoke(Object instance, Object... args) throws IllegalStateException, IllegalArgumentException, RuntimeException {
         return invokeMethod(instance, getResolvedMethod(), args);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof MethodDefinition)) return false;
+        if (!super.equals(o)) return false;
+
+        MethodDefinition that = (MethodDefinition) o;
+        return Arrays.equals(getParameterTypes(), that.getParameterTypes()) && Objects.equals(getResolvedMethod(), that.getResolvedMethod());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + Arrays.hashCode(getParameterTypes());
+        result = 31 * result + Objects.hashCode(getResolvedMethod());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "MethodDefinition{" +
+                "since=" + since +
+                ", deprecation=" + deprecation +
+                ", declaredClass=" + declaredClass +
+                ", name='" + name + '\'' +
+                ", parameterTypes=" + Arrays.toString(parameterTypes) +
+                ", resolvedMethod=" + resolvedMethod +
+                '}';
     }
 }
