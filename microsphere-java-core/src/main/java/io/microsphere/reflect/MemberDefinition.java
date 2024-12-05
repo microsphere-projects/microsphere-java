@@ -49,11 +49,10 @@ public abstract class MemberDefinition {
     protected final String name;
 
     /**
-     *
-     * @param since
-     * @param deprecation
-     * @param declaredClass
-     * @param name
+     * @param since         the 'since' version
+     * @param deprecation   the deprecation
+     * @param declaredClass The declared class of the method
+     * @param name          the member name
      */
     public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull Class<?> declaredClass, @Nonnull String name) {
         assertNotNull(since, () -> "The 'since' version must not be null.");
