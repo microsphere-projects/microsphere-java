@@ -3,7 +3,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.collection.CollectionUtils;
 import io.microsphere.constants.FileConstants;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
@@ -17,15 +16,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,8 +49,6 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
-import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
-import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.startsWith;
