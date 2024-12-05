@@ -42,7 +42,7 @@ import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.microsphere.reflect.MethodUtils.OBJECT_METHODS;
+import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -415,7 +415,7 @@ public abstract class AnnotationUtils extends BaseUtils {
     private static boolean isInheritedObjectMethod(Method attributeMethod) {
         boolean inherited = false;
 
-        for (Method method : OBJECT_METHODS) {
+        for (Method method : OBJECT_PUBLIC_METHODS) {
             if (overrides(attributeMethod, method)) {
                 inherited = true;
                 break;
