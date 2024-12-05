@@ -113,9 +113,8 @@ public class MethodDefinition {
         return new MethodDefinition(since, deprecation, declaredClass, methodName, parameterTypes);
     }
 
-
     /**
-     * The since version of the method
+     * The 'since' version of the method
      *
      * @return non-null
      */
@@ -169,6 +168,7 @@ public class MethodDefinition {
      *
      * @return <code>null</code> if not resovled
      */
+    @Nullable
     public Method getResolvedMethod() {
         return resolvedMethod;
     }
