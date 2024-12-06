@@ -38,7 +38,7 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the class names of parameters
      */
-    public ConstructorDefinition(String since, String declaredClassName, String name, String... parameterClassNames) {
+    public ConstructorDefinition(String since, String declaredClassName, String... parameterClassNames) {
         super(since, declaredClassName, declaredClassName, parameterClassNames);
     }
 
@@ -48,7 +48,7 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the parameter class names
      */
-    public ConstructorDefinition(String since, Deprecation deprecation, String declaredClassName, String name, String... parameterClassNames) {
+    public ConstructorDefinition(String since, Deprecation deprecation, String declaredClassName, String... parameterClassNames) {
         super(since, deprecation, declaredClassName, declaredClassName, parameterClassNames);
     }
 
@@ -83,6 +83,17 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      */
     public Constructor<?> getConstructor() {
         return getMember();
+    }
+
+    /**
+     * Create an instance by the specified {@link Constructor} and arguments
+     *
+     * @param args the {@link Constructor Constructors} arguments
+     * @param <T>  the type of instance
+     * @return non-null
+     */
+    public <T> T newInstance(Object... args) {
+        return ConstructorUtils.newInstance((Constructor<T>) getConstructor(), args);
     }
 
     @Override
