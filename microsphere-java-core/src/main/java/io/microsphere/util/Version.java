@@ -20,6 +20,7 @@ import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
 import java.util.StringTokenizer;
@@ -44,7 +45,9 @@ import static java.lang.Integer.compare;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class Version implements Comparable<Version> {
+public class Version implements Comparable<Version> , Serializable {
+
+    private static final long serialVersionUID = -6434504483466016691L;
 
     private final int major;
 
