@@ -32,6 +32,8 @@ import static io.microsphere.lang.Deprecation.Level.DEFAULT;
  */
 public final class Deprecation implements Serializable {
 
+    private static final long serialVersionUID = 6380988834632455932L;
+
     @Nullable
     private final String since;
 
