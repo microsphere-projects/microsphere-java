@@ -31,11 +31,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public class DeprecationTest {
 
-    private static final String SINCE = "1.0.0";
-    private static final String REASON = "No Reason";
-    private static final String REPLACEMENT = "No Replacement";
-    private static final String LINK = "https://github.com/microsphere-projects/microsphere-java";
-    private static Deprecation.Level LEVEL = Deprecation.Level.REMOVAL;
+    public static final String SINCE = "1.0.0";
+    
+    public static final String REASON = "No Reason";
+
+    public static final String REPLACEMENT = "No Replacement";
+
+    public static final String LINK = "https://github.com/microsphere-projects/microsphere-java";
+
+    public static Deprecation.Level LEVEL = Deprecation.Level.REMOVAL;
 
     @Test
     public void test() {
