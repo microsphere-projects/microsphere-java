@@ -46,8 +46,10 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
     @Nonnull
     protected final String[] parameterClassNames;
 
+    private transient boolean resolvedParameterTypes;
+
     @Nonnull
-    protected final transient Class<?>[] parameterTypes;
+    private transient Class<?>[] parameterTypes;
 
     /**
      * @param since               the 'since' version
@@ -92,16 +94,6 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
         assertNotNull(parameterClassNames, () -> "the class names of parameters of method must not be null.");
         assertNoNullElements(parameterClassNames, () -> "The parameter class names must not contain any null element.");
         this.parameterClassNames = parameterClassNames;
-        this.parameterTypes = resolveParameterTypes(parameterClassNames);
-    }
-
-    protected Class<?>[] resolveParameterTypes(String[] parameterClassNames) {
-        int length = parameterClassNames.length;
-        Class<?>[] parameterTypes = new Class<?>[length];
-        for (int i = 0; i < length; i++) {
-            parameterTypes[i] = resolveClass(parameterClassNames[i], this.classLoader);
-        }
-        return parameterTypes;
     }
 
     /**
@@ -121,7 +113,11 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      */
     @Nonnull
     public final Class<?>[] getParameterTypes() {
-        return parameterTypes.clone();
+        if (!this.resolvedParameterTypes && this.parameterTypes == null) {
+            this.parameterTypes = resolveParameterTypes(this.parameterClassNames);
+            this.resolvedParameterTypes = true;
+        }
+        return this.parameterTypes.clone();
     }
 
     @Override
@@ -152,5 +148,14 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
                 ", parameterClassNames='" + Arrays.toString(this.parameterClassNames) + '\'' +
                 ", parameterTypes=" + Arrays.toString(this.parameterTypes) +
                 '}';
+    }
+
+    protected Class<?>[] resolveParameterTypes(String[] parameterClassNames) {
+        int length = parameterClassNames.length;
+        Class<?>[] parameterTypes = new Class<?>[length];
+        for (int i = 0; i < length; i++) {
+            parameterTypes[i] = resolveClass(parameterClassNames[i], this.classLoader);
+        }
+        return parameterTypes;
     }
 }

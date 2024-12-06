@@ -40,7 +40,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
     protected final String name;
 
     @Nullable
-    private M member;
+    private transient M member;
 
     private boolean resolvedMember;
 

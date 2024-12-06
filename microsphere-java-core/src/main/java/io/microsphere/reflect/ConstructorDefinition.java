@@ -73,7 +73,7 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
 
     @Override
     protected Constructor resolveMember() {
-        return findConstructor(getDeclaredClass(), getParameterTypes());
+        return findConstructor(super.getDeclaredClass(), super.getParameterTypes());
     }
 
     /**
@@ -88,12 +88,12 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
     @Override
     public String toString() {
         return "ConstructorDefinition{" +
-                "since=" + this.since +
-                ", deprecation=" + this.deprecation +
-                ", declaredClassName='" + this.getDeclaredClassName() + '\'' +
-                ", declaredClass=" + this.getDeclaredClass() +
-                ", parameterClassName=" + Arrays.toString(this.parameterClassNames) +
-                ", parameterTypes=" + Arrays.toString(this.parameterTypes) +
+                "since=" + super.since +
+                ", deprecation=" + super.deprecation +
+                ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
+                ", declaredClass=" + super.getDeclaredClass() +
+                ", parameterClassName=" + Arrays.toString(super.parameterClassNames) +
+                ", parameterTypes=" + Arrays.toString(super.getParameterTypes()) +
                 '}';
     }
 }

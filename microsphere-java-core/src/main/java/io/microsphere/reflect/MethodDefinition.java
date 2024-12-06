@@ -139,14 +139,14 @@ public class MethodDefinition extends ExecutableDefinition<Method> {
     @Override
     public String toString() {
         return "MethodDefinition{" +
-                "since=" + this.since +
-                ", deprecation=" + this.deprecation +
-                ", declaredClassName='" + this.getDeclaredClassName() + '\'' +
-                ", declaredClass=" + this.getDeclaredClass() +
+                "since=" + super.since +
+                ", deprecation=" + super.deprecation +
+                ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
+                ", declaredClass=" + super.getDeclaredClass() +
                 ", methodName='" + getMethodName() + '\'' +
                 ", method=" + getMethod() +
-                ", parameterClassName=" + Arrays.toString(this.parameterClassNames) +
-                ", parameterTypes=" + Arrays.toString(this.parameterTypes) +
+                ", parameterClassName=" + Arrays.toString(super.parameterClassNames) +
+                ", parameterTypes=" + Arrays.toString(super.getParameterTypes()) +
                 '}';
     }
 }
