@@ -49,10 +49,10 @@ public class ClassDefinitionTest {
 
         assertEquals(Version.of(SINCE), cd.since);
         assertEquals(DEPRECATION, cd.deprecation);
-        assertEquals("io.microsphere.reflect.ClassDefinitionTest", cd.declaredClassName);
+        assertEquals("io.microsphere.reflect.ClassDefinitionTest", cd.getClassName());
         assertTrue(cd.isPresent());
         assertTrue(cd.isDeprecated());
-        assertEquals(getClass(), cd.declaredClass);
+        assertEquals(getClass(), cd.getResolvedClass());
 
         assertClassDefinition(SINCE, DEPRECATION, CLASS_NAME);
         assertClassDefinition(SINCE, CLASS_NAME);
@@ -72,9 +72,8 @@ public class ClassDefinitionTest {
 
         assertEquals(Version.of(since), cd.getSince());
         assertEquals(deprecation, cd.getDeprecation());
-        assertEquals(className, cd.getDeclaredClassName());
-        assertEquals(className, cd.getClasName());
-        assertEquals(getClass(), cd.getDeclaredClass());
+        assertEquals(className, cd.getClassName());
+        assertEquals(getClass(), cd.getResolvedClass());
         assertTrue(cd.isPresent());
     }
 }

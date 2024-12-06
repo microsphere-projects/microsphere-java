@@ -22,110 +22,148 @@ import io.microsphere.util.Version;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Member;
-import java.util.Objects;
-
-import static io.microsphere.util.Assert.assertNotBlank;
-import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * The definition class for Java Refection {@link Member}
  *
+ * @param <M> the subtype of {@link Member}
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Member
+ * @see ConstructorDefinition
+ * @see FieldDefinition
+ * @see MethodDefinition
  * @since 1.0.0
  */
-public abstract class MemberDefinition {
-
-    @Nonnull
-    protected final Version since;
-
-    @Nullable
-    protected final Deprecation deprecation;
-
-    @Nonnull
-    protected final Class<?> declaredClass;
+public abstract class MemberDefinition<M extends Member> extends ReflectiveDefinition {
 
     @Nonnull
     protected final String name;
 
+    @Nullable
+    private M member;
+
+    private boolean resolvedMember;
+
     /**
-     * @param since         the 'since' version
-     * @param deprecation   the deprecation
-     * @param declaredClass The declared class
-     * @param name          the member name
+     * @param since             the 'since' version
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
      */
-    public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull Class<?> declaredClass, @Nonnull String name) {
-        assertNotNull(since, () -> "The 'since' version must not be null.");
-        assertNotNull(declaredClass, () -> "The declared class must not be null.");
-        assertNotBlank(name, () -> "The name must not be blank.");
-        this.since = since;
-        this.deprecation = deprecation;
-        this.declaredClass = declaredClass;
+    public MemberDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
+        this(since, null, declaredClassName, name);
+    }
+
+    /**
+     * @param since             the 'since' version
+     * @param deprecation       the deprecation
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
+     */
+    public MemberDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+        this(Version.of(since), deprecation, declaredClassName, name);
+    }
+
+    /**
+     * @param since             the 'since' version
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
+     */
+    public MemberDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
+        this(since, null, declaredClassName, name);
+    }
+
+    /**
+     * @param since             the 'since' version
+     * @param deprecation       the deprecation
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
+     */
+    public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+        super(since, deprecation, declaredClassName);
         this.name = name;
     }
 
-    @Nonnull
-    public final Version getSince() {
-        return since;
-    }
+    /**
+     * Resolve the {@link M member} instance
+     *
+     * @return <code>null</code> if can't be resolved
+     */
+    protected abstract M resolveMember();
 
-    @Nullable
-    public final Deprecation getDeprecation() {
-        return deprecation;
-    }
-
-    @Nonnull
-    public final Class<?> getDeclaredClass() {
-        return declaredClass;
-    }
-
+    /**
+     * Get the member name
+     *
+     * @return non-null
+     */
     @Nonnull
     public final String getName() {
         return name;
     }
 
     /**
-     * Whether the member is deprecated
+     * Get the declared class name
+     *
+     * @return non-null
      */
-    public final boolean isDeprecated() {
-        return deprecation != null;
+    @Nonnull
+    public final String getDeclaredClassName() {
+        return super.getClassName();
     }
 
     /**
-     * Whether the member is present
+     * Get the declared class
      *
-     * @return <code>true</code> if present
+     * @return nullable
      */
-    public abstract boolean isPresent();
+    @Nullable
+    public final Class<?> getDeclaredClass() {
+        return super.getResolvedClass();
+    }
+
+    /**
+     * Get the member instance
+     *
+     * @return <code>null</code> if can't be resolved
+     */
+    @Nullable
+    public final M getMember() {
+        if (!resolvedMember && member == null) {
+            member = resolveMember();
+            resolvedMember = true;
+        }
+        return member;
+    }
+
+    @Override
+    public boolean isPresent() {
+        return getMember() != null;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof MemberDefinition)) return false;
+        if (!super.equals(o)) return false;
 
-        MemberDefinition that = (MemberDefinition) o;
-        return getSince().equals(that.getSince())
-                && Objects.equals(getDeprecation(), that.getDeprecation())
-                && getDeclaredClass().equals(that.getDeclaredClass())
-                && getName().equals(that.getName());
+        MemberDefinition<?> that = (MemberDefinition<?>) o;
+        return this.name.equals(that.name);
     }
 
     @Override
     public int hashCode() {
-        int result = getSince().hashCode();
-        result = 31 * result + Objects.hashCode(getDeprecation());
-        result = 31 * result + getDeclaredClass().hashCode();
-        result = 31 * result + getName().hashCode();
+        int result = super.hashCode();
+        result = 31 * result + this.name.hashCode();
         return result;
     }
-
 
     @Override
     public String toString() {
         return "MemberDefinition{" +
                 "since=" + since +
                 ", deprecation=" + deprecation +
-                ", declaredClass=" + declaredClass +
+                ", declaredClassName='" + getDeclaredClassName() + '\'' +
+                ", declaredClass=" + getDeclaredClass() +
                 ", name='" + name + '\'' +
+                ", member=" + getMember() +
                 '}';
     }
 }

@@ -39,9 +39,7 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
  */
 public abstract class ReflectiveDefinition implements Serializable {
 
-    private static final long serialVersionUID = -5500080952852240466L;
-
-    protected final transient ClassLoader classLoader;
+    private static final long serialVersionUID = 3266384797780485350L;
 
     @Nonnull
     protected final Version since;
@@ -50,50 +48,55 @@ public abstract class ReflectiveDefinition implements Serializable {
     protected final Deprecation deprecation;
 
     @Nonnull
-    protected final String declaredClassName;
+    protected final String className;
 
     @Nullable
-    protected final transient Class<?> declaredClass;
+    protected final transient ClassLoader classLoader;
+
+    private transient boolean resolved;
+
+    @Nullable
+    private transient Class<?> resolvedClass;
 
     /**
-     * @param since             the 'since' version
-     * @param declaredClassName the name of declared class
+     * @param since     the 'since' version
+     * @param className the name of class
      */
-    public ReflectiveDefinition(@Nonnull String since, @Nonnull String declaredClassName) {
-        this(since, null, declaredClassName);
+    public ReflectiveDefinition(@Nonnull String since, @Nonnull String className) {
+        this(since, null, className);
     }
 
     /**
-     * @param since             the 'since' version
-     * @param deprecation       the deprecation
-     * @param declaredClassName the name of declared class
+     * @param since       the 'since' version
+     * @param deprecation the deprecation
+     * @param className   the name of class
      */
-    public ReflectiveDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName) {
-        this(Version.of(since), deprecation, declaredClassName);
+    public ReflectiveDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String className) {
+        this(Version.of(since), deprecation, className);
     }
 
     /**
-     * @param since             the 'since' version
-     * @param declaredClassName the name of declared class
+     * @param since     the 'since' version
+     * @param className the name of class
      */
-    public ReflectiveDefinition(@Nonnull Version since, @Nonnull String declaredClassName) {
-        this(since, null, declaredClassName);
+    public ReflectiveDefinition(@Nonnull Version since, @Nonnull String className) {
+        this(since, null, className);
     }
 
     /**
-     * @param since             the 'since' version
-     * @param deprecation       the deprecation
-     * @param declaredClassName the name of declared class
+     * @param since       the 'since' version
+     * @param deprecation the deprecation
+     * @param className   the name of class
      */
-    public ReflectiveDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName) {
+    public ReflectiveDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String className) {
         assertNotNull(since, () -> "The 'since' version must not be null.");
-        assertNotBlank(declaredClassName, () -> "The declared class name must not be null.");
+        assertNotBlank(className, () -> "The class name must not be null.");
         ClassLoader classLoader = getClassLoader(getClass());
-        this.classLoader = classLoader;
         this.since = since;
         this.deprecation = deprecation;
-        this.declaredClassName = declaredClassName;
-        this.declaredClass = resolveClass(declaredClassName, classLoader, true);
+        this.className = className;
+        this.classLoader = classLoader;
+        this.resolvedClass = resolveClass(className, classLoader, true);
     }
 
     /**
@@ -117,23 +120,27 @@ public abstract class ReflectiveDefinition implements Serializable {
     }
 
     /**
-     * Get the name of declared class
+     * Get the name of class
      *
      * @return non-null
      */
     @Nonnull
-    public final String getDeclaredClassName() {
-        return declaredClassName;
+    public final String getClassName() {
+        return className;
     }
 
     /**
-     * Get the declared class
+     * Get the resolved class
      *
-     * @return <code>null</code> if can't be loaded
+     * @return <code>null</code> if can't be resolved
      */
     @Nullable
-    public final Class<?> getDeclaredClass() {
-        return declaredClass;
+    public final Class<?> getResolvedClass() {
+        if (!resolved && resolvedClass == null) {
+            resolvedClass = resolveClass(className, classLoader, true);
+            resolved = true;
+        }
+        return resolvedClass;
     }
 
     /**
@@ -157,14 +164,14 @@ public abstract class ReflectiveDefinition implements Serializable {
         ReflectiveDefinition that = (ReflectiveDefinition) o;
         return this.since.equals(that.since)
                 && Objects.equals(this.deprecation, that.deprecation)
-                && this.declaredClassName.equals(that.declaredClassName);
+                && this.className.equals(that.className);
     }
 
     @Override
     public int hashCode() {
         int result = this.since.hashCode();
         result = 31 * result + Objects.hashCode(this.deprecation);
-        result = 31 * result + this.declaredClassName.hashCode();
+        result = 31 * result + this.className.hashCode();
         return result;
     }
 
@@ -173,8 +180,8 @@ public abstract class ReflectiveDefinition implements Serializable {
         return "ReflectiveDefinition{" +
                 "since=" + this.since +
                 ", deprecation=" + this.deprecation +
-                ", declaredClassName=" + this.declaredClassName +
-                ", declaredClass=" + this.declaredClass +
+                ", className='" + this.className + "'" +
+                ", resolvedClass=" + this.resolvedClass +
                 '}';
     }
 }

@@ -36,9 +36,9 @@ public class FieldDefinitionTest {
 
     @Test
     public void test() {
-        FieldDefinition fd = FieldDefinition.of("1.0.0", FieldDefinitionTest.class, "name");
+        FieldDefinition fd = new FieldDefinition("1.0.0", getClass().getName(), "name");
         assertEquals(Version.of("1.0.0"), fd.getSince());
-        assertEquals(this.getClass(), fd.getDeclaredClass());
+        assertEquals(this.getClass(), fd.getResolvedClass());
         assertEquals("name", fd.getFieldName());
         assertNotNull(fd.getResolvedField());
         assertNull(fd.get(this));

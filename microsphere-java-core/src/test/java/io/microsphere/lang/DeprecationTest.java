@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class DeprecationTest {
 
     public static final String SINCE = "1.0.0";
-    
+
     public static final String REASON = "No Reason";
 
     public static final String REPLACEMENT = "No Replacement";
@@ -40,6 +40,8 @@ public class DeprecationTest {
     public static final String LINK = "https://github.com/microsphere-projects/microsphere-java";
 
     public static Deprecation.Level LEVEL = Deprecation.Level.REMOVAL;
+
+    public static Deprecation DEPRECATION = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK, LEVEL);
 
     @Test
     public void test() {

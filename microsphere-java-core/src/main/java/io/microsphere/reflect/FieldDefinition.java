@@ -34,84 +34,49 @@ import static io.microsphere.reflect.FieldUtils.setFieldValue;
  * @see Field
  * @since 1.0.0
  */
-public class FieldDefinition extends MemberDefinition {
-
-    @Nullable
-    private final Field resolvedField;
+public class FieldDefinition extends MemberDefinition<Field> {
 
     /**
-     * @param since         the 'since' version
-     * @param declaredClass The declared class of the method
-     * @param fieldName     the field name
+     * @param since             the 'since' version
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
      */
-    protected FieldDefinition(@Nonnull Version since, @Nonnull Class<?> declaredClass,
-                              @Nonnull String fieldName) {
-        this(since, null, declaredClass, fieldName);
+    public FieldDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
+        super(since, declaredClassName, name);
     }
 
     /**
-     * @param since         the 'since' version
-     * @param deprecation   the deprecation
-     * @param declaredClass The declared class of the method
-     * @param fieldName     the field name
+     * @param since             the 'since' version
+     * @param deprecation       the deprecation
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
      */
-    protected FieldDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull Class<?> declaredClass,
-                              @Nonnull String fieldName) {
-        super(since, deprecation, declaredClass, fieldName);
-        this.resolvedField = findField(declaredClass, fieldName);
+    public FieldDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+        super(since, deprecation, declaredClassName, name);
     }
 
     /**
-     * Create a new instance
-     *
-     * @param since         the 'since' version
-     * @param declaredClass The declared class of the method
-     * @param fieldName     the field name
+     * @param since             the 'since' version
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
      */
-    public static FieldDefinition of(String since, Class<?> declaredClass, String fieldName) {
-        return of(Version.of(since), declaredClass, fieldName);
+    public FieldDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
+        super(since, declaredClassName, name);
     }
 
     /**
-     * Create a new instance
-     *
-     * @param since         the 'since' version
-     * @param declaredClass The declared class of the method
-     * @param fieldName     the field name
+     * @param since             the 'since' version
+     * @param deprecation       the deprecation
+     * @param declaredClassName the name of declared class
+     * @param name              the member name
      */
-    public static FieldDefinition of(Version since, Class<?> declaredClass, String fieldName) {
-        return new FieldDefinition(since, declaredClass, fieldName);
-    }
-
-    /**
-     * Create a new instance
-     *
-     * @param since         the 'since' version
-     * @param deprecation   the deprecation
-     * @param declaredClass The declared class of the method
-     * @param fieldName     the field name
-     * @return
-     */
-    public static FieldDefinition of(String since, Deprecation deprecation, Class<?> declaredClass, String fieldName) {
-        return of(Version.of(since), deprecation, declaredClass, fieldName);
-    }
-
-    /**
-     * Create a new instance
-     *
-     * @param since         the 'since' version
-     * @param deprecation   the deprecation
-     * @param declaredClass The declared class of the method
-     * @param fieldName     the field name
-     * @return
-     */
-    public static FieldDefinition of(Version since, Deprecation deprecation, Class<?> declaredClass, String fieldName) {
-        return new FieldDefinition(since, deprecation, declaredClass, fieldName);
+    public FieldDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+        super(since, deprecation, declaredClassName, name);
     }
 
     @Override
-    public boolean isPresent() {
-        return this.resolvedField != null;
+    protected Field resolveMember() {
+        return findField(getResolvedClass(), getFieldName());
     }
 
     @Nonnull
@@ -121,7 +86,7 @@ public class FieldDefinition extends MemberDefinition {
 
     @Nullable
     public Field getResolvedField() {
-        return resolvedField;
+        return getMember();
     }
 
     /**

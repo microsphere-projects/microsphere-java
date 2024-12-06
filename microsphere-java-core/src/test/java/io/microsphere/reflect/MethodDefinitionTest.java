@@ -41,17 +41,21 @@ public class MethodDefinitionTest {
 
     @Test
     public void test() {
-        MethodDefinition md = MethodDefinition.of("1.0.0", this.getClass(), "log", String.class);
+        MethodDefinition md = new MethodDefinition("1.0.0", "io.microsphere.reflect.MethodDefinitionTest", "log", "java.lang.String");
 
         assertEquals(Version.of("1.0.0"), md.getSince());
         assertNull(md.getDeprecation());
-        assertEquals(MethodDefinitionTest.class, md.getDeclaredClass());
+        assertEquals(MethodDefinitionTest.class, md.getResolvedClass());
         assertEquals("log", md.getMethodName());
         assertArrayEquals(ArrayUtils.of(String.class), md.getParameterTypes());
         assertTrue(md.isPresent());
-        assertNotNull(md.getResolvedMethod());
+        assertNotNull(md.getMethod());
 
         assertNull(md.invoke(this, "test"));
+    }
+
+    private void assertObjectMethods(MethodDefinition md) {
+        MethodDefinition copy = new MethodDefinition(md.since, md.deprecation, md.getDeclaredClassName(), md.name, md.parameterClassNames);
     }
 
     private void log(String message) {

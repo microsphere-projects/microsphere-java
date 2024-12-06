@@ -66,19 +66,9 @@ public class ClassDefinition extends ReflectiveDefinition {
         super(since, deprecation, className);
     }
 
-    /**
-     * Get the class name
-     *
-     * @return non-null
-     */
-    @Nonnull
-    public final String getClasName() {
-        return super.getDeclaredClassName();
-    }
-
     @Override
     public final boolean isPresent() {
-        return this.declaredClass != null;
+        return super.getResolvedClass() != null;
     }
 
     @Override
@@ -86,8 +76,8 @@ public class ClassDefinition extends ReflectiveDefinition {
         return "ClassDefinition{" +
                 "since=" + since +
                 ", deprecation=" + deprecation +
-                ", className='" + this.declaredClassName + '\'' +
-                ", declaredClass=" + declaredClass +
+                ", className='" + this.getClassName() + '\'' +
+                ", resolvedClass=" + getResolvedClass() +
                 '}';
     }
 }

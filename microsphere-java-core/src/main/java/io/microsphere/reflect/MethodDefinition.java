@@ -23,11 +23,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * The definition class of Java {@link Method}
@@ -37,76 +35,48 @@ import static io.microsphere.util.Assert.assertNotNull;
  * @see Version
  * @since 1.0.0
  */
-public class MethodDefinition extends MemberDefinition {
-
-    @Nonnull
-    private final Class<?>[] parameterTypes;
-
-    @Nullable
-    private final Method resolvedMethod;
+public class MethodDefinition extends ExecutableDefinition<Method> {
 
     /**
-     * @param since          the 'since' version
-     * @param declaredClass  The declared class of the method
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
+     * @param since               the 'since' version
+     * @param declaredClassName   The declared class name of the method
+     * @param methodName          the method name
+     * @param parameterClassNames the parameter types
      */
-    protected MethodDefinition(Version since, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        this(since, null, declaredClass, methodName, parameterTypes);
+    public MethodDefinition(String since, String declaredClassName, String methodName, String... parameterClassNames) {
+        this(since, null, declaredClassName, methodName, parameterClassNames);
     }
 
     /**
-     * @param since          the 'since' version
-     * @param deprecation    the deprecation
-     * @param declaredClass  The declared class of the method
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
+     * @param since               the 'since' version
+     * @param deprecation         the deprecation
+     * @param declaredClassName   The declared class name of the method
+     * @param methodName          the method name
+     * @param parameterClassNames the parameter class names
      */
-    protected MethodDefinition(Version since, Deprecation deprecation, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        super(since, deprecation, declaredClass, methodName);
-        assertNotNull(parameterTypes, () -> "The parameter types of method must not be null.");
-        this.parameterTypes = parameterTypes;
-        this.resolvedMethod = findMethod(declaredClass, methodName, parameterTypes);
+    public MethodDefinition(String since, Deprecation deprecation, String declaredClassName, String methodName, String... parameterClassNames) {
+        this(Version.of(since), deprecation, declaredClassName, methodName, parameterClassNames);
     }
 
     /**
-     * Create a new {@link MethodDefinition}
-     *
-     * @param since          the since version
-     * @param declaredClass  The declared class of the method
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
-     * @return non-null
+     * @param since               the 'since' version
+     * @param declaredClassName   The declared class name of the method
+     * @param methodName          the method name
+     * @param parameterClassNames the parameter types
      */
-    public static MethodDefinition of(String since, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        return of(Version.of(since), declaredClass, methodName, parameterTypes);
+    public MethodDefinition(Version since, String declaredClassName, String methodName, String... parameterClassNames) {
+        this(since, null, declaredClassName, methodName, parameterClassNames);
     }
 
     /**
-     * Create a new {@link MethodDefinition}
-     *
-     * @param since          the 'since' version
-     * @param declaredClass  The declared class of the method
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
-     * @return non-null
+     * @param since               the 'since' version
+     * @param deprecation         the deprecation
+     * @param declaredClassName   The declared class name of the method
+     * @param methodName          the method name
+     * @param parameterClassNames the parameter class names
      */
-    public static MethodDefinition of(Version since, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        return new MethodDefinition(since, declaredClass, methodName, parameterTypes);
-    }
-
-    /**
-     * Create a new {@link MethodDefinition}
-     *
-     * @param since          the 'since' version
-     * @param deprecation    the deprecation
-     * @param declaredClass  The declared class of the method
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
-     * @return non-null
-     */
-    public static MethodDefinition of(Version since, @Nullable Deprecation deprecation, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        return new MethodDefinition(since, deprecation, declaredClass, methodName, parameterTypes);
+    public MethodDefinition(Version since, Deprecation deprecation, String declaredClassName, String methodName, String... parameterClassNames) {
+        super(since, deprecation, declaredClassName, methodName, parameterClassNames);
     }
 
     /**
@@ -120,33 +90,18 @@ public class MethodDefinition extends MemberDefinition {
     }
 
     /**
-     * The parameter types
-     *
-     * @return non-null
-     */
-    @Nonnull
-    public Class<?>[] getParameterTypes() {
-        return parameterTypes.clone();
-    }
-
-    /**
      * The resolved method
      *
-     * @return <code>null</code> if not resovled
+     * @return <code>null</code> if not resolved
      */
     @Nullable
-    public Method getResolvedMethod() {
-        return resolvedMethod;
+    public Method getMethod() {
+        return super.getMember();
     }
 
-    /**
-     * Determine whether the method definition is present
-     *
-     * @return {@code true} if the method definition is present
-     */
     @Override
-    public boolean isPresent() {
-        return resolvedMethod != null;
+    protected Method resolveMember() {
+        return findMethod(super.getDeclaredClass(), getMethodName(), super.getParameterTypes());
     }
 
     /**
@@ -178,35 +133,20 @@ public class MethodDefinition extends MemberDefinition {
      *                                  throws an exception.
      */
     public <R> R invoke(Object instance, Object... args) throws IllegalStateException, IllegalArgumentException, RuntimeException {
-        return invokeMethod(instance, getResolvedMethod(), args);
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (!(o instanceof MethodDefinition)) return false;
-        if (!super.equals(o)) return false;
-
-        MethodDefinition that = (MethodDefinition) o;
-        return Arrays.equals(getParameterTypes(), that.getParameterTypes()) && Objects.equals(getResolvedMethod(), that.getResolvedMethod());
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(getParameterTypes());
-        result = 31 * result + Objects.hashCode(getResolvedMethod());
-        return result;
+        return invokeMethod(instance, getMethod(), args);
     }
 
     @Override
     public String toString() {
         return "MethodDefinition{" +
-                "since=" + since +
-                ", deprecation=" + deprecation +
-                ", declaredClass=" + declaredClass +
-                ", name='" + name + '\'' +
-                ", parameterTypes=" + Arrays.toString(parameterTypes) +
-                ", resolvedMethod=" + resolvedMethod +
+                "since=" + this.since +
+                ", deprecation=" + this.deprecation +
+                ", declaredClassName='" + this.getDeclaredClassName() + '\'' +
+                ", declaredClass=" + this.getDeclaredClass() +
+                ", methodName='" + getMethodName() + '\'' +
+                ", method=" + getMethod() +
+                ", parameterClassName=" + Arrays.toString(this.parameterClassNames) +
+                ", parameterTypes=" + Arrays.toString(this.parameterTypes) +
                 '}';
     }
 }
