@@ -39,39 +39,41 @@ public class FieldDefinition extends MemberDefinition<Field> {
     /**
      * @param since             the 'since' version
      * @param declaredClassName the name of declared class
-     * @param name              the member name
+     * @param fieldName              the field name
      */
-    public FieldDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
-        super(since, declaredClassName, name);
+    public FieldDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String fieldName) {
+        super(since, declaredClassName, fieldName);
     }
 
     /**
      * @param since             the 'since' version
      * @param deprecation       the deprecation
      * @param declaredClassName the name of declared class
-     * @param name              the member name
+     * @param fieldName              the field name
      */
-    public FieldDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
-        super(since, deprecation, declaredClassName, name);
+    public FieldDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
+                           @Nonnull String fieldName) {
+        super(since, deprecation, declaredClassName, fieldName);
     }
 
     /**
      * @param since             the 'since' version
      * @param declaredClassName the name of declared class
-     * @param name              the member name
+     * @param fieldName              the field name
      */
-    public FieldDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
-        super(since, declaredClassName, name);
+    public FieldDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String fieldName) {
+        super(since, declaredClassName, fieldName);
     }
 
     /**
      * @param since             the 'since' version
      * @param deprecation       the deprecation
      * @param declaredClassName the name of declared class
-     * @param name              the member name
+     * @param fieldName              the field name
      */
-    public FieldDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
-        super(since, deprecation, declaredClassName, name);
+    public FieldDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName,
+                           @Nonnull String fieldName) {
+        super(since, deprecation, declaredClassName, fieldName);
     }
 
     @Override
