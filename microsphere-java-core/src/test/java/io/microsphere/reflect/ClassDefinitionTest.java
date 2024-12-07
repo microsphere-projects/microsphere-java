@@ -36,8 +36,6 @@ public class ClassDefinitionTest {
 
     private static final String CLASS_NAME = "io.microsphere.reflect.ClassDefinitionTest";
 
-    public static final ClassDefinition CLASS_DEFINITION = new ClassDefinition(SINCE, DEPRECATION, CLASS_NAME);
-
     @Test
     public void test() {
         assertClassDefinition(SINCE, DEPRECATION, CLASS_NAME);
