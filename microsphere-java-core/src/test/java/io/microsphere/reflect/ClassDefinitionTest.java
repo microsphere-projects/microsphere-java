@@ -40,20 +40,6 @@ public class ClassDefinitionTest {
 
     @Test
     public void test() {
-        String className = getClass().getName();
-        ClassDefinition cd = new ClassDefinition(SINCE, DEPRECATION, className);
-
-        assertEquals(cd, CLASS_DEFINITION);
-        assertEquals(cd.hashCode(), CLASS_DEFINITION.hashCode());
-        assertEquals(cd.toString(), CLASS_DEFINITION.toString());
-
-        assertEquals(Version.of(SINCE), cd.since);
-        assertEquals(DEPRECATION, cd.deprecation);
-        assertEquals("io.microsphere.reflect.ClassDefinitionTest", cd.getClassName());
-        assertTrue(cd.isPresent());
-        assertTrue(cd.isDeprecated());
-        assertEquals(getClass(), cd.getResolvedClass());
-
         assertClassDefinition(SINCE, DEPRECATION, CLASS_NAME);
         assertClassDefinition(SINCE, CLASS_NAME);
     }
@@ -75,5 +61,10 @@ public class ClassDefinitionTest {
         assertEquals(className, cd.getClassName());
         assertEquals(getClass(), cd.getResolvedClass());
         assertTrue(cd.isPresent());
+        assertEquals(deprecation != null, cd.isDeprecated());
+
+        assertEquals(Version.of(since), cd.getSince());
+        assertEquals(deprecation, cd.getDeprecation());
+        assertEquals(className, cd.getClassName());
     }
 }
