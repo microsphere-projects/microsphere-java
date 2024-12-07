@@ -16,9 +16,13 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.lang.DeprecationTest.DEPRECATION;
+import static io.microsphere.lang.DeprecationTest.SINCE;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -35,14 +39,26 @@ public class FieldDefinitionTest {
     private String name;
 
     @Test
-    public void test() {
-        FieldDefinition fd = new FieldDefinition("1.0.0", getClass().getName(), "name");
-        assertEquals(Version.of("1.0.0"), fd.getSince());
+    public void test() throws Throwable {
+        assertFieldDefinition(SINCE, getClass().getName(), "name", "test");
+        assertFieldDefinition(SINCE, DEPRECATION, getClass().getName(), "name", "test");
+    }
+
+    private void assertFieldDefinition(String since, String className, String fieldName, Object fieldValue) throws Throwable {
+        assertFieldDefinition(since, null, className, fieldName, fieldValue);
+    }
+
+    private void assertFieldDefinition(String since, Deprecation deprecation, String className, String fieldName, Object fieldValue) throws Throwable {
+        FieldDefinition fd = new FieldDefinition(since, deprecation, className, fieldName);
+        assertEquals(Version.of(since), fd.getSince());
+        assertEquals(deprecation, fd.getDeprecation());
+        assertEquals(className, fd.getClassName());
+        assertEquals(fieldName, fd.getFieldName());
         assertEquals(this.getClass(), fd.getResolvedClass());
-        assertEquals("name", fd.getFieldName());
         assertNotNull(fd.getResolvedField());
-        assertNull(fd.get(this));
-        assertNull(fd.set(this, "test"));
-        assertEquals("test", fd.get(this));
+        Object instance = fd.getDeclaredClass().newInstance();
+        assertNull(fd.get(instance));
+        assertNull(fd.set(instance, fieldValue));
+        assertEquals(fieldValue, fd.get(instance));
     }
 }
