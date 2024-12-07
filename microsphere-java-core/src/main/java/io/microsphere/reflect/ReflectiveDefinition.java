@@ -96,7 +96,7 @@ public abstract class ReflectiveDefinition implements Serializable {
         this.deprecation = deprecation;
         this.className = className;
         this.classLoader = classLoader;
-        this.resolvedClass = resolveClass(className, classLoader, true);
+        this.resolved = false;
     }
 
     /**
