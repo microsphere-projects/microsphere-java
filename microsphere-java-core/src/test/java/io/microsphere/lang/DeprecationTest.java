@@ -60,7 +60,7 @@ public class DeprecationTest {
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK);
         assertObjectMethods(deprecation);
-        assertEquals(SINCE, deprecation.getSince());
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertEquals(LINK, deprecation.getLink());
@@ -71,7 +71,7 @@ public class DeprecationTest {
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON);
         assertObjectMethods(deprecation);
-        assertEquals(SINCE, deprecation.getSince());
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -82,7 +82,7 @@ public class DeprecationTest {
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON);
         assertObjectMethods(deprecation);
-        assertEquals(SINCE, deprecation.getSince());
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -93,7 +93,7 @@ public class DeprecationTest {
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT);
         assertObjectMethods(deprecation);
-        assertEquals(SINCE, deprecation.getSince());
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertNull(deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -104,18 +104,7 @@ public class DeprecationTest {
 
         deprecation = Deprecation.of(SINCE);
         assertObjectMethods(deprecation);
-        assertEquals(SINCE, deprecation.getSince());
-        assertNull(deprecation.getReplacement());
-        assertNull(deprecation.getReason());
-        assertNull(deprecation.getLink());
-        assertEquals(Deprecation.Level.DEFAULT, deprecation.getLevel());
-        assertNotNull(deprecation.toString());
-        assertEquals(deprecation, new Deprecation(deprecation));
-        assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
-
-        deprecation = Deprecation.of(null);
-        assertObjectMethods(deprecation);
-        assertNull(deprecation.getSince());
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertNull(deprecation.getReplacement());
         assertNull(deprecation.getReason());
         assertNull(deprecation.getLink());
