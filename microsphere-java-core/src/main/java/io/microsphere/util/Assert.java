@@ -128,6 +128,70 @@ public abstract class Assert extends BaseUtils {
     }
 
     /**
+     * Assert that a string is not empty ("").
+     * <pre>
+     * assertNotEmpty(entity.getName(), "Name for entity " + entity.getName() + " must not be empty");
+     * </pre>
+     *
+     * @param text    the text to check
+     * @param message the exception message to use if the
+     *                assertion fails
+     */
+    public static void assertNotEmpty(@Nullable String text, String message) {
+        if (StringUtils.isEmpty(text)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * Assert that a string is not empty ("").
+     * <pre>
+     * assertNotEmpty(entity.getName(), () -&gt; "Name for entity " + entity.getName() + " must not be empty");
+     * </pre>
+     *
+     * @param text            the text to check
+     * @param messageSupplier a supplier for the exception message to use if the
+     *                        assertion fails
+     */
+    public static void assertNotEmpty(@Nullable String text, Supplier<String> messageSupplier) {
+        if (StringUtils.isEmpty(text)) {
+            throw new IllegalArgumentException(nullSafeGet(messageSupplier));
+        }
+    }
+
+    /**
+     * Assert that a string is not blank.
+     * <pre>
+     * assertNotBlank(entity.getName(), "Name for entity " + entity.getName() + " must not be blank");
+     * </pre>
+     *
+     * @param text    the text to check
+     * @param message the exception message to use if the
+     *                assertion fails
+     */
+    public static void assertNotBlank(@Nullable String text, String message) {
+        if (StringUtils.isBlank(text)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * Assert that a string is not blank.
+     * <pre>
+     * assertNotBlank(entity.getName(), () -&gt; "Name for entity " + entity.getName() + " must not be blank");
+     * </pre>
+     *
+     * @param text            the text to check
+     * @param messageSupplier a supplier for the exception message to use if the
+     *                        assertion fails
+     */
+    public static void assertNotBlank(@Nullable String text, Supplier<String> messageSupplier) {
+        if (StringUtils.isBlank(text)) {
+            throw new IllegalArgumentException(nullSafeGet(messageSupplier));
+        }
+    }
+
+    /**
      * Assert that an array contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
      * <pre>assertNotEmpty(array, "The array must contain elements");</pre>

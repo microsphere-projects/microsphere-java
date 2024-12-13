@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.util.Version;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,17 +32,24 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public class DeprecationTest {
 
-    private static final String SINCE = "1.0.0";
-    private static final String REASON = "No Reason";
-    private static final String REPLACEMENT = "No Replacement";
-    private static final String LINK = "https://github.com/microsphere-projects/microsphere-java";
-    private static Deprecation.Level LEVEL = Deprecation.Level.REMOVAL;
+    public static final String SINCE = "1.0.0";
+
+    public static final String REASON = "No Reason";
+
+    public static final String REPLACEMENT = "No Replacement";
+
+    public static final String LINK = "https://github.com/microsphere-projects/microsphere-java";
+
+    public static Deprecation.Level LEVEL = Deprecation.Level.REMOVAL;
+
+    public static Deprecation DEPRECATION = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK, LEVEL);
 
     @Test
     public void test() {
         Deprecation deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK, LEVEL);
 
-        assertEquals(SINCE, deprecation.getSince());
+        assertObjectMethods(deprecation);
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertEquals(LINK, deprecation.getLink());
@@ -51,7 +59,8 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK);
-        assertEquals(SINCE, deprecation.getSince());
+        assertObjectMethods(deprecation);
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertEquals(LINK, deprecation.getLink());
@@ -61,7 +70,8 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON);
-        assertEquals(SINCE, deprecation.getSince());
+        assertObjectMethods(deprecation);
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -71,7 +81,8 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON);
-        assertEquals(SINCE, deprecation.getSince());
+        assertObjectMethods(deprecation);
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -81,7 +92,8 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
 
         deprecation = Deprecation.of(SINCE, REPLACEMENT);
-        assertEquals(SINCE, deprecation.getSince());
+        assertObjectMethods(deprecation);
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertNull(deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -91,7 +103,8 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
 
         deprecation = Deprecation.of(SINCE);
-        assertEquals(SINCE, deprecation.getSince());
+        assertObjectMethods(deprecation);
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertNull(deprecation.getReplacement());
         assertNull(deprecation.getReason());
         assertNull(deprecation.getLink());
@@ -100,15 +113,12 @@ public class DeprecationTest {
         assertEquals(deprecation, new Deprecation(deprecation));
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
 
-        deprecation = Deprecation.of(null);
-        assertNull(deprecation.getSince());
-        assertNull(deprecation.getReplacement());
-        assertNull(deprecation.getReason());
-        assertNull(deprecation.getLink());
-        assertEquals(Deprecation.Level.DEFAULT, deprecation.getLevel());
-        assertNotNull(deprecation.toString());
-        assertEquals(deprecation, new Deprecation(deprecation));
-        assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
+    }
 
+    private void assertObjectMethods(Deprecation deprecation) {
+        Deprecation copy = new Deprecation(deprecation);
+        assertEquals(deprecation, copy);
+        assertEquals(deprecation.hashCode(), copy.hashCode());
+        assertEquals(deprecation.toString(), copy.toString());
     }
 }

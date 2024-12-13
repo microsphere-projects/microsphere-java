@@ -16,18 +16,25 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.util.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.microsphere.reflect.MethodUtils.OBJECT_DECLARED_METHODS;
+import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
+import static io.microsphere.reflect.MethodUtils.PULIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static java.lang.Integer.valueOf;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -56,42 +63,123 @@ public class MethodUtilsTest {
         // Test two-argument Method
         method = findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
         assertEquals("io.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
-
     }
 
     @Test
-    void testGetMethodsFromClass() {
-        List<Method> objectMethods = getMethods(Object.class, true, true);
+    void testFilterMethodsFromNull() {
+        List<Method> methods = MethodUtils.filterMethods(null, true, true);
+        assertEquals(emptyList(), methods);
 
-        List<Method> methods = getMethods(TestClass.class, true, true);
+        methods = MethodUtils.filterMethods(null, true, false);
+        assertEquals(emptyList(), methods);
+
+        methods = MethodUtils.filterMethods(null, false, true);
+        assertEquals(emptyList(), methods);
+
+        methods = MethodUtils.filterMethods(null, false, false);
+        assertEquals(emptyList(), methods);
+
+        methods = getMethods(null);
+        assertEquals(emptyList(), methods);
+    }
+
+    @Test
+    public void testFilterMethodsFromPrimitive() {
+        Class<?> primitiveType = int.class;
+        List<Method> methods = MethodUtils.filterMethods(primitiveType, true, true);
+        assertEquals(emptyList(), methods);
+
+        methods = MethodUtils.filterMethods(primitiveType, true, false);
+        assertEquals(emptyList(), methods);
+
+        methods = MethodUtils.filterMethods(primitiveType, false, true);
+        assertEquals(emptyList(), methods);
+
+        methods = MethodUtils.filterMethods(primitiveType, false, false);
+        assertEquals(emptyList(), methods);
+
+        methods = getMethods(primitiveType);
+        assertEquals(emptyList(), methods);
+    }
+
+    @Test
+    public void testFilterMethodsFromArray() {
+        Class<?> arrayClass = ArrayUtils.EMPTY_CLASS_ARRAY.getClass();
+        List<Method> methods = MethodUtils.filterMethods(arrayClass, true, true);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = MethodUtils.filterMethods(arrayClass, false, true);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = MethodUtils.filterMethods(arrayClass, true, false);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = MethodUtils.filterMethods(arrayClass, false, false);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+    }
+
+    @Test
+    void testFilterMethodsFromClass() {
+        List<Method> objectMethods = MethodUtils.filterMethods(Object.class, true, true);
+
+        List<Method> methods = MethodUtils.filterMethods(TestClass.class, true, true);
         assertEquals(1 + objectMethods.size(), methods.size());
 
-        methods = getMethods(TestClass.class, false, true);
+        methods = MethodUtils.filterMethods(TestClass.class, false, true);
         assertEquals(1, methods.size());
 
-        methods = getMethods(TestClass.class, false, false);
+        methods = MethodUtils.filterMethods(TestClass.class, false, false);
         assertEquals(7, methods.size());
 
-        methods = getMethods(TestClass.class, true, false);
-        objectMethods = getMethods(Object.class, true, false);
+        methods = MethodUtils.filterMethods(TestClass.class, true, false);
+        objectMethods = MethodUtils.filterMethods(Object.class, true, false);
 
         assertEquals(7 + objectMethods.size(), methods.size());
     }
 
     @Test
-    void testGetMethodsFromInterface() {
-        List<Method> methods = getMethods(TestInterface.class, true, true);
+    void testFilterMethodsFromInterface() {
+        List<Method> methods = MethodUtils.filterMethods(TestInterface.class, true, true);
         assertEquals(2, methods.size()); // method + useLambda
 
-        methods = getMethods(TestInterface.class, true, false);
-        assertEquals(3, methods.size()); // method + useLambda + 合成的lambda方法Object[]::new
-        // NOTE:需不需要把合成的方法计算在内？ 应该是要算的
+        methods = MethodUtils.filterMethods(TestInterface.class, true, false);
+        assertEquals(3, methods.size()); // method + useLambda + generated lambda method by compiler
 
-        List<Method> subMethods = getMethods(TestSubInterface.class, false, true);
+        List<Method> subMethods = MethodUtils.filterMethods(TestSubInterface.class, false, true);
         assertEquals(1, subMethods.size()); // subMethod
 
-        subMethods = getMethods(TestSubInterface.class, true, true);
+        subMethods = MethodUtils.filterMethods(TestSubInterface.class, true, true);
         assertEquals(3, subMethods.size()); // method + useLambda + subMethod
+    }
+
+    @Test
+    public void testGetDeclaredMethods() {
+        List<Method> methods = getDeclaredMethods(Object.class);
+        assertEquals(OBJECT_DECLARED_METHODS, methods);
+
+        methods = getDeclaredMethods(Object.class, PULIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getDeclaredMethods(TestClass.class);
+        assertEquals(7, methods.size());
+
+        methods = getDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
+        assertEquals(1, methods.size());
+    }
+
+    @Test
+    public void testGetAllDeclaredMethods() {
+        List<Method> methods = getAllDeclaredMethods(Object.class);
+        assertEquals(OBJECT_DECLARED_METHODS, methods);
+
+        methods = getAllDeclaredMethods(Object.class, PULIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getAllDeclaredMethods(TestClass.class);
+        assertEquals(OBJECT_DECLARED_METHODS.size() + 7, methods.size());
+
+        methods = getAllDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
     }
 
     @Test
@@ -109,6 +197,13 @@ public class MethodUtilsTest {
         Method method = findMethod(Integer.class, "valueOf", int.class);
         assertEquals(valueOf(0), (Integer) invokeStaticMethod(method, 0));
         assertEquals(valueOf(0), (Integer) invokeStaticMethod(TestClass.class, "value", 0));
+    }
+
+    @Test
+    public void test() {
+        Method[] methods = TestSubInterface.class.getDeclaredMethods();
+        methods = TestInterface.class.getDeclaredMethods();
+        System.out.println(methods);
     }
 
     static class TestClass {

@@ -4,17 +4,12 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.reflect.ReflectionUtils;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Nonnull;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
-import java.net.URL;
 import java.util.AbstractCollection;
 import java.util.Map;
-import java.util.Set;
 
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
@@ -28,7 +23,6 @@ import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

@@ -18,7 +18,6 @@ package io.microsphere.lang;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
-import io.microsphere.util.ClassPathUtils;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
