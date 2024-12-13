@@ -16,6 +16,8 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.util.Version;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -32,8 +34,10 @@ import static io.microsphere.lang.Deprecation.Level.DEFAULT;
  */
 public final class Deprecation implements Serializable {
 
+    private static final long serialVersionUID = 6380988834632455932L;
+
     @Nullable
-    private final String since;
+    private final Version since;
 
     @Nullable
     private final String replacement;
@@ -57,6 +61,11 @@ public final class Deprecation implements Serializable {
 
     Deprecation(@Nullable String since, @Nullable String replacement, @Nullable String reason,
                 @Nullable String link, @Nullable Level level) {
+        this(Version.of(since), replacement, reason, link, level);
+    }
+
+    Deprecation(@Nullable Version since, @Nullable String replacement, @Nullable String reason,
+                @Nullable String link, @Nullable Level level) {
         this.since = since;
         this.replacement = replacement;
         this.reason = reason;
@@ -65,7 +74,7 @@ public final class Deprecation implements Serializable {
     }
 
     @Nullable
-    public String getSince() {
+    public Version getSince() {
         return since;
     }
 
@@ -133,6 +142,78 @@ public final class Deprecation implements Serializable {
         REMOVAL,
     }
 
+    /**
+     * The Builder class for {@link Deprecation}
+     */
+    public static class Builder {
+
+        @Nullable
+        private Version since;
+
+        @Nullable
+        private String replacement;
+
+        @Nullable
+        private String reason;
+
+        @Nullable
+        private String link;
+
+        @Nonnull
+        private Level level;
+
+        protected Builder() {
+        }
+
+        public Builder since(@Nullable String since) {
+            return since(Version.of(since));
+        }
+
+        public Builder since(@Nullable Version since) {
+            this.since = since;
+            return this;
+        }
+
+        public Builder replacement(@Nullable String replacement) {
+            this.replacement = replacement;
+            return this;
+        }
+
+        public Builder reason(@Nullable String reason) {
+            this.reason = reason;
+            return this;
+        }
+
+        public Builder link(@Nullable String link) {
+            this.link = link;
+            return this;
+        }
+
+        public Builder level(@Nullable Level level) {
+            this.level = level == null ? DEFAULT : level;
+            return this;
+        }
+
+
+        /**
+         * Build an instance of {@link Deprecation}
+         *
+         * @return non-null
+         */
+        public Deprecation build() {
+            return new Deprecation(since, replacement, reason, link, level);
+        }
+    }
+
+    /**
+     * Create a new instance of {@link Deprecation.Builder}
+     *
+     * @return non-null
+     */
+    public static Deprecation.Builder builder() {
+        return new Builder();
+    }
+
     public static Deprecation of(String since) {
         return of(since, null);
     }
@@ -150,6 +231,12 @@ public final class Deprecation implements Serializable {
     }
 
     public static Deprecation of(String since, String replacement, String reason, String link, Level level) {
-        return new Deprecation(since, replacement, reason, link, level);
+        return builder()
+                .since(since)
+                .replacement(replacement)
+                .reason(reason)
+                .link(link)
+                .level(level)
+                .build();
     }
 }
