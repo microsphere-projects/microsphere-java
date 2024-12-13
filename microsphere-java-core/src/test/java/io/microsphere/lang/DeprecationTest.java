@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.util.Version;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,7 +49,7 @@ public class DeprecationTest {
         Deprecation deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK, LEVEL);
 
         assertObjectMethods(deprecation);
-        assertEquals(SINCE, deprecation.getSince());
+        assertEquals(Version.of(SINCE), deprecation.getSince());
         assertEquals(REPLACEMENT, deprecation.getReplacement());
         assertEquals(REASON, deprecation.getReason());
         assertEquals(LINK, deprecation.getLink());
