@@ -1,4 +1,4 @@
-<configuration scan="true" scanPeriod="30 seconds" debug="false">
+<configuration>
 
     <property name="ENCODER_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} %level %logger{0} [%t] %m%n"/>
 
