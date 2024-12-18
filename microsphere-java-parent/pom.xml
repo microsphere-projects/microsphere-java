@@ -34,7 +34,7 @@
         <p6spy.version>3.9.1</p6spy.version>
         <antlr.version>4.13.1</antlr.version>
         <slf4j.version>1.7.36</slf4j.version>
-        <logback.version>1.2.12</logback.version>
+        <logback.version>1.2.13</logback.version>
 
         <!-- Testing -->
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
