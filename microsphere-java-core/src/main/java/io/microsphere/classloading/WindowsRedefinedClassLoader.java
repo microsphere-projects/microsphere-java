@@ -77,8 +77,10 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
             File[] files = packageDirectory.listFiles(file -> classFileName.equals(file.getName()));
             if (files.length == 1) {
                 File classFile = files[0];
-                logger.debug("Class[name: {}] file [name: {}] found in Package directory [path: {}], about to execute ClassLoader.defineClass",
-                        className, classFileName, packageDirectory.getAbsolutePath());
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Class[name: {}] file [name: {}] found in Package directory [path: {}], about to execute ClassLoader.defineClass",
+                            className, classFileName, packageDirectory.getAbsolutePath());
+                }
                 try (FileInputStream inputStream = new FileInputStream(classFile)) {
                     byte[] byteCodes = toByteArray(inputStream);
                     result = super.defineClass(className, byteCodes, 0, byteCodes.length);
