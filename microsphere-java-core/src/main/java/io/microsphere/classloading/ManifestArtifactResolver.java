@@ -172,9 +172,11 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
         }
 
         if (version == null) {
-            logger.debug("The version can't be found in the {} of artifact[Path: {}]", MANIFEST_RESOURCE_PATH,
-                    artifactResourceURL.getPath()
-            );
+            if (logger.isTraceEnabled()) {
+                logger.trace("The version can't be found in the {} of artifact[Path: {}]", MANIFEST_RESOURCE_PATH,
+                        artifactResourceURL.getPath()
+                );
+            }
         }
 
         return version;
