@@ -124,8 +124,10 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
             while (packageResources.hasMoreElements()) {
                 URL packageResource = packageResources.nextElement();
                 if (!"file".equalsIgnoreCase(packageResource.getProtocol())) {
-                    logger.debug("Class [name: {}] is located in a non-file system directory [path: {}], RedefinedClassMetadata does not need to be processed!",
-                            className, packageResource);
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Class [name: {}] is located in a non-file system directory [path: {}], RedefinedClassMetadata does not need to be processed!",
+                                className, packageResource);
+                    }
                     continue;
                 }
                 File packageDirectory = new File(packageResource.getPath());
