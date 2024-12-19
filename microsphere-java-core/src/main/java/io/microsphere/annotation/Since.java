@@ -64,7 +64,7 @@ public @interface Since {
     String module() default "";
 
     /**
-     * @return The version value of the API
+     * @return The version value of the API, e.g. <code>1.0.0</code>
      * @see Version
      */
     String value();
