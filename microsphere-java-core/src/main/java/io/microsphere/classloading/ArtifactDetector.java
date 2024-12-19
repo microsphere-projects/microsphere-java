@@ -79,12 +79,12 @@ public class ArtifactDetector {
         if (!includedJdkLibraries) {
             removeJdkClassPathURLs(classPathURLs);
         }
-        if (logger.isDebugEnabled()) {
+        if (logger.isTraceEnabled()) {
             StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
             for (URL classPathURL : classPathURLs) {
                 stringJoiner.add(classPathURL.toString());
             }
-            logger.debug("ClassLoader[{}] covers the URLs[expected: {}, actual: {}], class-path : {}",
+            logger.trace("ClassLoader[{}] covers the URLs[expected: {}, actual: {}], class-path : {}",
                     classLoader, urls.size(), classPathURLs.size(), stringJoiner);
         }
         return classPathURLs;
