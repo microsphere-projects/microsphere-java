@@ -23,11 +23,19 @@ jobs:
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
+
       - name: Setup JDK ${{ matrix.Java }}
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
           cache: maven
+
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots --file pom.xml -Drevision=0.0.1-SNAPSHOT clean install
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: microsphere-projects/microsphere-java
