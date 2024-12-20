@@ -77,8 +77,10 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
             File[] files = packageDirectory.listFiles(file -> classFileName.equals(file.getName()));
             if (files.length == 1) {
                 File classFile = files[0];
-                logger.debug("Class[name: {}] file [name: {}] found in Package directory [path: {}], about to execute ClassLoader.defineClass",
-                        className, classFileName, packageDirectory.getAbsolutePath());
+                if (logger.isTraceEnabled()) {
+                    logger.trace("Class[name: {}] file [name: {}] found in Package directory [path: {}], about to execute ClassLoader.defineClass",
+                            className, classFileName, packageDirectory.getAbsolutePath());
+                }
                 try (FileInputStream inputStream = new FileInputStream(classFile)) {
                     byte[] byteCodes = toByteArray(inputStream);
                     result = super.defineClass(className, byteCodes, 0, byteCodes.length);
@@ -122,8 +124,10 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
             while (packageResources.hasMoreElements()) {
                 URL packageResource = packageResources.nextElement();
                 if (!"file".equalsIgnoreCase(packageResource.getProtocol())) {
-                    logger.debug("Class [name: {}] is located in a non-file system directory [path: {}], RedefinedClassMetadata does not need to be processed!",
-                            className, packageResource);
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Class [name: {}] is located in a non-file system directory [path: {}], RedefinedClassMetadata does not need to be processed!",
+                                className, packageResource);
+                    }
                     continue;
                 }
                 File packageDirectory = new File(packageResource.getPath());

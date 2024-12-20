@@ -124,8 +124,8 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
         }
 
         if (artifactId == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("The artifactId can't be resolved from the {} of artifact[resource: {}] : {}",
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifactId can't be resolved from the {} of artifact[resource: {}] : {}",
                         artifactResourceURL.getPath(),
                         MANIFEST_RESOURCE_PATH,
                         attributes.entrySet()
@@ -172,9 +172,11 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
         }
 
         if (version == null) {
-            logger.debug("The version can't be found in the {} of artifact[Path: {}]", MANIFEST_RESOURCE_PATH,
-                    artifactResourceURL.getPath()
-            );
+            if (logger.isTraceEnabled()) {
+                logger.trace("The version can't be found in the {} of artifact[Path: {}]", MANIFEST_RESOURCE_PATH,
+                        artifactResourceURL.getPath()
+                );
+            }
         }
 
         return version;
