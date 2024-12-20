@@ -254,8 +254,8 @@ public abstract class MethodUtils extends BaseUtils {
         }
 
         if (method == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("The declared method was not found in the target class[name : '{}'] by name['{}'] and parameter types['{}']",
+            if (logger.isTraceEnabled()) {
+                logger.trace("The declared method was not found in the target class[name : '{}'] by name['{}'] and parameter types['{}']",
                         targetClass, methodName, Arrays.toString(parameterTypes));
             }
         }

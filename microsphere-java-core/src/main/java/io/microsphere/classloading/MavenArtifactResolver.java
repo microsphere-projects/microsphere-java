@@ -57,8 +57,8 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
                     Artifact artifact = resolveArtifactMetaInfoInMavenPomProperties(mavenPomPropertiesResource);
                     if (artifact != null) {
                         artifactSet.add(artifact);
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("The artifact was resolved from the the Maven pom.properties[resource : {}] : {}", mavenPomPropertiesResource, artifact);
+                        if (logger.isTraceEnabled()) {
+                            logger.trace("The artifact was resolved from the the Maven pom.properties[resource : {}] : {}", mavenPomPropertiesResource, artifact);
                         }
                     }
                 }

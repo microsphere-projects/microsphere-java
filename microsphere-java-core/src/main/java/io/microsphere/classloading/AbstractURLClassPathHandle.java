@@ -104,7 +104,9 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
                 URL base = getFieldValue(loader, getBaseField());
                 String basePath_ = resolveBasePath(base);
                 if (Objects.equals(basePath_, basePath)) {
-                    logger.debug("Remove the Class-Path URL：{}", url);
+                    if (logger.isTraceEnabled()) {
+                        logger.trace("Remove the Class-Path URL：{}", url);
+                    }
                     iterator.remove();
                     removed = true;
                     break;
