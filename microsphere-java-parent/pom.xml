@@ -22,7 +22,7 @@
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
         <javax.ws.rs.version>2.1</javax.ws.rs.version>
         <jaxws-api.version>2.3.1</jaxws-api.version>
-        <jsr305.version>3.0.1</jsr305.version>
+        <jsr305.version>3.0.2</jsr305.version>
 
         <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
         <apache.commons.io.version>2.14.0</apache.commons.io.version>
@@ -32,7 +32,7 @@
         <spring.version>5.3.31</spring.version>
 
         <p6spy.version>3.9.1</p6spy.version>
-        <antlr.version>4.13.1</antlr.version>
+        <antlr.version>4.13.2</antlr.version>
         <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.13</logback.version>
 
