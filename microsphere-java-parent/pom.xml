@@ -32,7 +32,7 @@
         <spring.version>5.3.31</spring.version>
 
         <p6spy.version>3.9.1</p6spy.version>
-        <antlr.version>4.13.1</antlr.version>
+        <antlr.version>4.13.2</antlr.version>
         <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.13</logback.version>
 
