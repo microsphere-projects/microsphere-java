@@ -59,13 +59,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JAX-WS API-->
-        <dependency>
-            <groupId>javax.xml.ws</groupId>
-            <artifactId>jaxws-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
+        <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
