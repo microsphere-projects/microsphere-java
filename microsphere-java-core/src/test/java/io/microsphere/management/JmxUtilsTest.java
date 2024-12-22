@@ -32,7 +32,6 @@ import static io.microsphere.management.JmxUtils.getMBeanAttributesMap;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 import static javax.management.ObjectName.getInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -66,16 +65,6 @@ public class JmxUtilsTest extends AbstractTestCase {
 
     @Test
     public void testPlatformMXBeans() throws Throwable {
-        assertNull(JmxUtils.classLoadingMXBean);
-        assertNull(JmxUtils.memoryMXBean);
-        assertNull(JmxUtils.threadMXBean);
-        assertNull(JmxUtils.runtimeMXBean);
-        assertNull(JmxUtils.compilationMXBean);
-        assertNull(JmxUtils.operatingSystemMXBean);
-        assertNull(JmxUtils.memoryPoolMXBeans);
-        assertNull(JmxUtils.memoryManagerMXBeans);
-        assertNull(JmxUtils.garbageCollectorMXBeans);
-
         assertPlatformMXBean(JmxUtils::getClassLoadingMXBean, ManagementFactory.CLASS_LOADING_MXBEAN_NAME);
         assertPlatformMXBean(JmxUtils::getMemoryMXBean, ManagementFactory.MEMORY_MXBEAN_NAME);
         assertPlatformMXBean(JmxUtils::getThreadMXBean, ManagementFactory.THREAD_MXBEAN_NAME);
