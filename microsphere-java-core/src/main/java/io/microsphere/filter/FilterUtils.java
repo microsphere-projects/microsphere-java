@@ -3,6 +3,8 @@
  */
 package io.microsphere.filter;
 
+import io.microsphere.util.BaseUtils;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -18,7 +20,7 @@ import static java.util.Collections.unmodifiableList;
  * @see FilterUtils
  * @since 1.0.0
  */
-public abstract class FilterUtils {
+public abstract class FilterUtils extends BaseUtils {
 
     private FilterUtils() {
     }
