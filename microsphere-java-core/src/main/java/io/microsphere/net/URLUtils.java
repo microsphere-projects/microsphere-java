@@ -4,6 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.collection.MapUtils;
+import io.microsphere.util.BaseUtils;
 import io.microsphere.util.ClassPathUtils;
 import io.microsphere.util.jar.JarUtils;
 
@@ -67,7 +68,7 @@ import static java.util.Collections.unmodifiableMap;
  * @see URLDecoder
  * @since 1.0.0
  */
-public abstract class URLUtils {
+public abstract class URLUtils extends BaseUtils {
 
     /**
      * The default encoding : "UTF-8"
