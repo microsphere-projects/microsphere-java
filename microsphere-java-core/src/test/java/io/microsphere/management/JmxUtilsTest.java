@@ -22,12 +22,17 @@ import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import java.lang.management.ManagementFactory;
+import java.lang.management.PlatformManagedObject;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import static io.microsphere.management.JmxUtils.getMBeanAttributesMap;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 import static javax.management.ObjectName.getInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -57,5 +62,52 @@ public class JmxUtilsTest extends AbstractTestCase {
         assertTrue(mBeanAttributesMap.containsKey("LoadedClassCount"));
         assertTrue(mBeanAttributesMap.containsKey("UnloadedClassCount"));
         assertTrue(mBeanAttributesMap.containsKey("ObjectName"));
+    }
+
+    @Test
+    public void testPlatformMXBeans() throws Throwable {
+        assertNull(JmxUtils.classLoadingMXBean);
+        assertNull(JmxUtils.memoryMXBean);
+        assertNull(JmxUtils.threadMXBean);
+        assertNull(JmxUtils.runtimeMXBean);
+        assertNull(JmxUtils.compilationMXBean);
+        assertNull(JmxUtils.operatingSystemMXBean);
+        assertNull(JmxUtils.memoryPoolMXBeans);
+        assertNull(JmxUtils.memoryManagerMXBeans);
+        assertNull(JmxUtils.garbageCollectorMXBeans);
+
+        assertPlatformMXBean(JmxUtils::getClassLoadingMXBean, ManagementFactory.CLASS_LOADING_MXBEAN_NAME);
+        assertPlatformMXBean(JmxUtils::getMemoryMXBean, ManagementFactory.MEMORY_MXBEAN_NAME);
+        assertPlatformMXBean(JmxUtils::getThreadMXBean, ManagementFactory.THREAD_MXBEAN_NAME);
+        assertPlatformMXBean(JmxUtils::getRuntimeMXBean, ManagementFactory.RUNTIME_MXBEAN_NAME);
+        assertPlatformMXBean(JmxUtils.getCompilationMXBean(), ManagementFactory.COMPILATION_MXBEAN_NAME);
+        assertPlatformMXBean(JmxUtils::getOperatingSystemMXBean, ManagementFactory.OPERATING_SYSTEM_MXBEAN_NAME);
+        assertPlatformMXBeans(JmxUtils.getMemoryPoolMXBeans(), ManagementFactory.MEMORY_POOL_MXBEAN_DOMAIN_TYPE);
+        assertTrue(JmxUtils.getMemoryManagerMXBeans().size() > 0);
+        assertPlatformMXBeans(JmxUtils.getGarbageCollectorMXBeans(), ManagementFactory.GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE);
+    }
+
+    private void assertPlatformMXBean(Optional<? extends PlatformManagedObject> platformMXBean, String name) throws Throwable {
+        if (platformMXBean.isPresent()) {
+            return;
+        }
+        assertPlatformMXBean(platformMXBean.get(), name);
+    }
+
+    private void assertPlatformMXBean(Supplier<PlatformManagedObject> platformMXBean, String name) throws Throwable {
+        assertPlatformMXBean(platformMXBean.get(), name);
+    }
+
+    private void assertPlatformMXBeans(Iterable<? extends PlatformManagedObject> platformManagedObjects, String name) throws Throwable {
+        for (PlatformManagedObject platformManagedObject : platformManagedObjects) {
+            assertPlatformMXBean(platformManagedObject, name);
+        }
+    }
+
+    private void assertPlatformMXBean(PlatformManagedObject platformManagedObject, String name) throws Throwable {
+        ObjectName objectName = getInstance(name);
+        ObjectName actualObjectName = platformManagedObject.getObjectName();
+        assertEquals(objectName.getDomain(), actualObjectName.getDomain());
+        assertEquals(objectName.getKeyProperty("type"), actualObjectName.getKeyProperty("type"));
     }
 }
