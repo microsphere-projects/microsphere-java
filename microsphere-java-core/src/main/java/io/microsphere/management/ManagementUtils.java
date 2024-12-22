@@ -2,6 +2,7 @@ package io.microsphere.management;
 
 
 import io.microsphere.logging.Logger;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.management.RuntimeMXBean;
 
@@ -20,7 +21,7 @@ import static java.lang.Integer.parseInt;
  * @see ManagementUtils
  * @since 1.0.0
  */
-public abstract class ManagementUtils {
+public abstract class ManagementUtils extends BaseUtils {
 
     private static final Logger logger = getLogger(ManagementUtils.class);
 
