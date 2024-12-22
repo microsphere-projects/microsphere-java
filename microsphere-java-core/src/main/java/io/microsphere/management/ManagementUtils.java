@@ -6,11 +6,11 @@ import io.microsphere.logging.Logger;
 import java.lang.management.RuntimeMXBean;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.Integer.parseInt;
-import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
 /**
  * Management Utility class
