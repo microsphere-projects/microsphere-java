@@ -65,23 +65,23 @@ public abstract class JmxUtils extends BaseUtils {
 
     public static final MBeanAttribute[] EMPTY_MBEAN_ATTRIBUTE_ARRAY = new MBeanAttribute[0];
 
-    static ClassLoadingMXBean classLoadingMXBean;
+    private static ClassLoadingMXBean classLoadingMXBean;
 
-    static MemoryMXBean memoryMXBean;
+    private static MemoryMXBean memoryMXBean;
 
-    static ThreadMXBean threadMXBean;
+    private static ThreadMXBean threadMXBean;
 
-    static RuntimeMXBean runtimeMXBean;
+    private static RuntimeMXBean runtimeMXBean;
 
-    static Optional<CompilationMXBean> compilationMXBean;
+    private static Optional<CompilationMXBean> compilationMXBean;
 
-    static OperatingSystemMXBean operatingSystemMXBean;
+    private static OperatingSystemMXBean operatingSystemMXBean;
 
-    static List<MemoryPoolMXBean> memoryPoolMXBeans;
+    private static List<MemoryPoolMXBean> memoryPoolMXBeans;
 
-    static List<MemoryManagerMXBean> memoryManagerMXBeans;
+    private static List<MemoryManagerMXBean> memoryManagerMXBeans;
 
-    static List<GarbageCollectorMXBean> garbageCollectorMXBeans;
+    private static List<GarbageCollectorMXBean> garbageCollectorMXBeans;
 
     /**
      * Returns the managed bean for the class loading system of the Java virtual machine.
