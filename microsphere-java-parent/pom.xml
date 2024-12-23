@@ -37,7 +37,7 @@
         <logback.version>1.2.13</logback.version>
 
         <!-- Testing -->
-        <junit-jupiter.version>5.8.2</junit-jupiter.version>
+        <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <jmh.version>1.37</jmh.version>
     </properties>
 
