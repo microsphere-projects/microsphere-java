@@ -135,10 +135,10 @@ public class MethodUtilsTest {
         List<Method> objectMethods = filterMethods(Object.class, true, true);
 
         List<Method> methods = filterMethods(TestClass.class, true, true);
-        assertEquals(1 + JACOCO_ADDED_METHOD_COUNT + objectMethods.size(), methods.size());
+        assertEquals(1 + objectMethods.size(), methods.size());
 
         methods = filterMethods(TestClass.class, false, true);
-        assertEquals(1 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+        assertEquals(1, methods.size());
 
         methods = filterMethods(TestClass.class, false, false);
         assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
@@ -152,16 +152,16 @@ public class MethodUtilsTest {
     @Test
     void testFilterMethodsFromInterface() {
         List<Method> methods = filterMethods(TestInterface.class, true, true);
-        assertEquals(2 + JACOCO_ADDED_METHOD_COUNT, methods.size()); // method + useLambda
+        assertEquals(2, methods.size()); // method + useLambda
 
         methods = filterMethods(TestInterface.class, true, false);
         assertEquals(3 + JACOCO_ADDED_METHOD_COUNT, methods.size()); // method + useLambda + generated lambda method by compiler
 
         List<Method> subMethods = filterMethods(TestSubInterface.class, false, true);
-        assertEquals(1 + JACOCO_ADDED_METHOD_COUNT, subMethods.size()); // subMethod
+        assertEquals(1, subMethods.size()); // subMethod
 
         subMethods = filterMethods(TestSubInterface.class, true, true);
-        assertEquals(3 + JACOCO_ADDED_METHOD_COUNT, subMethods.size()); // method + useLambda + subMethod
+        assertEquals(3, subMethods.size()); // method + useLambda + subMethod
     }
 
     @Test
@@ -173,7 +173,7 @@ public class MethodUtilsTest {
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getDeclaredMethods(TestClass.class);
-        assertEquals(7, methods.size());
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
         methods = getDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
         assertEquals(1, methods.size());
@@ -188,7 +188,7 @@ public class MethodUtilsTest {
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getAllDeclaredMethods(TestClass.class);
-        assertEquals(OBJECT_DECLARED_METHODS.size() + 7, methods.size());
+        assertEquals(OBJECT_DECLARED_METHODS.size() + 7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
         methods = getAllDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
