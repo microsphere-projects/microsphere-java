@@ -32,6 +32,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Java Common Annotations -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Third-Party Dependencies -->
         <!-- SLF4j -->
         <dependency>
