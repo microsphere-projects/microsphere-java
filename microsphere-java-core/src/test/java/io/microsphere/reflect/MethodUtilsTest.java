@@ -19,13 +19,16 @@ package io.microsphere.reflect;
 import io.microsphere.util.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.MethodUtils.OBJECT_DECLARED_METHODS;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.PULIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.filterMethods;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
@@ -44,6 +47,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 public class MethodUtilsTest {
+
+    private static final int JACOCO_ADDED_METHOD_COUNT;
+
+    static {
+        RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
+        JACOCO_ADDED_METHOD_COUNT = runtimeMXBean.getInputArguments()
+                .stream()
+                .filter(arg -> arg.contains("org.jacoco.agent")).count() > 0 ? 1 : 0;
+    }
 
     /**
      * Test {@link MethodUtils#getSignature(Method)}
@@ -67,16 +79,16 @@ public class MethodUtilsTest {
 
     @Test
     void testFilterMethodsFromNull() {
-        List<Method> methods = MethodUtils.filterMethods(null, true, true);
+        List<Method> methods = filterMethods(null, true, true);
         assertEquals(emptyList(), methods);
 
-        methods = MethodUtils.filterMethods(null, true, false);
+        methods = filterMethods(null, true, false);
         assertEquals(emptyList(), methods);
 
-        methods = MethodUtils.filterMethods(null, false, true);
+        methods = filterMethods(null, false, true);
         assertEquals(emptyList(), methods);
 
-        methods = MethodUtils.filterMethods(null, false, false);
+        methods = filterMethods(null, false, false);
         assertEquals(emptyList(), methods);
 
         methods = getMethods(null);
@@ -86,16 +98,16 @@ public class MethodUtilsTest {
     @Test
     public void testFilterMethodsFromPrimitive() {
         Class<?> primitiveType = int.class;
-        List<Method> methods = MethodUtils.filterMethods(primitiveType, true, true);
+        List<Method> methods = filterMethods(primitiveType, true, true);
         assertEquals(emptyList(), methods);
 
-        methods = MethodUtils.filterMethods(primitiveType, true, false);
+        methods = filterMethods(primitiveType, true, false);
         assertEquals(emptyList(), methods);
 
-        methods = MethodUtils.filterMethods(primitiveType, false, true);
+        methods = filterMethods(primitiveType, false, true);
         assertEquals(emptyList(), methods);
 
-        methods = MethodUtils.filterMethods(primitiveType, false, false);
+        methods = filterMethods(primitiveType, false, false);
         assertEquals(emptyList(), methods);
 
         methods = getMethods(primitiveType);
@@ -105,50 +117,50 @@ public class MethodUtilsTest {
     @Test
     public void testFilterMethodsFromArray() {
         Class<?> arrayClass = ArrayUtils.EMPTY_CLASS_ARRAY.getClass();
-        List<Method> methods = MethodUtils.filterMethods(arrayClass, true, true);
+        List<Method> methods = filterMethods(arrayClass, true, true);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
-        methods = MethodUtils.filterMethods(arrayClass, false, true);
+        methods = filterMethods(arrayClass, false, true);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
-        methods = MethodUtils.filterMethods(arrayClass, true, false);
+        methods = filterMethods(arrayClass, true, false);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
-        methods = MethodUtils.filterMethods(arrayClass, false, false);
+        methods = filterMethods(arrayClass, false, false);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
     }
 
     @Test
     void testFilterMethodsFromClass() {
-        List<Method> objectMethods = MethodUtils.filterMethods(Object.class, true, true);
+        List<Method> objectMethods = filterMethods(Object.class, true, true);
 
-        List<Method> methods = MethodUtils.filterMethods(TestClass.class, true, true);
+        List<Method> methods = filterMethods(TestClass.class, true, true);
         assertEquals(1 + objectMethods.size(), methods.size());
 
-        methods = MethodUtils.filterMethods(TestClass.class, false, true);
+        methods = filterMethods(TestClass.class, false, true);
         assertEquals(1, methods.size());
 
-        methods = MethodUtils.filterMethods(TestClass.class, false, false);
-        assertEquals(7, methods.size());
+        methods = filterMethods(TestClass.class, false, false);
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
-        methods = MethodUtils.filterMethods(TestClass.class, true, false);
-        objectMethods = MethodUtils.filterMethods(Object.class, true, false);
+        methods = filterMethods(TestClass.class, true, false);
+        objectMethods = filterMethods(Object.class, true, false);
 
-        assertEquals(7 + objectMethods.size(), methods.size());
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT + objectMethods.size(), methods.size());
     }
 
     @Test
     void testFilterMethodsFromInterface() {
-        List<Method> methods = MethodUtils.filterMethods(TestInterface.class, true, true);
+        List<Method> methods = filterMethods(TestInterface.class, true, true);
         assertEquals(2, methods.size()); // method + useLambda
 
-        methods = MethodUtils.filterMethods(TestInterface.class, true, false);
-        assertEquals(3, methods.size()); // method + useLambda + generated lambda method by compiler
+        methods = filterMethods(TestInterface.class, true, false);
+        assertEquals(3 + JACOCO_ADDED_METHOD_COUNT, methods.size()); // method + useLambda + generated lambda method by compiler
 
-        List<Method> subMethods = MethodUtils.filterMethods(TestSubInterface.class, false, true);
+        List<Method> subMethods = filterMethods(TestSubInterface.class, false, true);
         assertEquals(1, subMethods.size()); // subMethod
 
-        subMethods = MethodUtils.filterMethods(TestSubInterface.class, true, true);
+        subMethods = filterMethods(TestSubInterface.class, true, true);
         assertEquals(3, subMethods.size()); // method + useLambda + subMethod
     }
 
@@ -161,7 +173,7 @@ public class MethodUtilsTest {
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getDeclaredMethods(TestClass.class);
-        assertEquals(7, methods.size());
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
         methods = getDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
         assertEquals(1, methods.size());
@@ -176,7 +188,7 @@ public class MethodUtilsTest {
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getAllDeclaredMethods(TestClass.class);
-        assertEquals(OBJECT_DECLARED_METHODS.size() + 7, methods.size());
+        assertEquals(OBJECT_DECLARED_METHODS.size() + 7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
         methods = getAllDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());

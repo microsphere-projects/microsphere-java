@@ -32,7 +32,7 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots --file pom.xml -Drevision=0.0.1-SNAPSHOT clean install
+        run: mvn --batch-mode --update-snapshots --file pom.xml -Drevision=0.0.1-SNAPSHOT clean install --activate-profiles coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

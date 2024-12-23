@@ -13,11 +13,11 @@ import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
+import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.Thread.currentThread;
-import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 import static java.util.Collections.emptySet;
 
 /**

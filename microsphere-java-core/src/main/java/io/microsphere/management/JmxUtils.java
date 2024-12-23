@@ -29,14 +29,28 @@ import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.CompilationMXBean;
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryManagerMXBean;
+import java.lang.management.MemoryPoolMXBean;
+import java.lang.management.OperatingSystemMXBean;
+import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadMXBean;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Optional.ofNullable;
 
 
 /**
@@ -49,7 +63,162 @@ public abstract class JmxUtils extends BaseUtils {
 
     private static final Logger logger = getLogger(JmxUtils.class);
 
-    private static final MBeanAttribute[] EMPTY_MBEAN_ATTRIBUTE_ARRAY = new MBeanAttribute[0];
+    public static final MBeanAttribute[] EMPTY_MBEAN_ATTRIBUTE_ARRAY = new MBeanAttribute[0];
+
+    private static ClassLoadingMXBean classLoadingMXBean;
+
+    private static MemoryMXBean memoryMXBean;
+
+    private static ThreadMXBean threadMXBean;
+
+    private static RuntimeMXBean runtimeMXBean;
+
+    private static Optional<CompilationMXBean> compilationMXBean;
+
+    private static OperatingSystemMXBean operatingSystemMXBean;
+
+    private static List<MemoryPoolMXBean> memoryPoolMXBeans;
+
+    private static List<MemoryManagerMXBean> memoryManagerMXBeans;
+
+    private static List<GarbageCollectorMXBean> garbageCollectorMXBeans;
+
+    /**
+     * Returns the managed bean for the class loading system of the Java virtual machine.
+     *
+     * @return a {@link ClassLoadingMXBean} object for
+     * the Java virtual machine.
+     * @see {@link ManagementFactory#getClassLoadingMXBean()}
+     */
+    @Nonnull
+    public static ClassLoadingMXBean getClassLoadingMXBean() {
+        if (classLoadingMXBean == null) {
+            classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+        }
+        return classLoadingMXBean;
+    }
+
+    /**
+     * Returns the managed bean for the memory system of the Java virtual machine.
+     *
+     * @return a {@link MemoryMXBean} object for the Java virtual machine.
+     * @see {@link ManagementFactory#getMemoryMXBean()}
+     */
+    @Nonnull
+    public static MemoryMXBean getMemoryMXBean() {
+        if (memoryMXBean == null) {
+            memoryMXBean = ManagementFactory.getMemoryMXBean();
+        }
+        return memoryMXBean;
+    }
+
+    /**
+     * Returns the managed bean for the thread system of the Java virtual machine.
+     *
+     * @return a {@link ThreadMXBean} object for the Java virtual machine.
+     * @see {@link ManagementFactory#getThreadMXBean()}
+     */
+    @Nonnull
+    public static ThreadMXBean getThreadMXBean() {
+        if (threadMXBean == null) {
+            threadMXBean = ManagementFactory.getThreadMXBean();
+        }
+        return threadMXBean;
+    }
+
+    /**
+     * Returns the managed bean for the runtime system of the Java virtual machine.
+     *
+     * @return a {@link RuntimeMXBean} object for the Java virtual machine.
+     * @see {@link ManagementFactory#getRuntimeMXBean()}
+     */
+    @Nonnull
+    public static RuntimeMXBean getRuntimeMXBean() {
+        if (runtimeMXBean == null) {
+            runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        }
+        return runtimeMXBean;
+    }
+
+    /**
+     * Returns the managed bean for the compilation system of the Java virtual machine.
+     * This method returns {@code null} if the Java virtual machine has no compilation system.
+     *
+     * @return an instance of {@link Optional} holding a {@link CompilationMXBean} object for the Java virtual machine
+     * or {@code null if the Java virtual machine has no compilation system.
+     * @see {@link ManagementFactory#getCompilationMXBean()}
+     */
+    @Nullable
+    public static Optional<CompilationMXBean> getCompilationMXBean() {
+        if (compilationMXBean == null) {
+            compilationMXBean = ofNullable(ManagementFactory.getCompilationMXBean());
+        }
+        return compilationMXBean;
+    }
+
+    /**
+     * Returns the managed bean for the operating system on which
+     * the Java virtual machine is running.
+     *
+     * @return an {@link OperatingSystemMXBean} object for
+     * the Java virtual machine.
+     * @see {@link ManagementFactory#getOperatingSystemMXBean()}
+     */
+    @Nonnull
+    public static OperatingSystemMXBean getOperatingSystemMXBean() {
+        if (operatingSystemMXBean == null) {
+            operatingSystemMXBean = ManagementFactory.getOperatingSystemMXBean();
+        }
+        return operatingSystemMXBean;
+    }
+
+    /**
+     * Returns a list of {@link MemoryPoolMXBean} objects in the Java virtual machine.
+     * The Java virtual machine can have one or more memory pools.
+     * It may add or remove memory pools during execution.
+     *
+     * @return a list of {@code MemoryPoolMXBean} objects.
+     * @see {@link ManagementFactory#getMemoryPoolMXBeans()}
+     */
+    @Nonnull
+    public static List<MemoryPoolMXBean> getMemoryPoolMXBeans() {
+        if (memoryPoolMXBeans == null) {
+            memoryPoolMXBeans = unmodifiableList(ManagementFactory.getMemoryPoolMXBeans());
+        }
+        return memoryPoolMXBeans;
+    }
+
+    /**
+     * Returns a list of {@link MemoryManagerMXBean} objects in the Java virtual machine.
+     * The Java virtual machine can have one or more memory managers.
+     * It may add or remove memory managers during execution.
+     *
+     * @return a list of {@code MemoryManagerMXBean} objects.
+     * @see {@link ManagementFactory#getMemoryManagerMXBeans()}
+     */
+    @Nonnull
+    public static List<MemoryManagerMXBean> getMemoryManagerMXBeans() {
+        if (memoryManagerMXBeans == null) {
+            memoryManagerMXBeans = unmodifiableList(ManagementFactory.getMemoryManagerMXBeans());
+        }
+        return memoryManagerMXBeans;
+    }
+
+    /**
+     * Returns a list of {@link GarbageCollectorMXBean} objects in the Java virtual machine.
+     * The Java virtual machine may have one or more {@code GarbageCollectorMXBean} objects.
+     * It may add or remove {@code GarbageCollectorMXBean} during execution.
+     *
+     * @return a list of {@code GarbageCollectorMXBean} objects.
+     * @see {@link ManagementFactory#getGarbageCollectorMXBeans()}
+     */
+    @Nonnull
+    public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
+        if (garbageCollectorMXBeans == null) {
+            garbageCollectorMXBeans = unmodifiableList(ManagementFactory.getGarbageCollectorMXBeans());
+        }
+        return garbageCollectorMXBeans;
+    }
 
     /**
      * Get the {@link Map} with the attribute name and {@link MBeanAttribute MBeanAttributes} from the specified named
