@@ -24,7 +24,7 @@
         <jaxws-api.version>2.3.1</jaxws-api.version>
         <jsr305.version>3.0.2</jsr305.version>
 
-        <apache.commons.lang3.version>3.4</apache.commons.lang3.version>
+        <apache.commons.lang3.version>3.17.0</apache.commons.lang3.version>
         <apache.commons.io.version>2.14.0</apache.commons.io.version>
         <apache.commons.collections.version>3.2.2</apache.commons.collections.version>
         <apache.commons.logging.version>1.3.2</apache.commons.logging.version>
