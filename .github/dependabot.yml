@@ -5,7 +5,8 @@
 
 version: 2
 updates:
-  - package-ecosystem: "maven" # See documentation for possible values
-    directory: "/"
-    schedule:
-      interval: "daily"
+- package-ecosystem: "maven" # See documentation for possible values
+  directory: "/"
+  schedule:
+    interval: "daily"
+  open-pull-requests-limit: 10
