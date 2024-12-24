@@ -18,11 +18,6 @@
     <name>Microsphere :: Java :: Core</name>
     <description>Microsphere Java Core</description>
 
-    <properties>
-        <jvm.argLine></jvm.argLine>
-        <jacoco.argLine></jacoco.argLine>
-    </properties>
-
     <dependencies>
 
         <!-- Java API Dependencies -->
@@ -94,89 +89,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <argLine>@{jacoco.argLine} ${jvm.argLine}</argLine>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>javax-api</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <dependencies>
-                <!-- Java Common Annotations -->
-                <dependency>
-                    <groupId>javax.annotation</groupId>
-                    <artifactId>javax.annotation-api</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>jdk9-15</id>
-            <activation>
-                <jdk>[9,15]</jdk>
-            </activation>
-            <properties>
-                <jvm.argLine>
-                    --illegal-access=permit
-                    --add-opens java.base/java.lang.invoke=ALL-UNNAMED
-                </jvm.argLine>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>jdk16+</id>
-            <activation>
-                <jdk>[16,)</jdk>
-            </activation>
-            <properties>
-                <jvm.argLine>
-                    --add-opens java.base/java.lang.invoke=ALL-UNNAMED
-                </jvm.argLine>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <configuration>
-                            <propertyName>jacoco.argLine</propertyName>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>report</id>
-                                <phase>test</phase>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-    </profiles>
 
 </project>
