@@ -37,7 +37,14 @@ jobs:
           cache: maven
 
       - name: Publish package
-        run: mvn --batch-mode --update-snapshots -Drevision=${{ inputs.revision }} -Dgpg.skip=true clean deploy --activate-profiles release,ci
+        run: mvn
+          --batch-mode
+          --update-snapshots
+          --file pom.xml
+          -Drevision=${{ inputs.revision }}
+          -Dgpg.skip=true
+          deploy
+          --activate-profiles release,ci
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
