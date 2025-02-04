@@ -27,6 +27,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Java Common Annotations -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Third-Party Dependencies -->
         <!-- SLF4j -->
         <dependency>
@@ -55,23 +62,10 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- JAX-WS API-->
-        <dependency>
-            <groupId>javax.xml.ws</groupId>
-            <artifactId>jaxws-api</artifactId>
-            <scope>test</scope>
-        </dependency>
-
+        <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Java Common Annotations -->
-        <dependency>
-            <groupId>javax.annotation</groupId>
-            <artifactId>javax.annotation-api</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -79,7 +73,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -96,35 +89,5 @@
         </dependency>
 
     </dependencies>
-
-    <profiles>
-        <profile>
-            <id>jigsaw</id>
-            <activation>
-                <jdk>[1.9,)</jdk>
-            </activation>
-            <dependencies>
-                <!-- Java Common Annotations -->
-                <dependency>
-                    <groupId>javax.annotation</groupId>
-                    <artifactId>javax.annotation-api</artifactId>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <argLine>
-                                --illegal-access=permit
-                                --add-opens java.base/java.lang.invoke=ALL-UNNAMED
-                            </argLine>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

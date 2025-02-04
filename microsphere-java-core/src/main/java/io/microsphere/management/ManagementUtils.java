@@ -2,15 +2,16 @@ package io.microsphere.management;
 
 
 import io.microsphere.logging.Logger;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.management.RuntimeMXBean;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.Integer.parseInt;
-import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
 /**
  * Management Utility class
@@ -20,7 +21,7 @@ import static java.lang.management.ManagementFactory.getRuntimeMXBean;
  * @see ManagementUtils
  * @since 1.0.0
  */
-public abstract class ManagementUtils {
+public abstract class ManagementUtils extends BaseUtils {
 
     private static final Logger logger = getLogger(ManagementUtils.class);
 

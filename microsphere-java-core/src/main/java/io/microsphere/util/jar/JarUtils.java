@@ -5,6 +5,7 @@ package io.microsphere.util.jar;
 
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -42,7 +43,7 @@ import static java.util.Collections.unmodifiableList;
  * @see JarFile
  * @since 1.0.0
  */
-public class JarUtils {
+public class JarUtils extends BaseUtils {
 
     /**
      * Create a {@link JarFile} from specified {@link URL} of {@link JarFile}

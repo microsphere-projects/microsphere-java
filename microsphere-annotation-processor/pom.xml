@@ -18,6 +18,11 @@
     <name>Microsphere :: Java :: Annotation Processor</name>
     <description>Microsphere Annotation Processor</description>
 
+    <properties>
+        <javax.ws.rs.version>2.1</javax.ws.rs.version>
+        <jaxws-api.version>2.3.1</jaxws-api.version>
+    </properties>
+
     <dependencies>
 
         <!-- microsphere-->
@@ -44,6 +49,7 @@
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -51,6 +57,7 @@
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
+            <version>${jaxws-api.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -58,14 +65,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
 
