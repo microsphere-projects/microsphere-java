@@ -580,8 +580,9 @@ public abstract class MethodUtils extends BaseUtils {
             }
         }
         if (logger.isTraceEnabled()) {
-            logger.trace("The target method[name : '{}' , parameter types : '{}'] can't be found in the methods : {}",
-                    methodName, Arrays.toString(parameterTypes), Arrays.toString(methods));
+            logger.trace("The target method[name : '{}' , parameter types : '{}'] {} be found in the methods : {}",
+                    methodName, Arrays.toString(parameterTypes), targetMethod == null ? "can't " : "can",
+                    Arrays.toString(methods));
         }
         return targetMethod;
     }
