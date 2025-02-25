@@ -19,12 +19,17 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentNavigableMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
+import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.isNotEmpty;
@@ -34,8 +39,10 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.shallowCloneMap;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -50,6 +57,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class MapUtilsTest {
+
+    @Test
+    public void testConstants() {
+        assertEquals(1.f, MIN_LOAD_FACTOR);
+    }
 
     @Test
     public void testIsEmpty() {
@@ -142,6 +154,7 @@ public class MapUtilsTest {
         assertNewMap(LinkedHashMap.class, newLinkedHashMap());
         assertNewMap(LinkedHashMap.class, newLinkedHashMap(2));
         assertNewMap(LinkedHashMap.class, newLinkedHashMap(2, 0.75f));
+        assertNewMap(LinkedHashMap.class, newLinkedHashMap(2, 0.75f, true));
         assertNewMap(LinkedHashMap.class, newLinkedHashMap(emptyMap()));
 
         assertNewMap(TreeMap.class, newTreeMap());
@@ -157,10 +170,44 @@ public class MapUtilsTest {
 
     @Test
     public void testToFixedMap() {
-        Map<String, Integer> map = toFixedMap(Arrays.asList("A", "B"), a -> ofEntry(a, a.hashCode()));
+        Map<String, Integer> map = toFixedMap(Collections.<String>emptyList(), a -> ofEntry(a, a.hashCode()));
+        assertTrue(map.isEmpty());
+
+        map = toFixedMap(Arrays.asList("A", "B"), a -> ofEntry(a, a.hashCode()));
         assertEquals(2, map.size());
         assertEquals("A".hashCode(), map.get("A"));
         assertEquals("B".hashCode(), map.get("B"));
+    }
+
+    @Test
+    public void testShallowCloneMap() {
+        Map<String, Integer> map = of("A", 1);
+        Map<String, Integer> cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
+
+        map = newTreeMap(map);
+        cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
+
+        map = newLinkedHashMap(map);
+        cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
+
+        map = new IdentityHashMap(map);
+        cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
+
+        map = new ConcurrentSkipListMap<>(map);
+        cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
+
+        map = newConcurrentHashMap(map);
+        cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
+
+        map = unmodifiableMap(map);
+        cloneMap = shallowCloneMap(map);
+        assertEquals(map, cloneMap);
     }
 
     private void assertNewMap(Class<? extends Map> mapClass, Map<?, ?> map) {
