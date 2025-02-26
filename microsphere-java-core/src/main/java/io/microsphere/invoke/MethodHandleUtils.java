@@ -180,6 +180,11 @@ public abstract class MethodHandleUtils extends BaseUtils {
     private static final ConcurrentMap<LookupKey, MethodHandles.Lookup> lookupCache = new ConcurrentHashMap<>();
 
     /**
+     * The {@link MethodHandles.Lookup} for {@link MethodHandles#publicLookup()}
+     */
+    public static final MethodHandles.Lookup PUBLIC_LOOKUP = publicLookup();
+
+    /**
      * The allowed {@link MethodHandles.Lookup} modes enumeration
      *
      * @see MethodHandles.Lookup#PUBLIC
@@ -345,7 +350,7 @@ public abstract class MethodHandleUtils extends BaseUtils {
         }
         Class<?> returnType = method.getReturnType();
         MethodType methodType = isEmpty(parameterTypes) ? methodType(returnType) : methodType(returnType, parameterTypes);
-        MethodHandles.Lookup lookup = isiCandidateMethod(method) ? publicLookup() : lookup(lookupClass);
+        MethodHandles.Lookup lookup = isiCandidateMethod(method) ? PUBLIC_LOOKUP : lookup(lookupClass);
         return execute(lookup, methodType, function);
     }
 
