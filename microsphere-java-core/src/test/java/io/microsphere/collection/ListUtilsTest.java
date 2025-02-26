@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -24,12 +25,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.Enumeration;
 
+import static io.microsphere.collection.ListUtils.forEach;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyEnumeration;
+import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.enumeration;
 import static java.util.Collections.singleton;
@@ -46,6 +51,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class ListUtilsTest {
+
+    private static final Logger logger = getLogger(ListUtilsTest.class);
 
     @Test
     public void testIsList() {
@@ -96,5 +103,30 @@ public class ListUtilsTest {
 
         list = ofList((Enumeration) null);
         assertEquals(emptyList(), list);
+    }
+
+    @Test
+    public void testNewArrayList() {
+        assertEquals(newArrayList(), newArrayList(1));
+        assertEquals(newArrayList(), newArrayList(emptyEnumeration()));
+        assertEquals(newArrayList(newArrayList()), newArrayList(emptyIterator()));
+    }
+
+    @Test
+    public void testNewLinkedList() {
+        assertEquals(emptyList(), newLinkedList());
+        assertEquals(newLinkedList(), newLinkedList(emptyEnumeration()));
+        assertEquals(newLinkedList(newArrayList()), newLinkedList(emptyIterator()));
+    }
+
+    @Test
+    public void testForEach() {
+        List<String> list = asList("A", "B", "C");
+        forEach(list, (index, value) -> {
+            logger.trace("forEach(index = {} , value = '{}')", index, value);
+        });
+        forEach(list, (value) -> {
+            logger.trace("forEach(value = '{}')", value);
+        });
     }
 }
