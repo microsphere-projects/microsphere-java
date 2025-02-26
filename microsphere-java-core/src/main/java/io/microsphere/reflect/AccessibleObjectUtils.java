@@ -20,17 +20,14 @@ import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
 
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
+import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.asMember;
 import static io.microsphere.reflect.MemberUtils.isPublic;
-import static java.lang.invoke.MethodHandles.lookup;
-import static java.lang.invoke.MethodType.methodType;
 
 /**
  * The utilities class of {@link AccessibleObject}
@@ -64,16 +61,6 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
     private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName, boolean.class);
-
-    private static MethodHandle findVirtual(Class<?> targetClass, String methodName, Class<?> returnType, Class<?>... parameterTypes) {
-        MethodHandles.Lookup lookup = lookup();
-        MethodType methodType = methodType(returnType, parameterTypes);
-        try {
-            return lookup.findVirtual(targetClass, methodName, methodType);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * The class name of {@linkplain java.lang.reflect.InaccessibleObject} since JDK 9
