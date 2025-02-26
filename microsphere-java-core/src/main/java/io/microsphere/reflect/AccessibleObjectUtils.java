@@ -54,13 +54,13 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * The {@link MethodHandle} of {@link AccessibleObject#canAccess(Object)} since JDK 9
      * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
-    private static final MethodHandle canAccessMethodHandle = findVirtual(AccessibleObject.class, canAccessMethodName, boolean.class, Object.class);
+    private static final MethodHandle canAccessMethodHandle = findVirtual(AccessibleObject.class, canAccessMethodName, Object.class);
 
     /**
      * The {@link MethodHandle} of {@link AccessibleObject#trySetAccessible()} since JDK 9
      * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
-    private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName, boolean.class);
+    private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
 
     /**
      * The class name of {@linkplain java.lang.reflect.InaccessibleObject} since JDK 9
