@@ -20,10 +20,10 @@ import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Enumeration;
 
 import static io.microsphere.collection.ListUtils.forEach;
 import static io.microsphere.collection.ListUtils.isList;
