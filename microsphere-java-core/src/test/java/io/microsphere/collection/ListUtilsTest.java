@@ -58,6 +58,10 @@ public class ListUtilsTest {
         assertSame(rawList, list);
         assertEquals(rawList, list);
 
+        list = ofList("A", "B", "C");
+        assertEquals(rawList, list);
+
+
         Set<String> rawSet = singleton("A");
         list = ofList(rawSet);
         assertEquals(newArrayList(rawSet), list);
