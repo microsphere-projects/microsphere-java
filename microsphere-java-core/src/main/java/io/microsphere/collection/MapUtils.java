@@ -51,7 +51,7 @@ public abstract class MapUtils extends BaseUtils {
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}
      */
-    public static final float MIN_LOAD_FACTOR = Float.MIN_NORMAL;
+    public static final float MIN_LOAD_FACTOR = 1.0f;
 
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
@@ -176,16 +176,16 @@ public abstract class MapUtils extends BaseUtils {
      */
     @Nonnull
     public static <K, V> Map<K, V> shallowCloneMap(@Nonnull Map<K, V> source) {
-        if (source instanceof SortedMap) {
-            return new TreeMap(source);
-        } else if (source instanceof LinkedHashMap) {
+        if (source instanceof LinkedHashMap) {
             return new LinkedHashMap(source);
-        } else if (source instanceof IdentityHashMap) {
-            return new IdentityHashMap(source);
         } else if (source instanceof ConcurrentNavigableMap) {
             return new ConcurrentSkipListMap(source);
+        } else if (source instanceof SortedMap) {
+            return new TreeMap(source);
         } else if (source instanceof ConcurrentMap) {
             return new ConcurrentHashMap<>(source);
+        } else if (source instanceof IdentityHashMap) {
+            return new IdentityHashMap(source);
         } else {
             return new HashMap(source);
         }

@@ -36,7 +36,7 @@ public class AccessibleObjectUtilsTest {
 
     private static final String test = "test";
 
-    private static Method[] methods = test.getClass().getDeclaredMethods();
+    private static Method[] methods = String.class.getMethods();
 
     @Test
     public void testCanAccess() {
