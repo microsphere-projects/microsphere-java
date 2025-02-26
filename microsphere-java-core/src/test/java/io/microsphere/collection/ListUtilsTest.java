@@ -19,15 +19,19 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.Enumeration;
 
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.ListUtils.ofList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.enumeration;
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -52,6 +56,16 @@ public class ListUtilsTest {
     }
 
     @Test
+    public void testOf() {
+        List<String> list = of();
+        assertTrue(list.isEmpty());
+
+        List<String> rawList = asList("A", "B", "C");
+        list = of("A", "B", "C");
+        assertEquals(rawList, list);
+    }
+
+    @Test
     public void testOfList() {
         List<String> rawList = asList("A", "B", "C");
         List<String> list = ofList(rawList);
@@ -61,13 +75,26 @@ public class ListUtilsTest {
         list = ofList("A", "B", "C");
         assertEquals(rawList, list);
 
-
         Set<String> rawSet = singleton("A");
         list = ofList(rawSet);
         assertEquals(newArrayList(rawSet), list);
 
+        list = ofList(enumeration(rawList));
+        assertEquals(rawList, list);
+
         list = ofList((List) null);
         assertSame(emptyList(), list);
+        assertEquals(emptyList(), list);
+
+        list = ofList((Iterable) null);
+        assertSame(emptyList(), list);
+        assertEquals(emptyList(), list);
+
+        list = ofList((Iterator) null);
+        assertSame(emptyList(), list);
+        assertEquals(emptyList(), list);
+
+        list = ofList((Enumeration) null);
         assertEquals(emptyList(), list);
     }
 }
