@@ -49,13 +49,6 @@
                 <version>${jsr305.version}</version>
             </dependency>
 
-            <!-- Apache Commons Dependencies -->
-            <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>${apache.commons.logging.version}</version>
-            </dependency>
-
             <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>
