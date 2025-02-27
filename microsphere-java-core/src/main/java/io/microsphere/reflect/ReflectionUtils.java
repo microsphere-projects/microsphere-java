@@ -88,6 +88,11 @@ public abstract class ReflectionUtils extends BaseUtils {
      */
     private static final Method getCallerClassMethod;
 
+    /**
+     * The class name of {@linkplain java.lang.reflect.InaccessibleObjectException} since JDK 9
+     */
+    public static final String INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME = "java.lang.reflect.InaccessibleObjectException";
+
     // Initialize sun.reflect.Reflection
     static {
         Method method = null;
@@ -519,6 +524,16 @@ public abstract class ReflectionUtils extends BaseUtils {
         }
 
         return types;
+    }
+
+    /**
+     * Determine whether the specified {@link Throwable} is {@link java.lang.reflect.InaccessibleObjectException}
+     *
+     * @param failure {@link Throwable} instance
+     * @return <code>true</code> if the specified {@link Throwable} is {@link java.lang.reflect.InaccessibleObjectException}
+     */
+    public static boolean isInaccessibleObjectException(Throwable failure) {
+        return failure != null && INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME.equals(failure.getClass().getName());
     }
 
 }

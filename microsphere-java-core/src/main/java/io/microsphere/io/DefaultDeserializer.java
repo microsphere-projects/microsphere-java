@@ -32,6 +32,8 @@ import java.io.Serializable;
  */
 public class DefaultDeserializer implements Deserializer<Object> {
 
+    public static final DefaultDeserializer INSTANCE = new DefaultDeserializer();
+
     @Override
     public Object deserialize(byte[] bytes) throws IOException {
         if (bytes == null) {

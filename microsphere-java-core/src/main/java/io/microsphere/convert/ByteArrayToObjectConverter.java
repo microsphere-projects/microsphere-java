@@ -14,37 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.io;
+package io.microsphere.convert;
 
-import java.io.ByteArrayOutputStream;
+import io.microsphere.io.DefaultDeserializer;
+
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
+
 /**
- * Default Serializer implementation based on Java Standard Serialization.
+ * The class coverts the {@link byte[] byte array} object to be a {@link Object} instance .
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ObjectOutputStream
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Serializable
- * Date : 2021-05-02
  * @since 1.0.0
  */
-public class DefaultSerializer implements Serializer<Object> {
+public class ByteArrayToObjectConverter implements Converter<byte[], Object> {
 
-    public static final DefaultSerializer INSTANCE = new DefaultSerializer();
+    /**
+     * The Singleton instance of {@link ByteArrayToObjectConverter}
+     */
+    public static final ByteArrayToObjectConverter INSTANCE = new ByteArrayToObjectConverter();
 
     @Override
-    public byte[] serialize(Object source) throws IOException {
-        byte[] bytes = null;
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)
-        ) {
-            // Key -> byte[]
-            objectOutputStream.writeObject(source);
-            bytes = outputStream.toByteArray();
+    public Serializable convert(byte[] source) {
+        try {
+            return (Serializable) DefaultDeserializer.INSTANCE.deserialize(source);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return bytes;
     }
 }
-

@@ -28,6 +28,7 @@ import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.asMember;
 import static io.microsphere.reflect.MemberUtils.isPublic;
+import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
 
 /**
  * The utilities class of {@link AccessibleObject}
@@ -61,11 +62,6 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
     private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
-
-    /**
-     * The class name of {@linkplain java.lang.reflect.InaccessibleObject} since JDK 9
-     */
-    public static final String INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME = "java.lang.reflect.InaccessibleObjectException";
 
     /**
      * Try to set the {@link AccessibleObject} accessible.
@@ -102,8 +98,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
             try {
                 accessibleObject.setAccessible(true);
             } catch (RuntimeException e) {
-                String exceptionClassName = e.getClass().getName();
-                if (INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME.equals(exceptionClassName)) {
+                if (isInaccessibleObjectException(e)) {
                     // JDK 16+ : JEP 396: Strongly Encapsulate JDK Internals by Default - https://openjdk.org/jeps/396
                     String errorMessage = "JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396 ."
                             + LINE_SEPARATOR
