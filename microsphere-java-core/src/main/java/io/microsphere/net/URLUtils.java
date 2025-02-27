@@ -104,7 +104,7 @@ public abstract class URLUtils extends BaseUtils {
     /**
      * The prefix of package for {@link URLStreamHandler Handlers}
      */
-    public static final String DEFAULT_HANDLER_PACKAGE_PREFIX = "sun.net.www.protocol";
+    public static final String DEFAULT_HANDLER_PACKAGE_PREFIX = "sun.net.www.protocol.";
 
     /**
      * The separator character of  {@link URLStreamHandler Handlers'} packages.
