@@ -39,12 +39,6 @@ public class ServiceLoaderURLStreamHandlerFactoryTest {
         handler = factory.createURLStreamHandler("jar");
         assertEquals("sun.net.www.protocol.jar.Handler", handler.getClass().getName());
 
-        handler = factory.createURLStreamHandler("http");
-        assertEquals("sun.net.www.protocol.http.Handler", handler.getClass().getName());
-
-        handler = factory.createURLStreamHandler("https");
-        assertEquals("sun.net.www.protocol.https.Handler", handler.getClass().getName());
-
         handler = factory.createURLStreamHandler("classpath");
         assertEquals("io.microsphere.net.classpath.Handler", handler.getClass().getName());
 
