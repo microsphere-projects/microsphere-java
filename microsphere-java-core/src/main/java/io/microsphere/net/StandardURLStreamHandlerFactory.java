@@ -74,17 +74,6 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
         return handler;
     }
 
-    /**
-     * Create {@link URLStreamHandler} from {@link URL#defaultFactory}
-     * Note :
-     * <ul>
-     *     <li>JDK 9 - 15 works</li>
-     *     <li>JDK 16+ requires JVM Options: </li>
-     * </ul>
-     *
-     * @param protocol
-     * @return
-     */
     URLStreamHandler createURLStreamHandlerFromDefaultFactory(String protocol) {
         if (defaultFactoryField == null) {
             if (logger.isTraceEnabled()) {
