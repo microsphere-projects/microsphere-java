@@ -16,12 +16,20 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.logging.Logger;
+
+import java.lang.reflect.Field;
+import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
@@ -32,6 +40,18 @@ import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
  */
 public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
+    private static final Logger logger = getLogger(StandardURLStreamHandlerFactory.class);
+
+    /**
+     * The field name of {@link URL#defaultFactory}
+     */
+    private static final String defaultFactoryFieldName = "defaultFactory";
+
+    /**
+     * {@link URL#defaultFactory} static field since JDK 9+
+     */
+    private static final Field defaultFactoryField = findField(URL.class, defaultFactoryFieldName); // JDK 9+
+
     private final Map<String, URLStreamHandler> handlersCache = new HashMap<>();
 
     @Override
@@ -40,15 +60,46 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
     }
 
     URLStreamHandler doCreateURLStreamHandler(String protocol) {
-        String name = DEFAULT_HANDLER_PACKAGE_PREFIX + "." + protocol + ".Handler";
-        try {
-            @SuppressWarnings("deprecation")
-            Object o = Class.forName(name).newInstance();
-            return (URLStreamHandler) o;
-        } catch (Exception x) {
-            // For compatibility, all Exceptions are ignored.
-            // any number of exceptions can get thrown here
+        URLStreamHandler handler = createURLStreamHandlerFromDefaultFactory(protocol);
+        if (handler == null) { // <= JDK 8 works
+            String name = DEFAULT_HANDLER_PACKAGE_PREFIX + "." + protocol + ".Handler";
+            try {
+                Object o = Class.forName(name).newInstance();
+                return (URLStreamHandler) o;
+            } catch (Exception x) {
+                // For compatibility, all Exceptions are ignored.
+                // any number of exceptions can get thrown here
+            }
         }
-        return null;
+        return handler;
+    }
+
+    /**
+     * Create {@link URLStreamHandler} from {@link URL#defaultFactory}
+     * Note :
+     * <ul>
+     *     <li>JDK 9 - 15 works</li>
+     *     <li>JDK 16+ requires JVM Options: </li>
+     * </ul>
+     *
+     * @param protocol
+     * @return
+     */
+    URLStreamHandler createURLStreamHandlerFromDefaultFactory(String protocol) {
+        if (defaultFactoryField == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The 'defaultFactory' field can't be found in the class URL.");
+            }
+            return null;
+        }
+        URLStreamHandler handler = null;
+        try {
+            trySetAccessible(defaultFactoryField);
+            URLStreamHandlerFactory factory = (URLStreamHandlerFactory) defaultFactoryField.get(null);
+            handler = factory.createURLStreamHandler(protocol);
+        } catch (Exception e) {
+            // ignore
+        }
+        return handler;
     }
 }
