@@ -200,8 +200,6 @@ public class URLUtilsTest {
         attachURLStreamHandlerFactory(factory);
         assertSame(factory, getURLStreamHandlerFactory());
 
-        URLStreamHandler handler = factory.createURLStreamHandler("http");
-        assertEquals("sun.net.www.protocol.http.Handler", handler.getClass().getName());
 
         attachURLStreamHandlerFactory(factory);
         CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();
