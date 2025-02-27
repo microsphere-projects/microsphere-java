@@ -32,6 +32,8 @@ import java.io.Serializable;
  */
 public class DefaultSerializer implements Serializer<Object> {
 
+    public static final DefaultSerializer INSTANCE = new DefaultSerializer();
+
     @Override
     public byte[] serialize(Object source) throws IOException {
         byte[] bytes = null;
