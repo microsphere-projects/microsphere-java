@@ -59,7 +59,7 @@ public abstract class ListUtils extends BaseUtils {
         return values instanceof List;
     }
 
-    public static <E> List<E> ofList(E... elements) {
+    public static <E> List<E> of(E... elements) {
         if (isEmpty(elements)) {
             return emptyList();
         }
@@ -73,6 +73,10 @@ public abstract class ListUtils extends BaseUtils {
             }
         }
         return unmodifiableList(asList(elements));
+    }
+
+    public static <E> List<E> ofList(E... elements) {
+        return of(elements);
     }
 
     public static <E> List<E> ofList(Iterable<E> iterable) {
@@ -100,6 +104,10 @@ public abstract class ListUtils extends BaseUtils {
         return unmodifiableList(list);
     }
 
+    public static <E> ArrayList<E> newArrayList() {
+        return new ArrayList<>();
+    }
+
     public static <E> ArrayList<E> newArrayList(int size) {
         return new ArrayList<>(size);
     }
@@ -120,8 +128,8 @@ public abstract class ListUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> ArrayList<E> newArrayList() {
-        return new ArrayList<>();
+    public static <E> LinkedList<E> newLinkedList() {
+        return new LinkedList<>();
     }
 
     public static <E> LinkedList<E> newLinkedList(Enumeration<E> values) {
@@ -138,10 +146,6 @@ public abstract class ListUtils extends BaseUtils {
             list.add(iterator.next());
         }
         return list;
-    }
-
-    public static <E> LinkedList<E> newLinkedList() {
-        return new LinkedList<>();
     }
 
     public static <T> void forEach(List<T> values, BiConsumer<Integer, T> indexedElementConsumer) {
