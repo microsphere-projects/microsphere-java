@@ -16,9 +16,12 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
+import java.lang.invoke.MethodHandle;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,6 +32,9 @@ import java.util.function.Consumer;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.CollectionUtils.toIterator;
+import static io.microsphere.invoke.MethodHandleUtils.findStatic;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -42,12 +48,35 @@ import static java.util.Collections.unmodifiableList;
  */
 public abstract class ListUtils extends BaseUtils {
 
+    private static final Logger logger = getLogger(ListUtils.class);
+
+    /**
+     * The {@link MethodHandle} of {@link List#of(Object...)} since JDK 9
+     */
+    private static final MethodHandle ofMethodHandle = findStatic(List.class, "of", Object[].class);
+
     public static boolean isList(Object values) {
         return values instanceof List;
     }
 
+    public static <E> List<E> of(E... elements) {
+        if (isEmpty(elements)) {
+            return emptyList();
+        }
+        if (ofMethodHandle != null) {
+            try {
+                return (List<E>) ofMethodHandle.invokeExact(elements);
+            } catch (Throwable e) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("It's failed to invoke MethodHandle of java.util.List#of(Object[] = {})", Arrays.toString(elements), e);
+                }
+            }
+        }
+        return unmodifiableList(asList(elements));
+    }
+
     public static <E> List<E> ofList(E... elements) {
-        return asList(elements);
+        return of(elements);
     }
 
     public static <E> List<E> ofList(Iterable<E> iterable) {
@@ -75,6 +104,10 @@ public abstract class ListUtils extends BaseUtils {
         return unmodifiableList(list);
     }
 
+    public static <E> ArrayList<E> newArrayList() {
+        return new ArrayList<>();
+    }
+
     public static <E> ArrayList<E> newArrayList(int size) {
         return new ArrayList<>(size);
     }
@@ -95,8 +128,8 @@ public abstract class ListUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> ArrayList<E> newArrayList() {
-        return new ArrayList<>();
+    public static <E> LinkedList<E> newLinkedList() {
+        return new LinkedList<>();
     }
 
     public static <E> LinkedList<E> newLinkedList(Enumeration<E> values) {
@@ -113,10 +146,6 @@ public abstract class ListUtils extends BaseUtils {
             list.add(iterator.next());
         }
         return list;
-    }
-
-    public static <E> LinkedList<E> newLinkedList() {
-        return new LinkedList<>();
     }
 
     public static <T> void forEach(List<T> values, BiConsumer<Integer, T> indexedElementConsumer) {

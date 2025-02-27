@@ -16,41 +16,40 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
-
-import java.util.Collections;
 import java.util.Enumeration;
+import java.util.NoSuchElementException;
 
 /**
- * The utilities class for Java {@link Enumeration}
+ * {@link Enumeration} based on array
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Enumeration
- * @see Collections#enumeration
  * @since 1.0.0
  */
-public abstract class EnumerationUtils extends BaseUtils {
+public class ArrayEnumeration<E> implements Enumeration<E> {
 
-    /**
-     * Create a {@link Enumeration} instance from the specified elements
-     *
-     * @param elements the specified elements
-     * @param <E>      the type of element
-     * @return non-null
-     */
-    public static <E> Enumeration<E> of(E... elements) {
-        return new ArrayEnumeration<>(elements);
+    private final E[] elements;
+
+    private final int size;
+
+    private int position;
+
+    public ArrayEnumeration(E[] elements) {
+        this.elements = elements;
+        this.size = elements.length;
+        this.position = 0;
     }
 
-    /**
-     * Create a {@link Enumeration} instance from the specified elements
-     *
-     * @param elements the specified elements
-     * @param <E>      the type of element
-     * @return non-null
-     */
-    public static <E> Enumeration<E> enumeration(E... elements) {
-        return of(elements);
+    @Override
+    public boolean hasMoreElements() {
+        return position < size;
     }
 
+    @Override
+    public E nextElement() {
+        if (!hasMoreElements()) {
+            throw new NoSuchElementException("No more elements exist");
+        }
+        return elements[position++];
+    }
 }
