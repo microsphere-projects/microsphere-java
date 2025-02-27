@@ -16,12 +16,12 @@
  */
 package io.microsphere.net;
 
-import java.lang.invoke.MethodHandle;
-import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.HashMap;
+import java.util.Map;
 
-import static io.microsphere.invoke.MethodHandleUtils.findStatic;
+import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
@@ -32,19 +32,23 @@ import static io.microsphere.invoke.MethodHandleUtils.findStatic;
  */
 public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory {
 
-    private static final MethodHandle methodHandle;
-
-    static {
-        methodHandle = findStatic(URL.class, "getURLStreamHandler", String.class);
-    }
+    private final Map<String, URLStreamHandler> handlersCache = new HashMap<>();
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        URLStreamHandler handler = null;
+        return handlersCache.computeIfAbsent(protocol, this::doCreateURLStreamHandler);
+    }
+
+    URLStreamHandler doCreateURLStreamHandler(String protocol) {
+        String name = DEFAULT_HANDLER_PACKAGE_PREFIX + "." + protocol + ".Handler";
         try {
-            handler = (URLStreamHandler) methodHandle.invokeExact(protocol);
-        } catch (Throwable e) {
+            @SuppressWarnings("deprecation")
+            Object o = Class.forName(name).newInstance();
+            return (URLStreamHandler) o;
+        } catch (Exception x) {
+            // For compatibility, all Exceptions are ignored.
+            // any number of exceptions can get thrown here
         }
-        return handler;
+        return null;
     }
 }
