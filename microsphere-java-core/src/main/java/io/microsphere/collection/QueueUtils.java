@@ -63,6 +63,10 @@ public abstract class QueueUtils extends BaseUtils {
         return new UnmodifiableQueue(queue);
     }
 
+    public static <E> Deque<E> unmodifiableDeque(Deque<E> deque) {
+        return new UnmodifiableDeque(deque);
+    }
+
     public static <E> Queue<E> singletonQueue(E element) {
         return new SingletonDeque<>(element);
     }
@@ -233,6 +237,9 @@ public abstract class QueueUtils extends BaseUtils {
 
         @Override
         public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
             return delegate.equals(o);
         }
 
@@ -363,21 +370,19 @@ public abstract class QueueUtils extends BaseUtils {
 
         private final E element;
 
-        private final Iterator<E> iterator;
 
         SingletonDeque(E element) {
             this.element = element;
-            this.iterator = singletonIterator(element);
         }
 
         @Override
         public Iterator<E> iterator() {
-            return iterator;
+            return singletonIterator(element);
         }
 
         @Override
         public Iterator<E> descendingIterator() {
-            return iterator;
+            return singletonIterator(element);
         }
 
         @Override

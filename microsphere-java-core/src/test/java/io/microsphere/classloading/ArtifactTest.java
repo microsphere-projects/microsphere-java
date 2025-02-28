@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.classloading.Artifact.create;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,7 +38,9 @@ public class ArtifactTest {
     public void test() {
         Artifact artifact = create("microsphere-core", "1.0.0");
 
+        assertTrue(artifact.equals(artifact));
         assertEquals(create("microsphere-core", "1.0.0"), artifact);
+        assertFalse(artifact.equals("test"));
 
         assertEquals("microsphere-core", artifact.getArtifactId());
         assertEquals("1.0.0", artifact.getVersion());
@@ -50,5 +53,7 @@ public class ArtifactTest {
         assertFalse(create("-", "-").matches(artifact));
         assertFalse(create("-", "*").matches(artifact));
         assertFalse(create("microsphere-core", "-").matches(artifact));
+
+        assertNotNull(artifact.toString());
     }
 }

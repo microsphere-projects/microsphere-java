@@ -22,14 +22,11 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.HashMap;
-import java.util.Map;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.findField;
-import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
@@ -52,14 +49,8 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
      */
     private static final Field defaultFactoryField = findField(URL.class, defaultFactoryFieldName); // JDK 9+
 
-    private final Map<String, URLStreamHandler> handlersCache = new HashMap<>();
-
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        return handlersCache.computeIfAbsent(protocol, this::doCreateURLStreamHandler);
-    }
-
-    URLStreamHandler doCreateURLStreamHandler(String protocol) {
         URLStreamHandler handler = createURLStreamHandlerFromDefaultFactory(protocol);
         if (handler == null) { // <= JDK 8 works
             String name = DEFAULT_HANDLER_PACKAGE_PREFIX + "." + protocol + ".Handler";
