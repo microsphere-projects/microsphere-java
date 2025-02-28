@@ -18,7 +18,12 @@ package io.microsphere.beans;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * {@link BeanProperty} Test
@@ -49,5 +54,10 @@ public class BeanPropertyTest {
         assertEquals(TEST_VALUE, beanProperty.getValue());
         assertEquals(BeanPropertyTest.class, beanProperty.getBeanClass());
         assertEquals(String.class, beanProperty.getDescriptor().getPropertyType());
+
+        Set<BeanProperty> beanProperties = new HashSet<>();
+        beanProperties.add(beanProperty);
+        assertFalse(beanProperties.add(beanProperty));
+        assertNotNull(beanProperty.toString());
     }
 }
