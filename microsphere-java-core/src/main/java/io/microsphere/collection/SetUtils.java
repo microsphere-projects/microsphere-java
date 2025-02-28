@@ -19,6 +19,7 @@ package io.microsphere.collection;
 import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -43,7 +44,7 @@ import static java.util.Collections.unmodifiableSet;
  */
 public abstract class SetUtils extends BaseUtils {
 
-    public static boolean isSet(Iterable<?> elements) {
+    public static boolean isSet(@Nullable Iterable<?> elements) {
         return elements instanceof Set;
     }
 
@@ -79,7 +80,16 @@ public abstract class SetUtils extends BaseUtils {
      */
     @Nonnull
     public static <E> Set<E> ofSet(Enumeration<E> elements) {
-        return ofSet(toIterable(elements));
+        if (elements == null || !elements.hasMoreElements()) {
+            return emptySet();
+        }
+
+        Set<E> set = newLinkedHashSet();
+        while (elements.hasMoreElements()) {
+            set.add(elements.nextElement());
+        }
+
+        return unmodifiableSet(set);
     }
 
     /**
@@ -90,6 +100,12 @@ public abstract class SetUtils extends BaseUtils {
      * @return read-only {@link Set}
      */
     public static <E> Set<E> ofSet(Iterable<E> elements) {
+        if (elements == null) {
+            return emptySet();
+        }
+        if (elements instanceof Collection) {
+            return ofSet((Collection) elements);
+        }
         return unmodifiableSet(newLinkedHashSet(elements));
     }
 
@@ -118,6 +134,10 @@ public abstract class SetUtils extends BaseUtils {
         return unmodifiableSet(elements);
     }
 
+    public static <T> Set<T> ofSet(Collection<T> elements) {
+        return ofSet(elements, null);
+    }
+
     public static <T> Set<T> ofSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
@@ -127,10 +147,6 @@ public abstract class SetUtils extends BaseUtils {
 
         int othersSize = length(others);
 
-        if (othersSize < 1) {
-            return ofSet(elements);
-        }
-
         int size = valuesSize + othersSize;
 
         Set<T> set = newLinkedHashSet(size, MIN_LOAD_FACTOR);
@@ -138,9 +154,10 @@ public abstract class SetUtils extends BaseUtils {
         set.addAll(elements);
 
         // add others
-        for (T other : others) {
-            set.add(other);
+        for (int i = 0; i < othersSize; i++) {
+            set.add(others[i]);
         }
+
         return unmodifiableSet(set);
     }
 
@@ -152,8 +169,17 @@ public abstract class SetUtils extends BaseUtils {
         return set;
     }
 
-    public static <E> Set<E> newHashSet(Collection<? extends E> elements) {
+    public static <E> Set<E> newHashSet(Collection<E> elements) {
         return new HashSet(elements);
+    }
+
+    public static <E> Set<E> newHashSet(E... elements) {
+        int length = length(elements);
+        Set<E> set = newHashSet(length);
+        for (int i = 0; i < length; i++) {
+            set.add(elements[i]);
+        }
+        return set;
     }
 
     public static <E> Set<E> newHashSet() {
@@ -181,8 +207,17 @@ public abstract class SetUtils extends BaseUtils {
         return set;
     }
 
-    public static <E> Set<E> newLinkedHashSet(Collection<? extends E> elements) {
+    public static <E> Set<E> newLinkedHashSet(Collection<E> elements) {
         return new LinkedHashSet(elements);
+    }
+
+    public static <E> Set<E> newLinkedHashSet(E... elements) {
+        int length = length(elements);
+        Set<E> set = newLinkedHashSet(length);
+        for (int i = 0; i < length; i++) {
+            set.add(elements[i]);
+        }
+        return set;
     }
 
     public static <E> Set<E> newLinkedHashSet() {
