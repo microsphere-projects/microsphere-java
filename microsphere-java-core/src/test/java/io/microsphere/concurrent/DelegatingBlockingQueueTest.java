@@ -3,16 +3,25 @@ package io.microsphere.concurrent;
 import io.microsphere.util.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Spliterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link DelegatingBlockingQueue} Test
@@ -68,7 +77,8 @@ public class DelegatingBlockingQueueTest {
         // test equals
         assertEquals(queue, queue);
         assertEquals(queue, delegate);
-        assertNotEquals(emptyQueue(), queue);
+        assertEquals(queue, new DelegatingBlockingQueue<>(delegate));
+        assertNotEquals(queue, emptyQueue());
 
         // test hashCode
         assertEquals(System.identityHashCode(delegate), queue.hashCode());
@@ -104,31 +114,45 @@ public class DelegatingBlockingQueueTest {
         assertEquals(Integer.MAX_VALUE, queue.remainingCapacity());
 
         // test drainTo
-        assertEquals(0, queue.drainTo(Arrays.asList(1)));
-        assertEquals(0, queue.drainTo(Arrays.asList(1, 2, 3, 4, 5), 3));
+        queue.offer(1);
+        queue.offer(2);
+        queue.offer(3);
+        List<Integer> values = newLinkedList();
+        assertEquals(3, queue.drainTo(values));
+        assertTrue(queue.isEmpty());
+        assertEquals(ofList(1, 2, 3), values);
+        values.clear();
+
+        queue.offer(1);
+        queue.offer(2);
+        queue.offer(3);
+        assertEquals(1, queue.drainTo(values, 1));
+        assertEquals(ofList(1), values);
 
         // test spliterator
-        queue.spliterator();
-    }
+        Spliterator<Integer> spliterator = queue.spliterator();
+        spliterator.tryAdvance(i -> assertEquals(2, i));
+        spliterator.forEachRemaining(i -> assertEquals(3, i));
+        queue.clear();
 
-    @Test
-    void stream() {
-    }
+        // test stream()
+        queue.offer(1);
+        Stream<Integer> stream = queue.stream();
+        stream.forEach(i -> assertEquals(1, i));
 
-    @Test
-    void parallelStream() {
-    }
+        // test parallelStream
+        Stream<Integer> parallelStream = queue.parallelStream();
+        parallelStream.forEach(i -> assertEquals(1, i));
 
+        // test forEach
+        queue.forEach(i -> assertEquals(1, i));
 
-    @Test
-    void drainTo() {
-    }
+        // test iterator
+        Iterator<Integer> iterator = queue.iterator();
+        assertTrue(iterator.hasNext());
+        assertEquals(1, iterator.next());
 
-    @Test
-    void testDrainTo() {
-    }
-
-    @Test
-    void forEach() {
+        // test toString
+        assertEquals(queue.toString(), delegate.toString());
     }
 }
