@@ -5,6 +5,8 @@ package io.microsphere.filter;
 
 import io.microsphere.util.ClassUtils;
 
+import static io.microsphere.util.StringUtils.isBlank;
+
 /**
  * {@link PackageNameClassNameFilter}
  *
@@ -33,6 +35,9 @@ public class PackageNameClassNameFilter implements Filter<String> {
 
     @Override
     public boolean accept(String className) {
+        if (isBlank(className)) {
+            return false;
+        }
         String packageName = ClassUtils.resolvePackageName(className);
         boolean accepted = packageName.equals(this.packageName);
         if (!accepted && includedSubPackages) {
