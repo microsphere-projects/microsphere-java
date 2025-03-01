@@ -18,6 +18,7 @@ package io.microsphere.convert.multiple;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
@@ -28,7 +29,10 @@ import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TransferQueue;
 
+import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.convert.multiple.MultiValueConverter.convertIfPossible;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link MultiValueConverter} Test
@@ -68,5 +72,11 @@ public class MultiValueConverterTest {
 
         converter = MultiValueConverter.find(String.class, TransferQueue.class);
         assertEquals(StringToTransferQueueConverter.class, converter.getClass());
+    }
+
+    @Test
+    public void testConvertIfPossible() {
+        assertEquals(ofSet(1, 2, 3), convertIfPossible("1,2,3", Set.class, Integer.class));
+        assertNull(convertIfPossible("1,2,3", Array.class, String.class));
     }
 }
