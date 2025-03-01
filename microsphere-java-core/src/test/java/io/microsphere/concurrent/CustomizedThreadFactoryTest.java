@@ -18,7 +18,6 @@ package io.microsphere.concurrent;
 
 import org.junit.jupiter.api.Test;
 
-import java.lang.management.ThreadMXBean;
 import java.util.concurrent.ThreadFactory;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.DEFAULT_DAEMON;

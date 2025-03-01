@@ -24,7 +24,6 @@ import static io.microsphere.convert.Converter.convertIfPossible;
 import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 

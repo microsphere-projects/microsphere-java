@@ -31,7 +31,6 @@ import java.util.concurrent.TransferQueue;
 
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.convert.multiple.MultiValueConverter.convertIfPossible;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
