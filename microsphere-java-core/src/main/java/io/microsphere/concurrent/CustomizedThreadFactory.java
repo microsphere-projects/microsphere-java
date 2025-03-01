@@ -27,6 +27,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CustomizedThreadFactory implements ThreadFactory {
 
+    /**
+     * The default value of {@link #daemon}
+     */
+    public static final boolean DEFAULT_DAEMON = true;
+
+    /**
+     * The default value of {@link #priority}
+     */
+    public static final int DEFAULT_PRIORITY = Thread.NORM_PRIORITY;
+
+    /**
+     * The default value of {@link #stackSize}
+     */
+    public static final long DEFAULT_STACK_SIZE = 0;
+
     private final ThreadGroup group;
 
     private final AtomicInteger threadNumber;
@@ -38,18 +53,6 @@ public class CustomizedThreadFactory implements ThreadFactory {
     private final int priority;
 
     private final long stackSize;
-
-    protected CustomizedThreadFactory(String namePrefix) {
-        this(namePrefix, false);
-    }
-
-    protected CustomizedThreadFactory(String namePrefix, boolean daemon) {
-        this(namePrefix, daemon, Thread.NORM_PRIORITY);
-    }
-
-    protected CustomizedThreadFactory(String namePrefix, boolean daemon, int priority) {
-        this(namePrefix, daemon, priority, 0);
-    }
 
     protected CustomizedThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
         SecurityManager s = System.getSecurityManager();
@@ -63,15 +66,15 @@ public class CustomizedThreadFactory implements ThreadFactory {
     }
 
     public static ThreadFactory newThreadFactory(String namePrefix) {
-        return new CustomizedThreadFactory(namePrefix);
+        return newThreadFactory(namePrefix, DEFAULT_DAEMON);
     }
 
     public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon) {
-        return new CustomizedThreadFactory(namePrefix, daemon);
+        return newThreadFactory(namePrefix, daemon, DEFAULT_PRIORITY);
     }
 
     public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon, int priority) {
-        return new CustomizedThreadFactory(namePrefix, daemon, priority);
+        return newThreadFactory(namePrefix, daemon, priority, DEFAULT_STACK_SIZE);
     }
 
     public static ThreadFactory newThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {

@@ -386,16 +386,6 @@ public abstract class QueueUtils extends BaseUtils {
         }
 
         @Override
-        public void addFirst(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void addLast(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
         public boolean removeFirstOccurrence(Object o) {
             return super.removeFirstOccurrence(o);
         }
