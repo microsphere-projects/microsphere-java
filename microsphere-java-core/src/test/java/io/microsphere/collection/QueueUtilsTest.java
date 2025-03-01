@@ -87,21 +87,50 @@ public class QueueUtilsTest {
 
     @Test
     public void testSingletonDeque() {
-        Deque<String> deque = singletonDeque("a");
-        assertSingletonIterator(deque.iterator());
-        assertSingletonIterator(deque.descendingIterator());
-        assertFalse(deque.offerFirst("b"));
-        assertFalse(deque.offerLast("b"));
+        QueueUtils.SingletonDeque<String> singletonDeque = (QueueUtils.SingletonDeque<String>) singletonDeque("a");
+        assertSingletonIterator(singletonDeque.iterator());
+        assertSingletonIterator(singletonDeque.descendingIterator());
 
-        assertThrows(UnsupportedOperationException.class, deque::pollFirst);
-        assertThrows(UnsupportedOperationException.class, deque::pollLast);
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.addFirst("a"));
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.addLast("a"));
+        assertThrows(UnsupportedOperationException.class, singletonDeque::removeFirst);
+        assertThrows(UnsupportedOperationException.class, singletonDeque::removeLast);
+        assertEquals("a", singletonDeque.peekFirst());
+        assertEquals("a", singletonDeque.peekLast());
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.removeFirstOccurrence("a"));
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.push("a"));
+        assertThrows(UnsupportedOperationException.class, singletonDeque::pop);
+        assertThrows(UnsupportedOperationException.class, singletonDeque::pop);
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.offer("a"));
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.offerFirst("a"));
+        assertThrows(UnsupportedOperationException.class, () -> singletonDeque.offerLast("a"));
+        assertThrows(UnsupportedOperationException.class, singletonDeque::poll);
+        assertEquals("a", singletonDeque.peek());
 
-        assertEquals("a", deque.getFirst());
-        assertEquals("a", deque.getLast());
+        assertThrows(UnsupportedOperationException.class, singletonDeque::pollFirst);
+        assertThrows(UnsupportedOperationException.class, singletonDeque::pollLast);
 
-        assertThrows(UnsupportedOperationException.class, () -> deque.removeLastOccurrence("b"));
+        assertEquals("a", singletonDeque.getFirst());
+        assertEquals("a", singletonDeque.getLast());
 
-        assertEquals(1, deque.size());
+
+        assertEquals(1, singletonDeque.size());
+    }
+
+    private void assertAbstractDeque(Deque<String> deque) {
+        assertThrows(UnsupportedOperationException.class, () -> deque.addFirst("a"));
+        assertThrows(UnsupportedOperationException.class, () -> deque.addLast("a"));
+        assertThrows(UnsupportedOperationException.class, deque::removeFirst);
+        assertThrows(UnsupportedOperationException.class, deque::removeLast);
+        assertThrows(UnsupportedOperationException.class, () -> deque.peekFirst());
+        assertThrows(UnsupportedOperationException.class, () -> deque.peekLast());
+        assertThrows(UnsupportedOperationException.class, () -> deque.removeFirstOccurrence("a"));
+        assertThrows(UnsupportedOperationException.class, () -> deque.push("a"));
+        assertThrows(UnsupportedOperationException.class, deque::pop);
+        assertThrows(UnsupportedOperationException.class, deque::pop);
+        assertThrows(UnsupportedOperationException.class, () -> deque.offer("a"));
+        assertThrows(UnsupportedOperationException.class, deque::poll);
+        assertThrows(UnsupportedOperationException.class, deque::peek);
     }
 
     private static void assertSingletonIterator(Iterator<String> it) {
