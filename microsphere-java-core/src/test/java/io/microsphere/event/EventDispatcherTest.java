@@ -73,6 +73,6 @@ public class EventDispatcherTest {
             }
         };
 
-        assertSame(DIRECT_EXECUTOR, defaultInstance.getExecutor());
+        assertSame(DIRECT_EXECUTOR, executor.getExecutor());
     }
 }
