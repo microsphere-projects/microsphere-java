@@ -59,6 +59,10 @@ public class DelegatingBlockingQueueTest {
         // test contains
         assertTrue(queue.contains(1));
 
+        // test containsAll
+        assertTrue(queue.containsAll(ofList(1)));
+        assertFalse(queue.containsAll(ofList(1, 2)));
+
         // test addAll
         assertTrue(queue.addAll(ofList(2, 3)));
 
