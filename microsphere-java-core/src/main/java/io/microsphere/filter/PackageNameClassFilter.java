@@ -31,6 +31,9 @@ public class PackageNameClassFilter implements ClassFilter {
 
     @Override
     public boolean accept(Class<?> filteredObject) {
+        if (filteredObject == null) {
+            return false;
+        }
         Package package_ = filteredObject.getPackage();
         String packageName = package_.getName();
         boolean accepted = packageName.equals(this.packageName);
