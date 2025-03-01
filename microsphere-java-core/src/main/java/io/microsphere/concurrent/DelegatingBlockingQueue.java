@@ -87,6 +87,16 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E> {
 
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof BlockingQueue)) {
+            return false;
+        }
+        if (o instanceof DelegatingBlockingQueue) {
+            DelegatingBlockingQueue that = (DelegatingBlockingQueue) o;
+            return this.delegate.equals(that.delegate);
+        }
         return delegate.equals(o);
     }
 
@@ -198,5 +208,10 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E> {
     @Override
     public void forEach(Consumer<? super E> action) {
         delegate.forEach(action);
+    }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
     }
 }
