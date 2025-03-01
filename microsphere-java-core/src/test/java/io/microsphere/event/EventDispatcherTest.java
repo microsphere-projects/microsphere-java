@@ -18,8 +18,12 @@ package io.microsphere.event;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link EventDispatcher} Test
@@ -40,5 +44,35 @@ public class EventDispatcherTest {
     public void testDefaultMethods() {
         assertEquals(DIRECT_EXECUTOR, defaultInstance.getExecutor());
         assertEquals(2, defaultInstance.getAllEventListeners().size());
+    }
+
+    @Test
+    public void testGetExecutor() throws Throwable {
+        assertSame(DIRECT_EXECUTOR, defaultInstance.getExecutor());
+
+
+        EventDispatcher executor = new EventDispatcher() {
+            @Override
+            public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
+
+            }
+
+            @Override
+            public void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
+
+            }
+
+            @Override
+            public List<EventListener<?>> getAllEventListeners() {
+                return emptyList();
+            }
+
+            @Override
+            public void dispatch(Event event) {
+
+            }
+        };
+
+        assertSame(DIRECT_EXECUTOR, defaultInstance.getExecutor());
     }
 }
