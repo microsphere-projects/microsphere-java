@@ -8,6 +8,7 @@ import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.io.scanner.SimpleJarEntryScanner;
+import io.microsphere.logging.Logger;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,10 +40,15 @@ import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
+import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -55,6 +61,7 @@ import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
+import static io.microsphere.util.StringUtils.substringBetween;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Arrays.asList;
@@ -73,6 +80,8 @@ import static java.util.Collections.unmodifiableSet;
  * @since 1.0.0
  */
 public abstract class ClassUtils extends BaseUtils {
+
+    private final static Logger logger = getLogger(ClassUtils.class);
 
     /**
      * Suffix for array class names: "[]"
@@ -479,12 +488,27 @@ public abstract class ClassUtils extends BaseUtils {
      */
     @Nonnull
     public static Set<String> findClassNamesInClassPath(String classPath, boolean recursive) {
-        File classesFileHolder = new File(classPath); // JarFile or Directory
+        String protocol = resolveProtocol(classPath);
+        String resolvedClassPath = null;
+        if (FILE_PROTOCOL.equals(protocol)) {
+            resolvedClassPath = substringBetween(classPath, protocol + COLON_CHAR, ARCHIVE_ENTRY_SEPARATOR);
+        } else {
+            resolvedClassPath = classPath;
+        }
+        File classesFileHolder = new File(resolvedClassPath); // File or Directory
+
         if (classesFileHolder.isDirectory()) { //Directory
             return findClassNamesInDirectory(classesFileHolder, recursive);
-        } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
-            return findClassNamesInJarFile(classesFileHolder, recursive);
+        } else if (classesFileHolder.isFile()) {
+            if (resolvedClassPath.endsWith(FileConstants.JAR_EXTENSION)) {        // JarFile
+                return findClassNamesInJarFile(classesFileHolder, recursive);
+            }
         }
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("No Class name was found in the classpath : '{}' , recursive : {}", classPath, recursive);
+        }
+
         return emptySet();
     }
 
