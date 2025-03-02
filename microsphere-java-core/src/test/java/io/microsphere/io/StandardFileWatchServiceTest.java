@@ -19,11 +19,10 @@ package io.microsphere.io;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.lang.function.ThrowableAction;
+import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 
 import java.io.File;
 import java.net.URL;
@@ -33,17 +32,17 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static org.junit.platform.commons.logging.LoggerFactory.getLogger;
 
 /**
  * {@link StandardFileWatchService} Test
@@ -53,14 +52,13 @@ import static org.junit.platform.commons.logging.LoggerFactory.getLogger;
  */
 public class StandardFileWatchServiceTest {
 
+    private final static Logger logger = getLogger(StandardFileWatchServiceTest.class);
+
     private static final String TEST_FILE_LOCATION = "test.txt";
 
     private StandardFileWatchService fileWatchService;
 
-
     private File sourceFile;
-
-    private File targetDir;
 
     private File targetFile;
 
@@ -79,7 +77,6 @@ public class StandardFileWatchServiceTest {
         targetDir.mkdirs();
 
         this.fileWatchService = fileWatchService;
-        this.targetDir = targetDir;
         this.targetFile = new File(targetDir, this.sourceFile.getName());
         this.countDownLatch = new CountDownLatch(3);
         this.executor = newSingleThreadExecutor();
@@ -108,8 +105,6 @@ public class StandardFileWatchServiceTest {
 
     private class MyFileChangedListener implements FileChangedListener {
 
-        private final Logger logger = getLogger(getClass());
-
         private CountDownLatch countDownLatch;
 
         public MyFileChangedListener(CountDownLatch countDownLatch) {
@@ -120,7 +115,7 @@ public class StandardFileWatchServiceTest {
         public void onFileCreated(FileChangedEvent event) {
             File targetFile = event.getFile();
             countDownLatch.countDown();
-            logger.info(event::toString);
+            logger.info(event.toString());
 
             // modified file
             async(() -> {
@@ -131,7 +126,7 @@ public class StandardFileWatchServiceTest {
         @Override
         public void onFileModified(FileChangedEvent event) {
             countDownLatch.countDown();
-            logger.info(event::toString);
+            logger.info(event.toString());
 
             // delete file
             async(() -> {
@@ -142,7 +137,7 @@ public class StandardFileWatchServiceTest {
         @Override
         public void onFileDeleted(FileChangedEvent event) {
             countDownLatch.countDown();
-            logger.info(event::toString);
+            logger.info(event.toString());
         }
     }
 
@@ -151,12 +146,16 @@ public class StandardFileWatchServiceTest {
             try {
                 task.execute();
             } catch (Throwable e) {
-                throw new RuntimeException(e);
+                wrap(e, Exception.class);
             }
+            return null;
         });
         try {
             future.get(100, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Failed to async(timeout : 100ms) : {}", e.getMessage(), e);
+            }
             future.cancel(true);
         }
     }
