@@ -274,7 +274,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @return true if type is a general class, false otherwise.
      */
     public static boolean isGeneralClass(Class<?> type) {
-        return isGeneralClass(type, null);
+        return isGeneralClass(type, Boolean.FALSE);
     }
 
     /**
@@ -294,12 +294,12 @@ public abstract class ClassUtils extends BaseUtils {
 
         int mod = type.getModifiers();
 
-        if (isInterface(mod)
-                || isAnnotation(mod)
+        if (isAnnotation(mod)
                 || isEnum(mod)
+                || isInterface(mod)
                 || isSynthetic(mod)
-                || type.isPrimitive()
-                || type.isArray()) {
+                || isPrimitive(type)
+                || isArray(type)) {
             return false;
         }
 
@@ -311,11 +311,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     public static boolean isTopLevelClass(Class<?> type) {
-        if (type == null) {
-            return false;
-        }
-
-        return !type.isLocalClass() && !type.isMemberClass();
+        return type != null && !type.isLocalClass() && !type.isMemberClass();
     }
 
 
@@ -347,34 +343,6 @@ public abstract class ClassUtils extends BaseUtils {
         return SIMPLE_TYPES.contains(type);
     }
 
-    public static Object convertPrimitive(Class<?> type, String value) {
-        if (value == null) {
-            return null;
-        } else if (type == char.class || type == Character.class) {
-            return value.length() > 0 ? value.charAt(0) : '\0';
-        } else if (type == boolean.class || type == Boolean.class) {
-            return Boolean.valueOf(value);
-        }
-        try {
-            if (type == byte.class || type == Byte.class) {
-                return Byte.valueOf(value);
-            } else if (type == short.class || type == Short.class) {
-                return Short.valueOf(value);
-            } else if (type == int.class || type == Integer.class) {
-                return Integer.valueOf(value);
-            } else if (type == long.class || type == Long.class) {
-                return Long.valueOf(value);
-            } else if (type == float.class || type == Float.class) {
-                return Float.valueOf(value);
-            } else if (type == double.class || type == Double.class) {
-                return Double.valueOf(value);
-            }
-        } catch (NumberFormatException e) {
-            return null;
-        }
-        return value;
-    }
-
     /**
      * Resolve the primitive class from the specified type
      *
@@ -402,7 +370,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     public static boolean isWrapperType(Class<?> type) {
-        return WRAPPER_PRIMITIVE_TYPE_MAP.containsKey(type);
+        return PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(type);
     }
 
     public static boolean arrayTypeEquals(Class<?> oneArrayType, Class<?> anotherArrayType) {
@@ -505,9 +473,6 @@ public abstract class ClassUtils extends BaseUtils {
             }
         }
 
-        if (logger.isTraceEnabled()) {
-            logger.trace("No Class name was found in the classpath : '{}' , recursive : {}", classPath, recursive);
-        }
 
         return emptySet();
     }
@@ -527,6 +492,10 @@ public abstract class ClassUtils extends BaseUtils {
             return findClassNamesInArchiveDirectory(archiveFile, recursive);
         } else if (archiveFile.isFile() && archiveFile.getName().endsWith(JAR)) { //JarFile
             return findClassNamesInArchiveFile(archiveFile, recursive);
+        }
+
+        if (logger.isTraceEnabled()) {
+            logger.trace("No Class name was found in the archiveFile : '{}' , recursive : {}", archiveFile, recursive);
         }
         return emptySet();
     }
