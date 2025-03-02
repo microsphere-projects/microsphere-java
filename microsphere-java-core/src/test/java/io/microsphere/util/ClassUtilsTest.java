@@ -9,16 +9,23 @@ import org.junit.jupiter.api.Test;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.AbstractCollection;
+import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
+import static io.microsphere.util.ClassUtils.isFinal;
+import static io.microsphere.util.ClassUtils.isGeneralClass;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isTopLevelClass;
+import static io.microsphere.util.ClassUtils.isWrapperType;
+import static io.microsphere.util.ClassUtils.resolvePrimitiveClassName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,6 +45,8 @@ public class ClassUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsConcreteClass() {
+        assertFalse(isConcreteClass(null));
+        assertTrue(isConcreteClass(Object.class));
         assertTrue(isConcreteClass(Object.class));
         assertTrue(isConcreteClass(String.class));
         assertTrue(concreteClassCache.containsKey(Object.class));
@@ -49,11 +58,52 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertFalse(isConcreteClass(int.class));
         assertFalse(isConcreteClass(int[].class));
         assertFalse(isConcreteClass(Object[].class));
+    }
 
+
+    @Test
+    public void testIsAbstractClass() {
+        // test null
+        assertFalse(isAbstractClass(null));
+        // test interface
+        assertFalse(isAbstractClass(Collection.class));
+        // test annotation
+        assertFalse(isAbstractClass(Override.class));
+        // test enum
+        assertFalse(isAbstractClass(TimeUnit.class));
+        // test primitive
+        assertFalse(isAbstractClass(int.class));
+        // test array
+        assertFalse(isAbstractClass(Object[].class));
+        // test abstract class
+        assertTrue(isAbstractClass(AbstractCollection.class));
+        // test concrete class
+        assertFalse(isAbstractClass(Object.class));
+    }
+
+    @Test
+    public void testIsGeneralClass() {
+        // test null
+        assertFalse(isGeneralClass(null));
+        // test interface
+        assertFalse(isGeneralClass(Collection.class));
+        // test annotation
+        assertFalse(isGeneralClass(Override.class));
+        // test enum
+        assertFalse(isGeneralClass(TimeUnit.class));
+        // test primitive
+        assertFalse(isGeneralClass(int.class));
+        // test array
+        assertFalse(isGeneralClass(Object[].class));
+        // test abstract class
+        assertFalse(isGeneralClass(AbstractCollection.class));
+        // test concrete class
+        assertTrue(isGeneralClass(Object.class));
     }
 
     @Test
     public void testIsTopLevelClass() {
+        assertFalse(isTopLevelClass(null));
         assertTrue(isTopLevelClass(Object.class));
         assertTrue(isTopLevelClass(String.class));
         assertFalse(isTopLevelClass(Map.Entry.class));
@@ -121,6 +171,14 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    public void testIsFinal() {
+        assertTrue(isFinal(Boolean.TYPE));
+        assertTrue(isFinal(Boolean.class));
+        assertFalse(isFinal(null));
+        assertFalse(isFinal(Object.class));
+    }
+
+    @Test
     public void testResolvePrimitiveType() {
         assertEquals(Boolean.TYPE, resolvePrimitiveType(Boolean.TYPE));
         assertEquals(Boolean.TYPE, resolvePrimitiveType(Boolean.class));
@@ -175,7 +233,56 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    public void testIsWrapperType() {
+        assertFalse(isWrapperType(Boolean.TYPE));
+        assertTrue(isWrapperType(Boolean.class));
+
+        assertFalse(isWrapperType(Byte.TYPE));
+        assertTrue(isWrapperType(Byte.class));
+
+        assertFalse(isWrapperType(Character.TYPE));
+        assertTrue(isWrapperType(Character.class));
+
+        assertFalse(isWrapperType(Short.TYPE));
+        assertTrue(isWrapperType(Short.class));
+
+        assertFalse(isWrapperType(Integer.TYPE));
+        assertTrue(isWrapperType(Integer.class));
+
+        assertFalse(isWrapperType(Long.TYPE));
+        assertTrue(isWrapperType(Long.class));
+
+        assertFalse(isWrapperType(Float.TYPE));
+        assertTrue(isWrapperType(Float.class));
+
+        assertFalse(isWrapperType(Double.TYPE));
+        assertTrue(isWrapperType(Double.class));
+
+        assertFalse(isWrapperType(null));
+    }
+
+    @Test
+    public void testResolvePrimitiveClassName() {
+        assertNull(resolvePrimitiveClassName(null));
+        assertNull(resolvePrimitiveClassName(""));
+        assertNull(resolvePrimitiveClassName(" "));
+        assertNull(resolvePrimitiveClassName("java.lang.String"));
+        assertEquals(boolean.class, resolvePrimitiveClassName("boolean"));
+        assertEquals(byte.class, resolvePrimitiveClassName("byte"));
+        assertEquals(char.class, resolvePrimitiveClassName("char"));
+        assertEquals(short.class, resolvePrimitiveClassName("short"));
+        assertEquals(int.class, resolvePrimitiveClassName("int"));
+        assertEquals(long.class, resolvePrimitiveClassName("long"));
+        assertEquals(float.class, resolvePrimitiveClassName("float"));
+        assertEquals(double.class, resolvePrimitiveClassName("double"));
+    }
+
+    @Test
     public void testArrayTypeEquals() {
+        assertFalse(arrayTypeEquals(null, null));
+        assertFalse(arrayTypeEquals(Object.class, Object.class));
+        assertFalse(arrayTypeEquals(Object[].class, Object.class));
+
         Class<?> oneArrayType = int[].class;
         Class<?> anotherArrayType = int[].class;
 
