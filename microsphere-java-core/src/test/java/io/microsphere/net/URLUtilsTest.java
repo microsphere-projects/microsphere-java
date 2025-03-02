@@ -26,12 +26,14 @@ import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
+import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -208,5 +210,20 @@ public class URLUtilsTest {
         assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
 
     }
+
+    @Test
+    public void testResolveProtocol() {
+        assertNull(resolveProtocol(null));
+        assertNull(resolveProtocol(""));
+        assertNull(resolveProtocol(" "));
+        assertNull(resolveProtocol(":"));
+        assertNull(resolveProtocol(" :"));
+        assertNull(resolveProtocol(" a:"));
+        assertNull(resolveProtocol("a :"));
+        assertEquals("ftp", resolveProtocol("ftp://..."));
+        assertEquals("http", resolveProtocol("http://..."));
+
+    }
+
 
 }

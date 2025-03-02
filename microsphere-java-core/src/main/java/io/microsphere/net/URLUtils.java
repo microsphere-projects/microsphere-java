@@ -4,6 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.collection.MapUtils;
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.ClassPathUtils;
 import io.microsphere.util.jar.JarUtils;
@@ -42,6 +43,7 @@ import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
 import static io.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.StringUtils.EMPTY;
@@ -52,6 +54,7 @@ import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static java.lang.Character.isWhitespace;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -69,6 +72,8 @@ import static java.util.Collections.unmodifiableMap;
  * @since 1.0.0
  */
 public abstract class URLUtils extends BaseUtils {
+
+    private static final Logger logger = getLogger(URLUtils.class);
 
     /**
      * The default encoding : "UTF-8"
@@ -600,6 +605,31 @@ public abstract class URLUtils extends BaseUtils {
             subProtocols = Arrays.asList(values);
         }
         return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
+    }
+
+    /**
+     * Resolve the protocol from the specified {@link URL} string
+     *
+     * @param url the {@link URL} string
+     * @return <code>null</code> if can't be resolved
+     */
+    public static String resolveProtocol(String url) {
+        if (isBlank(url)) {
+            return null;
+        }
+        int indexOfColon = url.indexOf(COLON_CHAR);
+        if (indexOfColon < 1) { // NOT FOUND
+            return null;
+        }
+        for (int i = 0; i <= indexOfColon; i++) {
+            if (isWhitespace(url.charAt(i))) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
+                }
+                return null;
+            }
+        }
+        return url.substring(0, indexOfColon);
     }
 
     private static String findSubProtocolsString(String url) {

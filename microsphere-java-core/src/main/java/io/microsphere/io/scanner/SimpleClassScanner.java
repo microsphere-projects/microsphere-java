@@ -134,15 +134,7 @@ public class SimpleClassScanner {
     public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,
                               Predicate<Class<?>>... classFilters) {
         File archiveFile = resolveArchiveFile(resourceInArchive);
-        Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
-        Set<Class<?>> classesSet = new LinkedHashSet<>();
-        for (String className : classNames) {
-            Class<?> class_ = requiredLoad ? loadClass(className, classLoader) : findLoadedClass(classLoader, className);
-            if (class_ != null) {
-                classesSet.add(class_);
-            }
-        }
-        return filterAll(classesSet, classFilters);
+        return scan(classLoader, archiveFile, requiredLoad, classFilters);
     }
 
     public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
