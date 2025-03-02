@@ -7,17 +7,22 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.ClassDataRepository;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.findClassNamesInDirectory;
+import static io.microsphere.util.ClassUtils.findClassNamesInJarFile;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
@@ -352,13 +357,26 @@ public class ClassUtilsTest extends AbstractTestCase {
 
     @Test
     public void testFindClassNamesInDirectory() {
-        assertSame(emptySet(), findClassNamesInDirectory(new File("not-exists"), true));
+        assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInDirectory);
+    }
 
-        assertSame(emptySet(), findClassNamesInDirectory(new File(SystemUtils.USER_DIR), false));
+    @Test
+    public void testFindClassNamesInJarFile() {
+        assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInJarFile);
+    }
 
+    private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
+        // Not exists
+        assertSame(emptySet(), findClassNamesFunction.apply(new File("not-exists"), true));
+
+        // Not Found
+        assertSame(emptySet(), findClassNamesFunction.apply(new File(SystemUtils.USER_DIR), false));
+
+        // Found
         ClassDataRepository classDataRepository = ClassDataRepository.INSTANCE;
-        String path = classDataRepository.findClassPath(ClassUtilsTest.class);
-        assertFalse(findClassNamesInDirectory(new File(path), true).isEmpty());
+        String path = classDataRepository.findClassPath(targetClassInClassPath);
+        assertFalse(findClassNamesFunction.apply(new File(path), true).isEmpty());
     }
 
 }
+
