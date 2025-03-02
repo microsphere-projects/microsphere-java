@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class IOFileFilterTest {
-    
+
     @Test
     public void tes() {
         File file = new File("test");
