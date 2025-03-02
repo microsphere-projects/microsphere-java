@@ -36,6 +36,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.MapUtils.ofMap;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
@@ -481,18 +482,21 @@ public abstract class ClassUtils extends BaseUtils {
             return emptySet();
         }
 
+        Set<String> classNames = emptySet();
         if (classPath.isDirectory()) { // Directory
-            return findClassNamesInDirectory(classPath, recursive);
+            classNames = findClassNamesInDirectory(classPath, recursive);
         } else if (classPath.isFile()) { // File
             if (classPath.getName().endsWith(JAR)) { // JarFile
-                return findClassNamesInJarFile(classPath, recursive);
+                classNames = findClassNamesInJarFile(classPath, recursive);
             }
         }
 
-        if (logger.isTraceEnabled()) {
-            logger.trace("No Class name was found in the classPath : '{}' , recursive : {}", classPath, recursive);
+        if (CollectionUtils.isEmpty(classNames)) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("No Class was found in the classPath : '{}' , recursive : {}", classPath, recursive);
+            }
         }
-        return emptySet();
+        return classNames;
     }
 
     /**
@@ -522,25 +526,38 @@ public abstract class ClassUtils extends BaseUtils {
         return unmodifiableSet(classNames);
     }
 
+    /**
+     * Find all class names in jar file
+     *
+     * @param jarFile   jar file
+     * @param recursive is recursive on sub directories
+     * @return all class names in jar file
+     */
     public static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
         if (jarFile == null || !jarFile.exists()) {
             return emptySet();
         }
-        Set<String> classNames = new LinkedHashSet();
+        Set<String> classNames;
         try {
             JarFile jarFile_ = new JarFile(jarFile);
             Set<JarEntry> jarEntries = SimpleJarEntryScanner.INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-
-            for (JarEntry jarEntry : jarEntries) {
-                String jarEntryName = jarEntry.getName();
-                String className = resolveClassName(jarEntryName);
-                if (isNotBlank(className)) {
-                    classNames.add(className);
+            if (CollectionUtils.isEmpty(jarEntries)) {
+                classNames = emptySet();
+            } else {
+                classNames = newLinkedHashSet();
+                for (JarEntry jarEntry : jarEntries) {
+                    String jarEntryName = jarEntry.getName();
+                    String className = resolveClassName(jarEntryName);
+                    if (isNotBlank(className)) {
+                        classNames.add(className);
+                    }
                 }
             }
         } catch (Exception e) {
+            classNames = emptySet();
             if (logger.isTraceEnabled()) {
-                logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} , recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", e);
+                logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} ," +
+                        " recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", jarFile, recursive, e);
             }
         }
         return classNames;
