@@ -19,14 +19,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.findClassNamesInDirectory;
 import static io.microsphere.util.ClassUtils.findClassNamesInJarFile;
+import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.ClassUtils.isFinal;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
@@ -37,6 +41,7 @@ import static io.microsphere.util.ClassUtils.resolvePrimitiveClassName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static java.util.Collections.emptySet;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -365,7 +370,34 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInJarFile);
     }
 
+    @Test
+    public void testGetAllInterfaces() {
+        assertSame(emptySet(), getAllInterfaces(null));
+        assertSame(emptySet(), getAllInterfaces(int.class));
+    }
+
+    @Test
+    public void testIsAssignableFrom() {
+        assertFalse(isAssignableFrom(null, null));
+        assertFalse(isAssignableFrom(String.class, null));
+        assertFalse(isAssignableFrom(null, String.class));
+        assertTrue(isAssignableFrom(Object.class, String.class));
+        assertFalse(isAssignableFrom(String.class, Object.class));
+    }
+
+    @Test
+    public void testGetTypes() {
+        assertSame(EMPTY_CLASS_ARRAY, getTypes(null));
+        assertSame(EMPTY_CLASS_ARRAY, getTypes());
+        assertSame(EMPTY_CLASS_ARRAY, getTypes(new Object[0]));
+
+        assertArrayEquals(new Object[]{String.class, Integer.class}, getTypes("", Integer.valueOf((1))));
+    }
+
     private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
+        // Null
+        assertSame(emptySet(), findClassNamesFunction.apply(null, true));
+
         // Not exists
         assertSame(emptySet(), findClassNamesFunction.apply(new File("not-exists"), true));
 
