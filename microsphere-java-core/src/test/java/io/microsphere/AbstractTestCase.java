@@ -71,7 +71,7 @@ public abstract class AbstractTestCase {
 
     protected final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
 
-    private final Logger logger = getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     public void log(Object object) {
         if (logger.isTraceEnabled()) {
