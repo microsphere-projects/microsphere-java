@@ -40,6 +40,7 @@ import static io.microsphere.util.ClassUtils.isGeneralClass;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isTopLevelClass;
 import static io.microsphere.util.ClassUtils.isWrapperType;
+import static io.microsphere.util.ClassUtils.newInstance;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
@@ -49,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -466,6 +468,12 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertFalse(isDerived(Object.class, String.class));
         assertTrue(isDerived(String.class, Object.class));
         assertTrue(isDerived(String.class, Object.class, Serializable.class, CharSequence.class));
+    }
+
+    @Test
+    public void testNewInstance() {
+        assertEquals("test", newInstance(String.class, "test"));
+        assertThrows(IllegalArgumentException.class, () -> newInstance(String.class, 1));
     }
 
     private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
