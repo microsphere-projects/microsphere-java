@@ -25,7 +25,6 @@ import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
-import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -385,6 +384,7 @@ public class ClassUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetTopComponentType() {
+        assertNull(getTopComponentType((Object) null));
         assertNull(getTopComponentType(null));
         assertNull(getTopComponentType(int.class));
         assertEquals(int.class, getTopComponentType(int[].class));
