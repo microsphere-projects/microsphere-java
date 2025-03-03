@@ -71,13 +71,11 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testFields() throws Exception {
 
-
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
-//        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
         Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
         for (ClassLoader classLoader : classLoaders) {
-            log(String.format("ClassLoader : %s", classLoader));
+            log("ClassLoader : {}", classLoader);
             for (Field field : allFields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(true);
