@@ -680,16 +680,6 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * Is generic class or not?
-     *
-     * @param type the target type
-     * @return if the target type is not null or <code>void</code> or Void.class, return <code>true</code>, or false
-     */
-    public static boolean isGenericClass(Class<?> type) {
-        return type != null && !void.class.equals(type) && !Void.class.equals(type);
-    }
-
-    /**
      * Resolve the types of the specified values
      *
      * @param values the values
