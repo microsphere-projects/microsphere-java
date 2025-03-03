@@ -11,6 +11,8 @@ import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.SecureClassLoader;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -27,6 +29,7 @@ import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPaths;
+import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClasses;
 import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClassesMap;
 import static io.microsphere.util.ClassLoaderUtils.getCallerClassLoader;
@@ -41,10 +44,12 @@ import static io.microsphere.util.ClassLoaderUtils.getResources;
 import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.getUnloadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static io.microsphere.util.ClassLoaderUtils.isVerbose;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_12;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -184,7 +189,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             assertFalse(classesSet.isEmpty());
 
 
-            classesSet = getLoadedClasses(ClassLoader.getSystemClassLoader());
+            classesSet = getLoadedClasses(getSystemClassLoader());
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
             info(classesSet);
@@ -199,7 +204,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             assertFalse(classesSet.isEmpty());
 
 
-            classesSet = getAllLoadedClasses(ClassLoader.getSystemClassLoader());
+            classesSet = getAllLoadedClasses(getSystemClassLoader());
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
             info(classesSet);
@@ -321,7 +326,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         currentThread.setContextClassLoader(null);
         assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
 
-        currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
+        currentThread.setContextClassLoader(getSystemClassLoader().getParent());
 
         // recovery
         currentThread.setContextClassLoader(classLoader);
@@ -335,6 +340,8 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testRemoveClassPathURL() {
+        assertFalse(removeClassPathURL(new TestClassLoader(), null));
+
         ClassLoader classLoader = getDefaultClassLoader();
         Set<URL> urls = findAllClassPathURLs(classLoader);
         for (URL url : urls) {
@@ -345,6 +352,48 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         }
         Set<URL> urls2 = findAllClassPathURLs(classLoader);
         assertEquals(urls.size(), urls2.size());
+    }
+
+    @Test
+    public void testIsPresent() {
+        assertFalse(isPresent(null));
+        assertFalse(isPresent(""));
+        assertFalse(isPresent(" "));
+        assertFalse(isPresent(null, null));
+        assertFalse(isPresent("", null));
+        assertFalse(isPresent(" ", null));
+        assertFalse(isPresent("NotFound"));
+        assertFalse(isPresent("NotFound", getDefaultClassLoader()));
+        assertTrue(isPresent("java.lang.String"));
+        assertTrue(isPresent("java.lang.String", null));
+        assertTrue(isPresent("java.lang.String", getSystemClassLoader()));
+        assertTrue(isPresent("java.lang.String", ClassLoaderUtils.class.getClassLoader()));
+    }
+
+    @Test
+    public void testFindURLClassLoader() {
+        URLClassLoader parent = URLClassLoader.newInstance(new URL[0]);
+        assertFindURLClassLoader(parent, parent);
+
+        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[0], getDefaultClassLoader());
+        assertFindURLClassLoader(classLoader, classLoader);
+
+        SecureClassLoader secureClassLoader = new SecureClassLoader() {
+            @Override
+            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                return super.loadClass(name, resolve);
+            }
+        };
+        assertFindURLClassLoader(secureClassLoader, null);
+
+    }
+
+    private void assertFindURLClassLoader(ClassLoader classLoader, ClassLoader expectedClassLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        assertSame(expectedClassLoader, urlClassLoader);
+    }
+
+    private static class TestClassLoader extends ClassLoader {
     }
 
 
