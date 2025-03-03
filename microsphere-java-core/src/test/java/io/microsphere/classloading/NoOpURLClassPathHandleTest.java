@@ -19,6 +19,7 @@ package io.microsphere.classloading;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
+import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -40,6 +41,6 @@ public class NoOpURLClassPathHandleTest {
         assertTrue(handle.supports());
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
         assertFalse(handle.removeURL(null, null));
-        assertEquals(MIN_PRIORITY, handle.getPriority());
+        assertEquals(NORMAL_PRIORITY, handle.getPriority());
     }
 }
