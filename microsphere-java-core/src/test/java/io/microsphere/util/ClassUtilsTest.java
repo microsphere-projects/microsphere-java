@@ -34,6 +34,7 @@ import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
+import static io.microsphere.util.ClassUtils.isDerived;
 import static io.microsphere.util.ClassUtils.isFinal;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
 import static io.microsphere.util.ClassUtils.isPrimitive;
@@ -440,12 +441,31 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertEquals(2, allClasses.size());
         assertTrue(allClasses.contains(Object.class));
         assertTrue(allClasses.contains(String.class));
-        
+
         allClasses = getAllClasses(TreeMap.class);
         assertEquals(3, allClasses.size());
         assertTrue(allClasses.contains(Object.class));
         assertTrue(allClasses.contains(AbstractMap.class));
         assertTrue(allClasses.contains(TreeMap.class));
+
+        allClasses = getAllClasses(TreeMap.class, klass -> isAssignableFrom(Map.class, klass));
+        assertEquals(2, allClasses.size());
+        assertTrue(allClasses.contains(AbstractMap.class));
+        assertTrue(allClasses.contains(TreeMap.class));
+
+        allClasses = getAllClasses(TreeMap.class, false, klass -> isAssignableFrom(Map.class, klass));
+        assertEquals(1, allClasses.size());
+        assertTrue(allClasses.contains(AbstractMap.class));
+    }
+
+    @Test
+    public void testIsDerived() {
+        assertFalse(isDerived(null, null));
+        assertFalse(isDerived(String.class, null));
+        assertFalse(isDerived(null, String.class));
+        assertFalse(isDerived(Object.class, String.class));
+        assertTrue(isDerived(String.class, Object.class));
+        assertTrue(isDerived(String.class, Object.class, Serializable.class, CharSequence.class));
     }
 
     private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
