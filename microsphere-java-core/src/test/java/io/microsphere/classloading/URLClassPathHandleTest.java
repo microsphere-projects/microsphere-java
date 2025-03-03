@@ -19,11 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see URLClassPathHandle
  * @since 1.0.0
  */
-public class URLClassPathHandleTest {
+public class URLClassPathHandleTest extends BaseURLClassPathHandleTest {
 
-    @Test
-    public void test() {
-        URLClassPathHandle handle = new URLClassPathHandle() {
+    @Override
+    protected URLClassPathHandle createHandle() {
+        return new URLClassPathHandle() {
             @Override
             public boolean supports() {
                 return false;
@@ -34,13 +34,25 @@ public class URLClassPathHandleTest {
                 return false;
             }
         };
+    }
 
+    @Override
+    @Test
+    public void testSupports() {
         assertFalse(handle.supports());
+    }
+
+    @Override
+    @Test
+    public void testGetURLs() {
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
         URL[] urls = new URL[0];
         assertArrayEquals(urls, handle.getURLs(new URLClassLoader(urls)));
-        assertFalse(handle.removeURL(null, null));
-        assertEquals(MIN_PRIORITY, handle.getPriority());
     }
 
+    @Override
+    @Test
+    public void testGetPriority() {
+        assertEquals(MIN_PRIORITY, handle.getPriority());
+    }
 }
