@@ -21,9 +21,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
-import java.util.Set;
 
-import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -48,15 +46,13 @@ public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
 
     public abstract void testSupports();
 
-    public abstract void testGetURLs();
-
     public abstract void testGetPriority();
 
     @Test
-    public void testRemoveURL() {
+    public void test() {
         ClassLoader classLoader = currentThread().getContextClassLoader();
         if (handle.supports()) {
-            Set<URL> urls = findAllClassPathURLs(classLoader);
+            URL[] urls = handle.getURLs(classLoader);
             for (URL url : urls) {
                 String path = url.getPath();
                 if (path.contains("jmh-generator-annprocess")) {
