@@ -34,9 +34,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class ClassicURLClassPathHandleTest {
+public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTest {
 
-    private final static ClassicURLClassPathHandle handle = new ClassicURLClassPathHandle();
+    @Override
+    protected AbstractURLClassPathHandle createHandle() {
+        return new ClassicURLClassPathHandle();
+    }
 
     @Test
     public void testSupports() {
@@ -54,7 +57,7 @@ public class ClassicURLClassPathHandleTest {
     }
 
     @Test
-    public void testRemoveURL() {
+    public void test() {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (handle.supports()) {
             Set<URL> urls = findAllClassPathURLs(classLoader);
