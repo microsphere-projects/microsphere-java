@@ -408,6 +408,7 @@ public class ClassUtilsTest extends AbstractTestCase {
     @Test
     public void testFindClassNamesInClassPath() {
         assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInClassPath);
+        assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInClassPath);
     }
 
     @Test
