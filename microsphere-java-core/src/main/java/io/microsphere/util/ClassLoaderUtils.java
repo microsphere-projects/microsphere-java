@@ -6,7 +6,6 @@ package io.microsphere.util;
 import io.microsphere.classloading.URLClassPathHandle;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.logging.Logger;
-import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
 
 import javax.annotation.Nonnull;
@@ -35,11 +34,14 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
+import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
@@ -695,7 +697,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         DEFAULT {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
                 return true;
             }
 
@@ -707,29 +709,43 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         }, CLASS {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
                 return endsWith(name, CLASS_EXTENSION);
             }
 
             @Override
             public String normalize(String name) {
-                String className = replace(name, CLASS_EXTENSION, EMPTY);
-                return replace(className, DOT, SLASH) + CLASS_EXTENSION;
+                if (name == null) {
+                    return null;
+                }
+                int index = name.lastIndexOf(CLASS_EXTENSION);
+                String className = index > -1 ? name.substring(0, index) : name;
+                className = className.replace(DOT_CHAR, SLASH_CHAR);
+                return className + CLASS_EXTENSION;
             }
 
 
         }, PACKAGE {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
+                if (name == null) {
+                    return false;
+                }
                 //TODO: use regexp to match more precise
-                return !CLASS.supported(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
+                return !CLASS.supports(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
             }
 
             @Override
             String normalize(String name) {
-                return replace(name, DOT, SLASH) + SLASH;
+                if (name == null) {
+                    return null;
+                }
+                String packageName = name.replace(DOT_CHAR, SLASH_CHAR);
+                if (!packageName.endsWith(SLASH)) {
+                    return packageName + SLASH;
+                }
+                return packageName;
             }
-
 
         };
 
@@ -740,10 +756,13 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          * @return a newly resolved resource name
          */
         public String resolve(String name) {
-            String normalizedName = supported(name) ? normalize(name) : null;
-            if (normalizedName == null) return normalizedName;
+            if (isBlank(name) || !supports(name)) {
+                return null;
+            }
 
-            normalizedName = URLUtils.normalizePath(normalizedName);
+            String normalizedName = normalize(name);
+
+            normalizedName = normalizePath(normalizedName);
 
             // Remove the character "/" in the start of String if found
             while (normalizedName.startsWith("/")) {
@@ -759,7 +778,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          * @param name resource name
          * @return If supported , return <code>true</code> , or return <code>false</code>
          */
-        abstract boolean supported(String name);
+        abstract boolean supports(String name);
 
         /**
          * Normalizes resource name
