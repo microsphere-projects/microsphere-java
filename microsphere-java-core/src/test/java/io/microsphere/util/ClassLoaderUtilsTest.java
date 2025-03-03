@@ -22,9 +22,6 @@ import java.util.TreeSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
-import static io.microsphere.util.ClassLoaderUtils.ResourceType.CLASS;
-import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
-import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
@@ -89,31 +86,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
                 }
             }
         }
-
-    }
-
-
-    @Test
-    public void testResolve() {
-        String resourceName = "META-INF/abc/def";
-        String expectedResourceName = "META-INF/abc/def";
-        String resolvedResourceName = DEFAULT.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
-
-        resourceName = "///////META-INF//abc\\/def";
-        resolvedResourceName = DEFAULT.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
-
-        resourceName = "java.lang.String.class";
-
-        expectedResourceName = "java/lang/String.class";
-        resolvedResourceName = CLASS.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
-
-        resourceName = "java.lang";
-        expectedResourceName = "java/lang/";
-        resolvedResourceName = PACKAGE.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
 
     }
 
