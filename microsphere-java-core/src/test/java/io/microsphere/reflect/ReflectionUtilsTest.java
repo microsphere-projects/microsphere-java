@@ -119,35 +119,6 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetCallerClassNamePerformance() {
-        if (isSupportedSunReflectReflection()) {
-            for (int i = 0; i < 6; i++) {
-                int times = (int) Math.pow(10 + .0, i + .0);
-                testGetCallerClassNameInSunJVMPerformance(times);
-                testGetCallerClassNameInGeneralJVMPerformance(times);
-            }
-        }
-    }
-
-    private void testGetCallerClassNameInSunJVMPerformance(int times) {
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < times; i++) {
-            getCallerClassNameInSunJVM();
-        }
-        long costTime = System.currentTimeMillis() - startTime;
-        logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInSunJVM() {} times : {} ms！", times, costTime);
-    }
-
-    private void testGetCallerClassNameInGeneralJVMPerformance(int times) {
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < times; i++) {
-            getCallerClassNameInGeneralJVM();
-        }
-        long costTime = System.currentTimeMillis() - startTime;
-        logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInGeneralJVM() {} times : {} ms！", times, costTime);
-    }
-
-    @Test
     public void testToList() {
         int[] intArray = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
         List<Integer> list = toList(intArray);
