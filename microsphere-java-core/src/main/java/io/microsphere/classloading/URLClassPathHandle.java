@@ -16,6 +16,8 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.lang.Prioritized;
+
 import javax.annotation.Nonnull;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -31,7 +33,7 @@ import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
  * @see ModernURLClassPathHandle
  * @since 1.0.0
  */
-public interface URLClassPathHandle {
+public interface URLClassPathHandle extends Prioritized {
 
     /**
      * Supports or not
@@ -63,4 +65,12 @@ public interface URLClassPathHandle {
      * @return if removed, return <code>true</code>, otherwise <code>false</code>
      */
     boolean removeURL(ClassLoader classLoader, URL url);
+
+    /**
+     * Get the priority
+     * @return the default value is {@link Prioritized#MIN_PRIORITY}
+     */
+    default int getPriority() {
+        return MIN_PRIORITY;
+    }
 }
