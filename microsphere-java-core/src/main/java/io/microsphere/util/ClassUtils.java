@@ -819,7 +819,6 @@ public abstract class ClassUtils extends BaseUtils {
      * @param targetType the target type
      * @param superTypes the super types
      * @return see {@link Class#isAssignableFrom(Class)}
-     * @since 1.0.0
      */
     public static boolean isDerived(Class<?> targetType, Class<?>... superTypes) {
         // any argument is null
