@@ -399,8 +399,10 @@ public class ClassUtilsTest extends AbstractTestCase {
 
     @Test
     public void testCast() {
-        assertEquals("test", cast("test", CharSequence.class));
+        assertNull(cast(null, Integer.class));
+        assertNull(cast("test", null));
         assertNull(cast("test", Integer.class));
+        assertEquals("test", cast("test", CharSequence.class));
     }
 
     @Test
