@@ -4,8 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.collection.CollectionUtils;
-import io.microsphere.collection.SetUtils;
-import io.microsphere.constants.FileConstants;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
