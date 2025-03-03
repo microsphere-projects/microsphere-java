@@ -4,7 +4,7 @@ import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
 
 /**
  * {@link ClassLoaderUtils} Performance Test
@@ -17,15 +17,8 @@ import java.util.Set;
 @Disabled
 public class ClassLoaderUtilsPerformanceTest extends AbstractPerformanceTest {
 
-
     @Test
     public void testFind() {
-        super.execute(new PerformanceAction<Set<Class<?>>>() {
-            @Override
-            public Set<Class<?>> execute() {
-                return ClassLoaderUtils.findLoadedClassesInClassPath(classLoader);
-            }
-        });
-
+        super.execute(() -> findLoadedClassesInClassPath(classLoader));
     }
 }
