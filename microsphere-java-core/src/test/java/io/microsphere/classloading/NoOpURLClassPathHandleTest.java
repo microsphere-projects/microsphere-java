@@ -46,7 +46,6 @@ public class NoOpURLClassPathHandleTest extends BaseURLClassPathHandleTest {
         assertTrue(handle.supports());
     }
 
-    @Override
     @Test
     public void testGetURLs() {
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
