@@ -43,7 +43,7 @@ public class NoOpURLClassPathHandle implements URLClassPathHandle {
 
     @Override
     public boolean removeURL(ClassLoader classLoader, URL url) {
-        return false;
+        return true;
     }
 
     @Override
