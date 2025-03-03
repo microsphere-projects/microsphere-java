@@ -23,7 +23,6 @@ import java.io.File;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.io.FileUtils.getFileExtension;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 
 /**
