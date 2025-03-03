@@ -20,7 +20,7 @@ public abstract class AbstractPerformanceTest extends AbstractTestCase {
         T returnValue = action.execute();
         long costTime = System.currentTimeMillis() - startTime;
         String message = String.format("execution %s return %s costs %s ms", action, returnValue, costTime);
-        info(message);
+        log(message);
     }
 
 }

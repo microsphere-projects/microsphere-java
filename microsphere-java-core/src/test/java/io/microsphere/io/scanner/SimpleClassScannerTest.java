@@ -27,11 +27,11 @@ public class SimpleClassScannerTest extends AbstractTestCase {
     public void testScan() {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.io.scanner");
         assertFalse(classesSet.isEmpty());
-        info(classesSet);
+        log(classesSet);
 
         classesSet = simpleClassScanner.scan(classLoader, "javax.annotation.concurrent", false, true);
         assertEquals(4, classesSet.size());
-        info(classesSet);
+        log(classesSet);
 
     }
 }

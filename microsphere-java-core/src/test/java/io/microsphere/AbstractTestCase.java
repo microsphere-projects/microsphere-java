@@ -5,7 +5,6 @@ package io.microsphere;
 
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Disabled;
 
@@ -21,6 +20,7 @@ import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -69,30 +69,33 @@ public abstract class AbstractTestCase {
 
     public static final Deque<?> SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
-
     protected final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = getLogger(getClass());
 
-    public void info(Object object, Object... others) {
-        info(object);
+    public void log(Object object, Object... others) {
+        log(object);
         for (Object o : others) {
-            info(o);
+            log(o);
         }
     }
 
-    public void info(Object object) {
-        logger.info(String.valueOf(object));
+    public void log(Object object) {
+        if (logger.isTraceEnabled()) {
+            logger.trace(String.valueOf(object));
+        }
     }
 
-    public void info(String object, Object... args) {
-        logger.info(object, args);
+    public void log(String object, Object... args) {
+        if (logger.isTraceEnabled()) {
+            logger.trace(object, args);
+        }
     }
 
-    public void info(Iterable<Object> iterable) {
+    public void log(Iterable<Object> iterable) {
         Iterator<?> iterator = iterable.iterator();
         while (iterator.hasNext()) {
-            info(iterator.next());
+            log(iterator.next());
         }
     }
 
