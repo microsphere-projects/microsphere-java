@@ -39,7 +39,7 @@ import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
-import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
@@ -170,6 +170,8 @@ public abstract class ClassUtils extends BaseUtils {
     private static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_TYPE_MAP;
 
     static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
+
+    private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = FileExtensionFilter.of(JAR_EXTENSION);
 
     static {
         PRIMITIVE_WRAPPER_TYPE_MAP = ofMap(
@@ -479,7 +481,7 @@ public abstract class ClassUtils extends BaseUtils {
         if (classPath.isDirectory()) { // Directory
             classNames = findClassNamesInDirectory(classPath, recursive);
         } else if (classPath.isFile()) { // File
-            if (classPath.getName().endsWith(JAR)) { // JarFile
+            if (JAR_FILE_EXTENSION_FILTER.accept(classPath)) { // JarFile
                 classNames = findClassNamesInJarFile(classPath, recursive);
             }
         }
