@@ -12,16 +12,20 @@ import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.AbstractCollection;
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
+import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
+import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -421,6 +425,27 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertSame(EMPTY_CLASS_ARRAY, getTypes(new Object[0]));
 
         assertArrayEquals(new Object[]{String.class, Integer.class}, getTypes("", Integer.valueOf((1))));
+    }
+
+    @Test
+    public void testGetAllClasses() {
+        assertSame(emptySet(), getAllClasses(null));
+        assertSame(emptySet(), getAllClasses(int.class));
+
+        Set<Class<?>> allClasses = getAllClasses(Object.class);
+        assertEquals(1, allClasses.size());
+        assertTrue(allClasses.contains(Object.class));
+
+        allClasses = getAllClasses(String.class);
+        assertEquals(2, allClasses.size());
+        assertTrue(allClasses.contains(Object.class));
+        assertTrue(allClasses.contains(String.class));
+        
+        allClasses = getAllClasses(TreeMap.class);
+        assertEquals(3, allClasses.size());
+        assertTrue(allClasses.contains(Object.class));
+        assertTrue(allClasses.contains(AbstractMap.class));
+        assertTrue(allClasses.contains(TreeMap.class));
     }
 
     private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
