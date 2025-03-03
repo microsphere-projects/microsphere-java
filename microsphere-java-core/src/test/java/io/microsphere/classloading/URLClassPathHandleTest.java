@@ -42,7 +42,6 @@ public class URLClassPathHandleTest extends BaseURLClassPathHandleTest {
         assertFalse(handle.supports());
     }
 
-    @Override
     @Test
     public void testGetURLs() {
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
