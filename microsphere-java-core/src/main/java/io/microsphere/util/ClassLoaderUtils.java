@@ -44,6 +44,7 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.contains;
@@ -161,7 +162,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         if (classLoader == null) { // If the ClassLoader is also not found,
             // try to get the ClassLoader from the Caller class
-            Class<?> callerClass = ReflectionUtils.getCallerClass(3);
+            Class<?> callerClass = getCallerClass(3);
             if (callerClass != null) {
                 classLoader = callerClass.getClassLoader();
             }
@@ -220,7 +221,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     private static ClassLoader getCallerClassLoader(int invocationFrame) {
         ClassLoader classLoader = null;
-        Class<?> callerClass = ReflectionUtils.getCallerClass(invocationFrame);
+        Class<?> callerClass = getCallerClass(invocationFrame);
         if (callerClass != null) {
             classLoader = callerClass.getClassLoader();
         }
