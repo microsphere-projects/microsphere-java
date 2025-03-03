@@ -55,20 +55,17 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     public void testGetClassNamesInPackage() {
         Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
         for (String packageName : packageNames) {
-            Set<String> classNames = repository.getClassNamesInPackage(packageName);
-            assertFalse(classNames.isEmpty());
-            assertNotNull(classNames);
-            info(packageName);
-            info("\t" + classNames);
+            assertFalse(repository.getClassNamesInPackage(packageName).isEmpty());
         }
-    }
 
+        Package pkg = ClassDataRepositoryTest.class.getPackage();
+        assertFalse(repository.getClassNamesInPackage(pkg).isEmpty());
+    }
 
     @Test
     public void testGetAllPackageNamesInClassPaths() {
         Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
         assertNotNull(packageNames);
-        info(packageNames);
     }
 
     @Test
