@@ -35,9 +35,7 @@ import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
-import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
-import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
@@ -48,11 +46,9 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static java.util.Collections.emptySet;
@@ -78,25 +74,11 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final String classesFieldName = "classes";
 
-    private static final MethodHandle findLoadedClassMethodHandle = initFindLoadedClassMethodHandle();
-
     protected static final ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
 
     private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
-
-    private static MethodHandle initFindLoadedClassMethodHandle() {
-        MethodHandle findLoadedClassMethodHandle = null;
-        try {
-            findLoadedClassMethodHandle = findVirtual(classLoaderClass, findLoadedClassMethodName, String.class);
-        } catch (Throwable e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The MethodHandle of ClassLoader#findLoadedClass(String) can't be found", e);
-            }
-        }
-        return findLoadedClassMethodHandle;
-    }
 
     private static URLClassPathHandle initURLClassPathHandle() {
         List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
@@ -315,12 +297,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     private static Class<?> invokeFindLoadedClassMethod(ClassLoader classLoader, String className) {
         Class<?> loadedClass = null;
         try {
-            if (findLoadedClassMethodHandle == null) {
-                Method findLoadedClassMethod = findMethod(ClassLoader.class, "findLoadedClass", String.class);
-                loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
-            } else {
-                loadedClass = (Class<?>) findLoadedClassMethodHandle.invokeExact(classLoader, className);
-            }
+            Method findLoadedClassMethod = findMethod(ClassLoader.class, findLoadedClassMethodName, String.class);
+            loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
         } catch (Throwable e) {
             logger.error("The java.lang.ClassLoader#findLoadedClasss(String) method can't be invoked in the current JVM[vendor : {} , version : {}]",
                     JAVA_VENDOR, JAVA_VERSION, e.getCause());
