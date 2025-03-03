@@ -16,15 +16,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
-import static io.microsphere.util.ClassUtils.findClassNamesInDirectory;
-import static io.microsphere.util.ClassUtils.findClassNamesInJarFile;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
+import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
@@ -317,7 +315,7 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testTypeName() {
+    public void testGetTypeName() {
         // a) Top level classes
         assertEquals("java.lang.String", getTypeName(String.class));
 
@@ -345,6 +343,37 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertEquals("long[]", getTypeName(long[].class));
         assertEquals("float[]", getTypeName(float[].class));
         assertEquals("double[]", getTypeName(double[].class));
+    }
+
+    @Test
+    public void testGetSimpleName() {
+        // a) Top level classes
+        assertEquals("String", getSimpleName(String.class));
+
+        // b) Nested classes (static member classes)
+        assertEquals("Entry", getSimpleName(Map.Entry.class));
+
+        // c) Inner classes (non-static member classes)
+        assertEquals("State", getSimpleName(Thread.State.class));
+
+        // d) Local classes (named classes declared within a method)
+        class LocalClass {
+        }
+        assertEquals("LocalClass", getSimpleName(LocalClass.class));
+
+        // e) Anonymous classes
+        Serializable instance = new Serializable() {
+        };
+        assertEquals("", getSimpleName(instance.getClass()));
+
+        // f) Array classes
+        assertEquals("byte[]", getSimpleName(byte[].class));
+        assertEquals("char[]", getSimpleName(char[].class));
+        assertEquals("short[]", getSimpleName(short[].class));
+        assertEquals("int[]", getSimpleName(int[].class));
+        assertEquals("long[]", getSimpleName(long[].class));
+        assertEquals("float[]", getSimpleName(float[].class));
+        assertEquals("double[]", getSimpleName(double[].class));
     }
 
     @Test
