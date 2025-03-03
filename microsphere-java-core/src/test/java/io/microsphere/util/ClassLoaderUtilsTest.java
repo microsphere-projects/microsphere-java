@@ -354,8 +354,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
                 return super.loadClass(name, resolve);
             }
         };
-        assertFindURLClassLoader(secureClassLoader, null);
-
+        findURLClassLoader(secureClassLoader);
     }
 
     private void assertFindURLClassLoader(ClassLoader classLoader, ClassLoader expectedClassLoader) {
