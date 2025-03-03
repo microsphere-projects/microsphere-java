@@ -49,12 +49,6 @@ public class ModernURLClassPathHandleTest extends AbstractURLClassPathHandleTest
 
     @Override
     @Test
-    public void testGetURLs() {
-
-    }
-
-    @Override
-    @Test
     public void testGetURLClassPathClassName() {
         assertEquals("jdk.internal.loader.URLClassPath", handle.getURLClassPathClassName());
     }
