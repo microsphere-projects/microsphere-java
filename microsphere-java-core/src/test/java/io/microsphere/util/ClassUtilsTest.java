@@ -22,6 +22,7 @@ import java.util.function.BiFunction;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
+import static io.microsphere.util.ClassUtils.cast;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
@@ -394,6 +395,12 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertEquals(int.class, getTopComponentType(int[][][][][].class));
         assertEquals(int.class, getTopComponentType(int[][][][][][].class));
         assertEquals(int.class, getTopComponentType(int[][][][][][][].class));
+    }
+
+    @Test
+    public void testCast() {
+        assertEquals("test", cast("test", CharSequence.class));
+        assertNull(cast("test", Integer.class));
     }
 
     @Test
