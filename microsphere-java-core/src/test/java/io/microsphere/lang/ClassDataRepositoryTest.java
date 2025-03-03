@@ -92,16 +92,15 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     @Test
     public void testGetCodeSourceLocation() throws IOException {
         URL codeSourceLocation = null;
-        assertNull(codeSourceLocation);
 
         codeSourceLocation = repository.getCodeSourceLocation(ClassDataRepositoryTest.class);
-        info("codeSourceLocation : " + codeSourceLocation);
         assertNotNull(codeSourceLocation);
 
         codeSourceLocation = repository.getCodeSourceLocation(Nonnull.class);
-        info("codeSourceLocation : " + codeSourceLocation);
         assertNotNull(codeSourceLocation);
 
+        codeSourceLocation = repository.getCodeSourceLocation(String.class);
+        assertNull(codeSourceLocation);
     }
 
 }
