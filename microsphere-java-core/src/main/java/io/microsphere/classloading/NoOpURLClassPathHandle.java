@@ -29,7 +29,7 @@ import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
  * @see URLClassPathHandle
  * @since 1.0.0
  */
-public class NoOpURLClassPathHandle implements URLClassPathHandle, Prioritized {
+public class NoOpURLClassPathHandle implements URLClassPathHandle {
 
     @Override
     public boolean supports() {
@@ -48,6 +48,6 @@ public class NoOpURLClassPathHandle implements URLClassPathHandle, Prioritized {
 
     @Override
     public int getPriority() {
-        return MIN_PRIORITY;
+        return NORMAL_PRIORITY;
     }
 }
