@@ -19,12 +19,7 @@ package io.microsphere.classloading;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-import java.util.Set;
-
 import static io.microsphere.classloading.AbstractURLClassPathHandle.DEFAULT_PRIORITY;
-import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
-import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
