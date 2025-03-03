@@ -152,11 +152,6 @@ public abstract class ClassUtils extends BaseUtils {
     );
 
     /**
-     * Prefix for internal array class names: "[L"
-     */
-    private static final String INTERNAL_ARRAY_PREFIX = "[L";
-
-    /**
      * A map with primitive type name as key and corresponding primitive type as
      * value, for example: "int" -> "int.class".
      */
