@@ -11,12 +11,11 @@ import io.microsphere.reflect.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
@@ -37,6 +36,7 @@ import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
@@ -76,11 +76,25 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final String classesFieldName = "classes";
 
+    private static final MethodHandle findLoadedClassMethodHandle = initFindLoadedClassMethodHandle();
+
     protected static final ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
 
     private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
+
+    private static MethodHandle initFindLoadedClassMethodHandle() {
+        MethodHandle findLoadedClassMethodHandle = null;
+        try {
+            findLoadedClassMethodHandle = findVirtual(classLoaderClass, findLoadedClassMethodName, String.class);
+        } catch (Throwable e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The MethodHandle of ClassLoader#findLoadedClass(String) can't be found", e);
+            }
+        }
+        return findLoadedClassMethodHandle;
+    }
 
     private static URLClassPathHandle initURLClassPathHandle() {
         List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
@@ -280,7 +294,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         if (loadedClass == null) {
             Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
             for (ClassLoader loader : classLoaders) {
-                loadedClass = (Class<?>) invokeFindLoadedClassMethod(loader, className);
+                loadedClass = invokeFindLoadedClassMethod(loader, className);
                 if (loadedClass != null) {
                     break;
                 }
@@ -290,7 +304,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Invoke the {@link Method} of {@link ClassLoader#findLoadedClass(String)}
+     * Invoke the {@link MethodHandle} of {@link ClassLoader#findLoadedClass(String)}
      *
      * @param classLoader {@link ClassLoader}
      * @param className   the class name
@@ -299,8 +313,12 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     private static Class<?> invokeFindLoadedClassMethod(ClassLoader classLoader, String className) {
         Class<?> loadedClass = null;
         try {
-            Method findLoadedClassMethod = findMethod(classLoaderClass, findLoadedClassMethodName, String.class);
-            loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
+            if (findLoadedClassMethodHandle == null) {
+                Method findLoadedClassMethod = findMethod(ClassLoader.class, "findLoadedClass", String.class);
+                loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
+            } else {
+                loadedClass = (Class<?>) findLoadedClassMethodHandle.invokeExact(classLoader, className);
+            }
         } catch (Throwable e) {
             logger.error("The java.lang.ClassLoader#findLoadedClasss(String) method can't be invoked in the current JVM[vendor : {} , version : {}]",
                     JAVA_VENDOR, JAVA_VERSION, e.getCause());
@@ -665,16 +683,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return urlClassLoader;
     }
 
-    private static URL toURL(String path) {
-        URL url = null;
-        try {
-            URI uri = new File(path).toURI();
-            url = uri.toURL();
-        } catch (Exception ignored) {
-        }
-        return url;
-    }
-
     private static String buildCacheKey(String className, ClassLoader classLoader) {
         String cacheKey = className + classLoader.hashCode();
         return cacheKey;
@@ -737,7 +745,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
             normalizedName = URLUtils.normalizePath(normalizedName);
 
-            // 除去开头的"/"
+            // Remove the character "/" in the start of String if found
             while (normalizedName.startsWith("/")) {
                 normalizedName = normalizedName.substring(1);
             }
