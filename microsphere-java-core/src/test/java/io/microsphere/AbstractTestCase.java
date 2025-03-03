@@ -73,13 +73,6 @@ public abstract class AbstractTestCase {
 
     private final Logger logger = getLogger(getClass());
 
-    public void log(Object object, Object... others) {
-        log(object);
-        for (Object o : others) {
-            log(o);
-        }
-    }
-
     public void log(Object object) {
         if (logger.isTraceEnabled()) {
             logger.trace(String.valueOf(object));
@@ -89,13 +82,6 @@ public abstract class AbstractTestCase {
     public void log(String object, Object... args) {
         if (logger.isTraceEnabled()) {
             logger.trace(object, args);
-        }
-    }
-
-    public void log(Iterable<Object> iterable) {
-        Iterator<?> iterator = iterable.iterator();
-        while (iterator.hasNext()) {
-            log(iterator.next());
         }
     }
 
