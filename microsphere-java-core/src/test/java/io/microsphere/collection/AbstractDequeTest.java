@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link AbstractDeque} Test
