@@ -88,23 +88,8 @@ public abstract class FileUtils extends BaseUtils {
      * @throws IOException in case cleaning is unsuccessful
      */
     public static void cleanDirectory(File directory) throws IOException {
-        if (!directory.exists()) {
-            String message = directory + " does not exist";
-            throw new IOException(message);
-        }
-
-        if (!directory.isDirectory()) {
-            String message = directory + " is not a directory";
-            throw new IOException(message);
-        }
-
-        File[] files = directory.listFiles();
-        if (files == null) {  // null if security restricted
-            throw new IOException("Failed to list contents of " + directory);
-        }
-
         IOException exception = null;
-        for (File file : files) {
+        for (File file : listFiles(directory)) {
             try {
                 forceDelete(file);
             } catch (IOException ioe) {
@@ -141,8 +126,7 @@ public abstract class FileUtils extends BaseUtils {
                 if (!filePresent) {
                     throw new FileNotFoundException("File does not exist: " + file);
                 }
-                String message =
-                        "Unable to delete file: " + file;
+                String message = "Unable to delete file: " + file;
                 throw new IOException(message);
             }
         }
@@ -190,33 +174,35 @@ public abstract class FileUtils extends BaseUtils {
      * @throws IOException          in case cleaning is unsuccessful
      */
     private static void cleanDirectoryOnExit(File directory) throws IOException {
-        if (!directory.exists()) {
-            String message = directory + " does not exist";
-            throw new IllegalArgumentException(message);
-        }
-
-        if (!directory.isDirectory()) {
-            String message = directory + " is not a directory";
-            throw new IllegalArgumentException(message);
-        }
-
-        File[] files = directory.listFiles();
-        if (files == null) {  // null if security restricted
-            throw new IOException("Failed to list contents of " + directory);
-        }
-
         IOException exception = null;
-        for (File file : files) {
+        for (File file : listFiles(directory)) {
             try {
                 forceDeleteOnExit(file);
             } catch (IOException ioe) {
                 exception = ioe;
             }
         }
-
         if (null != exception) {
             throw exception;
         }
+    }
+
+    private static File[] listFiles(File directory) throws IOException {
+        if (!directory.exists()) {
+            String message = directory + " does not exist";
+            throw new IOException(message);
+        }
+
+        if (!directory.isDirectory()) {
+            String message = directory + " is not a directory";
+            throw new IOException(message);
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null) {  // null if security restricted
+            throw new IOException("Failed to list contents of " + directory);
+        }
+        return files;
     }
 
     public static boolean isSymlink(File file) throws IOException {
