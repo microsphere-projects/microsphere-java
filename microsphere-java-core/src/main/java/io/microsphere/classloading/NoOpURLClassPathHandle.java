@@ -41,11 +41,6 @@ public class NoOpURLClassPathHandle implements URLClassPathHandle {
 
     @Override
     public boolean removeURL(ClassLoader classLoader, URL url) {
-        return true;
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY;
+        return false;
     }
 }
