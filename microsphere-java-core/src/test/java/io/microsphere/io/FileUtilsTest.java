@@ -120,6 +120,13 @@ public class FileUtilsTest extends AbstractTestCase {
     @Test
     public void testDeleteDirectoryOnExit() throws IOException {
         File tempDir = createRandomTempDirectory();
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                createRandomDirectory(tempDir);
+            } else {
+                createRandomFile(tempDir);
+            }
+        }
         forceDeleteOnExit(tempDir);
     }
 
