@@ -90,12 +90,12 @@ public abstract class FileUtils extends BaseUtils {
     public static void cleanDirectory(File directory) throws IOException {
         if (!directory.exists()) {
             String message = directory + " does not exist";
-            throw new IllegalArgumentException(message);
+            throw new IOException(message);
         }
 
         if (!directory.isDirectory()) {
             String message = directory + " is not a directory";
-            throw new IllegalArgumentException(message);
+            throw new IOException(message);
         }
 
         File[] files = directory.listFiles();
