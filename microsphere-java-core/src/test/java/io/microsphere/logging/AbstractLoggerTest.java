@@ -31,14 +31,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public abstract class AbstractLoggerTest {
 
-    protected AbstractLogger logger;
+    protected Logger logger;
 
     @BeforeEach
     public void init() {
         this.logger = createLogger();
     }
 
-    protected abstract AbstractLogger createLogger();
+    protected abstract Logger createLogger();
 
     @Test
     public void testGetName() {
