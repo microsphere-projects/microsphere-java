@@ -8,6 +8,7 @@ import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
@@ -107,25 +108,37 @@ public abstract class AbstractTestCase {
         failureHandler.accept(failure);
     }
 
-    protected File makeRandomTempDirectory() {
-        File tempDir = createTempFile(createRandomFileName());
+    protected File createRandomTempDirectory() {
+        File tempDir = newTempFile(buildRandomFileName());
         assertTrue(tempDir.mkdir());
         return tempDir;
     }
 
-    protected File createRandomTempFile() {
-        return createTempFile(createRandomFileName());
+    protected File createRandomTempFile() throws IOException {
+        File randomTempFile = newRandomTempFile();
+        assertTrue(randomTempFile.createNewFile());
+        return randomTempFile;
     }
 
-    protected File createRandomFile(File parentDir) {
-        return new File(parentDir, createRandomFileName());
+    protected File createRandomFile(File parentDir) throws IOException {
+        File randomFile = newRandomFile(parentDir);
+        assertTrue(randomFile.createNewFile());
+        return randomFile;
     }
 
-    protected String createRandomFileName() {
+    protected File newRandomTempFile() {
+        return newTempFile(buildRandomFileName());
+    }
+
+    protected File newRandomFile(File parentDir) {
+        return new File(parentDir, buildRandomFileName());
+    }
+
+    protected String buildRandomFileName() {
         return UUID.randomUUID().toString();
     }
 
-    protected File createTempFile(String path) {
+    protected File newTempFile(String path) {
         return new File(tempDir, path);
     }
 }
