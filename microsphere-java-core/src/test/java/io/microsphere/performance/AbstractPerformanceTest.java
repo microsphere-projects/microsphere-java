@@ -14,13 +14,10 @@ import org.junit.jupiter.api.Disabled;
 @Disabled
 public abstract class AbstractPerformanceTest extends AbstractTestCase {
 
-
     protected <T> void execute(PerformanceAction<T> action) {
         long startTime = System.currentTimeMillis();
         T returnValue = action.execute();
         long costTime = System.currentTimeMillis() - startTime;
-        String message = String.format("execution %s return %s costs %s ms", action, returnValue, costTime);
-        info(message);
+        log("execution {} return {} costs {} ms", action, returnValue, costTime);
     }
-
 }

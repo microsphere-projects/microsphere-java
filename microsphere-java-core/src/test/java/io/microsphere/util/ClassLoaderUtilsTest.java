@@ -11,6 +11,8 @@ import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.SecureClassLoader;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -20,13 +22,11 @@ import java.util.TreeSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
-import static io.microsphere.util.ClassLoaderUtils.ResourceType.CLASS;
-import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
-import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPaths;
+import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClasses;
 import static io.microsphere.util.ClassLoaderUtils.getAllLoadedClassesMap;
 import static io.microsphere.util.ClassLoaderUtils.getCallerClassLoader;
@@ -41,10 +41,12 @@ import static io.microsphere.util.ClassLoaderUtils.getResources;
 import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.getUnloadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static io.microsphere.util.ClassLoaderUtils.isVerbose;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_12;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -69,46 +71,19 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testFields() throws Exception {
 
-
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
-//        echo(ToStringBuilder.reflectionToString(classLoader,ToStringStyle.MULTI_LINE_STYLE));
         Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
         for (ClassLoader classLoader : classLoaders) {
-            info(String.format("ClassLoader : %s", classLoader));
+            log("ClassLoader : {}", classLoader);
             for (Field field : allFields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(true);
                     String message = String.format("Field name : %s , value : %s", field.getName(), field.get(classLoader));
-                    info(message);
+                    log(message);
                 }
             }
         }
-
-    }
-
-
-    @Test
-    public void testResolve() {
-        String resourceName = "META-INF/abc/def";
-        String expectedResourceName = "META-INF/abc/def";
-        String resolvedResourceName = DEFAULT.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
-
-        resourceName = "///////META-INF//abc\\/def";
-        resolvedResourceName = DEFAULT.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
-
-        resourceName = "java.lang.String.class";
-
-        expectedResourceName = "java/lang/String.class";
-        resolvedResourceName = CLASS.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
-
-        resourceName = "java.lang";
-        expectedResourceName = "java/lang/";
-        resolvedResourceName = PACKAGE.resolve(resourceName);
-        assertEquals(expectedResourceName, resolvedResourceName);
 
     }
 
@@ -116,26 +91,26 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testGetClassResource() {
         URL classResourceURL = getClassResource(classLoader, ClassLoaderUtilsTest.class);
         assertNotNull(classResourceURL);
-        info(classResourceURL);
+        log(classResourceURL);
 
         classResourceURL = getClassResource(classLoader, String.class.getName());
         assertNotNull(classResourceURL);
-        info(classResourceURL);
+        log(classResourceURL);
     }
 
     @Test
     public void testGetResource() {
         URL resourceURL = getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURL);
-        info(resourceURL);
+        log(resourceURL);
 
         resourceURL = getResource(classLoader, "///java/lang/CharSequence.class");
         assertNotNull(resourceURL);
-        info(resourceURL);
+        log(resourceURL);
 
         resourceURL = getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURL);
-        info(resourceURL);
+        log(resourceURL);
     }
 
     @Test
@@ -143,17 +118,17 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<URL> resourceURLs = getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
-        info(resourceURLs);
+        log(resourceURLs);
 
         resourceURLs = getResources(classLoader, "///java/lang/CharSequence.class");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
-        info(resourceURLs);
+        log(resourceURLs);
 
         resourceURLs = getResources(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
-        info(resourceURLs);
+        log(resourceURLs);
     }
 
     @Test
@@ -173,7 +148,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
         assertNotNull(classLoaders);
         assertTrue(classLoaders.size() > 1);
-        info(classLoaders);
+        log(classLoaders);
     }
 
     @Test
@@ -184,10 +159,10 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             assertFalse(classesSet.isEmpty());
 
 
-            classesSet = getLoadedClasses(ClassLoader.getSystemClassLoader());
+            classesSet = getLoadedClasses(getSystemClassLoader());
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
-            info(classesSet);
+            log(classesSet);
         }
     }
 
@@ -199,10 +174,10 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             assertFalse(classesSet.isEmpty());
 
 
-            classesSet = getAllLoadedClasses(ClassLoader.getSystemClassLoader());
+            classesSet = getAllLoadedClasses(getSystemClassLoader());
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
-            info(classesSet);
+            log(classesSet);
         }
     }
 
@@ -256,14 +231,14 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         Set<Class<?>> sortedClasses = new TreeSet(new ClassComparator());
         sortedClasses.addAll(remainingClasses);
 
-        info(sortedClasses);
+        log(sortedClasses);
 
         int loadedClassesSize = allLoadedClasses.size() + classesSet.size();
 
         int loadedClassCount = getLoadedClassCount();
 
-        info(loadedClassesSize);
-        info(loadedClassCount);
+        log(loadedClassesSize);
+        log(loadedClassCount);
     }
 
     @Test
@@ -321,7 +296,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         currentThread.setContextClassLoader(null);
         assertEquals(ClassLoaderUtils.class.getClassLoader(), getDefaultClassLoader());
 
-        currentThread.setContextClassLoader(ClassLoader.getSystemClassLoader().getParent());
+        currentThread.setContextClassLoader(getSystemClassLoader().getParent());
 
         // recovery
         currentThread.setContextClassLoader(classLoader);
@@ -335,6 +310,8 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testRemoveClassPathURL() {
+        assertFalse(removeClassPathURL(new TestClassLoader(), null));
+
         ClassLoader classLoader = getDefaultClassLoader();
         Set<URL> urls = findAllClassPathURLs(classLoader);
         for (URL url : urls) {
@@ -345,6 +322,47 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         }
         Set<URL> urls2 = findAllClassPathURLs(classLoader);
         assertEquals(urls.size(), urls2.size());
+    }
+
+    @Test
+    public void testIsPresent() {
+        assertFalse(isPresent(null));
+        assertFalse(isPresent(""));
+        assertFalse(isPresent(" "));
+        assertFalse(isPresent(null, null));
+        assertFalse(isPresent("", null));
+        assertFalse(isPresent(" ", null));
+        assertFalse(isPresent("NotFound"));
+        assertFalse(isPresent("NotFound", getDefaultClassLoader()));
+        assertTrue(isPresent("java.lang.String"));
+        assertTrue(isPresent("java.lang.String", null));
+        assertTrue(isPresent("java.lang.String", getSystemClassLoader()));
+        assertTrue(isPresent("java.lang.String", ClassLoaderUtils.class.getClassLoader()));
+    }
+
+    @Test
+    public void testFindURLClassLoader() {
+        URLClassLoader parent = URLClassLoader.newInstance(new URL[0]);
+        assertFindURLClassLoader(parent, parent);
+
+        URLClassLoader classLoader = URLClassLoader.newInstance(new URL[0], getDefaultClassLoader());
+        assertFindURLClassLoader(classLoader, classLoader);
+
+        SecureClassLoader secureClassLoader = new SecureClassLoader() {
+            @Override
+            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                return super.loadClass(name, resolve);
+            }
+        };
+        findURLClassLoader(secureClassLoader);
+    }
+
+    private void assertFindURLClassLoader(ClassLoader classLoader, ClassLoader expectedClassLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        assertSame(expectedClassLoader, urlClassLoader);
+    }
+
+    private static class TestClassLoader extends ClassLoader {
     }
 
 

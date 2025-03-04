@@ -6,17 +6,15 @@ package io.microsphere.util;
 import io.microsphere.classloading.URLClassPathHandle;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.logging.Logger;
-import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
@@ -36,20 +34,21 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
-import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
+import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static java.util.Collections.emptySet;
@@ -161,7 +160,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         if (classLoader == null) { // If the ClassLoader is also not found,
             // try to get the ClassLoader from the Caller class
-            Class<?> callerClass = ReflectionUtils.getCallerClass(3);
+            Class<?> callerClass = getCallerClass(3);
             if (callerClass != null) {
                 classLoader = callerClass.getClassLoader();
             }
@@ -220,7 +219,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     private static ClassLoader getCallerClassLoader(int invocationFrame) {
         ClassLoader classLoader = null;
-        Class<?> callerClass = ReflectionUtils.getCallerClass(invocationFrame);
+        Class<?> callerClass = getCallerClass(invocationFrame);
         if (callerClass != null) {
             classLoader = callerClass.getClassLoader();
         }
@@ -279,7 +278,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         if (loadedClass == null) {
             Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
             for (ClassLoader loader : classLoaders) {
-                loadedClass = (Class<?>) invokeFindLoadedClassMethod(loader, className);
+                loadedClass = invokeFindLoadedClassMethod(loader, className);
                 if (loadedClass != null) {
                     break;
                 }
@@ -289,7 +288,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Invoke the {@link Method} of {@link ClassLoader#findLoadedClass(String)}
+     * Invoke the {@link MethodHandle} of {@link ClassLoader#findLoadedClass(String)}
      *
      * @param classLoader {@link ClassLoader}
      * @param className   the class name
@@ -298,7 +297,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     private static Class<?> invokeFindLoadedClassMethod(ClassLoader classLoader, String className) {
         Class<?> loadedClass = null;
         try {
-            Method findLoadedClassMethod = findMethod(classLoaderClass, findLoadedClassMethodName, String.class);
+            Method findLoadedClassMethod = findMethod(ClassLoader.class, findLoadedClassMethodName, String.class);
             loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
         } catch (Throwable e) {
             logger.error("The java.lang.ClassLoader#findLoadedClasss(String) method can't be invoked in the current JVM[vendor : {} , version : {}]",
@@ -664,16 +663,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return urlClassLoader;
     }
 
-    private static URL toURL(String path) {
-        URL url = null;
-        try {
-            URI uri = new File(path).toURI();
-            url = uri.toURL();
-        } catch (Exception ignored) {
-        }
-        return url;
-    }
-
     private static String buildCacheKey(String className, ClassLoader classLoader) {
         String cacheKey = className + classLoader.hashCode();
         return cacheKey;
@@ -686,7 +675,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         DEFAULT {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
                 return true;
             }
 
@@ -698,29 +687,43 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         }, CLASS {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
                 return endsWith(name, CLASS_EXTENSION);
             }
 
             @Override
             public String normalize(String name) {
-                String className = replace(name, CLASS_EXTENSION, EMPTY);
-                return replace(className, DOT, SLASH) + CLASS_EXTENSION;
+                if (name == null) {
+                    return null;
+                }
+                int index = name.lastIndexOf(CLASS_EXTENSION);
+                String className = index > -1 ? name.substring(0, index) : name;
+                className = className.replace(DOT_CHAR, SLASH_CHAR);
+                return className + CLASS_EXTENSION;
             }
 
 
         }, PACKAGE {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
+                if (name == null) {
+                    return false;
+                }
                 //TODO: use regexp to match more precise
-                return !CLASS.supported(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
+                return !CLASS.supports(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
             }
 
             @Override
             String normalize(String name) {
-                return replace(name, DOT, SLASH) + SLASH;
+                if (name == null) {
+                    return null;
+                }
+                String packageName = name.replace(DOT_CHAR, SLASH_CHAR);
+                if (!packageName.endsWith(SLASH)) {
+                    return packageName + SLASH;
+                }
+                return packageName;
             }
-
 
         };
 
@@ -731,12 +734,15 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          * @return a newly resolved resource name
          */
         public String resolve(String name) {
-            String normalizedName = supported(name) ? normalize(name) : null;
-            if (normalizedName == null) return normalizedName;
+            if (isBlank(name) || !supports(name)) {
+                return null;
+            }
 
-            normalizedName = URLUtils.normalizePath(normalizedName);
+            String normalizedName = normalize(name);
 
-            // 除去开头的"/"
+            normalizedName = normalizePath(normalizedName);
+
+            // Remove the character "/" in the start of String if found
             while (normalizedName.startsWith("/")) {
                 normalizedName = normalizedName.substring(1);
             }
@@ -750,7 +756,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          * @param name resource name
          * @return If supported , return <code>true</code> , or return <code>false</code>
          */
-        abstract boolean supported(String name);
+        abstract boolean supports(String name);
 
         /**
          * Normalizes resource name

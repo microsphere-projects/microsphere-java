@@ -16,28 +16,31 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+import static io.microsphere.classloading.AbstractURLClassPathHandle.DEFAULT_PRIORITY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
- * Modern {@link URLClassPathHandle} for {@link jdk.internal.loader.URLClassPath} since JDK 9
+ * {@link AbstractURLClassPathHandle} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see jdk.internal.loader.URLClassPath
- * @see ClassicURLClassPathHandle
- * @see URLClassPathHandle
+ * @see AbstractURLClassPathHandle
  * @since 1.0.0
  */
-public class ModernURLClassPathHandle extends AbstractURLClassPathHandle {
+@Disabled
+public abstract class AbstractURLClassPathHandleTest extends BaseURLClassPathHandleTest<AbstractURLClassPathHandle> {
 
-    public ModernURLClassPathHandle() {
-        super();
-    }
+    @Test
+    public abstract void testGetURLClassPathClassName();
 
-    @Override
-    protected String getURLClassPathClassName() {
-        return "jdk.internal.loader.URLClassPath";
-    }
+    @Test
+    public abstract void testGetUrlsFieldName();
 
     @Override
-    protected String getUrlsFieldName() {
-        return "unopenedUrls";
+    @Test
+    public void testGetPriority() {
+        assertEquals(DEFAULT_PRIORITY, handle.getPriority());
     }
 }

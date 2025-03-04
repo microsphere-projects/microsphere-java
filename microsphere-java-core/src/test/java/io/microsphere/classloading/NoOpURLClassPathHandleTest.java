@@ -18,7 +18,10 @@ package io.microsphere.classloading;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
+import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -28,12 +31,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class NoOpURLClassPathHandleTest {
+public class NoOpURLClassPathHandleTest extends BaseURLClassPathHandleTest {
+
+    @Override
+    protected URLClassPathHandle createHandle() {
+        return new NoOpURLClassPathHandle();
+    }
+
+    @Override
+    @Test
+    public void testSupports() {
+        assertTrue(handle.supports());
+    }
 
     @Test
-    public void test() {
-        NoOpURLClassPathHandle handle = new NoOpURLClassPathHandle();
-        assertTrue(handle.supports());
-        assertFalse(handle.removeURL(null, null));
+    public void testGetURLs() {
+        assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
+    }
+
+    @Override
+    @Test
+    public void testGetPriority() {
+        assertEquals(NORMAL_PRIORITY, handle.getPriority());
     }
 }

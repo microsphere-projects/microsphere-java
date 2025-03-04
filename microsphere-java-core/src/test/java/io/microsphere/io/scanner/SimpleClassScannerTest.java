@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
@@ -26,6 +27,8 @@ public class SimpleClassScannerTest extends AbstractTestCase {
     public void testScan() {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.io.scanner");
         assertFalse(classesSet.isEmpty());
-        info(classesSet);
+
+        classesSet = simpleClassScanner.scan(classLoader, "javax.annotation.concurrent", false, true);
+        assertEquals(4, classesSet.size());
     }
 }

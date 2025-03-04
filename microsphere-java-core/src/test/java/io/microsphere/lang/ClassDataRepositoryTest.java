@@ -18,6 +18,7 @@ package io.microsphere.lang;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
+import io.microsphere.util.VersionUtils;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
@@ -27,6 +28,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -55,20 +57,17 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     public void testGetClassNamesInPackage() {
         Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
         for (String packageName : packageNames) {
-            Set<String> classNames = repository.getClassNamesInPackage(packageName);
-            assertFalse(classNames.isEmpty());
-            assertNotNull(classNames);
-            info(packageName);
-            info("\t" + classNames);
+            assertFalse(repository.getClassNamesInPackage(packageName).isEmpty());
         }
-    }
 
+        Package pkg = ClassDataRepositoryTest.class.getPackage();
+        assertFalse(repository.getClassNamesInPackage(pkg).isEmpty());
+    }
 
     @Test
     public void testGetAllPackageNamesInClassPaths() {
         Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
         assertNotNull(packageNames);
-        info(packageNames);
     }
 
     @Test
@@ -95,16 +94,19 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     @Test
     public void testGetCodeSourceLocation() throws IOException {
         URL codeSourceLocation = null;
-        assertNull(codeSourceLocation);
 
         codeSourceLocation = repository.getCodeSourceLocation(ClassDataRepositoryTest.class);
-        info("codeSourceLocation : " + codeSourceLocation);
         assertNotNull(codeSourceLocation);
 
         codeSourceLocation = repository.getCodeSourceLocation(Nonnull.class);
-        info("codeSourceLocation : " + codeSourceLocation);
         assertNotNull(codeSourceLocation);
 
+        codeSourceLocation = repository.getCodeSourceLocation(String.class);
+        if (CURRENT_JAVA_VERSION.le(VersionUtils.JAVA_VERSION_8)) {
+            assertNotNull(codeSourceLocation);
+        } else {
+            assertNull(codeSourceLocation);
+        }
     }
 
 }

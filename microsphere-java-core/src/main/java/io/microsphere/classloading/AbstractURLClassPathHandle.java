@@ -46,6 +46,11 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  */
 public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, Prioritized {
 
+    /**
+     * The default priority is {@link Prioritized#MAX_PRIORITY} + 99999
+     */
+    public static final int DEFAULT_PRIORITY = MAX_PRIORITY + 99999;
+
     private final Logger logger = getLogger(getClass());
 
     private Class<?> urlClassPathClass;
@@ -70,6 +75,10 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
     private Field baseField;
 
     private int priority;
+
+    public AbstractURLClassPathHandle() {
+        setPriority(DEFAULT_PRIORITY);
+    }
 
     @Override
     public boolean supports() {

@@ -37,7 +37,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         assertNotNull(bootstrapClassPaths);
         RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
         assertEquals(runtimeMXBean.isBootClassPathSupported(), !bootstrapClassPaths.isEmpty());
-        info(bootstrapClassPaths);
+        log(bootstrapClassPaths);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         Set<String> classPaths = getClassPaths();
         assertNotNull(classPaths);
         assertFalse(classPaths.isEmpty());
-        info(classPaths);
+        log(classPaths);
     }
 
     @Test
@@ -53,11 +53,11 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         URL location = null;
         location = getRuntimeClassLocation(String.class);
         assertNotNull(location);
-        info(location);
+        log(location);
 
         location = getRuntimeClassLocation(getClass());
         assertNotNull(location);
-        info(location);
+        log(location);
 
         //Primitive type
         location = getRuntimeClassLocation(int.class);

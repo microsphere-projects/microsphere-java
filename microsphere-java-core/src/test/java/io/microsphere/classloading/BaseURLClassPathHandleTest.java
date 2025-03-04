@@ -16,51 +16,43 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
-import java.util.Set;
 
-import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
-import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
-import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link ClassicURLClassPathHandle} Test
+ * Abstract {@link URLClassPathHandle} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see 1.0.0
+ * @see URLClassPathHandle
  * @since 1.0.0
  */
-public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTest {
+@Disabled
+public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
 
-    @Override
-    protected AbstractURLClassPathHandle createHandle() {
-        return new ClassicURLClassPathHandle();
+    protected H handle;
+
+    @BeforeEach
+    public void init() {
+        this.handle = createHandle();
     }
 
-    @Test
-    public void testSupports() {
-        assertEquals(CURRENT_JAVA_VERSION.le(JAVA_VERSION_8), handle.supports());
-    }
+    protected abstract H createHandle();
 
-    @Test
-    public void testGetURLClassPathClassName() {
-        assertEquals("sun.misc.URLClassPath", handle.getURLClassPathClassName());
-    }
+    public abstract void testSupports();
 
-    @Test
-    public void testGetUrlsFieldName() {
-        assertEquals("urls", handle.getUrlsFieldName());
-    }
+    public abstract void testGetPriority();
 
     @Test
     public void test() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = currentThread().getContextClassLoader();
         if (handle.supports()) {
-            Set<URL> urls = findAllClassPathURLs(classLoader);
+            URL[] urls = handle.getURLs(classLoader);
             for (URL url : urls) {
                 String path = url.getPath();
                 if (path.contains("jmh-generator-annprocess")) {

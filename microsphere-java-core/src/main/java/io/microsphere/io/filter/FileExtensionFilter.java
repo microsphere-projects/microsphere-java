@@ -20,6 +20,7 @@ import io.microsphere.io.FileUtils;
 
 import java.io.File;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.io.FileUtils.getFileExtension;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
@@ -37,7 +38,8 @@ public class FileExtensionFilter implements IOFileFilter {
     private final String extension;
 
     protected FileExtensionFilter(String extension) {
-        this.extension = extension;
+        int lastIndex = extension.lastIndexOf(DOT);
+        this.extension = lastIndex > -1 ? extension.substring(lastIndex + 1) : extension;
     }
 
     @Override
