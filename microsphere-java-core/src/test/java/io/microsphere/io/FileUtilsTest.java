@@ -1,6 +1,7 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -12,13 +13,16 @@ import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.FileUtils.forceDeleteOnExit;
 import static io.microsphere.io.FileUtils.getFileExtension;
+import static io.microsphere.io.FileUtils.isSymlink;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link FileUtils} Test
@@ -131,19 +135,18 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDeleteDirectoryOnExit0() throws IOException {
-        File tempDir = newRandomTempFile();
-        forceDeleteOnExit(tempDir);
-    }
-
-    @Test
-    public void testCleanDirectoryOnExit() {
-
-    }
-
-    @Test
-    public void testIsSymlink() {
-
+    public void testIsSymlink() throws IOException {
+        assertThrows(NullPointerException.class, () -> isSymlink(null));
+        if (IS_OS_WINDOWS) {
+            assertFalse(isSymlink(new File("")));
+        } else {
+            File tempDir = createRandomTempDirectory();
+            File targetFile = createRandomFile(tempDir);
+            File linkFile = new File(tempDir, "link");
+            ProcessExecutor processExecutor = new ProcessExecutor("ln", "-s", targetFile.getAbsolutePath(), linkFile.getAbsolutePath());
+            processExecutor.execute(System.out);
+            assertTrue(isSymlink(linkFile));
+        }
     }
 
 }
