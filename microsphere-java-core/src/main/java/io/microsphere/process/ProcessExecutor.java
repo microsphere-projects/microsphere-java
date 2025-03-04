@@ -86,7 +86,7 @@ public class ProcessExecutor {
             long costTime = endTime - startTime;
             if (costTime > timeoutInMilliseconds) {
                 finished = true;
-                process.destroy();
+                processManager.destroy(process);
                 String message = format("Execution is timeout[{} ms]!", timeoutInMilliseconds);
                 throw new TimeoutException(message);
             }
