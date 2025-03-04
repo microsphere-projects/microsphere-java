@@ -30,7 +30,11 @@ public class SimpleFileScannerTest extends AbstractTestCase {
     @Test
     public void testScan() {
         File jarHome = new File(JAVA_HOME);
-        Set<File> directories = simpleFileScanner.scan(jarHome, true, DirectoryFileFilter.INSTANCE);
+
+        Set<File> directories = simpleFileScanner.scan(jarHome, true);
+        assertFalse(directories.isEmpty());
+
+        directories = simpleFileScanner.scan(jarHome, true, DirectoryFileFilter.INSTANCE);
         assertFalse(directories.isEmpty());
 
         directories = simpleFileScanner.scan(jarHome, false, new NameFileFilter("bin"));
