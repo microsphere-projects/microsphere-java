@@ -1,17 +1,15 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
+import static io.microsphere.reflect.ReflectionUtils.assertArrayType;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInGeneralJVM;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunJVM;
@@ -19,7 +17,11 @@ import static io.microsphere.reflect.ReflectionUtils.getCallerClassName;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInGeneralJVM;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInSunJVM;
 import static io.microsphere.reflect.ReflectionUtils.isSupportedSunReflectReflection;
+import static io.microsphere.reflect.ReflectionUtils.readFieldsAsMap;
+import static io.microsphere.reflect.ReflectionUtils.toList;
+import static java.lang.reflect.Array.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -32,13 +34,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class ReflectionUtilsTest extends AbstractTestCase {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReflectionUtilsTest.class);
-
     @Test
     public void testAssertArrayIndex() {
         int size = 10;
-        Object array = Array.newInstance(int.class, size);
-
+        Object array = newInstance(int.class, size);
         for (int i = 0; i < size; i++) {
             assertArrayIndex(array, i);
         }
@@ -59,7 +58,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     public void testAssertArrayTypeOnException() {
         IllegalArgumentException exception = null;
         try {
-            ReflectionUtils.assertArrayType(new Object());
+            assertArrayType(new Object());
         } catch (IllegalArgumentException e) {
             exception = e;
             logger.error(e.getMessage());
@@ -82,8 +81,8 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     private void testAssertArrayType(Class<?> type) {
-        Object array = Array.newInstance(type, 0);
-        ReflectionUtils.assertArrayType(array);
+        Object array = newInstance(type, 0);
+        assertArrayType(array);
     }
 
     @Test
@@ -120,62 +119,32 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetCallerClassNamePerformance() {
-        if (isSupportedSunReflectReflection()) {
-            for (int i = 0; i < 6; i++) {
-                int times = (int) Math.pow(10 + .0, i + .0);
-                testGetCallerClassNameInSunJVMPerformance(times);
-                testGetCallerClassNameInGeneralJVMPerformance(times);
-            }
-        }
-    }
-
-    private void testGetCallerClassNameInSunJVMPerformance(int times) {
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < times; i++) {
-            getCallerClassNameInSunJVM();
-        }
-        long costTime = System.currentTimeMillis() - startTime;
-        logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInSunJVM() {} times : {} ms！", times, costTime);
-    }
-
-    private void testGetCallerClassNameInGeneralJVMPerformance(int times) {
-        long startTime = System.currentTimeMillis();
-        for (int i = 0; i < times; i++) {
-            getCallerClassNameInGeneralJVM();
-        }
-        long costTime = System.currentTimeMillis() - startTime;
-        logger.info("It's cost to execute ReflectionUtils.getCallerClassNameInGeneralJVM() {} times : {} ms！", times, costTime);
-    }
-
-    @Test
     public void testToList() {
         int[] intArray = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
-        List<Integer> list = ReflectionUtils.toList(intArray);
+        List<Integer> list = toList(intArray);
         Object expectedList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
         assertEquals(expectedList, list);
 
 
         int[][] intIntArray = new int[][]{{1, 2, 3}, {4, 5, 6,}, {7, 8, 9}};
-        list = ReflectionUtils.toList(intIntArray);
+        list = toList(intIntArray);
         expectedList = Arrays.asList(Arrays.asList(1, 2, 3), Arrays.asList(4, 5, 6), Arrays.asList(7, 8, 9));
         assertEquals(expectedList, list);
     }
 
     @Test
     public void testReadFieldsAsMap() {
-        Map<String, Object> map = ReflectionUtils.readFieldsAsMap(new String("abc"));
-        info(map);
+        Map<String, Object> map = readFieldsAsMap(new String("abc"));
+        assertFalse(map.isEmpty());
 
-        map = ReflectionUtils.readFieldsAsMap(Arrays.asList(1, 2, 3, 4));
-        info(map);
+        map = readFieldsAsMap(Arrays.asList(1, 2, 3, 4));
+        assertFalse(map.isEmpty());
 
         Map<String, String> value = new HashMap(3);
         value.put("a", "a");
         value.put("b", "b");
         value.put("c", "c");
-        map = ReflectionUtils.readFieldsAsMap(value);
-        info(map);
-
+        map = readFieldsAsMap(value);
+        assertFalse(map.isEmpty());
     }
 }

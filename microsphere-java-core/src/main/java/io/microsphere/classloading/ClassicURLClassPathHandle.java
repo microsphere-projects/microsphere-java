@@ -28,7 +28,7 @@ package io.microsphere.classloading;
 public class ClassicURLClassPathHandle extends AbstractURLClassPathHandle {
 
     public ClassicURLClassPathHandle() {
-        setPriority(MAX_PRIORITY + 99999);
+        super();
     }
 
     @Override
