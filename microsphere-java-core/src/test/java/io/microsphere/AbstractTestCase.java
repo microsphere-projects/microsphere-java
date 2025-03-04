@@ -114,6 +114,12 @@ public abstract class AbstractTestCase {
         return tempDir;
     }
 
+    protected File createRandomDirectory(File parentDir) {
+        File tempDir = newRandomFile(parentDir);
+        assertTrue(tempDir.mkdir());
+        return tempDir;
+    }
+
     protected File createRandomTempFile() throws IOException {
         File randomTempFile = newRandomTempFile();
         assertTrue(randomTempFile.createNewFile());
