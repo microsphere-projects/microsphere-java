@@ -12,6 +12,7 @@ import java.io.IOException;
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
 import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 
@@ -50,7 +51,7 @@ public abstract class FileUtils extends BaseUtils {
      * @return the file extension if found
      */
     public static String getFileExtension(String fileName) {
-        if (fileName == null) {
+        if (isBlank(fileName)) {
             return null;
         }
         int index = fileName.lastIndexOf(FILE_EXTENSION_CHAR);
