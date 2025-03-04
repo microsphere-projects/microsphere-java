@@ -5,7 +5,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeoutException;
 
+import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
+import static java.lang.Long.getLong;
+import static java.lang.Runtime.getRuntime;
 
 /**
  * {@link Process} Executor
@@ -17,11 +20,16 @@ import static io.microsphere.text.FormatUtils.format;
  */
 public class ProcessExecutor {
 
-    private static final long waitForTimeInSecond = Long.getLong("process.executor.wait.for", 1);
+    private static final long waitForTimeInSecond = getLong("process.executor.wait.for", 1);
+
+    private final ProcessManager processManager = INSTANCE;
+
+    private final Runtime runtime = getRuntime();
+
     private final String command;
+
     private final String arguments;
-    private final Runtime runtime = Runtime.getRuntime();
-    private final ProcessManager processManager = ProcessManager.INSTANCE;
+
     private boolean finished;
 
     /**
