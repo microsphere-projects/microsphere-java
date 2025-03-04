@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Set;
 
+import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -25,19 +26,28 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 public class SimpleFileScannerTest extends AbstractTestCase {
 
-    private SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
+    private static final SimpleFileScanner simpleFileScanner = INSTANCE;
+
+    private static final File JAVA_HOME_DIR = new File(JAVA_HOME);
 
     @Test
     public void testScan() {
-        File jarHome = new File(JAVA_HOME);
-
-        Set<File> directories = simpleFileScanner.scan(jarHome, true);
+        Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true);
         assertFalse(directories.isEmpty());
 
-        directories = simpleFileScanner.scan(jarHome, true, DirectoryFileFilter.INSTANCE);
+        directories = simpleFileScanner.scan(JAVA_HOME_DIR, false);
         assertFalse(directories.isEmpty());
+    }
 
-        directories = simpleFileScanner.scan(jarHome, false, new NameFileFilter("bin"));
+    @Test
+    public void testScanOnDirectory() {
+        Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true, DirectoryFileFilter.INSTANCE);
+        assertFalse(directories.isEmpty());
+    }
+
+    @Test
+    public void testScanOnBinDirectory() {
+        Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true, new NameFileFilter("bin"));
         assertEquals(1, directories.size());
     }
 }
