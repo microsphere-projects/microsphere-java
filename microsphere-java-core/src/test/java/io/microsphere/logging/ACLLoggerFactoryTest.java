@@ -11,7 +11,6 @@ public class ACLLoggerFactoryTest extends AbstractLoggerTest {
 
     @Override
     protected Logger createLogger() {
-        ACLLoggerFactory factory = new ACLLoggerFactory();
-        return factory.createLogger(ACLLoggerFactory.class.getName());
+        return new ACLLoggerFactory().createLogger(ACLLoggerFactory.class.getName());
     }
 }
