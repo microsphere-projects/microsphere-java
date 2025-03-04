@@ -5,8 +5,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -34,11 +38,27 @@ public class ProcessExecutorTest extends AbstractTestCase {
     @Test
     public void testExecute() throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
-        this.executor.execute(outputStream, 2000);
+        this.executor.execute(outputStream);
         assertTrue(outputStream.size() > 0);
         assertTrue(this.executor.isFinished());
         String response = new String(outputStream.toByteArray());
         log(response);
+    }
+
+    @Test
+    public void testExecuteWithTimeout() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
+        assertThrows(TimeoutException.class, () -> this.executor.execute(outputStream, 1));
+        assertEquals(0, outputStream.size());
+        assertTrue(this.executor.isFinished());
+    }
+
+    @Test
+    public void testExecuteOnWrongCommand() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
+        ProcessExecutor processExecutor = new ProcessExecutor("ttttt");
+        assertThrows(IOException.class, () -> processExecutor.execute(outputStream));
+        assertFalse(processExecutor.isFinished());
     }
 
 }
