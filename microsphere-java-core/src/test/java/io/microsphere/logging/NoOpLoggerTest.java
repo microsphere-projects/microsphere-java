@@ -1,9 +1,5 @@
 package io.microsphere.logging;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * {@link NoOpLogger} Test
  *
