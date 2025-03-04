@@ -1,5 +1,14 @@
 package io.microsphere.process;
 
+import io.microsphere.AbstractTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ProcessExecutor} Test
  *
@@ -8,11 +17,28 @@ package io.microsphere.process;
  * @see ProcessExecutorTest
  * @since 1.0.0
  */
-public class ProcessExecutorTest {
+public class ProcessExecutorTest extends AbstractTestCase {
 
-    public void testExecute2() throws Exception {
-        ProcessExecutor executor = new ProcessExecutor("java","-version");
-        executor.execute(System.out, 2000);
+    private ProcessExecutor executor;
+
+    @BeforeEach
+    public void init() {
+        this.executor = new ProcessExecutor("java", "-version");
+    }
+
+    @Test
+    public void testIsFinished() throws Exception {
+        assertFalse(this.executor.isFinished());
+    }
+
+    @Test
+    public void testExecute() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
+        this.executor.execute(outputStream, 2000);
+        assertTrue(outputStream.size() > 0);
+        assertTrue(this.executor.isFinished());
+        String response = new String(outputStream.toByteArray());
+        log(response);
     }
 
 }
