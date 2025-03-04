@@ -5,7 +5,6 @@ package io.microsphere;
 
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Disabled;
 
 import java.util.Collection;
@@ -20,6 +19,7 @@ import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -68,7 +68,7 @@ public abstract class AbstractTestCase {
 
     public static final Deque<?> SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
-    protected final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+    protected final ClassLoader classLoader = getDefaultClassLoader();
 
     protected final Logger logger = getLogger(getClass());
 
