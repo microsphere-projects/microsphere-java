@@ -173,10 +173,10 @@ public class ParameterizedTypeImpl implements ParameterizedType {
                 boolean typeArgEquality = Arrays.equals(actualTypeArguments, // avoid clone
                         that.getActualTypeArguments());
                 for (Type t : actualTypeArguments) {
-                    logger.info("\t\t{}{}", t, t.getClass());
+                    logger.debug("\t\t{}{}", t, t.getClass());
                 }
 
-                logger.info("\towner {}\traw {}\ttypeArg {}",
+                logger.debug("\towner {}\traw {}\ttypeArg {}",
                         ownerEquality, rawEquality, typeArgEquality);
                 return ownerEquality && rawEquality && typeArgEquality;
             }
