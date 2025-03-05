@@ -415,7 +415,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     public static URL getResource(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
-        return classLoader.getResource(normalizedResourceName);
+        return normalizedResourceName == null ?  null : classLoader.getResource(normalizedResourceName);
     }
 
 

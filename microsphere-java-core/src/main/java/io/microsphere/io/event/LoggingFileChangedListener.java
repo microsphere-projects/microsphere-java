@@ -14,33 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.classloading;
+package io.microsphere.io.event;
 
-import java.net.URL;
+import io.microsphere.logging.Logger;
 
-import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
- * No-Operation {@link URLClassPathHandle}
+ * {@link FileChangedListener} class for Logging with debug level
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see URLClassPathHandle
+ * @see FileChangedListener
  * @since 1.0.0
  */
-public class NoOpURLClassPathHandle implements URLClassPathHandle {
+public class LoggingFileChangedListener implements FileChangedListener {
+
+    private static final Logger logger = getLogger(LoggingFileChangedListener.class);
 
     @Override
-    public boolean supports() {
-        return true;
+    public void onFileCreated(FileChangedEvent event) {
+        log(event);
     }
 
     @Override
-    public URL[] getURLs(ClassLoader classLoader) {
-        return EMPTY_URL_ARRAY;
+    public void onFileModified(FileChangedEvent event) {
+        log(event);
     }
 
     @Override
-    public boolean removeURL(ClassLoader classLoader, URL url) {
-        return false;
+    public void onFileDeleted(FileChangedEvent event) {
+        log(event);
+    }
+
+    private void log(FileChangedEvent event) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(event.toString());
+        }
     }
 }

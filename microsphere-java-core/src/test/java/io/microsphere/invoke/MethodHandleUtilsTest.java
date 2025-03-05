@@ -42,16 +42,85 @@ public class MethodHandleUtilsTest {
         assertSame(lookup, lookup2);
     }
 
-    //
     @Test
-    public void testFindVirtual() throws Throwable {
-        MethodHandle methodHandle = findVirtual(String.class, "length");
-        assertEquals(1, (int) methodHandle.invokeExact("A"));
+    public void testFindVirtualOnPublicMethod() throws Throwable {
+        testFindVirtual("publicMethod");
     }
 
     @Test
-    public void testFindStatic() throws Throwable {
-        MethodHandle methodHandle = findStatic(String.class, "valueOf", int.class);
-        assertEquals("1", (String) methodHandle.invokeExact(1));
+    public void testFindVirtualOnProtectedMethod() throws Throwable {
+        testFindVirtual("protectedMethod");
+    }
+
+    @Test
+    public void testFindVirtualOnDefaultMethod() throws Throwable {
+        testFindVirtual("defaultMethod");
+    }
+
+    @Test
+    public void testFindVirtualOnPrivateMethod() throws Throwable {
+        testFindVirtual("privateMethod");
+    }
+
+    @Test
+    public void testFindStaticOnPublicStaticMethod() throws Throwable {
+        testFindStatic("publicStaticMethod");
+    }
+
+    @Test
+    public void testFindStaticOnProtectedStaticMethod() throws Throwable {
+        testFindStatic("protectedStaticMethod");
+    }
+
+    @Test
+    public void testFindStaticOnDefaultStaticMethod() throws Throwable {
+        testFindStatic("defaultStaticMethod");
+    }
+
+    @Test
+    public void testFindStaticOnPrivateStaticMethod() throws Throwable {
+        testFindStatic("privateStaticMethod");
+    }
+
+    private void testFindVirtual(String methodName) throws Throwable {
+        MethodHandle methodHandle = findVirtual(MethodHandleUtilsTest.class, methodName);
+        assertEquals(methodName, (String) methodHandle.invokeExact(this));
+    }
+
+    private void testFindStatic(String methodName) throws Throwable {
+        MethodHandle methodHandle = findStatic(MethodHandleUtilsTest.class, methodName);
+        assertEquals(methodName, (String) methodHandle.invokeExact());
+    }
+
+    public String publicMethod() {
+        return "publicMethod";
+    }
+
+    protected String protectedMethod() {
+        return "protectedMethod";
+    }
+
+    String defaultMethod() {
+        return "defaultMethod";
+    }
+
+    private String privateMethod() {
+        return "privateMethod";
+    }
+
+    public static String publicStaticMethod() {
+        return "publicStaticMethod";
+    }
+
+    private static String protectedStaticMethod() {
+        return "protectedStaticMethod";
+    }
+
+    static String defaultStaticMethod() {
+        return "defaultStaticMethod";
+    }
+
+    private static String privateStaticMethod() {
+        return "privateStaticMethod";
     }
 }

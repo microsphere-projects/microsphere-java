@@ -16,6 +16,10 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.logging.Logger;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
+
 /**
  * Base Utilities class
  *
@@ -24,7 +28,12 @@ package io.microsphere.util;
  */
 public abstract class BaseUtils {
 
+    protected static final Logger logger = getLogger("io.microsphere");
+
     protected BaseUtils() throws IllegalStateException {
+        if (logger.isWarnEnabled()) {
+            logger.warn("The constructor of the utilities class {} must not be invoked", getClass().getName());
+        }
         throw new IllegalStateException("Not Supported!");
     }
 }

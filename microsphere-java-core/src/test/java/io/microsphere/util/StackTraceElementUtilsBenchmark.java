@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.invoke;
+package io.microsphere.util;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -26,71 +26,33 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
-import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
-import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.util.StackTraceUtils.getCallerClassNameInGeneralJVM;
+import static io.microsphere.util.StackTraceUtils.getCallerClassNames;
 
 /**
- * The benchmark of {@link MethodHandleUtils}
+ * {@link StackTraceUtils} Benchmark
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see MethodHandleUtils
+ * @see StackTraceUtils
  * @since 1.0.0
  */
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 20, time = 1, timeUnit = TimeUnit.SECONDS)
-@Fork(3)
+@Fork(1)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Thread)
-public class MethodHandleUtilsBenchmark {
+public class StackTraceElementUtilsBenchmark {
 
-    private static final MethodHandle staticMethodHandle = findVirtual(MethodHandleUtilsBenchmark.class, "echo");
-
-    private static final Method method = findMethod(MethodHandleUtilsBenchmark.class, "echo");
-
-    private final MethodHandle methodHandle = findVirtual(MethodHandleUtilsBenchmark.class, "echo");
-
-    static {
-        method.setAccessible(true);
+    @Benchmark
+    public void testGetCallerClassNameInGeneralJVM() {
+        getCallerClassNameInGeneralJVM();
     }
 
     @Benchmark
-    public void directAccess() {
-        this.echo();
-    }
-
-    @Benchmark
-    public void invokeMethod() throws Throwable {
-        method.invoke(this);
-    }
-
-    @Benchmark
-    public void invokeExactMethodHandle() throws Throwable {
-        invokeExact(methodHandle);
-    }
-
-    @Benchmark
-    public void invokeMethodHandle() throws Throwable {
-        invokeExact(methodHandle);
-    }
-
-    @Benchmark
-    public void invokeStaticMethodHandle() throws Throwable {
-        invokeExact(staticMethodHandle);
-    }
-
-    private void invokeExact(MethodHandle methodHandle) throws Throwable {
-        methodHandle.invokeExact(this);
-    }
-
-    private void invoke(MethodHandle methodHandle) throws Throwable {
-        methodHandle.invoke(this);
-    }
-
-    public void echo() {
+    public void testGetCallerClassName() {
+        getCallerClassNames();
     }
 }

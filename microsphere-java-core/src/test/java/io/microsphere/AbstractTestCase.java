@@ -5,14 +5,16 @@ package io.microsphere;
 
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.Disabled;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static io.microsphere.collection.QueueUtils.emptyDeque;
@@ -20,12 +22,15 @@ import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Abstract Test
@@ -68,7 +73,9 @@ public abstract class AbstractTestCase {
 
     public static final Deque<?> SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
-    protected final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+    public static final File tempDir = new File(JAVA_IO_TMPDIR);
+
+    protected final ClassLoader classLoader = getDefaultClassLoader();
 
     protected final Logger logger = getLogger(getClass());
 
@@ -99,5 +106,45 @@ public abstract class AbstractTestCase {
         }
         assertNotNull(failure);
         failureHandler.accept(failure);
+    }
+
+    protected File createRandomTempDirectory() {
+        File tempDir = newTempFile(buildRandomFileName());
+        assertTrue(tempDir.mkdir());
+        return tempDir;
+    }
+
+    protected File createRandomDirectory(File parentDir) {
+        File tempDir = newRandomFile(parentDir);
+        assertTrue(tempDir.mkdir());
+        return tempDir;
+    }
+
+    protected File createRandomTempFile() throws IOException {
+        File randomTempFile = newRandomTempFile();
+        assertTrue(randomTempFile.createNewFile());
+        return randomTempFile;
+    }
+
+    protected File createRandomFile(File parentDir) throws IOException {
+        File randomFile = newRandomFile(parentDir);
+        assertTrue(randomFile.createNewFile());
+        return randomFile;
+    }
+
+    protected File newRandomTempFile() {
+        return newTempFile(buildRandomFileName());
+    }
+
+    protected File newRandomFile(File parentDir) {
+        return new File(parentDir, buildRandomFileName());
+    }
+
+    protected String buildRandomFileName() {
+        return UUID.randomUUID().toString();
+    }
+
+    protected File newTempFile(String path) {
+        return new File(tempDir, path);
     }
 }

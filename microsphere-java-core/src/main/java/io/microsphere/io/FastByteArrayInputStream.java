@@ -110,4 +110,8 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
     public void reset() {
         pos = mark;
     }
+
+    @Override
+    public void close() {
+    }
 }

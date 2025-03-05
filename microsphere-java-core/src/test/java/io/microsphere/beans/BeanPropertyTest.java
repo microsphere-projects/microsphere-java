@@ -16,13 +16,12 @@
  */
 package io.microsphere.beans;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -38,6 +37,8 @@ public class BeanPropertyTest {
 
     private String value = TEST_VALUE;
 
+    private BeanProperty beanProperty;
+
     public String getValue() {
         return value;
     }
@@ -46,18 +47,56 @@ public class BeanPropertyTest {
         this.value = value;
     }
 
-    @Test
-    public void test() {
-        BeanPropertyTest bean = new BeanPropertyTest();
-        BeanProperty beanProperty = BeanProperty.of(bean, "value");
-        assertEquals("value", beanProperty.getName());
-        assertEquals(TEST_VALUE, beanProperty.getValue());
-        assertEquals(BeanPropertyTest.class, beanProperty.getBeanClass());
-        assertEquals(String.class, beanProperty.getDescriptor().getPropertyType());
+    public BeanProperty getBeanProperty() {
+        return beanProperty;
+    }
 
-        Set<BeanProperty> beanProperties = new HashSet<>();
-        beanProperties.add(beanProperty);
-        assertFalse(beanProperties.add(beanProperty));
+    public void setBeanProperty(BeanProperty beanProperty) {
+        this.beanProperty = beanProperty;
+    }
+
+    @BeforeEach
+    public void init() {
+        beanProperty = BeanProperty.of(this, "value");
+    }
+
+    @Test
+    public void testValue() {
+        assertEquals(TEST_VALUE, beanProperty.getValue());
+        beanProperty.setValue("new-value");
+        assertEquals("new-value", beanProperty.getValue());
+    }
+
+    @Test
+    public void testName() {
+        assertEquals("value", beanProperty.getName());
+    }
+
+    @Test
+    public void testBeanClass() {
+        assertEquals(BeanPropertyTest.class, beanProperty.getBeanClass());
+    }
+
+    @Test
+    public void testPropertyDescriptor() {
+        assertNotNull(beanProperty.getDescriptor());
+    }
+
+    @Test
+    public void testEquals() {
+        assertFalse(this.beanProperty.equals(null));
+        assertFalse(this.beanProperty.equals("test"));
+        assertNotEquals(this.beanProperty, BeanProperty.of(this, "beanProperty"));
+        assertEquals(this.beanProperty, BeanProperty.of(this, "value"));
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(this.beanProperty.hashCode(), BeanProperty.of(this, "value").hashCode());
+    }
+
+    @Test
+    public void testToString() {
         assertNotNull(beanProperty.toString());
     }
 }
