@@ -16,6 +16,7 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.SystemUtils;
 
@@ -31,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
@@ -48,10 +50,17 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class IOUtils extends BaseUtils {
 
+    private static final Logger logger = getLogger(IOUtils.class);
+
+    /**
+     * The default buffer size for I/O
+     */
+    public static final int DEFAULT_BUFFER_SIZE = 4096;
+
     /**
      * The buffer size for I/O
      */
-    public static final int BUFFER_SIZE = getInteger("microsphere.io.buffer.size", 4096);
+    public static final int BUFFER_SIZE = getInteger("microsphere.io.buffer.size", DEFAULT_BUFFER_SIZE);
 
     /**
      * Copy the contents of the given InputStream into a new byte array.
@@ -65,7 +74,7 @@ public abstract class IOUtils extends BaseUtils {
         if (in == null) {
             return EMPTY_BYTE_ARRAY;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFFER_SIZE);
+        FastByteArrayOutputStream out = new FastByteArrayOutputStream(BUFFER_SIZE);
         copy(in, out);
         return out.toByteArray();
     }
@@ -120,18 +129,10 @@ public abstract class IOUtils extends BaseUtils {
             byteCount += bytesRead;
         }
         out.flush();
-        return byteCount;
-    }
-
-    /**
-     * Closes a URLConnection.
-     *
-     * @param conn the connection to close.
-     */
-    public static void close(URLConnection conn) {
-        if (conn instanceof HttpURLConnection) {
-            ((HttpURLConnection) conn).disconnect();
+        if (logger.isTraceEnabled()) {
+            logger.trace("Copied {} bytes[buffer size : {}] from InputStream[{}] to OutputStream[{}]", byteCount, BUFFER_SIZE, in, out);
         }
+        return byteCount;
     }
 
     /**
@@ -161,8 +162,10 @@ public abstract class IOUtils extends BaseUtils {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (IOException ignored) {
-            // ignore
+        } catch (IOException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The Closeable[{}] can't be closed", closeable, e);
+            }
         }
     }
 }
