@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.io.IOUtils.BUFFER_SIZE;
 import static io.microsphere.io.IOUtils.DEFAULT_BUFFER_SIZE;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link IOUtils} Test
