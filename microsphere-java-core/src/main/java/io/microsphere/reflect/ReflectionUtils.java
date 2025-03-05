@@ -1,6 +1,7 @@
 package io.microsphere.reflect;
 
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.text.FormatUtils.format;
@@ -54,14 +56,16 @@ import static java.util.Collections.unmodifiableSet;
 public abstract class ReflectionUtils extends BaseUtils {
 
     /**
-     * Sun JDK implementation class: full name of sun.reflect.Reflection
-     */
-    public static final String SUN_REFLECT_REFLECTION_CLASS_NAME = "sun.reflect.Reflection";
-
-    /**
      * Current Type
      */
     private static final Class<?> TYPE = ReflectionUtils.class;
+
+    private static final Logger logger = getLogger(TYPE);
+
+    /**
+     * Sun JDK implementation class: full name of sun.reflect.Reflection
+     */
+    public static final String SUN_REFLECT_REFLECTION_CLASS_NAME = "sun.reflect.Reflection";
 
     /**
      * sun.reflect.Reflection method name
@@ -112,9 +116,10 @@ public abstract class ReflectionUtils extends BaseUtils {
                 }
             }
             supported = true;
-        } catch (Exception e) {
-            method = null;
-            supported = false;
+        } catch (Throwable e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The class '{}' or its' method '{}({})' can't be initialized.", SUN_REFLECT_REFLECTION_CLASS_NAME, getCallerClassMethodName, int.class, e);
+            }
         }
         // set method info
         getCallerClassMethod = method;
