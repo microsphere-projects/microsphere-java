@@ -20,13 +20,10 @@ import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.SystemUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
