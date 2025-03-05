@@ -17,8 +17,8 @@ public class IOUtilsTest {
 
     @Test
     public void testConstants() {
-        assertEquals(4096, DEFAULT_BUFFER_SIZE);
-        assertEquals(4096, BUFFER_SIZE);
+        assertEquals(2048, DEFAULT_BUFFER_SIZE);
+        assertEquals(2048, BUFFER_SIZE);
     }
 
     @Test
