@@ -85,17 +85,10 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         int newCapacity = oldCapacity << 1;
         if (newCapacity - minCapacity < 0)
             newCapacity = minCapacity;
-        if (newCapacity - MAX_ARRAY_SIZE > 0)
-            newCapacity = hugeCapacity(minCapacity);
-        buf = copyOf(buf, newCapacity);
-    }
-
-    private static int hugeCapacity(int minCapacity) {
-        if (minCapacity < 0) // overflow
+        if (newCapacity - MAX_ARRAY_SIZE > 0) {
             throw new OutOfMemoryError();
-        return (minCapacity > MAX_ARRAY_SIZE) ?
-                Integer.MAX_VALUE :
-                MAX_ARRAY_SIZE;
+        }
+        buf = copyOf(buf, newCapacity);
     }
 
     /**
