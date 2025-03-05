@@ -52,7 +52,7 @@ public abstract class IOUtils extends BaseUtils {
     /**
      * The default buffer size for I/O
      */
-    public static final int DEFAULT_BUFFER_SIZE = 2028;
+    public static final int DEFAULT_BUFFER_SIZE = 2048;
 
     /**
      * The buffer size for I/O
