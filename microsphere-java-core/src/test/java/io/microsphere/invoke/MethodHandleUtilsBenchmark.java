@@ -74,7 +74,12 @@ public class MethodHandleUtilsBenchmark {
     }
 
     @Benchmark
-    public void invokeExactStaticMethodHandle() throws Throwable {
+    public void invokeMethodHandle() throws Throwable {
+        invokeExact(methodHandle);
+    }
+
+    @Benchmark
+    public void invokeStaticMethodHandle() throws Throwable {
         invokeExact(staticMethodHandle);
     }
 
@@ -82,6 +87,10 @@ public class MethodHandleUtilsBenchmark {
         methodHandle.invokeExact(this);
     }
 
-    private void echo() {
+    private void invoke(MethodHandle methodHandle) throws Throwable {
+        methodHandle.invoke(this);
+    }
+
+    public void echo() {
     }
 }
