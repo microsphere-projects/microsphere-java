@@ -22,6 +22,8 @@ public class FastByteArrayInputStreamTest {
 
     private static final String TEST_VALUE = "Hello";
 
+    private static final byte[] TEST_BYTES = TEST_VALUE.getBytes();
+
     private static final int TEST_OFFSET = 2;
 
     private FastByteArrayInputStream inputStream;
@@ -30,9 +32,8 @@ public class FastByteArrayInputStreamTest {
 
     @BeforeEach
     public void init() {
-        byte[] bytes = TEST_VALUE.getBytes();
-        inputStream = new FastByteArrayInputStream(bytes);
-        inputStream2 = new FastByteArrayInputStream(TEST_VALUE.getBytes(), TEST_OFFSET, TEST_VALUE.length());
+        inputStream = new FastByteArrayInputStream(TEST_BYTES);
+        inputStream2 = new FastByteArrayInputStream(TEST_BYTES, TEST_OFFSET, TEST_VALUE.length());
     }
 
     @AfterEach
