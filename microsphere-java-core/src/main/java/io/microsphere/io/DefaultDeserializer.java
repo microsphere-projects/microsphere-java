@@ -16,7 +16,6 @@
  */
 package io.microsphere.io;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -40,7 +39,7 @@ public class DefaultDeserializer implements Deserializer<Object> {
             return null;
         }
         Object value = null;
-        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+        try (FastByteArrayInputStream inputStream = new FastByteArrayInputStream(bytes);
              ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)
         ) {
             // byte[] -> Value

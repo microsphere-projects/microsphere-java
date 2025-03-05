@@ -11,7 +11,9 @@ import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
@@ -728,6 +730,17 @@ public abstract class URLUtils extends BaseUtils {
         MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory(true);
         factory.addURLStreamHandler(protocol, handler);
         attachURLStreamHandlerFactory(factory);
+    }
+
+    /**
+     * Closes a URLConnection.
+     *
+     * @param conn the connection to close.
+     */
+    public static void close(URLConnection conn) {
+        if (conn instanceof HttpURLConnection) {
+            ((HttpURLConnection) conn).disconnect();
+        }
     }
 
     protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory() {

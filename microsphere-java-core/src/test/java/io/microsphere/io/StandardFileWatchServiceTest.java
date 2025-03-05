@@ -18,6 +18,7 @@ package io.microsphere.io;
 
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
+import io.microsphere.io.event.LoggingFileChangedListener;
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -82,6 +83,7 @@ public class StandardFileWatchServiceTest {
         this.executor = newSingleThreadExecutor();
 
         fileWatchService.watch(targetFile, new MyFileChangedListener(this.countDownLatch));
+        fileWatchService.watch(targetFile, new LoggingFileChangedListener());
         fileWatchService.watch(targetFile, new FileChangedListener() {
         });
         fileWatchService.start();
@@ -115,8 +117,6 @@ public class StandardFileWatchServiceTest {
         public void onFileCreated(FileChangedEvent event) {
             File targetFile = event.getFile();
             countDownLatch.countDown();
-            logger.info(event.toString());
-
             // modified file
             async(() -> {
                 Files.write(targetFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
@@ -126,8 +126,6 @@ public class StandardFileWatchServiceTest {
         @Override
         public void onFileModified(FileChangedEvent event) {
             countDownLatch.countDown();
-            logger.info(event.toString());
-
             // delete file
             async(() -> {
                 forceDelete(targetFile);
@@ -137,7 +135,6 @@ public class StandardFileWatchServiceTest {
         @Override
         public void onFileDeleted(FileChangedEvent event) {
             countDownLatch.countDown();
-            logger.info(event.toString());
         }
     }
 
