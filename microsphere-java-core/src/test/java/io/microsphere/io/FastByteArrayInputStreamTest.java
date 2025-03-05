@@ -1,6 +1,5 @@
 package io.microsphere.io;
 
-import jdk.internal.util.xml.impl.Input;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.lang.Integer.MAX_VALUE;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link FastByteArrayInputStream} Test
