@@ -25,12 +25,17 @@ public class FastByteArrayOutputStreamTest {
 
     @BeforeEach
     public void init() {
-        outputStream = new FastByteArrayOutputStream();
+        outputStream = new FastByteArrayOutputStream(2);
     }
 
     @AfterEach
     public void destroy() {
         outputStream.close();
+    }
+
+    @Test
+    public void testConstructorOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new FastByteArrayOutputStream(-1));
     }
 
     @Test
