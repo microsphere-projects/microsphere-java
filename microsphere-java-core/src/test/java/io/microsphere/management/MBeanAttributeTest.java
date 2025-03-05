@@ -3,15 +3,12 @@ package io.microsphere.management;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static io.microsphere.management.JmxUtils.findMBeanAttributeInfo;
 import static io.microsphere.management.JmxUtils.getMBeanAttributesMap;
 import static io.microsphere.management.JmxUtils.getMBeanInfo;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
