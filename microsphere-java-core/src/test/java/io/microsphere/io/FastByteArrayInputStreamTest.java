@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -65,6 +66,26 @@ public class FastByteArrayInputStreamTest {
         length = TEST_VALUE.length() - TEST_OFFSET;
         assertEquals(length, inputStream2.read(bytes, offset, length));
         assertEquals("llo", new String(bytes, offset, length));
+    }
+
+    @Test
+    public void testRead1OnNullPointer() {
+        assertThrows(NullPointerException.class, () -> inputStream.read(null, 0, 0));
+        assertThrows(NullPointerException.class, () -> inputStream2.read(null, 0, 0));
+    }
+
+    @Test
+    public void testRead1OnIndexOutOfBounds() {
+        byte[] bytes = new byte[8];
+
+        assertThrows(IndexOutOfBoundsException.class, () -> inputStream.read(bytes, -1, 0));
+        assertThrows(IndexOutOfBoundsException.class, () -> inputStream2.read(bytes, -1, 0));
+
+        assertThrows(IndexOutOfBoundsException.class, () -> inputStream.read(bytes, 0, -1));
+        assertThrows(IndexOutOfBoundsException.class, () -> inputStream2.read(bytes, 0, -1));
+
+        assertThrows(IndexOutOfBoundsException.class, () -> inputStream.read(bytes, 0, MAX_VALUE));
+        assertThrows(IndexOutOfBoundsException.class, () -> inputStream2.read(bytes, 0, MAX_VALUE));
     }
 
     @Test
