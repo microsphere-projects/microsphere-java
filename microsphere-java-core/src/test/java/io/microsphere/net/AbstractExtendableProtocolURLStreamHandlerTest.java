@@ -30,6 +30,7 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.io.IOUtils.toByteArray;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackages;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue;
+import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.split;
 import static java.net.Proxy.NO_PROXY;
@@ -62,6 +63,7 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
 
     @AfterEach
     public void destroy() {
+        System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
     @Test
