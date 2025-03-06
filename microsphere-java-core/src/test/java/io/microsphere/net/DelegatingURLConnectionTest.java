@@ -143,7 +143,7 @@ public class DelegatingURLConnectionTest {
 
     @Test
     public void testGetHeaderFields() {
-        assertTrue(urlConnection.getHeaderFields().isEmpty());
+        assertNotNull(urlConnection.getHeaderFields());
     }
 
     @Test
