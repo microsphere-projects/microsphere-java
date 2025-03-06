@@ -190,27 +190,28 @@ public class ExtendableProtocolURLStreamHandlerTest {
 
     @Test
     public void testOpenConnection() throws IOException {
-
         URL url = new URL(TEST_URL);
         assertSame(url.openStream(), handler.openConnection(url, NO_PROXY).getInputStream());
         assertEquals(TEST_URL, url.toString());
-
-        url = new URL(TEST_URL_WITH_SP);
-        assertSame(url.openStream(), handler.openConnection(url, NO_PROXY).getInputStream());
-        assertEquals(TEST_URL_WITH_SP, url.toString());
     }
 
     @Test
-    public void testTestOpenConnection() throws IOException {
-        String spec = TEST_URL_WITH_SP_PARAMS;
-        URL url = new URL(spec);
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
+    public void testOpenConnectionWithProxy() throws IOException {
+        ExtendableProtocolURLStreamHandler handler = new TestHandler("console");
+        handler.customizeSubProtocolURLConnectionFactories(factories -> {
+            factories.add(new ConsoleSubProtocolURLConnectionFactory());
+        });
+        URL url = new URL(TEST_URL_WITH_SP);
+        assertSame(url.openStream(), handler.openConnection(url, NO_PROXY).getInputStream());
+        assertEquals(TEST_URL_WITH_SP, url.toString());
 
-        spec = TEST_URL_WITH_SP_PARAMS_HASH;
-        url = new URL(spec);
+        url = new URL(TEST_URL_WITH_SP_PARAMS);
         assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
+        assertEquals(TEST_URL_WITH_SP_PARAMS, url.toString());
+
+        url = new URL(TEST_URL_WITH_SP_PARAMS);
+        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
+        assertEquals(TEST_URL_WITH_SP_PARAMS, url.toString());
     }
 
     @Test
