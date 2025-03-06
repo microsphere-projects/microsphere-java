@@ -90,4 +90,16 @@ public class IOUtilsTest {
         destroy();
         close(new FastByteArrayOutputStream(0));
     }
+
+    @Test
+    public void testCloseOnNull() {
+        close(null);
+    }
+
+    @Test
+    public void testCloseOnIOException() {
+        close(() -> {
+            throw new IOException("For testing");
+        });
+    }
 }
