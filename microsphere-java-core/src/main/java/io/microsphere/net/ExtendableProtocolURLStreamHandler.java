@@ -311,28 +311,27 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         assertPackage(type);
     }
 
-    private static void assertClassTopLevel(Class<?> type) {
+    static void assertClassTopLevel(Class<?> type) {
         if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
-            throw new IllegalStateException("The implementation " + type + " must be the top level");
+            throw new IllegalArgumentException("The implementation " + type + " must be the top level");
         }
     }
 
-    private static void assertClassName(Class<?> type) {
+    static void assertClassName(Class<?> type) {
         String simpleClassName = type.getSimpleName();
-        String className = HANDLER_CONVENTION_CLASS_NAME;
-        if (!Objects.equals(className, simpleClassName)) {
-            throw new IllegalStateException("The implementation class must name '" + className + "', actual : '" + simpleClassName + "'");
+        if (!HANDLER_CONVENTION_CLASS_NAME.equals(simpleClassName)) {
+            throw new IllegalArgumentException("The implementation class must name '" + HANDLER_CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + "'");
         }
     }
 
-    private static void assertPackage(Class<?> type) {
+    static void assertPackage(Class<?> type) {
         String className = type.getName();
         if (className.indexOf(DOT_CHAR) < 0) {
-            throw new IllegalStateException("The Handler class must not be present at the top package!");
+            throw new IllegalArgumentException("The Handler class must not be present at the top package!");
         }
         String packagePrefix = DEFAULT_HANDLER_PACKAGE_PREFIX;
         if (className.startsWith(packagePrefix)) {
-            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + packagePrefix + "'");
+            throw new IllegalArgumentException("The Handler class must not be present in the builtin package : '" + packagePrefix + "'");
         }
     }
 
