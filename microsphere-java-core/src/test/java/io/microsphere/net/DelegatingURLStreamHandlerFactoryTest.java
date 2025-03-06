@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link DelegatingURLStreamHandlerFactory Test}
@@ -23,6 +24,11 @@ public class DelegatingURLStreamHandlerFactoryTest {
     public void init() {
         this.delegate = new StandardURLStreamHandlerFactory();
         this.factory = new DelegatingURLStreamHandlerFactory(this.delegate);
+    }
+
+    @Test
+    public void testConstructorOnNull() {
+        assertThrows(IllegalArgumentException.class, () -> new DelegatingURLStreamHandlerFactory(null));
     }
 
     @Test
