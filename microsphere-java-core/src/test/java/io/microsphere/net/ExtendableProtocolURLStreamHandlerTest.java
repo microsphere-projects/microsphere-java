@@ -34,6 +34,7 @@ import static io.microsphere.net.ExtendableProtocolURLStreamHandler.assertClassT
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.assertPackage;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackages;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue;
+import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
 import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL_WITH_SP;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -69,6 +70,7 @@ public class ExtendableProtocolURLStreamHandlerTest {
 
     @AfterEach
     public void destroy() {
+        System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
     @Test
