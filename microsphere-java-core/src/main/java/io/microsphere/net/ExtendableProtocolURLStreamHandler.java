@@ -39,6 +39,7 @@ import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
 import static io.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.registerURLStreamHandler;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 import static java.net.Proxy.NO_PROXY;
@@ -296,10 +297,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     @Override
     public String toString() {
-        String sb = getClass().getName() + "{defaultPort=" + getDefaultPort() +
-                ",protocol=" + getProtocol() +
-                '}';
-        return sb;
+        return format("{} {defaultPort = {} , protocol = '{}'}", getClass().getName(), getDefaultPort(), getProtocol());
     }
 
     private static String resolveConventionProtocol(String packageName) {
