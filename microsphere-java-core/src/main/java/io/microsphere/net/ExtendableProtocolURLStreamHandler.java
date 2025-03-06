@@ -161,7 +161,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     }
 
     @Override
-    protected URLConnection openConnection(URL u, Proxy p) throws IOException {
+    public URLConnection openConnection(URL u, Proxy p) throws IOException {
         List<String> subProtocols = resolveSubProtocols(u);
         URLConnection urlConnection = null;
         int size = factories.size();
