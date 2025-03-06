@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
@@ -143,6 +144,15 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @param factories the collection of {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
      */
     protected void initSubProtocolURLConnectionFactories(List<SubProtocolURLConnectionFactory> factories) {
+    }
+
+    /**
+     * Customize {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
+     *
+     * @param factoriesCustomizer the customizer for collection of {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
+     */
+    public void customizeSubProtocolURLConnectionFactories(Consumer<List<SubProtocolURLConnectionFactory>> factoriesCustomizer) {
+        factoriesCustomizer.accept(this.factories);
     }
 
     @Override
