@@ -39,7 +39,7 @@ import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 public class Handler extends ExtendableProtocolURLStreamHandler {
 
     @Override
-    protected URLConnection openConnection(URL u, Proxy proxy) throws IOException {
+    public URLConnection openConnection(URL u, Proxy proxy) throws IOException {
         String authority = u.getAuthority();
         String path = u.getPath();
 
