@@ -491,17 +491,6 @@ public abstract class URLUtils extends BaseUtils {
      * @return non-null
      * @throws NullPointerException If <code>url</code> is <code>null</code>
      */
-    public static String toString(URL url) throws NullPointerException {
-        return toExternalForm(url);
-    }
-
-    /**
-     * Converts a URL of a specific protocol to a String.
-     *
-     * @param url {@link URL}
-     * @return non-null
-     * @throws NullPointerException If <code>url</code> is <code>null</code>
-     */
     public static String toExternalForm(URL url) throws NullPointerException {
         // pre-compute length of StringBuilder
         String protocol = url.getProtocol();
