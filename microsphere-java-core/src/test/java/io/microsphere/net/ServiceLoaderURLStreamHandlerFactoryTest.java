@@ -16,10 +16,20 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.io.IOUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URL;
 import java.net.URLStreamHandler;
 
+import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
+import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
+import static io.microsphere.net.classpath.HandlerTest.TEST_PROPERTIES_CLASSPATH_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -29,6 +39,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 public class ServiceLoaderURLStreamHandlerFactoryTest {
+
+    @BeforeEach
+    public void init() {
+        attach();
+    }
+
+    @AfterEach
+    public void destroy() {
+        clearURLStreamHandlerFactory();
+    }
 
     @Test
     public void test() {
@@ -44,7 +64,12 @@ public class ServiceLoaderURLStreamHandlerFactoryTest {
 
         handler = factory.createURLStreamHandler("console");
         assertEquals("io.microsphere.net.console.Handler", handler.getClass().getName());
+    }
 
-
+    @Test
+    public void testAttach() throws IOException {
+        attach();
+        URL url = new URL(TEST_PROPERTIES_CLASSPATH_URL);
+        assertEquals("name = 测试名称", IOUtils.toString(url.openStream(), "UTF-8"));
     }
 }
