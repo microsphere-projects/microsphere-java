@@ -38,9 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class HandlerTest extends AbstractExtendableProtocolURLStreamHandlerTest {
 
-    private static final String TEST_PROPERTIES_CLASSPATH_URL = "classpath://META-INF/test.properties";
+    public static final String TEST_PROPERTIES_CLASSPATH_URL = "classpath://META-INF/test.properties";
 
-    private static final String EVENT_LISTENER_URL = "classpath:////META-INF/services/io.microsphere.event.EventListener";
+    public static final String EVENT_LISTENER_URL = "classpath:////META-INF/services/io.microsphere.event.EventListener";
 
     private static final String NOT_FOUND_URL = "classpath://META-INF/not-found.res";
 
