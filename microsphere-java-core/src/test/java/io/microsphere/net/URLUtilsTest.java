@@ -3,6 +3,7 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +24,7 @@ import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.encode;
+import static io.microsphere.net.URLUtils.getSubProtocol;
 import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.isArchiveURL;
 import static io.microsphere.net.URLUtils.isDirectoryURL;
@@ -34,6 +36,8 @@ import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
+import static io.microsphere.net.URLUtils.resolveSubProtocols;
+import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
@@ -333,18 +337,94 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testToStringOnDirectory() {
-        assertEquals(URLUtils.toString(userDirURL), userDirURL.toExternalForm());
+    public void testToExternalFormOnDirectory() {
+        testToExternalForm(userDirURL);
     }
 
     @Test
-    public void testToStringOnClassFile() {
-        assertEquals(URLUtils.toString(classFileURL), classFileURL.toExternalForm());
+    public void testToExternalFormOnClassFile() {
+        testToExternalForm(classFileURL);
     }
 
     @Test
-    public void testToStringOnClassArchiveEntry() {
-        assertEquals(URLUtils.toString(classArchiveEntryURL), classArchiveEntryURL.toExternalForm());
+    public void testToExternalFormOnClassArchiveEntry() {
+        testToExternalForm(classArchiveEntryURL);
+    }
+
+    @Test
+    public void testToExternalFormWithMatrix() throws MalformedURLException {
+        String url = "https://acme.com/;q=java";
+        testToExternalForm(url);
+    }
+
+    @Test
+    public void testToExternalFormWithQueryString() throws MalformedURLException {
+        String url = "https://acme.com?q=java&key=1";
+        testToExternalForm(url);
+    }
+
+    @Test
+    public void testToExternalFormWithPath() throws MalformedURLException {
+        String url = "https://acme.com/abc/def";
+        testToExternalForm(url);
+    }
+
+    @Test
+    public void testToExternalFormWithRef() throws MalformedURLException {
+        String url = "https://acme.com/abc/def#hash";
+        testToExternalForm(url);
+    }
+
+    private void testToExternalForm(String urlString) throws MalformedURLException {
+        testToExternalForm(new URL(urlString));
+    }
+
+    private void testToExternalForm(URL url) {
+        assertEquals(url.toExternalForm(), toExternalForm(url));
+    }
+
+    @Test
+    public void testGetSubProtocol() {
+        String url = "https://acme.com/;_sp=classpath";
+        assertEquals("classpath", getSubProtocol(url));
+    }
+
+    @Test
+    public void testGetSubProtocolWithSubProtocol() {
+        String url = "https://acme.com/";
+        assertNull(getSubProtocol(url));
+    }
+
+    @Test
+    public void testResolveSubProtocolsFromMatrix() throws MalformedURLException {
+        URL url = new URL("https://localhost/;_sp=text;_sp=properties");
+        List<String> subProtocols = resolveSubProtocols(url);
+        assertEquals(2, subProtocols.size());
+        assertEquals("text", subProtocols.get(0));
+        assertEquals("properties", subProtocols.get(1));
+    }
+
+    @Test
+    public void testResolveSubProtocolsFromProtocol() throws MalformedURLException {
+        new Handler();
+        URL url = new URL("console:text:properties://localhost");
+        List<String> subProtocols = resolveSubProtocols(url);
+        assertEquals(2, subProtocols.size());
+        assertEquals("text", subProtocols.get(0));
+        assertEquals("properties", subProtocols.get(1));
+    }
+
+    @Test
+    public void testResolveProtocol() {
+        assertNull(resolveProtocol(null));
+        assertNull(resolveProtocol(""));
+        assertNull(resolveProtocol(" "));
+        assertNull(resolveProtocol(":"));
+        assertNull(resolveProtocol(" :"));
+        assertNull(resolveProtocol(" a:"));
+        assertNull(resolveProtocol("a :"));
+        assertEquals("ftp", resolveProtocol("ftp://..."));
+        assertEquals("http", resolveProtocol("http://..."));
     }
 
     @Test
@@ -360,21 +440,6 @@ public class URLUtilsTest {
         assertEquals(1, compositeFactory.getFactories().size());
         assertSame(factory, compositeFactory.getFactories().get(0));
         assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
-
-    }
-
-    @Test
-    public void testResolveProtocol() {
-        assertNull(resolveProtocol(null));
-        assertNull(resolveProtocol(""));
-        assertNull(resolveProtocol(" "));
-        assertNull(resolveProtocol(":"));
-        assertNull(resolveProtocol(" :"));
-        assertNull(resolveProtocol(" a:"));
-        assertNull(resolveProtocol("a :"));
-        assertEquals("ftp", resolveProtocol("ftp://..."));
-        assertEquals("http", resolveProtocol("http://..."));
-
     }
 
 
