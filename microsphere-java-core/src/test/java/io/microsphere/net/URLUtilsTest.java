@@ -34,6 +34,7 @@ import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
+import static io.microsphere.net.URLUtils.resolvePath;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.net.URLUtils.resolveSubProtocols;
@@ -189,7 +190,7 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testResolvePath() {
+    public void testNormalizePath() {
         String path = null;
         String expectedPath = null;
         String resolvedPath = null;
@@ -425,6 +426,11 @@ public class URLUtilsTest {
         assertNull(resolveProtocol("a :"));
         assertEquals("ftp", resolveProtocol("ftp://..."));
         assertEquals("http", resolveProtocol("http://..."));
+    }
+
+    @Test
+    public void testResolvePath() {
+        assertEquals(USER_DIR, resolvePath(userDirURL));
     }
 
     @Test
