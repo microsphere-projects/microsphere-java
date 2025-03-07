@@ -14,12 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.net;
+package io.microsphere.net.test;
 
-import java.io.IOException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.URLConnection;
+import io.microsphere.net.ExtendableProtocolURLStreamHandler;
 
 /**
  * Test {@link ExtendableProtocolURLStreamHandler}
@@ -27,15 +24,14 @@ import java.net.URLConnection;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class TestHandler extends ExtendableProtocolURLStreamHandler {
+public class Handler extends ExtendableProtocolURLStreamHandler {
 
-    public TestHandler(String protocol) {
-        super(protocol);
+    public Handler() {
+        super();
     }
 
-    @Override
-    protected URLConnection openFallbackConnection(URL url, Proxy proxy) throws IOException {
-        return null;
+    public Handler(String protocol) {
+        super(protocol);
     }
 
 }

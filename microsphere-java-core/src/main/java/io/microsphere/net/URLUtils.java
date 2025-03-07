@@ -158,10 +158,10 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
-        return doResolveBasePath(url.getPath());
+        return resolveBasePath(url.getPath());
     }
 
-    protected static String doResolveBasePath(String path) {
+    protected static String resolveBasePath(String path) {
         int beginIndex = path.lastIndexOf(COLON_CHAR);
         if (beginIndex == -1) {
             return path;
@@ -482,17 +482,6 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String buildMatrixString(String name, String... values) {
         return buildString(name, values, SEMICOLON_CHAR, EQUAL_CHAR);
-    }
-
-    /**
-     * Converts a URL of a specific protocol to a String.
-     *
-     * @param url {@link URL}
-     * @return non-null
-     * @throws NullPointerException If <code>url</code> is <code>null</code>
-     */
-    public static String toString(URL url) throws NullPointerException {
-        return toExternalForm(url);
     }
 
     /**
