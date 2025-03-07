@@ -158,10 +158,10 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
-        return doResolveBasePath(url.getPath());
+        return resolveBasePath(url.getPath());
     }
 
-    protected static String doResolveBasePath(String path) {
+    protected static String resolveBasePath(String path) {
         int beginIndex = path.lastIndexOf(COLON_CHAR);
         if (beginIndex == -1) {
             return path;
