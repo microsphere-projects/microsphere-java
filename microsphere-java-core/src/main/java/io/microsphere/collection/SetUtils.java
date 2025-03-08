@@ -55,6 +55,17 @@ public abstract class SetUtils extends BaseUtils {
      * @return read-only {@link Set}
      */
     public static <E> Set<E> of(E... elements) {
+       return ofSet(elements);
+    }
+
+    /**
+     * Convert to multiple elements to be {@link LinkedHashSet}
+     *
+     * @param elements one or more elements
+     * @param <E>      the type of <code>elements</code>
+     * @return read-only {@link Set}
+     */
+    public static <E> Set<E> ofSet(E... elements) {
         int size = length(elements);
         if (size < 1) {
             return emptySet();
