@@ -21,6 +21,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
@@ -40,6 +41,7 @@ import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
+import static io.microsphere.net.URLUtils.resolveParameters;
 import static io.microsphere.net.URLUtils.resolvePath;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
@@ -48,6 +50,8 @@ import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.SystemUtils.USER_DIR;
 import static java.nio.file.Paths.get;
@@ -503,6 +507,16 @@ public class URLUtilsTest {
         testGetMutableURLStreamHandlerFactoryFromAttached();
         clearURLStreamHandlerFactory();
         testGetMutableURLStreamHandlerFactory();
+    }
+
+    @Test
+    public void testResolveParametersOnNull() {
+        assertSame(emptyMap(), resolveParameters(null, AND_CHAR));
+    }
+
+    @Test
+    public void testResolveParametersOnEmptyString() {
+        assertSame(emptyMap(), resolveParameters(EMPTY_STRING, AND_CHAR));
     }
 
 }
