@@ -57,7 +57,6 @@ import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -378,10 +377,10 @@ public abstract class MethodUtils extends BaseUtils {
             String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
             failure = new IllegalStateException(errorMessage, e);
         } catch (IllegalArgumentException e) {
-            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, asList(arguments));
+            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, Arrays.toString(arguments));
             failure = new IllegalArgumentException(errorMessage, e);
         } catch (InvocationTargetException e) {
-            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, asList(arguments));
+            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, Arrays.toString(arguments));
             failure = new RuntimeException(errorMessage, e.getTargetException());
         }
 
