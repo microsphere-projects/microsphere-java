@@ -43,12 +43,14 @@ import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.MapUtils.shallowCloneMap;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static java.lang.Integer.valueOf;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -158,11 +160,34 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOfMap() {
+    public void testOfMap1() {
         Map<String, Integer> map = ofMap("A", 1);
         assertEquals(1, map.size());
         assertEquals(1, map.get("A"));
         assertNull(map.get("B"));
+    }
+
+    @Test
+    public void testOfMap() {
+        Map<String, Integer> map = ofMap("A", 1, "C", 3);
+        assertEquals(2, map.size());
+        assertEquals(1, map.get("A"));
+        assertNull(map.get("B"));
+        assertEquals(3, map.get("C"));
+    }
+
+    @Test
+    public void testOfMapOnEmptyArray() {
+        Map map = ofMap(EMPTY_OBJECT_ARRAY);
+        assertTrue(map.isEmpty());
+        assertSame(emptyMap(), map);
+    }
+
+    @Test
+    public void testOfMapOnNull() {
+        Map map = ofMap(null);
+        assertTrue(map.isEmpty());
+        assertSame(emptyMap(), map);
     }
 
 
