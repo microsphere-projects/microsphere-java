@@ -55,7 +55,7 @@ public abstract class SetUtils extends BaseUtils {
      * @return read-only {@link Set}
      */
     public static <E> Set<E> of(E... elements) {
-       return ofSet(elements);
+        return ofSet(elements);
     }
 
     /**
@@ -73,7 +73,7 @@ public abstract class SetUtils extends BaseUtils {
             return singleton(elements[0]);
         }
 
-        Set<E> set = new LinkedHashSet<>(size);
+        Set<E> set = new LinkedHashSet<>(size, FIXED_LOAD_FACTOR);
 
         for (int i = 0; i < size; i++) {
             set.add(elements[i]);
@@ -117,31 +117,6 @@ public abstract class SetUtils extends BaseUtils {
             return ofSet((Collection) elements);
         }
         return unmodifiableSet(newLinkedHashSet(elements));
-    }
-
-    /**
-     * Convert to one or more elements to be a read-only {@link Set}
-     *
-     * @param one    one element
-     * @param others others elements
-     * @param <E>    the type of <code>elements</code>
-     * @return read-only {@link Set}
-     */
-    public static <E> Set<E> ofSet(E one, E... others) {
-        int othersSize = length(others);
-        if (othersSize < 1) {
-            return singleton(one);
-        }
-
-        Set<E> elements = new LinkedHashSet<>(othersSize + 1, FIXED_LOAD_FACTOR);
-
-        elements.add(one);
-
-        for (int i = 0; i < othersSize; i++) {
-            elements.add(others[i]);
-        }
-
-        return unmodifiableSet(elements);
     }
 
     public static <T> Set<T> ofSet(Collection<T> elements) {
