@@ -19,7 +19,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
+import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
@@ -813,7 +812,7 @@ public abstract class URLUtils extends BaseUtils {
             return emptyMap();
         }
 
-        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, FIXED_LOAD_FACTOR);
+        Map<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
 
         for (int i = 0; i < paramsLen; i++) {
             String param = params[i];
