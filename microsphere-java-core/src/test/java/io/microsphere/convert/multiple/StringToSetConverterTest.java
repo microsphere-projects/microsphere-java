@@ -37,7 +37,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -87,7 +87,7 @@ public class StringToSetConverterTest {
 
     @Test
     public void testConvert() {
-        Set values = new HashSet(asList(1.0, 2.0, 3.0));
+        Set values = new HashSet(ofList(1.0, 2.0, 3.0));
 
         Set result = (Set<Double>) converter.convert("1.0,2.0,3.0", Queue.class, Double.class);
 
