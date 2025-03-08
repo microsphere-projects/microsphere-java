@@ -1,6 +1,5 @@
 package io.microsphere.classloading;
 
-import io.microsphere.collection.CollectionUtils;
 import io.microsphere.io.IOUtils;
 import io.microsphere.logging.Logger;
 
@@ -12,7 +11,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
