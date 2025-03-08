@@ -59,7 +59,6 @@ import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Character.isWhitespace;
-import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
@@ -451,7 +450,7 @@ public abstract class URLUtils extends BaseUtils {
      * @return URI
      */
     public static String buildURI(String... paths) {
-        int length = getLength(paths);
+        int length = ArrayUtils.length(paths);
         if (length < 1) {
             return SLASH;
         }
