@@ -28,8 +28,8 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import java.util.concurrent.TimeUnit;
 
-import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.ListUtils.of;
+import static io.microsphere.collection.Lists.ofList;
 
 /**
  * {@link Lists} Benchmark
