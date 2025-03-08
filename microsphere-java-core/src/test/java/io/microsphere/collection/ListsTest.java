@@ -3,7 +3,7 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.ListUtils.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -19,6 +19,6 @@ public class ListsTest {
     @Test
     public void testOfList() {
         assertTrue(ofList().isEmpty());
-        assertEquals(asList(1, 2, 3), ofList(1, 2, 3));
+        assertEquals(of(1, 2, 3), ofList(1, 2, 3));
     }
 }
