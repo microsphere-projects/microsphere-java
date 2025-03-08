@@ -16,7 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.collection.MapUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -24,6 +23,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -111,7 +111,7 @@ public class AssertTest {
 
     @Test
     void testAssertMapNotEmpty() {
-        Map<String, String> map = MapUtils.of("A", "1");
+        Map<String, String> map = ofMap("A", "1");
         assertNotEmpty(map, "map");
         assertNotEmpty(map, () -> "map");
         assertNotEmpty(map, (Supplier<String>) null);

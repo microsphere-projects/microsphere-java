@@ -44,24 +44,29 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
     }
 
     public MutableURLStreamHandlerFactory addURLStreamHandler(String protocol, H handler) {
-        handlers.put(protocol, handler);
+        this.handlers.put(protocol, handler);
         return this;
     }
 
     public H removeURLStreamHandler(String protocol) {
-        return handlers.remove(protocol);
+        return this.handlers.remove(protocol);
     }
 
     public H getURLStreamHandler(String protocol) {
-        return handlers.get(protocol);
+        return this.handlers.get(protocol);
     }
 
     public Collection<H> getHandlers() {
-        return handlers.values();
+        return this.handlers.values();
     }
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        return handlers.get(protocol);
+        return getURLStreamHandler(protocol);
+    }
+
+    public MutableURLStreamHandlerFactory<H> clearHandlers() {
+        this.handlers.clear();
+        return this;
     }
 }

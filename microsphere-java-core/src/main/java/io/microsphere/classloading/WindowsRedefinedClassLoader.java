@@ -11,7 +11,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +19,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.io.IOUtils.toByteArray;
@@ -162,7 +162,7 @@ class WindowsRedefinedClassLoader extends URLClassLoader {
                 try (InputStream inputStream = resource.openStream()) {
                     String configContent = IOUtils.toString(inputStream, charset);
                     String[] classNames = split(configContent, LINE_SEPARATOR);
-                    redefinedClassNames.addAll(Arrays.asList(classNames));
+                    addAll(redefinedClassNames, classNames);
                 }
             }
         } catch (IOException e) {

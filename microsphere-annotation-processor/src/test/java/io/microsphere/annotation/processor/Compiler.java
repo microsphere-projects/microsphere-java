@@ -29,7 +29,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.Lists.ofList;
 
 /**
  * The Java Compiler
@@ -84,7 +85,7 @@ public class Compiler {
     }
 
     public Compiler processors(Processor... processors) {
-        this.processors.addAll(asList(processors));
+        addAll(this.processors, processors);
         return this;
     }
 
@@ -105,7 +106,7 @@ public class Compiler {
 
     public boolean compile(Class<?>... sourceClasses) {
         JavaCompiler.CompilationTask task = javaCompiler.getTask(null, this.javaFileManager, null,
-                asList("-parameters", "-Xlint:unchecked", "-nowarn", "-Xlint:deprecation"),
+                ofList("-parameters", "-Xlint:unchecked", "-nowarn", "-Xlint:deprecation"),
 //                null,
                 null, getJavaFileObjects(sourceClasses));
         if (!processors.isEmpty()) {

@@ -35,6 +35,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
@@ -51,7 +52,12 @@ public abstract class MapUtils extends BaseUtils {
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}
      */
-    public static final float MIN_LOAD_FACTOR = 1.0f;
+    public static final float MIN_LOAD_FACTOR = Float.MIN_VALUE;
+
+    /**
+     * The fixed load factor for {@link HashMap} or {@link Hashtable} = 1.00
+     */
+    protected static final float FIXED_LOAD_FACTOR = 1.00f;
 
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
@@ -62,7 +68,7 @@ public abstract class MapUtils extends BaseUtils {
     }
 
     public static <K, V> Map<K, V> of(K key, V value) {
-        return singletonMap(key, value);
+        return ofMap(key, value);
     }
 
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2) {
@@ -85,9 +91,17 @@ public abstract class MapUtils extends BaseUtils {
         return ofMap(values);
     }
 
+    public static <K, V> Map<K, V> ofMap(K key, V value) {
+        return singletonMap(key, value);
+    }
+
     public static Map ofMap(Object... keyValuePairs) {
-        int length = keyValuePairs.length;
-        Map map = new HashMap(length / 2, MIN_LOAD_FACTOR);
+        int length = length(keyValuePairs);
+        if (length < 1) {
+            return emptyMap();
+        }
+        int size = length / 2;
+        Map map = newFixedLinkedHashMap(size);
         for (int i = 0; i < length; ) {
             map.put(keyValuePairs[i++], keyValuePairs[i++]);
         }
@@ -191,6 +205,14 @@ public abstract class MapUtils extends BaseUtils {
         }
     }
 
+    public static <K, V> Map<K, V> newFixedHashMap(int size) {
+        return newHashMap(size, FIXED_LOAD_FACTOR);
+    }
+
+    public static <K, V> Map<K, V> newFixedLinkedHashMap(int size) {
+        return newLinkedHashMap(size, FIXED_LOAD_FACTOR);
+    }
+
     public static <K, V, E> Map<K, V> toFixedMap(Collection<E> values,
                                                  Function<E, Map.Entry<K, V>> entryMapper) {
         int size = size(values);
@@ -198,7 +220,7 @@ public abstract class MapUtils extends BaseUtils {
             return emptyMap();
         }
 
-        Map<K, V> fixedMap = newHashMap(size, MIN_LOAD_FACTOR);
+        Map<K, V> fixedMap = newFixedLinkedHashMap(size);
 
         for (E value : values) {
             Map.Entry<K, V> entry = entryMapper.apply(value);

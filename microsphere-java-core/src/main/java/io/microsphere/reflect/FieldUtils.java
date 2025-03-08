@@ -25,6 +25,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -32,7 +34,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
-import static java.util.Arrays.asList;
 
 /**
  * The Java Reflection {@link Field} Utility class
@@ -141,17 +142,17 @@ public abstract class FieldUtils extends BaseUtils {
     }
 
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
-        Set<Field> allFields = new LinkedHashSet<>(asList(declaredClass.getFields()));
+        Set<Field> allFields = new LinkedHashSet<>(ofList(declaredClass.getFields()));
         for (Class superType : getAllInheritedTypes(declaredClass)) {
-            allFields.addAll(asList(superType.getFields()));
+            allFields.addAll(ofList(superType.getFields()));
         }
         return filter(allFields, and(fieldFilters));
     }
 
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
-        Set<Field> allDeclaredFields = new LinkedHashSet<>(asList(declaredClass.getDeclaredFields()));
+        Set<Field> allDeclaredFields = new LinkedHashSet<>(ofList(declaredClass.getDeclaredFields()));
         for (Class superType : getAllInheritedTypes(declaredClass)) {
-            allDeclaredFields.addAll(asList(superType.getDeclaredFields()));
+            addAll(allDeclaredFields, superType.getDeclaredFields());
         }
         return filter(allDeclaredFields, and(fieldFilters));
     }

@@ -37,7 +37,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -88,13 +88,13 @@ public class StringToDequeConverterTest {
     @Test
     public void testConvert() {
 
-        Deque values = new ArrayDeque(asList(1, 2, 3));
+        Deque values = new ArrayDeque(ofList(1, 2, 3));
 
         Deque result = (Deque) converter.convert("1,2,3", Deque.class, Integer.class);
 
         assertTrue(CollectionUtils.equals(values, result));
 
-        values = new ArrayDeque(asList("123"));
+        values = new ArrayDeque(ofList("123"));
 
         result = (Deque) converter.convert("123", Deque.class, String.class);
 

@@ -30,11 +30,17 @@ import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.combine;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.of;
+import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.ArrayUtils.size;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 /**
  * {@link ArrayUtils} Test
@@ -60,6 +66,82 @@ public class ArrayUtilsTest {
     }
 
     @Test
+    public void tesOf() {
+        assertArrayEquals(of("A"), array("A"));
+        assertArrayEquals(of("A", "B"), array("A", "B"));
+        assertArrayEquals(of("A", "B", "C"), array("A", "B", "C"));
+    }
+
+    @Test
+    public void testOfArray() {
+        assertArrayEquals(of("A"), ofArray("A"));
+        assertArrayEquals(of("A", "B"), ofArray("A", "B"));
+        assertArrayEquals(of("A", "B", "C"), ofArray("A", "B", "C"));
+    }
+
+    @Test
+    public void testLength() {
+        assertEquals(1, length(ofArray("A")));
+        assertEquals(2, length(ofArray("A", "B")));
+    }
+
+    @Test
+    public void testLengthOnNull() {
+        assertEquals(0, length(ofArray(null)));
+    }
+
+    @Test
+    public void testLengthOnEmptyArray() {
+        assertEquals(0, length(ofArray(EMPTY_OBJECT_ARRAY)));
+    }
+
+    @Test
+    public void testSize() {
+        assertEquals(1, size(ofArray("A")));
+        assertEquals(2, size(ofArray("A", "B")));
+    }
+
+    @Test
+    public void testSizeOnNull() {
+        assertEquals(0, size(ofArray(null)));
+    }
+
+    @Test
+    public void testSizeOnEmptyArray() {
+        assertEquals(0, size(ofArray(EMPTY_OBJECT_ARRAY)));
+    }
+
+    @Test
+    public void testIsEmpty() {
+        assertFalse(isEmpty(ofArray("A")));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyArray() {
+        assertTrue(isEmpty(EMPTY_OBJECT_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNull() {
+        assertTrue(isEmpty(null));
+    }
+
+    @Test
+    public void testIsNotEmpty() {
+        assertTrue(isNotEmpty(ofArray("A")));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyArray() {
+        assertFalse(isNotEmpty(EMPTY_OBJECT_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNull() {
+        assertFalse(isNotEmpty(null));
+    }
+
+    @Test
     public void testCombine() {
         assertArrayEquals(of("A", "B"), combine("A", of("B")));
         assertArrayEquals(of("A", "B", "C"), combine("A", of("B", "C")));
@@ -78,8 +160,10 @@ public class ArrayUtilsTest {
                 combine(of("A", "B", "C"), of("D")));
         assertArrayEquals(of("A", "B", "C", "D"),
                 combine(of("A", "B", "C", "D")));
+    }
 
-
+    public static <T> T[] array(T... values) {
+        return values;
     }
 
     private <E> void assertEmptyArray(E[] array, Class<E> expectedComponentType) {

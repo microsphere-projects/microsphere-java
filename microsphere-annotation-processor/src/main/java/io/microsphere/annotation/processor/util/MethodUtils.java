@@ -35,11 +35,12 @@ import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonSt
 import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.ElementKind.METHOD;
 import static javax.lang.model.util.ElementFilter.methodsIn;
@@ -106,7 +107,7 @@ public interface MethodUtils {
     static ExecutableElement findMethod(TypeMirror type, String methodName, Type oneParameterType, Type... otherParameterTypes) {
         List<Type> parameterTypes = new LinkedList<>();
         parameterTypes.add(oneParameterType);
-        parameterTypes.addAll(asList(otherParameterTypes));
+        addAll(parameterTypes, otherParameterTypes);
         return findMethod(type, methodName, parameterTypes.stream().map(Type::getTypeName).toArray(String[]::new));
     }
 

@@ -50,10 +50,12 @@ public class FastByteArrayInputStreamTest {
         assertEquals('l', inputStream.read());
         assertEquals('l', inputStream.read());
         assertEquals('o', inputStream.read());
+        assertEquals(-1, inputStream.read());
 
         assertEquals('l', inputStream2.read());
         assertEquals('l', inputStream2.read());
         assertEquals('o', inputStream2.read());
+        assertEquals(-1, inputStream2.read());
     }
 
     @Test

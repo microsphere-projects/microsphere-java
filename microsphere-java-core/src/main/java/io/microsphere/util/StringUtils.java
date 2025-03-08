@@ -32,6 +32,8 @@ public abstract class StringUtils extends BaseUtils {
 
     public final static String EMPTY = "";
 
+    public final static String EMPTY_STRING = "";
+
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
 
     public static int length(String value) {

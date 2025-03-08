@@ -43,7 +43,7 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static java.lang.String.valueOf;
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.toSet;
@@ -61,7 +61,7 @@ import static javax.lang.model.element.ElementKind.INTERFACE;
  */
 public interface TypeUtils {
 
-    List<String> SIMPLE_TYPES = asList(
+    List<String> SIMPLE_TYPES = ofList(
             ClassUtils.SIMPLE_TYPES
                     .stream()
                     .map(Class::getName)

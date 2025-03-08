@@ -1,6 +1,6 @@
 package io.microsphere.filter;
 
-import java.lang.reflect.Array;
+import static io.microsphere.util.ArrayUtils.length;
 
 /**
  * {@link Filter} Operator enumeration , which contains {@link #AND}��{@link #OR}��{@link #XOR}
@@ -21,7 +21,7 @@ public enum FilterOperator {
     AND {
         @Override
         public <T> boolean accept(T filteredObject, Filter<T>... filters) {
-            int length = Array.getLength(filters);
+            int length = length(filters);
             if (length == 0)
                 return true;
             boolean success = true;
@@ -38,7 +38,7 @@ public enum FilterOperator {
     OR {
         @Override
         public <T> boolean accept(T filteredObject, Filter<T>... filters) {
-            int length = Array.getLength(filters);
+            int length = length(filters);
             if (length == 0)
                 return true;
             boolean success = false;
@@ -54,7 +54,7 @@ public enum FilterOperator {
     XOR {
         @Override
         public <T> boolean accept(T filteredObject, Filter<T>... filters) {
-            int length = Array.getLength(filters);
+            int length = length(filters);
             if (length == 0)
                 return true;
             boolean success = true;
