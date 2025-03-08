@@ -17,10 +17,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,10 +31,9 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
-import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
@@ -124,7 +121,7 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = of(
+    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(
             Void.class,
             Boolean.class,
             Character.class,
@@ -140,7 +137,7 @@ public abstract class ClassUtils extends BaseUtils {
             Date.class,
             Object.class);
 
-    public static final Set<Class<?>> PRIMITIVE_TYPES = of(
+    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(
             Void.TYPE,
             Boolean.TYPE,
             Character.TYPE,
@@ -150,6 +147,17 @@ public abstract class ClassUtils extends BaseUtils {
             Long.TYPE,
             Float.TYPE,
             Double.TYPE
+    );
+
+    public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
+            boolean[].class,
+            char[].class,
+            byte[].class,
+            short[].class,
+            int[].class,
+            long[].class,
+            float[].class,
+            double[].class
     );
 
     /**
@@ -204,16 +212,17 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     static {
-        Map<String, Class<?>> typeNamesMap = new HashMap<>(16);
-        List<Class<?>> primitiveTypeNames = new ArrayList<>(16);
-        primitiveTypeNames.addAll(ofList(boolean.class, byte.class, char.class, double.class,
-                float.class, int.class, long.class, short.class));
-        primitiveTypeNames.addAll(ofList(boolean[].class, byte[].class, char[].class, double[].class,
-                float[].class, int[].class, long[].class, short[].class));
-        for (Class<?> primitiveTypeName : primitiveTypeNames) {
-            typeNamesMap.put(primitiveTypeName.getName(), primitiveTypeName);
-        }
-        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(typeNamesMap);
+        Map<String, Class<?>> primitiveTypeNameMap = newFixedHashMap(17);
+
+        PRIMITIVE_TYPES.forEach(type -> {
+            primitiveTypeNameMap.put(type.getName(), type);
+        });
+
+        PRIMITIVE_ARRAY_TYPES.forEach(type -> {
+            primitiveTypeNameMap.put(type.getName(), type);
+        });
+
+        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(primitiveTypeNameMap);
     }
 
     /**
