@@ -36,7 +36,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -87,13 +87,13 @@ public class StringToListConverterTest {
     @Test
     public void testConvert() {
 
-        List values = asList(1, 2, 3);
+        List values = ofList(1, 2, 3);
 
         List result = (List<Integer>) converter.convert("1,2,3", List.class, Integer.class);
 
         assertTrue(CollectionUtils.equals(values, result));
 
-        values = asList("123");
+        values = ofList("123");
 
         result = (List<String>) converter.convert("123", List.class, String.class);
 
