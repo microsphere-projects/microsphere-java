@@ -19,7 +19,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +29,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
@@ -62,7 +62,6 @@ import static java.lang.Character.isWhitespace;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -611,9 +610,9 @@ public abstract class URLUtils extends BaseUtils {
             subProtocols = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
         } else {
             String[] values = split(subProtocolsString, COLON_CHAR);
-            subProtocols = Arrays.asList(values);
+            subProtocols = ofList(values);
         }
-        return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
+        return subProtocols == null ? emptyList() : subProtocols;
     }
 
     /**
@@ -810,7 +809,7 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
         String[] params = split(paramsString, separatorChar);
-        int paramsLen = ArrayUtils.size(params);
+        int paramsLen = ArrayUtils.length(params);
         if (paramsLen == 0) {
             return emptyMap();
         }
@@ -837,7 +836,7 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static String buildString(String name, String[] values, char separator, char joiner) {
-        int len = getLength(values);
+        int len = ArrayUtils.length(values);
 
         if (len == 0) {
             return null;
