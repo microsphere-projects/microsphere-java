@@ -16,7 +16,6 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.reflect.FieldUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -25,7 +24,6 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
@@ -36,7 +34,6 @@ import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.isNotEmpty;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
-import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.collection.MapUtils.newTreeMap;
