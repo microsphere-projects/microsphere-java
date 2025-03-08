@@ -68,7 +68,7 @@ public abstract class MapUtils extends BaseUtils {
     }
 
     public static <K, V> Map<K, V> of(K key, V value) {
-        return singletonMap(key, value);
+        return ofMap(key, value);
     }
 
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2) {
@@ -89,6 +89,10 @@ public abstract class MapUtils extends BaseUtils {
 
     public static Map of(Object... values) {
         return ofMap(values);
+    }
+
+    public static <K, V> Map<K, V> ofMap(K key, V value) {
+        return singletonMap(key, value);
     }
 
     public static Map ofMap(Object... keyValuePairs) {
