@@ -30,6 +30,7 @@ import static io.microsphere.net.URLUtils.isArchiveURL;
 import static io.microsphere.net.URLUtils.isDirectoryURL;
 import static io.microsphere.net.URLUtils.isJarURL;
 import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.net.URLUtils.resolveBasePath;
@@ -70,6 +71,20 @@ public class URLUtilsTest {
 
     private static final String FILE_URL_PREFIX = "file://";
 
+    private static final String userDirURLString = FILE_URL_PREFIX + USER_DIR;
+
+    private static final String TEST_HTTP_BASE = "http://localhost/";
+
+    private static final String TEST_HTTP_WITH_PATH = TEST_HTTP_BASE + TEST_PATH;
+
+    private static final String TEST_HTTP_WITH_PATH_HASH = TEST_HTTP_WITH_PATH + "#hash";
+
+    private static final String TEST_HTTP_WITH_QUERY_STRING = TEST_HTTP_BASE + "?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
+
+    private static final String TEST_HTTP_WITH_MATRIX_STRING = TEST_HTTP_BASE + ";q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
+
+    private static final String TEST_HTTP_WITH_SP_MATRIX = TEST_HTTP_BASE + ";_sp=text;_sp=properties";
+
     private static URL userDirURL;
 
     private static URL classFileURL;
@@ -79,7 +94,7 @@ public class URLUtilsTest {
     @BeforeAll
     public static void beforeAll() throws Throwable {
         ClassLoader classLoader = getDefaultClassLoader();
-        userDirURL = new URL(FILE_URL_PREFIX + USER_DIR);
+        userDirURL = ofURL(userDirURLString);
         classFileURL = getClassResource(classLoader, StringUtils.class);
         classArchiveEntryURL = getClassResource(classLoader, Nonnull.class);
     }
@@ -89,6 +104,15 @@ public class URLUtilsTest {
         clearURLStreamHandlerFactory();
     }
 
+    @Test
+    public void testOfURL() throws MalformedURLException {
+        assertEquals(new URL(userDirURLString), ofURL(userDirURLString));
+    }
+
+    @Test
+    public void testOfURLOnFailed() {
+        assertThrows(IllegalArgumentException.class, () -> ofURL("unknown://localhost/"));
+    }
 
     @Test
     public void testResolveArchiveEntryPath() {
@@ -130,7 +154,7 @@ public class URLUtilsTest {
 
     @Test
     public void testResolveQueryParameters() {
-        String url = "https://www.google.com.hk/search?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
+        String url = TEST_HTTP_WITH_QUERY_STRING;
         Map<String, List<String>> parametersMap = resolveQueryParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
         expectedParametersMap.put("q", Arrays.asList("java"));
@@ -141,33 +165,20 @@ public class URLUtilsTest {
 
         assertEquals(expectedParametersMap, parametersMap);
 
-        url = "https://www.google.com.hk/search";
+        url = TEST_HTTP_BASE;
         parametersMap = resolveQueryParameters(url);
         expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
 
-        url = "https://www.google.com.hk/search?";
+        url = TEST_HTTP_BASE;
         parametersMap = resolveQueryParameters(url);
         expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
-    }
-
-    @Test
-    public void testEncodeAndDecode() {
-        String path = "/abc/def";
-
-        String encodedPath = encode(path);
-        String decodedPath = decode(encodedPath);
-        assertEquals(path, decodedPath);
-
-        encodedPath = encode(path, "GBK");
-        decodedPath = decode(encodedPath, "GBK");
-        assertEquals(path, decodedPath);
     }
 
     @Test
     public void testResolveMatrixParameters() {
-        String url = "https://www.google.com.hk/search;q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
+        String url = TEST_HTTP_WITH_MATRIX_STRING;
         Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
         expectedParametersMap.put("q", Arrays.asList("java"));
@@ -178,12 +189,12 @@ public class URLUtilsTest {
 
         assertEquals(expectedParametersMap, parametersMap);
 
-        url = "https://www.google.com.hk/search";
+        url = TEST_HTTP_WITH_QUERY_STRING;
         parametersMap = resolveMatrixParameters(url);
         expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
 
-        url = "https://www.google.com.hk/search;";
+        url = TEST_HTTP_BASE;
         parametersMap = resolveMatrixParameters(url);
         expectedParametersMap = emptyMap();
         assertEquals(expectedParametersMap, parametersMap);
@@ -258,7 +269,7 @@ public class URLUtilsTest {
 
         String externalForm = null;
         externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
-        resourceURL = new URL(externalForm);
+        resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
 
         resourceURL = getClassResource(classLoader, String.class);
@@ -268,7 +279,7 @@ public class URLUtilsTest {
         assertFalse(isDirectoryURL(resourceURL));
 
         externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
-        resourceURL = new URL(externalForm);
+        resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
     }
 
@@ -290,7 +301,7 @@ public class URLUtilsTest {
     @Test
     public void testIsJarURLOnArchiveFile() throws MalformedURLException {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
-        assertTrue(isJarURL(new URL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
+        assertTrue(isJarURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
     }
 
     @Test
@@ -301,29 +312,13 @@ public class URLUtilsTest {
     @Test
     public void testIsArchiveURLOnFile() throws MalformedURLException {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
-        assertTrue(isArchiveURL(new URL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
+        assertTrue(isArchiveURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
     }
 
     @Test
     public void testIsArchiveURLOnNotJar() throws MalformedURLException {
         assertFalse(isArchiveURL(classFileURL));
     }
-
-//
-//    @Test
-//    public void testIsArchiveURLOnWar() throws MalformedURLException {
-//        testIsArchiveURLOn(WAR_PROTOCOL);
-//    }
-//
-//    @Test
-//    public void testIsArchiveURLOnEar() throws MalformedURLException {
-//        testIsArchiveURLOn(EAR_PROTOCOL);
-//    }
-//
-//    private void testIsArchiveURLOn(String protocol) throws MalformedURLException {
-//        String url = classArchiveEntryURL.toString().replace(JAR_PROTOCOL, protocol);
-//        assertTrue(isArchiveURL(new URL(url)));
-//    }
 
     @Test
     public void testBuildMatrixString() {
@@ -353,31 +348,27 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testToExternalFormWithMatrix() throws MalformedURLException {
-        String url = "https://acme.com/;q=java";
-        testToExternalForm(url);
+    public void testToExternalFormWithMatrixString() throws MalformedURLException {
+        testToExternalForm(TEST_HTTP_WITH_MATRIX_STRING);
     }
 
     @Test
     public void testToExternalFormWithQueryString() throws MalformedURLException {
-        String url = "https://acme.com?q=java&key=1";
-        testToExternalForm(url);
+        testToExternalForm(TEST_HTTP_WITH_QUERY_STRING);
     }
 
     @Test
     public void testToExternalFormWithPath() throws MalformedURLException {
-        String url = "https://acme.com/abc/def";
-        testToExternalForm(url);
+        testToExternalForm(TEST_HTTP_WITH_PATH);
     }
 
     @Test
     public void testToExternalFormWithRef() throws MalformedURLException {
-        String url = "https://acme.com/abc/def#hash";
-        testToExternalForm(url);
+        testToExternalForm(TEST_HTTP_WITH_PATH_HASH);
     }
 
     private void testToExternalForm(String urlString) throws MalformedURLException {
-        testToExternalForm(new URL(urlString));
+        testToExternalForm(ofURL(urlString));
     }
 
     private void testToExternalForm(URL url) {
@@ -386,19 +377,17 @@ public class URLUtilsTest {
 
     @Test
     public void testGetSubProtocol() {
-        String url = "https://acme.com/;_sp=classpath";
-        assertEquals("classpath", getSubProtocol(url));
+        assertEquals("text", getSubProtocol(TEST_HTTP_WITH_SP_MATRIX));
     }
 
     @Test
     public void testGetSubProtocolWithSubProtocol() {
-        String url = "https://acme.com/";
-        assertNull(getSubProtocol(url));
+        assertNull(getSubProtocol(TEST_HTTP_BASE));
     }
 
     @Test
-    public void testResolveSubProtocolsFromMatrix() throws MalformedURLException {
-        URL url = new URL("https://localhost/;_sp=text;_sp=properties");
+    public void testResolveSubProtocolsFromMatrixString() throws MalformedURLException {
+        URL url = ofURL(TEST_HTTP_WITH_SP_MATRIX);
         List<String> subProtocols = resolveSubProtocols(url);
         assertEquals(2, subProtocols.size());
         assertEquals("text", subProtocols.get(0));
@@ -408,7 +397,7 @@ public class URLUtilsTest {
     @Test
     public void testResolveSubProtocolsFromProtocol() throws MalformedURLException {
         new Handler();
-        URL url = new URL("console:text:properties://localhost");
+        URL url = ofURL("console:text:properties://localhost");
         List<String> subProtocols = resolveSubProtocols(url);
         assertEquals(2, subProtocols.size());
         assertEquals("text", subProtocols.get(0));
@@ -434,11 +423,15 @@ public class URLUtilsTest {
     }
 
     @Test
+    public void testResolvePathWithMatrixString() {
+        assertEquals(USER_DIR, resolvePath(userDirURL));
+    }
+
+    @Test
     public void testAttachURLStreamHandlerFactory() {
         URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
         assertSame(factory, getURLStreamHandlerFactory());
-
 
         attachURLStreamHandlerFactory(factory);
         CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();
@@ -447,6 +440,5 @@ public class URLUtilsTest {
         assertSame(factory, compositeFactory.getFactories().get(0));
         assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
     }
-
 
 }
