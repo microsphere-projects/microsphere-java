@@ -37,7 +37,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.ListUtils.of;
-import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
