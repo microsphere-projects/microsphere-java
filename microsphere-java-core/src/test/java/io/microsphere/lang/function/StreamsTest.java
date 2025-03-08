@@ -24,10 +24,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.lang.function.Streams.filterSet;
 import static io.microsphere.lang.function.Streams.filterStream;
-import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -40,19 +40,19 @@ public class StreamsTest {
 
     @Test
     public void testFilterStream() {
-        Stream<Integer> stream = filterStream(asList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(asList(2, 4), stream.collect(toList()));
+        Stream<Integer> stream = filterStream(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), stream.collect(toList()));
     }
 
     @Test
     public void testFilterList() {
-        List<Integer> list = filterList(asList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(asList(2, 4), list);
+        List<Integer> list = filterList(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
     }
 
     @Test
     public void testFilterSet() {
-        Set<Integer> set = filterSet(asList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(new LinkedHashSet<>(asList(2, 4)), set);
+        Set<Integer> set = filterSet(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(new LinkedHashSet<>(ofList(2, 4)), set);
     }
 }
