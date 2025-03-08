@@ -1,6 +1,5 @@
 package io.microsphere.concurrent;
 
-import io.microsphere.util.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
@@ -14,6 +13,7 @@ import java.util.stream.Stream;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -49,11 +49,11 @@ public class DelegatingBlockingQueueTest {
 
         // test toArray()
         Object[] array = queue.toArray();
-        assertArrayEquals(ArrayUtils.of(1), array);
+        assertArrayEquals(ofArray(1), array);
 
         // test toArray(Object[])
         array = queue.toArray(new Object[1]);
-        assertArrayEquals(ArrayUtils.of(1), array);
+        assertArrayEquals(ofArray(1), array);
 
         // test contains
         assertTrue(queue.contains(1));
