@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
-import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.appendHandlePackage;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.assertClassName;
