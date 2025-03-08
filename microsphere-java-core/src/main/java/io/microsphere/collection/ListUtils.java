@@ -54,6 +54,14 @@ public abstract class ListUtils extends BaseUtils {
         return unmodifiableList(asList(elements));
     }
 
+    /**
+     * Create a {@link List} from the specified array
+     *
+     * @param elements
+     * @param <E>
+     * @return
+     * @see {@link Lists#ofList} as recommended
+     */
     public static <E> List<E> ofList(E... elements) {
         return of(elements);
     }
