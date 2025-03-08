@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -28,6 +27,7 @@ import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.close;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.encode;
+import static io.microsphere.net.URLUtils.getMutableURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.getSubProtocol;
 import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.isArchiveURL;
@@ -477,6 +477,25 @@ public class URLUtilsTest {
     @Test
     public void testCloseOnNull() {
         close(null);
+    }
+
+    @Test
+    public void testGetMutableURLStreamHandlerFactory() {
+        MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory();
+        assertNull(factory);
+    }
+
+    @Test
+    public void testGetMutableURLStreamHandlerFactoryFromAttached() {
+        MutableURLStreamHandlerFactory factory = new MutableURLStreamHandlerFactory();
+        attachURLStreamHandlerFactory(factory);
+        assertSame(factory, getMutableURLStreamHandlerFactory());
+    }
+
+    @Test
+    public void testGetMutableURLStreamHandlerFactoryOnCreateIfAbsent() {
+        MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory(true);
+        assertNotNull(factory);
     }
 
 }
