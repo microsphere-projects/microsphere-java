@@ -37,7 +37,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -88,7 +88,7 @@ public class StringToQueueConverterTest {
     @Test
     public void testConvert() {
 
-        Queue values = new ArrayDeque(asList(1.0, 2.0, 3.0));
+        Queue values = new ArrayDeque(ofList(1.0, 2.0, 3.0));
 
         Queue result = (Queue<Double>) converter.convert("1.0,2.0,3.0", Queue.class, Double.class);
 
