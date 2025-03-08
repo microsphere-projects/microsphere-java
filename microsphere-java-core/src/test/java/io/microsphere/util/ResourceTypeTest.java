@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
-import static io.microsphere.util.ArrayUtils.of;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.CLASS;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
@@ -40,9 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ResourceTypeTest {
 
     private static final Map<ClassLoaderUtils.ResourceType, String[]> resourceNamesMap = ofMap(
-            DEFAULT, of("///////META-INF//abc\\/def", "META-INF/abc/def"),
-            CLASS, of("java.lang.String.class", "java/lang/String.class"),
-            PACKAGE, of("java.lang", "java/lang/")
+            DEFAULT, ofArray("///////META-INF//abc\\/def", "META-INF/abc/def"),
+            CLASS, ofArray("java.lang.String.class", "java/lang/String.class"),
+            PACKAGE, ofArray("java.lang", "java/lang/")
     );
 
 
