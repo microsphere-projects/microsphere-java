@@ -29,6 +29,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
@@ -813,7 +814,7 @@ public abstract class URLUtils extends BaseUtils {
             return emptyMap();
         }
 
-        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, Float.MIN_NORMAL);
+        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, MIN_LOAD_FACTOR);
 
         for (int i = 0; i < paramsLen; i++) {
             String param = params[i];
