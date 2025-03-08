@@ -141,6 +141,10 @@ public abstract class ArrayUtils extends BaseUtils {
         return values;
     }
 
+    public static <T> T[] ofArray(T... values) {
+        return of(values);
+    }
+
     public static <T> int length(T[] values) {
         return values == null ? 0 : values.length;
     }
