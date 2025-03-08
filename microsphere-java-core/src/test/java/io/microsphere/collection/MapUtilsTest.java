@@ -28,7 +28,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
+import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.isNotEmpty;
@@ -59,7 +59,7 @@ public class MapUtilsTest {
 
     @Test
     public void testConstants() {
-        assertEquals(1.f, MIN_LOAD_FACTOR);
+        assertEquals(1.f, FIXED_LOAD_FACTOR);
     }
 
     @Test

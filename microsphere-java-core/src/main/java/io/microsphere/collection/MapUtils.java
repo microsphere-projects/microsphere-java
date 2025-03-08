@@ -51,7 +51,12 @@ public abstract class MapUtils extends BaseUtils {
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}
      */
-    public static final float MIN_LOAD_FACTOR = 1.0f;
+    public static final float MIN_LOAD_FACTOR = Float.MIN_VALUE;
+
+    /**
+     * The fixed load factor for {@link HashMap} or {@link Hashtable} = 1.00
+     */
+    public static final float FIXED_LOAD_FACTOR = 1.00f;
 
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
@@ -87,7 +92,7 @@ public abstract class MapUtils extends BaseUtils {
 
     public static Map ofMap(Object... keyValuePairs) {
         int length = keyValuePairs.length;
-        Map map = new HashMap(length / 2, MIN_LOAD_FACTOR);
+        Map map = new HashMap(length / 2, FIXED_LOAD_FACTOR);
         for (int i = 0; i < length; ) {
             map.put(keyValuePairs[i++], keyValuePairs[i++]);
         }
@@ -198,7 +203,7 @@ public abstract class MapUtils extends BaseUtils {
             return emptyMap();
         }
 
-        Map<K, V> fixedMap = newHashMap(size, MIN_LOAD_FACTOR);
+        Map<K, V> fixedMap = newHashMap(size, FIXED_LOAD_FACTOR);
 
         for (E value : values) {
             Map.Entry<K, V> entry = entryMapper.apply(value);

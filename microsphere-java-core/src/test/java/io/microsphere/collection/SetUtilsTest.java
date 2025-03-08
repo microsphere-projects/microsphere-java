@@ -8,7 +8,7 @@ import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EnumerationUtils.enumeration;
-import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
+import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
@@ -86,7 +86,7 @@ public class SetUtilsTest {
 
     @Test
     public void testNewHashSet() {
-        Iterable<String> iterable = newHashSet(1, MIN_LOAD_FACTOR);
+        Iterable<String> iterable = newHashSet(1, FIXED_LOAD_FACTOR);
         assertEquals(iterable, newHashSet(iterable));
 
         iterable = newHashSet(ELEMENTS);
@@ -98,7 +98,7 @@ public class SetUtilsTest {
 
     @Test
     public void testNewLinkedHashSet() {
-        Iterable<String> iterable = newLinkedHashSet(1, MIN_LOAD_FACTOR);
+        Iterable<String> iterable = newLinkedHashSet(1, FIXED_LOAD_FACTOR);
         Collection<String> elements = newLinkedHashSet(iterable);
         assertEquals(iterable, elements);
 

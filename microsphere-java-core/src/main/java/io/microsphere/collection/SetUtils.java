@@ -28,7 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.size;
-import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
+import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -122,7 +122,7 @@ public abstract class SetUtils extends BaseUtils {
             return singleton(one);
         }
 
-        Set<E> elements = new LinkedHashSet<>(othersSize + 1, MIN_LOAD_FACTOR);
+        Set<E> elements = new LinkedHashSet<>(othersSize + 1, FIXED_LOAD_FACTOR);
 
         elements.add(one);
 
@@ -148,7 +148,7 @@ public abstract class SetUtils extends BaseUtils {
 
         int size = valuesSize + othersSize;
 
-        Set<T> set = newLinkedHashSet(size, MIN_LOAD_FACTOR);
+        Set<T> set = newLinkedHashSet(size, FIXED_LOAD_FACTOR);
         // add elements
         set.addAll(elements);
 
