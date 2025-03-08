@@ -128,6 +128,22 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static final String SUB_PROTOCOL_MATRIX_NAME = "_sp";
 
+
+    /**
+     * Convert the <code>url</code> to {@link URL}
+     *
+     * @param url
+     * @return non-null
+     * @throws IllegalArgumentException if <code>url</code> is malformed
+     */
+    public static URL ofURL(String url) {
+        try {
+            return new URL(url);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     /**
      * Resolve the entry path from Archive File URL
      *
