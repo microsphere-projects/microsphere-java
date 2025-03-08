@@ -20,14 +20,15 @@ import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
-import static java.util.Arrays.asList;
 
 /**
  * The utilities class of {@link Constructor}
@@ -66,13 +67,13 @@ public abstract class ConstructorUtils extends BaseUtils {
 
     public static List<Constructor<?>> findConstructors(Class<?> type,
                                                         Predicate<? super Constructor<?>>... constructorFilters) {
-        List<Constructor<?>> constructors = asList(type.getConstructors());
+        List<Constructor<?>> constructors = ofList(type.getConstructors());
         return filterAll(constructors, constructorFilters);
     }
 
     public static List<Constructor<?>> findDeclaredConstructors(Class<?> type,
                                                                 Predicate<? super Constructor<?>>... constructorFilters) {
-        List<Constructor<?>> constructors = asList(type.getDeclaredConstructors());
+        List<Constructor<?>> constructors = ofList(type.getDeclaredConstructors());
         return filterAll(constructors, constructorFilters);
     }
 
@@ -87,7 +88,7 @@ public abstract class ConstructorUtils extends BaseUtils {
     public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
             if (logger.isTraceEnabled()) {
-                logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, asList(parameterTypes));
+                logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, Arrays.toString(parameterTypes));
             }
             return NOT_FOUND_CONSTRUCTOR;
         });
