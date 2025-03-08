@@ -16,11 +16,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
@@ -50,7 +50,6 @@ import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
-import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.SystemUtils.USER_DIR;
@@ -167,11 +166,11 @@ public class URLUtilsTest {
         String url = TEST_HTTP_WITH_QUERY_STRING;
         Map<String, List<String>> parametersMap = resolveQueryParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
-        expectedParametersMap.put("q", Arrays.asList("java"));
-        expectedParametersMap.put("oq", Arrays.asList("java"));
-        expectedParametersMap.put("sourceid", Arrays.asList("chrome"));
-        expectedParametersMap.put("es_sm", Arrays.asList("122"));
-        expectedParametersMap.put("ie", Arrays.asList("UTF-8"));
+        expectedParametersMap.put("q", ofList("java"));
+        expectedParametersMap.put("oq", ofList("java"));
+        expectedParametersMap.put("sourceid", ofList("chrome"));
+        expectedParametersMap.put("es_sm", ofList("122"));
+        expectedParametersMap.put("ie", ofList("UTF-8"));
 
         assertEquals(expectedParametersMap, parametersMap);
 
@@ -191,11 +190,11 @@ public class URLUtilsTest {
         String url = TEST_HTTP_WITH_MATRIX_STRING;
         Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
-        expectedParametersMap.put("q", Arrays.asList("java"));
-        expectedParametersMap.put("oq", Arrays.asList("java"));
-        expectedParametersMap.put("sourceid", Arrays.asList("chrome"));
-        expectedParametersMap.put("es_sm", Arrays.asList("122"));
-        expectedParametersMap.put("ie", Arrays.asList("UTF-8"));
+        expectedParametersMap.put("q", ofList("java"));
+        expectedParametersMap.put("oq", ofList("java"));
+        expectedParametersMap.put("sourceid", ofList("chrome"));
+        expectedParametersMap.put("es_sm", ofList("122"));
+        expectedParametersMap.put("ie", ofList("UTF-8"));
 
         assertEquals(expectedParametersMap, parametersMap);
 
