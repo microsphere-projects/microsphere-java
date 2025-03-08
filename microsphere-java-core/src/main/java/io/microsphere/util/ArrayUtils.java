@@ -138,11 +138,11 @@ public abstract class ArrayUtils extends BaseUtils {
     public static final Character[] EMPTY_CHARACTER_OBJECT_ARRAY = new Character[0];
 
     public static <T> T[] of(T... values) {
-        return values;
+        return ofArray(values);
     }
 
     public static <T> T[] ofArray(T... values) {
-        return of(values);
+        return values;
     }
 
     public static <T> int length(T[] values) {
