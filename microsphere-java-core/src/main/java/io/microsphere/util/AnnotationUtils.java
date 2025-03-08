@@ -38,6 +38,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
@@ -47,10 +48,8 @@ import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Optional.ofNullable;
 
@@ -62,8 +61,14 @@ import static java.util.Optional.ofNullable;
  */
 public abstract class AnnotationUtils extends BaseUtils {
 
-    public final static List<Class<? extends Annotation>> NATIVE_ANNOTATION_TYPES = unmodifiableList(asList
-            (Target.class, Retention.class, Documented.class, Inherited.class, Native.class, Repeatable.class));
+    public final static List<Class<? extends Annotation>> NATIVE_ANNOTATION_TYPES = ofList(
+            Target.class,
+            Retention.class,
+            Documented.class,
+            Inherited.class,
+            Native.class,
+            Repeatable.class
+    );
 
     private static final Predicate<Method> INHERITED_OBJECT_METHOD_PREDICATE = AnnotationUtils::isInheritedObjectMethod;
 
@@ -138,7 +143,7 @@ public abstract class AnnotationUtils extends BaseUtils {
         if (metaAnnotationTypes == null) {
             return false;
         }
-        return isMetaAnnotation(annotation, asList(metaAnnotationTypes));
+        return isMetaAnnotation(annotation, ofList(metaAnnotationTypes));
     }
 
     public static boolean isMetaAnnotation(Annotation annotation,
@@ -151,7 +156,7 @@ public abstract class AnnotationUtils extends BaseUtils {
 
     public static boolean isMetaAnnotation(Class<? extends Annotation> annotationType,
                                            Class<? extends Annotation>... metaAnnotationTypes) {
-        return isMetaAnnotation(annotationType, asList(metaAnnotationTypes));
+        return isMetaAnnotation(annotationType, ofList(metaAnnotationTypes));
     }
 
     public static boolean isMetaAnnotation(Class<? extends Annotation> annotationType,
@@ -200,7 +205,7 @@ public abstract class AnnotationUtils extends BaseUtils {
 
     public static List<Annotation> filterAnnotations(Annotation[] annotations,
                                                      Predicate<Annotation>... annotationsToFilter) {
-        return filterAnnotations(asList(annotations), annotationsToFilter);
+        return filterAnnotations(ofList(annotations), annotationsToFilter);
     }
 
     public static <S extends Iterable<Annotation>> S filterAnnotations(S annotations,
@@ -252,7 +257,7 @@ public abstract class AnnotationUtils extends BaseUtils {
             return emptyList();
         }
 
-        return filterAll(asList(annotatedElement.getAnnotations()), annotationsToFilter);
+        return filterAll(ofList(annotatedElement.getAnnotations()), annotationsToFilter);
     }
 
     public static <T> T getAttributeValue(Annotation[] annotations, String attributeName, Class<T> returnType) {
