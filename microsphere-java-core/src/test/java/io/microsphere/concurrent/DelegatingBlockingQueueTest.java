@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Stream;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
-import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
