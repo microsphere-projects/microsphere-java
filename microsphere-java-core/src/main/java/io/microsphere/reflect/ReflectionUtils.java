@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.getDeclaredField;
@@ -34,7 +35,6 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.reflect.Modifier.isStatic;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 
@@ -434,8 +434,9 @@ public abstract class ReflectionUtils extends BaseUtils {
      * @return non-null read-only {@link Set}
      */
     public static Set<ParameterizedType> findParameterizedTypes(Class<?> sourceClass) {
+        List<Type> genericTypes = new LinkedList<>();
         // Add Generic Interfaces
-        List<Type> genericTypes = new LinkedList<>(asList(sourceClass.getGenericInterfaces()));
+        addAll(genericTypes, sourceClass.getGenericInterfaces());
         // Add Generic Super Class
         genericTypes.add(sourceClass.getGenericSuperclass());
 
