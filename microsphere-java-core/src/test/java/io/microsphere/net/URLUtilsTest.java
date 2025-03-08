@@ -11,8 +11,11 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -22,6 +25,7 @@ import java.util.Map;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.close;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.encode;
 import static io.microsphere.net.URLUtils.getSubProtocol;
@@ -31,6 +35,7 @@ import static io.microsphere.net.URLUtils.isDirectoryURL;
 import static io.microsphere.net.URLUtils.isJarURL;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.ofURL;
+import static io.microsphere.net.URLUtils.registerURLStreamHandler;
 import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.net.URLUtils.resolveBasePath;
@@ -40,6 +45,7 @@ import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.net.URLUtils.resolveSubProtocols;
 import static io.microsphere.net.URLUtils.toExternalForm;
+import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
@@ -439,6 +445,38 @@ public class URLUtilsTest {
         assertEquals(1, compositeFactory.getFactories().size());
         assertSame(factory, compositeFactory.getFactories().get(0));
         assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
+    }
+
+    @Test
+    public void testGetURLStreamHandlerFactory() {
+        assertNull(getURLStreamHandlerFactory());
+    }
+
+    @Test
+    public void testRegisterURLStreamHandler() throws IOException {
+        Handler handler = new Handler();
+        registerURLStreamHandler(handler);
+        URL url = ofURL(TEST_CONSOLE_URL);
+        assertSame(System.in, url.openStream());
+    }
+
+    @Test
+    public void testClose() throws IOException {
+        URL url = ofURL("http://localhost");
+        URLConnection urlConnection = url.openConnection();
+        close(urlConnection);
+    }
+
+    @Test
+    public void testCloseOnNonHttp() throws IOException {
+        URL url = ofURL("ftp://localhost");
+        URLConnection urlConnection = url.openConnection();
+        close(urlConnection);
+    }
+
+    @Test
+    public void testCloseOnNull() {
+        close(null);
     }
 
 }
