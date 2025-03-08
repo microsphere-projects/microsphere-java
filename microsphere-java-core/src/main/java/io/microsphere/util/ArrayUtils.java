@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.function.BiConsumer;
@@ -237,4 +238,14 @@ public abstract class ArrayUtils extends BaseUtils {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
+    /**
+     * Convert the specified array to a string
+     *
+     * @param array the specified array
+     * @param <T>   the element type of array
+     * @return {@link Arrays#toString}
+     */
+    public static <T> String arrayToString(T[] array) {
+        return Arrays.toString(array);
+    }
 }
