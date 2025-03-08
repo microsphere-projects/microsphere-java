@@ -36,6 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
@@ -73,12 +74,12 @@ public abstract class MethodUtils extends BaseUtils {
     /**
      * The public methods of {@link Object}
      */
-    public final static List<Method> OBJECT_PUBLIC_METHODS = ofList(Object.class.getMethods());
+    public final static List<Method> OBJECT_PUBLIC_METHODS = of(Object.class.getMethods());
 
     /**
      * The declared methods of {@link Object}
      */
-    public final static List<Method> OBJECT_DECLARED_METHODS = ofList(Object.class.getDeclaredMethods());
+    public final static List<Method> OBJECT_DECLARED_METHODS = of(Object.class.getDeclaredMethods());
 
     /**
      * The {@link Predicate} reference to {@link MethodUtils#isObjectMethod(Method)}
