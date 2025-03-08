@@ -18,7 +18,6 @@ package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -28,6 +27,7 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
@@ -172,7 +172,7 @@ public class MapUtilsTest {
         Map<String, Integer> map = toFixedMap(Collections.<String>emptyList(), a -> ofEntry(a, a.hashCode()));
         assertTrue(map.isEmpty());
 
-        map = toFixedMap(Arrays.asList("A", "B"), a -> ofEntry(a, a.hashCode()));
+        map = toFixedMap(ofList("A", "B"), a -> ofEntry(a, a.hashCode()));
         assertEquals(2, map.size());
         assertEquals("A".hashCode(), map.get("A"));
         assertEquals("B".hashCode(), map.get("B"));
