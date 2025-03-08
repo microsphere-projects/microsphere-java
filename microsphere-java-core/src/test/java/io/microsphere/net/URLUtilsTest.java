@@ -498,4 +498,11 @@ public class URLUtilsTest {
         assertNotNull(factory);
     }
 
+    @Test
+    public void testClearURLStreamHandlerFactory() {
+        testGetMutableURLStreamHandlerFactoryFromAttached();
+        clearURLStreamHandlerFactory();
+        testGetMutableURLStreamHandlerFactory();
+    }
+
 }
