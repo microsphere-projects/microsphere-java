@@ -29,7 +29,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
@@ -114,7 +114,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     public static Set<String> getHandlePackages() {
         String value = getHandlePackagesPropertyValue();
         String[] packages = split(value, HANDLER_PACKAGES_SEPARATOR_CHAR);
-        return of(packages);
+        return ofSet(packages);
     }
 
     /**
