@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -29,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
@@ -632,9 +632,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         Set<URL> allClassPathURLs = new LinkedHashSet<>();
 
         URL[] classPathURLs = urlClassPathHandle.getURLs(classLoader);
-        int length = classPathURLs.length;
 
-        allClassPathURLs.addAll(Arrays.asList(classPathURLs).subList(0, length));
+        addAll(allClassPathURLs,classPathURLs);
 
         ClassLoader parentClassLoader = classLoader.getParent();
         if (parentClassLoader != null) {

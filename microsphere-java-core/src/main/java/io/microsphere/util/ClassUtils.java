@@ -17,10 +17,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +31,9 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
-import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
@@ -53,6 +51,7 @@ import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
@@ -65,7 +64,6 @@ import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.reverse;
 import static java.util.Collections.synchronizedMap;
@@ -123,7 +121,7 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = of(
+    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(
             Void.class,
             Boolean.class,
             Character.class,
@@ -139,7 +137,7 @@ public abstract class ClassUtils extends BaseUtils {
             Date.class,
             Object.class);
 
-    public static final Set<Class<?>> PRIMITIVE_TYPES = of(
+    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(
             Void.TYPE,
             Boolean.TYPE,
             Character.TYPE,
@@ -149,6 +147,17 @@ public abstract class ClassUtils extends BaseUtils {
             Long.TYPE,
             Float.TYPE,
             Double.TYPE
+    );
+
+    public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
+            boolean[].class,
+            char[].class,
+            byte[].class,
+            short[].class,
+            int[].class,
+            long[].class,
+            float[].class,
+            double[].class
     );
 
     /**
@@ -203,16 +212,17 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     static {
-        Map<String, Class<?>> typeNamesMap = new HashMap<>(16);
-        List<Class<?>> primitiveTypeNames = new ArrayList<>(16);
-        primitiveTypeNames.addAll(asList(boolean.class, byte.class, char.class, double.class,
-                float.class, int.class, long.class, short.class));
-        primitiveTypeNames.addAll(asList(boolean[].class, byte[].class, char[].class, double[].class,
-                float[].class, int[].class, long[].class, short[].class));
-        for (Class<?> primitiveTypeName : primitiveTypeNames) {
-            typeNamesMap.put(primitiveTypeName.getName(), primitiveTypeName);
-        }
-        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(typeNamesMap);
+        Map<String, Class<?>> primitiveTypeNameMap = newFixedHashMap(17);
+
+        PRIMITIVE_TYPES.forEach(type -> {
+            primitiveTypeNameMap.put(type.getName(), type);
+        });
+
+        PRIMITIVE_ARRAY_TYPES.forEach(type -> {
+            primitiveTypeNameMap.put(type.getName(), type);
+        });
+
+        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(primitiveTypeNameMap);
     }
 
     /**
@@ -849,7 +859,7 @@ public abstract class ClassUtils extends BaseUtils {
         });
 
         if (constructors.isEmpty()) {
-            String message = format("No constructor[class : '{}'] matches the arguments : {}", getTypeName(type), Arrays.asList(args));
+            String message = format("No constructor[class : '{}'] matches the arguments : {}", getTypeName(type), arrayToString(args));
             throw new IllegalArgumentException(message);
         }
 

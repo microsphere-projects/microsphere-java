@@ -28,7 +28,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.size;
-import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
+import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -55,6 +55,17 @@ public abstract class SetUtils extends BaseUtils {
      * @return read-only {@link Set}
      */
     public static <E> Set<E> of(E... elements) {
+        return ofSet(elements);
+    }
+
+    /**
+     * Convert to multiple elements to be {@link LinkedHashSet}
+     *
+     * @param elements one or more elements
+     * @param <E>      the type of <code>elements</code>
+     * @return read-only {@link Set}
+     */
+    public static <E> Set<E> ofSet(E... elements) {
         int size = length(elements);
         if (size < 1) {
             return emptySet();
@@ -62,7 +73,7 @@ public abstract class SetUtils extends BaseUtils {
             return singleton(elements[0]);
         }
 
-        Set<E> set = new LinkedHashSet<>(size);
+        Set<E> set = new LinkedHashSet<>(size, FIXED_LOAD_FACTOR);
 
         for (int i = 0; i < size; i++) {
             set.add(elements[i]);
@@ -108,31 +119,6 @@ public abstract class SetUtils extends BaseUtils {
         return unmodifiableSet(newLinkedHashSet(elements));
     }
 
-    /**
-     * Convert to one or more elements to be a read-only {@link Set}
-     *
-     * @param one    one element
-     * @param others others elements
-     * @param <E>    the type of <code>elements</code>
-     * @return read-only {@link Set}
-     */
-    public static <E> Set<E> ofSet(E one, E... others) {
-        int othersSize = length(others);
-        if (othersSize < 1) {
-            return singleton(one);
-        }
-
-        Set<E> elements = new LinkedHashSet<>(othersSize + 1, MIN_LOAD_FACTOR);
-
-        elements.add(one);
-
-        for (int i = 0; i < othersSize; i++) {
-            elements.add(others[i]);
-        }
-
-        return unmodifiableSet(elements);
-    }
-
     public static <T> Set<T> ofSet(Collection<T> elements) {
         return ofSet(elements, null);
     }
@@ -148,7 +134,7 @@ public abstract class SetUtils extends BaseUtils {
 
         int size = valuesSize + othersSize;
 
-        Set<T> set = newLinkedHashSet(size, MIN_LOAD_FACTOR);
+        Set<T> set = newLinkedHashSet(size, FIXED_LOAD_FACTOR);
         // add elements
         set.addAll(elements);
 

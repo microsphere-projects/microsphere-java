@@ -16,13 +16,12 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.ArrayUtils;
-
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
 import static io.microsphere.util.ArrayUtils.combineArray;
+import static io.microsphere.util.ArrayUtils.ofArray;
 
 /**
  * Multiple {@link Type}
@@ -61,7 +60,7 @@ public class MultipleType {
     }
 
     public static MultipleType of(Type one, Type two, Type... others) {
-        Type[] oneAndTwo = ArrayUtils.of(one, two);
+        Type[] oneAndTwo = ofArray(one, two);
         Type[] types = combineArray(oneAndTwo, others);
         return new MultipleType(types);
     }

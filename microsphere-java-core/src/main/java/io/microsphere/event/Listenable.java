@@ -18,9 +18,9 @@ package io.microsphere.event;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static java.util.stream.StreamSupport.stream;
 
 /**
@@ -73,7 +73,7 @@ public interface Listenable<E extends EventListener<?>> {
             IllegalArgumentException {
         List<E> listeners = new ArrayList<>(1 + others.length);
         listeners.add(listener);
-        listeners.addAll(Arrays.asList(others));
+        addAll(listeners,others);
         addEventListeners(listeners);
     }
 

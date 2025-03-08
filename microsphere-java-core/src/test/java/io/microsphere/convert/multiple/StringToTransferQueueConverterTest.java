@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -88,7 +88,7 @@ public class StringToTransferQueueConverterTest {
     @Test
     public void testConvert() {
 
-        TransferQueue values = new LinkedTransferQueue(asList(1, 2, 3));
+        TransferQueue values = new LinkedTransferQueue(ofList(1, 2, 3));
 
         TransferQueue result = (TransferQueue) converter.convert("1,2,3", List.class, Integer.class);
 
@@ -96,7 +96,7 @@ public class StringToTransferQueueConverterTest {
 
         values.clear();
 
-        values.addAll(asList("123"));
+        values.addAll(ofList("123"));
 
         result = (TransferQueue) converter.convert("123", NavigableSet.class, String.class);
 

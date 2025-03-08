@@ -3,38 +3,65 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.util.ClassLoaderUtils;
+import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
+import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.close;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.encode;
+import static io.microsphere.net.URLUtils.getMutableURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.getSubProtocol;
 import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.isArchiveURL;
+import static io.microsphere.net.URLUtils.isDirectoryURL;
+import static io.microsphere.net.URLUtils.isJarURL;
 import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.net.URLUtils.ofURL;
+import static io.microsphere.net.URLUtils.registerURLStreamHandler;
 import static io.microsphere.net.URLUtils.resolveArchiveEntryPath;
+import static io.microsphere.net.URLUtils.resolveArchiveFile;
+import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
+import static io.microsphere.net.URLUtils.resolveParameters;
+import static io.microsphere.net.URLUtils.resolvePath;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
+import static io.microsphere.net.URLUtils.resolveSubProtocols;
+import static io.microsphere.net.URLUtils.toExternalForm;
+import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
+import static io.microsphere.util.SystemUtils.USER_DIR;
+import static java.nio.file.Paths.get;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -47,26 +74,143 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class URLUtilsTest {
 
+    private static final String TEST_PATH = "/abc/def";
+
+    private static final String UTF8_ENCODED_TEST_PATH = "%2Fabc%2Fdef";
+
+    private static final String FILE_URL_PREFIX = "file://";
+
+    private static final String userDirURLString = FILE_URL_PREFIX + USER_DIR;
+
+    private static final String TEST_HTTP_BASE = "http://localhost/";
+
+    private static final String TEST_HTTP_WITH_PATH = TEST_HTTP_BASE + TEST_PATH;
+
+    private static final String TEST_HTTP_WITH_PATH_HASH = TEST_HTTP_WITH_PATH + "#hash";
+
+    private static final String TEST_HTTP_WITH_QUERY_STRING = TEST_HTTP_BASE + "?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
+
+    private static final String TEST_HTTP_WITH_MATRIX_STRING = TEST_HTTP_BASE + ";q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
+
+    private static final String TEST_HTTP_WITH_SP_MATRIX = TEST_HTTP_BASE + ";_sp=text;_sp=properties";
+
+    private static URL userDirURL;
+
+    private static URL classFileURL;
+
+    private static URL classArchiveEntryURL;
+
+    @BeforeAll
+    public static void beforeAll() throws Throwable {
+        ClassLoader classLoader = getDefaultClassLoader();
+        userDirURL = ofURL(userDirURLString);
+        classFileURL = getClassResource(classLoader, StringUtils.class);
+        classArchiveEntryURL = getClassResource(classLoader, Nonnull.class);
+    }
+
     @AfterEach
     public void after() {
-        URLUtils.clearURLStreamHandlerFactory();
+        clearURLStreamHandlerFactory();
     }
 
     @Test
-    public void testEncodeAndDecode() {
-        String path = "/abc/def";
-
-        String encodedPath = encode(path);
-        String decodedPath = decode(encodedPath);
-        assertEquals(path, decodedPath);
-
-        encodedPath = encode(path, "GBK");
-        decodedPath = decode(encodedPath, "GBK");
-        assertEquals(path, decodedPath);
+    public void testOfURL() throws MalformedURLException {
+        assertEquals(new URL(userDirURLString), ofURL(userDirURLString));
     }
 
     @Test
-    public void testResolvePath() {
+    public void testOfURLOnFailed() {
+        assertThrows(IllegalArgumentException.class, () -> ofURL("unknown://localhost/"));
+    }
+
+    @Test
+    public void testResolveArchiveEntryPath() {
+        ClassLoader classLoader = getDefaultClassLoader();
+        URL resourceURL = getClassResource(classLoader, Nonnull.class);
+        String expectedPath = "javax/annotation/Nonnull.class";
+        String relativePath = resolveArchiveEntryPath(resourceURL);
+        assertEquals(expectedPath, relativePath);
+    }
+
+    @Test
+    public void testResolveArchiveEntryPathOnFile() {
+        assertNull(resolveArchiveEntryPath(userDirURL));
+    }
+
+    @Test
+    public void testResolveBasePathOnFile() {
+        assertEquals(get(USER_DIR), get(resolveBasePath(userDirURL)));
+    }
+
+    @Test
+    public void testResolveBasePathOnArchiveEntry() throws MalformedURLException {
+        String basePath = resolveBasePath(classArchiveEntryURL);
+        assertNotNull(basePath);
+        assertEquals(get(basePath), get(resolveBasePath(FILE_URL_PREFIX + basePath)));
+    }
+
+    @Test
+    public void testResolveArchiveFile() {
+        File archiveFile = resolveArchiveFile(classArchiveEntryURL);
+        assertTrue(archiveFile.exists());
+    }
+
+    @Test
+    public void testResolveArchiveFileOnClassFile() {
+        File archiveFile = resolveArchiveFile(classFileURL);
+        assertTrue(archiveFile.exists());
+    }
+
+    @Test
+    public void testResolveQueryParameters() {
+        String url = TEST_HTTP_WITH_QUERY_STRING;
+        Map<String, List<String>> parametersMap = resolveQueryParameters(url);
+        Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
+        expectedParametersMap.put("q", ofList("java"));
+        expectedParametersMap.put("oq", ofList("java"));
+        expectedParametersMap.put("sourceid", ofList("chrome"));
+        expectedParametersMap.put("es_sm", ofList("122"));
+        expectedParametersMap.put("ie", ofList("UTF-8"));
+
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = TEST_HTTP_BASE;
+        parametersMap = resolveQueryParameters(url);
+        expectedParametersMap = emptyMap();
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = TEST_HTTP_BASE;
+        parametersMap = resolveQueryParameters(url);
+        expectedParametersMap = emptyMap();
+        assertEquals(expectedParametersMap, parametersMap);
+    }
+
+    @Test
+    public void testResolveMatrixParameters() {
+        String url = TEST_HTTP_WITH_MATRIX_STRING;
+        Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
+        Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
+        expectedParametersMap.put("q", ofList("java"));
+        expectedParametersMap.put("oq", ofList("java"));
+        expectedParametersMap.put("sourceid", ofList("chrome"));
+        expectedParametersMap.put("es_sm", ofList("122"));
+        expectedParametersMap.put("ie", ofList("UTF-8"));
+
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = TEST_HTTP_WITH_QUERY_STRING;
+        parametersMap = resolveMatrixParameters(url);
+        expectedParametersMap = emptyMap();
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = TEST_HTTP_BASE;
+        parametersMap = resolveMatrixParameters(url);
+        expectedParametersMap = emptyMap();
+        assertEquals(expectedParametersMap, parametersMap);
+    }
+
+    @Test
+    public void testNormalizePath() {
         String path = null;
         String expectedPath = null;
         String resolvedPath = null;
@@ -97,68 +241,92 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testResolveRelativePath() throws MalformedURLException {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
-        String expectedPath = "javax/annotation/Nonnull.class";
-        String relativePath = resolveArchiveEntryPath(resourceURL);
-        assertEquals(expectedPath, relativePath);
+    public void testEncode() {
+        assertEquals(UTF8_ENCODED_TEST_PATH, encode(TEST_PATH));
     }
 
     @Test
-    public void testResolveArchiveFile() {
-        ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
-        File archiveFile = URLUtils.resolveArchiveFile(resourceURL);
-        assertTrue(archiveFile.exists());
+    public void testEncodeWithEncoding() {
+        assertEquals(UTF8_ENCODED_TEST_PATH, encode(TEST_PATH, "UTF-8"));
     }
 
     @Test
-    public void testResolveQueryParameters() {
-        String url = "https://www.google.com.hk/search?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
-        Map<String, List<String>> parametersMap = resolveQueryParameters(url);
-        Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
-        expectedParametersMap.put("q", Arrays.asList("java"));
-        expectedParametersMap.put("oq", Arrays.asList("java"));
-        expectedParametersMap.put("sourceid", Arrays.asList("chrome"));
-        expectedParametersMap.put("es_sm", Arrays.asList("122"));
-        expectedParametersMap.put("ie", Arrays.asList("UTF-8"));
-
-        assertEquals(expectedParametersMap, parametersMap);
-
-        url = "https://www.google.com.hk/search";
-        parametersMap = resolveQueryParameters(url);
-        expectedParametersMap = emptyMap();
-        assertEquals(expectedParametersMap, parametersMap);
-
-        url = "https://www.google.com.hk/search?";
-        parametersMap = resolveQueryParameters(url);
-        expectedParametersMap = emptyMap();
-        assertEquals(expectedParametersMap, parametersMap);
+    public void testEncodeOnInvalidEncoding() {
+        assertThrows(IllegalArgumentException.class, () -> encode(TEST_PATH, "unknown-encoding"));
     }
 
     @Test
-    public void testResolveMatrixParameters() {
-        String url = "https://www.google.com.hk/search;q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
-        Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
-        Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
-        expectedParametersMap.put("q", Arrays.asList("java"));
-        expectedParametersMap.put("oq", Arrays.asList("java"));
-        expectedParametersMap.put("sourceid", Arrays.asList("chrome"));
-        expectedParametersMap.put("es_sm", Arrays.asList("122"));
-        expectedParametersMap.put("ie", Arrays.asList("UTF-8"));
+    public void testDecode() {
+        assertEquals(TEST_PATH, decode(UTF8_ENCODED_TEST_PATH));
+    }
 
-        assertEquals(expectedParametersMap, parametersMap);
+    @Test
+    public void testDecodeWithEncoding() {
+        assertEquals(TEST_PATH, decode(UTF8_ENCODED_TEST_PATH, "UTF-8"));
+    }
 
-        url = "https://www.google.com.hk/search";
-        parametersMap = resolveMatrixParameters(url);
-        expectedParametersMap = emptyMap();
-        assertEquals(expectedParametersMap, parametersMap);
+    @Test
+    public void testDecodeOnInvalidEncoding() {
+        assertThrows(IllegalArgumentException.class, () -> decode(UTF8_ENCODED_TEST_PATH, "unknown-encoding"));
+    }
 
-        url = "https://www.google.com.hk/search;";
-        parametersMap = resolveMatrixParameters(url);
-        expectedParametersMap = emptyMap();
-        assertEquals(expectedParametersMap, parametersMap);
+    @Test
+    public void testIsDirectoryURL() throws Exception {
+        ClassLoader classLoader = getDefaultClassLoader();
+        URL resourceURL = getClassResource(classLoader, StringUtils.class);
+        assertFalse(isDirectoryURL(classFileURL));
+
+        String externalForm = null;
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
+        resourceURL = ofURL(externalForm);
+        assertTrue(isDirectoryURL(resourceURL));
+
+        resourceURL = getClassResource(classLoader, String.class);
+        assertFalse(isDirectoryURL(resourceURL));
+
+        resourceURL = getClassResource(classLoader, getClass());
+        assertFalse(isDirectoryURL(resourceURL));
+
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
+        resourceURL = ofURL(externalForm);
+        assertTrue(isDirectoryURL(resourceURL));
+    }
+
+    @Test
+    public void testIsJarURLOnDirectory() {
+        assertFalse(isJarURL(userDirURL));
+    }
+
+    @Test
+    public void testIsJarURLOnClassFile() {
+        assertFalse(isJarURL(classFileURL));
+    }
+
+    @Test
+    public void testIsJarURLOnArchiveEntry() {
+        assertTrue(isJarURL(classArchiveEntryURL));
+    }
+
+    @Test
+    public void testIsJarURLOnArchiveFile() throws MalformedURLException {
+        File archiveFile = resolveArchiveFile(classArchiveEntryURL);
+        assertTrue(isJarURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
+    }
+
+    @Test
+    public void testIsArchiveURLOnJar() throws MalformedURLException {
+        assertTrue(isArchiveURL(classArchiveEntryURL));
+    }
+
+    @Test
+    public void testIsArchiveURLOnFile() throws MalformedURLException {
+        File archiveFile = resolveArchiveFile(classArchiveEntryURL);
+        assertTrue(isArchiveURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
+    }
+
+    @Test
+    public void testIsArchiveURLOnNotJar() throws MalformedURLException {
+        assertFalse(isArchiveURL(classFileURL));
     }
 
     @Test
@@ -174,41 +342,75 @@ public class URLUtilsTest {
     }
 
     @Test
-    public void testIsDirectoryURL() throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, StringUtils.class);
-        assertFalse(URLUtils.isDirectoryURL(resourceURL));
-
-        String externalForm = null;
-        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
-        resourceURL = new URL(externalForm);
-        assertTrue(URLUtils.isDirectoryURL(resourceURL));
-
-        resourceURL = ClassLoaderUtils.getClassResource(classLoader, String.class);
-        assertFalse(URLUtils.isDirectoryURL(resourceURL));
-
-        resourceURL = ClassLoaderUtils.getClassResource(classLoader, getClass());
-        assertFalse(URLUtils.isDirectoryURL(resourceURL));
-
-        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
-        resourceURL = new URL(externalForm);
-        assertTrue(URLUtils.isDirectoryURL(resourceURL));
+    public void testToExternalFormOnDirectory() {
+        testToExternalForm(userDirURL);
     }
 
     @Test
-    public void testAttachURLStreamHandlerFactory() {
-        URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
-        attachURLStreamHandlerFactory(factory);
-        assertSame(factory, getURLStreamHandlerFactory());
+    public void testToExternalFormOnClassFile() {
+        testToExternalForm(classFileURL);
+    }
 
+    @Test
+    public void testToExternalFormOnClassArchiveEntry() {
+        testToExternalForm(classArchiveEntryURL);
+    }
 
-        attachURLStreamHandlerFactory(factory);
-        CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();
-        assertNotSame(factory, compositeFactory);
-        assertEquals(1, compositeFactory.getFactories().size());
-        assertSame(factory, compositeFactory.getFactories().get(0));
-        assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
+    @Test
+    public void testToExternalFormWithMatrixString() throws MalformedURLException {
+        testToExternalForm(TEST_HTTP_WITH_MATRIX_STRING);
+    }
 
+    @Test
+    public void testToExternalFormWithQueryString() throws MalformedURLException {
+        testToExternalForm(TEST_HTTP_WITH_QUERY_STRING);
+    }
+
+    @Test
+    public void testToExternalFormWithPath() throws MalformedURLException {
+        testToExternalForm(TEST_HTTP_WITH_PATH);
+    }
+
+    @Test
+    public void testToExternalFormWithRef() throws MalformedURLException {
+        testToExternalForm(TEST_HTTP_WITH_PATH_HASH);
+    }
+
+    private void testToExternalForm(String urlString) throws MalformedURLException {
+        testToExternalForm(ofURL(urlString));
+    }
+
+    private void testToExternalForm(URL url) {
+        assertEquals(url.toExternalForm(), toExternalForm(url));
+    }
+
+    @Test
+    public void testGetSubProtocol() {
+        assertEquals("text", getSubProtocol(TEST_HTTP_WITH_SP_MATRIX));
+    }
+
+    @Test
+    public void testGetSubProtocolWithSubProtocol() {
+        assertNull(getSubProtocol(TEST_HTTP_BASE));
+    }
+
+    @Test
+    public void testResolveSubProtocolsFromMatrixString() throws MalformedURLException {
+        URL url = ofURL(TEST_HTTP_WITH_SP_MATRIX);
+        List<String> subProtocols = resolveSubProtocols(url);
+        assertEquals(2, subProtocols.size());
+        assertEquals("text", subProtocols.get(0));
+        assertEquals("properties", subProtocols.get(1));
+    }
+
+    @Test
+    public void testResolveSubProtocolsFromProtocol() throws MalformedURLException {
+        new Handler();
+        URL url = ofURL("console:text:properties://localhost");
+        List<String> subProtocols = resolveSubProtocols(url);
+        assertEquals(2, subProtocols.size());
+        assertEquals("text", subProtocols.get(0));
+        assertEquals("properties", subProtocols.get(1));
     }
 
     @Test
@@ -222,8 +424,98 @@ public class URLUtilsTest {
         assertNull(resolveProtocol("a :"));
         assertEquals("ftp", resolveProtocol("ftp://..."));
         assertEquals("http", resolveProtocol("http://..."));
-
     }
 
+    @Test
+    public void testResolvePath() {
+        assertEquals(USER_DIR, resolvePath(userDirURL));
+    }
+
+    @Test
+    public void testResolvePathWithMatrixString() {
+        assertEquals(USER_DIR, resolvePath(userDirURL));
+    }
+
+    @Test
+    public void testAttachURLStreamHandlerFactory() {
+        URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
+        attachURLStreamHandlerFactory(factory);
+        assertSame(factory, getURLStreamHandlerFactory());
+
+        attachURLStreamHandlerFactory(factory);
+        CompositeURLStreamHandlerFactory compositeFactory = (CompositeURLStreamHandlerFactory) getURLStreamHandlerFactory();
+        assertNotSame(factory, compositeFactory);
+        assertEquals(1, compositeFactory.getFactories().size());
+        assertSame(factory, compositeFactory.getFactories().get(0));
+        assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
+    }
+
+    @Test
+    public void testGetURLStreamHandlerFactory() {
+        assertNull(getURLStreamHandlerFactory());
+    }
+
+    @Test
+    public void testRegisterURLStreamHandler() throws IOException {
+        Handler handler = new Handler();
+        registerURLStreamHandler(handler);
+        URL url = ofURL(TEST_CONSOLE_URL);
+        assertSame(System.in, url.openStream());
+    }
+
+    @Test
+    public void testClose() throws IOException {
+        URL url = ofURL("http://localhost");
+        URLConnection urlConnection = url.openConnection();
+        close(urlConnection);
+    }
+
+    @Test
+    public void testCloseOnNonHttp() throws IOException {
+        URL url = ofURL("ftp://localhost");
+        URLConnection urlConnection = url.openConnection();
+        close(urlConnection);
+    }
+
+    @Test
+    public void testCloseOnNull() {
+        close(null);
+    }
+
+    @Test
+    public void testGetMutableURLStreamHandlerFactory() {
+        MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory();
+        assertNull(factory);
+    }
+
+    @Test
+    public void testGetMutableURLStreamHandlerFactoryFromAttached() {
+        MutableURLStreamHandlerFactory factory = new MutableURLStreamHandlerFactory();
+        attachURLStreamHandlerFactory(factory);
+        assertSame(factory, getMutableURLStreamHandlerFactory());
+    }
+
+    @Test
+    public void testGetMutableURLStreamHandlerFactoryOnCreateIfAbsent() {
+        MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory(true);
+        assertNotNull(factory);
+    }
+
+    @Test
+    public void testClearURLStreamHandlerFactory() {
+        testGetMutableURLStreamHandlerFactoryFromAttached();
+        clearURLStreamHandlerFactory();
+        testGetMutableURLStreamHandlerFactory();
+    }
+
+    @Test
+    public void testResolveParametersOnNull() {
+        assertSame(emptyMap(), resolveParameters(null, AND_CHAR));
+    }
+
+    @Test
+    public void testResolveParametersOnEmptyString() {
+        assertSame(emptyMap(), resolveParameters(EMPTY_STRING, AND_CHAR));
+    }
 
 }

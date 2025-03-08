@@ -11,7 +11,7 @@ import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Set;
 
-import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
@@ -49,7 +49,7 @@ public abstract class ClassPathUtils extends BaseUtils {
 
     private static Set<String> resolveClassPaths(String classPath) {
         String[] classPathsArray = split(classPath, PATH_SEPARATOR);
-        return of(classPathsArray);
+        return ofSet(classPathsArray);
     }
 
 

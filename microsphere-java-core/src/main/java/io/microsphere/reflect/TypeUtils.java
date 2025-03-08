@@ -37,8 +37,10 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
@@ -47,7 +49,6 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static java.lang.Integer.getInteger;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -272,7 +273,7 @@ public abstract class TypeUtils extends BaseUtils {
                 }
             }
 
-            return Arrays.asList(actualTypeArguments);
+            return ofList(actualTypeArguments);
         });
     }
 
@@ -398,9 +399,15 @@ public abstract class TypeUtils extends BaseUtils {
         List<Type> genericTypes = new LinkedList<>();
 
         genericTypes.add(rawClass.getGenericSuperclass());
-        genericTypes.addAll(asList(rawClass.getGenericInterfaces()));
+        addAll(genericTypes, rawClass.getGenericInterfaces());
 
-        return unmodifiableList(filterList(genericTypes, TypeUtils::isParameterizedType).stream().map(ParameterizedType.class::cast).filter(and(typeFilters)).collect(toList()));
+        return unmodifiableList(
+                filterList(genericTypes, TypeUtils::isParameterizedType)
+                        .stream()
+                        .map(ParameterizedType.class::cast)
+                        .filter(and(typeFilters))
+                        .collect(toList())
+        );
     }
 
     public static List<Type> findAllTypes(Type type, Predicate<Type>... typeFilters) {
@@ -552,7 +559,12 @@ public abstract class TypeUtils extends BaseUtils {
         // Add all super interfaces
         allTypes.addAll(ClassUtils.getAllInterfaces(rawClass));
 
-        List<ParameterizedType> allGenericInterfaces = allTypes.stream().map(Class::getGenericInterfaces).map(Arrays::asList).flatMap(Collection::stream).map(TypeUtils::asParameterizedType).filter(Objects::nonNull).collect(toList());
+        List<ParameterizedType> allGenericInterfaces = allTypes.stream().map(Class::getGenericInterfaces)
+                .map(Arrays::asList)
+                .flatMap(Collection::stream)
+                .map(TypeUtils::asParameterizedType)
+                .filter(Objects::nonNull)
+                .collect(toList());
 
         return unmodifiableList(filterAll(allGenericInterfaces, typeFilters));
     }
@@ -758,8 +770,9 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     public static Set<ParameterizedType> findParameterizedTypes(Class<?> sourceClass) {
+        List<Type> genericTypes = new LinkedList<>();
         // Add Generic Interfaces
-        List<Type> genericTypes = new LinkedList<>(asList(sourceClass.getGenericInterfaces()));
+        addAll(genericTypes, sourceClass.getGenericInterfaces());
         // Add Generic Super Class
         genericTypes.add(sourceClass.getGenericSuperclass());
 

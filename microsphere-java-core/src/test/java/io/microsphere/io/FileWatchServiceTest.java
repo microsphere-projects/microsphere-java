@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.Lists.ofList;
 
 /**
  * {@link FileWatchService} Test

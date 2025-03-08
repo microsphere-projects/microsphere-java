@@ -16,7 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.collection.MapUtils;
 import io.microsphere.reflect.MemberUtils;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +25,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING_PROPERTY_KEY;
@@ -106,7 +106,7 @@ public class SystemUtilsTest {
 
     private static final Field[] IS_JAVA_VERSION_FIELDS = findIsJavaVersionFields();
 
-    private static final Map<Integer, String> versionedClassNames = MapUtils.of(
+    private static final Map<Integer, String> versionedClassNames = ofMap(
             22, "java.lang.foreign.Arena",
             21, "java.util.SequencedSet",
             20, "java.lang.reflect.ClassFileFormatVersion",

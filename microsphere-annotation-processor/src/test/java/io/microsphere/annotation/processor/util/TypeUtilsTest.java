@@ -68,7 +68,7 @@ import static io.microsphere.annotation.processor.util.TypeUtils.listTypeElement
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -415,7 +415,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testOfDeclaredTypes() {
-        Set<DeclaredType> declaredTypes = ofDeclaredTypes(asList(getType(String.class), getType(TestServiceImpl.class), getType(Color.class)));
+        Set<DeclaredType> declaredTypes = ofDeclaredTypes(ofList(getType(String.class), getType(TestServiceImpl.class), getType(Color.class)));
         assertTrue(declaredTypes.contains(getType(String.class).asType()));
         assertTrue(declaredTypes.contains(getType(TestServiceImpl.class).asType()));
         assertTrue(declaredTypes.contains(getType(Color.class).asType()));
@@ -425,24 +425,24 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testListDeclaredTypes() {
-        List<DeclaredType> types = listDeclaredTypes(asList(testType, testType, testType));
+        List<DeclaredType> types = listDeclaredTypes(ofList(testType, testType, testType));
         assertEquals(1, types.size());
         assertEquals(ofDeclaredType(testType), types.get(0));
 
-        types = listDeclaredTypes(asList(new Element[]{null}));
+        types = listDeclaredTypes(ofList(new Element[]{null}));
         assertTrue(types.isEmpty());
     }
 
     @Test
     public void testListTypeElements() {
-        List<TypeElement> typeElements = listTypeElements(asList(testType.asType(), ofDeclaredType(testType)));
+        List<TypeElement> typeElements = listTypeElements(ofList(testType.asType(), ofDeclaredType(testType)));
         assertEquals(1, typeElements.size());
         assertEquals(testType, typeElements.get(0));
 
-        typeElements = listTypeElements(asList(types.getPrimitiveType(TypeKind.BYTE), types.getNullType(), types.getNoType(TypeKind.NONE)));
+        typeElements = listTypeElements(ofList(types.getPrimitiveType(TypeKind.BYTE), types.getNullType(), types.getNoType(TypeKind.NONE)));
         assertTrue(typeElements.isEmpty());
 
-        typeElements = listTypeElements(asList(new TypeMirror[]{null}));
+        typeElements = listTypeElements(ofList(new TypeMirror[]{null}));
         assertTrue(typeElements.isEmpty());
 
         typeElements = listTypeElements(null);

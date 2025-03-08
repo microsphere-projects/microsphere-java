@@ -19,7 +19,6 @@ package io.microsphere.collection;
 import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -34,6 +33,7 @@ import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.CollectionUtils.singletonIterable;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyEnumeration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -153,7 +153,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertEquals(0, addAll(null, "A"));
         assertEquals(0, addAll(values));
         assertEquals(2, addAll(values, "A", "B"));
-        assertEquals(Arrays.asList("A", "B"), values);
+        assertEquals(ofList("A", "B"), values);
     }
 
     @Test

@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
@@ -47,7 +46,6 @@ import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_12;
 import static java.lang.ClassLoader.getSystemClassLoader;
-import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -257,22 +255,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testFindLoadedClassesInClassPaths() {
         Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPaths(classLoader, ClassPathUtils.getClassPaths());
         assertFalse(allLoadedClasses.isEmpty());
-    }
-
-    @Test
-    public void testOfSet() {
-        Set<String> set = of();
-        assertEquals(emptySet(), set);
-
-        set = of(((String[]) null));
-        assertEquals(emptySet(), set);
-
-        set = of("A", "B", "C");
-        Set<String> expectedSet = new LinkedHashSet<>();
-        expectedSet.add("A");
-        expectedSet.add("B");
-        expectedSet.add("C");
-        assertEquals(expectedSet, set);
     }
 
     @Test

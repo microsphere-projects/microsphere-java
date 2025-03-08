@@ -19,6 +19,8 @@ package io.microsphere.net;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
+import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * Delegating {@link URLStreamHandlerFactory}
  *
@@ -30,9 +32,7 @@ public class DelegatingURLStreamHandlerFactory implements URLStreamHandlerFactor
     private final URLStreamHandlerFactory delegate;
 
     public DelegatingURLStreamHandlerFactory(URLStreamHandlerFactory delegate) {
-        if (delegate == null) {
-            throw new NullPointerException("The 'delegate' argument must not be null!");
-        }
+        assertNotNull(delegate, () -> "The 'delegate' argument must not be null!");
         this.delegate = delegate;
     }
 

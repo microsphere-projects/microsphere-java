@@ -5,6 +5,7 @@ package io.microsphere.net;
 
 import io.microsphere.collection.MapUtils;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.ClassPathUtils;
 import io.microsphere.util.jar.JarUtils;
@@ -18,8 +19,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +28,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
@@ -57,10 +58,8 @@ import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Character.isWhitespace;
-import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -128,6 +127,22 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static final String SUB_PROTOCOL_MATRIX_NAME = "_sp";
 
+
+    /**
+     * Convert the <code>url</code> to {@link URL}
+     *
+     * @param url
+     * @return non-null
+     * @throws IllegalArgumentException if <code>url</code> is malformed
+     */
+    public static URL ofURL(String url) {
+        try {
+            return new URL(url);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     /**
      * Resolve the entry path from Archive File URL
      *
@@ -158,10 +173,10 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
-        return doResolveBasePath(url.getPath());
+        return resolveBasePath(url.getPath());
     }
 
-    protected static String doResolveBasePath(String path) {
+    protected static String resolveBasePath(String path) {
         int beginIndex = path.lastIndexOf(COLON_CHAR);
         if (beginIndex == -1) {
             return path;
@@ -434,7 +449,7 @@ public abstract class URLUtils extends BaseUtils {
      * @return URI
      */
     public static String buildURI(String... paths) {
-        int length = getLength(paths);
+        int length = ArrayUtils.length(paths);
         if (length < 1) {
             return SLASH;
         }
@@ -482,17 +497,6 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String buildMatrixString(String name, String... values) {
         return buildString(name, values, SEMICOLON_CHAR, EQUAL_CHAR);
-    }
-
-    /**
-     * Converts a URL of a specific protocol to a String.
-     *
-     * @param url {@link URL}
-     * @return non-null
-     * @throws NullPointerException If <code>url</code> is <code>null</code>
-     */
-    public static String toString(URL url) throws NullPointerException {
-        return toExternalForm(url);
     }
 
     /**
@@ -604,9 +608,9 @@ public abstract class URLUtils extends BaseUtils {
             subProtocols = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
         } else {
             String[] values = split(subProtocolsString, COLON_CHAR);
-            subProtocols = Arrays.asList(values);
+            subProtocols = ofList(values);
         }
-        return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
+        return subProtocols == null ? emptyList() : subProtocols;
     }
 
     /**
@@ -803,12 +807,12 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
         String[] params = split(paramsString, separatorChar);
-        int paramsLen = params == null ? 0 : params.length;
+        int paramsLen = ArrayUtils.length(params);
         if (paramsLen == 0) {
             return emptyMap();
         }
 
-        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, Float.MIN_NORMAL);
+        Map<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
 
         for (int i = 0; i < paramsLen; i++) {
             String param = params[i];
@@ -830,7 +834,7 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static String buildString(String name, String[] values, char separator, char joiner) {
-        int len = getLength(values);
+        int len = ArrayUtils.length(values);
 
         if (len == 0) {
             return null;

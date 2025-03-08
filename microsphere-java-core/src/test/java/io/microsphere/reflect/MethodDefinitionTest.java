@@ -18,10 +18,10 @@ package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
-import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Version;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,7 +47,7 @@ public class MethodDefinitionTest {
         assertNull(md.getDeprecation());
         assertEquals(MethodDefinitionTest.class, md.getResolvedClass());
         assertEquals("log", md.getMethodName());
-        assertArrayEquals(ArrayUtils.of(String.class), md.getParameterTypes());
+        assertArrayEquals(ofArray(String.class), md.getParameterTypes());
         assertTrue(md.isPresent());
         assertNotNull(md.getMethod());
 
