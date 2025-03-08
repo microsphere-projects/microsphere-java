@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.toIterable;
@@ -37,6 +38,22 @@ public class SetUtilsTest {
     public void testIsSet() {
         assertTrue(isSet(emptySet()));
         assertFalse(isSet(emptyList()));
+    }
+
+    @Test
+    public void testOfSet() {
+        Set<String> set = ofSet();
+        assertEquals(emptySet(), set);
+
+        set = ofSet(((String[]) null));
+        assertEquals(emptySet(), set);
+
+        set = ofSet("A", "B", "C");
+        Set<String> expectedSet = new LinkedHashSet<>();
+        expectedSet.add("A");
+        expectedSet.add("B");
+        expectedSet.add("C");
+        assertEquals(expectedSet, set);
     }
 
     @Test
