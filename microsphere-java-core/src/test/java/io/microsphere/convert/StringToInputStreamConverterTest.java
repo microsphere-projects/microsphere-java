@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
