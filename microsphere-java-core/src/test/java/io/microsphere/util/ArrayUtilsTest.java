@@ -166,6 +166,26 @@ public class ArrayUtilsTest {
         assertArrayEquals(of("A", "B", "C"), ofArray("A", "B", "C"));
     }
 
+    // Test size(...) methods
+
+    @Test
+    public void testSize() {
+        assertEquals(1, size(ofArray("A")));
+        assertEquals(2, size(ofArray("A", "B")));
+    }
+
+    @Test
+    public void testSizeOnNull() {
+        assertEquals(0, size(ofArray((Object[]) null)));
+    }
+
+    @Test
+    public void testSizeOnEmptyArray() {
+        assertEquals(0, size(ofArray(EMPTY_OBJECT_ARRAY)));
+    }
+
+    // Test length(...) methods
+
     @Test
     public void testLengthOnBooleanArray() {
         assertEquals(1, length(ofBooleans(true)));
@@ -197,7 +217,109 @@ public class ArrayUtilsTest {
 
     @Test
     public void testLengthOnNullByteArray() {
-        assertEquals(0, length((byte[][]) null));
+        assertEquals(0, length((byte[]) null));
+    }
+
+    @Test
+    public void testLengthOnCharArray() {
+        assertEquals(1, length(ofChars((char) 1)));
+        assertEquals(2, length(ofChars((char) 1, (char) 2)));
+        assertEquals(3, length(ofChars((char) 1, (char) 2, (char) 3)));
+    }
+
+    @Test
+    public void testLengthOnEmptyCharArray() {
+        assertEquals(0, length(EMPTY_CHAR_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullCharArray() {
+        assertEquals(0, length((char[]) null));
+    }
+
+    @Test
+    public void testLengthOnShortArray() {
+        assertEquals(1, length(ofShorts((short) 1)));
+        assertEquals(2, length(ofShorts((short) 1, (short) 2)));
+        assertEquals(3, length(ofShorts((short) 1, (short) 2, (short) 3)));
+    }
+
+    @Test
+    public void testLengthOnEmptyShortArray() {
+        assertEquals(0, length(EMPTY_SHORT_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullShortArray() {
+        assertEquals(0, length((short[]) null));
+    }
+
+    @Test
+    public void testLengthOnIntArray() {
+        assertEquals(1, length(ofInts(1)));
+        assertEquals(2, length(ofInts(1, 2)));
+        assertEquals(3, length(ofInts(1, 2, 3)));
+    }
+
+    @Test
+    public void testLengthOnEmptyIntArray() {
+        assertEquals(0, length(EMPTY_INT_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullIntArray() {
+        assertEquals(0, length((int[]) null));
+    }
+
+    @Test
+    public void testLengthOnLongArray() {
+        assertEquals(1, length(ofLongs(1L)));
+        assertEquals(2, length(ofLongs(1L, 2L)));
+        assertEquals(3, length(ofLongs(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testLengthOnEmptyLongArray() {
+        assertEquals(0, length(EMPTY_LONG_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullLongArray() {
+        assertEquals(0, length((long[]) null));
+    }
+
+    @Test
+    public void testLengthOnFloatArray() {
+        assertEquals(1, length(ofFloats(1L)));
+        assertEquals(2, length(ofFloats(1L, 2L)));
+        assertEquals(3, length(ofFloats(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testLengthOnEmptyFloatArray() {
+        assertEquals(0, length(EMPTY_FLOAT_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullFloatArray() {
+        assertEquals(0, length((float[]) null));
+    }
+
+    @Test
+    public void testLengthOnDoubleArray() {
+        assertEquals(1, length(ofDoubles(1L)));
+        assertEquals(2, length(ofDoubles(1L, 2L)));
+        assertEquals(3, length(ofDoubles(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testLengthOnEmptyDoubleArray() {
+        assertEquals(0, length(EMPTY_DOUBLE_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullDoubleArray() {
+        assertEquals(0, length((double[]) null));
     }
 
     @Test
@@ -216,20 +338,142 @@ public class ArrayUtilsTest {
         assertEquals(0, length(ofArray(EMPTY_OBJECT_ARRAY)));
     }
 
+    // Test isEmpty(...) methods
+
     @Test
-    public void testSize() {
-        assertEquals(1, size(ofArray("A")));
-        assertEquals(2, size(ofArray("A", "B")));
+    public void testIsEmptyOnBooleanArray() {
+        assertFalse(isEmpty(ofBooleans(true)));
+        assertFalse(isEmpty(ofBooleans(true, false)));
+        assertFalse(isEmpty(ofBooleans(true, false, true)));
     }
 
     @Test
-    public void testSizeOnNull() {
-        assertEquals(0, size(ofArray((Object[]) null)));
+    public void testIsEmptyOnEmptyBooleanArray() {
+        assertTrue(isEmpty(EMPTY_BOOLEAN_ARRAY));
     }
 
     @Test
-    public void testSizeOnEmptyArray() {
-        assertEquals(0, size(ofArray(EMPTY_OBJECT_ARRAY)));
+    public void testIsEmptyOnNullBooleanArray() {
+        assertTrue(isEmpty((boolean[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnByteArray() {
+        assertFalse(isEmpty(ofBytes((byte) 1)));
+        assertFalse(isEmpty(ofBytes((byte) 1, (byte) 2)));
+        assertFalse(isEmpty(ofBytes((byte) 1, (byte) 2, (byte) 3)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyByteArray() {
+        assertTrue(isEmpty(EMPTY_BYTE_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullByteArray() {
+        assertTrue(isEmpty((byte[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnCharArray() {
+        assertFalse(isEmpty(ofChars((char) 1)));
+        assertFalse(isEmpty(ofChars((char) 1, (char) 2)));
+        assertFalse(isEmpty(ofChars((char) 1, (char) 2, (char) 3)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyCharArray() {
+        assertTrue(isEmpty(EMPTY_CHAR_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullCharArray() {
+        assertTrue(isEmpty((char[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnShortArray() {
+        assertFalse(isEmpty(ofShorts((short) 1)));
+        assertFalse(isEmpty(ofShorts((short) 1, (short) 2)));
+        assertFalse(isEmpty(ofShorts((short) 1, (short) 2, (short) 3)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyShortArray() {
+        assertTrue(isEmpty(EMPTY_SHORT_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullShortArray() {
+        assertTrue(isEmpty((short[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnIntArray() {
+        assertFalse(isEmpty(ofInts(1)));
+        assertFalse(isEmpty(ofInts(1, 2)));
+        assertFalse(isEmpty(ofInts(1, 2, 3)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyIntArray() {
+        assertTrue(isEmpty(EMPTY_INT_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullIntArray() {
+        assertTrue(isEmpty((int[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnLongArray() {
+        assertFalse(isEmpty(ofLongs(1L)));
+        assertFalse(isEmpty(ofLongs(1L, 2L)));
+        assertFalse(isEmpty(ofLongs(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyLongArray() {
+        assertTrue(isEmpty(EMPTY_LONG_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullLongArray() {
+        assertTrue(isEmpty((long[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnFloatArray() {
+        assertFalse(isEmpty(ofFloats(1L)));
+        assertFalse(isEmpty(ofFloats(1L, 2L)));
+        assertFalse(isEmpty(ofFloats(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyFloatArray() {
+        assertTrue(isEmpty(EMPTY_FLOAT_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullFloatArray() {
+        assertTrue(isEmpty((float[]) null));
+    }
+
+    @Test
+    public void testIsEmptyOnDoubleArray() {
+        assertFalse(isEmpty(ofDoubles(1L)));
+        assertFalse(isEmpty(ofDoubles(1L, 2L)));
+        assertFalse(isEmpty(ofDoubles(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testIsEmptyOnEmptyDoubleArray() {
+        assertTrue(isEmpty(EMPTY_DOUBLE_ARRAY));
+    }
+
+    @Test
+    public void testIsEmptyOnNullDoubleArray() {
+        assertTrue(isEmpty((double[]) null));
     }
 
     @Test
@@ -245,6 +489,144 @@ public class ArrayUtilsTest {
     @Test
     public void testIsEmptyOnNull() {
         assertTrue(isEmpty((Object[]) null));
+    }
+
+    // Test isNotEmpty(...) methods
+
+    @Test
+    public void testIsNotEmptyOnBooleanArray() {
+        assertTrue(isNotEmpty(ofBooleans(true)));
+        assertTrue(isNotEmpty(ofBooleans(true, false)));
+        assertTrue(isNotEmpty(ofBooleans(true, false, true)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyBooleanArray() {
+        assertFalse(isNotEmpty(EMPTY_BOOLEAN_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullBooleanArray() {
+        assertFalse(isNotEmpty((boolean[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnByteArray() {
+        assertTrue(isNotEmpty(ofBytes((byte) 1)));
+        assertTrue(isNotEmpty(ofBytes((byte) 1, (byte) 2)));
+        assertTrue(isNotEmpty(ofBytes((byte) 1, (byte) 2, (byte) 3)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyByteArray() {
+        assertFalse(isNotEmpty(EMPTY_BYTE_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullByteArray() {
+        assertFalse(isNotEmpty((byte[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnCharArray() {
+        assertTrue(isNotEmpty(ofChars((char) 1)));
+        assertTrue(isNotEmpty(ofChars((char) 1, (char) 2)));
+        assertTrue(isNotEmpty(ofChars((char) 1, (char) 2, (char) 3)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyCharArray() {
+        assertFalse(isNotEmpty(EMPTY_CHAR_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullCharArray() {
+        assertFalse(isNotEmpty((char[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnShortArray() {
+        assertTrue(isNotEmpty(ofShorts((short) 1)));
+        assertTrue(isNotEmpty(ofShorts((short) 1, (short) 2)));
+        assertTrue(isNotEmpty(ofShorts((short) 1, (short) 2, (short) 3)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyShortArray() {
+        assertFalse(isNotEmpty(EMPTY_SHORT_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullShortArray() {
+        assertFalse(isNotEmpty((short[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnIntArray() {
+        assertTrue(isNotEmpty(ofInts(1)));
+        assertTrue(isNotEmpty(ofInts(1, 2)));
+        assertTrue(isNotEmpty(ofInts(1, 2, 3)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyIntArray() {
+        assertFalse(isNotEmpty(EMPTY_INT_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullIntArray() {
+        assertFalse(isNotEmpty((int[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnLongArray() {
+        assertTrue(isNotEmpty(ofLongs(1L)));
+        assertTrue(isNotEmpty(ofLongs(1L, 2L)));
+        assertTrue(isNotEmpty(ofLongs(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyLongArray() {
+        assertFalse(isNotEmpty(EMPTY_LONG_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullLongArray() {
+        assertFalse(isNotEmpty((long[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnFloatArray() {
+        assertTrue(isNotEmpty(ofFloats(1L)));
+        assertTrue(isNotEmpty(ofFloats(1L, 2L)));
+        assertTrue(isNotEmpty(ofFloats(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyFloatArray() {
+        assertFalse(isNotEmpty(EMPTY_FLOAT_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullFloatArray() {
+        assertFalse(isNotEmpty((float[]) null));
+    }
+
+    @Test
+    public void testIsNotEmptyOnDoubleArray() {
+        assertTrue(isNotEmpty(ofDoubles(1L)));
+        assertTrue(isNotEmpty(ofDoubles(1L, 2L)));
+        assertTrue(isNotEmpty(ofDoubles(1L, 2L, 3L)));
+    }
+
+    @Test
+    public void testIsNotEmptyOnEmptyDoubleArray() {
+        assertFalse(isNotEmpty(EMPTY_DOUBLE_ARRAY));
+    }
+
+    @Test
+    public void testIsNotEmptyOnNullDoubleArray() {
+        assertFalse(isNotEmpty((double[]) null));
     }
 
     @Test
