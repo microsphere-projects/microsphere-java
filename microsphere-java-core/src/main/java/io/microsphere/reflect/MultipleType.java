@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.combineArray;
 import static io.microsphere.util.ArrayUtils.ofArray;
 
@@ -52,7 +53,7 @@ public class MultipleType {
 
     @Override
     public String toString() {
-        return "MultipleType : " + Arrays.toString(types);
+        return "MultipleType : " + arrayToString(types);
     }
 
     public static MultipleType of(Type one, Type two) {
