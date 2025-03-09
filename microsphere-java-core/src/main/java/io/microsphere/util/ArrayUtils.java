@@ -290,6 +290,42 @@ public abstract class ArrayUtils extends BaseUtils {
         return !isEmpty(values);
     }
 
+    public static boolean arrayEquals(boolean[] a, boolean[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(byte[] a, byte[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(char[] a, char[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(short[] a, short[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(int[] a, int[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(long[] a, long[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(float[] a, float[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(double[] a, double[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static <T> boolean arrayEquals(T[] a, T[] b) {
+        return Arrays.equals(a, b);
+    }
+
     public static <E> E[] asArray(Enumeration<E> enumeration, Class<?> componentType) {
         return asArray(list(enumeration), componentType);
     }
@@ -359,16 +395,112 @@ public abstract class ArrayUtils extends BaseUtils {
         return newArray;
     }
 
+    public static <T> void forEach(boolean[] values, Consumer<Boolean> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(char[] values, Consumer<Character> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(byte[] values, Consumer<Byte> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(short[] values, Consumer<Short> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(int[] values, Consumer<Integer> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(long[] values, Consumer<Long> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(float[] values, Consumer<Float> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(double[] values, Consumer<Double> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(T[] values, Consumer<T> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(boolean[] values, BiConsumer<Integer, Boolean> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Boolean value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(char[] values, BiConsumer<Integer, Character> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Character value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(byte[] values, BiConsumer<Integer, Byte> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Byte value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(short[] values, BiConsumer<Integer, Short> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Short value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(int[] values, BiConsumer<Integer, Integer> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Integer value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(long[] values, BiConsumer<Integer, Long> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Long value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(float[] values, BiConsumer<Integer, Float> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Float value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(double[] values, BiConsumer<Integer, Double> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Double value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
     public static <T> void forEach(T[] values, BiConsumer<Integer, T> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             T value = values[i];
             indexedElementConsumer.accept(i, value);
         }
-    }
-
-    public static <T> void forEach(T[] values, Consumer<T> consumer) {
-        forEach(values, (i, e) -> consumer.accept(e));
     }
 
     /**
