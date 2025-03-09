@@ -20,6 +20,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import static io.microsphere.util.Assert.assertNotNull;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -60,7 +61,7 @@ public interface ThrowableConsumer<T> {
      * @throws NullPointerException if <code>exceptionHandler</code> is <code>null</code>
      */
     default void execute(T t, BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
-        requireNonNull(exceptionHandler, "The exceptionHandler must not be null");
+        assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
         try {
             accept(t);
         } catch (Throwable e) {
@@ -88,8 +89,7 @@ public interface ThrowableConsumer<T> {
      * @throws NullPointerException if <code>consumer</code> is <code>null</code>
      */
     static <T> void execute(T t, ThrowableConsumer<T> consumer) throws NullPointerException {
-        requireNonNull(consumer, "The consumer must not be null");
-        consumer.execute(t);
+        consumer.execute(t, consumer::handleException);
     }
 
     /**
@@ -103,7 +103,7 @@ public interface ThrowableConsumer<T> {
      * @throws NullPointerException if <code>consumer</code> and <code>exceptionHandler</code> is <code>null</code>
      */
     static <T> void execute(T t, ThrowableConsumer<T> consumer, BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
-        requireNonNull(consumer, "The consumer must not be null");
+        assertNotNull(consumer, "The 'consumer' must not be null");
         consumer.execute(t, exceptionHandler);
     }
 }
