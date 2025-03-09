@@ -177,6 +177,38 @@ public abstract class ArrayUtils extends BaseUtils {
         return values;
     }
 
+    public static int length(boolean[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(byte[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(char[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(short[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(int[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(long[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(float[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(double[] values) {
+        return values == null ? 0 : values.length;
+    }
+
     public static <T> int length(T[] values) {
         return values == null ? 0 : values.length;
     }
@@ -185,8 +217,72 @@ public abstract class ArrayUtils extends BaseUtils {
         return length(values);
     }
 
+    public static boolean isEmpty(boolean[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(byte[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(char[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(short[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(int[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(long[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(float[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(double[] values) {
+        return length(values) == 0;
+    }
+
     public static <T> boolean isEmpty(T[] values) {
         return length(values) == 0;
+    }
+
+    public static boolean isNotEmpty(boolean[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(byte[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(char[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(short[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(int[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(long[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(float[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(double[] values) {
+        return !isEmpty(values);
     }
 
     public static <T> boolean isNotEmpty(T[] values) {
