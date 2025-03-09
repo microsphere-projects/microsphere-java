@@ -19,15 +19,20 @@ package io.microsphere.lang.function;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.lang.function.Streams.filter;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterAny;
+import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.lang.function.Streams.filterSet;
 import static io.microsphere.lang.function.Streams.filterStream;
+import static io.microsphere.lang.function.Streams.stream;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -37,6 +42,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 public class StreamsTest {
+
+    @Test
+    public void testStreamOnIterable() {
+        Iterable<Integer> iterable = ofList(1, 2);
+        Stream<Integer> stream = stream(iterable);
+        assertEquals(2, stream.count());
+    }
 
     @Test
     public void testFilterStream() {
@@ -53,6 +65,40 @@ public class StreamsTest {
     @Test
     public void testFilterSet() {
         Set<Integer> set = filterSet(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(new LinkedHashSet<>(ofList(2, 4)), set);
+        assertEquals(ofSet(2, 4), set);
     }
+
+    @Test
+    public void testFilter() {
+        List<Integer> list = filter(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
+
+        Set<Integer> set = filter(ofSet(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofSet(2, 4), set);
+    }
+
+    @Test
+    public void testFilterAll() {
+        List<Integer> list = filterAll(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
+
+        Set<Integer> set = filterAll(ofSet(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofSet(2, 4), set);
+    }
+
+    @Test
+    public void testFilterAny() {
+        List<Integer> list = filterAny(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
+
+        Set<Integer> set = filterAny(ofSet(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofSet(2, 4), set);
+    }
+
+    @Test
+    public void testFilterFirst() {
+        assertEquals(2, filterFirst(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0));
+        assertEquals(2, filterFirst(ofSet(1, 2, 3, 4, 5), i -> i % 2 == 0));
+    }
+
 }
