@@ -28,10 +28,24 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class ThrowableActionTest {
 
+    private static final ThrowableAction action = () -> {
+        throw new Exception("Test");
+    };
+
     @Test
-    public void testExecute() {
-        assertThrows(RuntimeException.class, () -> execute(() -> {
-            throw new Exception("Test");
+    public void testExecute0() {
+        assertThrows(Exception.class, action::execute);
+    }
+
+    @Test
+    public void testExecute1() {
+        assertThrows(RuntimeException.class, () -> execute(action));
+    }
+
+    @Test
+    public void testExecute2() {
+        assertThrows(RuntimeException.class, () -> execute(action, e -> {
+            throw new RuntimeException(e);
         }));
     }
 }
