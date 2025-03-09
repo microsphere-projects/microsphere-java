@@ -16,8 +16,6 @@
  */
 package io.microsphere.logging;
 
-import io.microsphere.lang.Prioritized;
-
 import java.util.logging.Level;
 
 /**
@@ -27,7 +25,7 @@ import java.util.logging.Level;
  * @see LoggerFactory
  * @since 1.0.0
  */
-public class JDKLoggerFactory extends LoggerFactory implements Prioritized {
+public class JDKLoggerFactory extends LoggerFactory {
 
     public static final String JDK_LOGGER_CLASS_NAME = "java.util.logging.Logger";
 

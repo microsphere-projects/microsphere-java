@@ -16,11 +16,10 @@
  */
 package io.microsphere.lang.function;
 
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * {@link Function} with {@link Throwable}
@@ -62,7 +61,7 @@ public interface ThrowableFunction<T, R> {
      * @return the function result
      */
     default R execute(T t, BiFunction<T, Throwable, R> exceptionHandler) throws RuntimeException {
-        R result = null;
+        R result;
         try {
             result = apply(t);
         } catch (Throwable e) {
@@ -96,7 +95,7 @@ public interface ThrowableFunction<T, R> {
      * @see #andThen(ThrowableFunction)
      */
     default <V> ThrowableFunction<V, R> compose(ThrowableFunction<? super V, ? extends T> before) {
-        Objects.requireNonNull(before);
+        assertNotNull(before, () -> "The 'before' must not be null");
         return (V v) -> apply(before.apply(v));
     }
 
@@ -115,7 +114,7 @@ public interface ThrowableFunction<T, R> {
      * @see #compose(ThrowableFunction)
      */
     default <V> ThrowableFunction<T, V> andThen(ThrowableFunction<? super R, ? extends V> after) {
-        Objects.requireNonNull(after);
+        assertNotNull(after, () -> "The 'after' must not be null");
         return (T t) -> after.apply(apply(t));
     }
 
@@ -127,11 +126,10 @@ public interface ThrowableFunction<T, R> {
      * @param <T>      the source type
      * @param <R>      the return type
      * @return the result after execution
-     * @throws NullPointerException if <code>function</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>function</code> is <code>null</code>
      */
-    static <T, R> R execute(T t, ThrowableFunction<T, R> function) throws NullPointerException {
-        requireNonNull(function, "The function must not be null");
-        return function.execute(t);
+    static <T, R> R execute(T t, ThrowableFunction<T, R> function) throws IllegalArgumentException {
+        return execute(t, function, function::handleException);
     }
 
     /**
@@ -144,12 +142,12 @@ public interface ThrowableFunction<T, R> {
      * @param <T>              the source type
      * @param <R>              the return type
      * @return the result after execution
-     * @throws NullPointerException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
      */
     static <T, R> R execute(T t, ThrowableFunction<T, R> function, BiFunction<T, Throwable, R> exceptionHandler)
-            throws NullPointerException {
-        requireNonNull(function, "The function must not be null");
-        requireNonNull(exceptionHandler, "The exceptionHandler must not be null");
+            throws IllegalArgumentException {
+        assertNotNull(function, () -> "The 'function' must not be null");
+        assertNotNull(exceptionHandler, "The 'exceptionHandler' must not be null");
         return function.execute(t, exceptionHandler);
     }
 }

@@ -74,8 +74,7 @@ public abstract class FileUtils extends BaseUtils {
         }
 
         if (!directory.delete()) {
-            String message =
-                    "Unable to delete directory " + directory + ".";
+            String message = "Unable to delete directory " + directory + ".";
             throw new IOException(message);
         }
     }

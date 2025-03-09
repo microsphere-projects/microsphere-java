@@ -14,38 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.lang.function;
+package io.microsphere.nio.charset;
 
-import org.junit.jupiter.api.Test;
+import io.microsphere.util.BaseUtils;
 
-import static io.microsphere.lang.function.ThrowableAction.execute;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.nio.charset.Charset;
+
+import static java.nio.charset.Charset.defaultCharset;
 
 /**
- * {@link ThrowableAction} Test
+ * The Utilities class for {@link Charset}
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see Charset
  * @since 1.0.0
  */
-public class ThrowableActionTest {
+public abstract class CharsetUtils extends BaseUtils {
 
-    private static final ThrowableAction action = () -> {
-        throw new Exception("Test");
-    };
-
-    @Test
-    public void testExecute0() {
-        assertThrows(Exception.class, action::execute);
-    }
-
-    @Test
-    public void testExecute1() {
-        assertThrows(RuntimeException.class, () -> execute(action));
-    }
-
-    @Test
-    public void testExecute2() {
-        assertThrows(RuntimeException.class, () -> execute(action, e -> {
-            throw new RuntimeException(e);
-        }));
-    }
+    /**
+     * The default charset looks up from the JDK system property "file.encoding"
+     * if present, or the default charset is {@code UTF-8}
+     */
+    public static final Charset DEFAULT_CHARSET = defaultCharset();
 }

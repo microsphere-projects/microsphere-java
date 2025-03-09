@@ -50,7 +50,7 @@ public class StringToInputStreamConverterTest {
     private void assertContent(Converter<String, InputStream> converter, String content) throws IOException {
         InputStream inputStream = converter.convert(content);
         assertEquals(FastByteArrayInputStream.class, inputStream.getClass());
-        String value = IOUtils.toString(inputStream, StringToInputStreamConverter.DEFAULT_CHARSET);
+        String value = IOUtils.toString(inputStream);
         assertEquals(content, value);
     }
 

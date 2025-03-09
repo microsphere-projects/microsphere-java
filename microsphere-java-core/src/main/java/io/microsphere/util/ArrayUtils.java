@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ClassUtils.isArray;
+import static java.lang.System.arraycopy;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Collections.list;
 
@@ -38,9 +39,89 @@ import static java.util.Collections.list;
 public abstract class ArrayUtils extends BaseUtils {
 
     /**
+     * An empty immutable {@code boolean} array.
+     */
+    public static final boolean[] EMPTY_BOOLEAN_ARRAY = new boolean[0];
+
+    /**
+     * An empty immutable {@code char} array.
+     */
+    public static final char[] EMPTY_CHAR_ARRAY = new char[0];
+
+    /**
+     * An empty immutable {@code byte} array.
+     */
+    public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
+
+    /**
+     * An empty immutable {@code short} array.
+     */
+    public static final short[] EMPTY_SHORT_ARRAY = new short[0];
+
+    /**
+     * An empty immutable {@code int} array.
+     */
+    public static final int[] EMPTY_INT_ARRAY = new int[0];
+
+    /**
+     * An empty immutable {@code long} array.
+     */
+    public static final long[] EMPTY_LONG_ARRAY = new long[0];
+
+    /**
+     * An empty immutable {@code float} array.
+     */
+    public static final float[] EMPTY_FLOAT_ARRAY = new float[0];
+
+    /**
+     * An empty immutable {@code double} array.
+     */
+    public static final double[] EMPTY_DOUBLE_ARRAY = new double[0];
+
+    /**
      * An empty immutable {@code Object} array.
      */
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+
+    /**
+     * An empty immutable {@code Boolean} array.
+     */
+    public static final Boolean[] EMPTY_BOOLEAN_OBJECT_ARRAY = new Boolean[0];
+
+    /**
+     * An empty immutable {@code Byte} array.
+     */
+    public static final Byte[] EMPTY_BYTE_OBJECT_ARRAY = new Byte[0];
+
+    /**
+     * An empty immutable {@code Character} array.
+     */
+    public static final Character[] EMPTY_CHARACTER_OBJECT_ARRAY = new Character[0];
+
+    /**
+     * An empty immutable {@code Short} array.
+     */
+    public static final Short[] EMPTY_SHORT_OBJECT_ARRAY = new Short[0];
+
+    /**
+     * An empty immutable {@code Integer} array.
+     */
+    public static final Integer[] EMPTY_INTEGER_OBJECT_ARRAY = new Integer[0];
+
+    /**
+     * An empty immutable {@code Long} array.
+     */
+    public static final Long[] EMPTY_LONG_OBJECT_ARRAY = new Long[0];
+
+    /**
+     * An empty immutable {@code Float} array.
+     */
+    public static final Float[] EMPTY_FLOAT_OBJECT_ARRAY = new Float[0];
+
+    /**
+     * An empty immutable {@code Double} array.
+     */
+    public static final Double[] EMPTY_DOUBLE_OBJECT_ARRAY = new Double[0];
 
     /**
      * An empty immutable {@code Class} array.
@@ -57,92 +138,76 @@ public abstract class ArrayUtils extends BaseUtils {
      */
     public static final Parameter[] EMPTY_PARAMETER_ARRAY = new Parameter[0];
 
-    /**
-     * An empty immutable {@code long} array.
-     */
-    public static final long[] EMPTY_LONG_ARRAY = new long[0];
-
-    /**
-     * An empty immutable {@code Long} array.
-     */
-    public static final Long[] EMPTY_LONG_OBJECT_ARRAY = new Long[0];
-
-    /**
-     * An empty immutable {@code int} array.
-     */
-    public static final int[] EMPTY_INT_ARRAY = new int[0];
-
-    /**
-     * An empty immutable {@code Integer} array.
-     */
-    public static final Integer[] EMPTY_INTEGER_OBJECT_ARRAY = new Integer[0];
-
-    /**
-     * An empty immutable {@code short} array.
-     */
-    public static final short[] EMPTY_SHORT_ARRAY = new short[0];
-
-    /**
-     * An empty immutable {@code Short} array.
-     */
-    public static final Short[] EMPTY_SHORT_OBJECT_ARRAY = new Short[0];
-
-    /**
-     * An empty immutable {@code byte} array.
-     */
-    public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
-
-    /**
-     * An empty immutable {@code Byte} array.
-     */
-    public static final Byte[] EMPTY_BYTE_OBJECT_ARRAY = new Byte[0];
-
-    /**
-     * An empty immutable {@code double} array.
-     */
-    public static final double[] EMPTY_DOUBLE_ARRAY = new double[0];
-
-    /**
-     * An empty immutable {@code Double} array.
-     */
-    public static final Double[] EMPTY_DOUBLE_OBJECT_ARRAY = new Double[0];
-
-    /**
-     * An empty immutable {@code float} array.
-     */
-    public static final float[] EMPTY_FLOAT_ARRAY = new float[0];
-
-    /**
-     * An empty immutable {@code Float} array.
-     */
-    public static final Float[] EMPTY_FLOAT_OBJECT_ARRAY = new Float[0];
-
-    /**
-     * An empty immutable {@code boolean} array.
-     */
-    public static final boolean[] EMPTY_BOOLEAN_ARRAY = new boolean[0];
-
-    /**
-     * An empty immutable {@code Boolean} array.
-     */
-    public static final Boolean[] EMPTY_BOOLEAN_OBJECT_ARRAY = new Boolean[0];
-
-    /**
-     * An empty immutable {@code char} array.
-     */
-    public static final char[] EMPTY_CHAR_ARRAY = new char[0];
-
-    /**
-     * An empty immutable {@code Character} array.
-     */
-    public static final Character[] EMPTY_CHARACTER_OBJECT_ARRAY = new Character[0];
-
     public static <T> T[] of(T... values) {
         return ofArray(values);
     }
 
+    public static boolean[] ofBooleans(boolean... values) {
+        return values;
+    }
+
+    public static byte[] ofBytes(byte... values) {
+        return values;
+    }
+
+    public static char[] ofChars(char... values) {
+        return values;
+    }
+
+    public static short[] ofShorts(short... values) {
+        return values;
+    }
+
+    public static int[] ofInts(int... values) {
+        return values;
+    }
+
+    public static long[] ofLongs(long... values) {
+        return values;
+    }
+
+    public static float[] ofFloats(float... values) {
+        return values;
+    }
+
+    public static double[] ofDoubles(double... values) {
+        return values;
+    }
+
     public static <T> T[] ofArray(T... values) {
         return values;
+    }
+
+    public static int length(boolean[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(byte[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(char[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(short[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(int[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(long[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(float[] values) {
+        return values == null ? 0 : values.length;
+    }
+
+    public static int length(double[] values) {
+        return values == null ? 0 : values.length;
     }
 
     public static <T> int length(T[] values) {
@@ -153,12 +218,112 @@ public abstract class ArrayUtils extends BaseUtils {
         return length(values);
     }
 
+    public static boolean isEmpty(boolean[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(byte[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(char[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(short[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(int[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(long[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(float[] values) {
+        return length(values) == 0;
+    }
+
+    public static boolean isEmpty(double[] values) {
+        return length(values) == 0;
+    }
+
     public static <T> boolean isEmpty(T[] values) {
         return length(values) == 0;
     }
 
+    public static boolean isNotEmpty(boolean[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(byte[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(char[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(short[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(int[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(long[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(float[] values) {
+        return !isEmpty(values);
+    }
+
+    public static boolean isNotEmpty(double[] values) {
+        return !isEmpty(values);
+    }
+
     public static <T> boolean isNotEmpty(T[] values) {
         return !isEmpty(values);
+    }
+
+    public static boolean arrayEquals(boolean[] a, boolean[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(byte[] a, byte[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(char[] a, char[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(short[] a, short[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(int[] a, int[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(long[] a, long[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(float[] a, float[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static boolean arrayEquals(double[] a, double[] b) {
+        return Arrays.equals(a, b);
+    }
+
+    public static <T> boolean arrayEquals(T[] a, T[] b) {
+        return Arrays.equals(a, b);
     }
 
     public static <E> E[] asArray(Enumeration<E> enumeration, Class<?> componentType) {
@@ -189,7 +354,7 @@ public abstract class ArrayUtils extends BaseUtils {
             int length = 1 + othersLength;
             E[] values = newArray(componentType, length);
             values[0] = one;
-            System.arraycopy(others, 0, values, 1, othersLength);
+            arraycopy(others, 0, values, 1, othersLength);
             return values;
         }
     }
@@ -216,18 +381,118 @@ public abstract class ArrayUtils extends BaseUtils {
         E[] newArray = newArray(componentType, size);
 
         int pos = 0;
-        System.arraycopy(one, 0, newArray, pos, oneSize);
+        arraycopy(one, 0, newArray, pos, oneSize);
         pos += oneSize;
 
         for (int i = 0; i < othersSize; i++) {
             E[] other = others[i];
             int otherLength = length(other);
             if (otherLength > 0) {
-                System.arraycopy(other, 0, newArray, pos, otherLength);
+                arraycopy(other, 0, newArray, pos, otherLength);
                 pos += otherLength;
             }
         }
         return newArray;
+    }
+
+    public static <T> void forEach(boolean[] values, Consumer<Boolean> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(char[] values, Consumer<Character> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(byte[] values, Consumer<Byte> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(short[] values, Consumer<Short> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(int[] values, Consumer<Integer> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(long[] values, Consumer<Long> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(float[] values, Consumer<Float> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(double[] values, Consumer<Double> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(T[] values, Consumer<T> consumer) {
+        forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    public static <T> void forEach(boolean[] values, BiConsumer<Integer, Boolean> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Boolean value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(char[] values, BiConsumer<Integer, Character> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Character value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(byte[] values, BiConsumer<Integer, Byte> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Byte value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(short[] values, BiConsumer<Integer, Short> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Short value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(int[] values, BiConsumer<Integer, Integer> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Integer value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(long[] values, BiConsumer<Integer, Long> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Long value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(float[] values, BiConsumer<Integer, Float> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Float value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static <T> void forEach(double[] values, BiConsumer<Integer, Double> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Double value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
     }
 
     public static <T> void forEach(T[] values, BiConsumer<Integer, T> indexedElementConsumer) {
@@ -236,10 +501,6 @@ public abstract class ArrayUtils extends BaseUtils {
             T value = values[i];
             indexedElementConsumer.accept(i, value);
         }
-    }
-
-    public static <T> void forEach(T[] values, Consumer<T> consumer) {
-        forEach(values, (i, e) -> consumer.accept(e));
     }
 
     /**

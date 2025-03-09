@@ -39,7 +39,6 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,6 +46,7 @@ import java.util.Optional;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
@@ -339,7 +339,7 @@ public abstract class JmxUtils extends BaseUtils {
             logger.warn("the MBean[name : '{}'] can't be manipulated by the Reflection in the MBeanServer[default domain : '{}' , domains : {}]",
                     objectName.getCanonicalName(),
                     mBeanServer.getDefaultDomain(),
-                    Arrays.toString(mBeanServer.getDomains()),
+                    arrayToString(mBeanServer.getDomains()),
                     e
             );
         }
@@ -353,7 +353,7 @@ public abstract class JmxUtils extends BaseUtils {
                     attributeName,
                     objectName.getCanonicalName(),
                     mBeanServer.getDefaultDomain(),
-                    Arrays.toString(mBeanServer.getDomains()),
+                    arrayToString(mBeanServer.getDomains()),
                     e
             );
         }

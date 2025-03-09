@@ -17,6 +17,7 @@
 package io.microsphere.io;
 
 import io.microsphere.logging.Logger;
+import io.microsphere.nio.charset.CharsetUtils;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.SystemUtils;
 
@@ -25,11 +26,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
@@ -77,6 +78,33 @@ public abstract class IOUtils extends BaseUtils {
     }
 
     /**
+     * {@link #copyToString(InputStream)} as recommended
+     *
+     * @see #copyToString(InputStream)
+     */
+    public static String toString(InputStream in) throws IOException {
+        return copyToString(in);
+    }
+
+    /**
+     * {@link #copyToString(InputStream, String)} as recommended
+     *
+     * @see #copyToString(InputStream, String)
+     */
+    public static String toString(InputStream in, String encoding) throws IOException {
+        return copyToString(in, encoding);
+    }
+
+    /**
+     * {@link #copyToString(InputStream, Charset)}  as recommended
+     *
+     * @see #copyToString(InputStream, Charset)
+     */
+    public static String toString(InputStream in, Charset charset) throws IOException {
+        return copyToString(in, charset);
+    }
+
+    /**
      * Copy the contents of the given InputStream into a new {@link String}.
      * <p>Leaves the stream open when done.
      *
@@ -85,24 +113,32 @@ public abstract class IOUtils extends BaseUtils {
      * @return the new byte array that has been copied to (possibly empty)
      * @throws IOException in case of I/O errors
      */
-    public static String toString(InputStream in, String encoding) throws IOException {
+    public static String copyToString(InputStream in, String encoding) throws IOException {
         String charset = isBlank(encoding) ? FILE_ENCODING : encoding;
-        return toString(in, forName(charset));
+        return copyToString(in, forName(charset));
     }
 
     /**
-     * Copy the contents of the given InputStream into a new {@link String}.
+     * Copy the contents of the given InputStream into a new {@link String} using {@link CharsetUtils#DEFAULT_CHARSET}.
      * <p>Leaves the stream open when done.
      *
-     * @param in      the stream to copy from (may be {@code null} or empty)
-     * @param charset the charset to use, if it's <code>null</code>, take the {@link SystemUtils#FILE_ENCODING} as default
+     * @param in the stream to copy from (may be {@code null} or empty)
      * @return the new byte array that has been copied to (possibly empty)
      * @throws IOException in case of I/O errors
      */
-    public static String toString(InputStream in, Charset charset) throws IOException {
+    public static String copyToString(InputStream in) throws IOException {
+        return copyToString(in, DEFAULT_CHARSET);
+    }
+
+    /**
+     * See {@link #toString(InputStream, Charset)}
+     */
+    public static String copyToString(InputStream in, Charset charset) throws IOException {
         byte[] bytes = toByteArray(in);
-        Charset actualCharset = charset == null ? StandardCharsets.UTF_8 : charset;
-        return EMPTY_BYTE_ARRAY.equals(bytes) ? null : new String(bytes, actualCharset);
+        if (EMPTY_BYTE_ARRAY == bytes) {
+            return null;
+        }
+        return new String(bytes, charset == null ? DEFAULT_CHARSET : charset);
     }
 
     /**

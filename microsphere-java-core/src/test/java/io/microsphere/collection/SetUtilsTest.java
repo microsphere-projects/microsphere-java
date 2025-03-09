@@ -8,7 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.toIterable;
-import static io.microsphere.collection.EnumerationUtils.enumeration;
+import static io.microsphere.collection.EnumerationUtils.ofEnums;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
@@ -79,7 +79,7 @@ public class SetUtilsTest {
         e = emptyEnumeration();
         assertSame(emptySet(), ofSet(e));
 
-        e = enumeration(ELEMENTS);
+        e = ofEnums(ELEMENTS);
         Set<String> set = ofSet(e);
         assertSet(set);
     }

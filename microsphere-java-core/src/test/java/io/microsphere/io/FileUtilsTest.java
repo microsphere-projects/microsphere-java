@@ -33,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class FileUtilsTest extends AbstractTestCase {
 
-
     private final URL classFileResource = getClassResource(classLoader, FileUtilsTest.class);
 
     private final URL packageResource = getResource(classLoader, "io.microsphere");
@@ -45,6 +44,11 @@ public class FileUtilsTest extends AbstractTestCase {
     @Test
     public void testResolveRelativePath() throws Exception {
         assertEquals("/io/FileUtilsTest.class", resolveRelativePath(packageDirectory, classFile));
+    }
+
+    @Test
+    public void testResolveRelativePathOnNotRelativePath() throws Exception {
+        assertNull(resolveRelativePath(classFile, packageDirectory));
     }
 
     @Test

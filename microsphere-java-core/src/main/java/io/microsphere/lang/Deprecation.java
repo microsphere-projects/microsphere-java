@@ -59,11 +59,6 @@ public final class Deprecation implements Serializable {
         this.level = source.level;
     }
 
-    Deprecation(@Nullable String since, @Nullable String replacement, @Nullable String reason,
-                @Nullable String link, @Nullable Level level) {
-        this(Version.of(since), replacement, reason, link, level);
-    }
-
     Deprecation(@Nullable Version since, @Nullable String replacement, @Nullable String reason,
                 @Nullable String link, @Nullable Level level) {
         this.since = since;

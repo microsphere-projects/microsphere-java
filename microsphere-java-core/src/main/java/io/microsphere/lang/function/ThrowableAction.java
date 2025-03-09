@@ -19,7 +19,7 @@ package io.microsphere.lang.function;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * A function interface for action with {@link Throwable}
@@ -45,7 +45,7 @@ public interface ThrowableAction {
      * @throws NullPointerException if <code>exceptionHandler</code> is <code>null</code>
      */
     default void execute(Consumer<Throwable> exceptionHandler) {
-        requireNonNull(exceptionHandler, "The exceptionHandler must not be null");
+        assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
         try {
             execute();
         } catch (Throwable e) {
@@ -80,7 +80,7 @@ public interface ThrowableAction {
      * @throws NullPointerException if <code>action</code> or <code>exceptionHandler</code> is <code>null</code>
      */
     static void execute(ThrowableAction action, Consumer<Throwable> exceptionHandler) throws NullPointerException {
-        requireNonNull(action, "The action must not be null");
+        assertNotNull(action, () -> "The 'action' must not be null");
         action.execute(exceptionHandler);
     }
 }
