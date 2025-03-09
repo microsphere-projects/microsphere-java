@@ -52,6 +52,7 @@ import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
@@ -255,7 +256,7 @@ public abstract class MethodUtils extends BaseUtils {
         if (method == null) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The declared method was not found in the target class[name : '{}'] by name['{}'] and parameter types['{}']",
-                        targetClass, methodName, Arrays.toString(parameterTypes));
+                        targetClass, methodName, arrayToString(parameterTypes));
             }
         }
 
@@ -377,10 +378,10 @@ public abstract class MethodUtils extends BaseUtils {
             String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
             failure = new IllegalStateException(errorMessage, e);
         } catch (IllegalArgumentException e) {
-            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, Arrays.toString(arguments));
+            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, arrayToString(arguments));
             failure = new IllegalArgumentException(errorMessage, e);
         } catch (InvocationTargetException e) {
-            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, Arrays.toString(arguments));
+            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, arrayToString(arguments));
             failure = new RuntimeException(errorMessage, e.getTargetException());
         }
 
@@ -580,8 +581,8 @@ public abstract class MethodUtils extends BaseUtils {
         }
         if (logger.isTraceEnabled()) {
             logger.trace("The target method[name : '{}' , parameter types : {}] {} found in the methods : {}",
-                    methodName, Arrays.toString(parameterTypes), targetMethod == null ? "can't be" : "is",
-                    Arrays.toString(methods));
+                    methodName, arrayToString(parameterTypes), targetMethod == null ? "can't be" : "is",
+                    arrayToString(methods));
         }
         return targetMethod;
     }
