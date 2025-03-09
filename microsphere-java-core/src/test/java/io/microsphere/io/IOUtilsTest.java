@@ -79,6 +79,11 @@ public class IOUtilsTest {
     }
 
     @Test
+    public void testToStringWithDefaultCharset() throws IOException {
+        assertEquals(TEST_VALUE, IOUtils.toString(inputStream));
+    }
+
+    @Test
     public void testCopy() throws IOException {
         FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream(TEST_BYTES.length);
         copy(inputStream, outputStream);
