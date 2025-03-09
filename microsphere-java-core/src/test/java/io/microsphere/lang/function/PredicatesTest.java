@@ -66,10 +66,20 @@ public class PredicatesTest {
     }
 
     @Test
+    public void testAndOnNull() {
+        assertTrue(and(null).test(null));
+    }
+
+    @Test
     public void testOr() {
         assertTrue(or(alwaysTrue(), alwaysTrue(), alwaysTrue()).test(null));
         assertTrue(or(alwaysTrue(), alwaysTrue(), alwaysFalse()).test(null));
         assertTrue(or(alwaysTrue(), alwaysFalse(), alwaysFalse()).test(null));
         assertFalse(or(alwaysFalse(), alwaysFalse(), alwaysFalse()).test(null));
+    }
+
+    @Test
+    public void testOrOnNull() {
+        assertTrue(or(null).test(null));
     }
 }
