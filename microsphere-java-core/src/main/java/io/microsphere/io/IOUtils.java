@@ -17,6 +17,7 @@
 package io.microsphere.io;
 
 import io.microsphere.logging.Logger;
+import io.microsphere.nio.charset.CharsetUtils;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.SystemUtils;
 
@@ -25,16 +26,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Integer.getInteger;
 import static java.nio.charset.Charset.forName;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -77,6 +79,18 @@ public abstract class IOUtils extends BaseUtils {
     }
 
     /**
+     * Copy the contents of the given InputStream into a new {@link String} using {@link CharsetUtils#DEFAULT_CHARSET}.
+     * <p>Leaves the stream open when done.
+     *
+     * @param in the stream to copy from (may be {@code null} or empty)
+     * @return the new byte array that has been copied to (possibly empty)
+     * @throws IOException in case of I/O errors
+     */
+    public static String toString(InputStream in) throws IOException {
+        return toString(in, DEFAULT_CHARSET);
+    }
+
+    /**
      * Copy the contents of the given InputStream into a new {@link String}.
      * <p>Leaves the stream open when done.
      *
@@ -101,7 +115,7 @@ public abstract class IOUtils extends BaseUtils {
      */
     public static String toString(InputStream in, Charset charset) throws IOException {
         byte[] bytes = toByteArray(in);
-        Charset actualCharset = charset == null ? StandardCharsets.UTF_8 : charset;
+        Charset actualCharset = charset == null ? UTF_8 : charset;
         return EMPTY_BYTE_ARRAY.equals(bytes) ? null : new String(bytes, actualCharset);
     }
 
