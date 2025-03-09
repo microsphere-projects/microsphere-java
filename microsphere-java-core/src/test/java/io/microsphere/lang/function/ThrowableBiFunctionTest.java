@@ -42,15 +42,24 @@ public class ThrowableBiFunctionTest {
     }
 
     @Test
-    public void testExecute() {
+    public void testExecute3() {
         assertEquals("1".hashCode() + "2".hashCode(), execute("1", "2", stringHashCode));
-        assertEquals(1, execute(null, null, stringHashCode, (t, u, e) -> 1));
+    }
+
+    @Test
+    public void testExecute3OnException() {
         assertThrows(RuntimeException.class, () -> execute(null, null, stringHashCode));
     }
 
     @Test
-    public void testExecuteOnException() {
-        assertThrows(RuntimeException.class, () -> execute(null, null, stringHashCode));
+    public void testExecute4() {
+        assertEquals(1, execute(null, null, stringHashCode, (t, u, e) -> 1));
     }
 
+    @Test
+    public void testExecute4OnException() {
+        assertThrows(IllegalStateException.class, () -> execute(null, null, stringHashCode, (t, u, e) -> {
+            throw new IllegalStateException(e);
+        }));
+    }
 }
