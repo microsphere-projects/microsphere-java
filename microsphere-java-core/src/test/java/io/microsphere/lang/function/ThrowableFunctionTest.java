@@ -19,6 +19,7 @@ package io.microsphere.lang.function;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.ThrowableFunction.execute;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -28,24 +29,54 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class ThrowableFunctionTest {
 
-    private static final ThrowableFunction<String, String> function = m -> {
+    private static final ThrowableFunction<String, String> function = t -> t;
+
+    private static final ThrowableFunction<String, String> throwableFunction = m -> {
         throw new Exception(m);
     };
 
+    private static final ThrowableFunction<String, Integer> stringToInteger = Integer::valueOf;
+
     @Test
     public void testExecute1() {
-        assertThrows(RuntimeException.class, () -> function.execute("For testing"));
+        assertEquals("Hello,World", function.execute("Hello,World"));
+    }
+
+    @Test
+    public void testExecute1OnException() {
+        assertThrows(RuntimeException.class, () -> throwableFunction.execute("For testing"));
     }
 
     @Test
     public void testExecute2() {
-        assertThrows(RuntimeException.class, () -> execute("For testing", function));
+        assertEquals("Hello,World", execute("Hello,World", function));
+    }
+
+    @Test
+    public void testExecute2OnException() {
+        assertThrows(RuntimeException.class, () -> execute("For testing", throwableFunction));
     }
 
     @Test
     public void testExecute3() {
-        assertThrows(RuntimeException.class, () -> execute("For testing", function, (t, e) -> {
+        assertEquals("Hello,World", execute("Hello,World", function, (t, e) -> t));
+    }
+
+    @Test
+    public void testExecute3OnException() {
+        assertThrows(RuntimeException.class, () -> execute("For testing", throwableFunction, (t, e) -> {
             throw new RuntimeException(t, e);
         }));
     }
+
+    @Test
+    public void testCompose() throws Throwable {
+        assertEquals(1, stringToInteger.compose(function).apply("1"));
+    }
+
+    @Test
+    public void testAndThen() throws Throwable {
+        assertEquals(1, function.andThen(stringToInteger).apply("1"));
+    }
+
 }
