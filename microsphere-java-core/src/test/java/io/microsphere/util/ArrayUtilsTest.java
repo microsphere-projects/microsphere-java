@@ -42,6 +42,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.combine;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -60,7 +61,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 /**
  * {@link ArrayUtils} Test
@@ -167,6 +167,40 @@ public class ArrayUtilsTest {
     }
 
     @Test
+    public void testLengthOnBooleanArray() {
+        assertEquals(1, length(ofBooleans(true)));
+        assertEquals(2, length(ofBooleans(true, false)));
+        assertEquals(3, length(ofBooleans(true, false, true)));
+    }
+
+    @Test
+    public void testLengthOnEmptyBooleanArray() {
+        assertEquals(0, length(EMPTY_BOOLEAN_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullBooleanArray() {
+        assertEquals(0, length((boolean[]) null));
+    }
+
+    @Test
+    public void testLengthOnByteArray() {
+        assertEquals(1, length(ofBytes((byte) 1)));
+        assertEquals(2, length(ofBytes((byte) 1, (byte) 2)));
+        assertEquals(3, length(ofBytes((byte) 1, (byte) 2, (byte) 3)));
+    }
+
+    @Test
+    public void testLengthOnEmptyByteArray() {
+        assertEquals(0, length(EMPTY_BYTE_ARRAY));
+    }
+
+    @Test
+    public void testLengthOnNullByteArray() {
+        assertEquals(0, length((byte[][]) null));
+    }
+
+    @Test
     public void testLength() {
         assertEquals(1, length(ofArray("A")));
         assertEquals(2, length(ofArray("A", "B")));
@@ -210,7 +244,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testIsEmptyOnNull() {
-        assertTrue(isEmpty(null));
+        assertTrue(isEmpty((Object[]) null));
     }
 
     @Test
@@ -225,7 +259,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testIsNotEmptyOnNull() {
-        assertFalse(isNotEmpty(null));
+        assertFalse(isNotEmpty((Object[]) null));
     }
 
     @Test
