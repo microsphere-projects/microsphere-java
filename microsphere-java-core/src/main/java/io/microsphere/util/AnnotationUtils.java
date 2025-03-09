@@ -70,13 +70,13 @@ public abstract class AnnotationUtils extends BaseUtils {
             Repeatable.class
     );
 
-    private static final Predicate<Method> INHERITED_OBJECT_METHOD_PREDICATE = AnnotationUtils::isInheritedObjectMethod;
+    static final Predicate<Method> INHERITED_OBJECT_METHOD_PREDICATE = AnnotationUtils::isInheritedObjectMethod;
 
-    private static final Predicate<Method> NON_INHERITED_OBJECT_METHOD_PREDICATE = INHERITED_OBJECT_METHOD_PREDICATE.negate();
+    static final Predicate<Method> NON_INHERITED_OBJECT_METHOD_PREDICATE = INHERITED_OBJECT_METHOD_PREDICATE.negate();
 
-    private static final Predicate<Method> ANNOTATION_METHOD_PREDICATE = AnnotationUtils::isAnnotationMethod;
+    static final Predicate<Method> ANNOTATION_METHOD_PREDICATE = AnnotationUtils::isAnnotationMethod;
 
-    private static final Predicate<Method> NON_ANNOTATION_METHOD_PREDICATE = ANNOTATION_METHOD_PREDICATE.negate();
+    static final Predicate<Method> NON_ANNOTATION_METHOD_PREDICATE = ANNOTATION_METHOD_PREDICATE.negate();
 
     /**
      * The annotation class name of {@linkplain jdk.internal.reflect.CallerSensitive}
