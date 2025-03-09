@@ -48,4 +48,9 @@ public class ThrowableBiFunctionTest {
         assertThrows(RuntimeException.class, () -> execute(null, null, stringHashCode));
     }
 
+    @Test
+    public void testExecuteOnException() {
+        assertThrows(RuntimeException.class, () -> execute(null, null, stringHashCode));
+    }
+
 }
