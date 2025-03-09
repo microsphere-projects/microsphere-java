@@ -20,9 +20,9 @@ import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 
 /**
  * The definition class for {@link Constructor}
@@ -103,8 +103,8 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
                 ", deprecation=" + super.deprecation +
                 ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
                 ", declaredClass=" + super.getDeclaredClass() +
-                ", parameterClassName=" + Arrays.toString(super.parameterClassNames) +
-                ", parameterTypes=" + Arrays.toString(super.getParameterTypes()) +
+                ", parameterClassName=" + arrayToString(super.parameterClassNames) +
+                ", parameterTypes=" + arrayToString(super.getParameterTypes()) +
                 '}';
     }
 }

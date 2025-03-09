@@ -16,6 +16,8 @@
  */
 package io.microsphere.logging;
 
+import static io.microsphere.util.StringUtils.isBlank;
+
 /**
  * No-Operation {@link Logger}
  *
@@ -26,7 +28,7 @@ package io.microsphere.logging;
 final class NoOpLogger extends AbstractLogger {
 
     NoOpLogger(String name) {
-        super(name);
+        super(isBlank(name) ? "" : name);
     }
 
     @Override

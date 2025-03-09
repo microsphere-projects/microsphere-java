@@ -20,7 +20,9 @@ import io.microsphere.io.FastByteArrayInputStream;
 
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
+
+import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
+import static java.nio.charset.Charset.forName;
 
 /**
  * The class to convert {@link String} to {@link InputStream}
@@ -30,28 +32,6 @@ import java.nio.charset.StandardCharsets;
  */
 public class StringToInputStreamConverter implements StringConverter<InputStream> {
 
-    /**
-     * The JDK system property name : "microsphere.charset.default"
-     */
-    public static final String DEFAULT_CHARSET_PROPERTY_NAME = "microsphere.charset.default";
-
-    /**
-     * The default charset looks up from the JDK system property {@link #DEFAULT_CHARSET_PROPERTY_NAME "microsphere.charset.default"}
-     * if present, or applies {@link StandardCharsets#US_ASCII "US-ASCII"}
-     */
-    public static final Charset DEFAULT_CHARSET = getDefaultCharset();
-
-    private static Charset getDefaultCharset() {
-        Charset defaultCharset = null;
-        String name = System.getProperty(DEFAULT_CHARSET_PROPERTY_NAME);
-        if (name == null || name.isEmpty()) {
-            defaultCharset = StandardCharsets.US_ASCII;
-        } else {
-            defaultCharset = Charset.forName(name);
-        }
-        return defaultCharset;
-    }
-
     private final Charset charset;
 
     public StringToInputStreamConverter() {
@@ -59,13 +39,12 @@ public class StringToInputStreamConverter implements StringConverter<InputStream
     }
 
     public StringToInputStreamConverter(String encoding) {
-        this(Charset.forName(encoding));
+        this(forName(encoding));
     }
 
     public StringToInputStreamConverter(Charset charset) {
         this.charset = charset;
     }
-
 
     @Override
     public InputStream convert(String source) {

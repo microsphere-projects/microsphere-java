@@ -14,38 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.lang.function;
-
-import org.junit.jupiter.api.Test;
-
-import static io.microsphere.lang.function.ThrowableAction.execute;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+package io.microsphere.logging;
 
 /**
- * {@link ThrowableAction} Test
+ * {@link LoggerFactory} for {@link NoOpLogger}
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see NoOpLogger
  * @since 1.0.0
  */
-public class ThrowableActionTest {
+public class NoOpLoggerFactory extends LoggerFactory {
 
-    private static final ThrowableAction action = () -> {
-        throw new Exception("Test");
-    };
-
-    @Test
-    public void testExecute0() {
-        assertThrows(Exception.class, action::execute);
+    @Override
+    protected String getDelegateLoggerClassName() {
+        throw new UnsupportedOperationException("This method should not be invoked here!");
     }
 
-    @Test
-    public void testExecute1() {
-        assertThrows(RuntimeException.class, () -> execute(action));
+    @Override
+    protected boolean isAvailable() {
+        return true;
     }
 
-    @Test
-    public void testExecute2() {
-        assertThrows(RuntimeException.class, () -> execute(action, e -> {
-            throw new RuntimeException(e);
-        }));
+    @Override
+    public Logger createLogger(String name) {
+        return new NoOpLogger(name);
+    }
+
+    @Override
+    public int getPriority() {
+        return MIN_PRIORITY;
     }
 }

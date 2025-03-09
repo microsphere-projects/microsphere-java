@@ -28,10 +28,45 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class ThrowableConsumerTest {
 
+    private static final ThrowableConsumer<String> consumer = t -> {
+    };
+
+    private static final ThrowableConsumer<String> throwableConsumer = t -> {
+        throw new Exception(t);
+    };
+
     @Test
-    public void testExecute() {
-        assertThrows(RuntimeException.class, () -> execute("Hello,World", m -> {
+    public void testExecute1() {
+        consumer.execute("Hello,World");
+    }
+
+    @Test
+    public void testExecute1OnException() {
+        assertThrows(RuntimeException.class, () -> throwableConsumer.execute("For testing"));
+    }
+
+    @Test
+    public void testExecute2() {
+        execute("Hello,World", consumer);
+    }
+
+    @Test
+    public void testExecute2OnException() {
+        assertThrows(RuntimeException.class, () -> execute("For testing", throwableConsumer));
+    }
+
+    @Test
+    public void testExecute3() {
+        execute("Hello,World", consumer, (t, e) -> {
+        });
+    }
+
+    @Test
+    public void testExecute3OnException() {
+        assertThrows(RuntimeException.class, () -> execute("For testing", m -> {
             throw new Exception(m);
-        }), "Hello,World");
+        }, (t, e) -> {
+            throw new RuntimeException(t, e);
+        }));
     }
 }

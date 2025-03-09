@@ -20,7 +20,9 @@ import io.microsphere.convert.ByteArrayToObjectConverter;
 import io.microsphere.convert.ObjectToByteArrayConverter;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.convert.ByteArrayToObjectConverter.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 /**
@@ -31,21 +33,26 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
  * @since 1.0.0
  */
 public class ObjectToByteArrayConverterTest {
-    ObjectToByteArrayConverter converter = ObjectToByteArrayConverter.INSTANCE;
 
-    ByteArrayToObjectConverter converter2 = ByteArrayToObjectConverter.INSTANCE;
+    private ByteArrayToObjectConverter instance = INSTANCE;
 
     @Test
-    public void test() {
+    public void testCovert() {
+        ObjectToByteArrayConverter converter = ObjectToByteArrayConverter.INSTANCE;
         String source = "Hello,World";
         byte[] bytes = converter.convert(source);
-        Object target = converter2.convert(bytes);
+        Object target = instance.convert(bytes);
         assertEquals(source, target);
     }
 
     @Test
-    public void testOnFailed() {
-        assertThrowsExactly(RuntimeException.class, () -> converter.convert(new Object()));
-        assertThrowsExactly(RuntimeException.class, () -> converter2.convert(new byte[0]));
+    public void testCovertOnNull() {
+        assertNull(instance.convert(null));
+        assertNull(instance.convert(new byte[0]));
+    }
+
+    @Test
+    public void testCovertOnFailed() {
+        assertThrowsExactly(RuntimeException.class, () -> instance.convert(new byte[]{1}));
     }
 }

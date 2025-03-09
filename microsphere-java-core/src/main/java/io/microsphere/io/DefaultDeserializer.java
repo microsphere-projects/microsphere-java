@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 
+import static io.microsphere.util.ArrayUtils.isEmpty;
+
 /**
  * Default {@link Deserializer} based on Java Standard Serialization.
  *
@@ -35,7 +37,7 @@ public class DefaultDeserializer implements Deserializer<Object> {
 
     @Override
     public Object deserialize(byte[] bytes) throws IOException {
-        if (bytes == null) {
+        if (isEmpty(bytes)) {
             return null;
         }
         Object value = null;

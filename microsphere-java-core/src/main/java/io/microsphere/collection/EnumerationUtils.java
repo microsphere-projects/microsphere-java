@@ -39,7 +39,7 @@ public abstract class EnumerationUtils extends BaseUtils {
      * @return non-null
      */
     public static <E> Enumeration<E> of(E... elements) {
-        return new ArrayEnumeration<>(elements);
+        return ofEnums(elements);
     }
 
     /**
@@ -49,8 +49,8 @@ public abstract class EnumerationUtils extends BaseUtils {
      * @param <E>      the type of element
      * @return non-null
      */
-    public static <E> Enumeration<E> enumeration(E... elements) {
-        return of(elements);
+    public static <E> Enumeration<E> ofEnums(E... elements) {
+        return new ArrayEnumeration<>(elements);
     }
 
 }

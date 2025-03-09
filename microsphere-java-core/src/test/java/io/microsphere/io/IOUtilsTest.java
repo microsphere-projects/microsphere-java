@@ -11,11 +11,13 @@ import static io.microsphere.io.IOUtils.BUFFER_SIZE;
 import static io.microsphere.io.IOUtils.DEFAULT_BUFFER_SIZE;
 import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.copy;
+import static io.microsphere.io.IOUtils.copyToString;
 import static io.microsphere.io.IOUtils.toByteArray;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link IOUtils} Test
@@ -76,6 +78,72 @@ public class IOUtilsTest {
     @Test
     public void testToString1() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream, UTF_8));
+    }
+
+    @Test
+    public void testToStringOnDefaultCharset() throws IOException {
+        assertEquals(TEST_VALUE, IOUtils.toString(inputStream));
+    }
+
+
+    @Test
+    public void testToStringOnNullInputStream() throws IOException {
+        assertNull(IOUtils.toString(null));
+    }
+
+    @Test
+    public void testToStringOnNull() throws IOException {
+        assertNull(IOUtils.toString(null, (Charset) null));
+    }
+
+    @Test
+    public void testToStringOnNull1() throws IOException {
+        assertNull(IOUtils.toString(null, (String) null));
+    }
+
+    @Test
+    public void testCopyToStringOnNullEncoding() throws IOException {
+        assertEquals(TEST_VALUE, copyToString(inputStream, (String) null));
+    }
+
+    @Test
+    public void testCopyToStringOnEmptyEncoding() throws IOException {
+        assertEquals(TEST_VALUE, copyToString(inputStream, ""));
+    }
+
+    @Test
+    public void testCopyToString() throws IOException {
+        assertEquals(TEST_VALUE, copyToString(inputStream, FILE_ENCODING));
+    }
+
+    @Test
+    public void testCopyToString1OnNullCharset() throws IOException {
+        assertEquals(TEST_VALUE, copyToString(inputStream, (Charset) null));
+    }
+
+    @Test
+    public void testCopyToStringOnUTF8Charset() throws IOException {
+        assertEquals(TEST_VALUE, copyToString(inputStream, UTF_8));
+    }
+
+    @Test
+    public void testCopyToStringWithDefaultCharset() throws IOException {
+        assertEquals(TEST_VALUE, copyToString(inputStream));
+    }
+
+    @Test
+    public void testCopyToStringOnNullInputStream() throws IOException {
+        assertNull(copyToString(null));
+    }
+
+    @Test
+    public void testCopyToStringOnNull() throws IOException {
+        assertNull(copyToString(null, (Charset) null));
+    }
+
+    @Test
+    public void testCopyToStringOnNull1() throws IOException {
+        assertNull(copyToString(null, (String) null));
     }
 
     @Test

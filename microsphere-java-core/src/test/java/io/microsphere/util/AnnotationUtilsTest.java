@@ -22,6 +22,8 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
+import java.lang.annotation.Native;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -29,6 +31,7 @@ import java.util.List;
 
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS_NAME;
+import static io.microsphere.util.AnnotationUtils.NATIVE_ANNOTATION_TYPES;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
@@ -48,6 +51,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class AnnotationUtilsTest {
+
+    @Test
+    public void testNATIVE_ANNOTATION_TYPES() {
+        assertEquals(6, NATIVE_ANNOTATION_TYPES.size());
+        assertTrue(NATIVE_ANNOTATION_TYPES.contains(Target.class));
+        assertTrue(NATIVE_ANNOTATION_TYPES.contains(Retention.class));
+        assertTrue(NATIVE_ANNOTATION_TYPES.contains(Documented.class));
+        assertTrue(NATIVE_ANNOTATION_TYPES.contains(Inherited.class));
+        assertTrue(NATIVE_ANNOTATION_TYPES.contains(Native.class));
+        assertTrue(NATIVE_ANNOTATION_TYPES.contains(Repeatable.class));
+    }
+
+    @Test
+    public void testINHERITED_OBJECT_METHOD_PREDICATE() {
+
+    }
 
     @Test
     public void testIsAnnotatedPresent() {

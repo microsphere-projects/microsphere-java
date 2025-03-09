@@ -25,6 +25,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -145,8 +146,8 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
                 ", declaredClass=" + this.getDeclaredClass() +
                 ", name='" + this.name + '\'' +
                 ", executable=" + this.getMember() +
-                ", parameterClassNames='" + Arrays.toString(this.parameterClassNames) + '\'' +
-                ", parameterTypes=" + Arrays.toString(this.parameterTypes) +
+                ", parameterClassNames='" + arrayToString(this.parameterClassNames) + '\'' +
+                ", parameterTypes=" + arrayToString(this.parameterTypes) +
                 '}';
     }
 

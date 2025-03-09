@@ -20,7 +20,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static io.microsphere.text.FormatUtils.format;
-import static java.util.Objects.requireNonNull;
+import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * {@link BiFunction} with {@link Throwable}
@@ -63,7 +63,6 @@ public interface ThrowableBiFunction<T, U, R> {
      * @throws NullPointerException if <code>function</code> is <code>null</code>
      */
     static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function) throws NullPointerException {
-        requireNonNull(function, "The function must not be null");
         return execute(first, second, function, (ExceptionHandler<T, U, R>) DEFAULT_EXCEPTION_HANDLER);
     }
 
@@ -82,9 +81,9 @@ public interface ThrowableBiFunction<T, U, R> {
      * @throws NullPointerException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
      */
     static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function, ExceptionHandler<T, U, R> exceptionHandler) throws NullPointerException {
-        requireNonNull(function, "The function must not be null");
-        requireNonNull(exceptionHandler, "The exceptionHandler must not be null");
-        R result = null;
+        assertNotNull(function, () -> "The 'function' must not be null");
+        assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
+        R result;
         try {
             result = function.apply(first, second);
         } catch (Throwable failure) {

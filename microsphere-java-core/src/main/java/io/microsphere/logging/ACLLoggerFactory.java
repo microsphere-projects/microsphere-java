@@ -16,8 +16,6 @@
  */
 package io.microsphere.logging;
 
-import io.microsphere.lang.Prioritized;
-
 /**
  * {@link LoggerFactory} for Apache Commons Logging
  *
@@ -25,7 +23,7 @@ import io.microsphere.lang.Prioritized;
  * @see LoggerFactory
  * @since 1.0.0
  */
-public class ACLLoggerFactory extends LoggerFactory implements Prioritized {
+public class ACLLoggerFactory extends LoggerFactory {
 
     public static final String ACL_LOG_CLASS_NAME = "org.apache.commons.logging.Log";
 

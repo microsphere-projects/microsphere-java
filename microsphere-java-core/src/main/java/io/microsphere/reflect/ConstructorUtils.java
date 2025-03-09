@@ -20,7 +20,6 @@ import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -29,6 +28,7 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 
 /**
  * The utilities class of {@link Constructor}
@@ -88,7 +88,7 @@ public abstract class ConstructorUtils extends BaseUtils {
     public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
         return execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
             if (logger.isTraceEnabled()) {
-                logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, Arrays.toString(parameterTypes));
+                logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, arrayToString(parameterTypes));
             }
             return NOT_FOUND_CONSTRUCTOR;
         });

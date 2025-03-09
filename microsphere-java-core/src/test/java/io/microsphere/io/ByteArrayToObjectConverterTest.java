@@ -14,45 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.collection;
+package io.microsphere.io;
 
+import io.microsphere.convert.ByteArrayToObjectConverter;
+import io.microsphere.convert.ObjectToByteArrayConverter;
 import org.junit.jupiter.api.Test;
 
-import java.util.Enumeration;
-import java.util.NoSuchElementException;
-
-import static io.microsphere.collection.EnumerationUtils.ofEnums;
+import static io.microsphere.convert.ObjectToByteArrayConverter.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 /**
- * {@link EnumerationUtils} Test
+ * {@link ObjectToByteArrayConverter} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see EnumerationUtils
+ * @see ObjectToByteArrayConverter
  * @since 1.0.0
  */
-public class EnumerationUtilsTest {
+public class ByteArrayToObjectConverterTest {
+
+    private ObjectToByteArrayConverter instance = INSTANCE;
 
     @Test
-    public void testOfEnums() {
-        Enumeration<String> e = ofEnums("A", "B", "C");
-        assertNotNull(e);
-
-        assertTrue(e.hasMoreElements());
-        assertEquals("A", e.nextElement());
-
-        assertTrue(e.hasMoreElements());
-        assertEquals("B", e.nextElement());
-
-        assertTrue(e.hasMoreElements());
-        assertEquals("C", e.nextElement());
-
-        assertFalse(e.hasMoreElements());
-        assertThrows(NoSuchElementException.class, e::nextElement);
+    public void testConvert() {
+        ByteArrayToObjectConverter converter = ByteArrayToObjectConverter.INSTANCE;
+        String source = "Hello,World";
+        byte[] bytes = instance.convert(source);
+        Object target = converter.convert(bytes);
+        assertEquals(source, target);
     }
 
+    @Test
+    public void testConvertOnNull() {
+        assertNotNull(instance.convert(null));
+    }
+
+    @Test
+    public void testConvertOnFailed() {
+        assertThrowsExactly(RuntimeException.class, () -> instance.convert(new Object()));
+    }
 }
