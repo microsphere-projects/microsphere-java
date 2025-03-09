@@ -126,11 +126,10 @@ public interface ThrowableFunction<T, R> {
      * @param <T>      the source type
      * @param <R>      the return type
      * @return the result after execution
-     * @throws NullPointerException if <code>function</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>function</code> is <code>null</code>
      */
-    static <T, R> R execute(T t, ThrowableFunction<T, R> function) throws NullPointerException {
-        assertNotNull(function, () -> "The 'function' must not be null");
-        return function.execute(t);
+    static <T, R> R execute(T t, ThrowableFunction<T, R> function) throws IllegalArgumentException {
+        return execute(t, function, function::handleException);
     }
 
     /**
@@ -143,10 +142,10 @@ public interface ThrowableFunction<T, R> {
      * @param <T>              the source type
      * @param <R>              the return type
      * @return the result after execution
-     * @throws NullPointerException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
      */
     static <T, R> R execute(T t, ThrowableFunction<T, R> function, BiFunction<T, Throwable, R> exceptionHandler)
-            throws NullPointerException {
+            throws IllegalArgumentException {
         assertNotNull(function, () -> "The 'function' must not be null");
         assertNotNull(exceptionHandler, "The 'exceptionHandler' must not be null");
         return function.execute(t, exceptionHandler);
