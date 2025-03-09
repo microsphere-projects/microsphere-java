@@ -22,10 +22,10 @@ import io.microsphere.util.Version;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 
 /**
  * The definition class of Java {@link Method}
@@ -145,8 +145,8 @@ public class MethodDefinition extends ExecutableDefinition<Method> {
                 ", declaredClass=" + super.getDeclaredClass() +
                 ", methodName='" + getMethodName() + '\'' +
                 ", method=" + getMethod() +
-                ", parameterClassName=" + Arrays.toString(super.parameterClassNames) +
-                ", parameterTypes=" + Arrays.toString(super.getParameterTypes()) +
+                ", parameterClassName=" + arrayToString(super.parameterClassNames) +
+                ", parameterTypes=" + arrayToString(super.getParameterTypes()) +
                 '}';
     }
 }
