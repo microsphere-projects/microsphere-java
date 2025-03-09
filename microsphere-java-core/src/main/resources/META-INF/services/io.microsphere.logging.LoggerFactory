@@ -1,3 +1,4 @@
 io.microsphere.logging.Sfl4jLoggerFactory
 io.microsphere.logging.ACLLoggerFactory
 io.microsphere.logging.JDKLoggerFactory
+io.microsphere.logging.NoOpLoggerFactory
