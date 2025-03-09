@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ClassUtils.isArray;
+import static java.lang.System.arraycopy;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Collections.list;
 
@@ -317,7 +318,7 @@ public abstract class ArrayUtils extends BaseUtils {
             int length = 1 + othersLength;
             E[] values = newArray(componentType, length);
             values[0] = one;
-            System.arraycopy(others, 0, values, 1, othersLength);
+            arraycopy(others, 0, values, 1, othersLength);
             return values;
         }
     }
@@ -344,14 +345,14 @@ public abstract class ArrayUtils extends BaseUtils {
         E[] newArray = newArray(componentType, size);
 
         int pos = 0;
-        System.arraycopy(one, 0, newArray, pos, oneSize);
+        arraycopy(one, 0, newArray, pos, oneSize);
         pos += oneSize;
 
         for (int i = 0; i < othersSize; i++) {
             E[] other = others[i];
             int otherLength = length(other);
             if (otherLength > 0) {
-                System.arraycopy(other, 0, newArray, pos, otherLength);
+                arraycopy(other, 0, newArray, pos, otherLength);
                 pos += otherLength;
             }
         }
