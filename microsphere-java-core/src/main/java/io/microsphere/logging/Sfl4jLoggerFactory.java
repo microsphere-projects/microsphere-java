@@ -16,8 +16,6 @@
  */
 package io.microsphere.logging;
 
-import io.microsphere.lang.Prioritized;
-
 /**
  * The {@link LoggerFactory} class for Slf4j
  *
@@ -25,7 +23,7 @@ import io.microsphere.lang.Prioritized;
  * @see LoggerFactory
  * @since 1.0.0
  */
-public class Sfl4jLoggerFactory extends LoggerFactory implements Prioritized {
+public class Sfl4jLoggerFactory extends LoggerFactory {
 
     public static final String SLF4J_LOGGER_CLASS_NAME = "org.slf4j.Logger";
 
