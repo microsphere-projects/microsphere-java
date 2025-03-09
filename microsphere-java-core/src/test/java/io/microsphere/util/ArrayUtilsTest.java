@@ -18,15 +18,26 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Parameter;
+
+import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CHARACTER_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_CHAR_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_DOUBLE_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_DOUBLE_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_FLOAT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_FLOAT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_INTEGER_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_INT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_LONG_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_LONG_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_PARAMETER_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.combine;
@@ -34,8 +45,17 @@ import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.ArrayUtils.ofBooleans;
+import static io.microsphere.util.ArrayUtils.ofBytes;
+import static io.microsphere.util.ArrayUtils.ofChars;
+import static io.microsphere.util.ArrayUtils.ofDoubles;
+import static io.microsphere.util.ArrayUtils.ofFloats;
+import static io.microsphere.util.ArrayUtils.ofInts;
+import static io.microsphere.util.ArrayUtils.ofLongs;
+import static io.microsphere.util.ArrayUtils.ofShorts;
 import static io.microsphere.util.ArrayUtils.size;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
+import static java.lang.reflect.Array.getLength;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -52,17 +72,28 @@ public class ArrayUtilsTest {
 
     @Test
     public void testConstants() {
+
+        assertEmptyArray(EMPTY_BOOLEAN_ARRAY, boolean.class);
+        assertEmptyArray(EMPTY_CHAR_ARRAY, char.class);
+        assertEmptyArray(EMPTY_BYTE_ARRAY, byte.class);
+        assertEmptyArray(EMPTY_SHORT_ARRAY, short.class);
+        assertEmptyArray(EMPTY_INT_ARRAY, int.class);
+        assertEmptyArray(EMPTY_LONG_ARRAY, long.class);
+        assertEmptyArray(EMPTY_FLOAT_ARRAY, float.class);
+        assertEmptyArray(EMPTY_DOUBLE_ARRAY, double.class);
+
         assertEmptyArray(EMPTY_OBJECT_ARRAY, Object.class);
+        assertEmptyArray(EMPTY_BOOLEAN_OBJECT_ARRAY, Boolean.class);
+        assertEmptyArray(EMPTY_BYTE_OBJECT_ARRAY, Byte.class);
+        assertEmptyArray(EMPTY_CHARACTER_OBJECT_ARRAY, Character.class);
+        assertEmptyArray(EMPTY_SHORT_OBJECT_ARRAY, Short.class);
+        assertEmptyArray(EMPTY_INTEGER_OBJECT_ARRAY, Integer.class);
+        assertEmptyArray(EMPTY_LONG_OBJECT_ARRAY, Long.class);
+        assertEmptyArray(EMPTY_FLOAT_OBJECT_ARRAY, Float.class);
+        assertEmptyArray(EMPTY_DOUBLE_OBJECT_ARRAY, Double.class);
         assertEmptyArray(EMPTY_CLASS_ARRAY, Class.class);
         assertEmptyArray(EMPTY_STRING_ARRAY, String.class);
-        assertEmptyArray(EMPTY_LONG_OBJECT_ARRAY, Long.class);
-        assertEmptyArray(EMPTY_INTEGER_OBJECT_ARRAY, Integer.class);
-        assertEmptyArray(EMPTY_SHORT_OBJECT_ARRAY, Short.class);
-        assertEmptyArray(EMPTY_BYTE_OBJECT_ARRAY, Byte.class);
-        assertEmptyArray(EMPTY_DOUBLE_OBJECT_ARRAY, Double.class);
-        assertEmptyArray(EMPTY_FLOAT_OBJECT_ARRAY, Float.class);
-        assertEmptyArray(EMPTY_BOOLEAN_OBJECT_ARRAY, Boolean.class);
-        assertEmptyArray(EMPTY_CHARACTER_OBJECT_ARRAY, Character.class);
+        assertEmptyArray(EMPTY_PARAMETER_ARRAY, Parameter.class);
     }
 
     @Test
@@ -70,6 +101,62 @@ public class ArrayUtilsTest {
         assertArrayEquals(of("A"), array("A"));
         assertArrayEquals(of("A", "B"), array("A", "B"));
         assertArrayEquals(of("A", "B", "C"), array("A", "B", "C"));
+    }
+
+    @Test
+    public void testOfBooleans() {
+        assertArrayEquals(new boolean[]{true}, ofBooleans(true));
+        assertArrayEquals(new boolean[]{true, false}, ofBooleans(true, false));
+        assertArrayEquals(new boolean[]{true, false, true}, ofBooleans(true, false, true));
+    }
+
+    @Test
+    public void testOfBytes() {
+        assertArrayEquals(new byte[]{1}, ofBytes((byte) 1));
+        assertArrayEquals(new byte[]{1, 2}, ofBytes((byte) 1, (byte) 2));
+        assertArrayEquals(new byte[]{1, 2, 3}, ofBytes((byte) 1, (byte) 2, (byte) 3));
+    }
+
+    @Test
+    public void testOfChars() {
+        assertArrayEquals(new char[]{1}, ofChars((char) 1));
+        assertArrayEquals(new char[]{1, 2}, ofChars((char) 1, (char) 2));
+        assertArrayEquals(new char[]{1, 2, 3}, ofChars((char) 1, (char) 2, (char) 3));
+    }
+
+    @Test
+    public void testOfShorts() {
+        assertArrayEquals(new short[]{1}, ofShorts((short) 1));
+        assertArrayEquals(new short[]{1, 2}, ofShorts((short) 1, (short) 2));
+        assertArrayEquals(new short[]{1, 2, 3}, ofShorts((short) 1, (short) 2, (short) 3));
+    }
+
+    @Test
+    public void testOfInts() {
+        assertArrayEquals(new int[]{1}, ofInts(1));
+        assertArrayEquals(new int[]{1, 2}, ofInts(1, 2));
+        assertArrayEquals(new int[]{1, 2, 3}, ofInts(1, 2, 3));
+    }
+
+    @Test
+    public void testOfLongs() {
+        assertArrayEquals(new long[]{1}, ofLongs(1L));
+        assertArrayEquals(new long[]{1, 2}, ofLongs(1L, 2L));
+        assertArrayEquals(new long[]{1, 2, 3}, ofLongs(1L, 2L, 3L));
+    }
+
+    @Test
+    public void testOfFloats() {
+        assertArrayEquals(new float[]{1f}, ofFloats(1f));
+        assertArrayEquals(new float[]{1f, 2f}, ofFloats(1f, 2f));
+        assertArrayEquals(new float[]{1f, 2f, 3f}, ofFloats(1f, 2f, 3f));
+    }
+
+    @Test
+    public void testOfDoubles() {
+        assertArrayEquals(new double[]{1d}, ofDoubles(1d));
+        assertArrayEquals(new double[]{1d, 2d}, ofDoubles(1d, 2d));
+        assertArrayEquals(new double[]{1d, 2d, 3d}, ofDoubles(1d, 2d, 3d));
     }
 
     @Test
@@ -87,7 +174,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testLengthOnNull() {
-        assertEquals(0, length(ofArray(null)));
+        assertEquals(0, length(ofArray((Object[]) null)));
     }
 
     @Test
@@ -103,7 +190,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testSizeOnNull() {
-        assertEquals(0, size(ofArray(null)));
+        assertEquals(0, size(ofArray((Object[]) null)));
     }
 
     @Test
@@ -164,6 +251,11 @@ public class ArrayUtilsTest {
 
     public static <T> T[] array(T... values) {
         return values;
+    }
+
+    private void assertEmptyArray(Object array, Class<?> expectedComponentType) {
+        assertEquals(0, getLength(array));
+        assertEquals(expectedComponentType, getTopComponentType(array));
     }
 
     private <E> void assertEmptyArray(E[] array, Class<E> expectedComponentType) {
