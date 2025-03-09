@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Predicates.or;
 import static java.util.stream.Collectors.toList;
@@ -39,7 +40,7 @@ public interface Streams {
     }
 
     static <T, S extends Iterable<T>> Stream<T> filterStream(S values, Predicate<? super T> predicate) {
-        return StreamSupport.stream(values.spliterator(), false).filter(predicate);
+        return stream(values).filter(predicate);
     }
 
     static <T, S extends Iterable<T>> List<T> filterList(S values, Predicate<? super T> predicate) {
@@ -52,7 +53,7 @@ public interface Streams {
     }
 
     static <T, S extends Iterable<T>> S filter(S values, Predicate<? super T> predicate) {
-        final boolean isSet = Set.class.isAssignableFrom(values.getClass());
+        final boolean isSet = isSet(values);
         return (S) (isSet ? filterSet(values, predicate) : filterList(values, predicate));
     }
 
