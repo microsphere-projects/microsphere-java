@@ -2,7 +2,7 @@ package io.microsphere.lang.function;
 
 import java.util.function.Function;
 
-import static java.util.Objects.requireNonNull;
+import static io.microsphere.util.Assert.assertNotNull;
 
 @FunctionalInterface
 public interface ThrowableSupplier<T> {
@@ -33,8 +33,8 @@ public interface ThrowableSupplier<T> {
      * @see #execute()
      */
     default T execute(Function<Throwable, T> exceptionHandler) {
-        requireNonNull(exceptionHandler, "The exceptionHandler must not be null");
-        T result = null;
+        assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
+        T result;
         try {
             result = get();
         } catch (Throwable e) {
@@ -62,8 +62,7 @@ public interface ThrowableSupplier<T> {
      * @throws NullPointerException if <code>supplier</code> is <code>null</code>
      */
     static <T> T execute(ThrowableSupplier<T> supplier) throws NullPointerException {
-        requireNonNull(supplier, "The supplier must not be null");
-        return supplier.execute();
+        return execute(supplier, supplier::handleException);
     }
 
     /**
@@ -76,7 +75,7 @@ public interface ThrowableSupplier<T> {
      * @throws NullPointerException if <code>supplier</code> or <code>exceptionHandler</code> is <code>null</code>
      */
     static <T> T execute(ThrowableSupplier<T> supplier, Function<Throwable, T> exceptionHandler) throws NullPointerException {
-        requireNonNull(supplier, "The supplier must not be null");
+        assertNotNull(supplier, "The supplier must not be null");
         return supplier.execute(exceptionHandler);
     }
 }
