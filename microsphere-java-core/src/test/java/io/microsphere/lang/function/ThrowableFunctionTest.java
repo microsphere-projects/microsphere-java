@@ -28,23 +28,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class ThrowableFunctionTest {
 
-    static final ThrowableFunction<String, String> EXCEPTION_HANDLER = m -> {
+    private static final ThrowableFunction<String, String> function = m -> {
         throw new Exception(m);
     };
 
     @Test
     public void testExecute1() {
-        assertThrows(RuntimeException.class, () -> EXCEPTION_HANDLER.execute("For testing"));
+        assertThrows(RuntimeException.class, () -> function.execute("For testing"));
     }
 
     @Test
     public void testExecute2() {
-        assertThrows(RuntimeException.class, () -> execute("For testing", EXCEPTION_HANDLER));
+        assertThrows(RuntimeException.class, () -> execute("For testing", function));
     }
 
     @Test
     public void testExecute3() {
-        assertThrows(RuntimeException.class, () -> execute("For testing", EXCEPTION_HANDLER, (t, e) -> {
+        assertThrows(RuntimeException.class, () -> execute("For testing", function, (t, e) -> {
             throw new RuntimeException(t, e);
         }));
     }
