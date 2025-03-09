@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
-import static io.microsphere.collection.EnumerationUtils.enumeration;
+import static io.microsphere.collection.EnumerationUtils.ofEnums;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class EnumerationUtilsTest {
 
     @Test
-    public void testEnumeration() {
-        Enumeration<String> e = enumeration("A", "B", "C");
+    public void testOfEnums() {
+        Enumeration<String> e = ofEnums("A", "B", "C");
         assertNotNull(e);
 
         assertTrue(e.hasMoreElements());
