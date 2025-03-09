@@ -48,10 +48,7 @@ public abstract class ListUtils extends BaseUtils {
     }
 
     public static <E> List<E> of(E... elements) {
-        if (isEmpty(elements)) {
-            return emptyList();
-        }
-        return unmodifiableList(asList(elements));
+        return ofList(elements);
     }
 
     /**
@@ -63,7 +60,10 @@ public abstract class ListUtils extends BaseUtils {
      * @see {@link Lists#ofList} as recommended
      */
     public static <E> List<E> ofList(E... elements) {
-        return of(elements);
+        if (isEmpty(elements)) {
+            return emptyList();
+        }
+        return unmodifiableList(asList(elements));
     }
 
     public static <E> List<E> ofList(Iterable<E> iterable) {
