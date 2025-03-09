@@ -16,10 +16,10 @@
  */
 package io.microsphere.lang.function;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.ThrowableAction.execute;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ThrowableAction} Test
@@ -30,8 +30,8 @@ public class ThrowableActionTest {
 
     @Test
     public void testExecute() {
-        Assertions.assertThrows(RuntimeException.class, () -> execute(() -> {
+        assertThrows(RuntimeException.class, () -> execute(() -> {
             throw new Exception("Test");
-        }), "Test");
+        }));
     }
 }
