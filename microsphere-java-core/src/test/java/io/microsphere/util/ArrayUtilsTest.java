@@ -16,10 +16,16 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Parameter;
+import java.util.Collection;
+import java.util.Enumeration;
 
+import static io.microsphere.collection.EnumerationUtils.ofEnums;
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
@@ -40,10 +46,14 @@ import static io.microsphere.util.ArrayUtils.EMPTY_PARAMETER_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ArrayUtils.combine;
+import static io.microsphere.util.ArrayUtils.forEach;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ArrayUtils.newArray;
 import static io.microsphere.util.ArrayUtils.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ArrayUtils.ofBooleans;
@@ -69,6 +79,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class ArrayUtilsTest {
+
+    private static final Logger logger = getLogger(ArrayUtilsTest.class);
 
     @Test
     public void testConstants() {
@@ -644,6 +656,217 @@ public class ArrayUtilsTest {
         assertFalse(isNotEmpty((Object[]) null));
     }
 
+    // Test arrayEquals(...) methods;
+
+    @Test
+    public void testArrayEqualsOnBooleanArray() {
+        assertTrue(arrayEquals(ofBooleans(true), ofBooleans(true)));
+        assertTrue(arrayEquals(ofBooleans(true), new boolean[]{true}));
+
+        assertTrue(arrayEquals(ofBooleans(true, false), ofBooleans(true, false)));
+        assertTrue(arrayEquals(ofBooleans(true, false), new boolean[]{true, false}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyBooleanArray() {
+        assertTrue(arrayEquals(EMPTY_BOOLEAN_ARRAY, EMPTY_BOOLEAN_ARRAY));
+        assertTrue(arrayEquals(EMPTY_BOOLEAN_ARRAY, new boolean[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullBooleanArray() {
+        assertTrue(arrayEquals((boolean[]) null, (boolean[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnByteArray() {
+        assertTrue(arrayEquals(ofBytes((byte) 1), ofBytes((byte) 1)));
+        assertTrue(arrayEquals(ofBytes((byte) 1), new byte[]{1}));
+
+        assertTrue(arrayEquals(ofBytes((byte) 1, (byte) 2), ofBytes((byte) 1, (byte) 2)));
+        assertTrue(arrayEquals(ofBytes((byte) 1, (byte) 2), new byte[]{1, 2}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyByteArray() {
+        assertTrue(arrayEquals(EMPTY_BYTE_ARRAY, EMPTY_BYTE_ARRAY));
+        assertTrue(arrayEquals(EMPTY_BYTE_ARRAY, new byte[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullByteArray() {
+        assertTrue(arrayEquals((byte[]) null, (byte[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnCharArray() {
+        assertTrue(arrayEquals(ofChars((char) 1), ofChars((char) 1)));
+        assertTrue(arrayEquals(ofChars((char) 1), new char[]{1}));
+
+        assertTrue(arrayEquals(ofChars((char) 1, (char) 2), ofChars((char) 1, (char) 2)));
+        assertTrue(arrayEquals(ofChars((char) 1, (char) 2), new char[]{1, 2}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyCharArray() {
+        assertTrue(arrayEquals(EMPTY_CHAR_ARRAY, EMPTY_CHAR_ARRAY));
+        assertTrue(arrayEquals(EMPTY_CHAR_ARRAY, new char[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullCharArray() {
+        assertTrue(arrayEquals((char[]) null, (char[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnShortArray() {
+        assertTrue(arrayEquals(ofShorts((short) 1), ofShorts((short) 1)));
+        assertTrue(arrayEquals(ofShorts((short) 1), new short[]{1}));
+
+        assertTrue(arrayEquals(ofShorts((short) 1, (short) 2), ofShorts((short) 1, (short) 2)));
+        assertTrue(arrayEquals(ofShorts((short) 1, (short) 2), new short[]{1, 2}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyShortArray() {
+        assertTrue(arrayEquals(EMPTY_SHORT_ARRAY, EMPTY_SHORT_ARRAY));
+        assertTrue(arrayEquals(EMPTY_SHORT_ARRAY, new short[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullShortArray() {
+        assertTrue(arrayEquals((short[]) null, (short[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnIntArray() {
+        assertTrue(arrayEquals(ofInts(1), ofInts(1)));
+        assertTrue(arrayEquals(ofInts(1), new int[]{1}));
+
+        assertTrue(arrayEquals(ofInts(1, 2), ofInts(1, 2)));
+        assertTrue(arrayEquals(ofInts(1, 2), new int[]{1, 2}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyIntArray() {
+        assertTrue(arrayEquals(EMPTY_INT_ARRAY, EMPTY_INT_ARRAY));
+        assertTrue(arrayEquals(EMPTY_INT_ARRAY, new int[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullIntArray() {
+        assertTrue(arrayEquals((int[]) null, (int[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnLongArray() {
+        assertTrue(arrayEquals(ofLongs(1L), ofLongs(1L)));
+        assertTrue(arrayEquals(ofLongs(1L), new long[]{1L}));
+
+        assertTrue(arrayEquals(ofLongs(1L, 2L), ofLongs(1L, 2L)));
+        assertTrue(arrayEquals(ofLongs(1L, 2L), new long[]{1L, 2L}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyLongArray() {
+        assertTrue(arrayEquals(EMPTY_LONG_ARRAY, EMPTY_LONG_ARRAY));
+        assertTrue(arrayEquals(EMPTY_LONG_ARRAY, new long[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullLongArray() {
+        assertTrue(arrayEquals((long[]) null, (long[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnFloatArray() {
+        assertTrue(arrayEquals(ofFloats(1F), ofFloats(1F)));
+        assertTrue(arrayEquals(ofFloats(1F), new float[]{1F}));
+
+        assertTrue(arrayEquals(ofFloats(1F, 2F), ofFloats(1F, 2F)));
+        assertTrue(arrayEquals(ofFloats(1F, 2F), new float[]{1F, 2F}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyFloatArray() {
+        assertTrue(arrayEquals(EMPTY_FLOAT_ARRAY, EMPTY_FLOAT_ARRAY));
+        assertTrue(arrayEquals(EMPTY_FLOAT_ARRAY, new float[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullFloatArray() {
+        assertTrue(arrayEquals((float[]) null, (float[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnDoubleArray() {
+        assertTrue(arrayEquals(ofDoubles(1D), ofDoubles(1D)));
+        assertTrue(arrayEquals(ofDoubles(1D), new double[]{1D}));
+
+        assertTrue(arrayEquals(ofDoubles(1D, 2D), ofDoubles(1D, 2D)));
+        assertTrue(arrayEquals(ofDoubles(1D, 2D), new double[]{1D, 2D}));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyDoubleArray() {
+        assertTrue(arrayEquals(EMPTY_DOUBLE_ARRAY, EMPTY_DOUBLE_ARRAY));
+        assertTrue(arrayEquals(EMPTY_DOUBLE_ARRAY, new double[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullDoubleArray() {
+        assertTrue(arrayEquals((double[]) null, (double[]) null));
+    }
+
+    @Test
+    public void testArrayEqualsOnObjectArray() {
+        assertTrue(arrayEquals(of("A", "B"), of("A", "B")));
+        assertTrue(arrayEquals(of("A", "B"), new String[]{"A", "B"}));
+
+        assertTrue(arrayEquals(of("A", "B"), combine("A", of("B"))));
+        assertTrue(arrayEquals(of("A", "B", "C"), combine("A", of("B", "C"))));
+    }
+
+    @Test
+    public void testArrayEqualsOnEmptyObjectArray() {
+        assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, EMPTY_OBJECT_ARRAY));
+        assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, new Object[0]));
+    }
+
+    @Test
+    public void testArrayEqualsOnNullObjectArray() {
+        assertTrue(arrayEquals((Object[]) null, (Object[]) null));
+    }
+
+    // Test asArray methods
+
+    @Test
+    public void testAsArrayOnEnumeration() {
+        Enumeration<String> enums = ofEnums("A", "B");
+        assertArrayEquals(ofArray("A", "B"), asArray(enums, String.class));
+    }
+
+    @Test
+    public void testAsArrayOnIterable() {
+        Iterable<String> iterable = ofList("A", "B");
+        assertArrayEquals(ofArray("A", "B"), asArray(iterable, String.class));
+    }
+
+    @Test
+    public void testAsArrayOnCollection() {
+        Collection<String> collection = ofList("A", "B");
+        assertArrayEquals(ofArray("A", "B"), asArray(collection, String.class));
+    }
+
+    // Test newArray
+    @Test
+    public void testNewArray() {
+        Integer[] values = newArray(Integer.class, 3);
+        assertEquals(3, values.length);
+    }
+
+    // Test combine
+
     @Test
     public void testCombine() {
         assertArrayEquals(of("A", "B"), combine("A", of("B")));
@@ -665,7 +888,190 @@ public class ArrayUtilsTest {
                 combine(of("A", "B", "C", "D")));
     }
 
-    public static <T> T[] array(T... values) {
+    // Test forEach(...) methods
+
+    @Test
+    public void testForEach1OnBooleanArray() {
+        boolean[] values = ofBooleans(true);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnByteArray() {
+        byte[] values = ofBytes((byte) 1);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnCharArray() {
+        char[] values = ofChars('A');
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnShortArray() {
+        short[] values = ofShorts((short) 1);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnIntArray() {
+        int[] values = ofInts(1);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnLongArray() {
+        long[] values = ofLongs(1L);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnFloatArray() {
+        float[] values = ofFloats(1F);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnDoubleArray() {
+        double[] values = ofDoubles(1D);
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach1OnObjectArray() {
+        Object[] values = of("A");
+        forEach(values, (value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(value : {})", value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnBooleanArray() {
+        boolean[] values = ofBooleans(true);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnByteArray() {
+        byte[] values = ofBytes((byte) 1);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnCharArray() {
+        char[] values = ofChars('A');
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnShortArray() {
+        short[] values = ofShorts((short) 1);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnIntArray() {
+        int[] values = ofInts(1);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnLongArray() {
+        long[] values = ofLongs(1L);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnFloatArray() {
+        float[] values = ofFloats(1F);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnDoubleArray() {
+        double[] values = ofDoubles(1D);
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+    @Test
+    public void testForEach2OnObjectArray() {
+        Object[] values = of("A");
+        forEach(values, (index, value) -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("forEach(index : {} , value : {})", index, value);
+            }
+        });
+    }
+
+
+    private static <T> T[] array(T... values) {
         return values;
     }
 
