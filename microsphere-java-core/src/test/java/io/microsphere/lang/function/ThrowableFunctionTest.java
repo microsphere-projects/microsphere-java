@@ -18,7 +18,7 @@ package io.microsphere.lang.function;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.lang.function.ThrowableConsumer.execute;
+import static io.microsphere.lang.function.ThrowableFunction.execute;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -28,26 +28,23 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class ThrowableFunctionTest {
 
+    static final ThrowableFunction<String, String> EXCEPTION_HANDLER = m -> {
+        throw new Exception(m);
+    };
+
     @Test
     public void testExecute1() {
-        ThrowableFunction<String, String> throwableFunction = m -> {
-            throw new Exception(m);
-        };
-        assertThrows(RuntimeException.class, () -> throwableFunction.execute("For testing"));
+        assertThrows(RuntimeException.class, () -> EXCEPTION_HANDLER.execute("For testing"));
     }
 
     @Test
     public void testExecute2() {
-        assertThrows(RuntimeException.class, () -> execute("For testing", m -> {
-            throw new Exception(m);
-        }));
+        assertThrows(RuntimeException.class, () -> execute("For testing", EXCEPTION_HANDLER));
     }
 
     @Test
     public void testExecute3() {
-        assertThrows(RuntimeException.class, () -> execute("For testing", m -> {
-            throw new Exception(m);
-        }, (t, e) -> {
+        assertThrows(RuntimeException.class, () -> execute("For testing", EXCEPTION_HANDLER, (t, e) -> {
             throw new RuntimeException(t, e);
         }));
     }
