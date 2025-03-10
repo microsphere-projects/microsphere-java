@@ -14,23 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.reflect;
+package io.microsphere.process;
 
-import java.util.List;
-
-import static java.util.Collections.emptyList;
+import io.microsphere.lang.Prioritized;
 
 /**
- * {@link ClassDefinition} Test
+ * The resolver for Process ID
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ClassDefinition
+ * @see ModernProcessIdResolver
  * @since 1.0.0
  */
-public class ClassDefinitionTest extends AbstractReflectiveDefinitionTest<ClassDefinition> {
+public interface ProcessIdResolver extends Prioritized {
 
-    @Override
-    protected List<Object> getTailConstructorArguments() {
-        return emptyList();
-    }
+    /**
+     * Resolve the current process id
+     *
+     * @return <code>>null</code> if can't be resolved
+     */
+    Long current();
 }

@@ -28,6 +28,7 @@ import java.util.Arrays;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 
 /**
@@ -137,25 +138,12 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "ExecutableDefinition{" +
-                "since=" + this.since +
-                ", deprecation=" + this.deprecation +
-                ", declaredClassName='" + this.getDeclaredClassName() + '\'' +
-                ", declaredClass=" + this.getDeclaredClass() +
-                ", name='" + this.name + '\'' +
-                ", executable=" + this.getMember() +
-                ", parameterClassNames='" + arrayToString(this.parameterClassNames) + '\'' +
-                ", parameterTypes=" + arrayToString(this.parameterTypes) +
-                '}';
-    }
-
     protected Class<?>[] resolveParameterTypes(String[] parameterClassNames) {
+        ClassLoader classLoader = getClassLoader(getClass());
         int length = parameterClassNames.length;
         Class<?>[] parameterTypes = new Class<?>[length];
         for (int i = 0; i < length; i++) {
-            parameterTypes[i] = resolveClass(parameterClassNames[i], this.classLoader);
+            parameterTypes[i] = resolveClass(parameterClassNames[i], classLoader);
         }
         return parameterTypes;
     }

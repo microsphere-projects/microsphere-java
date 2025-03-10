@@ -1,0 +1,3 @@
+io.microsphere.process.ModernProcessIdResolver
+io.microsphere.process.VirtualMachineProcessIdResolver
+io.microsphere.process.ClassicProcessIdResolver

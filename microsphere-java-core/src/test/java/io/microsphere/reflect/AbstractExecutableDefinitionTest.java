@@ -16,21 +16,30 @@
  */
 package io.microsphere.reflect;
 
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
-import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * {@link ClassDefinition} Test
+ * Abstract {@link ExecutableDefinition} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ClassDefinition
+ * @see ExecutableDefinition
  * @since 1.0.0
  */
-public class ClassDefinitionTest extends AbstractReflectiveDefinitionTest<ClassDefinition> {
+public abstract class AbstractExecutableDefinitionTest<D extends ExecutableDefinition> extends AbstractMemberDefinitionTest<D> {
 
-    @Override
-    protected List<Object> getTailConstructorArguments() {
-        return emptyList();
+    @Test
+    public void testGetParameterClassNames() {
+        for (D definition : definitions) {
+            assertNotNull(definition.getParameterClassNames());
+        }
+    }
+
+    @Test
+    public void testGetParameterTypes() {
+        for (D definition : definitions) {
+            assertNotNull(definition.getParameterTypes());
+        }
     }
 }

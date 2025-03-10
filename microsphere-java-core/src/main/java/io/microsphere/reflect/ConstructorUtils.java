@@ -50,7 +50,7 @@ public abstract class ConstructorUtils extends BaseUtils {
      * otherwise <code>false</code>
      */
     public static boolean isNonPrivateConstructorWithoutParameters(Constructor<?> constructor) {
-        return !isPrivate(constructor) && constructor.getParameterCount() < 1;
+        return constructor != null && !isPrivate(constructor) && constructor.getParameterCount() < 1;
     }
 
     public static boolean hasNonPrivateConstructorWithoutParameters(Class<?> type) {
