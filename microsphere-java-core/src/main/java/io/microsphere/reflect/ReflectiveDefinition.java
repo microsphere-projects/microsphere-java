@@ -28,6 +28,7 @@ import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.Version.ofVersion;
 
 /**
  * The abstract definition class for Java Reflection
@@ -69,7 +70,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * @param className   the name of class
      */
     public ReflectiveDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String className) {
-        this(Version.of(since), deprecation, className);
+        this(ofVersion(since), deprecation, className);
     }
 
     /**
