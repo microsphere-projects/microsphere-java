@@ -177,7 +177,7 @@ public abstract class ReflectiveDefinition implements Serializable {
 
     @Override
     public String toString() {
-        return "ReflectiveDefinition{" +
+        return getClass().getSimpleName() + "{" +
                 "since=" + this.since +
                 ", deprecation=" + this.deprecation +
                 ", className='" + this.className + "'" +
