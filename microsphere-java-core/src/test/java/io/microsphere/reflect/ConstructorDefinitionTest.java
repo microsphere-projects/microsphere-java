@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see ConstructorDefinition
  * @since 1.0.0
  */
-public class ConstructorDefinitionTest extends AbstractReflectiveDefinitionTest<ConstructorDefinition> {
+public class ConstructorDefinitionTest extends AbstractMemberDefinitionTest<ConstructorDefinition> {
 
     public static class TestData {
 
