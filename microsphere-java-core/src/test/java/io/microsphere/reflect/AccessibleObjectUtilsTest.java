@@ -30,6 +30,8 @@ import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_16;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -71,7 +73,7 @@ public class AccessibleObjectUtilsTest {
     public void testSetAccessibleOnNonPublicMembers() {
         assertEquals(tryCanAccessMethod.isAccessible(), setAccessible(tryCanAccessMethod));
 
-        if (INACCESSIBLE_OBJECT_EXCEPTION_CLASS != null) {
+        if (INACCESSIBLE_OBJECT_EXCEPTION_CLASS != null && CURRENT_JAVA_VERSION.ge(JAVA_VERSION_16)) {
             assertThrows(INACCESSIBLE_OBJECT_EXCEPTION_CLASS, () -> setAccessible(abstractProcessorConstructor));
         } else {
             assertEquals(abstractProcessorConstructor.isAccessible(), setAccessible(abstractProcessorConstructor));
