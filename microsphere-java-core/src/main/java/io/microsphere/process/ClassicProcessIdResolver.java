@@ -46,10 +46,10 @@ public class ClassicProcessIdResolver implements ProcessIdResolver {
             String processIdValue = substringBefore(name, AT);
             processId = valueOf(processIdValue);
             if (logger.isTraceEnabled()) {
-                logger.trace("The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' : {}", processId);
+                logger.trace("The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", name, processId);
             }
         } catch (Throwable e) {
-            logger.error("The Process ID can't be based !", e);
+            logger.warn("The PID can't be resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", name, e);
         }
         return processId;
     }
