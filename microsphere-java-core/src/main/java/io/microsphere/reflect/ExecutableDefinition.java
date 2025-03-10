@@ -140,12 +140,12 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
     @Override
     public String toString() {
         return "ExecutableDefinition{" +
-                "since=" + this.since +
-                ", deprecation=" + this.deprecation +
-                ", declaredClassName='" + this.getDeclaredClassName() + '\'' +
-                ", declaredClass=" + this.getDeclaredClass() +
-                ", name='" + this.name + '\'' +
-                ", executable=" + this.getMember() +
+                "since=" + super.since +
+                ", deprecation=" + super.deprecation +
+                ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
+                ", declaredClass=" + super.getDeclaredClass() +
+                ", name='" + super.name + '\'' +
+                ", executable=" + super.getMember() +
                 ", parameterClassNames='" + arrayToString(this.parameterClassNames) + '\'' +
                 ", parameterTypes=" + arrayToString(this.parameterTypes) +
                 '}';
