@@ -18,10 +18,6 @@ package io.microsphere.process;
 
 import io.microsphere.logging.Logger;
 
-import java.lang.invoke.MethodHandle;
-
-import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
-import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
