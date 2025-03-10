@@ -31,10 +31,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> {
 
     private final List<Object>[] headConstructorArgumentsArray = new List[]{
-            ofList(SINCE, getClass().getName()),
-            ofList(ofVersion(SINCE), getClass().getName()),
-            ofList(SINCE, DEPRECATION, getClass().getName()),
-            ofList(ofVersion(SINCE), DEPRECATION, getClass().getName())
+            ofList(SINCE, getClassName()),
+            ofList(ofVersion(SINCE), getClassName()),
+            ofList(SINCE, DEPRECATION, getClassName()),
+            ofList(ofVersion(SINCE), DEPRECATION, getClassName())
     };
 
     protected List<D> definitions;
@@ -64,6 +64,10 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
             Constructor constructor = findConstructor(defintionClass, parameterTypes);
             definitions.add((D) constructor.newInstance(arguments));
         }
+    }
+
+    protected String getClassName() {
+        return getClass().getName();
     }
 
     protected abstract List<Object> getTailConstructorArguments();
