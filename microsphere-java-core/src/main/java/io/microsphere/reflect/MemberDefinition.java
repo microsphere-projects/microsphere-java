@@ -156,16 +156,4 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
         result = 31 * result + this.name.hashCode();
         return result;
     }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName() + "{" +
-                "since=" + super.since +
-                ", deprecation=" + super.deprecation +
-                ", declaredClassName='" + getDeclaredClassName() + '\'' +
-                ", declaredClass=" + getDeclaredClass() +
-                ", name='" + this.name + '\'' +
-                ", member=" + this.getMember() +
-                '}';
-    }
 }
