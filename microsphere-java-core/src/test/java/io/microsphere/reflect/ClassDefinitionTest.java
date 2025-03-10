@@ -20,8 +20,12 @@ import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.DeprecationTest.DEPRECATION;
 import static io.microsphere.lang.DeprecationTest.SINCE;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,58 +37,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassDefinition
  * @since 1.0.0
  */
-public class ClassDefinitionTest {
+public class ClassDefinitionTest extends AbstractReflectiveDefinitionTest<ClassDefinition> {
 
-    private static final String CLASS_NAME = "io.microsphere.reflect.ClassDefinitionTest";
-
-    @Test
-    public void testOnConstructorWith2Args() {
-        assertClassDefinition(SINCE, CLASS_NAME);
-    }
-
-    @Test
-    public void testOnConstructorWith3Args() {
-        assertClassDefinition(SINCE, DEPRECATION, CLASS_NAME);
-    }
-
-    private void assertClassDefinition(String since, String className) {
-        ClassDefinition cd = new ClassDefinition(since, className);
-        ClassDefinition cd2 = new ClassDefinition(Version.of(since), className);
-
-        assertClassDefinition(cd, cd2);
-        assertClassDefinition(since, null, className, cd);
-        assertClassDefinition(since, null, className, cd2);
-    }
-
-    private void assertClassDefinition(String since, Deprecation deprecation, String className) {
-        ClassDefinition cd = new ClassDefinition(since, deprecation, className);
-        ClassDefinition cd2 = new ClassDefinition(Version.of(since), deprecation, className);
-
-        assertClassDefinition(cd, cd2);
-
-        assertClassDefinition(since, deprecation, className, cd);
-        assertClassDefinition(since, deprecation, className, cd2);
-
-
-    }
-
-    private void assertClassDefinition(String since, Deprecation deprecation, String className, ClassDefinition cd) {
-        assertEquals(Version.of(since), cd.getSince());
-        assertEquals(deprecation, cd.getDeprecation());
-        assertEquals(className, cd.getClassName());
-        assertEquals(getClass(), cd.getResolvedClass());
-        assertTrue(cd.isPresent());
-        assertEquals(deprecation != null, cd.isDeprecated());
-        assertEquals(Version.of(since), cd.getSince());
-        assertEquals(deprecation, cd.getDeprecation());
-        assertEquals(className, cd.getClassName());
-    }
-
-    private void assertClassDefinition(ClassDefinition cd, ClassDefinition cd2) {
-        assertEquals(cd, cd);
-        assertEquals(cd, cd2);
-        assertNotEquals(cd, null);
-        assertEquals(cd.hashCode(), cd2.hashCode());
-        assertEquals(cd.toString(), cd2.toString());
+    @Override
+    protected List<Object> getTailConstructorArguments() {
+        return emptyList();
     }
 }
