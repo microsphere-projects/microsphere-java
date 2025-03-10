@@ -157,13 +157,13 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
 
     @Override
     public String toString() {
-        return "MemberDefinition{" +
-                "since=" + since +
-                ", deprecation=" + deprecation +
+        return getClass().getSimpleName() + "{" +
+                "since=" + super.since +
+                ", deprecation=" + super.deprecation +
                 ", declaredClassName='" + getDeclaredClassName() + '\'' +
                 ", declaredClass=" + getDeclaredClass() +
-                ", name='" + name + '\'' +
-                ", member=" + getMember() +
+                ", name='" + this.name + '\'' +
+                ", member=" + this.getMember() +
                 '}';
     }
 }
