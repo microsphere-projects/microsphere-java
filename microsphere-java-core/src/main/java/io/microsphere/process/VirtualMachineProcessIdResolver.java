@@ -20,13 +20,10 @@ import io.microsphere.logging.Logger;
 
 import java.lang.management.RuntimeMXBean;
 
-import static io.microsphere.constants.SymbolConstants.AT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.StringUtils.substringBefore;
-import static java.lang.Long.valueOf;
 
 /**
  * {@link ProcessIdResolver} class for SUN JVM
@@ -51,32 +48,12 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
      */
     final static String GET_PROCESS_ID_METHOD_NAME = "getProcessId";
 
-    /**
-     * {@link RuntimeMXBean}
-     */
-    final static RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
-
-    /**
-     * sun.management.ManagementFactory.jvm
-     */
-    final static Object jvm = findJvm();
-
-    private static Object findJvm() {
-        Object jvm = null;
-        if (runtimeMXBean != null) {
-            try {
-                jvm = getFieldValue(runtimeMXBean, JVM_FIELD_NAME);
-            } catch (Throwable e) {
-                logger.error("The Field[name : '{}'] can't be found in RuntimeMXBean class : '{}'!", JVM_FIELD_NAME, runtimeMXBean.getClass(), e);
-            }
-        }
-        return jvm;
-    }
-
     @Override
     public Long current() {
         Integer processId = null;
         try {
+            RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
+            Object jvm = getFieldValue(runtimeMXBean, JVM_FIELD_NAME);
             processId = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
             if (logger.isTraceEnabled()) {
                 logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
