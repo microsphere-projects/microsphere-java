@@ -23,12 +23,14 @@ import java.lang.invoke.MethodHandle;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Member;
 
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.asMember;
 import static io.microsphere.reflect.MemberUtils.isPublic;
 import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
+import static io.microsphere.util.StringUtils.substringBetween;
 
 /**
  * The utilities class of {@link AccessibleObject}
@@ -99,11 +101,18 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
                 accessibleObject.setAccessible(true);
             } catch (RuntimeException e) {
                 if (isInaccessibleObjectException(e)) {
+                    String rawErrorMessage = e.getMessage();
+                    String moduleName = substringBetween(rawErrorMessage, "module ", " ");
+                    String packageName = substringBetween(rawErrorMessage, "opens ", "\"");
                     // JDK 16+ : JEP 396: Strongly Encapsulate JDK Internals by Default - https://openjdk.org/jeps/396
-                    String errorMessage = "JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396 ."
-                            + LINE_SEPARATOR
-                            + "It's require to add JVM Options '--add-opens java.base/java.lang.invoke=ALL-UNNAMED' for running";
-                    logger.error(errorMessage, e);
+                    StringBuilder errorMessageBuilder = new StringBuilder("JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396.");
+                    errorMessageBuilder.append(LINE_SEPARATOR)
+                            .append("It's require to add JVM Options '--add-opens=")
+                            .append(moduleName)
+                            .append(SLASH_CHAR)
+                            .append(packageName)
+                            .append("=ALL-UNNAMED' for running");
+                    logger.error(errorMessageBuilder.toString(), e);
                 }
                 throw e;
             }

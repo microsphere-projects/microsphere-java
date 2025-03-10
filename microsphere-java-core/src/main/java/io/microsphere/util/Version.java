@@ -45,7 +45,7 @@ import static java.lang.Integer.compare;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class Version implements Comparable<Version> , Serializable {
+public class Version implements Comparable<Version>, Serializable {
 
     private static final long serialVersionUID = -6434504483466016691L;
 
@@ -70,18 +70,35 @@ public class Version implements Comparable<Version> , Serializable {
     }
 
     public static Version of(int major) {
-        return new Version(major);
+        return ofVersion(major);
     }
 
     public static Version of(int major, int minor) {
-        return new Version(major, minor);
+        return ofVersion(major, minor);
     }
 
     public static Version of(int major, int minor, int patch) {
-        return new Version(major, minor, patch);
+        return ofVersion(major, minor, patch);
     }
 
     public static Version of(String version) {
+        return ofVersion(version);
+    }
+
+    public static Version ofVersion(int major) {
+        return new Version(major);
+    }
+
+    public static Version ofVersion(int major, int minor) {
+        return new Version(major, minor);
+    }
+
+    public static Version ofVersion(int major, int minor, int patch) {
+        return new Version(major, minor, patch);
+    }
+
+
+    public static Version ofVersion(String version) {
 
         if (version == null) {
             throw new NullPointerException("The 'version' argument must not be null!");

@@ -3,7 +3,7 @@ package io.microsphere.management;
 import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static io.microsphere.management.ManagementUtils.getCurrentProcessId;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -17,13 +17,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ManagementUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testStaticFields() {
-        assertNotNull(ManagementUtils.jvm);
-    }
-
-    @Test
     public void testGetCurrentProcessId() {
-        int currentProcessId = ManagementUtils.getCurrentProcessId();
+        long currentProcessId = getCurrentProcessId();
         assertTrue(currentProcessId > 0);
     }
+
 }

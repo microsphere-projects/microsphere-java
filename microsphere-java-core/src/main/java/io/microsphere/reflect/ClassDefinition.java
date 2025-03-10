@@ -71,13 +71,4 @@ public class ClassDefinition extends ReflectiveDefinition {
         return super.getResolvedClass() != null;
     }
 
-    @Override
-    public String toString() {
-        return "ClassDefinition{" +
-                "since=" + super.since +
-                ", deprecation=" + super.deprecation +
-                ", className='" + this.getClassName() + '\'' +
-                ", resolvedClass=" + super.getResolvedClass() +
-                '}';
-    }
 }

@@ -6,6 +6,7 @@ import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.lang.reflect.Array;
@@ -32,6 +33,7 @@ import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.reflect.Modifier.isStatic;
@@ -96,6 +98,13 @@ public abstract class ReflectionUtils extends BaseUtils {
      * The class name of {@linkplain java.lang.reflect.InaccessibleObjectException} since JDK 9
      */
     public static final String INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME = "java.lang.reflect.InaccessibleObjectException";
+
+    /**
+     * The {@link Class class} of {@linkplain java.lang.reflect.InaccessibleObjectException} since JDK 9.
+     * It may be <code>null</code> if the JDK version is less than 9.
+     */
+    @Nullable
+    public static final Class<? extends Throwable> INACCESSIBLE_OBJECT_EXCEPTION_CLASS = (Class<? extends Throwable>) resolveClass(INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME);
 
     // Initialize sun.reflect.Reflection
     static {

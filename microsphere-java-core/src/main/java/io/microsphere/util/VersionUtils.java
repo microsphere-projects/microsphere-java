@@ -20,7 +20,7 @@ import javax.lang.model.SourceVersion;
 
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
-import static io.microsphere.util.Version.of;
+import static io.microsphere.util.Version.ofVersion;
 import static javax.lang.model.SourceVersion.latest;
 
 /**
@@ -40,82 +40,82 @@ public abstract class VersionUtils extends BaseUtils {
     /**
      * The {@link Version} instance for current Java Version
      */
-    public static final Version CURRENT_JAVA_VERSION = of(currentJavaVersion());
+    public static final Version CURRENT_JAVA_VERSION = ofVersion(currentJavaVersion());
 
     /**
      * The {@link Version} instance for Java 8
      */
-    public static final Version JAVA_VERSION_8 = of(8);
+    public static final Version JAVA_VERSION_8 = ofVersion(8);
 
     /**
      * The {@link Version} instance for Java 9
      */
-    public static final Version JAVA_VERSION_9 = of(9);
+    public static final Version JAVA_VERSION_9 = ofVersion(9);
 
     /**
      * The {@link Version} instance for Java 10
      */
-    public static final Version JAVA_VERSION_10 = of(10);
+    public static final Version JAVA_VERSION_10 = ofVersion(10);
 
     /**
      * The {@link Version} instance for Java 11
      */
-    public static final Version JAVA_VERSION_11 = of(11);
+    public static final Version JAVA_VERSION_11 = ofVersion(11);
 
     /**
      * The {@link Version} instance for Java 12
      */
-    public static final Version JAVA_VERSION_12 = of(12);
+    public static final Version JAVA_VERSION_12 = ofVersion(12);
 
     /**
      * The {@link Version} instance for Java 13
      */
-    public static final Version JAVA_VERSION_13 = of(13);
+    public static final Version JAVA_VERSION_13 = ofVersion(13);
 
     /**
      * The {@link Version} instance for Java 14
      */
-    public static final Version JAVA_VERSION_14 = of(14);
+    public static final Version JAVA_VERSION_14 = ofVersion(14);
 
     /**
      * The {@link Version} instance for Java 15
      */
-    public static final Version JAVA_VERSION_15 = of(15);
+    public static final Version JAVA_VERSION_15 = ofVersion(15);
 
     /**
      * The {@link Version} instance for Java 16
      */
-    public static final Version JAVA_VERSION_16 = of(16);
+    public static final Version JAVA_VERSION_16 = ofVersion(16);
 
     /**
      * The {@link Version} instance for Java 17
      */
-    public static final Version JAVA_VERSION_17 = of(17);
+    public static final Version JAVA_VERSION_17 = ofVersion(17);
 
     /**
      * The {@link Version} instance for Java 18
      */
-    public static final Version JAVA_VERSION_18 = of(18);
+    public static final Version JAVA_VERSION_18 = ofVersion(18);
 
     /**
      * The {@link Version} instance for Java 19
      */
-    public static final Version JAVA_VERSION_19 = of(19);
+    public static final Version JAVA_VERSION_19 = ofVersion(19);
 
     /**
      * The {@link Version} instance for Java 20
      */
-    public static final Version JAVA_VERSION_20 = of(20);
+    public static final Version JAVA_VERSION_20 = ofVersion(20);
 
     /**
      * The {@link Version} instance for Java 21
      */
-    public static final Version JAVA_VERSION_21 = of(21);
+    public static final Version JAVA_VERSION_21 = ofVersion(21);
 
     /**
      * The {@link Version} instance for Java 22
      */
-    public static final Version JAVA_VERSION_22 = of(22);
+    public static final Version JAVA_VERSION_22 = ofVersion(22);
 
     /**
      * Determine whether the current Java version matches the specified version

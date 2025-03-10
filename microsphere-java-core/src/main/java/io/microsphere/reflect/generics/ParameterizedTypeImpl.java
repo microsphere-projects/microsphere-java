@@ -16,16 +16,12 @@
  */
 package io.microsphere.reflect.generics;
 
-import io.microsphere.logging.Logger;
-
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Objects;
-
-import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * {@link ParameterizedType} Implementation forks {@link sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl}
@@ -36,8 +32,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
  * @since 1.0.0
  */
 public class ParameterizedTypeImpl implements ParameterizedType {
-
-    private static final Logger logger = getLogger(ParameterizedTypeImpl.class);
 
     private final Type[] actualTypeArguments;
 
@@ -126,7 +120,6 @@ public class ParameterizedTypeImpl implements ParameterizedType {
         return rawType;
     }
 
-
     /**
      * Returns a <tt>Type</tt> object representing the type that this type
      * is a member of.  For example, if this type is <tt>O<T>.I<S></tt>,
@@ -166,21 +159,6 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             Type thatOwner = that.getOwnerType();
             Type thatRawType = that.getRawType();
 
-            if (false) { // Debugging
-                boolean ownerEquality = (Objects.equals(ownerType, thatOwner));
-                boolean rawEquality = (Objects.equals(rawType, thatRawType));
-
-                boolean typeArgEquality = Arrays.equals(actualTypeArguments, // avoid clone
-                        that.getActualTypeArguments());
-                for (Type t : actualTypeArguments) {
-                    logger.debug("\t\t{}{}", t, t.getClass());
-                }
-
-                logger.debug("\towner {}\traw {}\ttypeArg {}",
-                        ownerEquality, rawEquality, typeArgEquality);
-                return ownerEquality && rawEquality && typeArgEquality;
-            }
-
             return
                     Objects.equals(ownerType, thatOwner) &&
                             Objects.equals(rawType, thatRawType) &&
@@ -217,8 +195,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
         } else
             sb.append(rawType.getName());
 
-        if (actualTypeArguments != null &&
-                actualTypeArguments.length > 0) {
+        if (actualTypeArguments != null && actualTypeArguments.length > 0) {
             sb.append("<");
             boolean first = true;
             for (Type t : actualTypeArguments) {

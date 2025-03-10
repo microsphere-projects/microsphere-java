@@ -23,6 +23,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.lang.reflect.Member;
 
+import static io.microsphere.util.Version.ofVersion;
+
 /**
  * The definition class for Java Refection {@link Member}
  *
@@ -60,7 +62,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param name              the member name
      */
     public MemberDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
-        this(Version.of(since), deprecation, declaredClassName, name);
+        this(ofVersion(since), deprecation, declaredClassName, name);
     }
 
     /**
@@ -153,17 +155,5 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
         int result = super.hashCode();
         result = 31 * result + this.name.hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "MemberDefinition{" +
-                "since=" + since +
-                ", deprecation=" + deprecation +
-                ", declaredClassName='" + getDeclaredClassName() + '\'' +
-                ", declaredClass=" + getDeclaredClass() +
-                ", name='" + name + '\'' +
-                ", member=" + getMember() +
-                '}';
     }
 }

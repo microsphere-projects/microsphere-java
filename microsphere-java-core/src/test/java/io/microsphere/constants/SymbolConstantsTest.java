@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.AND;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.microsphere.constants.SymbolConstants.AT;
+import static io.microsphere.constants.SymbolConstants.AT_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.COMMA;
@@ -74,6 +76,7 @@ public class SymbolConstantsTest {
     public void test() {
         assertEquals(',', COMMA_CHAR);
         assertEquals(' ', SPACE_CHAR);
+        assertEquals('@', AT_CHAR);
         assertEquals('!', EXCLAMATION_CHAR);
         assertEquals('"', DOUBLE_QUOTATION_CHAR);
         assertEquals('$', DOLLAR_CHAR);
@@ -95,6 +98,7 @@ public class SymbolConstantsTest {
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
+        assertEquals("@", AT);
         assertEquals("!", EXCLAMATION);
         assertEquals("\"", DOUBLE_QUOTATION);
         assertEquals("$", DOLLAR);
