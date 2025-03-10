@@ -35,6 +35,11 @@ public interface SymbolConstants {
     char SPACE_CHAR = ' ';
 
     /**
+     * The at char : '@'
+     */
+    char AT_CHAR = '@';
+
+    /**
      * The exclamation char : '!'
      */
     char EXCLAMATION_CHAR = '!';
@@ -133,6 +138,11 @@ public interface SymbolConstants {
      * The space symbol : " "
      */
     String SPACE = " ";
+
+    /**
+     * The at symbol : "@"
+     */
+    String AT = "@";
 
     /**
      * The exclamation symbol : "!"
