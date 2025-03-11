@@ -81,8 +81,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
     public static boolean trySetAccessible(AccessibleObject accessibleObject) {
         MethodHandle methodHandle = trySetAccessibleMethodHandle;
         if (methodHandle == null) { // JDK < 9 or not be initialized
-            setAccessible(accessibleObject);
-            return true;
+            return setAccessible(accessibleObject);
         } else { // JDK 9+
             return trySetAccessible(methodHandle, accessibleObject);
         }
