@@ -22,7 +22,6 @@ import java.util.List;
 
 import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -34,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  */
 public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> {
 
-    private String name;
+    private String name = "test-name";
 
     @Override
     protected List<Object> getTailConstructorArguments() {
@@ -59,7 +58,7 @@ public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefin
     @Test
     public void testGet() {
         for (FieldDefinition definition : definitions) {
-            assertNull(definition.get(this));
+            assertSame("test-name", definition.get(this));
         }
     }
 
