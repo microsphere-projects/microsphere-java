@@ -131,7 +131,6 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
         try {
             accessible = (boolean) methodHandle.invokeExact(accessibleObject);
         } catch (Throwable e) {
-            handleInaccessibleObjectExceptionIfFound(e);
             logger.error("It's failed to invokeExact on {} with accessibleObject : {}", methodHandle, accessibleObject, e);
         }
         return accessible;
