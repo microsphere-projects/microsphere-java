@@ -136,21 +136,23 @@ public abstract class FieldUtils extends BaseUtils {
      * @param fieldName  the name of {@link Field}
      * @param fieldValue the value of {@link Field}
      */
-    public static void setStaticFieldValue(Class<?> klass, String fieldName, Object fieldValue) {
+    public static <V> V setStaticFieldValue(Class<?> klass, String fieldName, V fieldValue) {
         Field field = findField(klass, fieldName);
-        setFieldValue(null, field, fieldValue);
+        return setFieldValue(null, field, fieldValue);
     }
 
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
-        Set<Field> allFields = new LinkedHashSet<>(ofList(declaredClass.getFields()));
+        Set<Field> allFields = new LinkedHashSet<>();
+        addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
-            allFields.addAll(ofList(superType.getFields()));
+            addAll(allFields, superType.getFields());
         }
         return filter(allFields, and(fieldFilters));
     }
 
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
-        Set<Field> allDeclaredFields = new LinkedHashSet<>(ofList(declaredClass.getDeclaredFields()));
+        Set<Field> allDeclaredFields = new LinkedHashSet<>();
+        addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());
         }
