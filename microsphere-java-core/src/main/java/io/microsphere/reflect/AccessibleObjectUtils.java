@@ -145,7 +145,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
         try {
             accessible = (boolean) methodHandle.invokeExact(accessibleObject);
         } catch (Throwable e) {
-            logger.error("java.lang.reflect.AccessibleObject#trySetAccessible() can't be invoked, accessible object : {}", accessibleObject, e);
+            logger.error("It's failed to invokeExact on {} with accessibleObject : {}", methodHandle, accessibleObject, e);
         }
         return accessible;
     }
@@ -156,7 +156,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
             try {
                 access = (boolean) canAccessMethodHandle.invokeExact(accessibleObject, object);
             } catch (Throwable e) {
-                logger.error("java.lang.reflect.AccessibleObject#canAccess(Object) can't be invoked, object : {} , accessible object : {}", object, accessibleObject, e);
+                logger.error("It's failed to invokeExact on {} with object : {} , accessible object : {}", canAccessMethodHandle, object, accessibleObject, e);
             }
         }
         return access;
