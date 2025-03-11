@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
-import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -165,6 +164,7 @@ public abstract class FieldUtils extends BaseUtils {
      * @param declaredClass the declared class
      * @param fieldName     the name of {@link Field}
      * @return if can't be found, return <code>null</code>
+     * @throws RuntimeException thrown if you can't find the {@link Field}
      */
     public static Field getDeclaredField(Class<?> declaredClass, String fieldName) {
         return execute(() -> declaredClass.getDeclaredField(fieldName));
