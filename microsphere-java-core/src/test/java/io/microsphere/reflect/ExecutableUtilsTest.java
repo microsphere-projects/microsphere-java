@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 
 import static io.microsphere.reflect.ExecutableUtils.execute;
 import static io.microsphere.reflect.MethodUtils.findMethod;
-import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
