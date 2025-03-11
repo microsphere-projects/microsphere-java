@@ -20,9 +20,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
-import java.util.function.Predicate;
+import java.util.Set;
 
+import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.reflect.FieldUtils.findAllFields;
 import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setFieldValue;
@@ -34,6 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link FieldUtils} Test
@@ -151,6 +156,61 @@ public class FieldUtilsTest {
         assertSetStaticFieldValue(ReflectionTest.class, "staticField", "test");
     }
 
+    @Test
+    public void testFindAllFields() {
+        Set<Field> fields = findAllFields(ReflectionTest.class, p -> false);
+        assertEquals(0, fields.size());
+
+        fields = findAllFields(ReflectionTestExt.class, p -> false);
+        assertEquals(0, fields.size());
+    }
+
+    @Test
+    public void testFindAllFieldsWithoutPredicate() {
+        Set<Field> fields = findAllFields(ReflectionTest.class);
+        assertEquals(1, fields.size());
+
+        fields = findAllFields(ReflectionTestExt.class);
+        assertEquals(1, fields.size());
+    }
+
+    @Test
+    public void testFindAllDeclaredFieldsWithoutPredicate() {
+        Set<Field> fields = findAllDeclaredFields(ReflectionTest.class);
+        assertTrue(fields.size() >= 5);
+
+        fields = findAllDeclaredFields(ReflectionTestExt.class);
+        assertTrue(fields.size() >= 7);
+    }
+
+    @Test
+    public void testGetDeclaredField() {
+        assertGetDeclaredField(ReflectionTest.class, "privateField");
+        assertGetDeclaredField(ReflectionTest.class, "packagePrivateField");
+        assertGetDeclaredField(ReflectionTest.class, "protectedField");
+        assertGetDeclaredField(ReflectionTest.class, "publicField");
+        assertGetDeclaredField(ReflectionTest.class, "staticField");
+
+        assertThrows(RuntimeException.class, () -> getDeclaredField(ReflectionTestExt.class, "unknownField"));
+
+        assertGetDeclaredField(ReflectionTestExt.class, "intField");
+        assertGetDeclaredField(ReflectionTestExt.class, "stringField");
+
+        assertThrows(RuntimeException.class, () ->  getDeclaredField(ReflectionTestExt.class, "privateField"));
+        assertThrows(RuntimeException.class, () -> getDeclaredField(ReflectionTestExt.class, "packagePrivateField"));
+        assertThrows(RuntimeException.class, () -> getDeclaredField(ReflectionTestExt.class, "protectedField"));
+        assertThrows(RuntimeException.class, () -> getDeclaredField(ReflectionTestExt.class, "publicField"));
+        assertThrows(RuntimeException.class, () -> getDeclaredField(ReflectionTestExt.class, "staticField"));
+        assertThrows(RuntimeException.class, () -> getDeclaredField(ReflectionTestExt.class, "unknownField"));
+    }
+
+    static class ReflectionTestExt extends ReflectionTest {
+
+        private int intField;
+
+        private String stringField;
+
+    }
 
     private void assertFindField(Object object, String fieldName) {
         assertNotNull(findField(object, fieldName));
@@ -182,5 +242,9 @@ public class FieldUtilsTest {
 
     private void assertSetStaticFieldValue(Class<?> klass, String fieldName, String fieldValue) {
         assertEquals(fieldName, setStaticFieldValue(klass, fieldName, fieldValue));
+    }
+
+    private void assertGetDeclaredField(Class<?> klass, String fieldName) {
+        assertNotNull(getDeclaredField(klass, fieldName));
     }
 }
