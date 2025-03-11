@@ -26,11 +26,13 @@ public class ReflectionTest {
 
     private String privateField = "privateField";
 
-    String packagePrivateField = "defaultField";
+    String packagePrivateField = "packagePrivateField";
 
     protected String protectedField = "protectedField";
 
     public String publicField = "publicField";
+
+    static String staticField = "staticField";
 
     private String privateMethod() {
         return "test";
