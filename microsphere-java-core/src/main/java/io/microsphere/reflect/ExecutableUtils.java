@@ -30,8 +30,9 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.reflect.AccessibleObjectUtils.setAccessible;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ExceptionUtils.wrap;
 
 /**
  * The utility class for Java Reflection {@link Executable}
@@ -130,13 +131,11 @@ public abstract class ExecutableUtils extends BaseUtils {
     public static <E extends Executable & Member, R> R execute(E executableMember, ThrowableFunction<E, R> callback)
             throws NullPointerException, IllegalStateException, IllegalArgumentException, RuntimeException {
         R result = null;
-        boolean accessible = false;
         RuntimeException failure = null;
         try {
-            accessible = setAccessible(executableMember);
             result = callback.apply(executableMember);
         } catch (IllegalAccessException e) {
-            String errorMessage = format("The executable member['{}'] can't be accessed[accessible : {}]", executableMember, accessible);
+            String errorMessage = format("The executable member['{}'] can't be accessed", executableMember);
             failure = new IllegalStateException(errorMessage, e);
         } catch (IllegalArgumentException e) {
             String errorMessage = format("The arguments can't match the executable member['{}'] : {}", executableMember, e.getMessage());
@@ -144,10 +143,8 @@ public abstract class ExecutableUtils extends BaseUtils {
         } catch (InvocationTargetException e) {
             String errorMessage = format("It's failed to invoke the executable member['{}']", executableMember);
             failure = new RuntimeException(errorMessage, e.getTargetException());
-        } catch (RuntimeException e) {
-            failure = e;
         } catch (Throwable e) {
-            failure = new RuntimeException(e);
+            failure = wrap(e, RuntimeException.class);
         }
 
         if (failure != null) {
