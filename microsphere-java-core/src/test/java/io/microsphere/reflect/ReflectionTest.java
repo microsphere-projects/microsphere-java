@@ -26,7 +26,7 @@ public class ReflectionTest {
 
     private String privateField = "privateField";
 
-    String defaultField = "defaultField";
+    String packagePrivateField = "defaultField";
 
     protected String protectedField = "protectedField";
 
@@ -36,7 +36,7 @@ public class ReflectionTest {
         return "test";
     }
 
-    String defaultMethod(String arg) {
+    String packagePrivateMethod(String arg) {
         return arg;
     }
 
@@ -44,11 +44,11 @@ public class ReflectionTest {
         return args;
     }
 
-    public static String publicStaticMethod(int value) {
+    public String publicMethod(int value) {
         return String.valueOf(value);
     }
 
-    public void throwsException() {
-        throw new RuntimeException("Test...");
+    public void errorMethod() {
+        throw new RuntimeException("For testing...");
     }
 }
