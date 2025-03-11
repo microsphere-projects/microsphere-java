@@ -98,6 +98,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
         if (!accessible) {
             try {
                 accessibleObject.setAccessible(true);
+                accessible = true;
             } catch (RuntimeException e) {
                 if (isInaccessibleObjectException(e)) {
                     String rawErrorMessage = e.getMessage();
