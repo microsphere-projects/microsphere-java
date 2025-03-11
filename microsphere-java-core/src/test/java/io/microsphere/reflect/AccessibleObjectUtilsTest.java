@@ -73,11 +73,7 @@ public class AccessibleObjectUtilsTest {
     public void testSetAccessibleOnNonPublicMembers() {
         assertEquals(setAccessible(tryCanAccessMethod), tryCanAccessMethod.isAccessible());
 
-        if (INACCESSIBLE_OBJECT_EXCEPTION_CLASS != null && CURRENT_JAVA_VERSION.ge(JAVA_VERSION_16)) {
-            assertThrows(INACCESSIBLE_OBJECT_EXCEPTION_CLASS, () -> setAccessible(abstractProcessorConstructor));
-        } else {
-            assertEquals(setAccessible(abstractProcessorConstructor), abstractProcessorConstructor.isAccessible());
-        }
+        assertEquals(setAccessible(abstractProcessorConstructor), abstractProcessorConstructor.isAccessible());
     }
 
     @Test
