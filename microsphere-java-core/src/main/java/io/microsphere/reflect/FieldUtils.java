@@ -309,13 +309,13 @@ public abstract class FieldUtils extends BaseUtils {
     /**
      * Assert Field type match
      *
-     * @param instance     Object
+     * @param instance     Object or class
      * @param fieldName    field name
      * @param expectedType expected type
      * @throws IllegalArgumentException if type is not matched
      */
     public static void assertFieldMatchType(Object instance, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
-        Class<?> type = instance.getClass();
+        Class<?> type = instance instanceof Class ? (Class<?>) instance : instance.getClass();
         Field field = findField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
