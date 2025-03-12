@@ -70,13 +70,25 @@ public class StreamsTest {
     }
 
     @Test
-    public void testFilterList() {
+    public void testFilterListOnArray() {
+        List<Integer> list = filterList(ofArray(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
+    }
+
+    @Test
+    public void testFilterListOnIterable() {
         List<Integer> list = filterList(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
         assertEquals(ofList(2, 4), list);
     }
 
     @Test
-    public void testFilterSet() {
+    public void testFilterSetOnArray() {
+        Set<Integer> set = filterSet(ofArray(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofSet(2, 4), set);
+    }
+
+    @Test
+    public void testFilterSetOnIterable() {
         Set<Integer> set = filterSet(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
         assertEquals(ofSet(2, 4), set);
     }
@@ -91,7 +103,13 @@ public class StreamsTest {
     }
 
     @Test
-    public void testFilterAll() {
+    public void testFilterAllOnArray() {
+        List<Integer> list = filterAll(ofArray(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
+    }
+
+    @Test
+    public void testFilterAllOnIterable() {
         List<Integer> list = filterAll(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
         assertEquals(ofList(2, 4), list);
 
@@ -100,7 +118,13 @@ public class StreamsTest {
     }
 
     @Test
-    public void testFilterAny() {
+    public void testFilterAnyOnArray() {
+        List<Integer> list = filterAny(ofArray(1, 2, 3, 4, 5), i -> i % 2 == 0);
+        assertEquals(ofList(2, 4), list);
+    }
+
+    @Test
+    public void testFilterAnyOnIterable() {
         List<Integer> list = filterAny(ofList(1, 2, 3, 4, 5), i -> i % 2 == 0);
         assertEquals(ofList(2, 4), list);
 
