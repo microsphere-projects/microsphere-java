@@ -43,6 +43,7 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterAllList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
@@ -134,8 +135,8 @@ public abstract class MethodUtils extends BaseUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    protected static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
-                                                Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
+                                             Predicate<? super Method>... methodsToFilter) {
 
         if (targetClass == null || isPrimitive(targetClass)) {
             return emptyList();
@@ -182,7 +183,7 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     /**
-     * Get all public {@link Method methods} of the target class, including the inherited methods.
+     * Get all public {@link Method methods} of the target class, excluding the inherited methods.
      *
      * @param targetClass     the target class
      * @param methodsToFilter (optional) the methods to be filtered
@@ -619,6 +620,10 @@ public abstract class MethodUtils extends BaseUtils {
 
     static List<Method> doFilterMethods(List<Method> methods, Predicate<? super Method>... methodsToFilter) {
         return unmodifiableList(filterAll(methods, methodsToFilter));
+    }
+
+    static List<Method> doFilterMethods(Method[] methods, Predicate<? super Method>... methodsToFilter) {
+        return unmodifiableList(filterAllList(methods, methodsToFilter));
     }
 
     static Method doFindMethod(MethodKey key) {
