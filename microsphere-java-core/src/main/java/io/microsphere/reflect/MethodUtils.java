@@ -89,7 +89,27 @@ public abstract class MethodUtils extends BaseUtils {
     /**
      * The {@link Predicate} reference to {@link MemberUtils#isPublic(Member)}
      */
-    public final static Predicate<? super Method> PULIC_METHOD_PREDICATE = MemberUtils::isPublic;
+    public final static Predicate<? super Method> PUBLIC_METHOD_PREDICATE = MemberUtils::isPublic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isStatic(Member)}
+     */
+    public final static Predicate<? super Method> STATIC_METHOD_PREDICATE = MemberUtils::isStatic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isNonStatic(Member)}
+     */
+    public final static Predicate<? super Method> NON_STATIC_METHOD_PREDICATE = MemberUtils::isNonStatic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isFinal(Member)}
+     */
+    public final static Predicate<? super Method> FINAL_METHOD_PREDICATE = MemberUtils::isFinal;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isNonPrivate(Member)}
+     */
+    public final static Predicate<? super Method> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
 
     private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>(256);
 
@@ -114,7 +134,8 @@ public abstract class MethodUtils extends BaseUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    public static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly, Predicate<? super Method>... methodsToFilter) {
+    protected static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
+                                                Predicate<? super Method>... methodsToFilter) {
 
         if (targetClass == null || isPrimitive(targetClass)) {
             return emptyList();
@@ -128,9 +149,9 @@ public abstract class MethodUtils extends BaseUtils {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
-        Predicate<? super Method> predicate = and(methodsToFilter);
+        Predicate predicate = and(methodsToFilter);
         if (publicOnly) {
-            predicate = predicate.and((Predicate) PULIC_METHOD_PREDICATE);
+            predicate = PUBLIC_METHOD_PREDICATE.and(predicate);
         }
 
         // All methods
@@ -535,7 +556,7 @@ public abstract class MethodUtils extends BaseUtils {
 
     public static boolean isObjectMethod(Method method) {
         if (method != null) {
-            return Objects.equals(Object.class, method.getDeclaringClass());
+            return Object.class.equals(method.getDeclaringClass());
         }
         return false;
     }
