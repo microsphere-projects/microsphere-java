@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.MemberUtils.FINAL_METHOD_PREDICATE;
+import static io.microsphere.reflect.MemberUtils.NON_PRIVATE_METHOD_PREDICATE;
+import static io.microsphere.reflect.MemberUtils.NON_STATIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MemberUtils.PUBLIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MemberUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MemberUtils.asMember;
 import static io.microsphere.reflect.MemberUtils.isAbstract;
 import static io.microsphere.reflect.MemberUtils.isFinal;
@@ -27,6 +32,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class MemberUtilsTest {
+
+    @Test
+    public void testSTATIC_METHOD_PREDICATE() {
+        assertTrue(STATIC_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "staticMethod")));
+    }
+
+    @Test
+    public void testNON_STATIC_METHOD_PREDICATE() {
+        assertTrue(NON_STATIC_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "privateMethod")));
+    }
+
+    @Test
+    public void testFINAL_METHOD_PREDICATE() {
+        assertTrue(FINAL_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "errorMethod")));
+    }
+
+    @Test
+    public void testPUBLIC_METHOD_PREDICATE() {
+        assertTrue(PUBLIC_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
+    }
+
+    @Test
+    public void testNON_PRIVATE_METHOD_PREDICATE() {
+        assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
+        assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "protectedMethod", Object[].class)));
+        assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "packagePrivateMethod", String.class)));
+    }
 
     @Test
     public void testIsStatic() {
