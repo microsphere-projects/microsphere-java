@@ -35,6 +35,8 @@ import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.OBJECT_DECLARED_METHODS;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.PUBLIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.buildKey;
+import static io.microsphere.reflect.MethodUtils.buildSignature;
 import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.filterMethods;
 import static io.microsphere.reflect.MethodUtils.findMethod;
@@ -47,8 +49,10 @@ import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.reflect.MethodUtils.isObjectMethod;
 import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.lang.Integer.valueOf;
 import static java.util.Collections.emptyList;
@@ -388,8 +392,8 @@ public class MethodUtilsTest {
 
     @Test
     public void testOverridesOnPrivate() {
-        Method privateMethod = findMethod(ReflectionTest.class, "privateMethod");
-        Method publicMethod = findMethod(ReflectionTest.class, "publicMethod");
+        Method privateMethod = findMethod(ReflectionTest.class, "method", int.class);
+        Method publicMethod = findMethod(ReflectionTest.class, "method", String.class);
         assertFalse(overrides(privateMethod, publicMethod));
         assertFalse(overrides(publicMethod, privateMethod));
     }
@@ -489,6 +493,35 @@ public class MethodUtilsTest {
         // Test two-argument Method
         method = findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
         assertEquals("io.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
+    }
+
+    @Test
+    public void testIsObjectMethod() {
+        assertIsObjectMethod(true, Object.class, "toString");
+        assertIsObjectMethod(false, String.class, "toString");
+        assertIsObjectMethod(false, String.class, "notFound");
+    }
+
+    private void assertIsObjectMethod(boolean expected, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        Method method = findMethod(declaredClass, methodName, parameterTypes);
+        assertEquals(expected, isObjectMethod(method));
+    }
+
+    @Test
+    public void testBuildKey() {
+        assertMethodKey(String.class, "toString");
+        assertMethodKey(ReflectionTest.class, "publicMethod", int.class);
+        assertMethodKey(Appendable.class, "append", CharSequence.class, int.class, int.class);
+    }
+
+    private void assertMethodKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        MethodUtils.MethodKey methodKey1 = buildKey(declaredClass, methodName, parameterTypes);
+        MethodUtils.MethodKey methodKey2 = buildKey(declaredClass, methodName, parameterTypes.length == 0 ? null : parameterTypes);
+
+        assertEquals(methodKey1, methodKey2);
+        assertEquals(methodKey1.hashCode(), methodKey2.hashCode());
+        assertEquals(methodKey1.toString(), methodKey2.toString());
+        assertEquals(methodKey1.toString(), buildSignature(methodKey1.declaredClass, methodKey1.methodName, methodKey1.parameterTypes));
     }
 
     private void testFilterMethodsOnEmptyList(Class<?> type) {
