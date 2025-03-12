@@ -76,20 +76,28 @@ public interface Streams {
         return (S) (isSet ? filterSet(values, predicate) : filterList(values, predicate));
     }
 
-    static <T, S extends Iterable<T>> S filterAll(T[] values, Predicate<? super T>... predicates) {
-        return (S) filterAll(asList(values), and(predicates));
-    }
-
     static <T, S extends Iterable<T>> S filterAll(S values, Predicate<? super T>... predicates) {
         return filter(values, and(predicates));
     }
 
-    static <T, S extends Iterable<T>> S filterAny(T[] values, Predicate<? super T>... predicates) {
-        return (S) filterAny(asList(values), or(predicates));
+    static <T> List<T> filterAllList(T[] values, Predicate<? super T>... predicates) {
+        return filterAll(asList(values), and(predicates));
+    }
+
+    static <T> Set<T> filterAllSet(T[] values, Predicate<? super T>... predicates) {
+        return filterAll(ofSet(values), and(predicates));
     }
 
     static <T, S extends Iterable<T>> S filterAny(S values, Predicate<? super T>... predicates) {
         return filter(values, or(predicates));
+    }
+
+    static <T> List<T> filterAnyList(T[] values, Predicate<? super T>... predicates) {
+        return filterAny(asList(values), or(predicates));
+    }
+
+    static <T> Set<T> filterAnySet(T[] values, Predicate<? super T>... predicates) {
+        return filterAny(ofSet(values), or(predicates));
     }
 
     static <T> T filterFirst(Iterable<T> values, Predicate<? super T>... predicates) {
