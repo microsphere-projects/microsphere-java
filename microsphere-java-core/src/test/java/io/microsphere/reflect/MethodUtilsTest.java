@@ -16,29 +16,37 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.ArrayUtils;
 import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
+import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.OBJECT_DECLARED_METHODS;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
-import static io.microsphere.reflect.MethodUtils.PULIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.PUBLIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.filterMethods;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
-import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.lang.Integer.valueOf;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link MethodUtils} Test
@@ -57,66 +65,64 @@ public class MethodUtilsTest {
                 .filter(arg -> arg.contains("org.jacoco.agent")).count() > 0 ? 1 : 0;
     }
 
-    /**
-     * Test {@link MethodUtils#getSignature(Method)}
-     */
+
     @Test
-    public void testGetSignature() {
-        Method method = null;
-
-        // Test non-argument Method
-        method = findMethod(this.getClass(), "testGetSignature");
-        assertEquals("io.microsphere.reflect.MethodUtilsTest#testGetSignature()", getSignature(method));
-
-        // Test one-argument Method
-        method = findMethod(Object.class, "equals", Object.class);
-        assertEquals("java.lang.Object#equals(java.lang.Object)", getSignature(method));
-
-        // Test two-argument Method
-        method = findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
-        assertEquals("io.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
+    public void testSTATIC_METHOD_PREDICATE() {
+        assertTrue(STATIC_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "staticMethod")));
     }
 
     @Test
-    void testFilterMethodsFromNull() {
-        List<Method> methods = filterMethods(null, true, true);
-        assertEquals(emptyList(), methods);
-
-        methods = filterMethods(null, true, false);
-        assertEquals(emptyList(), methods);
-
-        methods = filterMethods(null, false, true);
-        assertEquals(emptyList(), methods);
-
-        methods = filterMethods(null, false, false);
-        assertEquals(emptyList(), methods);
-
-        methods = getMethods(null);
-        assertEquals(emptyList(), methods);
+    public void testNON_STATIC_METHOD_PREDICATE() {
+        assertTrue(NON_STATIC_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "privateMethod")));
     }
 
     @Test
-    public void testFilterMethodsFromPrimitive() {
-        Class<?> primitiveType = int.class;
-        List<Method> methods = filterMethods(primitiveType, true, true);
-        assertEquals(emptyList(), methods);
-
-        methods = filterMethods(primitiveType, true, false);
-        assertEquals(emptyList(), methods);
-
-        methods = filterMethods(primitiveType, false, true);
-        assertEquals(emptyList(), methods);
-
-        methods = filterMethods(primitiveType, false, false);
-        assertEquals(emptyList(), methods);
-
-        methods = getMethods(primitiveType);
-        assertEquals(emptyList(), methods);
+    public void testFINAL_METHOD_PREDICATE() {
+        assertTrue(FINAL_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "errorMethod")));
     }
 
     @Test
-    public void testFilterMethodsFromArray() {
-        Class<?> arrayClass = ArrayUtils.EMPTY_CLASS_ARRAY.getClass();
+    public void testPUBLIC_METHOD_PREDICATE() {
+        assertTrue(MemberUtils.PUBLIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
+    }
+
+    @Test
+    public void testNON_PRIVATE_METHOD_PREDICATE() {
+        assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
+        assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "protectedMethod", Object[].class)));
+        assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "packagePrivateMethod", String.class)));
+    }
+
+    @Test
+    public void testExcludedDeclaredClass() {
+        Predicate<? super Method> predicate = excludedDeclaredClass(Object.class);
+        for (Method method : ReflectionTest.class.getDeclaredMethods()) {
+            assertTrue(predicate.test(method));
+        }
+    }
+
+    @Test
+    void testFilterMethodsOnNull() {
+        testFilterMethodsOnEmptyList(null);
+
+//        methods = getMethods(null);
+//        assertSame(emptyList(), methods);
+    }
+
+    @Test
+    public void testFilterMethodsOnPrimitive() {
+
+        PRIMITIVE_TYPES.forEach(primitiveType -> {
+            testFilterMethodsOnEmptyList(primitiveType);
+        });
+
+//        methods = getMethods(primitiveType);
+//        assertEquals(emptyList(), methods);
+    }
+
+    @Test
+    public void testFilterMethodsOnArray() {
+        Class<?> arrayClass = EMPTY_CLASS_ARRAY.getClass();
         List<Method> methods = filterMethods(arrayClass, true, true);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
@@ -131,7 +137,7 @@ public class MethodUtilsTest {
     }
 
     @Test
-    void testFilterMethodsFromClass() {
+    void testFilterMethodsOnClass() {
         List<Method> objectMethods = filterMethods(Object.class, true, true);
 
         List<Method> methods = filterMethods(TestClass.class, true, true);
@@ -169,13 +175,13 @@ public class MethodUtilsTest {
         List<Method> methods = getDeclaredMethods(Object.class);
         assertEquals(OBJECT_DECLARED_METHODS, methods);
 
-        methods = getDeclaredMethods(Object.class, PULIC_METHOD_PREDICATE);
+        methods = getDeclaredMethods(Object.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getDeclaredMethods(TestClass.class);
         assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
-        methods = getDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
+        methods = getDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(1, methods.size());
     }
 
@@ -184,13 +190,13 @@ public class MethodUtilsTest {
         List<Method> methods = getAllDeclaredMethods(Object.class);
         assertEquals(OBJECT_DECLARED_METHODS, methods);
 
-        methods = getAllDeclaredMethods(Object.class, PULIC_METHOD_PREDICATE);
+        methods = getAllDeclaredMethods(Object.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getAllDeclaredMethods(TestClass.class);
         assertEquals(OBJECT_DECLARED_METHODS.size() + 7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
-        methods = getAllDeclaredMethods(TestClass.class, PULIC_METHOD_PREDICATE);
+        methods = getAllDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
     }
 
@@ -216,6 +222,41 @@ public class MethodUtilsTest {
         Method[] methods = TestSubInterface.class.getDeclaredMethods();
         methods = TestInterface.class.getDeclaredMethods();
         System.out.println(methods);
+    }
+
+
+    /**
+     * Test {@link MethodUtils#getSignature(Method)}
+     */
+    @Test
+    public void testGetSignature() {
+        Method method = null;
+
+        // Test non-argument Method
+        method = findMethod(this.getClass(), "testGetSignature");
+        assertEquals("io.microsphere.reflect.MethodUtilsTest#testGetSignature()", getSignature(method));
+
+        // Test one-argument Method
+        method = findMethod(Object.class, "equals", Object.class);
+        assertEquals("java.lang.Object#equals(java.lang.Object)", getSignature(method));
+
+        // Test two-argument Method
+        method = findMethod(MethodUtils.class, "findMethod", Class.class, String.class, Class[].class);
+        assertEquals("io.microsphere.reflect.MethodUtils#findMethod(java.lang.Class,java.lang.String,java.lang.Class[])", getSignature(method));
+    }
+
+    private void testFilterMethodsOnEmptyList(Class<?> type) {
+        List<Method> methods = filterMethods(type, true, true);
+        assertSame(emptyList(), methods);
+
+        methods = filterMethods(type, true, false);
+        assertSame(emptyList(), methods);
+
+        methods = filterMethods(type, false, true);
+        assertSame(emptyList(), methods);
+
+        methods = filterMethods(type, false, false);
+        assertSame(emptyList(), methods);
     }
 
     static class TestClass {
