@@ -50,7 +50,12 @@ public class ReflectionTest {
         return String.valueOf(value);
     }
 
-    public void errorMethod() {
+    public final void errorMethod() {
         throw new RuntimeException("For testing...");
     }
+
+    public static String staticMethod() {
+        return "staticMethod";
+    }
+
 }
