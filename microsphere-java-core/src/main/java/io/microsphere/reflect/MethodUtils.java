@@ -433,7 +433,12 @@ public abstract class MethodUtils extends BaseUtils {
      */
     public static boolean overrides(Method overrider, Method overridden) {
 
-        if (overrider == null || overridden == null) {
+        if (overrider == null || overridden == null || overrider == overridden) {
+            return false;
+        }
+
+        // Method comparison: The method name must be equal
+        if (!Objects.equals(overrider.getName(), overridden.getName())) {
             return false;
         }
 
@@ -442,18 +447,8 @@ public abstract class MethodUtils extends BaseUtils {
             return false;
         }
 
-        // equality comparison: If two methods are same
-        if (Objects.equals(overrider, overridden)) {
-            return false;
-        }
-
         // Modifiers comparison: the accessibility of any method must not be private
         if (isPrivate(overrider) || isPrivate(overridden)) {
-            return false;
-        }
-
-        // Inheritance comparison: the target class of overrider must be inherit from the overridden's
-        if (!overridden.getDeclaringClass().isAssignableFrom(overrider.getDeclaringClass())) {
             return false;
         }
 
@@ -462,8 +457,16 @@ public abstract class MethodUtils extends BaseUtils {
             return false;
         }
 
-        // Method comparison: The method name must be equal
-        if (!Objects.equals(overrider.getName(), overridden.getName())) {
+        Class<?> overriderDeclaringClass = overrider.getDeclaringClass();
+        Class<?> overriddenDeclaringClass = overridden.getDeclaringClass();
+
+        // Method comparison: The declaring class of overrider must not equal the overridden's
+        if (overriderDeclaringClass == overriddenDeclaringClass) {
+            return false;
+        }
+
+        // Inheritance comparison: the target class of overrider must be inherit from the overridden's
+        if (!overriddenDeclaringClass.isAssignableFrom(overriderDeclaringClass)) {
             return false;
         }
 
@@ -481,7 +484,8 @@ public abstract class MethodUtils extends BaseUtils {
             return false;
         }
 
-        // Method comparison: The return type of overrider must be inherit from the overridden's
+        // Method comparison: The return type of overrider must be inherit from the overridden's.
+        // Actually, the different return types of overrider and overridden are not allowed by compiler after above tests.
         return overridden.getReturnType().isAssignableFrom(overrider.getReturnType());
 
         // Throwable comparison: "throws" Throwable list will be ignored, trust the compiler verify
@@ -513,7 +517,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return if found, the overrider <code>method</code>, or <code>null</code>
      */
     public static Method findOverriddenMethod(Method overrider, Class<?> targetClass) {
-        List<Method> matchedMethods = getAllMethods(targetClass, method -> overrides(overrider, method));
+        List<Method> matchedMethods = getDeclaredMethods(targetClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
     }
 
