@@ -17,7 +17,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nullable;
@@ -31,7 +30,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -47,7 +45,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
-import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
@@ -527,12 +524,13 @@ public abstract class MethodUtils extends BaseUtils {
      * @return non-null
      */
     public static String getSignature(Method method) {
-        Class<?> targetClass = method.getDeclaringClass();
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
+    }
+
+    static String buildSignature(Class<?> declaringClass, String methodName, Class<?>[] parameterTypes) {
         int parameterCount = parameterTypes.length;
         String[] parameterTypeNames = new String[parameterCount];
-        String methodName = method.getName();
-        String declaringClassName = getTypeName(targetClass);
+        String declaringClassName = getTypeName(declaringClass);
         int size = declaringClassName.length() + 1 // '#'
                 + methodName.length() + 1  // '('
                 + (parameterCount == 0 ? 0 : parameterCount - 1) // (parameterCount - 1) * ','
@@ -642,6 +640,10 @@ public abstract class MethodUtils extends BaseUtils {
         return unmodifiableList(filterAll(methods, methodsToFilter));
     }
 
+    static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        return new MethodKey(declaredClass, methodName, parameterTypes);
+    }
+
     static Method doFindMethod(MethodKey key) {
         Class<?> declaredClass = key.declaredClass;
         String methodName = key.methodName;
@@ -651,11 +653,11 @@ public abstract class MethodUtils extends BaseUtils {
 
     static class MethodKey {
 
-        private final Class<?> declaredClass;
+        final Class<?> declaredClass;
 
-        private final String methodName;
+        final String methodName;
 
-        private final Class<?>[] parameterTypes;
+        final Class<?>[] parameterTypes;
 
         MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
             this.declaredClass = declaredClass;
@@ -686,13 +688,7 @@ public abstract class MethodUtils extends BaseUtils {
 
         @Override
         public String toString() {
-            StringJoiner stringJoiner = new StringJoiner(",", "(", ") ");
-            ArrayUtils.forEach(parameterTypes, parameterType -> stringJoiner.add(getTypeName(parameterType)));
-            return getTypeName(declaredClass) + "#" + methodName + stringJoiner;
-        }
-
-        static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
-            return new MethodKey(declaredClass, methodName, parameterTypes);
+            return buildSignature(declaredClass, methodName, parameterTypes);
         }
     }
 }
