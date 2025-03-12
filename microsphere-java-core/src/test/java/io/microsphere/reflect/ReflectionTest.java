@@ -58,4 +58,12 @@ public class ReflectionTest {
         return "staticMethod";
     }
 
+    private int method(int value) {
+        return value;
+    }
+
+    public String method(String message) {
+        return message;
+    }
+
 }
