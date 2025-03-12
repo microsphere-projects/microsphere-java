@@ -24,7 +24,7 @@ package io.microsphere.reflect;
  */
 public class ReflectionTest {
 
-    private String privateField = "privateField";
+    private final String privateField = "privateField";
 
     String packagePrivateField = "packagePrivateField";
 
