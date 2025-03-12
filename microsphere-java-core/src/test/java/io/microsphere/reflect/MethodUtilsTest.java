@@ -36,16 +36,23 @@ import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.filterMethods;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.getAllMethods;
 import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.lang.Integer.valueOf;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -186,6 +193,21 @@ public class MethodUtilsTest {
     }
 
     @Test
+    public void testGetMethods() {
+        List<Method> methods = getMethods(Object.class);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getMethods(TestClass.class);
+        assertEquals(1, methods.size());
+
+        methods = getMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(1, methods.size());
+    }
+
+    @Test
     public void testGetAllDeclaredMethods() {
         List<Method> methods = getAllDeclaredMethods(Object.class);
         assertEquals(OBJECT_DECLARED_METHODS, methods);
@@ -201,6 +223,95 @@ public class MethodUtilsTest {
     }
 
     @Test
+    public void testGetAllMethods() {
+        List<Method> methods = getAllMethods(Object.class);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getAllMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getAllMethods(TestClass.class);
+        assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+    }
+
+    @Test
+    public void testFindMethodWithoutParameterTypes() {
+        assertNotNull(findMethod(Object.class, "getClass"));
+        assertNotNull(findMethod(Object.class, "hashCode"));
+        assertNotNull(findMethod(Object.class, "clone"));
+        assertNotNull(findMethod(Object.class, "toString"));
+        assertNotNull(findMethod(Object.class, "notify"));
+        assertNotNull(findMethod(Object.class, "notifyAll"));
+        assertNotNull(findMethod(Object.class, "wait"));
+    }
+
+    @Test
+    public void testFindMethodWithoutParameterTypesOnNotFound() {
+        assertNull(findMethod(Object.class, "equals"));
+    }
+
+    @Test
+    public void testFindMethodWithParameterTypes() {
+        assertNotNull(findMethod(Object.class, "equals", Object.class));
+        assertNotNull(findMethod(Object.class, "wait", long.class));
+        assertNotNull(findMethod(Object.class, "wait", long.class, int.class));
+    }
+
+    @Test
+    public void testFindMethodWithParameterTypesOnNotFound() {
+        assertNull(findMethod(Object.class, "equals", int.class));
+        assertNull(findMethod(Object.class, "wait", Object.class));
+        assertNull(findMethod(Object.class, "notFound"));
+    }
+
+    @Test
+    public void testFindMethodOnSuperTypes() {
+        assertNotNull(findMethod(TestClass.class, "equals", Object.class));
+        assertNotNull(findMethod(TestClass.class, "wait", long.class));
+        assertNotNull(findMethod(TestClass.class, "wait", long.class, int.class));
+
+        assertNotNull(findMethod(TestInterface.class, "equals", Object.class));
+        assertNotNull(findMethod(TestInterface.class, "wait", long.class));
+        assertNotNull(findMethod(TestInterface.class, "wait", long.class, int.class));
+
+        assertNotNull(findMethod(TestSubInterface.class, "equals", Object.class));
+        assertNotNull(findMethod(TestSubInterface.class, "wait", long.class));
+        assertNotNull(findMethod(TestSubInterface.class, "wait", long.class, int.class));
+    }
+
+    @Test
+    public void testFindMethodOnSuperTypesOnNotFound() {
+        assertNull(findMethod(TestClass.class, "equals", int.class));
+        assertNull(findMethod(TestClass.class, "wait", Object.class));
+        assertNull(findMethod(TestClass.class, "notFound"));
+
+        assertNull(findMethod(TestInterface.class, "equals", int.class));
+        assertNull(findMethod(TestInterface.class, "wait", Object.class));
+        assertNull(findMethod(TestInterface.class, "notFound"));
+
+        assertNull(findMethod(TestSubInterface.class, "equals", int.class));
+        assertNull(findMethod(TestSubInterface.class, "wait", Object.class));
+        assertNull(findMethod(TestSubInterface.class, "notFound"));
+    }
+
+    @Test
+    public void testFindMethodOnSuperInterfaces() {
+        assertNotNull(findMethod(TestSubInterface.class, "method"));
+        assertNotNull(findMethod(TestSubInterface.class, "useLambda"));
+    }
+
+    @Test
+    public void testFindMethodOnSuperInterfacesOnNotFound() {
+        assertNull(findMethod(TestInterface.class, "equals", int.class));
+        assertNull(findMethod(TestInterface.class, "wait", Object.class));
+        assertNull(findMethod(TestInterface.class, "notFound"));
+
+        assertNull(findMethod(TestSubInterface.class, "equals", int.class));
+        assertNull(findMethod(TestSubInterface.class, "wait", Object.class));
+        assertNull(findMethod(TestSubInterface.class, "notFound"));
+    }
+
+    @Test
     public void testInvokeMethod() {
         String test = "test";
         assertEquals(test, invokeMethod(test, "toString"));
@@ -211,10 +322,63 @@ public class MethodUtilsTest {
     }
 
     @Test
+    public void testInvokeMethodOnNullPointerException() {
+        assertThrows(NullPointerException.class, () -> invokeMethod("test", (Method) null));
+    }
+
+    @Test
+    public void testInvokeMethodOnIllegalStateException() {
+        assertThrows(IllegalStateException.class, () -> invokeMethod("test", "notFound"));
+    }
+
+    @Test
+    public void testInvokeMethodOnIllegalArgumentException() {
+        Method method = findMethod(String.class, "toString");
+        assertThrows(IllegalArgumentException.class, () -> invokeMethod("test", method, "abc"));
+    }
+
+    @Test
+    public void testInvokeMethodOnInvocationTargetException() {
+        assertThrows(RuntimeException.class, () -> invokeMethod(new ReflectionTest(), "errorMethod"));
+    }
+
+    @Test
     public void testInvokeStaticMethod() {
         Method method = findMethod(Integer.class, "valueOf", int.class);
         assertEquals(valueOf(0), (Integer) invokeStaticMethod(method, 0));
         assertEquals(valueOf(0), (Integer) invokeStaticMethod(TestClass.class, "value", 0));
+    }
+
+    @Test
+    public void testOverridesOnNull() {
+        assertFalse(overrides(null, null));
+
+        Method method = findMethod(Integer.class, "valueOf", int.class);
+
+        assertFalse(overrides(method, null));
+        assertFalse(overrides(null, method));
+    }
+
+    @Test
+    public void testOverridesOnStaticMethod() {
+        Method staticMethod = findMethod(Integer.class, "valueOf", int.class);
+        Method method = findMethod(String.class, "toString");
+        assertFalse(overrides(staticMethod, method));
+        assertFalse(overrides(method, staticMethod));
+    }
+
+    @Test
+    public void testOverridesOnEqual() {
+        Method method = findMethod(String.class, "toString");
+        assertFalse(overrides(method, method));
+    }
+
+    @Test
+    public void testOverridesOnPrivate() {
+        Method privateMethod = findMethod(ReflectionTest.class, "privateMethod");
+        Method publicMethod = findMethod(ReflectionTest.class, "publicMethod");
+        assertFalse(overrides(privateMethod, publicMethod));
+        assertFalse(overrides(publicMethod, privateMethod));
     }
 
     @Test
