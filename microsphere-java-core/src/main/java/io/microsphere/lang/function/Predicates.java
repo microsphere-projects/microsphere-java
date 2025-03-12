@@ -18,6 +18,8 @@ package io.microsphere.lang.function;
 
 import java.util.function.Predicate;
 
+import static io.microsphere.util.ArrayUtils.length;
+
 /**
  * The utilities class for Java {@link Predicate}
  *
@@ -60,7 +62,7 @@ public interface Predicates {
      * @return non-null
      */
     static <T> Predicate<? super T> and(Predicate<? super T>... predicates) {
-        int length = predicates == null ? 0 : predicates.length;
+        int length = length(predicates);
         if (length == 0) {
             return alwaysTrue();
         } else if (length == 1) {
@@ -82,7 +84,7 @@ public interface Predicates {
      * @return non-null
      */
     static <T> Predicate<? super T> or(Predicate<? super T>... predicates) {
-        int length = predicates == null ? 0 : predicates.length;
+        int length = length(predicates);
         if (length == 0) {
             return alwaysTrue();
         } else if (length == 1) {
