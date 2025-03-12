@@ -25,9 +25,9 @@ import java.util.function.Predicate;
 
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
-import static io.microsphere.reflect.MemberUtils.FINAL_METHOD_PREDICATE;
-import static io.microsphere.reflect.MemberUtils.NON_PRIVATE_METHOD_PREDICATE;
-import static io.microsphere.reflect.MemberUtils.NON_STATIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.util.ClassUtils.isArray;
