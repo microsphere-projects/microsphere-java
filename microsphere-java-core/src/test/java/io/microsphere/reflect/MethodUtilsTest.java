@@ -16,11 +16,14 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.lang.Prioritized;
 import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -35,6 +38,8 @@ import static io.microsphere.reflect.MethodUtils.PUBLIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.filterMethods;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.findNearestOverriddenMethod;
+import static io.microsphere.reflect.MethodUtils.findOverriddenMethod;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.getAllMethods;
 import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
@@ -360,17 +365,25 @@ public class MethodUtilsTest {
     }
 
     @Test
-    public void testOverridesOnStaticMethod() {
-        Method staticMethod = findMethod(Integer.class, "valueOf", int.class);
+    public void testOverridesOnSame() {
         Method method = findMethod(String.class, "toString");
-        assertFalse(overrides(staticMethod, method));
-        assertFalse(overrides(method, staticMethod));
+        assertFalse(overrides(method, method));
     }
 
     @Test
-    public void testOverridesOnEqual() {
-        Method method = findMethod(String.class, "toString");
-        assertFalse(overrides(method, method));
+    public void testOverridesOnDifferentMethodName() {
+        Method hashCodeMethod = findMethod(Object.class, "hashCode");
+        Method toStringMethod = findMethod(String.class, "toString");
+        assertFalse(overrides(hashCodeMethod, toStringMethod));
+        assertFalse(overrides(toStringMethod, hashCodeMethod));
+    }
+
+    @Test
+    public void testOverridesOnStaticMethod() {
+        Method valueOfMethod1 = findMethod(Integer.class, "valueOf", int.class);
+        Method valueOfMethod2 = findMethod(String.class, "valueOf", int.class);
+        assertFalse(overrides(valueOfMethod1, valueOfMethod2));
+        assertFalse(overrides(valueOfMethod2, valueOfMethod1));
     }
 
     @Test
@@ -379,6 +392,75 @@ public class MethodUtilsTest {
         Method publicMethod = findMethod(ReflectionTest.class, "publicMethod");
         assertFalse(overrides(privateMethod, publicMethod));
         assertFalse(overrides(publicMethod, privateMethod));
+    }
+
+    @Test
+    public void testOverridesOnDefaultMethod() {
+        Method compareToMethod1 = findMethod(Prioritized.class, "compareTo", Object.class);
+        Method compareToMethod2 = findMethod(Comparable.class, "compareTo", Object.class);
+        assertFalse(overrides(compareToMethod1, compareToMethod2));
+    }
+
+
+    @Test
+    public void testOverridesOnSameDeclaringClass() {
+        Method waitMethod1 = findMethod(Object.class, "wait");
+        Method waitMethod2 = findMethod(Object.class, "wait", long.class);
+        assertFalse(overrides(waitMethod1, waitMethod2));
+    }
+
+    @Test
+    public void testOverridesOnDifferentDeclaringClass() {
+        Method toStringMethod1 = findMethod(Integer.class, "toString");
+        Method toStringMethod2 = findMethod(String.class, "toString");
+        assertFalse(overrides(toStringMethod1, toStringMethod2));
+    }
+
+    @Test
+    public void testOverridesOnDifferentParameterCount() {
+        Method appendMethod1 = findMethod(StringBuilder.class, "append", CharSequence.class);
+        Method appendMethod2 = findMethod(Appendable.class, "append", CharSequence.class, int.class, int.class);
+        assertFalse(overrides(appendMethod1, appendMethod2));
+    }
+
+    @Test
+    public void testOverridesOnDifferentParameterTypes() {
+        Method appendMethod1 = findMethod(StringBuilder.class, "append", CharSequence.class);
+        Method appendMethod2 = findMethod(Appendable.class, "append", char.class);
+        assertFalse(overrides(appendMethod1, appendMethod2));
+    }
+
+    @Test
+    public void testOverrides() {
+        Method overrider = findMethod(List.class, "size");
+        Method overridden = findMethod(Collection.class, "size");
+
+        assertTrue(overrides(overrider, overridden));
+        assertFalse(overrides(overridden, overrider));
+    }
+
+    @Test
+    public void testFindOverriddenMethod() {
+        Method overrider = findMethod(List.class, "size");
+        Method overridden = findMethod(Collection.class, "size");
+        assertEquals(overridden, findOverriddenMethod(overrider, Collection.class));
+    }
+
+    @Test
+    public void testFindOverriddenMethodOnNotFound() {
+        Method overrider = findMethod(List.class, "size");
+        assertNull(findOverriddenMethod(overrider, Object.class));
+    }
+
+    @Test
+    public void testFindNearestOverriddenMethod() {
+        Method overrider = findMethod(List.class, "size");
+        Method overridden = findMethod(Collection.class, "size");
+        assertEquals(overridden, findNearestOverriddenMethod(overrider));
+
+        overrider = findMethod(ArrayList.class, "size");
+        overridden = findMethod(AbstractList.class, "size");
+        assertEquals(overridden, findNearestOverriddenMethod(overrider));
     }
 
     @Test
