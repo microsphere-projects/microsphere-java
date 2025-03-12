@@ -262,7 +262,7 @@ public abstract class MethodUtils extends BaseUtils {
         Method method = doFindDeclaredMethod(targetClass, methodName, parameterTypes);
 
         if (method == null) {  // Second, to find the declared method in the super class
-            Class<?> superClass = targetClass.getSuperclass();
+            Class<?> superClass = targetClass.isInterface() ? Object.class : targetClass.getSuperclass();
             method = findDeclaredMethod(superClass, methodName, parameterTypes);
         }
 
@@ -373,6 +373,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return the result of dispatching the method represented by
      * this object on {@code instance} with parameters
      * {@code arguments}
+     * @throws NullPointerException     if this {@link Method} object is <code>null</code>
      * @throws IllegalStateException    if this {@code Method} object
      *                                  is enforcing Java language access control and the underlying
      *                                  method is inaccessible.
@@ -390,6 +391,9 @@ public abstract class MethodUtils extends BaseUtils {
      *                                  throws an exception.
      */
     public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
+        if (method == null) {
+            throw new NullPointerException("The 'method' must not be null");
+        }
         R result = null;
         boolean accessible = false;
         RuntimeException failure = null;
@@ -433,13 +437,13 @@ public abstract class MethodUtils extends BaseUtils {
             return false;
         }
 
-        // equality comparison: If two methods are same
-        if (Objects.equals(overrider, overridden)) {
+        // Modifiers comparison: Any method must be non-static method
+        if (isStatic(overrider) || isStatic(overridden)) { //
             return false;
         }
 
-        // Modifiers comparison: Any method must be non-static method
-        if (isStatic(overrider) || isStatic(overridden)) { //
+        // equality comparison: If two methods are same
+        if (Objects.equals(overrider, overridden)) {
             return false;
         }
 
@@ -464,15 +468,17 @@ public abstract class MethodUtils extends BaseUtils {
         }
 
         // Method comparison: The count of method parameters must be equal
-        if (!Objects.equals(overrider.getParameterCount(), overridden.getParameterCount())) {
+        int parameterCount = overrider.getParameterCount();
+        if (parameterCount != overridden.getParameterCount()) {
             return false;
         }
 
+        Class<?>[] overriderParameterTypes = overrider.getParameterTypes();
+        Class<?>[] overriddenParameterTypes = overridden.getParameterTypes();
+
         // Method comparison: Any parameter type of overrider must equal the overridden's
-        for (int i = 0; i < overrider.getParameterCount(); i++) {
-            if (!Objects.equals(overridden.getParameterTypes()[i], overrider.getParameterTypes()[i])) {
-                return false;
-            }
+        if (!matchesParameterTypes(overriderParameterTypes, overriddenParameterTypes, parameterCount)) {
+            return false;
         }
 
         // Method comparison: The return type of overrider must be inherit from the overridden's
@@ -610,8 +616,19 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     static boolean matches(Method method, String methodName, Class<?>[] parameterTypes) {
-        return Objects.equals(method.getName(), methodName)
-                && Arrays.equals(method.getParameterTypes(), parameterTypes);
+        int parameterCount = parameterTypes.length;
+        return parameterCount == method.getParameterCount()
+                && Objects.equals(method.getName(), methodName)
+                && matchesParameterTypes(method.getParameterTypes(), parameterTypes, parameterCount);
+    }
+
+    static boolean matchesParameterTypes(Class<?>[] oneParameterTypes, Class<?>[] anotherParameterTypes, int parameterCount) {
+        for (int i = 0; i < parameterCount; i++) {
+            if (oneParameterTypes[i] != anotherParameterTypes[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static Method[] doGetDeclaredMethods(Class<?> klass) {
@@ -620,10 +637,6 @@ public abstract class MethodUtils extends BaseUtils {
 
     static List<Method> doFilterMethods(List<Method> methods, Predicate<? super Method>... methodsToFilter) {
         return unmodifiableList(filterAll(methods, methodsToFilter));
-    }
-
-    static List<Method> doFilterMethods(Method[] methods, Predicate<? super Method>... methodsToFilter) {
-        return unmodifiableList(filterAllList(methods, methodsToFilter));
     }
 
     static Method doFindMethod(MethodKey key) {
