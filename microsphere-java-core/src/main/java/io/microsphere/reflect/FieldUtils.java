@@ -33,6 +33,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.microsphere.util.ClassUtils.getTypeName;
 
 /**
  * The Java Reflection {@link Field} Utility class
@@ -244,9 +245,9 @@ public abstract class FieldUtils extends BaseUtils {
             accessible = trySetAccessible(field);
             fieldValue = (V) field.get(instance);
         } catch (IllegalAccessException e) {
-            String errorMessage = format("The field[name : '{}' , type : '{}' , instance : {}] can't be accessed[accessible : {}]",
-                    field.getName(), field.getType(), instance, accessible);
-            throw new IllegalStateException(errorMessage, e);
+            handleIllegalAccessException(e, instance, field, accessible);
+        } catch (IllegalArgumentException e) {
+            handleIllegalArgumentException(e, instance, field);
         }
 
         return fieldValue;
@@ -294,13 +295,9 @@ public abstract class FieldUtils extends BaseUtils {
                 field.set(instance, value);
             }
         } catch (IllegalAccessException e) {
-            String errorMessage = format("The field[name : '{}' , type : '{}' , instance : {}] can't be accessed[accessible : {}]",
-                    field.getName(), field.getType(), instance, accessible);
-            throw new IllegalStateException(errorMessage, e);
+            handleIllegalAccessException(e, instance, field, accessible);
         } catch (IllegalArgumentException e) {
-            String errorMessage = format("The instance[{}] can't match the field[name : '{}' , type : '{}']",
-                    instance, field.getName(), field.getType());
-            throw new IllegalArgumentException(errorMessage, e);
+            handleIllegalArgumentException(e, instance, field);
         }
 
         return previousValue;
@@ -323,4 +320,23 @@ public abstract class FieldUtils extends BaseUtils {
             throw new IllegalArgumentException(message);
         }
     }
+
+    static void handleIllegalAccessException(IllegalAccessException e, Object instance, Field field, boolean accessible) {
+        String errorMessage = format("The instance [object : {} , class : {} ] can't access the field[name : '{}' , type : {} , accessible : {}]",
+                instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()), accessible);
+        if (logger.isTraceEnabled()) {
+            logger.trace(errorMessage);
+        }
+        throw new IllegalStateException(errorMessage, e);
+    }
+
+    static void handleIllegalArgumentException(IllegalArgumentException e, Object instance, Field field) {
+        String errorMessage = format("The instance[object : {} , class : {}] can't match the field[name : '{}' , type : {}]",
+                instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()));
+        if (logger.isTraceEnabled()) {
+            logger.trace(errorMessage);
+        }
+        throw new IllegalArgumentException(errorMessage, e);
+    }
+
 }
