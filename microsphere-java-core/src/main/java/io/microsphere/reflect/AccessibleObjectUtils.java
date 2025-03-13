@@ -81,8 +81,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
     public static boolean trySetAccessible(AccessibleObject accessibleObject) {
         MethodHandle methodHandle = trySetAccessibleMethodHandle;
         if (methodHandle == null) { // JDK < 9 or not be initialized
-            setAccessible(accessibleObject);
-            return true;
+            return setAccessible(accessibleObject);
         } else { // JDK 9+
             return trySetAccessible(methodHandle, accessibleObject);
         }
@@ -99,22 +98,9 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
         if (!accessible) {
             try {
                 accessibleObject.setAccessible(true);
+                accessible = true;
             } catch (RuntimeException e) {
-                if (isInaccessibleObjectException(e)) {
-                    String rawErrorMessage = e.getMessage();
-                    String moduleName = substringBetween(rawErrorMessage, "module ", " ");
-                    String packageName = substringBetween(rawErrorMessage, "opens ", "\"");
-                    // JDK 16+ : JEP 396: Strongly Encapsulate JDK Internals by Default - https://openjdk.org/jeps/396
-                    StringBuilder errorMessageBuilder = new StringBuilder("JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396.");
-                    errorMessageBuilder.append(LINE_SEPARATOR)
-                            .append("It's require to add JVM Options '--add-opens=")
-                            .append(moduleName)
-                            .append(SLASH_CHAR)
-                            .append(packageName)
-                            .append("=ALL-UNNAMED' for running");
-                    logger.error(errorMessageBuilder.toString(), e);
-                }
-                throw e;
+                handleInaccessibleObjectExceptionIfFound(e);
             }
         }
         return accessible;
@@ -132,15 +118,11 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
      * @return {@code true} if the caller can access this reflected object.
      */
     public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
-
         Member member = asMember(accessibleObject);
-
         if (isPublic(member)) {
             return true;
         }
-
         Boolean access = tryCanAccess(object, accessibleObject);
-
         return access == null ? accessibleObject.isAccessible() : access;
     }
 
@@ -149,8 +131,7 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
         try {
             accessible = (boolean) methodHandle.invokeExact(accessibleObject);
         } catch (Throwable e) {
-            logger.error("java.lang.reflect.AccessibleObject#trySetAccessible() can't be invoked, accessible object : {}",
-                    accessibleObject, e);
+            logger.error("It's failed to invokeExact on {} with accessibleObject : {}", methodHandle, accessibleObject, e);
         }
         return accessible;
     }
@@ -161,10 +142,26 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
             try {
                 access = (boolean) canAccessMethodHandle.invokeExact(accessibleObject, object);
             } catch (Throwable e) {
-                logger.error("java.lang.reflect.AccessibleObject#canAccess(Object) can't be invoked, object : {} , accessible object : {}",
-                        object, accessibleObject, e);
+                logger.error("It's failed to invokeExact on {} with object : {} , accessible object : {}", canAccessMethodHandle, object, accessibleObject, e);
             }
         }
         return access;
+    }
+
+    private static void handleInaccessibleObjectExceptionIfFound(Throwable e) {
+        if (isInaccessibleObjectException(e)) {
+            String rawErrorMessage = e.getMessage();
+            String moduleName = substringBetween(rawErrorMessage, "module ", " ");
+            String packageName = substringBetween(rawErrorMessage, "opens ", "\"");
+            // JDK 16+ : JEP 396: Strongly Encapsulate JDK Internals by Default - https://openjdk.org/jeps/396
+            StringBuilder errorMessageBuilder = new StringBuilder("JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396.");
+            errorMessageBuilder.append(LINE_SEPARATOR)
+                    .append("It's require to add JVM Options '--add-opens=")
+                    .append(moduleName)
+                    .append(SLASH_CHAR)
+                    .append(packageName)
+                    .append("=ALL-UNNAMED' for running");
+            logger.error(errorMessageBuilder.toString(), e);
+        }
     }
 }

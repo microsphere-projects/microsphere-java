@@ -16,14 +16,15 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.lang.function.ThrowableFunction;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 
 import static io.microsphere.reflect.ExecutableUtils.execute;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ExecutableUtils} Test
@@ -40,12 +41,61 @@ public class ExecutableUtilsTest {
     private static final ReflectionTest test = new ReflectionTest();
 
     @Test
-    public void testExecute() {
-        Method method = getMethod("privateMethod");
-        assertEquals("test", execute(method, (ThrowableFunction<Method, Object>) m -> method.invoke(test)));
+    public void testExecuteWithThrowableConsumerOnPublicMethod() {
+        Method method = findMethod(ReflectionTest.class, "publicMethod", int.class);
+        execute(method, m -> {
+            assertEquals("1", method.invoke(test, 1));
+        });
     }
 
-    private Method getMethod(String methodName) {
-        return findMethod(testClass, methodName);
+    @Test
+    public void testExecuteWithThrowableConsumerOnProtectedMethod() {
+        Method method = findMethod(ReflectionTest.class, "protectedMethod", Object[].class);
+        execute(method, m -> {
+            Object[] args = new Object[]{1};
+            Object arg = args;
+            assertArrayEquals(args, (Object[]) method.invoke(test, arg));
+        });
     }
+
+    @Test
+    public void testExecuteWithThrowableConsumerOnPackagePrivateMethod() {
+        Method method = findMethod(ReflectionTest.class, "packagePrivateMethod", String.class);
+        execute(method, m -> {
+            assertEquals("1", method.invoke(test, "1"));
+        });
+    }
+
+    @Test
+    public void testExecuteWithThrowableConsumerOnIllegalAccessException() {
+        Method method = findMethod(ReflectionTest.class, "privateMethod");
+        assertThrows(IllegalStateException.class, () -> execute(method, m -> {
+            assertEquals("test", method.invoke(test));
+        }));
+    }
+
+    @Test
+    public void testExecuteWithThrowableConsumerOnInvocationTargetException() {
+        Method method = findMethod(ReflectionTest.class, "errorMethod");
+        assertThrows(RuntimeException.class, () -> execute(method, m -> {
+            method.invoke(test);
+        }));
+    }
+
+    @Test
+    public void testExecuteWithThrowableConsumerOnIllegalArgumentException() {
+        Method method = findMethod(ReflectionTest.class, "protectedMethod", Object[].class);
+        assertThrows(IllegalArgumentException.class, () -> execute(method, m -> {
+            method.invoke(test);
+        }));
+    }
+
+    @Test
+    public void testExecuteWithThrowableConsumerOnClassCastException() {
+        Method method = findMethod(ReflectionTest.class, "publicMethod", int.class);
+        assertThrows(RuntimeException.class, () -> execute(method, m -> {
+            assertEquals(1, (int) method.invoke(test, 1));
+        }));
+    }
+
 }

@@ -32,15 +32,30 @@ import java.util.function.Predicate;
  */
 public abstract class MemberUtils extends BaseUtils {
 
-    public final static Predicate<Method> STATIC_METHOD_PREDICATE = MemberUtils::isStatic;
+    /**
+     * The {@link Predicate} reference to {@link #isStatic(Member)}
+     */
+    public final static Predicate<? super Member> STATIC_MEMBER_PREDICATE = MemberUtils::isStatic;
 
-    public final static Predicate<Member> NON_STATIC_METHOD_PREDICATE = MemberUtils::isNonStatic;
+    /**
+     * The {@link Predicate} reference to {@link #isNonStatic(Member)}
+     */
+    public final static Predicate<? super Member> NON_STATIC_MEMBER_PREDICATE = MemberUtils::isNonStatic;
 
-    public final static Predicate<Member> FINAL_METHOD_PREDICATE = MemberUtils::isFinal;
+    /**
+     * The {@link Predicate} reference to {@link #isFinal(Member)}
+     */
+    public final static Predicate<? super Member> FINAL_MEMBER_PREDICATE = MemberUtils::isFinal;
 
-    public final static Predicate<Member> PUBLIC_METHOD_PREDICATE = MemberUtils::isPublic;
+    /**
+     * The {@link Predicate} reference to {@link #isPublic(Member)}
+     */
+    public final static Predicate<? super Member> PUBLIC_MEMBER_PREDICATE = MemberUtils::isPublic;
 
-    public final static Predicate<Member> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
+    /**
+     * The {@link Predicate} reference to {@link #isNonPrivate(Member)}
+     */
+    public final static Predicate<? super Member> NON_PRIVATE_MEMBER_PREDICATE = MemberUtils::isNonPrivate;
 
     /**
      * check the specified {@link Member member} is static or not ?

@@ -40,7 +40,6 @@ import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
-import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.ElementKind.METHOD;
 import static javax.lang.model.util.ElementFilter.methodsIn;

@@ -27,6 +27,7 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 
@@ -103,6 +104,7 @@ public abstract class ConstructorUtils extends BaseUtils {
      * @return non-null
      */
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
+        trySetAccessible(constructor);
         return ExecutableUtils.execute(constructor, () -> constructor.newInstance(args));
     }
 }
