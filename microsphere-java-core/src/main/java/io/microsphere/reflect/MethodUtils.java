@@ -17,7 +17,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nullable;
@@ -31,7 +30,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
@@ -47,7 +45,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
-import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
@@ -89,7 +86,27 @@ public abstract class MethodUtils extends BaseUtils {
     /**
      * The {@link Predicate} reference to {@link MemberUtils#isPublic(Member)}
      */
-    public final static Predicate<? super Method> PULIC_METHOD_PREDICATE = MemberUtils::isPublic;
+    public final static Predicate<? super Method> PUBLIC_METHOD_PREDICATE = MemberUtils::isPublic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isStatic(Member)}
+     */
+    public final static Predicate<? super Method> STATIC_METHOD_PREDICATE = MemberUtils::isStatic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isNonStatic(Member)}
+     */
+    public final static Predicate<? super Method> NON_STATIC_METHOD_PREDICATE = MemberUtils::isNonStatic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isFinal(Member)}
+     */
+    public final static Predicate<? super Method> FINAL_METHOD_PREDICATE = MemberUtils::isFinal;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isNonPrivate(Member)}
+     */
+    public final static Predicate<? super Method> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
 
     private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>(256);
 
@@ -114,7 +131,8 @@ public abstract class MethodUtils extends BaseUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    public static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly, Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
+                                             Predicate<? super Method>... methodsToFilter) {
 
         if (targetClass == null || isPrimitive(targetClass)) {
             return emptyList();
@@ -128,9 +146,9 @@ public abstract class MethodUtils extends BaseUtils {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
-        Predicate<? super Method> predicate = and(methodsToFilter);
+        Predicate predicate = and(methodsToFilter);
         if (publicOnly) {
-            predicate = predicate.and((Predicate) PULIC_METHOD_PREDICATE);
+            predicate = PUBLIC_METHOD_PREDICATE.and(predicate);
         }
 
         // All methods
@@ -161,7 +179,7 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     /**
-     * Get all public {@link Method methods} of the target class, including the inherited methods.
+     * Get all public {@link Method methods} of the target class, excluding the inherited methods.
      *
      * @param targetClass     the target class
      * @param methodsToFilter (optional) the methods to be filtered
@@ -240,7 +258,7 @@ public abstract class MethodUtils extends BaseUtils {
         Method method = doFindDeclaredMethod(targetClass, methodName, parameterTypes);
 
         if (method == null) {  // Second, to find the declared method in the super class
-            Class<?> superClass = targetClass.getSuperclass();
+            Class<?> superClass = targetClass.isInterface() ? Object.class : targetClass.getSuperclass();
             method = findDeclaredMethod(superClass, methodName, parameterTypes);
         }
 
@@ -351,6 +369,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return the result of dispatching the method represented by
      * this object on {@code instance} with parameters
      * {@code arguments}
+     * @throws NullPointerException     if this {@link Method} object is <code>null</code>
      * @throws IllegalStateException    if this {@code Method} object
      *                                  is enforcing Java language access control and the underlying
      *                                  method is inaccessible.
@@ -368,11 +387,14 @@ public abstract class MethodUtils extends BaseUtils {
      *                                  throws an exception.
      */
     public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
+        if (method == null) {
+            throw new NullPointerException("The 'method' must not be null");
+        }
         R result = null;
         boolean accessible = false;
         RuntimeException failure = null;
         try {
-            trySetAccessible(method);
+            accessible = trySetAccessible(method);
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException e) {
             String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
@@ -407,12 +429,12 @@ public abstract class MethodUtils extends BaseUtils {
      */
     public static boolean overrides(Method overrider, Method overridden) {
 
-        if (overrider == null || overridden == null) {
+        if (overrider == null || overridden == null || overrider == overridden) {
             return false;
         }
 
-        // equality comparison: If two methods are same
-        if (Objects.equals(overrider, overridden)) {
+        // Method comparison: The method name must be equal
+        if (!Objects.equals(overrider.getName(), overridden.getName())) {
             return false;
         }
 
@@ -426,34 +448,40 @@ public abstract class MethodUtils extends BaseUtils {
             return false;
         }
 
-        // Inheritance comparison: the target class of overrider must be inherit from the overridden's
-        if (!overridden.getDeclaringClass().isAssignableFrom(overrider.getDeclaringClass())) {
-            return false;
-        }
-
         // Method comparison: must not be "default" method
         if (overrider.isDefault()) {
             return false;
         }
 
-        // Method comparison: The method name must be equal
-        if (!Objects.equals(overrider.getName(), overridden.getName())) {
+        Class<?> overriderDeclaringClass = overrider.getDeclaringClass();
+        Class<?> overriddenDeclaringClass = overridden.getDeclaringClass();
+
+        // Method comparison: The declaring class of overrider must not equal the overridden's
+        if (overriderDeclaringClass == overriddenDeclaringClass) {
+            return false;
+        }
+
+        // Inheritance comparison: the target class of overrider must be inherit from the overridden's
+        if (!overriddenDeclaringClass.isAssignableFrom(overriderDeclaringClass)) {
             return false;
         }
 
         // Method comparison: The count of method parameters must be equal
-        if (!Objects.equals(overrider.getParameterCount(), overridden.getParameterCount())) {
+        int parameterCount = overrider.getParameterCount();
+        if (parameterCount != overridden.getParameterCount()) {
             return false;
         }
 
+        Class<?>[] overriderParameterTypes = overrider.getParameterTypes();
+        Class<?>[] overriddenParameterTypes = overridden.getParameterTypes();
+
         // Method comparison: Any parameter type of overrider must equal the overridden's
-        for (int i = 0; i < overrider.getParameterCount(); i++) {
-            if (!Objects.equals(overridden.getParameterTypes()[i], overrider.getParameterTypes()[i])) {
-                return false;
-            }
+        if (!matchesParameterTypes(overriderParameterTypes, overriddenParameterTypes, parameterCount)) {
+            return false;
         }
 
-        // Method comparison: The return type of overrider must be inherit from the overridden's
+        // Method comparison: The return type of overrider must be inherit from the overridden's.
+        // Actually, the different return types of overrider and overridden are not allowed by compiler after above tests.
         return overridden.getReturnType().isAssignableFrom(overrider.getReturnType());
 
         // Throwable comparison: "throws" Throwable list will be ignored, trust the compiler verify
@@ -485,7 +513,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return if found, the overrider <code>method</code>, or <code>null</code>
      */
     public static Method findOverriddenMethod(Method overrider, Class<?> targetClass) {
-        List<Method> matchedMethods = getAllMethods(targetClass, method -> overrides(overrider, method));
+        List<Method> matchedMethods = getDeclaredMethods(targetClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
     }
 
@@ -496,12 +524,13 @@ public abstract class MethodUtils extends BaseUtils {
      * @return non-null
      */
     public static String getSignature(Method method) {
-        Class<?> targetClass = method.getDeclaringClass();
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
+    }
+
+    static String buildSignature(Class<?> declaringClass, String methodName, Class<?>[] parameterTypes) {
         int parameterCount = parameterTypes.length;
         String[] parameterTypeNames = new String[parameterCount];
-        String methodName = method.getName();
-        String declaringClassName = getTypeName(targetClass);
+        String declaringClassName = getTypeName(declaringClass);
         int size = declaringClassName.length() + 1 // '#'
                 + methodName.length() + 1  // '('
                 + (parameterCount == 0 ? 0 : parameterCount - 1) // (parameterCount - 1) * ','
@@ -535,7 +564,7 @@ public abstract class MethodUtils extends BaseUtils {
 
     public static boolean isObjectMethod(Method method) {
         if (method != null) {
-            return Objects.equals(Object.class, method.getDeclaringClass());
+            return Object.class.equals(method.getDeclaringClass());
         }
         return false;
     }
@@ -588,8 +617,19 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     static boolean matches(Method method, String methodName, Class<?>[] parameterTypes) {
-        return Objects.equals(method.getName(), methodName)
-                && Arrays.equals(method.getParameterTypes(), parameterTypes);
+        int parameterCount = parameterTypes.length;
+        return parameterCount == method.getParameterCount()
+                && Objects.equals(method.getName(), methodName)
+                && matchesParameterTypes(method.getParameterTypes(), parameterTypes, parameterCount);
+    }
+
+    static boolean matchesParameterTypes(Class<?>[] oneParameterTypes, Class<?>[] anotherParameterTypes, int parameterCount) {
+        for (int i = 0; i < parameterCount; i++) {
+            if (oneParameterTypes[i] != anotherParameterTypes[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static Method[] doGetDeclaredMethods(Class<?> klass) {
@@ -598,6 +638,10 @@ public abstract class MethodUtils extends BaseUtils {
 
     static List<Method> doFilterMethods(List<Method> methods, Predicate<? super Method>... methodsToFilter) {
         return unmodifiableList(filterAll(methods, methodsToFilter));
+    }
+
+    static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        return new MethodKey(declaredClass, methodName, parameterTypes);
     }
 
     static Method doFindMethod(MethodKey key) {
@@ -609,11 +653,11 @@ public abstract class MethodUtils extends BaseUtils {
 
     static class MethodKey {
 
-        private final Class<?> declaredClass;
+        final Class<?> declaredClass;
 
-        private final String methodName;
+        final String methodName;
 
-        private final Class<?>[] parameterTypes;
+        final Class<?>[] parameterTypes;
 
         MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
             this.declaredClass = declaredClass;
@@ -644,13 +688,7 @@ public abstract class MethodUtils extends BaseUtils {
 
         @Override
         public String toString() {
-            StringJoiner stringJoiner = new StringJoiner(",", "(", ") ");
-            ArrayUtils.forEach(parameterTypes, parameterType -> stringJoiner.add(getTypeName(parameterType)));
-            return getTypeName(declaredClass) + "#" + methodName + stringJoiner;
-        }
-
-        static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
-            return new MethodKey(declaredClass, methodName, parameterTypes);
+            return buildSignature(declaredClass, methodName, parameterTypes);
         }
     }
 }

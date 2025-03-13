@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
-import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -34,6 +33,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.microsphere.util.ClassUtils.getTypeName;
 
 /**
  * The Java Reflection {@link Field} Utility class
@@ -136,21 +136,23 @@ public abstract class FieldUtils extends BaseUtils {
      * @param fieldName  the name of {@link Field}
      * @param fieldValue the value of {@link Field}
      */
-    public static void setStaticFieldValue(Class<?> klass, String fieldName, Object fieldValue) {
+    public static <V> V setStaticFieldValue(Class<?> klass, String fieldName, V fieldValue) {
         Field field = findField(klass, fieldName);
-        setFieldValue(null, field, fieldValue);
+        return setFieldValue(null, field, fieldValue);
     }
 
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
-        Set<Field> allFields = new LinkedHashSet<>(ofList(declaredClass.getFields()));
+        Set<Field> allFields = new LinkedHashSet<>();
+        addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
-            allFields.addAll(ofList(superType.getFields()));
+            addAll(allFields, superType.getFields());
         }
         return filter(allFields, and(fieldFilters));
     }
 
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
-        Set<Field> allDeclaredFields = new LinkedHashSet<>(ofList(declaredClass.getDeclaredFields()));
+        Set<Field> allDeclaredFields = new LinkedHashSet<>();
+        addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());
         }
@@ -163,6 +165,7 @@ public abstract class FieldUtils extends BaseUtils {
      * @param declaredClass the declared class
      * @param fieldName     the name of {@link Field}
      * @return if can't be found, return <code>null</code>
+     * @throws RuntimeException thrown if you can't find the {@link Field}
      */
     public static Field getDeclaredField(Class<?> declaredClass, String fieldName) {
         return execute(() -> declaredClass.getDeclaredField(fieldName));
@@ -242,9 +245,9 @@ public abstract class FieldUtils extends BaseUtils {
             accessible = trySetAccessible(field);
             fieldValue = (V) field.get(instance);
         } catch (IllegalAccessException e) {
-            String errorMessage = format("The field[name : '{}' , type : '{}' , instance : {}] can't be accessed[accessible : {}]",
-                    field.getName(), field.getType(), instance, accessible);
-            throw new IllegalStateException(errorMessage, e);
+            handleIllegalAccessException(e, instance, field, accessible);
+        } catch (IllegalArgumentException e) {
+            handleIllegalArgumentException(e, instance, field);
         }
 
         return fieldValue;
@@ -292,13 +295,9 @@ public abstract class FieldUtils extends BaseUtils {
                 field.set(instance, value);
             }
         } catch (IllegalAccessException e) {
-            String errorMessage = format("The field[name : '{}' , type : '{}' , instance : {}] can't be accessed[accessible : {}]",
-                    field.getName(), field.getType(), instance, accessible);
-            throw new IllegalStateException(errorMessage, e);
+            handleIllegalAccessException(e, instance, field, accessible);
         } catch (IllegalArgumentException e) {
-            String errorMessage = format("The instance[{}] can't match the field[name : '{}' , type : '{}']",
-                    instance, field.getName(), field.getType());
-            throw new IllegalArgumentException(errorMessage, e);
+            handleIllegalArgumentException(e, instance, field);
         }
 
         return previousValue;
@@ -307,13 +306,13 @@ public abstract class FieldUtils extends BaseUtils {
     /**
      * Assert Field type match
      *
-     * @param instance     Object
+     * @param instance     Object or class
      * @param fieldName    field name
      * @param expectedType expected type
      * @throws IllegalArgumentException if type is not matched
      */
     public static void assertFieldMatchType(Object instance, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
-        Class<?> type = instance.getClass();
+        Class<?> type = instance instanceof Class ? (Class<?>) instance : instance.getClass();
         Field field = findField(type, fieldName);
         Class<?> fieldType = field.getType();
         if (!expectedType.isAssignableFrom(fieldType)) {
@@ -321,4 +320,23 @@ public abstract class FieldUtils extends BaseUtils {
             throw new IllegalArgumentException(message);
         }
     }
+
+    static void handleIllegalAccessException(IllegalAccessException e, Object instance, Field field, boolean accessible) {
+        String errorMessage = format("The instance [object : {} , class : {} ] can't access the field[name : '{}' , type : {} , accessible : {}]",
+                instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()), accessible);
+        if (logger.isTraceEnabled()) {
+            logger.trace(errorMessage);
+        }
+        throw new IllegalStateException(errorMessage, e);
+    }
+
+    static void handleIllegalArgumentException(IllegalArgumentException e, Object instance, Field field) {
+        String errorMessage = format("The instance[object : {} , class : {}] can't match the field[name : '{}' , type : {}]",
+                instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()));
+        if (logger.isTraceEnabled()) {
+            logger.trace(errorMessage);
+        }
+        throw new IllegalArgumentException(errorMessage, e);
+    }
+
 }

@@ -24,8 +24,10 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import static io.microsphere.collection.SetUtils.isSet;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Predicates.or;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -35,16 +37,33 @@ import static java.util.stream.Collectors.toList;
  */
 public interface Streams {
 
+    static <T> Stream<T> stream(T... values) {
+        return Stream.of(values);
+    }
+
     static <T> Stream<T> stream(Iterable<T> iterable) {
         return StreamSupport.stream(iterable.spliterator(), false);
+    }
+
+    static <T> Stream<T> filterStream(T[] values, Predicate<? super T> predicate) {
+        Stream<T> stream = stream(values);
+        return stream.filter(predicate);
     }
 
     static <T, S extends Iterable<T>> Stream<T> filterStream(S values, Predicate<? super T> predicate) {
         return stream(values).filter(predicate);
     }
 
+    static <T> List<T> filterList(T[] values, Predicate<? super T> predicate) {
+        return filterList(asList(values), predicate);
+    }
+
     static <T, S extends Iterable<T>> List<T> filterList(S values, Predicate<? super T> predicate) {
         return filterStream(values, predicate).collect(toList());
+    }
+
+    static <T> Set<T> filterSet(T[] values, Predicate<? super T> predicate) {
+        return filterSet(ofSet(values), predicate);
     }
 
     static <T, S extends Iterable<T>> Set<T> filterSet(S values, Predicate<? super T> predicate) {
@@ -61,8 +80,24 @@ public interface Streams {
         return filter(values, and(predicates));
     }
 
+    static <T> List<T> filterAllList(T[] values, Predicate<? super T>... predicates) {
+        return filterAll(asList(values), and(predicates));
+    }
+
+    static <T> Set<T> filterAllSet(T[] values, Predicate<? super T>... predicates) {
+        return filterAll(ofSet(values), and(predicates));
+    }
+
     static <T, S extends Iterable<T>> S filterAny(S values, Predicate<? super T>... predicates) {
         return filter(values, or(predicates));
+    }
+
+    static <T> List<T> filterAnyList(T[] values, Predicate<? super T>... predicates) {
+        return filterAny(asList(values), or(predicates));
+    }
+
+    static <T> Set<T> filterAnySet(T[] values, Predicate<? super T>... predicates) {
+        return filterAny(ofSet(values), or(predicates));
     }
 
     static <T> T filterFirst(Iterable<T> values, Predicate<? super T>... predicates) {

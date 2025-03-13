@@ -43,7 +43,7 @@ import static java.util.Collections.unmodifiableList;
  * @see JarFile
  * @since 1.0.0
  */
-public class JarUtils extends BaseUtils {
+public abstract class JarUtils extends BaseUtils {
 
     /**
      * Create a {@link JarFile} from specified {@link URL} of {@link JarFile}
