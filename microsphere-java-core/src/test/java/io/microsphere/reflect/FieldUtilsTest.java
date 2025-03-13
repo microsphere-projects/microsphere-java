@@ -29,6 +29,7 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getDeclaredField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.FieldUtils.handleIllegalAccessException;
 import static io.microsphere.reflect.FieldUtils.setFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
@@ -194,6 +195,12 @@ public class FieldUtilsTest {
     }
 
     @Test
+    public void testGetFieldValueOnIllegalArgumentException() {
+        Field field = findField(test, "privateField");
+        assertThrows(IllegalArgumentException.class, () -> getFieldValue("test", field));
+    }
+
+    @Test
     public void testSetFieldValue() {
         Integer value = 999;
         setFieldValue(value, "value", 2);
@@ -203,6 +210,11 @@ public class FieldUtilsTest {
         assertSetFieldValue(test, "packagePrivateField", "test");
         assertSetFieldValue(test, "protectedField", "test");
         assertSetFieldValue(test, "publicField", "test");
+    }
+
+    @Test
+    public void testSetFieldValueOnFieldNotFound() {
+        assertNull(setFieldValue(test, "notFoundField", null));
     }
 
     @Test
@@ -232,6 +244,12 @@ public class FieldUtilsTest {
     @Test
     public void testAssertFieldMatchTypeOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> assertFieldMatchType(test, "privateField", Integer.class));
+    }
+
+    @Test
+    public void testHandleIllegalAccessException() {
+        Field field = findField(ReflectionTest.class, "staticField");
+        assertThrows(IllegalStateException.class, () -> handleIllegalAccessException(new IllegalAccessException(), test, field, field.isAccessible()));
     }
 
 
