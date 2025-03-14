@@ -16,7 +16,6 @@
  */
 package io.microsphere.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -216,26 +215,24 @@ public class AssertTest {
         }
 
         for (int i = size; i < size * 2; i++) {
-            ArrayIndexOutOfBoundsException exception = null;
-            try {
-                assertArrayIndex(array, i);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                exception = e;
-            }
-            Assertions.assertNotNull(exception);
+            final int index = i;
+            assertThrows(ArrayIndexOutOfBoundsException.class, () -> assertArrayIndex(array, index));
         }
     }
 
     @Test
-    public void testAssertArrayTypeOnException() {
-        IllegalArgumentException exception = null;
-        try {
-            assertArrayType(new Object());
-        } catch (IllegalArgumentException e) {
-            exception = e;
+    public void testAssertArrayIndexOnArrayIndexOutOfBoundsException() {
+        int size = 10;
+        Object array = newInstance(int.class, size);
+
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> assertArrayIndex(array, -1));
+
+        for (int i = size; i < size * 2; i++) {
+            final int index = i;
+            assertThrows(ArrayIndexOutOfBoundsException.class, () -> assertArrayIndex(array, index));
         }
-        Assertions.assertNotNull(exception);
     }
+
 
     @Test
     public void testAssertArrayType() {
@@ -249,6 +246,16 @@ public class AssertTest {
         testAssertArrayType(char.class);
         testAssertArrayType(String.class);
         testAssertArrayType(Object.class);
+    }
+
+    @Test
+    public void testAssertArrayTypeOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> assertArrayType(new Object()));
+    }
+
+    @Test
+    public void testAssertArrayTypeOnNullPointerException() {
+        assertThrows(NullPointerException.class, () -> assertArrayType(null));
     }
 
     @Test
