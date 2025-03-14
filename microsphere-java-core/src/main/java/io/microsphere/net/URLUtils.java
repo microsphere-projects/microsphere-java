@@ -11,6 +11,7 @@ import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -205,16 +206,11 @@ public abstract class URLUtils extends BaseUtils {
         // path removes the matrix parameters if present
         path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
 
-
         return path;
     }
 
-
     static String resolvePathFromFile(URL url) {
-        return resolvePathFromFile(url.getPath());
-    }
-
-    static String resolvePathFromFile(String path) {
+        String path = buildPath(url);
         if (IS_OS_WINDOWS) {
             int index = path.indexOf(SLASH_CHAR);
             if (index == 0) {
@@ -224,8 +220,31 @@ public abstract class URLUtils extends BaseUtils {
         return path;
     }
 
-    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
+    static String buildPath(URL url) {
+        String authority = url.getAuthority();
         String path = url.getPath();
+        int length = 0;
+        int authorityLength = length(authority);
+        if (authorityLength > 0) {
+            length += authority.length() + 1;
+        }
+        int pathLength = length(path);
+        if (pathLength > 0) {
+            length += pathLength;
+        }
+        StringBuilder pathBuilder = new StringBuilder(length);
+        if (authorityLength > 0) {
+            pathBuilder.append(SLASH_CHAR)
+                    .append(authority);
+        }
+        if (pathLength > 0) {
+            pathBuilder.append(path);
+        }
+        return pathBuilder.toString();
+    }
+
+    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
+        String path = buildPath(url);
         int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
         if (filePrefixIndex == 0) { //  path starts with "file:/"
             path = path.substring(FILE_URL_PREFIX_LENGTH);
@@ -237,6 +256,11 @@ public abstract class URLUtils extends BaseUtils {
             path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
         }
 
+        // path adds the leading slash if not present
+        int indexOfSlash = path.indexOf(SLASH_CHAR);
+        if (indexOfSlash != 0) {
+            path = SLASH_CHAR + path;
+        }
         return path;
     }
 
@@ -450,12 +474,8 @@ public abstract class URLUtils extends BaseUtils {
         String protocol = url.getProtocol();
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
-            try {
-                File file = new File(url.toURI());
-                JarFile jarFile = new JarFile(file);
-                flag = jarFile != null;
-            } catch (Exception e) {
-            }
+            JarFile jarFile = toJarFile(url);
+            flag = jarFile != null;
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
@@ -478,14 +498,30 @@ public abstract class URLUtils extends BaseUtils {
                 flag = true;
                 break;
             case FILE_PROTOCOL:
-                try {
-                    File file = new File(url.toURI());
-                    JarFile jarFile = new JarFile(file);
-                    flag = jarFile != null;
-                } catch (Exception e) {
-                }
+                JarFile jarFile = toJarFile(url);
+                flag = jarFile != null;
         }
         return flag;
+    }
+
+    public static JarFile toJarFile(URL url) {
+        String path = buildPath(url);
+        File file = new File(path);
+        if (!file.exists()) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile is not existed from the url : {}", url);
+            }
+            return null;
+        }
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(file);
+        } catch (IOException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile can't be open from the url : {}", url);
+            }
+        }
+        return jarFile;
     }
 
     /**
@@ -500,12 +536,12 @@ public abstract class URLUtils extends BaseUtils {
             return SLASH;
         }
 
-        StringBuilder uriBuilder = new StringBuilder(SLASH);
+        StringBuilder uriBuilder = new StringBuilder(SLASH_CHAR);
         for (int i = 0; i < length; i++) {
             String path = paths[i];
             uriBuilder.append(path);
             if (i < length - 1) {
-                uriBuilder.append(SLASH);
+                uriBuilder.append(SLASH_CHAR);
             }
         }
 
