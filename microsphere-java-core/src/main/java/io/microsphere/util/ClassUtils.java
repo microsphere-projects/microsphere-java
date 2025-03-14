@@ -691,6 +691,16 @@ public abstract class ClassUtils extends BaseUtils {
      * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
      */
     public static Class[] getTypes(Object... values) {
+        return resolveTypes(values);
+    }
+
+    /**
+     * Resolve the types of the specified values
+     *
+     * @param values the values
+     * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
+     */
+    public static Class[] resolveTypes(Object... values) {
 
         if (isEmpty(values)) {
             return EMPTY_CLASS_ARRAY;
