@@ -227,8 +227,6 @@ public abstract class ClassUtils extends BaseUtils {
 
     /**
      * The specified type is array or not?
-     * <p>
-     * It's an optimized alternative for {@link Class#isArray()}).
      *
      * @param type the type to test
      * @return <code>true</code> if the specified type is an array class,
@@ -236,7 +234,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @see Class#isArray()
      */
     public static boolean isArray(Class<?> type) {
-        return type != null && type.getName().startsWith("[");
+        return type != null && type.isArray();
     }
 
     /**
