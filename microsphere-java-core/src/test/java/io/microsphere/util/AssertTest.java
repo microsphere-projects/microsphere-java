@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -24,11 +25,15 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static io.microsphere.collection.MapUtils.ofMap;
+import static io.microsphere.util.Assert.assertArrayIndex;
+import static io.microsphere.util.Assert.assertArrayType;
+import static io.microsphere.util.Assert.assertFieldMatchType;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Assert.assertNull;
 import static io.microsphere.util.Assert.assertTrue;
+import static java.lang.reflect.Array.newInstance;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -175,5 +180,70 @@ public class AssertTest {
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, "collectionWithNull"));
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, () -> "collectionWithNull"));
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, (Supplier<String>) null));
+    }
+
+
+    @Test
+    public void testAssertArrayIndex() {
+        int size = 10;
+        Object array = newInstance(int.class, size);
+        for (int i = 0; i < size; i++) {
+            assertArrayIndex(array, i);
+        }
+
+        for (int i = size; i < size * 2; i++) {
+            ArrayIndexOutOfBoundsException exception = null;
+            try {
+                assertArrayIndex(array, i);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                exception = e;
+            }
+            Assertions.assertNotNull(exception);
+        }
+    }
+
+    @Test
+    public void testAssertArrayTypeOnException() {
+        IllegalArgumentException exception = null;
+        try {
+            assertArrayType(new Object());
+        } catch (IllegalArgumentException e) {
+            exception = e;
+        }
+        Assertions.assertNotNull(exception);
+    }
+
+    @Test
+    public void testAssertArrayType() {
+        testAssertArrayType(long.class);
+        testAssertArrayType(int.class);
+        testAssertArrayType(short.class);
+        testAssertArrayType(byte.class);
+        testAssertArrayType(boolean.class);
+        testAssertArrayType(double.class);
+        testAssertArrayType(float.class);
+        testAssertArrayType(char.class);
+        testAssertArrayType(String.class);
+        testAssertArrayType(Object.class);
+    }
+
+    @Test
+    public void testAssertFieldMatchType() {
+        assertFieldMatchType("test", "hash", int.class);
+    }
+
+    @Test
+    public void testAssertFieldMatchTypeOnFieldNotFound() {
+        assertThrows(NullPointerException.class, () -> assertFieldMatchType("test", "hashCode", int.class));
+    }
+
+    @Test
+    public void testAssertFieldMatchTypeOnFieldTypeNotMatch() {
+        assertThrows(IllegalArgumentException.class, () -> assertFieldMatchType("test", "hash", Integer.class));
+    }
+
+    private void testAssertArrayType(Class<?> type) {
+        Object array = newInstance(type, 0);
+        assertArrayType(array);
     }
 }
