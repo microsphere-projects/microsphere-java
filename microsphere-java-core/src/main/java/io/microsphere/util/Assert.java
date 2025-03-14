@@ -20,9 +20,16 @@ import io.microsphere.collection.CollectionUtils;
 import io.microsphere.collection.MapUtils;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ClassUtils.getTypeName;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
 /**
  * The utility class for Assertion
@@ -371,6 +378,61 @@ public abstract class Assert extends BaseUtils {
                     throw new IllegalArgumentException(nullSafeGet(messageSupplier));
                 }
             }
+        }
+    }
+
+    /**
+     * Assert array index
+     *
+     * @param array Array object
+     * @param index index
+     * @throws IllegalArgumentException       see {@link #assertArrayType(Object)}
+     * @throws ArrayIndexOutOfBoundsException If <code>index</code> is less than 0 or equals or greater than length of array
+     */
+    public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
+        if (index < 0) {
+            String message = format("The index argument must be positive , actual is {}", index);
+            throw new ArrayIndexOutOfBoundsException(message);
+        }
+        assertArrayType(array);
+        int length = Array.getLength(array);
+        if (index > length - 1) {
+            String message = format("The index must be less than {} , actual is {}", length, index);
+            throw new ArrayIndexOutOfBoundsException(message);
+        }
+    }
+
+    /**
+     * Assert the object is array or not
+     *
+     * @param array asserted object
+     * @throws IllegalArgumentException if the object is not a array
+     */
+    public static void assertArrayType(Object array) throws IllegalArgumentException {
+        Class<?> type = array.getClass();
+        if (!type.isArray()) {
+            String message = format("The argument is not an array object, its type is {}", type.getName());
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * Assert Field type match
+     *
+     * @param object       Object
+     * @param fieldName    field name
+     * @param expectedType expected type
+     * @throws NullPointerException     if field can't be found in the specified object by name
+     * @throws IllegalArgumentException if type is not matched
+     */
+    public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws NullPointerException, IllegalArgumentException {
+        Class<?> type = object.getClass();
+        Field field = findField(type, fieldName);
+        Class<?> fieldType = field.getType();
+        if (!isAssignableFrom(expectedType, fieldType)) {
+            String message = format("The type['{}'] of field[name : '{}'] in Class['{}'] can't match expected type['{}']",
+                    getTypeName(type), fieldName, getTypeName(type), getTypeName(expectedType));
+            throw new IllegalArgumentException(message);
         }
     }
 
