@@ -256,11 +256,15 @@ public abstract class URLUtils extends BaseUtils {
             path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
         }
 
-        // path adds the leading slash if not present
-        int indexOfSlash = path.indexOf(SLASH_CHAR);
-        if (indexOfSlash != 0) {
-            path = SLASH_CHAR + path;
-        }
+        int indexOfColon = path.indexOf(COLON_CHAR);
+        if (indexOfColon > -1) { // the path on the Unix/Linux
+            // path adds the leading slash if not present
+            int indexOfSlash = path.indexOf(SLASH_CHAR);
+            if (indexOfSlash != 0) {
+                path = SLASH_CHAR + path;
+            }
+        } // else the path on the Windows
+
         return path;
     }
 
