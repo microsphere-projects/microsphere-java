@@ -16,9 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.collection.CollectionUtils;
-import io.microsphere.collection.MapUtils;
-
 import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -26,10 +23,15 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
+import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.isEmpty;
 
 /**
  * The utility class for Assertion
@@ -145,7 +147,7 @@ public abstract class Assert extends BaseUtils {
      *                assertion fails
      */
     public static void assertNotEmpty(@Nullable String text, String message) {
-        if (StringUtils.isEmpty(text)) {
+        if (isEmpty(text)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -161,7 +163,7 @@ public abstract class Assert extends BaseUtils {
      *                        assertion fails
      */
     public static void assertNotEmpty(@Nullable String text, Supplier<String> messageSupplier) {
-        if (StringUtils.isEmpty(text)) {
+        if (isEmpty(text)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
     }
@@ -177,7 +179,7 @@ public abstract class Assert extends BaseUtils {
      *                assertion fails
      */
     public static void assertNotBlank(@Nullable String text, String message) {
-        if (StringUtils.isBlank(text)) {
+        if (isBlank(text)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -193,7 +195,7 @@ public abstract class Assert extends BaseUtils {
      *                        assertion fails
      */
     public static void assertNotBlank(@Nullable String text, Supplier<String> messageSupplier) {
-        if (StringUtils.isBlank(text)) {
+        if (isBlank(text)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
     }
@@ -208,7 +210,7 @@ public abstract class Assert extends BaseUtils {
      * @throws IllegalArgumentException if the object array is {@code null} or contains no elements
      */
     public static void assertNotEmpty(@Nullable Object[] array, String message) {
-        if (ArrayUtils.isEmpty(array)) {
+        if (isEmpty(array)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -226,7 +228,7 @@ public abstract class Assert extends BaseUtils {
      * @throws IllegalArgumentException if the object array is {@code null} or contains no elements
      */
     public static void assertNotEmpty(@Nullable Object[] array, Supplier<String> messageSupplier) {
-        if (ArrayUtils.isEmpty(array)) {
+        if (isEmpty(array)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
     }
@@ -242,7 +244,7 @@ public abstract class Assert extends BaseUtils {
      *                                  contains no elements
      */
     public static void assertNotEmpty(@Nullable Collection<?> collection, String message) {
-        if (CollectionUtils.isEmpty(collection)) {
+        if (isEmpty(collection)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -261,7 +263,7 @@ public abstract class Assert extends BaseUtils {
      *                                  contains no elements
      */
     public static void assertNotEmpty(@Nullable Collection<?> collection, Supplier<String> messageSupplier) {
-        if (CollectionUtils.isEmpty(collection)) {
+        if (isEmpty(collection)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
     }
@@ -276,7 +278,7 @@ public abstract class Assert extends BaseUtils {
      * @throws IllegalArgumentException if the map is {@code null} or contains no entries
      */
     public static void assertNotEmpty(@Nullable Map<?, ?> map, String message) {
-        if (MapUtils.isEmpty(map)) {
+        if (isEmpty(map)) {
             throw new IllegalArgumentException(message);
         }
     }
@@ -294,7 +296,7 @@ public abstract class Assert extends BaseUtils {
      * @throws IllegalArgumentException if the map is {@code null} or contains no entries
      */
     public static void assertNotEmpty(@Nullable Map<?, ?> map, Supplier<String> messageSupplier) {
-        if (MapUtils.isEmpty(map)) {
+        if (isEmpty(map)) {
             throw new IllegalArgumentException(nullSafeGet(messageSupplier));
         }
     }
