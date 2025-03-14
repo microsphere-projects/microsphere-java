@@ -39,6 +39,7 @@ import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.getAllGenericTypes;
 import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
@@ -100,6 +101,27 @@ public class TypeUtilsTest {
 
         types = findAllHierarchicalTypes(E.class);
         assertTypes(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+    }
+
+    @Test
+    public void testGetAllGenericTypes() {
+        List<ParameterizedType> genericTypes = getAllGenericTypes(E.class);
+
+        assertEquals(1, genericTypes.size());
+
+        ParameterizedType genericType = genericTypes.get(0);
+        assertEquals(Comparable.class, genericType.getRawType());
+        assertEquals(B.class, genericType.getActualTypeArguments()[0]);
+
+        genericTypes = getAllGenericTypes(D.class);
+
+        assertEquals(2, genericTypes.size());
+        assertEquals(C.class, genericTypes.get(0).getRawType());
+        assertEquals(String.class, genericTypes.get(0).getActualTypeArguments()[0]);
+
+        assertEquals(Comparable.class, genericTypes.get(1).getRawType());
+        assertEquals(B.class, genericTypes.get(1).getActualTypeArguments()[0]);
+
     }
 
     @Test
