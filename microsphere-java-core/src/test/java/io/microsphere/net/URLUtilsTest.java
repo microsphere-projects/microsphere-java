@@ -57,6 +57,7 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.SystemUtils.USER_DIR;
+import static java.nio.file.Paths.get;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -106,7 +107,7 @@ public class URLUtilsTest {
     @BeforeAll
     public static void beforeAll() throws Throwable {
         ClassLoader classLoader = getDefaultClassLoader();
-        userDirURL = ofURL(userDirURLString);
+        userDirURL = get(USER_DIR).toUri().toURL();
         classPathURL = getResource(classLoader, "/");
         classFileURL = getClassResource(classLoader, StringUtils.class);
         classArchiveEntryURL = getClassResource(classLoader, Nonnull.class);
