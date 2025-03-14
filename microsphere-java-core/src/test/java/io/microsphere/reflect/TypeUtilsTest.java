@@ -45,12 +45,14 @@ import static io.microsphere.reflect.TypeUtils.getAllGenericTypes;
 import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
+import static io.microsphere.reflect.TypeUtils.getClassName;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -161,6 +163,16 @@ public class TypeUtilsTest {
     @Test
     public void testGetAllGenericInterfacesOnNull() {
         assertSame(emptyList(), getAllGenericInterfaces(null));
+    }
+
+    @Test
+    public void testGetClassName() {
+        assertEquals("java.lang.String", getClassName(String.class));
+    }
+
+    @Test
+    public void testGetClassNameOnNull() {
+        assertThrows(NullPointerException.class, () -> getClassName(null));
     }
 
     @Test
