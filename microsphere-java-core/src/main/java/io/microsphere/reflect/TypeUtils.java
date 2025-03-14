@@ -531,7 +531,11 @@ public abstract class TypeUtils extends BaseUtils {
         // Add all super classes
         allTypes.addAll(getAllSuperClasses(rawClass, NON_OBJECT_CLASS_FILTER));
 
-        List<ParameterizedType> allGenericSuperClasses = allTypes.stream().map(Class::getGenericSuperclass).filter(TypeUtils::isParameterizedType).map(ParameterizedType.class::cast).collect(Collectors.toList());
+        List<ParameterizedType> allGenericSuperClasses = allTypes.stream()
+                .map(Class::getGenericSuperclass)
+                .filter(TypeUtils::isParameterizedType)
+                .map(ParameterizedType.class::cast)
+                .collect(toList());
 
         return unmodifiableList(filterAll(allGenericSuperClasses, typeFilters));
     }
@@ -559,7 +563,8 @@ public abstract class TypeUtils extends BaseUtils {
         // Add all super interfaces
         allTypes.addAll(ClassUtils.getAllInterfaces(rawClass));
 
-        List<ParameterizedType> allGenericInterfaces = allTypes.stream().map(Class::getGenericInterfaces)
+        List<ParameterizedType> allGenericInterfaces = allTypes.stream()
+                .map(Class::getGenericInterfaces)
                 .map(Arrays::asList)
                 .flatMap(Collection::stream)
                 .map(TypeUtils::asParameterizedType)
@@ -776,12 +781,16 @@ public abstract class TypeUtils extends BaseUtils {
         // Add Generic Super Class
         genericTypes.add(sourceClass.getGenericSuperclass());
 
-        Set<ParameterizedType> parameterizedTypes = genericTypes.stream().filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
+        Set<ParameterizedType> parameterizedTypes = genericTypes.stream()
+                .filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
                 .map(ParameterizedType.class::cast)  // cast to ParameterizedType
                 .collect(Collectors.toSet());
 
         if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
-            genericTypes.stream().filter(type -> type instanceof Class).map(Class.class::cast).forEach(superClass -> parameterizedTypes.addAll(findParameterizedTypes(superClass)));
+            genericTypes.stream()
+                    .filter(type -> type instanceof Class)
+                    .map(Class.class::cast)
+                    .forEach(superClass -> parameterizedTypes.addAll(findParameterizedTypes(superClass)));
         }
 
         return unmodifiableSet(parameterizedTypes);                     // build as a Set

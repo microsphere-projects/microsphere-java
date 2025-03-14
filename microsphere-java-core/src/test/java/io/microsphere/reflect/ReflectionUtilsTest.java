@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
-import static io.microsphere.reflect.ReflectionUtils.assertArrayType;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInGeneralJVM;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunJVM;
@@ -19,10 +17,8 @@ import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInSunJVM;
 import static io.microsphere.reflect.ReflectionUtils.isSupportedSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.readFieldsAsMap;
 import static io.microsphere.reflect.ReflectionUtils.toList;
-import static java.lang.reflect.Array.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * {@link ReflectionUtils} Test
@@ -33,57 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @since 1.0.0
  */
 public class ReflectionUtilsTest extends AbstractTestCase {
-
-    @Test
-    public void testAssertArrayIndex() {
-        int size = 10;
-        Object array = newInstance(int.class, size);
-        for (int i = 0; i < size; i++) {
-            assertArrayIndex(array, i);
-        }
-
-        for (int i = size; i < size * 2; i++) {
-            ArrayIndexOutOfBoundsException exception = null;
-            try {
-                assertArrayIndex(array, i);
-            } catch (ArrayIndexOutOfBoundsException e) {
-                exception = e;
-                logger.error(e.getMessage());
-            }
-            assertNotNull(exception);
-        }
-    }
-
-    @Test
-    public void testAssertArrayTypeOnException() {
-        IllegalArgumentException exception = null;
-        try {
-            assertArrayType(new Object());
-        } catch (IllegalArgumentException e) {
-            exception = e;
-            logger.error(e.getMessage());
-        }
-        assertNotNull(exception);
-    }
-
-    @Test
-    public void testAssertArrayType() {
-        testAssertArrayType(long.class);
-        testAssertArrayType(int.class);
-        testAssertArrayType(short.class);
-        testAssertArrayType(byte.class);
-        testAssertArrayType(boolean.class);
-        testAssertArrayType(double.class);
-        testAssertArrayType(float.class);
-        testAssertArrayType(char.class);
-        testAssertArrayType(String.class);
-        testAssertArrayType(Object.class);
-    }
-
-    private void testAssertArrayType(Class<?> type) {
-        Object array = newInstance(type, 0);
-        assertArrayType(array);
-    }
 
     @Test
     public void testGetCallerClassX() throws Exception {
