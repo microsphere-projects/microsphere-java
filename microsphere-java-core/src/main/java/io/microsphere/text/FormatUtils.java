@@ -2,7 +2,7 @@ package io.microsphere.text;
 
 import io.microsphere.util.BaseUtils;
 
-import static io.microsphere.util.StringUtils.isEmpty;
+import static io.microsphere.util.StringUtils.isBlank;
 
 /**
  * The utility class of text format
@@ -19,7 +19,7 @@ public abstract class FormatUtils extends BaseUtils {
     }
 
     public static String formatWithPlaceholder(String pattern, String placeholder, Object... args) {
-        if (isEmpty(pattern)) {
+        if (isBlank(pattern)) {
             return pattern;
         }
         int offset = placeholder.length();
