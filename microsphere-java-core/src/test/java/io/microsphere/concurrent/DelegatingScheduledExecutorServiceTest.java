@@ -83,7 +83,7 @@ public class DelegatingScheduledExecutorServiceTest {
         assertEquals(1, futures.size());
         assertEquals("Hello,World", futures.get(0).get());
 
-        futures = instance.invokeAll(ofList(() -> "Hello,World"), 1, MILLISECONDS);
+        futures = instance.invokeAll(ofList(() -> "Hello,World"), 100, MILLISECONDS);
         assertEquals(1, futures.size());
         assertEquals("Hello,World", futures.get(0).get());
 

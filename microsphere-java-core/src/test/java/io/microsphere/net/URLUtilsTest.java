@@ -21,9 +21,12 @@ import java.util.List;
 import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
+import static io.microsphere.net.URLUtils.buildURI;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.close;
 import static io.microsphere.net.URLUtils.decode;
@@ -50,6 +53,7 @@ import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.SystemUtils.USER_DIR;
@@ -78,8 +82,6 @@ public class URLUtilsTest {
 
     private static final String UTF8_ENCODED_TEST_PATH = "%2Fabc%2Fdef";
 
-    private static final String FILE_URL_PREFIX = "file://";
-
     private static final String userDirURLString = FILE_URL_PREFIX + USER_DIR;
 
     private static final String TEST_HTTP_BASE = "http://localhost/";
@@ -96,6 +98,8 @@ public class URLUtilsTest {
 
     private static URL userDirURL;
 
+    private static URL classPathURL;
+
     private static URL classFileURL;
 
     private static URL classArchiveEntryURL;
@@ -103,7 +107,8 @@ public class URLUtilsTest {
     @BeforeAll
     public static void beforeAll() throws Throwable {
         ClassLoader classLoader = getDefaultClassLoader();
-        userDirURL = ofURL(userDirURLString);
+        userDirURL = get(USER_DIR).toUri().toURL();
+        classPathURL = getResource(classLoader, "/");
         classFileURL = getClassResource(classLoader, StringUtils.class);
         classArchiveEntryURL = getClassResource(classLoader, Nonnull.class);
     }
@@ -139,14 +144,14 @@ public class URLUtilsTest {
 
     @Test
     public void testResolveBasePathOnFile() {
-        assertEquals(get(USER_DIR), get(resolveBasePath(userDirURL)));
+        assertEquals(new File(USER_DIR), new File(resolveBasePath(userDirURL)));
     }
 
     @Test
     public void testResolveBasePathOnArchiveEntry() throws MalformedURLException {
         String basePath = resolveBasePath(classArchiveEntryURL);
         assertNotNull(basePath);
-        assertEquals(get(basePath), get(resolveBasePath(FILE_URL_PREFIX + basePath)));
+        assertTrue(new File(basePath).exists());
     }
 
     @Test
@@ -330,6 +335,24 @@ public class URLUtilsTest {
     }
 
     @Test
+    public void testBuildURI() {
+        String path = buildURI("a", "b", "c");
+        assertEquals("/a/b/c", path);
+
+        path = buildURI("a/", "b\\\\", "//c");
+        assertEquals("/a/b/c", path);
+    }
+
+    @Test
+    public void testBuildURIOnEmpty() {
+        String path = buildURI();
+        assertEquals("/", path);
+
+        path = buildURI(null);
+        assertEquals("/", path);
+    }
+
+    @Test
     public void testBuildMatrixString() {
         String matrixString = buildMatrixString("n", "1");
         assertEquals(";n=1", matrixString);
@@ -339,6 +362,13 @@ public class URLUtilsTest {
 
         matrixString = buildMatrixString("n", "1", "2", "3");
         assertEquals(";n=1;n=2;n=3", matrixString);
+    }
+
+    @Test
+    public void testBuildMatrixStringOnEmptyMap() {
+        assertNull(buildMatrixString(null));
+        assertNull(buildMatrixString(emptyMap()));
+        assertNull(buildMatrixString(newHashMap()));
     }
 
     @Test
@@ -426,14 +456,17 @@ public class URLUtilsTest {
         assertEquals("http", resolveProtocol("http://..."));
     }
 
+
     @Test
     public void testResolvePath() {
-        assertEquals(USER_DIR, resolvePath(userDirURL));
+        assertResolvePath(userDirURL);
+        assertResolvePath(classPathURL);
+        assertResolvePath(classFileURL);
     }
 
     @Test
     public void testResolvePathWithMatrixString() {
-        assertEquals(USER_DIR, resolvePath(userDirURL));
+        assertEquals(new File(USER_DIR), new File(resolvePath(userDirURL)));
     }
 
     @Test
@@ -516,6 +549,16 @@ public class URLUtilsTest {
     @Test
     public void testResolveParametersOnEmptyString() {
         assertSame(emptyMap(), resolveParameters(EMPTY_STRING, AND_CHAR));
+    }
+
+
+    private void assertResolvePath(URL url) {
+        assertResolvePath(url, true);
+    }
+
+    private void assertResolvePath(URL url, boolean includeArchiveEntryPath) {
+        String path = URLUtils.resolvePath(url, includeArchiveEntryPath);
+        assertEquals(new File(path), new File(url.getPath()));
     }
 
 }

@@ -2,43 +2,26 @@ package io.microsphere.reflect;
 
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
-import static io.microsphere.reflect.FieldUtils.getDeclaredField;
-import static io.microsphere.text.FormatUtils.format;
-import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.reflect.Modifier.isStatic;
-import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableSet;
 
 /**
  * Reflection Utility class , generic methods are defined from {@link FieldUtils} , {@link MethodUtils} , {@link
@@ -314,60 +297,6 @@ public abstract class ReflectionUtils extends BaseUtils {
     }
 
     /**
-     * Assert array index
-     *
-     * @param array Array object
-     * @param index index
-     * @throws IllegalArgumentException       see {@link ReflectionUtils#assertArrayType(Object)}
-     * @throws ArrayIndexOutOfBoundsException If <code>index</code> is less than 0 or equals or greater than length of array
-     */
-    public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
-        if (index < 0) {
-            String message = format("The index argument must be positive , actual is {}", index);
-            throw new ArrayIndexOutOfBoundsException(message);
-        }
-        assertArrayType(array);
-        int length = Array.getLength(array);
-        if (index > length - 1) {
-            String message = format("The index must be less than {} , actual is {}", length, index);
-            throw new ArrayIndexOutOfBoundsException(message);
-        }
-    }
-
-    /**
-     * Assert the object is array or not
-     *
-     * @param array asserted object
-     * @throws IllegalArgumentException if the object is not a array
-     */
-    public static void assertArrayType(Object array) throws IllegalArgumentException {
-        Class<?> type = array.getClass();
-        if (!type.isArray()) {
-            String message = format("The argument is not an array object, its type is {}", type.getName());
-            throw new IllegalArgumentException(message);
-        }
-    }
-
-    /**
-     * Assert Field type match
-     *
-     * @param object       Object
-     * @param fieldName    field name
-     * @param expectedType expected type
-     * @throws IllegalArgumentException if type is not matched
-     */
-    public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws IllegalArgumentException {
-        Class<?> type = object.getClass();
-        Field field = getDeclaredField(type, fieldName);
-        Class<?> fieldType = field.getType();
-        if (!expectedType.isAssignableFrom(fieldType)) {
-            String message = format("The type['{}'] of field['{}'] in Class['{}'] can't match expected type['{}']", fieldType.getName(), fieldName, type.getName(), expectedType.getName());
-            throw new IllegalArgumentException(message);
-        }
-    }
-
-
-    /**
      * Convert {@link Array} object to {@link List}
      *
      * @param array array object
@@ -435,111 +364,6 @@ public abstract class ReflectionUtils extends BaseUtils {
         return fieldsAsMap;
     }
 
-
-    /**
-     * Find the {@link Set} of {@link ParameterizedType}
-     *
-     * @param sourceClass the source {@link Class class}
-     * @return non-null read-only {@link Set}
-     */
-    public static Set<ParameterizedType> findParameterizedTypes(Class<?> sourceClass) {
-        List<Type> genericTypes = new LinkedList<>();
-        // Add Generic Interfaces
-        addAll(genericTypes, sourceClass.getGenericInterfaces());
-        // Add Generic Super Class
-        genericTypes.add(sourceClass.getGenericSuperclass());
-
-        Set<ParameterizedType> parameterizedTypes = genericTypes.stream().filter(type -> type instanceof ParameterizedType)// filter ParameterizedType
-                .map(type -> (ParameterizedType) type)  // cast to ParameterizedType
-                .collect(Collectors.toSet());
-
-        if (parameterizedTypes.isEmpty()) { // If not found, try to search super types recursively
-            genericTypes.stream().filter(type -> type instanceof Class).map(type -> (Class) type).forEach(superClass -> {
-                parameterizedTypes.addAll(findParameterizedTypes(superClass));
-            });
-        }
-
-        return unmodifiableSet(parameterizedTypes);                     // build as a Set
-
-    }
-
-    /**
-     * Find the hierarchical types from the source {@link Class class} by specified {@link Class type}.
-     *
-     * @param sourceClass the source {@link Class class}
-     * @param matchType   the type to match
-     * @param <T>         the type to match
-     * @return non-null read-only {@link Set}
-     */
-    public static <T> Set<Class<T>> findHierarchicalTypes(Class<?> sourceClass, Class<T> matchType) {
-        if (sourceClass == null) {
-            return emptySet();
-        }
-
-        Set<Class<T>> hierarchicalTypes = new LinkedHashSet<>();
-
-        if (matchType.isAssignableFrom(sourceClass)) {
-            hierarchicalTypes.add((Class<T>) sourceClass);
-        }
-
-        // Find all super classes
-        hierarchicalTypes.addAll(findHierarchicalTypes(sourceClass.getSuperclass(), matchType));
-
-        return unmodifiableSet(hierarchicalTypes);
-    }
-
-    /**
-     * Get the value from the specified bean and its getter method.
-     *
-     * @param bean       the bean instance
-     * @param methodName the name of getter
-     * @param <T>        the type of property value
-     * @return
-     */
-    public static <T> T getProperty(Object bean, String methodName) {
-        Class<?> beanClass = bean.getClass();
-        BeanInfo beanInfo = null;
-        T propertyValue = null;
-
-        try {
-            beanInfo = Introspector.getBeanInfo(beanClass);
-            propertyValue = (T) Stream.of(beanInfo.getMethodDescriptors()).filter(methodDescriptor -> methodName.equals(methodDescriptor.getName())).findFirst().map(method -> {
-                try {
-                    return method.getMethod().invoke(bean);
-                } catch (Exception e) {
-                    //ignore
-                }
-                return null;
-            }).get();
-        } catch (Exception e) {
-
-        }
-        return propertyValue;
-    }
-
-    /**
-     * Resolve the types of the specified values
-     *
-     * @param values the values
-     * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
-     */
-    public static Class[] resolveTypes(Object... values) {
-
-        if (isEmpty(values)) {
-            return EMPTY_CLASS_ARRAY;
-        }
-
-        int size = values.length;
-
-        Class[] types = new Class[size];
-
-        for (int i = 0; i < size; i++) {
-            Object value = values[i];
-            types[i] = value == null ? null : value.getClass();
-        }
-
-        return types;
-    }
 
     /**
      * Determine whether the specified {@link Throwable} is {@link java.lang.reflect.InaccessibleObjectException}

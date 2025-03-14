@@ -298,7 +298,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     }
 
     protected String resolvePath(URL url) {
-        return URLUtils.resolvePath(url.getPath());
+        return URLUtils.resolvePath(url);
     }
 
     public final String getProtocol() {

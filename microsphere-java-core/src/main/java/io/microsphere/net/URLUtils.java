@@ -3,7 +3,6 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.collection.MapUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
@@ -12,6 +11,7 @@ import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -29,10 +29,12 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
-import static io.microsphere.constants.PathConstants.BACK_SLASH;
+import static io.microsphere.constants.PathConstants.BACK_SLASH_CHAR;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
@@ -57,6 +59,7 @@ import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -90,6 +93,16 @@ public abstract class URLUtils extends BaseUtils {
      * The length of {@link #ARCHIVE_ENTRY_SEPARATOR_LENGTH}
      */
     private static final int ARCHIVE_ENTRY_SEPARATOR_LENGTH = ARCHIVE_ENTRY_SEPARATOR.length();
+
+    /**
+     * The prefix of {@link URL} for file protocol : "file:/"
+     */
+    public static final String FILE_URL_PREFIX = FILE_PROTOCOL + COLON_CHAR + SLASH_CHAR;
+
+    /**
+     * The length of {@link #FILE_URL_PREFIX}
+     */
+    private static final int FILE_URL_PREFIX_LENGTH = FILE_URL_PREFIX.length();
 
     /**
      * The property which specifies the package prefix list to be scanned
@@ -173,21 +186,86 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
-        return resolveBasePath(url.getPath());
+        return resolvePath(url, false);
     }
 
-    protected static String resolveBasePath(String path) {
-        int beginIndex = path.lastIndexOf(COLON_CHAR);
-        if (beginIndex == -1) {
-            return path;
+    static String resolvePath(URL url, boolean includeArchiveEntryPath) {
+        String protocol = url.getProtocol();
+
+        switch (protocol) {
+            case FILE_PROTOCOL:
+                return resolvePathFromFile(url);
+            case JAR_PROTOCOL:
+                return resolvePathFromJar(url, includeArchiveEntryPath);
         }
-        beginIndex += 1;
-        int endIndex = indexOfArchiveEntry(path);
-        if (endIndex == -1) {
-            return path.substring(beginIndex);
-        } else {
-            return path.substring(beginIndex, endIndex);
+
+        String path = url.getPath();
+
+        // path may contain the matrix parameters
+        int indexOfMatrixString = indexOfMatrixString(path);
+        // path removes the matrix parameters if present
+        path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
+
+        return path;
+    }
+
+    static String resolvePathFromFile(URL url) {
+        String path = buildPath(url);
+        if (IS_OS_WINDOWS) {
+            int index = path.indexOf(SLASH_CHAR);
+            if (index == 0) {
+                path = path.substring(1);
+            }
         }
+        return path;
+    }
+
+    static String buildPath(URL url) {
+        String authority = url.getAuthority();
+        String path = url.getPath();
+        int length = 0;
+        int authorityLength = length(authority);
+        if (authorityLength > 0) {
+            length += authority.length() + 1;
+        }
+        int pathLength = length(path);
+        if (pathLength > 0) {
+            length += pathLength;
+        }
+        StringBuilder pathBuilder = new StringBuilder(length);
+        if (authorityLength > 0) {
+            pathBuilder.append(SLASH_CHAR)
+                    .append(authority);
+        }
+        if (pathLength > 0) {
+            pathBuilder.append(path);
+        }
+        return pathBuilder.toString();
+    }
+
+    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
+        String path = buildPath(url);
+        int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
+        if (filePrefixIndex == 0) { //  path starts with "file:/"
+            path = path.substring(FILE_URL_PREFIX_LENGTH);
+        }
+
+        // path removes the archive entry path if present
+        if (!includeArchiveEntryPath) {
+            int indexOfArchiveEntry = indexOfArchiveEntry(path);
+            path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
+        }
+
+        int indexOfColon = path.indexOf(COLON_CHAR);
+        if (indexOfColon == -1) { // the path on the Unix/Linux
+            // path adds the leading slash if not present
+            int indexOfSlash = path.indexOf(SLASH_CHAR);
+            if (indexOfSlash != 0) {
+                path = SLASH_CHAR + path;
+            }
+        } // else the path on the Windows
+
+        return path;
     }
 
     /**
@@ -207,14 +285,9 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static File doResolveArchiveFile(URL url) throws NullPointerException {
-        if (isArchiveURL(url)) {
-            String basePath = resolveBasePath(url);
-            File archiveFile = new File(basePath);
-            if (archiveFile.exists()) {
-                return archiveFile;
-            }
-        }
-        return null;
+        String basePath = resolveBasePath(url);
+        File archiveFile = new File(basePath);
+        return archiveFile.exists() ? archiveFile : null;
     }
 
     protected static File resolveArchiveDirectory(URL resourceURL) {
@@ -285,13 +358,14 @@ public abstract class URLUtils extends BaseUtils {
 
         String resolvedPath = path.trim();
 
-        while (resolvedPath.contains(BACK_SLASH)) {
-            resolvedPath = replace(resolvedPath, BACK_SLASH, SLASH);
+        while (resolvedPath.indexOf(BACK_SLASH_CHAR) > -1) {
+            resolvedPath = resolvedPath.replace(BACK_SLASH_CHAR, SLASH_CHAR);
         }
 
         while (resolvedPath.contains(DOUBLE_SLASH)) {
             resolvedPath = replace(resolvedPath, DOUBLE_SLASH, SLASH);
         }
+
         return resolvedPath;
     }
 
@@ -404,12 +478,8 @@ public abstract class URLUtils extends BaseUtils {
         String protocol = url.getProtocol();
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
-            try {
-                File file = new File(url.toURI());
-                JarFile jarFile = new JarFile(file);
-                flag = jarFile != null;
-            } catch (Exception e) {
-            }
+            JarFile jarFile = toJarFile(url);
+            flag = jarFile != null;
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
@@ -432,14 +502,30 @@ public abstract class URLUtils extends BaseUtils {
                 flag = true;
                 break;
             case FILE_PROTOCOL:
-                try {
-                    File file = new File(url.toURI());
-                    JarFile jarFile = new JarFile(file);
-                    flag = jarFile != null;
-                } catch (Exception e) {
-                }
+                JarFile jarFile = toJarFile(url);
+                flag = jarFile != null;
         }
         return flag;
+    }
+
+    public static JarFile toJarFile(URL url) {
+        String path = buildPath(url);
+        File file = new File(path);
+        if (!file.exists()) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile is not existed from the url : {}", url);
+            }
+            return null;
+        }
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(file);
+        } catch (IOException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile can't be open from the url : {}", url);
+            }
+        }
+        return jarFile;
     }
 
     /**
@@ -454,13 +540,17 @@ public abstract class URLUtils extends BaseUtils {
             return SLASH;
         }
 
-        StringBuilder uriBuilder = new StringBuilder(SLASH);
+        int capacity = 0;
+
+        for (int i = 0; i < length; i++) {
+            capacity += length(paths[i]) + 1;
+        }
+
+        StringBuilder uriBuilder = new StringBuilder(capacity);
         for (int i = 0; i < length; i++) {
             String path = paths[i];
+            uriBuilder.append(SLASH_CHAR);
             uriBuilder.append(path);
-            if (i < length - 1) {
-                uriBuilder.append(SLASH);
-            }
         }
 
         return normalizePath(uriBuilder.toString());
@@ -473,7 +563,7 @@ public abstract class URLUtils extends BaseUtils {
      * @return the Matrix String
      */
     public static String buildMatrixString(Map<String, List<String>> matrixParameters) {
-        if (MapUtils.isEmpty(matrixParameters)) {
+        if (isEmpty(matrixParameters)) {
             return null;
         }
         StringBuilder matrixStringBuilder = new StringBuilder();
@@ -658,15 +748,10 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     public static String resolvePath(URL url) {
-        return resolvePath(url.getPath());
+        return resolvePath(url, true);
     }
 
-    public static String resolvePath(String value) {
-        int indexOfMatrixString = indexOfMatrixString(value);
-        return resolvePath(value, indexOfMatrixString);
-    }
-
-    public static String resolvePath(String value, int indexOfMatrixString) {
+    static String resolvePath(String value, int indexOfMatrixString) {
         return indexOfMatrixString > -1 ? value.substring(0, indexOfMatrixString) : value;
     }
 
