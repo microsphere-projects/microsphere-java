@@ -22,7 +22,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import static io.microsphere.reflect.ReflectionUtils.findParameterizedTypes;
+import static io.microsphere.reflect.TypeUtils.findParameterizedTypes;
 
 /**
  * The {@link Event Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
