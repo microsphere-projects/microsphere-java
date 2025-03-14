@@ -39,13 +39,18 @@ import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.getAllGenericInterfaces;
+import static io.microsphere.reflect.TypeUtils.getAllGenericSuperClasses;
 import static io.microsphere.reflect.TypeUtils.getAllGenericTypes;
 import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -122,6 +127,40 @@ public class TypeUtilsTest {
         assertEquals(Comparable.class, genericTypes.get(1).getRawType());
         assertEquals(B.class, genericTypes.get(1).getActualTypeArguments()[0]);
 
+    }
+
+    @Test
+    public void testGetAllGenericSuperClasses() {
+        List<ParameterizedType> genericSuperClasses = getAllGenericSuperClasses(E.class);
+        assertEquals(0, genericSuperClasses.size());
+
+        genericSuperClasses = getAllGenericSuperClasses(D.class);
+        assertEquals(1, genericSuperClasses.size());
+        assertEquals(C.class, genericSuperClasses.get(0).getRawType());
+        assertEquals(String.class, genericSuperClasses.get(0).getActualTypeArguments()[0]);
+    }
+
+    @Test
+    public void testGetAllGenericSuperClassesOnNullType() {
+        assertSame(emptyList(), getAllGenericSuperClasses(Comparable.class));
+    }
+
+    @Test
+    public void testGetAllGenericSuperClassesOnInterfaceType() {
+        assertSame(emptyList(), getAllGenericSuperClasses(Comparable.class));
+    }
+
+    @Test
+    public void testGetAllGenericInterfaces() {
+        List<ParameterizedType> genericInterfaces = getAllGenericInterfaces(E.class);
+        assertEquals(1, genericInterfaces.size());
+        assertEquals(Comparable.class, genericInterfaces.get(0).getRawType());
+        assertEquals(B.class, genericInterfaces.get(0).getActualTypeArguments()[0]);
+    }
+
+    @Test
+    public void testGetAllGenericInterfacesOnNull() {
+        assertSame(emptyList(), getAllGenericInterfaces(null));
     }
 
     @Test
