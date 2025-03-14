@@ -531,7 +531,11 @@ public abstract class TypeUtils extends BaseUtils {
         // Add all super classes
         allTypes.addAll(getAllSuperClasses(rawClass, NON_OBJECT_CLASS_FILTER));
 
-        List<ParameterizedType> allGenericSuperClasses = allTypes.stream().map(Class::getGenericSuperclass).filter(TypeUtils::isParameterizedType).map(ParameterizedType.class::cast).collect(Collectors.toList());
+        List<ParameterizedType> allGenericSuperClasses = allTypes.stream()
+                .map(Class::getGenericSuperclass)
+                .filter(TypeUtils::isParameterizedType)
+                .map(ParameterizedType.class::cast)
+                .collect(toList());
 
         return unmodifiableList(filterAll(allGenericSuperClasses, typeFilters));
     }
@@ -559,7 +563,8 @@ public abstract class TypeUtils extends BaseUtils {
         // Add all super interfaces
         allTypes.addAll(ClassUtils.getAllInterfaces(rawClass));
 
-        List<ParameterizedType> allGenericInterfaces = allTypes.stream().map(Class::getGenericInterfaces)
+        List<ParameterizedType> allGenericInterfaces = allTypes.stream()
+                .map(Class::getGenericInterfaces)
                 .map(Arrays::asList)
                 .flatMap(Collection::stream)
                 .map(TypeUtils::asParameterizedType)
