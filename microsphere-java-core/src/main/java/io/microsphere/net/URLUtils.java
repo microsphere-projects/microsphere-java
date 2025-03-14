@@ -536,13 +536,17 @@ public abstract class URLUtils extends BaseUtils {
             return SLASH;
         }
 
-        StringBuilder uriBuilder = new StringBuilder(SLASH_CHAR);
+        int capacity = 0;
+
+        for (int i = 0; i < length; i++) {
+            capacity += length(paths[i]) + 1;
+        }
+
+        StringBuilder uriBuilder = new StringBuilder(capacity);
         for (int i = 0; i < length; i++) {
             String path = paths[i];
+            uriBuilder.append(SLASH_CHAR);
             uriBuilder.append(path);
-            if (i < length - 1) {
-                uriBuilder.append(SLASH_CHAR);
-            }
         }
 
         return normalizePath(uriBuilder.toString());
