@@ -94,9 +94,9 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing one element.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the single element
-     * @return a {@code List} containing the specified element
+     * @return a {@code Set} containing the specified element
      * @throws NullPointerException if the element is {@code null}
      */
     static <E> Set<E> ofSet(E e1) {
@@ -113,10 +113,10 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing two elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2) {
@@ -133,11 +133,11 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing three elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3) {
@@ -154,12 +154,12 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing four elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
      * @param e4  the fourth element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4) {
@@ -176,13 +176,13 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing five elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
      * @param e4  the fourth element
      * @param e5  the fifth element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5) {
@@ -199,14 +199,14 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing six elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
      * @param e4  the fourth element
      * @param e5  the fifth element
      * @param e6  the sixth element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6) {
@@ -223,7 +223,7 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing seven elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -231,7 +231,7 @@ public abstract class Sets extends BaseUtils {
      * @param e5  the fifth element
      * @param e6  the sixth element
      * @param e7  the seventh element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
@@ -248,7 +248,7 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing eight elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -257,7 +257,7 @@ public abstract class Sets extends BaseUtils {
      * @param e6  the sixth element
      * @param e7  the seventh element
      * @param e8  the eighth element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
@@ -274,7 +274,7 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing nine elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -284,7 +284,7 @@ public abstract class Sets extends BaseUtils {
      * @param e7  the seventh element
      * @param e8  the eighth element
      * @param e9  the ninth element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
@@ -301,7 +301,7 @@ public abstract class Sets extends BaseUtils {
     /**
      * Returns an unmodifiable set containing ten elements.
      *
-     * @param <E> the {@code List}'s element type
+     * @param <E> the {@code Set}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -312,7 +312,7 @@ public abstract class Sets extends BaseUtils {
      * @param e8  the eighth element
      * @param e9  the ninth element
      * @param e10 the tenth element
-     * @return a {@code List} containing the specified elements
+     * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
     static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
