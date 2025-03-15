@@ -48,6 +48,7 @@ import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.getClassName;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
+import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClasses;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -109,6 +110,42 @@ public class TypeUtilsTest {
         assertTrue(isAssignableFrom(B.class, D.class.getGenericSuperclass()));
         assertTrue(isAssignableFrom(D.class.getGenericSuperclass(), D.class.getGenericSuperclass()));
         assertTrue(isAssignableFrom(Comparable.class, B.class.getGenericInterfaces()[0]));
+    }
+
+
+    @Test
+    public void testResolveActualTypeArguments() {
+        List<Type> actualTypeArguments = resolveActualTypeArguments(B.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = resolveActualTypeArguments(C.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = resolveActualTypeArguments(D.class, C.class);
+        assertTypes(actualTypeArguments, String.class);
+
+        actualTypeArguments = resolveActualTypeArguments(E.class, Comparable.class);
+        assertTypes(actualTypeArguments, B.class);
+
+        actualTypeArguments = resolveActualTypeArguments(StringToStringConverter.class, Converter.class);
+        assertTypes(actualTypeArguments, String.class, String.class);
+
+        actualTypeArguments = resolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
+        assertTypes(actualTypeArguments, String.class, Integer.class);
+    }
+
+    @Test
+    public void testResolveActualTypeArgumentClasses() {
+        List<Class> actualTypeArgumentClasses = resolveActualTypeArgumentClasses(D.class, C.class);
+        assertEquals(1, actualTypeArgumentClasses.size());
+        assertSame(String.class, actualTypeArgumentClasses.get(0));
+
+        actualTypeArgumentClasses = resolveActualTypeArgumentClasses(D.class, B.class);
+        assertTrue(actualTypeArgumentClasses.isEmpty());
+
+        actualTypeArgumentClasses = resolveActualTypeArgumentClasses(D.class, Comparable.class);
+        assertEquals(1, actualTypeArgumentClasses.size());
+        assertSame(B.class, actualTypeArgumentClasses.get(0));
     }
 
     @Test
@@ -195,28 +232,6 @@ public class TypeUtilsTest {
     @Test
     public void testGetClassNameOnNull() {
         assertThrows(NullPointerException.class, () -> getClassName(null));
-    }
-
-    @Test
-    public void testResolveActualTypeArguments() {
-        List<Type> actualTypeArguments = resolveActualTypeArguments(B.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
-
-        actualTypeArguments = resolveActualTypeArguments(C.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
-
-        actualTypeArguments = resolveActualTypeArguments(D.class, C.class);
-        assertTypes(actualTypeArguments, String.class);
-
-        actualTypeArguments = resolveActualTypeArguments(E.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
-
-        actualTypeArguments = resolveActualTypeArguments(StringToStringConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, String.class);
-
-        actualTypeArguments = resolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
-
     }
 
     @Test
