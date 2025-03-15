@@ -46,10 +46,13 @@ import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.getClassName;
+import static io.microsphere.reflect.TypeUtils.getRawClass;
+import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -86,6 +89,26 @@ public class TypeUtilsTest {
         assertFalse(TYPE_VARIABLE_FILTER.test(D.class.getGenericSuperclass()));
 
         assertTrue(TYPE_VARIABLE_FILTER.test(Comparable.class.getTypeParameters()[0]));
+    }
+
+    @Test
+    public void testGetRawClass() {
+        assertEquals(Object.class, getRawClass(Object.class));
+        assertEquals(C.class, getRawClass(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testGetRawClassOnNull() {
+        assertNull(getRawClass(null));
+    }
+
+    @Test
+    public void testIsAssignableFrom() {
+        assertTrue(isAssignableFrom(Object.class, Object.class));
+        assertTrue(isAssignableFrom(C.class, D.class.getGenericSuperclass()));
+        assertTrue(isAssignableFrom(B.class, D.class.getGenericSuperclass()));
+        assertTrue(isAssignableFrom(D.class.getGenericSuperclass(), D.class.getGenericSuperclass()));
+        assertTrue(isAssignableFrom(Comparable.class, B.class.getGenericInterfaces()[0]));
     }
 
     @Test
