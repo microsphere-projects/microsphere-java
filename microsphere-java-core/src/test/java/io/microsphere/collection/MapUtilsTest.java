@@ -332,7 +332,7 @@ public class MapUtilsTest {
         assertEquals(map, cloneMap);
     }
 
-    private void assertOfMap(Map map) {
+    static void assertOfMap(Map map) {
         assertThrows(UnsupportedOperationException.class, () -> map.remove("A"));
     }
 
