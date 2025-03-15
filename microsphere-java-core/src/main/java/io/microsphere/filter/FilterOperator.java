@@ -71,7 +71,7 @@ public enum FilterOperator {
      * @param <T>            Filtered object type
      * @param filteredObject Filtered object
      * @param filters        multiple {@link Filter}
-     * @return If accepted ��return <code>true</code>
+     * @return If accepted return <code>true</code>
      * @version 1.0.0
      * @since 1.0.0
      */

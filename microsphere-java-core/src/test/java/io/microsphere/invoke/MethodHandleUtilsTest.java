@@ -24,6 +24,7 @@ import java.lang.invoke.MethodHandles;
 import static io.microsphere.invoke.MethodHandleUtils.findStatic;
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.invoke.MethodHandleUtils.lookup;
+import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -63,6 +64,11 @@ public class MethodHandleUtilsTest {
     }
 
     @Test
+    public void testFindVirtualOnNotFoundMethod() throws Throwable {
+        assertSame(NOT_FOUND_METHOD_HANDLE, findVirtual(MethodHandleUtilsTest.class, "notFound"));
+    }
+
+    @Test
     public void testFindStaticOnPublicStaticMethod() throws Throwable {
         testFindStatic("publicStaticMethod");
     }
@@ -76,6 +82,7 @@ public class MethodHandleUtilsTest {
     public void testFindStaticOnDefaultStaticMethod() throws Throwable {
         testFindStatic("defaultStaticMethod");
     }
+
 
     @Test
     public void testFindStaticOnPrivateStaticMethod() throws Throwable {

@@ -19,7 +19,6 @@ package io.microsphere.event;
 import io.microsphere.lang.function.ThrowableConsumer;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -97,10 +96,6 @@ public abstract class GenericEventListener implements EventListener<Event> {
     private boolean isHandleEventMethod(Method method) {
 
         if (onEventMethod.equals(method)) { // not {@link #onEvent(Event)} method
-            return false;
-        }
-
-        if (!Modifier.isPublic(method.getModifiers())) { // not public
             return false;
         }
 

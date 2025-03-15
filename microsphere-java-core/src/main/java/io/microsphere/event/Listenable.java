@@ -16,11 +16,14 @@
  */
 package io.microsphere.event;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassUtils.getTypeName;
+import static java.lang.reflect.Modifier.isFinal;
 import static java.util.stream.StreamSupport.stream;
 
 /**
@@ -32,22 +35,24 @@ import static java.util.stream.StreamSupport.stream;
 public interface Listenable<E extends EventListener<?>> {
 
     /**
-     * Assets the listener is valid or not
+     * Assets the listener is valid or not, rules:
+     * <ul>
+     *     <li>the <code>listener</code> must not be null</li>
+     *     <li>the class of <code>listener</code> must not be final</li>
+     * </ul>
      *
      * @param listener the instance of {@link EventListener}
-     * @throws NullPointerException
+     * @throws IllegalArgumentException
      */
-    static void assertListener(EventListener<?> listener) throws NullPointerException {
-        if (listener == null) {
-            throw new NullPointerException("The listener must not be null.");
-        }
+    static void assertListener(EventListener<?> listener) throws IllegalArgumentException {
+        assertNotNull(listener, () -> "The 'listener' must not be null.");
 
         Class<?> listenerClass = listener.getClass();
 
         int modifiers = listenerClass.getModifiers();
 
-        if (Modifier.isAbstract(modifiers) || Modifier.isInterface(modifiers)) {
-            throw new IllegalArgumentException("The listener must be concrete class");
+        if (isFinal(modifiers)) {
+            throw new IllegalArgumentException(format("The listener[class : '{}'] must be non-final class", getTypeName(listenerClass)));
         }
     }
 
@@ -73,7 +78,7 @@ public interface Listenable<E extends EventListener<?>> {
             IllegalArgumentException {
         List<E> listeners = new ArrayList<>(1 + others.length);
         listeners.add(listener);
-        addAll(listeners,others);
+        addAll(listeners, others);
         addEventListeners(listeners);
     }
 

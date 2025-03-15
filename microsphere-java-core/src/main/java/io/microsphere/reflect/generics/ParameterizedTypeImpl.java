@@ -79,6 +79,34 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      *                            instantiated
      * @param actualTypeArguments - a (possibly empty) array of types
      *                            representing the actual type arguments to the parameterized type
+     * @return An instance of <tt>ParameterizedType</tt>
+     * @throws MalformedParameterizedTypeException - if the instantiation
+     *                                             is invalid
+     */
+    public static ParameterizedTypeImpl of(Class<?> rawType, Type... actualTypeArguments) {
+        return of(rawType, actualTypeArguments, null);
+    }
+
+    /**
+     * Static factory. Given a (generic) class, actual type arguments
+     * and an owner type, creates a parameterized type.
+     * This class can be instantiated with a a raw type that does not
+     * represent a generic type, provided the list of actual type
+     * arguments is empty.
+     * If the ownerType argument is null, the declaring class of the
+     * raw type is used as the owner type.
+     * <p> This method throws a MalformedParameterizedTypeException
+     * under the following circumstances:
+     * If the number of actual type arguments (i.e., the size of the
+     * array <tt>typeArgs</tt>) does not correspond to the number of
+     * formal type arguments.
+     * If any of the actual type arguments is not an instance of the
+     * bounds on the corresponding formal.
+     *
+     * @param rawType             the Class representing the generic type declaration being
+     *                            instantiated
+     * @param actualTypeArguments - a (possibly empty) array of types
+     *                            representing the actual type arguments to the parameterized type
      * @param ownerType           - the enclosing type, if known.
      * @return An instance of <tt>ParameterizedType</tt>
      * @throws MalformedParameterizedTypeException - if the instantiation

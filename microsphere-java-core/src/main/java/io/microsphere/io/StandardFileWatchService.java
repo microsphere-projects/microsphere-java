@@ -23,7 +23,6 @@ import io.microsphere.io.event.FileChangedListener;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -39,6 +38,7 @@ import java.util.concurrent.ExecutorService;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.event.EventDispatcher.parallel;
+import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
@@ -83,7 +83,7 @@ public class StandardFileWatchService implements FileWatchService {
             throw new IllegalStateException("StandardFileWatchService has started");
         }
 
-        FileSystem fileSystem = FileSystems.getDefault();
+        FileSystem fileSystem = getDefault();
 
         WatchService watchService = fileSystem.newWatchService();
 
