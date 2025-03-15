@@ -32,13 +32,17 @@ import java.util.RandomAccess;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.PARAMETERIZED_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
+import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArgumentsInFastPath;
 import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.findAllTypes;
 import static io.microsphere.reflect.TypeUtils.getAllGenericInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllGenericSuperClasses;
 import static io.microsphere.reflect.TypeUtils.getAllGenericTypes;
@@ -46,10 +50,16 @@ import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.getClassName;
+import static io.microsphere.reflect.TypeUtils.getClassNames;
+import static io.microsphere.reflect.TypeUtils.getGenericTypes;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
+import static io.microsphere.reflect.TypeUtils.isParameterizedType;
+import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgument;
+import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClasses;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
+import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -149,24 +159,36 @@ public class TypeUtilsTest {
     }
 
     @Test
+    public void testResolveActualTypeArgumentClass() {
+        assertSame(String.class, resolveActualTypeArgumentClass(D.class, C.class, 0));
+        assertSame(B.class, resolveActualTypeArgumentClass(D.class, Comparable.class, 0));
+    }
+
+    @Test
+    public void testResolveActualTypeArgument() {
+        assertSame(String.class, resolveActualTypeArgument(D.class, C.class, 0));
+        assertSame(B.class, resolveActualTypeArgument(D.class, Comparable.class, 0));
+    }
+
+    @Test
     public void testFindAllHierarchicalTypes() {
         List<Type> types = findAllHierarchicalTypes(A.class);
         assertTypes(types, Object.class, Serializable.class);
 
         types = findAllHierarchicalTypes(B.class);
-        assertTypes(types, A.class, Comparable.class, Object.class, Serializable.class);
+        assertTypes(types, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = findAllHierarchicalTypes(C.class);
-        assertTypes(types, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+        assertTypes(types, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = findAllHierarchicalTypes(D.class);
-        assertTypes(types, C.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+        assertTypes(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = findAllHierarchicalTypes(D.class);
-        assertTypes(types, C.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+        assertTypes(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = findAllHierarchicalTypes(E.class);
-        assertTypes(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, Comparable.class, Object.class, Serializable.class);
+        assertTypes(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class);
     }
 
     @Test
@@ -187,7 +209,6 @@ public class TypeUtilsTest {
 
         assertEquals(Comparable.class, genericTypes.get(1).getRawType());
         assertEquals(B.class, genericTypes.get(1).getActualTypeArguments()[0]);
-
     }
 
     @Test
@@ -235,6 +256,14 @@ public class TypeUtilsTest {
     }
 
     @Test
+    public void testGetClassNames() {
+        Set<String> classNames = getClassNames(ofList(String.class, Integer.class));
+        assertEquals(2, classNames.size());
+        assertTrue(classNames.contains("java.lang.String"));
+        assertTrue(classNames.contains("java.lang.Integer"));
+    }
+
+    @Test
     public void testDoResolveActualTypeArguments() {
         List<Type> actualTypeArguments = null;
 
@@ -266,9 +295,61 @@ public class TypeUtilsTest {
         actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
         assertTypes(actualTypeArguments, String.class, String.class);
 
-
     }
 
+    @Test
+    public void testDoResolveActualTypeArgumentsOnNull() {
+        assertSame(emptyList(), doResolveActualTypeArguments(null, BiFunction.class));
+        assertSame(emptyList(), doResolveActualTypeArguments(BiFunction.class, null));
+    }
+
+    @Test
+    public void testDoResolveActualTypeArgumentsInFastPathOnNull() {
+        assertSame(emptyList(), doResolveActualTypeArgumentsInFastPath(null));
+    }
+
+    @Test
+    public void testGetGenericTypes() {
+        List<ParameterizedType> genericTypes = getGenericTypes(D.class, type -> isParameterizedType(type));
+        assertEquals(1, genericTypes.size());
+        assertEquals(C.class, genericTypes.get(0).getRawType());
+        assertEquals(String.class, genericTypes.get(0).getActualTypeArguments()[0]);
+    }
+
+    @Test
+    public void testGetGenericTypesWithoutPredicate() {
+        List<ParameterizedType> genericTypes = getGenericTypes(D.class);
+        assertEquals(1, genericTypes.size());
+        assertEquals(C.class, genericTypes.get(0).getRawType());
+        assertEquals(String.class, genericTypes.get(0).getActualTypeArguments()[0]);
+    }
+
+    @Test
+    public void testFindAllTypesWithout() {
+        List<Type> types = findAllTypes(D.class, TypeUtils::isParameterizedType);
+        assertEquals(2, types.size());
+        assertTrue(types.contains(of(C.class, String.class)));
+        assertTrue(types.contains(of(Comparable.class, B.class)));
+    }
+
+    @Test
+    public void testFindAllTypesWithoutPredicate() {
+        List<Type> types = findAllTypes(D.class);
+        assertEquals(8, types.size());
+        assertTrue(types.contains(D.class));
+        assertTrue(types.contains(of(C.class, String.class)));
+        assertTrue(types.contains(RandomAccess.class));
+        assertTrue(types.contains(B.class));
+        assertTrue(types.contains(of(Comparable.class, B.class)));
+        assertTrue(types.contains(A.class));
+        assertTrue(types.contains(Serializable.class));
+        assertTrue(types.contains(Object.class));
+    }
+
+    @Test
+    public void testGetGenericTypesOnNull() {
+        assertSame(emptyList(), getGenericTypes(null));
+    }
 
     private void assertTypes(List<Type> types, Type... expectedTypes) {
         assertTypes(types, expectedTypes.length, expectedTypes);
@@ -276,9 +357,7 @@ public class TypeUtilsTest {
 
     private void assertTypes(List<Type> types, int expectedSize, Type... expectedTypes) {
         assertEquals(expectedSize, types.size());
-        for (int i = 0; i < expectedSize; i++) {
-            assertType(expectedTypes[i], types.get(i));
-        }
+        assertEquals(newHashSet(expectedTypes), newHashSet(types));
     }
 
     private void assertType(Type expect, Type actual) {
