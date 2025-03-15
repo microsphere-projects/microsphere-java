@@ -16,7 +16,6 @@
  */
 package io.microsphere.lang;
 
-import io.microsphere.collection.CollectionUtils;
 import io.microsphere.util.ClassPathUtils;
 
 import javax.annotation.Nonnull;
