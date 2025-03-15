@@ -28,10 +28,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
- * The utility class for {@link List} for Modern JDK(9+)
+ * The utility class for {@link List} for Modern JDK(9+), which supports the feedback if Java Runtime is below JDK 9.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see List
+ * @see ListUtils
  * @since 1.0.0
  */
 public abstract class Lists extends BaseUtils {
