@@ -37,6 +37,11 @@ import static java.util.Collections.singletonList;
 public abstract class Lists extends BaseUtils {
 
     /**
+     * The {@link MethodHandle} of {@link List#of()} since JDK 9
+     */
+    private static final MethodHandle of0MethodHandle = findPublicStatic(List.class, "of");
+
+    /**
      * The {@link MethodHandle} of {@link List#of(Object)} since JDK 9
      */
     private static final MethodHandle of1MethodHandle = findPublicStatic(List.class, "of", Object.class);
@@ -92,9 +97,24 @@ public abstract class Lists extends BaseUtils {
     private static final MethodHandle ofMethodHandle = findPublicStatic(List.class, "of", Object[].class);
 
     /**
+     * Returns an unmodifiable list containing zero elements.
+     *
+     * @param <E> the {@code List}'s element type
+     * @return an empty {@code List}
+     */
+    static <E> List<E> ofList() {
+        if (of0MethodHandle == null) {
+            return emptyList();
+        }
+        try {
+            return (List<E>) of0MethodHandle.invokeExact();
+        } catch (Throwable e) {
+            return emptyList();
+        }
+    }
+
+    /**
      * Returns an unmodifiable list containing one element.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the single element
@@ -114,8 +134,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing two elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -136,8 +154,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing three elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -159,8 +175,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing four elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -183,8 +197,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing five elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -208,8 +220,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing six elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -234,8 +244,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing seven elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -261,8 +269,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing eight elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -289,8 +295,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing nine elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -318,8 +322,6 @@ public abstract class Lists extends BaseUtils {
 
     /**
      * Returns an unmodifiable list containing ten elements.
-     * <p>
-     * See <a href="#unmodifiable">Unmodifiable Lists</a> for details.
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -356,7 +358,7 @@ public abstract class Lists extends BaseUtils {
      */
     public static <E> List<E> ofList(E... elements) {
         if (length(elements) < 1) {
-            return emptyList();
+            return ofList();
         }
         if (ofMethodHandle == null) {
             return of(elements);
