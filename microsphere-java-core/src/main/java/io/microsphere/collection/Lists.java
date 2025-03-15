@@ -28,7 +28,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 /**
- * The utility class for {@link List}
+ * The utility class for {@link List} for Modern JDK(9+)
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see List
