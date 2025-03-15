@@ -17,7 +17,7 @@
 package io.microsphere.event;
 
 /**
- * An {@link EventListener} extending the the conditional feature that {@link #accept(Event) decides} some
+ * An {@link EventListener} extending the conditional feature that {@link #accept(Event) decides} some
  * {@link Event event} is handled or not by current listener.
  *
  * @see EventListener
