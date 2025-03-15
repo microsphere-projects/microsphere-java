@@ -43,7 +43,6 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
-import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
@@ -220,15 +219,10 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     protected static List<Type> doResolveActualTypeArguments(Type type, Class baseClass) {
+        if (type == null || baseClass == null) { // the raw class of type or baseType is null
+            return emptyList();
+        }
         return resolvedGenericTypesCache.computeIfAbsent(MultipleType.of(type, baseClass), mt -> {
-
-            if (type == null) { // the raw class of type
-                return emptyList();
-            }
-
-            if (baseClass == null) { // baseType are null
-                return emptyList();
-            }
 
             TypeVariable<Class>[] baseTypeParameters = baseClass.getTypeParameters();
             int baseTypeParametersLength = baseTypeParameters.length;
@@ -249,7 +243,7 @@ public abstract class TypeUtils extends BaseUtils {
 
             Predicate<Type> baseClassFilter = t -> isAssignableFrom(baseClass, t);
 
-            List<Type> hierarchicalTypes = doFindAllHierarchicalTypes(type, baseClassFilter);
+            List<Type> hierarchicalTypes = filterList(doFindAllHierarchicalTypes(type), baseClassFilter);
 
             int hierarchicalTypesSize = hierarchicalTypes.size();
 
@@ -277,12 +271,12 @@ public abstract class TypeUtils extends BaseUtils {
         });
     }
 
-    private static List<Type> doResolveActualTypeArgumentsInFastPath(Type type) {
+    static List<Type> doResolveActualTypeArgumentsInFastPath(Type type) {
         ParameterizedType pType = asParameterizedType(type);
         if (pType != null) {
             Type[] actualTypeArguments = pType.getActualTypeArguments();
             int actualTypeArgumentsLength = actualTypeArguments.length;
-            List<Type> actualTypeArgumentsList = newArrayList();
+            List<Type> actualTypeArgumentsList = newArrayList(actualTypeArgumentsLength);
             for (int i = 0; i < actualTypeArgumentsLength; i++) {
                 Type actualTypeArgument = actualTypeArguments[i];
                 if (isActualType(actualTypeArgument)) {
@@ -392,7 +386,7 @@ public abstract class TypeUtils extends BaseUtils {
 
         Class<?> rawClass = getRawClass(type);
 
-        if (rawClass == null) {
+        if (rawClass == null || Object.class.equals(rawClass)) {
             return emptyList();
         }
 
@@ -411,49 +405,51 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     public static List<Type> findAllTypes(Type type, Predicate<Type>... typeFilters) {
-        List<Type> allGenericTypes = newLinkedList();
-        Predicate filter = and(typeFilters);
-        if (filter.test(type)) {
-            // add self
-            allGenericTypes.add(type);
+        if (type == null) {
+            return emptyList();
         }
+        List<Type> allGenericTypes = newLinkedList();
+        // add self
+        allGenericTypes.add(type);
         // Add all hierarchical types in declaration order
-        addAllHierarchicalTypes(allGenericTypes, type, filter);
-        return unmodifiableList(allGenericTypes);
-
+        addAllHierarchicalTypes(allGenericTypes, type);
+        return unmodifiableList(filterList(allGenericTypes, and(typeFilters)));
     }
 
     public static List<Type> findHierarchicalTypes(Type type) {
-        return findHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
+        return unmodifiableList(doFindHierarchicalTypes(type));
     }
 
     public static List<Type> findHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
-        return unmodifiableList(doFindHierarchicalTypes(type, typeFilters));
+        List<Type> hierarchicalTypes = findHierarchicalTypes(type);
+        return unmodifiableList(filterList(hierarchicalTypes, and(typeFilters)));
     }
 
-    protected static List<Type> doFindHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
+    protected static List<Type> doFindHierarchicalTypes(Type type) {
         Class<?> klass = asClass(type);
-        return doFindHierarchicalTypes(klass, typeFilters);
+        return doFindHierarchicalTypes(klass);
     }
 
-    protected static List<Type> doFindHierarchicalTypes(Class<?> klass, Predicate<Type>... typeFilters) {
+    protected static List<Type> doFindHierarchicalTypes(Class<?> klass) {
         if (klass == null || isObjectType(klass)) {
             return emptyList();
         }
 
-        LinkedList<Type> types = newLinkedList();
-
-        Predicate<? super Type> filter = and(typeFilters);
-
         Type superType = klass.getGenericSuperclass();
+        Type[] interfaceTypes = klass.getGenericInterfaces();
+        int interfaceTypesLength = interfaceTypes.length;
 
-        if (superType != null && filter.test(superType)) { // interface type will return null
-            types.add(superType);
+        if (superType == null && interfaceTypesLength == 0) {
+            return emptyList();
         }
 
-        Type[] interfaceTypes = klass.getGenericInterfaces();
-        for (Type interfaceType : interfaceTypes) {
-            if (filter.test(interfaceType)) {
+        List<Type> types = newArrayList(interfaceTypesLength + 1);
+
+        types.add(superType);
+
+        for (int i = 0; i < interfaceTypesLength; i++) {
+            Type interfaceType = interfaceTypes[i];
+            if (!types.contains(interfaceType)) {
                 types.add(interfaceType);
             }
         }
@@ -462,22 +458,22 @@ public abstract class TypeUtils extends BaseUtils {
 
 
     public static List<Type> findAllHierarchicalTypes(Type type) {
-        return findAllHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
+        return unmodifiableList(doFindAllHierarchicalTypes(type));
     }
 
     public static List<Type> findAllHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
-        return unmodifiableList(doFindAllHierarchicalTypes(type, typeFilters));
+        return unmodifiableList(filterList(doFindAllHierarchicalTypes(type), and(typeFilters)));
     }
 
-    protected static LinkedList<Type> doFindAllHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
+    protected static LinkedList<Type> doFindAllHierarchicalTypes(Type type) {
         LinkedList<Type> allTypes = newLinkedList();
-        addAllHierarchicalTypes(allTypes, type, typeFilters);
+        addAllHierarchicalTypes(allTypes, type);
         return allTypes;
     }
 
-    protected static void addAllHierarchicalTypes(List<Type> allTypes, Type type, Predicate<Type>... typeFilters) {
+    protected static void addAllHierarchicalTypes(List<Type> allTypes, Type type) {
 
-        List<Type> hierarchicalTypes = doFindHierarchicalTypes(type, typeFilters);
+        List<Type> hierarchicalTypes = doFindHierarchicalTypes(type);
 
         int hierarchicalTypesSize = hierarchicalTypes.size();
 
@@ -485,11 +481,12 @@ public abstract class TypeUtils extends BaseUtils {
             return;
         }
 
-        allTypes.addAll(hierarchicalTypes);
-
         for (int i = 0; i < hierarchicalTypesSize; i++) {
             Type hierarchicalType = hierarchicalTypes.get(i);
-            addAllHierarchicalTypes(allTypes, hierarchicalType, typeFilters);
+            if (!allTypes.contains(hierarchicalType)) {
+                allTypes.add(hierarchicalType);
+            }
+            addAllHierarchicalTypes(allTypes, hierarchicalType);
         }
     }
 
