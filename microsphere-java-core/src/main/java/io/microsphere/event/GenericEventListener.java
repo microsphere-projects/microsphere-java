@@ -19,14 +19,12 @@ package io.microsphere.event;
 import io.microsphere.lang.function.ThrowableConsumer;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.lang.function.ThrowableFunction.execute;
-import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
 
