@@ -37,6 +37,11 @@ import static java.util.Collections.singleton;
 public abstract class Sets extends BaseUtils {
 
     /**
+     * The {@link MethodHandle} of {@link Set#of()} since JDK 9
+     */
+    private static final MethodHandle of0MethodHandle = findPublicStatic(Set.class, "of");
+
+    /**
      * The {@link MethodHandle} of {@link Set#of(Object)} since JDK 9
      */
     private static final MethodHandle of1MethodHandle = findPublicStatic(Set.class, "of", Object.class);
@@ -90,6 +95,23 @@ public abstract class Sets extends BaseUtils {
      * The {@link MethodHandle} of {@link Set#of(Object...)} since JDK 9
      */
     private static final MethodHandle ofMethodHandle = findPublicStatic(Set.class, "of", Object[].class);
+
+    /**
+     * Returns an unmodifiable set containing zero elements.
+     *
+     * @param <E> the {@code Set}'s element type
+     * @return an empty {@code Set}
+     */
+    static <E> Set<E> ofSet() {
+        if (of0MethodHandle == null) {
+            return emptySet();
+        }
+        try {
+            return (Set<E>) of0MethodHandle.invokeExact();
+        } catch (Throwable e) {
+            return emptySet();
+        }
+    }
 
     /**
      * Returns an unmodifiable set containing one element.
@@ -336,7 +358,7 @@ public abstract class Sets extends BaseUtils {
      */
     public static <E> Set<E> ofSet(E... elements) {
         if (length(elements) < 1) {
-            return emptySet();
+            return ofSet();
         }
         if (ofMethodHandle == null) {
             return of(elements);
