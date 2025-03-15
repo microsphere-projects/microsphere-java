@@ -579,7 +579,9 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     public static Set<String> getClassNames(Iterable<? extends Type> types) {
-        return stream(types.spliterator(), false).map(TypeUtils::getClassName).collect(toSet());
+        return stream(types.spliterator(), false)
+                .map(TypeUtils::getClassName)
+                .collect(toSet());
     }
 
     public static List<Class<?>> resolveTypeArguments(Class<?> targetClass) {
