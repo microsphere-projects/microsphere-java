@@ -96,6 +96,7 @@ public class MapUtilsTest {
         assertEquals(1, map.size());
         assertEquals(1, map.get("A"));
         assertNull(map.get("B"));
+        assertOfMap(map);
     }
 
     @Test
@@ -105,6 +106,7 @@ public class MapUtilsTest {
         assertEquals(1, map.get("A"));
         assertEquals(2, map.get("B"));
         assertNull(map.get("C"));
+        assertOfMap(map);
     }
 
     @Test
@@ -115,6 +117,7 @@ public class MapUtilsTest {
         assertEquals(2, map.get("B"));
         assertEquals(3, map.get("C"));
         assertNull(map.get("D"));
+        assertOfMap(map);
     }
 
     @Test
@@ -126,6 +129,7 @@ public class MapUtilsTest {
         assertEquals(3, map.get("C"));
         assertEquals(4, map.get("D"));
         assertNull(map.get("E"));
+        assertOfMap(map);
     }
 
     @Test
@@ -138,6 +142,7 @@ public class MapUtilsTest {
         assertEquals(4, map.get("D"));
         assertEquals(5, map.get("E"));
         assertNull(map.get("F"));
+        assertOfMap(map);
     }
 
     @Test
@@ -149,6 +154,7 @@ public class MapUtilsTest {
         assertEquals(3, map.get("C"));
         assertEquals(2, map.get("B"));
         assertNull(map.get("A"));
+        assertOfMap(map);
 
         map = of("B", 2, "C", 3, "D", 4, "E", 5, "F", 6, "G", 7);
         assertEquals(7, map.get("G"));
@@ -158,6 +164,7 @@ public class MapUtilsTest {
         assertEquals(3, map.get("C"));
         assertEquals(2, map.get("B"));
         assertNull(map.get("A"));
+        assertOfMap(map);
     }
 
     @Test
@@ -171,6 +178,7 @@ public class MapUtilsTest {
         assertEquals(1, map.get("A"));
         assertEquals(2, map.get("B"));
         assertEquals(3, map.get("C"));
+        assertOfMap(map);
     }
 
     @Test
@@ -191,6 +199,7 @@ public class MapUtilsTest {
         assertEquals(1, map.size());
         assertEquals(1, map.get("A"));
         assertNull(map.get("B"));
+        assertOfMap(map);
     }
 
     @Test
@@ -200,6 +209,7 @@ public class MapUtilsTest {
         assertEquals(1, map.get("A"));
         assertNull(map.get("B"));
         assertEquals(3, map.get("C"));
+        assertOfMap(map);
     }
 
     @Test
@@ -320,6 +330,10 @@ public class MapUtilsTest {
         map = unmodifiableMap(map);
         cloneMap = shallowCloneMap(map);
         assertEquals(map, cloneMap);
+    }
+
+    private void assertOfMap(Map map) {
+        assertThrows(UnsupportedOperationException.class, () -> map.remove("A"));
     }
 
     private void assertNewFixedMap(int size, Function<Integer, Map<String, Integer>> fixedMapCreator) {
