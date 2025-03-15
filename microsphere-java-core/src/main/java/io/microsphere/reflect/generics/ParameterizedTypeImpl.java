@@ -83,7 +83,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      * @throws MalformedParameterizedTypeException - if the instantiation
      *                                             is invalid
      */
-    public static ParameterizedTypeImpl of(Class<?> rawType, Type[] actualTypeArguments) {
+    public static ParameterizedTypeImpl of(Class<?> rawType, Type... actualTypeArguments) {
         return of(rawType, actualTypeArguments, null);
     }
 
