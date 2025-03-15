@@ -24,6 +24,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
@@ -160,6 +161,31 @@ public class MapUtilsTest {
     }
 
     @Test
+    public void testOfOnEntries() {
+        Map.Entry<String, Integer> entryA = ofEntry("A", 1);
+        Map.Entry<String, Integer> entryB = ofEntry("B", 2);
+        Map.Entry<String, Integer> entryC = ofEntry("C", 3);
+
+        Map<String, Integer> map = of(entryA, entryB, entryC);
+        assertEquals(3, map.size());
+        assertEquals(1, map.get("A"));
+        assertEquals(2, map.get("B"));
+        assertEquals(3, map.get("C"));
+    }
+
+    @Test
+    public void testOfOnNullEntries() {
+        Map map = of((Map.Entry[]) null);
+        assertSame(emptyMap(), map);
+    }
+
+    @Test
+    public void testOfOnEmptyEntries() {
+        Map map = of(new Map.Entry[0]);
+        assertSame(emptyMap(), map);
+    }
+
+    @Test
     public void testOfMap1() {
         Map<String, Integer> map = ofMap("A", 1);
         assertEquals(1, map.size());
@@ -236,10 +262,12 @@ public class MapUtilsTest {
 
     @Test
     public void testNewConcurrentHashMap() {
-        assertNewMap(TreeMap.class, newTreeMap());
-        assertNewMap(TreeMap.class, newTreeMap(Integer::compare));
-        assertNewMap(TreeMap.class, newTreeMap(emptyMap()));
-        assertNewMap(TreeMap.class, newTreeMap(new TreeMap<>()));
+        assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap());
+        assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(emptyMap()));
+        assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(newHashMap()));
+        assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(newTreeMap()));
+        assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(1));
+        assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(1, 0.75f));
     }
 
     @Test
