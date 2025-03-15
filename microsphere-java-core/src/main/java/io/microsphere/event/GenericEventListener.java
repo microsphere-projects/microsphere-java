@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.lang.function.ThrowableFunction.execute;
+import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
 
@@ -97,10 +98,6 @@ public abstract class GenericEventListener implements EventListener<Event> {
     private boolean isHandleEventMethod(Method method) {
 
         if (onEventMethod.equals(method)) { // not {@link #onEvent(Event)} method
-            return false;
-        }
-
-        if (!Modifier.isPublic(method.getModifiers())) { // not public
             return false;
         }
 
