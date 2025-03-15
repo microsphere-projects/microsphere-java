@@ -31,6 +31,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
+import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublic;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
@@ -116,11 +117,6 @@ public abstract class MethodHandleUtils extends BaseUtils {
     public static final int ALL_MODES = (PUBLIC | PRIVATE | PROTECTED | PACKAGE | MODULE | UNCONDITIONAL | ORIGINAL);
 
     /**
-     * {@link MethodHandle} for Not-Found
-     */
-    public static final MethodHandle NOT_FOUND_METHOD_HANDLE = null;
-
-    /**
      * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class)} since JDK 7
      */
     private static final Constructor<MethodHandles.Lookup> lookupConstructor1 = getDeclaredConstructor(MethodHandles.Lookup.class, Class.class);
@@ -156,7 +152,6 @@ public abstract class MethodHandleUtils extends BaseUtils {
      * @see MethodHandles.Lookup#ALL_MODES
      */
     public enum LookupMode {
-
 
         /**
          * @see MethodHandles.Lookup#PUBLIC
@@ -208,10 +203,6 @@ public abstract class MethodHandleUtils extends BaseUtils {
 
         LookupMode(int value) {
             this.value = value;
-        }
-
-        public int getValue() {
-            return value;
         }
 
         public static int getModes(LookupMode... lookupModes) {
