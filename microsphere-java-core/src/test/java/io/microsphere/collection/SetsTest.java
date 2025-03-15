@@ -6,7 +6,6 @@ import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.Sets.ofSet;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link Sets} Test
@@ -16,6 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @since 1.0.0
  */
 public class SetsTest {
+
+    @Test
+    public void testOfSet0() {
+        assertEquals(emptySet(), ofSet());
+    }
 
     @Test
     public void testOfSet1() {
@@ -69,8 +73,7 @@ public class SetsTest {
 
     @Test
     public void testOfSet() {
-        assertSame(emptySet(), ofSet());
-        assertSame(emptySet(), ofSet(null));
+        assertEquals(emptySet(), ofSet(null));
         assertEquals(of(1, 2, 3), ofSet(1, 2, 3));
     }
 }
