@@ -72,7 +72,7 @@ public class FilterOperatorTest {
         filter = XOR.createFilter(filter2, filter2);
         assertTrue(filter.accept(null));
     }
-    
+
     @Test
     public void testXOROnNullFilters() {
         Filter filter = XOR.createFilter(null);
