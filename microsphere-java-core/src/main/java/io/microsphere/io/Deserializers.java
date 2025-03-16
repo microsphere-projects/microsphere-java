@@ -23,7 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.reflect.TypeUtils.resolveTypeArguments;
+import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
 import static java.util.Collections.emptyList;
 import static java.util.ServiceLoader.load;
 
@@ -49,7 +49,7 @@ public class Deserializers {
 
     public void loadSPI() {
         for (Deserializer deserializer : load(Deserializer.class)) {
-            List<Class<?>> typeArguments = resolveTypeArguments(deserializer.getClass());
+            List<Class<?>> typeArguments = resolveTypeArgumentClasses(deserializer.getClass());
             Class<?> targetClass = typeArguments.isEmpty() ? Object.class : typeArguments.get(0);
             List<Deserializer> deserializers = typedDeserializers.computeIfAbsent(targetClass, k -> new LinkedList());
             deserializers.add(deserializer);
