@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
-import io.microsphere.util.ClassUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -402,7 +401,7 @@ public class TypeUtilsTest {
     }
 
     @Test
-    public void testFindAllTypesWithout() {
+    public void testFindAllTypes() {
         List<Type> types = findAllTypes(D.class, TypeUtils::isParameterizedType);
         assertEquals(2, types.size());
         assertTrue(types.contains(of(C.class, String.class)));
@@ -421,6 +420,12 @@ public class TypeUtilsTest {
         assertTrue(types.contains(A.class));
         assertTrue(types.contains(Serializable.class));
         assertTrue(types.contains(Object.class));
+    }
+
+    @Test
+    public void testFindAllTypesOnNull() {
+        List<Type> types = findAllTypes(null);
+        assertSame(emptyList(), types);
     }
 
     @Test
