@@ -44,14 +44,14 @@ public class ParameterizedTypeImplTest {
 
     @BeforeEach
     public void init() {
-        topLevelType = of(Map.class, actualTypeArguments, null);
+        topLevelType = of(Map.class, actualTypeArguments);
         nestedType = of(Map.Entry.class, actualTypeArguments, Map.class);
         complexType = of(Map.Entry.class, actualTypeArguments, topLevelType);
     }
 
     @Test
     public void testOfOnMalformedParameterizedTypeException() {
-        assertThrows(MalformedParameterizedTypeException.class, () -> of(Map.class, new Type[]{String.class}, null));
+        assertThrows(MalformedParameterizedTypeException.class, () -> of(Map.class, new Type[]{String.class}));
     }
 
     @Test

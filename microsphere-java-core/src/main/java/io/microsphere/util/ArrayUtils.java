@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -137,6 +138,11 @@ public abstract class ArrayUtils extends BaseUtils {
      * An empty immutable {@code Parameter} array.
      */
     public static final Parameter[] EMPTY_PARAMETER_ARRAY = new Parameter[0];
+
+    /**
+     * An empty immutable {@code Type} array
+     */
+    public static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
 
     public static <T> T[] of(T... values) {
         return ofArray(values);

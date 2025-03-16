@@ -70,6 +70,13 @@ public class GenericEventListenerTest {
             this.echoEvent = echoEvent;
         }
 
+        protected void notEvent(EchoEvent echoEvent) {
+            this.echoEvent = echoEvent;
+        }
+
+        protected void notEvent(Object object) {
+        }
+
         public EchoEvent getEchoEvent() {
             return echoEvent;
         }

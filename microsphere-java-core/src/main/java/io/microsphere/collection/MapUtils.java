@@ -91,6 +91,19 @@ public abstract class MapUtils extends BaseUtils {
         return ofMap(values);
     }
 
+    public static <K, V> Map<K, V> of(Map.Entry<? extends K, ? extends V>... entries) {
+        int length = length(entries);
+        if (length < 1) {
+            return emptyMap();
+        }
+        Map<K, V> map = newFixedLinkedHashMap(length);
+        for (int i = 0; i < length; i++) {
+            Map.Entry<? extends K, ? extends V> entry = entries[i];
+            map.put(entry.getKey(), entry.getValue());
+        }
+        return unmodifiableMap(map);
+    }
+
     public static <K, V> Map<K, V> ofMap(K key, V value) {
         return singletonMap(key, value);
     }
