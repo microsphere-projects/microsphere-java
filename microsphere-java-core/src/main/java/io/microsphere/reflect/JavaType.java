@@ -31,13 +31,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static io.microsphere.reflect.TypeUtils.EMPTY_TYPE;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
+import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
 
 /**
@@ -560,11 +560,11 @@ public class JavaType implements Serializable {
         }
 
         public Type[] getInterfaces(Type type) {
-            return EMPTY_TYPE;
+            return EMPTY_TYPE_ARRAY;
         }
 
         public Type[] getGenericTypes(JavaType javaType) {
-            return EMPTY_TYPE;
+            return EMPTY_TYPE_ARRAY;
         }
 
         public static Kind valueOf(Type type) {

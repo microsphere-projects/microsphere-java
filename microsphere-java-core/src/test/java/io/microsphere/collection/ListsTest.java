@@ -6,7 +6,6 @@ import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link Lists} Test
@@ -16,6 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @since 1.0.0
  */
 public class ListsTest {
+
+    @Test
+    public void testOfList0(){
+        assertEquals(emptyList(), ofList());
+    }
 
     @Test
     public void testOfList1() {
@@ -69,8 +73,7 @@ public class ListsTest {
 
     @Test
     public void testOfList() {
-        assertSame(emptyList(), ofList());
-        assertSame(emptyList(), ofList(null));
+        assertEquals(emptyList(), ofList(null));
         assertEquals(of(1, 2, 3), ofList(1, 2, 3));
     }
 }
