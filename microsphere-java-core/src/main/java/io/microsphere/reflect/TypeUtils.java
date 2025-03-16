@@ -530,17 +530,10 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     protected static List<Type> getSuperTypes(Type type, boolean includeGenericSuperclass, boolean includedGenericInterfaces) {
-        if (type == null || isObjectType(type)) {
-            return emptyList();
-        }
 
         Class<?> klass = asClass(type);
 
-        if (klass == null) {
-            return emptyList();
-        }
-
-        Type genericSuperclass = includeGenericSuperclass ? klass.getGenericSuperclass() : null;
+        Type genericSuperclass = includeGenericSuperclass && klass != null ? klass.getGenericSuperclass() : null;
 
         boolean hasGenericSuperclass = genericSuperclass != null;
 
@@ -552,6 +545,10 @@ public abstract class TypeUtils extends BaseUtils {
         int interfaceTypesLength = interfaceTypes.length;
 
         int size = interfaceTypesLength + (hasGenericSuperclass ? 1 : 0);
+
+        if (size == 0) {
+            return emptyList();
+        }
 
         List<Type> types = newArrayList(size);
 
@@ -662,12 +659,6 @@ public abstract class TypeUtils extends BaseUtils {
             ParameterizedType parameterizedType = asParameterizedType(type);
             if (parameterizedType != null) {
                 targetClass = asClass(parameterizedType.getRawType());
-            }
-        }
-        if (targetClass == null) { // try to cast a component type of GenericArrayType if possible
-            GenericArrayType genericArrayType = asGenericArrayType(type);
-            if (genericArrayType != null) {
-                targetClass = asClass(genericArrayType.getGenericComponentType());
             }
         }
         return targetClass;
