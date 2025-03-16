@@ -19,6 +19,7 @@ package io.microsphere.reflect;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
+import io.microsphere.util.ClassUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -61,7 +62,10 @@ import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgument;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClasses;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
+import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
+import static io.microsphere.reflect.TypeUtils.resolveTypeArguments;
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
+import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -281,6 +285,59 @@ public class TypeUtilsTest {
         assertEquals(2, classNames.size());
         assertTrue(classNames.contains("java.lang.String"));
         assertTrue(classNames.contains("java.lang.Integer"));
+    }
+
+    @Test
+    public void testResolveTypeArguments() {
+        List<Type> typeArguments = resolveTypeArguments(A.class);
+        assertTrue(typeArguments.isEmpty());
+
+        typeArguments = resolveTypeArguments(B.class);
+        assertEquals(1, typeArguments.size());
+        assertEquals(B.class, typeArguments.get(0));
+
+        typeArguments = resolveTypeArguments(C.class);
+        assertEquals(1, typeArguments.size());
+        assertEquals(B.class, typeArguments.get(0));
+
+        typeArguments = resolveTypeArguments(D.class);
+        assertEquals(2, typeArguments.size());
+        assertEquals(String.class, typeArguments.get(0));
+        assertEquals(B.class, typeArguments.get(1));
+
+        typeArguments = resolveTypeArguments(E.class);
+        assertEquals(1, typeArguments.size());
+        assertEquals(B.class, typeArguments.get(0));
+    }
+
+    @Test
+    public void testResolveTypeArgumentsOnNull() {
+        assertSame(emptyList(), resolveTypeArguments((Class) null));
+    }
+
+    @Test
+    public void testResolveTypeArgumentsOnPrimitiveType() {
+        PRIMITIVE_TYPES.forEach(primitiveType -> {
+            assertSame(emptyList(), resolveTypeArguments(primitiveType));
+        });
+    }
+
+    @Test
+    public void testResolveTypeArgumentsOnArrayType() {
+        assertSame(emptyList(), resolveTypeArguments(int[].class));
+        assertSame(emptyList(), resolveTypeArguments(String[].class));
+        assertSame(emptyList(), resolveTypeArguments(String[][].class));
+    }
+
+    @Test
+    public void testResolveTypeArgumentClasses() {
+        List<Class<?>> typeArguments = resolveTypeArgumentClasses(A.class);
+        assertTrue(typeArguments.isEmpty());
+
+        typeArguments = resolveTypeArgumentClasses(B.class);
+        assertEquals(1, typeArguments.size());
+        assertEquals(B.class, typeArguments.get(0));
+
     }
 
     @Test
