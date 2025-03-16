@@ -401,6 +401,16 @@ public class TypeUtilsTest {
     }
 
     @Test
+    public void testGetGenericTypesOnNull() {
+        assertSame(emptyList(), getGenericTypes(null));
+    }
+
+    @Test
+    public void testGetGenericTypesOnObject() {
+        assertSame(emptyList(), getGenericTypes(Object.class));
+    }
+
+    @Test
     public void testFindAllTypes() {
         List<Type> types = findAllTypes(D.class, TypeUtils::isParameterizedType);
         assertEquals(2, types.size());
@@ -426,11 +436,6 @@ public class TypeUtilsTest {
     public void testFindAllTypesOnNull() {
         List<Type> types = findAllTypes(null);
         assertSame(emptyList(), types);
-    }
-
-    @Test
-    public void testGetGenericTypesOnNull() {
-        assertSame(emptyList(), getGenericTypes(null));
     }
 
     private void assertTypes(List<Type> types, Type... expectedTypes) {
