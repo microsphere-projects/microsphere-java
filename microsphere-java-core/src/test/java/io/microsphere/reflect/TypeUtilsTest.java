@@ -34,10 +34,12 @@ import java.util.function.BiFunction;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.newHashSet;
+import static io.microsphere.reflect.TypeUtils.GENERIC_ARRAY_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.PARAMETERIZED_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
+import static io.microsphere.reflect.TypeUtils.WILDCARD_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArgumentsInFastPath;
@@ -172,6 +174,18 @@ public class TypeUtilsTest {
 
     @Test
     public void testFindAllHierarchicalTypes() {
+        List<Type> types = findAllHierarchicalTypes(A.class, NON_OBJECT_TYPE_FILTER);
+        assertTypes(types, Serializable.class);
+
+        types = findAllHierarchicalTypes(E.class, WILDCARD_TYPE_FILTER);
+        assertTrue(types.isEmpty());
+
+        types = findAllHierarchicalTypes(D.class, GENERIC_ARRAY_TYPE_FILTER);
+        assertTrue(types.isEmpty());
+    }
+
+    @Test
+    public void testFindAllHierarchicalTypesWithoutPredicate() {
         List<Type> types = findAllHierarchicalTypes(A.class);
         assertTypes(types, Object.class, Serializable.class);
 
@@ -213,6 +227,12 @@ public class TypeUtilsTest {
 
     @Test
     public void testGetAllGenericSuperClasses() {
+        List<ParameterizedType> genericSuperClasses = getAllGenericSuperClasses(E.class, TypeUtils::isParameterizedType);
+        assertEquals(0, genericSuperClasses.size());
+    }
+
+    @Test
+    public void testGetAllGenericSuperClassesWithoutPredicate() {
         List<ParameterizedType> genericSuperClasses = getAllGenericSuperClasses(E.class);
         assertEquals(0, genericSuperClasses.size());
 
@@ -224,7 +244,7 @@ public class TypeUtilsTest {
 
     @Test
     public void testGetAllGenericSuperClassesOnNullType() {
-        assertSame(emptyList(), getAllGenericSuperClasses(Comparable.class));
+        assertSame(emptyList(), getAllGenericSuperClasses(null));
     }
 
     @Test
