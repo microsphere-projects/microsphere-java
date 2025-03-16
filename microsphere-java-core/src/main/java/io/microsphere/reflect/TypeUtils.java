@@ -77,11 +77,6 @@ public abstract class TypeUtils extends BaseUtils {
 
     public static final Predicate<Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
 
-    /**
-     * Empty {@link Type} array
-     */
-    public static final Type[] EMPTY_TYPE = new Type[0];
-
     public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = "microsphere.reflect.resolved-generic-types.cache.size";
 
     private static final ConcurrentMap<MultipleType, List<Type>> resolvedGenericTypesCache = newConcurrentHashMap(getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, 256));
