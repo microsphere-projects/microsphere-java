@@ -22,8 +22,10 @@ import io.microsphere.convert.StringToStringConverter;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -31,9 +33,11 @@ import java.util.Map;
 import java.util.RandomAccess;
 import java.util.Set;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.newHashSet;
+import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.TypeUtils.GENERIC_ARRAY_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
@@ -43,20 +47,30 @@ import static io.microsphere.reflect.TypeUtils.WILDCARD_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArgumentsInFastPath;
-import static io.microsphere.reflect.TypeUtils.findAllHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.findAllGenericInterfaces;
+import static io.microsphere.reflect.TypeUtils.findAllGenericSuperclasses;
+import static io.microsphere.reflect.TypeUtils.findAllParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.findAllTypes;
+import static io.microsphere.reflect.TypeUtils.findHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.findParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getAllGenericInterfaces;
-import static io.microsphere.reflect.TypeUtils.getAllGenericSuperClasses;
-import static io.microsphere.reflect.TypeUtils.getAllGenericTypes;
-import static io.microsphere.reflect.TypeUtils.getAllInterfaces;
-import static io.microsphere.reflect.TypeUtils.getAllSuperTypes;
+import static io.microsphere.reflect.TypeUtils.getAllGenericSuperclasses;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.getClassName;
 import static io.microsphere.reflect.TypeUtils.getClassNames;
-import static io.microsphere.reflect.TypeUtils.getGenericTypes;
+import static io.microsphere.reflect.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.reflect.TypeUtils.getParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
+import static io.microsphere.reflect.TypeUtils.getRawType;
+import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
+import static io.microsphere.reflect.TypeUtils.isClass;
+import static io.microsphere.reflect.TypeUtils.isGenericArrayType;
+import static io.microsphere.reflect.TypeUtils.isObjectClass;
+import static io.microsphere.reflect.TypeUtils.isObjectType;
 import static io.microsphere.reflect.TypeUtils.isParameterizedType;
+import static io.microsphere.reflect.TypeUtils.isTypeVariable;
+import static io.microsphere.reflect.TypeUtils.isWildcardType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgument;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClasses;
@@ -108,6 +122,170 @@ public class TypeUtilsTest {
     }
 
     @Test
+    public void testIsClass() {
+        assertTrue(isClass(String.class));
+    }
+
+    @Test
+    public void testIsClassOnNull() {
+        assertFalse(isClass(null));
+    }
+
+    @Test
+    public void testIsClassOnObject() {
+        assertFalse(isClass(1));
+        assertFalse(isClass("test"));
+    }
+
+    @Test
+    public void testIsObjectClass() {
+        assertTrue(isObjectClass(Object.class));
+    }
+
+    @Test
+    public void testIsObjectClassOnNull() {
+        assertFalse(isObjectClass(null));
+    }
+
+    @Test
+    public void testIsObjectClassOnNotObjectClass() {
+        assertFalse(isObjectClass(Integer.class));
+        assertFalse(isObjectClass(String.class));
+    }
+
+
+    @Test
+    public void testIsObjectType() {
+        assertTrue(isObjectType(Object.class));
+    }
+
+    @Test
+    public void testIsObjectTypeOnNull() {
+        assertFalse(isObjectType(null));
+    }
+
+    @Test
+    public void testIsObjectTypeOnNotObjectClass() {
+        assertFalse(isObjectType(Integer.class));
+        assertFalse(isObjectType(String.class));
+    }
+
+    @Test
+    public void testIsParameterizedType() {
+        assertTrue(isParameterizedType(D.class.getGenericSuperclass()));
+        assertTrue(isParameterizedType(of(C.class, String.class)));
+    }
+
+    @Test
+    public void testIsParameterizedTypeOnNull() {
+        assertFalse(isParameterizedType(null));
+    }
+
+    @Test
+    public void testIsParameterizedTypeOnNotParameterizedType() {
+        assertFalse(isParameterizedType(Object.class));
+        assertFalse(isParameterizedType(String.class));
+    }
+
+    @Test
+    public void testIsTypeVariable() {
+        assertTrue(isTypeVariable(Comparable.class.getTypeParameters()[0]));
+    }
+
+    @Test
+    public void testIsTypeVariableOnNull() {
+        assertFalse(isTypeVariable(null));
+    }
+
+    @Test
+    public void testIsTypeVariableOnNotTypeVariable() {
+        assertFalse(isTypeVariable(Object.class));
+        assertFalse(isTypeVariable(String.class));
+    }
+
+    @Test
+    public void testIsWildcardType() {
+        Method andMethod = findMethod(Predicate.class, "and", Predicate.class);
+        Type[] genericParameterTypes = andMethod.getGenericParameterTypes();
+        Type genericParameterType = genericParameterTypes[0];
+        ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
+        Type type = parameterizedType.getActualTypeArguments()[0];
+        assertTrue(isWildcardType(type));
+    }
+
+    @Test
+    public void testIsWildcardTypeOnNull() {
+        assertFalse(isWildcardType(null));
+    }
+
+    @Test
+    public void testIsWildcardTypeOnNotWildcardType() {
+        assertFalse(isWildcardType(Object.class));
+        assertFalse(isWildcardType(String.class));
+    }
+
+    @Test
+    public void testIsGenericArrayType() {
+        Method toArrayMethod = findMethod(Collection.class, "toArray", Object[].class);
+        Type returnType = toArrayMethod.getGenericReturnType();
+        assertTrue(isGenericArrayType(returnType));
+    }
+
+    @Test
+    public void testIsGenericArrayTypeOnNull() {
+        assertFalse(isGenericArrayType(null));
+    }
+
+    @Test
+    public void testIsGenericArrayTypeOnNotGenericArrayType() {
+        assertFalse(isGenericArrayType(Object.class));
+        assertFalse(isGenericArrayType(String.class));
+    }
+
+    @Test
+    public void testIsActualTypeOnClass() {
+        assertTrue(isActualType(int.class));
+        assertTrue(isActualType(String.class));
+        assertTrue(isActualType(String[].class));
+        assertTrue(isActualType(String[][].class));
+        assertTrue(isActualType(String[][][].class));
+        assertTrue(isActualType(String[][][][].class));
+        assertTrue(isActualType(String[][][][][].class));
+    }
+
+    @Test
+    public void testIsActualTypeOnParameterizedType() {
+        assertTrue(isActualType(of(C.class, String.class)));
+        assertTrue(isActualType(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testIsActualTypeOnNull() {
+        assertFalse(isActualType(null));
+    }
+
+    @Test
+    public void testIsActualTypeOnNotActualType() {
+        assertFalse(isActualType(Comparable.class.getTypeParameters()[0]));
+    }
+
+    @Test
+    public void testGetRawTypeOnParameterizedType() {
+        assertEquals(C.class, getRawType(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testGetRawTypeOnNotParameterizedType() {
+        assertEquals(int.class, getRawType(int.class));
+        assertEquals(Object.class, getRawType(Object.class));
+    }
+
+    @Test
+    public void testGetRawTypeOnNull() {
+        assertNull(getRawType(null));
+    }
+
+    @Test
     public void testGetRawClass() {
         assertEquals(Object.class, getRawClass(Object.class));
         assertEquals(C.class, getRawClass(D.class.getGenericSuperclass()));
@@ -119,14 +297,22 @@ public class TypeUtilsTest {
     }
 
     @Test
-    public void testIsAssignableFrom() {
-        assertTrue(isAssignableFrom(Object.class, Object.class));
+    public void testIsAssignableFromOnType() {
+        assertTrue(isAssignableFrom(D.class.getGenericSuperclass(), D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testIsAssignableFromOnClassAndParameterizedType() {
         assertTrue(isAssignableFrom(C.class, D.class.getGenericSuperclass()));
         assertTrue(isAssignableFrom(B.class, D.class.getGenericSuperclass()));
-        assertTrue(isAssignableFrom(D.class.getGenericSuperclass(), D.class.getGenericSuperclass()));
         assertTrue(isAssignableFrom(Comparable.class, B.class.getGenericInterfaces()[0]));
     }
 
+    @Test
+    public void testIsAssignableFromOnClass() {
+        assertTrue(isAssignableFrom(Object.class, Object.class));
+        assertTrue(isAssignableFrom(Object.class, String.class));
+    }
 
     @Test
     public void testResolveActualTypeArguments() {
@@ -150,6 +336,12 @@ public class TypeUtilsTest {
     }
 
     @Test
+    public void testResolveActualTypeArgument() {
+        assertSame(String.class, resolveActualTypeArgument(D.class, C.class, 0));
+        assertSame(B.class, resolveActualTypeArgument(D.class, Comparable.class, 0));
+    }
+
+    @Test
     public void testResolveActualTypeArgumentClasses() {
         List<Class> actualTypeArgumentClasses = resolveActualTypeArgumentClasses(D.class, C.class);
         assertEquals(1, actualTypeArgumentClasses.size());
@@ -170,102 +362,249 @@ public class TypeUtilsTest {
     }
 
     @Test
-    public void testResolveActualTypeArgument() {
-        assertSame(String.class, resolveActualTypeArgument(D.class, C.class, 0));
-        assertSame(B.class, resolveActualTypeArgument(D.class, Comparable.class, 0));
+    public void testGetAllGenericSuperclasses() {
+        List<Type> types = getAllGenericSuperclasses(A.class);
+        assertEquals(1, types.size());
+        assertAGenericSuperclasses(types);
+
+        types = getAllGenericSuperclasses(B.class);
+        assertEquals(2, types.size());
+        assertBGenericSuperclasses(types);
+
+        types = getAllGenericSuperclasses(C.class);
+        assertEquals(3, types.size());
+        assertCGenericSuperclasses(types);
+
+        types = getAllGenericSuperclasses(D.class);
+        assertEquals(4, types.size());
+        assertDGenericSuperclasses(types);
+
+        types = getAllGenericSuperclasses(E.class);
+        assertEquals(4, types.size());
+        assertEGenericSuperclasses(types);
+    }
+
+
+    @Test
+    public void testGetAllGenericInterfaces() {
+        List<Type> types = getAllGenericInterfaces(A.class);
+        assertEquals(1, types.size());
+        assertAGenericInterfaces(types);
+
+        types = getAllGenericInterfaces(B.class);
+        assertEquals(2, types.size());
+        assertBGenericInterfaces(types);
+
+        types = getAllGenericInterfaces(C.class);
+        assertEquals(3, types.size());
+        assertCGenericInterfaces(types);
+
+        types = getAllGenericInterfaces(D.class);
+        assertEquals(3, types.size());
+        assertDGenericInterfaces(types);
+
+        types = getAllGenericInterfaces(E.class);
+        assertEquals(3, types.size());
+        assertEGenericInterfaces(types);
     }
 
     @Test
-    public void testFindAllHierarchicalTypes() {
-        List<Type> types = findAllHierarchicalTypes(A.class, NON_OBJECT_TYPE_FILTER);
-        assertTypes(types, Serializable.class);
+    public void testGetParameterizedTypes() {
+        List<ParameterizedType> genericTypes = getParameterizedTypes(A.class);
+        assertSame(emptyList(), genericTypes);
 
-        types = findAllHierarchicalTypes(E.class, WILDCARD_TYPE_FILTER);
-        assertTrue(types.isEmpty());
+        genericTypes = getParameterizedTypes(B.class);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
 
-        types = findAllHierarchicalTypes(D.class, GENERIC_ARRAY_TYPE_FILTER);
-        assertTrue(types.isEmpty());
+        genericTypes = getParameterizedTypes(C.class);
+        assertSame(emptyList(), genericTypes);
+
+        genericTypes = getParameterizedTypes(D.class);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(C.class, String.class), genericTypes.get(0));
+
+        genericTypes = getParameterizedTypes(E.class);
+        assertSame(emptyList(), genericTypes);
     }
 
     @Test
-    public void testFindAllHierarchicalTypesWithoutPredicate() {
-        List<Type> types = findAllHierarchicalTypes(A.class);
+    public void testGetParameterizedTypesOnNull() {
+        assertSame(emptyList(), getParameterizedTypes(null));
+    }
+
+    @Test
+    public void testGetParameterizedTypesOnObjectClass() {
+        assertSame(emptyList(), getParameterizedTypes(Object.class));
+    }
+
+    @Test
+    public void testGetHierarchicalTypes() {
+        List<Type> types = getHierarchicalTypes(A.class);
         assertTypes(types, Object.class, Serializable.class);
 
-        types = findAllHierarchicalTypes(B.class);
+        types = getHierarchicalTypes(B.class);
         assertTypes(types, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
-        types = findAllHierarchicalTypes(C.class);
+        types = getHierarchicalTypes(C.class);
         assertTypes(types, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
-        types = findAllHierarchicalTypes(D.class);
+        types = getHierarchicalTypes(D.class);
         assertTypes(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
-        types = findAllHierarchicalTypes(D.class);
+        types = getHierarchicalTypes(D.class);
         assertTypes(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
-        types = findAllHierarchicalTypes(E.class);
+        types = getHierarchicalTypes(E.class);
         assertTypes(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class);
     }
 
     @Test
-    public void testGetAllGenericTypes() {
-        List<ParameterizedType> genericTypes = getAllGenericTypes(E.class);
+    public void testGetAllTypes() {
+        List<Type> types = getAllTypes(E.class);
+        assertEquals(8, types.size());
+        assertTrue(types.contains(E.class));
+        assertTrue(types.contains(C.class));
+        assertTrue(types.contains(B.class));
+        assertTrue(types.contains(A.class));
+        assertTrue(types.contains(Object.class));
+        assertTrue(types.contains(Serializable.class));
+        assertFalse(types.contains(Comparable.class));
+        assertTrue(types.contains(RandomAccess.class));
+    }
 
+
+    @Test
+    public void testFindAllGenericSuperclasses() {
+        List<Type> types = findAllGenericSuperclasses(E.class);
+        assertEquals(4, types.size());
+        assertTrue(types.contains(A.class));
+        assertTrue(types.contains(B.class));
+        assertTrue(types.contains(C.class));
+        assertTrue(types.contains(Object.class));
+
+
+        types = findAllGenericSuperclasses(D.class);
+
+        assertEquals(4, types.size());
+        assertTrue(types.contains(A.class));
+        assertTrue(types.contains(B.class));
+        assertFalse(types.contains(C.class));
+        assertTrue(types.contains(Object.class));
+
+        Iterator<Type> iterator = types.iterator();
+        while (iterator.hasNext()) {
+            Type type = iterator.next();
+            if (type instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                assertEquals(C.class, parameterizedType.getRawType());
+                assertEquals(String.class, parameterizedType.getActualTypeArguments()[0]);
+            }
+        }
+
+        types = findAllGenericSuperclasses(D.class, TypeUtils::isParameterizedType);
+        assertEquals(1, types.size());
+
+        // null
+        types = findAllGenericSuperclasses(null);
+        assertTrue(types.isEmpty());
+    }
+
+    @Test
+    public void testFindAllGenericInterfaces() {
+        List<Type> types = findAllGenericInterfaces(C.class);
+        assertEquals(3, types.size());
+
+        types = findAllGenericInterfaces(C.class, TypeUtils::isParameterizedType);
+
+        Iterator<Type> iterator = types.iterator();
+        while (iterator.hasNext()) {
+            Type type = iterator.next();
+            ParameterizedType parameterizedType = (ParameterizedType) type;
+            assertEquals(Comparable.class, parameterizedType.getRawType());
+            assertEquals(B.class, parameterizedType.getActualTypeArguments()[0]);
+        }
+    }
+
+    @Test
+    public void testFindAllGenericInterfacesOnNull() {
+        assertSame(emptyList(), findAllGenericInterfaces(null));
+    }
+
+    @Test
+    public void testFindParameterizedTypes() {
+        List<ParameterizedType> genericTypes = findParameterizedTypes(A.class, PARAMETERIZED_TYPE_FILTER);
+        assertSame(emptyList(), genericTypes);
+
+        genericTypes = findParameterizedTypes(B.class, PARAMETERIZED_TYPE_FILTER);
         assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
 
-        ParameterizedType genericType = genericTypes.get(0);
-        assertEquals(Comparable.class, genericType.getRawType());
-        assertEquals(B.class, genericType.getActualTypeArguments()[0]);
+        genericTypes = findParameterizedTypes(C.class, PARAMETERIZED_TYPE_FILTER);
+        assertSame(emptyList(), genericTypes);
 
-        genericTypes = getAllGenericTypes(D.class);
+        genericTypes = findParameterizedTypes(D.class, PARAMETERIZED_TYPE_FILTER);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(C.class, String.class), genericTypes.get(0));
 
-        assertEquals(2, genericTypes.size());
-        assertEquals(C.class, genericTypes.get(0).getRawType());
-        assertEquals(String.class, genericTypes.get(0).getActualTypeArguments()[0]);
-
-        assertEquals(Comparable.class, genericTypes.get(1).getRawType());
-        assertEquals(B.class, genericTypes.get(1).getActualTypeArguments()[0]);
+        genericTypes = findParameterizedTypes(E.class, PARAMETERIZED_TYPE_FILTER);
+        assertSame(emptyList(), genericTypes);
     }
 
     @Test
-    public void testGetAllGenericSuperClasses() {
-        List<ParameterizedType> genericSuperClasses = getAllGenericSuperClasses(E.class, TypeUtils::isParameterizedType);
-        assertEquals(0, genericSuperClasses.size());
+    public void testFindParameterizedTypesOnNull() {
+        assertSame(emptyList(), findParameterizedTypes(null, PARAMETERIZED_TYPE_FILTER));
     }
 
     @Test
-    public void testGetAllGenericSuperClassesWithoutPredicate() {
-        List<ParameterizedType> genericSuperClasses = getAllGenericSuperClasses(E.class);
-        assertEquals(0, genericSuperClasses.size());
-
-        genericSuperClasses = getAllGenericSuperClasses(D.class);
-        assertEquals(1, genericSuperClasses.size());
-        assertEquals(C.class, genericSuperClasses.get(0).getRawType());
-        assertEquals(String.class, genericSuperClasses.get(0).getActualTypeArguments()[0]);
+    public void testFindParameterizedTypesOnObjectClass() {
+        assertSame(emptyList(), findParameterizedTypes(Object.class, PARAMETERIZED_TYPE_FILTER));
     }
 
     @Test
-    public void testGetAllGenericSuperClassesOnNullType() {
-        assertSame(emptyList(), getAllGenericSuperClasses(null));
+    public void testFindAllParameterizedTypes() {
+        List<ParameterizedType> genericTypes = findAllParameterizedTypes(D.class, PARAMETERIZED_TYPE_FILTER);
     }
 
     @Test
-    public void testGetAllGenericSuperClassesOnInterfaceType() {
-        assertSame(emptyList(), getAllGenericSuperClasses(Comparable.class));
+    public void testFindHierarchicalTypes() {
+        List<Type> types = findHierarchicalTypes(A.class, NON_OBJECT_TYPE_FILTER);
+        assertTypes(types, Serializable.class);
+
+        types = findHierarchicalTypes(E.class, WILDCARD_TYPE_FILTER);
+        assertTrue(types.isEmpty());
+
+        types = findHierarchicalTypes(D.class, GENERIC_ARRAY_TYPE_FILTER);
+        assertTrue(types.isEmpty());
+    }
+
+
+    @Test
+    public void testFindAllTypes() {
+        List<Type> types = findAllTypes(D.class, TypeUtils::isParameterizedType);
+        assertEquals(2, types.size());
+        assertTrue(types.contains(of(C.class, String.class)));
+        assertTrue(types.contains(of(Comparable.class, B.class)));
     }
 
     @Test
-    public void testGetAllGenericInterfaces() {
-        List<ParameterizedType> genericInterfaces = getAllGenericInterfaces(E.class);
-        assertEquals(1, genericInterfaces.size());
-        assertEquals(Comparable.class, genericInterfaces.get(0).getRawType());
-        assertEquals(B.class, genericInterfaces.get(0).getActualTypeArguments()[0]);
+    public void testFindAllTypesWithoutPredicate() {
+        List<Type> types = findAllTypes(D.class);
+        assertEquals(8, types.size());
+        assertTrue(types.contains(D.class));
+        assertTrue(types.contains(of(C.class, String.class)));
+        assertTrue(types.contains(RandomAccess.class));
+        assertTrue(types.contains(B.class));
+        assertTrue(types.contains(of(Comparable.class, B.class)));
+        assertTrue(types.contains(A.class));
+        assertTrue(types.contains(Serializable.class));
+        assertTrue(types.contains(Object.class));
     }
 
     @Test
-    public void testGetAllGenericInterfacesOnNull() {
-        assertSame(emptyList(), getAllGenericInterfaces(null));
+    public void testFindAllTypesOnNull() {
+        List<Type> types = findAllTypes(null);
+        assertSame(emptyList(), types);
     }
 
     @Test
@@ -384,58 +723,51 @@ public class TypeUtilsTest {
         assertSame(emptyList(), doResolveActualTypeArgumentsInFastPath(null));
     }
 
-    @Test
-    public void testGetGenericTypes() {
-        List<ParameterizedType> genericTypes = getGenericTypes(D.class, type -> isParameterizedType(type));
-        assertEquals(1, genericTypes.size());
-        assertEquals(C.class, genericTypes.get(0).getRawType());
-        assertEquals(String.class, genericTypes.get(0).getActualTypeArguments()[0]);
-    }
-
-    @Test
-    public void testGetGenericTypesWithoutPredicate() {
-        List<ParameterizedType> genericTypes = getGenericTypes(D.class);
-        assertEquals(1, genericTypes.size());
-        assertEquals(C.class, genericTypes.get(0).getRawType());
-        assertEquals(String.class, genericTypes.get(0).getActualTypeArguments()[0]);
-    }
-
-    @Test
-    public void testGetGenericTypesOnNull() {
-        assertSame(emptyList(), getGenericTypes(null));
-    }
-
-    @Test
-    public void testGetGenericTypesOnObject() {
-        assertSame(emptyList(), getGenericTypes(Object.class));
-    }
-
-    @Test
-    public void testFindAllTypes() {
-        List<Type> types = findAllTypes(D.class, TypeUtils::isParameterizedType);
-        assertEquals(2, types.size());
-        assertTrue(types.contains(of(C.class, String.class)));
-        assertTrue(types.contains(of(Comparable.class, B.class)));
-    }
-
-    @Test
-    public void testFindAllTypesWithoutPredicate() {
-        List<Type> types = findAllTypes(D.class);
-        assertEquals(8, types.size());
-        assertTrue(types.contains(D.class));
-        assertTrue(types.contains(of(C.class, String.class)));
-        assertTrue(types.contains(RandomAccess.class));
-        assertTrue(types.contains(B.class));
-        assertTrue(types.contains(of(Comparable.class, B.class)));
-        assertTrue(types.contains(A.class));
-        assertTrue(types.contains(Serializable.class));
+    private void assertAGenericSuperclasses(List<Type> types) {
         assertTrue(types.contains(Object.class));
     }
 
-    @Test
-    public void testFindAllTypesOnNull() {
-        List<Type> types = findAllTypes(null);
-        assertSame(emptyList(), types);
+    private void assertBGenericSuperclasses(List<Type> types) {
+        assertAGenericSuperclasses(types);
+        assertTrue(types.contains(A.class));
+    }
+
+    private void assertCGenericSuperclasses(List<Type> types) {
+        assertBGenericSuperclasses(types);
+        assertTrue(types.contains(B.class));
+    }
+
+    private void assertDGenericSuperclasses(List<Type> types) {
+        assertCGenericSuperclasses(types);
+        assertTrue(types.contains(of(C.class, String.class)));
+    }
+
+    private void assertEGenericSuperclasses(List<Type> types) {
+        assertCGenericSuperclasses(types);
+        assertTrue(types.contains(C.class));
+    }
+
+    private void assertAGenericInterfaces(List<Type> types) {
+        assertTrue(types.contains(Serializable.class));
+    }
+
+    private void assertBGenericInterfaces(List<Type> types) {
+        assertAGenericInterfaces(types);
+        assertTrue(types.contains(of(Comparable.class, B.class)));
+    }
+
+    private void assertCGenericInterfaces(List<Type> types) {
+        assertBGenericInterfaces(types);
+        assertTrue(types.contains(RandomAccess.class));
+    }
+
+
+    private void assertDGenericInterfaces(List<Type> types) {
+        assertCGenericInterfaces(types);
+    }
+
+    private void assertEGenericInterfaces(List<Type> types) {
+        assertDGenericInterfaces(types);
     }
 
     private void assertTypes(List<Type> types, Type... expectedTypes) {
@@ -449,80 +781,6 @@ public class TypeUtilsTest {
 
     private void assertType(Type expect, Type actual) {
         assertEquals(asClass(expect), asClass(actual));
-    }
-
-
-    @Test
-    public void testGetAllSuperTypes() {
-        Set<Type> types = getAllSuperTypes(E.class);
-        assertEquals(4, types.size());
-        assertTrue(types.contains(A.class));
-        assertTrue(types.contains(B.class));
-        assertTrue(types.contains(C.class));
-        assertTrue(types.contains(Object.class));
-
-
-        types = getAllSuperTypes(D.class);
-
-        assertEquals(4, types.size());
-        assertTrue(types.contains(A.class));
-        assertTrue(types.contains(B.class));
-        assertFalse(types.contains(C.class));
-        assertTrue(types.contains(Object.class));
-
-        Iterator<Type> iterator = types.iterator();
-        while (iterator.hasNext()) {
-            Type type = iterator.next();
-            if (type instanceof ParameterizedType) {
-                ParameterizedType parameterizedType = (ParameterizedType) type;
-                assertEquals(C.class, parameterizedType.getRawType());
-                assertEquals(String.class, parameterizedType.getActualTypeArguments()[0]);
-            }
-        }
-
-        types = getAllSuperTypes(D.class, TypeUtils::isParameterizedType);
-        assertEquals(1, types.size());
-
-        // null
-        types = getAllSuperTypes(null);
-        assertTrue(types.isEmpty());
-    }
-
-    @Test
-    public void testGetAllInterfaces() {
-        Set<Type> types = getAllInterfaces(C.class);
-        assertEquals(3, types.size());
-
-        types = getAllInterfaces(C.class, TypeUtils::isParameterizedType);
-
-        Iterator<Type> iterator = types.iterator();
-        while (iterator.hasNext()) {
-            Type type = iterator.next();
-            ParameterizedType parameterizedType = (ParameterizedType) type;
-            assertEquals(Comparable.class, parameterizedType.getRawType());
-            assertEquals(B.class, parameterizedType.getActualTypeArguments()[0]);
-        }
-    }
-
-    @Test
-    public void testGetAllTypes() {
-        Set<Type> types = getAllTypes(E.class);
-        assertEquals(8, types.size());
-        assertTrue(types.contains(E.class));
-        assertTrue(types.contains(C.class));
-        assertTrue(types.contains(B.class));
-        assertTrue(types.contains(A.class));
-        assertTrue(types.contains(Object.class));
-        assertTrue(types.contains(Serializable.class));
-        assertFalse(types.contains(Comparable.class));
-        assertTrue(types.contains(RandomAccess.class));
-
-        types = getAllTypes(D.class, TypeUtils::isParameterizedType);
-        assertEquals(2, types.size());
-
-        types = getAllTypes(E.class, TypeUtils::isParameterizedType);
-        assertEquals(1, types.size());
-
     }
 
 }
