@@ -45,6 +45,10 @@ import static io.microsphere.reflect.TypeUtils.PARAMETERIZED_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.TYPE_VARIABLE_FILTER;
 import static io.microsphere.reflect.TypeUtils.WILDCARD_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.asClass;
+import static io.microsphere.reflect.TypeUtils.asGenericArrayType;
+import static io.microsphere.reflect.TypeUtils.asParameterizedType;
+import static io.microsphere.reflect.TypeUtils.asTypeVariable;
+import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.doResolveActualTypeArgumentsInFastPath;
 import static io.microsphere.reflect.TypeUtils.findAllGenericInterfaces;
@@ -59,6 +63,7 @@ import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.getClassName;
 import static io.microsphere.reflect.TypeUtils.getClassNames;
+import static io.microsphere.reflect.TypeUtils.getComponentType;
 import static io.microsphere.reflect.TypeUtils.getHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.getParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
@@ -190,7 +195,7 @@ public class TypeUtilsTest {
 
     @Test
     public void testIsTypeVariable() {
-        assertTrue(isTypeVariable(Comparable.class.getTypeParameters()[0]));
+        assertTrue(isTypeVariable(getTypeVariable()));
     }
 
     @Test
@@ -206,12 +211,7 @@ public class TypeUtilsTest {
 
     @Test
     public void testIsWildcardType() {
-        Method andMethod = findMethod(Predicate.class, "and", Predicate.class);
-        Type[] genericParameterTypes = andMethod.getGenericParameterTypes();
-        Type genericParameterType = genericParameterTypes[0];
-        ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
-        Type type = parameterizedType.getActualTypeArguments()[0];
-        assertTrue(isWildcardType(type));
+        assertTrue(isWildcardType(getWildcardType()));
     }
 
     @Test
@@ -227,9 +227,8 @@ public class TypeUtilsTest {
 
     @Test
     public void testIsGenericArrayType() {
-        Method toArrayMethod = findMethod(Collection.class, "toArray", Object[].class);
-        Type returnType = toArrayMethod.getGenericReturnType();
-        assertTrue(isGenericArrayType(returnType));
+        Type genericArrayType = getGenericArrayType();
+        assertTrue(isGenericArrayType(genericArrayType));
     }
 
     @Test
@@ -785,6 +784,220 @@ public class TypeUtilsTest {
         assertSame(emptyList(), doResolveActualTypeArgumentsInFastPath(null));
     }
 
+    @Test
+    public void testAsClassOnClass() {
+        assertSame(String.class, asClass(String.class));
+    }
+
+    @Test
+    public void testAsClassOnParameterizedType() {
+        assertSame(Comparable.class, asClass(of(Comparable.class, String.class)));
+        assertSame(Comparable.class, asClass(B.class.getGenericInterfaces()[0]));
+        assertSame(C.class, asClass(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testAsClassOnNull() {
+        assertNull(asClass(null));
+    }
+
+    @Test
+    public void testAsClassOnGenericArrayType() {
+        assertNull(asClass(getGenericArrayType()));
+    }
+
+    @Test
+    public void testAsClassOnTypeVariable() {
+        assertNull(asClass(getTypeVariable()));
+    }
+
+    @Test
+    public void testAsClassOnWildcardType() {
+        assertNull(asClass(getWildcardType()));
+    }
+
+    @Test
+    public void testAsGenericArrayTypeOnClass() {
+        assertNull(asGenericArrayType(String.class));
+    }
+
+    @Test
+    public void testAsGenericArrayTypeOnParameterizedType() {
+        assertNull(asGenericArrayType(of(Comparable.class, String.class)));
+        assertNull(asGenericArrayType(B.class.getGenericInterfaces()[0]));
+        assertNull(asGenericArrayType(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testAsGenericArrayTypeOnNull() {
+        assertNull(asGenericArrayType(null));
+    }
+
+    @Test
+    public void testAsGenericArrayTypeOnGenericArrayType() {
+        assertSame(getGenericArrayType(), asGenericArrayType(getGenericArrayType()));
+    }
+
+    @Test
+    public void testAsGenericArrayTypeOnTypeVariable() {
+        assertNull(asGenericArrayType(getTypeVariable()));
+    }
+
+    @Test
+    public void testAsGenericArrayTypeOnWildcardType() {
+        assertNull(asGenericArrayType(getWildcardType()));
+    }
+
+    @Test
+    public void testAsParameterizedTypeOnClass() {
+        assertNull(asParameterizedType(String.class));
+    }
+
+    @Test
+    public void testAsParameterizedTypeOnParameterizedType() {
+        assertEquals(of(Comparable.class, String.class), asParameterizedType(of(Comparable.class, String.class)));
+        assertEquals(of(Comparable.class, B.class), asParameterizedType(B.class.getGenericInterfaces()[0]));
+        assertEquals(of(C.class, String.class), asParameterizedType(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testAsParameterizedTypeOnNull() {
+        assertNull(asParameterizedType(null));
+    }
+
+    @Test
+    public void testAsParameterizedTypeOnGenericArrayType() {
+        assertNull(asParameterizedType(getGenericArrayType()));
+    }
+
+    @Test
+    public void testAsParameterizedTypeOnTypeVariable() {
+        assertNull(asParameterizedType(getTypeVariable()));
+    }
+
+    @Test
+    public void testAsParameterizedTypeOnWildcardType() {
+        assertNull(asParameterizedType(getWildcardType()));
+    }
+
+    @Test
+    public void testAsTypeVariableOnClass() {
+        assertNull(asTypeVariable(String.class));
+    }
+
+    @Test
+    public void testAsTypeVariableOnParameterizedType() {
+        assertNull(asTypeVariable(of(Comparable.class, String.class)));
+        assertNull(asTypeVariable(B.class.getGenericInterfaces()[0]));
+        assertNull(asTypeVariable(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testAsTypeVariableOnNull() {
+        assertNull(asTypeVariable(null));
+    }
+
+    @Test
+    public void testAsTypeVariableOnGenericArrayType() {
+        assertNull(asTypeVariable(getGenericArrayType()));
+    }
+
+    @Test
+    public void testAsTypeVariableOnTypeVariable() {
+        assertSame(getTypeVariable(), asTypeVariable(getTypeVariable()));
+    }
+
+    @Test
+    public void testAsTypeVariableOnWildcardType() {
+        assertNull(asTypeVariable(getWildcardType()));
+    }
+
+    @Test
+    public void testAsWildcardTypeOnClass() {
+        assertNull(asWildcardType(String.class));
+    }
+
+    @Test
+    public void testAsWildcardTypeOnParameterizedType() {
+        assertNull(asWildcardType(of(Comparable.class, String.class)));
+        assertNull(asWildcardType(B.class.getGenericInterfaces()[0]));
+        assertNull(asWildcardType(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testAsWildcardTypeOnNull() {
+        assertNull(asWildcardType(null));
+    }
+
+    @Test
+    public void testAsWildcardTypeOnGenericArrayType() {
+        assertNull(asWildcardType(getGenericArrayType()));
+    }
+
+    @Test
+    public void testAsWildcardTypeOnTypeVariable() {
+        assertNull(asWildcardType(getTypeVariable()));
+    }
+
+    @Test
+    public void testAsWildcardTypeOnWildcardType() {
+        assertSame(getWildcardType(), asWildcardType(getWildcardType()));
+    }
+
+    @Test
+    public void testGetComponentTypeOnClass() {
+        assertNull(getComponentType(String.class));
+    }
+
+    @Test
+    public void testGetComponentTypeOnClassArray() {
+        assertSame(String.class, getComponentType(String[].class));
+    }
+
+    @Test
+    public void testGetComponentTypeOnParameterizedType() {
+        assertNull(getComponentType(of(Comparable.class, String.class)));
+        assertNull(getComponentType(B.class.getGenericInterfaces()[0]));
+        assertNull(getComponentType(D.class.getGenericSuperclass()));
+    }
+
+    @Test
+    public void testGetComponentTypeOnNull() {
+        assertNull(getComponentType(null));
+    }
+
+    @Test
+    public void testGetComponentTypeOnGenericArrayType() {
+        assertTrue(isTypeVariable(getComponentType(getGenericArrayType())));
+    }
+
+    @Test
+    public void testGetComponentTypeOnTypeVariable() {
+        assertNull(getComponentType(getTypeVariable()));
+    }
+
+    @Test
+    public void testGetComponentTypeOnWildcardType() {
+        assertNull(getComponentType(getWildcardType()));
+    }
+
+    private Type getGenericArrayType() {
+        Method toArrayMethod = findMethod(Collection.class, "toArray", Object[].class);
+        return toArrayMethod.getGenericReturnType();
+    }
+
+    private Type getTypeVariable() {
+        return Comparable.class.getTypeParameters()[0];
+    }
+
+    private Type getWildcardType() {
+        Method andMethod = findMethod(Predicate.class, "and", Predicate.class);
+        Type[] genericParameterTypes = andMethod.getGenericParameterTypes();
+        Type genericParameterType = genericParameterTypes[0];
+        ParameterizedType parameterizedType = (ParameterizedType) genericParameterType;
+        return parameterizedType.getActualTypeArguments()[0];
+    }
+
     private void assertAGenericSuperclasses(List<Type> types) {
         assertTrue(types.contains(Object.class));
     }
@@ -844,7 +1057,6 @@ public class TypeUtilsTest {
     private void assertType(Type expect, Type actual) {
         assertEquals(asClass(expect), asClass(actual));
     }
-
 }
 
 class A implements Serializable {
