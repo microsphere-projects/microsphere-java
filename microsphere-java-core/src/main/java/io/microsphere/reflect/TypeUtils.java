@@ -382,7 +382,7 @@ public abstract class TypeUtils extends BaseUtils {
 
         Class<?> rawClass = getRawClass(type);
 
-        if (rawClass == null || Object.class.equals(rawClass)) {
+        if (rawClass == null || rawClass == Object.class) {
             return emptyList();
         }
 
