@@ -55,6 +55,7 @@ import static io.microsphere.reflect.TypeUtils.findHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.findParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getAllGenericInterfaces;
 import static io.microsphere.reflect.TypeUtils.getAllGenericSuperclasses;
+import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getAllTypes;
 import static io.microsphere.reflect.TypeUtils.getClassName;
 import static io.microsphere.reflect.TypeUtils.getClassNames;
@@ -439,6 +440,39 @@ public class TypeUtilsTest {
     }
 
     @Test
+    public void testGetAllParameterizedTypes() {
+        List<ParameterizedType> genericTypes = getAllParameterizedTypes(A.class);
+        assertSame(emptyList(), genericTypes);
+
+        genericTypes = getAllParameterizedTypes(B.class);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
+
+        genericTypes = getAllParameterizedTypes(C.class);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
+
+        genericTypes = getAllParameterizedTypes(D.class);
+        assertEquals(2, genericTypes.size());
+        assertEquals(of(C.class, String.class), genericTypes.get(0));
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(1));
+
+        genericTypes = getAllParameterizedTypes(E.class);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
+    }
+
+    @Test
+    public void testGetAllParameterizedTypesOnNull() {
+        assertSame(emptyList(), getAllParameterizedTypes(null));
+    }
+
+    @Test
+    public void testGetAllParameterizedTypesOnObjectClass() {
+        assertSame(emptyList(), getAllParameterizedTypes(Object.class));
+    }
+
+    @Test
     public void testGetHierarchicalTypes() {
         List<Type> types = getHierarchicalTypes(A.class);
         assertTypes(types, Object.class, Serializable.class);
@@ -563,7 +597,35 @@ public class TypeUtilsTest {
 
     @Test
     public void testFindAllParameterizedTypes() {
-        List<ParameterizedType> genericTypes = findAllParameterizedTypes(D.class, PARAMETERIZED_TYPE_FILTER);
+        List<ParameterizedType> genericTypes = findAllParameterizedTypes(A.class, PARAMETERIZED_TYPE_FILTER);
+        assertSame(emptyList(), genericTypes);
+
+        genericTypes = findAllParameterizedTypes(B.class, PARAMETERIZED_TYPE_FILTER);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
+
+        genericTypes = findAllParameterizedTypes(C.class, PARAMETERIZED_TYPE_FILTER);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
+
+        genericTypes = findAllParameterizedTypes(D.class, PARAMETERIZED_TYPE_FILTER);
+        assertEquals(2, genericTypes.size());
+        assertEquals(of(C.class, String.class), genericTypes.get(0));
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(1));
+
+        genericTypes = findAllParameterizedTypes(E.class, PARAMETERIZED_TYPE_FILTER);
+        assertEquals(1, genericTypes.size());
+        assertEquals(of(Comparable.class, B.class), genericTypes.get(0));
+    }
+
+    @Test
+    public void testFindAllParameterizedTypesOnNull() {
+        assertSame(emptyList(), findAllParameterizedTypes(null, PARAMETERIZED_TYPE_FILTER));
+    }
+
+    @Test
+    public void testFindAllParameterizedTypesOnObjectClass() {
+        assertSame(emptyList(), findAllParameterizedTypes(Object.class, PARAMETERIZED_TYPE_FILTER));
     }
 
     @Test
