@@ -46,6 +46,7 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterList;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static java.lang.Integer.getInteger;
 import static java.util.Collections.emptyList;
@@ -581,55 +582,49 @@ public abstract class TypeUtils extends BaseUtils {
                 .collect(toSet());
     }
 
-    public static List<Class<?>> resolveTypeArguments(Class<?> targetClass) {
-        List<Class<?>> typeArguments = emptyList();
-        while (targetClass != null) {
-            typeArguments = resolveTypeArgumentsFromInterfaces(targetClass);
-            if (!typeArguments.isEmpty()) {
-                break;
-            }
 
-            Type superType = targetClass.getGenericSuperclass();
-            if (superType instanceof ParameterizedType) {
-                typeArguments = resolveTypeArgumentsFromType(superType);
-            }
-
-            if (!typeArguments.isEmpty()) {
-                break;
-            }
-            // recursively
+    public static List<Type> resolveTypeArguments(Class<?> targetClass) {
+        if (targetClass == null || targetClass.isPrimitive() || targetClass.isArray()) {
+            return emptyList();
+        }
+        List<Type> typeArguments = newLinkedList();
+        while (targetClass != null && targetClass != Object.class) {
+            typeArguments.addAll(resolveTypeArguments(targetClass.getGenericSuperclass()));
+            typeArguments.addAll(resolveTypeArguments(targetClass.getGenericInterfaces()));
             targetClass = targetClass.getSuperclass();
         }
-
-        return typeArguments;
+        return typeArguments.isEmpty() ? emptyList() : unmodifiableList(typeArguments);
     }
 
-    public static List<Class<?>> resolveTypeArgumentsFromInterfaces(Class<?> type) {
-        List<Class<?>> typeArguments = emptyList();
-        for (Type superInterface : type.getGenericInterfaces()) {
-            typeArguments = resolveTypeArgumentsFromType(superInterface);
-            if (typeArguments != null && !typeArguments.isEmpty()) {
-                break;
-            }
+    protected static List<Type> resolveTypeArguments(Type... types) {
+        int length = length(types);
+        if (length < 1) {
+            return emptyList();
+        }
+        List<Type> typeArguments = newLinkedList();
+        for (int i = 0; i < length; i++) {
+            typeArguments.addAll(getActualTypeArguments(types[i]));
         }
         return typeArguments;
     }
 
-    public static List<Class<?>> resolveTypeArgumentsFromType(Type type) {
-        List<Class<?>> typeArguments = emptyList();
+    protected static List<Type> getActualTypeArguments(Type type) {
+        if (type == Object.class) {
+            return emptyList();
+        }
         if (type instanceof ParameterizedType) {
-            typeArguments = new LinkedList<>();
             ParameterizedType pType = (ParameterizedType) type;
-            if (pType.getRawType() instanceof Class) {
-                for (Type argument : pType.getActualTypeArguments()) {
-                    Class<?> typeArgument = asClass(argument);
-                    if (typeArgument != null) {
-                        typeArguments.add(typeArgument);
-                    }
-                }
-            }
+            return ofList(pType.getActualTypeArguments());
         }
-        return typeArguments;
+        return emptyList();
+    }
+
+    public static List<Class<?>> resolveTypeArgumentClasses(Class<?> targetClass) {
+        List<Type> typeArguments = resolveTypeArguments(targetClass);
+        return unmodifiableList(typeArguments.stream()
+                .map(TypeUtils::asClass)
+                .filter(Objects::nonNull)
+                .collect(toList()));
     }
 
     public static Class<?> asClass(Type type) {
