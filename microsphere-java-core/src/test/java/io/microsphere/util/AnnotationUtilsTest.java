@@ -28,6 +28,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 
 import static io.microsphere.collection.Lists.ofList;
@@ -35,15 +36,19 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.AnnotationUtils.ANNOTATION_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS_NAME;
+import static io.microsphere.util.AnnotationUtils.EMPTY_ANNOTATION_ARRAY;
 import static io.microsphere.util.AnnotationUtils.INHERITED_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NATIVE_ANNOTATION_TYPES;
 import static io.microsphere.util.AnnotationUtils.NON_ANNOTATION_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NON_INHERITED_OBJECT_METHOD_PREDICATE;
+import static io.microsphere.util.AnnotationUtils.exists;
 import static io.microsphere.util.AnnotationUtils.filterAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAllDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
+import static io.microsphere.util.AnnotationUtils.findAttributeValue;
 import static io.microsphere.util.AnnotationUtils.findDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAllDeclaredAnnotations;
+import static io.microsphere.util.AnnotationUtils.getAttributeValue;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.isAnnotationMethod;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
@@ -59,6 +64,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -77,6 +83,10 @@ public class AnnotationUtilsTest {
     private static final Method retentionValueMethod = findMethod(Retention.class, "value");
 
     private static final Method targetValueMethod = findMethod(Target.class, "value");
+
+    private static final Annotation[] annotationsOfA = A.class.getAnnotations();
+
+    private static final Annotation[] annotationsOfB = B.class.getAnnotations();
 
     @Test
     public void testNATIVE_ANNOTATION_TYPES() {
@@ -289,17 +299,13 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testFilterAnnotations() {
-        Annotation[] annotations = A.class.getAnnotations();
-        assertEquals(ofList(annotations), filterAnnotations(annotations, annotation -> true));
-        assertEquals(ofList(annotations), filterAnnotations(ofList(annotations), annotation -> true));
-
-        assertSame(emptyList(), filterAnnotations(annotations, annotation -> false));
-        assertSame(emptyList(), filterAnnotations(ofList(annotations), annotation -> false));
+        assertFilterAnnotations(annotationsOfA);
+        assertFilterAnnotations(annotationsOfB);
     }
 
     @Test
     public void testFilterAnnotationsOnEmpty() {
-        assertSame(emptyList(), filterAnnotations(new Annotation[0], annotation -> true));
+        assertSame(emptyList(), filterAnnotations(EMPTY_ANNOTATION_ARRAY, annotation -> true));
         assertSame(emptyList(), filterAnnotations(emptyList(), annotation -> true));
     }
 
@@ -310,18 +316,54 @@ public class AnnotationUtilsTest {
     }
 
     @Test
+    public void testFindAttributeValue() {
+        assertNotNull(findAttributeValue(DataAccess.class.getAnnotations(), "value"));
+    }
+
+    @Test
+    public void testFindAttributeValueOnAttributeNotFound() {
+        assertNull(findAttributeValue(annotationsOfA, "value"));
+    }
+
+    @Test
     public void testGetAttributeValue() {
+        ElementType[] elementTypes = getAttributeValue(DataAccess.class.getAnnotation(Target.class), "value");
+        assertEquals(2, elementTypes.length);
+        assertEquals(TYPE, elementTypes[0]);
+        assertEquals(METHOD, elementTypes[1]);
 
+        RetentionPolicy retentionPolicy = getAttributeValue(DataAccess.class.getAnnotation(Retention.class), "value");
+        assertEquals(RUNTIME, retentionPolicy);
     }
 
     @Test
-    public void testContains() {
-
+    public void testGetAttributeValueOnAttributeNotFound() {
+        assertNotNull(getAttributeValue(DataAccess.class.getAnnotation(Target.class), "notFound"));
     }
 
     @Test
-    public void testExists() {
+    public void testExistsOnArray() {
+        assertTrue(exists(annotationsOfA, DataAccess.class));
+        assertTrue(exists(annotationsOfB, DataAccess.class));
 
+        assertFalse(exists(Object.class.getAnnotations(), DataAccess.class));
+    }
+
+    @Test
+    public void testExistsOnCollection() {
+        assertTrue(exists(ofList(annotationsOfA), DataAccess.class));
+        assertTrue(exists(ofList(annotationsOfA), DataAccess.class));
+
+        assertFalse(exists(ofList(Object.class.getAnnotations()), DataAccess.class));
+    }
+
+    @Test
+    public void testExistsOnNull() {
+        assertFalse(exists((Annotation[]) null, DataAccess.class));
+        assertFalse(exists((Collection) null, DataAccess.class));
+        assertFalse(exists((Iterable) null, DataAccess.class));
+        assertFalse(exists(annotationsOfA, null));
+        assertFalse(exists(ofList(annotationsOfA), null));
     }
 
     @Test
@@ -358,6 +400,14 @@ public class AnnotationUtilsTest {
     public void testIsCallerSensitivePresent() {
         assertEquals(isPresent(CALLER_SENSITIVE_ANNOTATION_CLASS_NAME), isCallerSensitivePresent());
         assertEquals(CALLER_SENSITIVE_ANNOTATION_CLASS != null, isCallerSensitivePresent());
+    }
+
+    private void assertFilterAnnotations(Annotation[] annotations) {
+        assertEquals(ofList(annotations), filterAnnotations(annotations, annotation -> true));
+        assertEquals(ofList(annotations), filterAnnotations(ofList(annotations), annotation -> true));
+
+        assertSame(emptyList(), filterAnnotations(annotations, annotation -> false));
+        assertSame(emptyList(), filterAnnotations(ofList(annotations), annotation -> false));
     }
 
 
