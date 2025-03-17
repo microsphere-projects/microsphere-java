@@ -30,6 +30,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.AnnotationUtils.ANNOTATION_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
@@ -38,6 +39,7 @@ import static io.microsphere.util.AnnotationUtils.INHERITED_OBJECT_METHOD_PREDIC
 import static io.microsphere.util.AnnotationUtils.NATIVE_ANNOTATION_TYPES;
 import static io.microsphere.util.AnnotationUtils.NON_ANNOTATION_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NON_INHERITED_OBJECT_METHOD_PREDICATE;
+import static io.microsphere.util.AnnotationUtils.filterAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAllDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.AnnotationUtils.findDeclaredAnnotations;
@@ -286,13 +288,25 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testFilterAnnotation() {
+    public void testFilterAnnotations() {
+        Annotation[] annotations = A.class.getAnnotations();
+        assertEquals(ofList(annotations), filterAnnotations(annotations, annotation -> true));
+        assertEquals(ofList(annotations), filterAnnotations(ofList(annotations), annotation -> true));
 
+        assertSame(emptyList(), filterAnnotations(annotations, annotation -> false));
+        assertSame(emptyList(), filterAnnotations(ofList(annotations), annotation -> false));
     }
 
     @Test
-    public void testFilterAnnotations() {
+    public void testFilterAnnotationsOnEmpty() {
+        assertSame(emptyList(), filterAnnotations(new Annotation[0], annotation -> true));
+        assertSame(emptyList(), filterAnnotations(emptyList(), annotation -> true));
+    }
 
+    @Test
+    public void testFilterAnnotationsOnNull() {
+        assertSame(emptyList(), filterAnnotations((Annotation[]) null, annotation -> true));
+        assertSame(emptyList(), filterAnnotations((List) null, annotation -> true));
     }
 
     @Test
