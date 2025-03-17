@@ -197,6 +197,17 @@ public abstract class AnnotationUtils extends BaseUtils {
     }
 
     /**
+     * Get the declared annotations that are <em>directly present</em> on this element.
+     * This method ignores inherited annotations.
+     *
+     * @param annotatedElement the annotated element
+     * @return non-null read-only {@link List}
+     */
+    public static List<Annotation> getDeclaredAnnotations(AnnotatedElement annotatedElement) {
+        return findDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
      * Find all directly declared annotations of the annotated element with filters, not including
      * meta annotations.
      *
@@ -253,17 +264,6 @@ public abstract class AnnotationUtils extends BaseUtils {
         }
 
         return filterAll(allAnnotations, annotationsToFilter);
-    }
-
-    /**
-     * Get the declared annotations that are <em>directly present</em> on this element.
-     * This method ignores inherited annotations.
-     *
-     * @param annotatedElement the annotated element
-     * @return non-null read-only {@link List}
-     */
-    public static List<Annotation> getDeclaredAnnotations(AnnotatedElement annotatedElement) {
-        return findDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
