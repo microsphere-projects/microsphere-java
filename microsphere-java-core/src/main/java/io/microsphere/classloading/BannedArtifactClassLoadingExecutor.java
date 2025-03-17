@@ -14,6 +14,7 @@ import java.util.List;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
@@ -49,7 +50,7 @@ public class BannedArtifactClassLoadingExecutor {
     private final ArtifactDetector artifactDetector;
 
     public BannedArtifactClassLoadingExecutor() {
-        this(Thread.currentThread().getContextClassLoader());
+        this(getDefaultClassLoader());
     }
 
     public BannedArtifactClassLoadingExecutor(ClassLoader classLoader) {
