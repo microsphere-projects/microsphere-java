@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.io.IOUtils.close;
+import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 
 /**
  * {@link PropertyResourceBundle} {@link ResourceBundle.Control} Implementation which supports encoding {@link
@@ -40,7 +41,7 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
     private static final ConcurrentMap<String, ResourceBundle.Control> encodingControlMap = new ConcurrentHashMap<String, ResourceBundle.Control>();
 
     static {
-        addEncodingControlMap(newControl(SystemUtils.FILE_ENCODING));
+        addEncodingControlMap(newControl(FILE_ENCODING));
         addEncodingControlMap(newControl("UTF-8"));
     }
 
@@ -51,7 +52,7 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
     }
 
     protected PropertyResourceBundleControl() {
-        this(SystemUtils.FILE_ENCODING);
+        this(FILE_ENCODING);
     }
 
     private static final void addEncodingControlMap(ResourceBundle.Control control) {
