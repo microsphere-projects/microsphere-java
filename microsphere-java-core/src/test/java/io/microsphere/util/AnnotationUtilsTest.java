@@ -252,6 +252,35 @@ public class AnnotationUtilsTest {
     }
 
     @Test
+    public void testFindAllDeclaredAnnotationsNoNull() {
+        assertSame(emptyList(), findAllDeclaredAnnotations(null, annotation -> true));
+    }
+
+    @Test
+    public void testFindDeclaredAnnotations() {
+        List<Annotation> annotations = findDeclaredAnnotations(A.class, annotation -> true);
+        assertEquals(1, annotations.size());
+        assertEquals(DataAccess.class, annotations.get(0).annotationType());
+    }
+
+    @Test
+    public void testFindDeclaredAnnotationsOnInheritedClass() {
+        List<Annotation> annotations = findDeclaredAnnotations(B.class, annotation -> true);
+        assertEquals(1, annotations.size());
+        assertEquals(DataAccess.class, annotations.get(0).annotationType());
+    }
+
+    @Test
+    public void testFindDeclaredAnnotationsOnAnnotation() {
+        List<Annotation> annotations = findDeclaredAnnotations(DataAccess.class, annotation -> true);
+        assertEquals(4, annotations.size());
+        assertEquals(Inherited.class, annotations.get(0).annotationType());
+        assertEquals(Target.class, annotations.get(1).annotationType());
+        assertEquals(Retention.class, annotations.get(2).annotationType());
+        assertEquals(Monitored.class, annotations.get(3).annotationType());
+    }
+
+    @Test
     public void testFindDeclaredAnnotationsNoNull() {
         assertSame(emptyList(), findDeclaredAnnotations(null, annotation -> true));
     }
