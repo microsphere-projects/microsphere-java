@@ -173,7 +173,7 @@ public class MethodUtilsTest {
         assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
 
         methods = findDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
-        assertEquals(1 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+        assertEquals(1, methods.size());
     }
 
     @Test
