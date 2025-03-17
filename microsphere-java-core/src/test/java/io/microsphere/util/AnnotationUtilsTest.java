@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.reflect.MethodUtils;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -32,15 +33,15 @@ import java.util.Collection;
 import java.util.List;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.findMethod;
-import static io.microsphere.util.AnnotationUtils.ANNOTATION_METHOD_PREDICATE;
+import static io.microsphere.util.AnnotationUtils.ANNOTATION_INTERFACE_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS_NAME;
 import static io.microsphere.util.AnnotationUtils.EMPTY_ANNOTATION_ARRAY;
-import static io.microsphere.util.AnnotationUtils.INHERITED_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NATIVE_ANNOTATION_TYPES;
-import static io.microsphere.util.AnnotationUtils.NON_ANNOTATION_METHOD_PREDICATE;
-import static io.microsphere.util.AnnotationUtils.NON_INHERITED_OBJECT_METHOD_PREDICATE;
+import static io.microsphere.util.AnnotationUtils.NON_ANNOTATION_INTERFACE_METHOD_PREDICATE;
+import static io.microsphere.util.AnnotationUtils.NON_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.exists;
 import static io.microsphere.util.AnnotationUtils.filterAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAllDeclaredAnnotations;
@@ -50,7 +51,7 @@ import static io.microsphere.util.AnnotationUtils.findDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAllDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAttributeValue;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
-import static io.microsphere.util.AnnotationUtils.isAnnotationMethod;
+import static io.microsphere.util.AnnotationUtils.isAnnotationInterfaceMethod;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
@@ -76,7 +77,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class AnnotationUtilsTest {
 
-    private static final Method equalsMethod = findMethod(String.class, "equals", Object.class);
+    private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);
 
     private static final Method annotationTypeMethod = findMethod(Annotation.class, "annotationType");
 
@@ -100,35 +101,34 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testINHERITED_OBJECT_METHOD_PREDICATE() {
-        assertTrue(INHERITED_OBJECT_METHOD_PREDICATE.test(equalsMethod));
+    public void testNON_OBJECT_METHOD_PREDICATE() {
+        assertTrue(NON_OBJECT_METHOD_PREDICATE.test(findMethod(Target.class, "value")));
+        assertTrue(NON_OBJECT_METHOD_PREDICATE.test(findMethod(Retention.class, "value")));
+        assertTrue(NON_OBJECT_METHOD_PREDICATE.test(stringEqualsMethod));
+
+        OBJECT_PUBLIC_METHODS.forEach(method -> assertFalse(NON_OBJECT_METHOD_PREDICATE.test(method)));
     }
 
     @Test
-    public void testINHERITED_OBJECT_METHOD_PREDICATE_OnNull() {
-        assertFalse(INHERITED_OBJECT_METHOD_PREDICATE.test(null));
+    public void testNON_OBJECT_METHOD_PREDICATE_OnNull() {
+        assertFalse(NON_OBJECT_METHOD_PREDICATE.test(null));
     }
 
     @Test
-    public void testNON_INHERITED_OBJECT_METHOD_PREDICATE() {
-        assertFalse(NON_INHERITED_OBJECT_METHOD_PREDICATE.test(equalsMethod));
+    public void testANNOTATION_INTERFACE_METHOD_PREDICATE() {
+        assertTrue(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(annotationTypeMethod));
+        assertFalse(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(retentionValueMethod));
+        assertFalse(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(targetValueMethod));
     }
 
     @Test
-    public void testANNOTATION_METHOD_PREDICATE() {
-        assertTrue(ANNOTATION_METHOD_PREDICATE.test(annotationTypeMethod));
-        assertTrue(ANNOTATION_METHOD_PREDICATE.test(retentionValueMethod));
-        assertTrue(ANNOTATION_METHOD_PREDICATE.test(targetValueMethod));
+    public void testANNOTATION_INTERFACE_METHOD_PREDICATE_OnNull() {
+        assertFalse(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(null));
     }
 
     @Test
-    public void testANNOTATION_METHOD_PREDICATE_OnNull() {
-        assertFalse(ANNOTATION_METHOD_PREDICATE.test(null));
-    }
-
-    @Test
-    public void testNON_ANNOTATION_METHOD_PREDICATE() {
-        assertTrue(NON_ANNOTATION_METHOD_PREDICATE.test(null));
+    public void testNON_ANNOTATION_INTERFACE_METHOD_PREDICATE() {
+        assertTrue(NON_ANNOTATION_INTERFACE_METHOD_PREDICATE.test(null));
     }
 
     @Test
@@ -338,7 +338,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testGetAttributeValueOnAttributeNotFound() {
-        assertNotNull(getAttributeValue(DataAccess.class.getAnnotation(Target.class), "notFound"));
+        assertNull(getAttributeValue(DataAccess.class.getAnnotation(Target.class), "notFound"));
     }
 
     @Test
@@ -389,10 +389,10 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testIsAnnotationMethod() {
-        isAnnotationMethod(annotationTypeMethod);
-        isAnnotationMethod(retentionValueMethod);
-        isAnnotationMethod(targetValueMethod);
+    public void testIsAnnotationInterfaceMethod() {
+        assertTrue(isAnnotationInterfaceMethod(annotationTypeMethod));
+        assertFalse(isAnnotationInterfaceMethod(retentionValueMethod));
+        assertFalse(isAnnotationInterfaceMethod(targetValueMethod));
     }
 
 
