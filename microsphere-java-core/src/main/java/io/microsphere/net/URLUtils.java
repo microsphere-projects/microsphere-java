@@ -60,6 +60,7 @@ import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -449,8 +450,8 @@ public abstract class URLUtils extends BaseUtils {
             String protocol = url.getProtocol();
             try {
                 if (JAR_PROTOCOL.equals(protocol)) {
-                    JarFile jarFile = JarUtils.toJarFile(url); // Test whether valid jar or not
-                    final String relativePath = JarUtils.resolveRelativePath(url);
+                    JarFile jarFile = toJarFile(url); // Test whether valid jar or not
+                    final String relativePath = resolveRelativePath(url);
                     if (EMPTY.equals(relativePath)) { // root directory in jar
                         isDirectory = true;
                     } else {
