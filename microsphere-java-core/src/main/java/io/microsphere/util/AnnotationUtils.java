@@ -44,6 +44,8 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
 import static io.microsphere.util.ArrayUtils.isEmpty;
@@ -90,6 +92,11 @@ public abstract class AnnotationUtils extends BaseUtils {
      * The annotation {@link Class} of {@linkplain jdk.internal.reflect.CallerSensitive} that may be <code>null</code>
      */
     public static final Class<? extends Annotation> CALLER_SENSITIVE_ANNOTATION_CLASS = (Class<? extends Annotation>) resolveClass(CALLER_SENSITIVE_ANNOTATION_CLASS_NAME);
+
+    /**
+     * An empty immutable {@code Annotation} array
+     */
+    public static final Annotation[] EMPTY_ANNOTATION_ARRAY = ArrayUtils.EMPTY_ANNOTATION_ARRAY;
 
     /**
      * Is the specified type a generic {@link Class type}
@@ -284,11 +291,19 @@ public abstract class AnnotationUtils extends BaseUtils {
         return isEmpty(filteredAnnotations) ? emptyList() : filteredAnnotations;
     }
 
-    public static <T> T getAttributeValue(Annotation[] annotations, String attributeName, Class<T> returnType) {
+    /**
+     * Find the attribute value from the specified annotations
+     *
+     * @param annotations   the annotations to be found
+     * @param attributeName attribute name
+     * @param <T>           attribute value type
+     * @return attribute value if found, otherwise <code>null</code>
+     */
+    public static <T> T findAttributeValue(Annotation[] annotations, String attributeName) {
         T attributeValue = null;
         for (Annotation annotation : annotations) {
             if (annotation != null) {
-                attributeValue = getAttributeValue(annotation, attributeName, returnType);
+                attributeValue = getAttributeValue(annotation, attributeName);
                 if (attributeValue != null) {
                     break;
                 }
@@ -297,31 +312,29 @@ public abstract class AnnotationUtils extends BaseUtils {
         return attributeValue;
     }
 
-    public static <T> T getAttributeValue(Annotation annotation, String attributeName, Class<T> returnType) {
+    /**
+     * Get the attribute value of the annotation
+     *
+     * @param annotation    annotation
+     * @param attributeName attribute name
+     * @param <T>           attribute value type
+     * @return attribute value if found, otherwise <code>null</code>
+     */
+    public static <T> T getAttributeValue(Annotation annotation, String attributeName) {
         Class<?> annotationType = annotation.annotationType();
-        T attributeValue = null;
-        try {
-            Method method = annotationType.getMethod(attributeName);
-            Object value = method.invoke(annotation);
-            attributeValue = returnType.cast(value);
-        } catch (Exception ignored) {
-            attributeValue = null;
-        }
-        return attributeValue;
+        Method attributeMethod = findMethod(annotationType, attributeName);
+        return attributeMethod == null ? null : invokeMethod(annotation, attributeMethod);
     }
 
-    public static boolean contains(Collection<Annotation> annotations, Class<? extends Annotation> annotationType) {
-        if (annotations == null || annotations.isEmpty()) {
+    public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
+        return exists(ofList(annotations), annotationType);
+    }
+
+    public static boolean exists(Collection<Annotation> annotations, Class<? extends Annotation> annotationType) {
+        if (isEmpty(annotations)) {
             return false;
         }
-        boolean contained = false;
-        for (Annotation annotation : annotations) {
-            if (Objects.equals(annotationType, annotation.annotationType())) {
-                contained = true;
-                break;
-            }
-        }
-        return contained;
+        return exists((Iterable) annotations, annotationType);
     }
 
     public static boolean exists(Iterable<Annotation> annotations, Class<? extends Annotation> annotationType) {
@@ -340,22 +353,6 @@ public abstract class AnnotationUtils extends BaseUtils {
         return found;
     }
 
-    public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
-        int length = length(annotations);
-        if (length < 1 || annotationType == null) {
-            return false;
-        }
-
-        boolean found = false;
-        for (int i = 0; i < length; i++) {
-            if (Objects.equals(annotations[i].annotationType(), annotationType)) {
-                found = true;
-                break;
-            }
-        }
-
-        return found;
-    }
 
     public static boolean existsAnnotated(AnnotatedElement[] annotatedElements, Class<? extends Annotation> annotationType) {
         int length = length(annotatedElements);
