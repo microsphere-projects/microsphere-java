@@ -1,8 +1,6 @@
 package io.microsphere.classloading;
 
-import io.microsphere.collection.CollectionUtils;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ClassLoaderUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -14,8 +12,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
@@ -60,7 +60,7 @@ public class ArtifactDetector {
     }
 
     protected List<Artifact> detect(Set<URL> classPathURLs) {
-        if (CollectionUtils.isEmpty(classPathURLs)) {
+        if (isEmpty(classPathURLs)) {
             return emptyList();
         }
         List<Artifact> artifactList = new LinkedList<>();
@@ -75,7 +75,7 @@ public class ArtifactDetector {
     }
 
     protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
-        Set<URL> urls = ClassLoaderUtils.findAllClassPathURLs(classLoader);
+        Set<URL> urls = findAllClassPathURLs(classLoader);
         Set<URL> classPathURLs = new LinkedHashSet<>(urls);
         if (!includedJdkLibraries) {
             removeJdkClassPathURLs(classPathURLs);
