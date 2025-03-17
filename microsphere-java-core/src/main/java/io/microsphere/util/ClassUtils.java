@@ -3,7 +3,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.collection.CollectionUtils;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
@@ -31,6 +30,7 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
@@ -226,7 +226,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * The specified type is array or not?
+     * The specified type is array or not?*
      *
      * @param type the type to test
      * @return <code>true</code> if the specified type is an array class,
@@ -494,7 +494,7 @@ public abstract class ClassUtils extends BaseUtils {
             }
         }
 
-        if (CollectionUtils.isEmpty(classNames)) {
+        if (isEmpty(classNames)) {
             if (logger.isTraceEnabled()) {
                 logger.trace("No Class was found in the classPath : '{}' , recursive : {}", classPath, recursive);
             }
@@ -515,7 +515,7 @@ public abstract class ClassUtils extends BaseUtils {
         }
 
         Set<File> classFiles = SimpleFileScanner.INSTANCE.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS));
-        if (CollectionUtils.isEmpty(classFiles)) {
+        if (isEmpty(classFiles)) {
             return emptySet();
         }
 
@@ -544,7 +544,7 @@ public abstract class ClassUtils extends BaseUtils {
         try {
             JarFile jarFile_ = new JarFile(jarFile);
             Set<JarEntry> jarEntries = SimpleJarEntryScanner.INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-            if (CollectionUtils.isEmpty(jarEntries)) {
+            if (isEmpty(jarEntries)) {
                 classNames = emptySet();
             } else {
                 classNames = newLinkedHashSet();
