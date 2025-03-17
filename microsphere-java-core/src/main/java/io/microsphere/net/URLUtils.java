@@ -4,10 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
-import io.microsphere.util.ClassPathUtils;
-import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -51,6 +48,8 @@ import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -293,7 +292,7 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static File resolveArchiveDirectory(URL resourceURL) {
         String resourcePath = new File(resourceURL.getFile()).toString();
-        Set<String> classPaths = ClassPathUtils.getClassPaths();
+        Set<String> classPaths = getClassPaths();
         File archiveDirectory = null;
         for (String classPath : classPaths) {
             if (resourcePath.contains(classPath)) {
@@ -536,7 +535,7 @@ public abstract class URLUtils extends BaseUtils {
      * @return URI
      */
     public static String buildURI(String... paths) {
-        int length = ArrayUtils.length(paths);
+        int length = length(paths);
         if (length < 1) {
             return SLASH;
         }
@@ -893,7 +892,7 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
         String[] params = split(paramsString, separatorChar);
-        int paramsLen = ArrayUtils.length(params);
+        int paramsLen = length(params);
         if (paramsLen == 0) {
             return emptyMap();
         }
@@ -920,7 +919,7 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static String buildString(String name, String[] values, char separator, char joiner) {
-        int len = ArrayUtils.length(values);
+        int len = length(values);
 
         if (len == 0) {
             return null;
