@@ -55,7 +55,7 @@ public abstract class ExceptionUtils extends BaseUtils {
             return (TT) source;
         }
         Object[] args = resolveArguments(source);
-        return ClassUtils.newInstance(thrownType, args);
+        return newInstance(thrownType, args);
     }
 
     private static <T extends Throwable> Object[] resolveArguments(T source) {
