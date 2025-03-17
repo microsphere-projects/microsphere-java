@@ -44,7 +44,10 @@ import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATO
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
+import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterSet;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
@@ -589,11 +592,51 @@ public abstract class ClassUtils extends BaseUtils {
     /**
      * Get all super classes from the specified type
      *
+     * @param type the specified type
+     * @return non-null read-only {@link Set}
+     */
+    public static Set<Class<?>> getAllSuperClasses(Class<?> type) {
+        return findAllSuperClasses(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all interfaces from the specified type
+     *
+     * @param type the specified type
+     * @return non-null read-only {@link Set}
+     */
+    public static Set<Class<?>> getAllInterfaces(Class<?> type) {
+        return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all inherited types from the specified type
+     *
+     * @param type the specified type
+     * @return non-null read-only {@link Set}
+     */
+    public static Set<Class<?>> getAllInheritedTypes(Class<?> type) {
+        return getAllInheritedClasses(type);
+    }
+
+    /**
+     * Get all inherited classes from the specified type
+     *
+     * @param type the specified type
+     * @return non-null read-only {@link Set}
+     */
+    public static Set<Class<?>> getAllInheritedClasses(Class<?> type) {
+        return findAllInheritedClasses(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Find all super classes from the specified type
+     *
      * @param type         the specified type
      * @param classFilters the filters for classes
      * @return non-null read-only {@link Set}
      */
-    public static Set<Class<?>> getAllSuperClasses(Class<?> type, Predicate<Class<?>>... classFilters) {
+    public static Set<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
 
         Set<Class<?>> allSuperClasses = new LinkedHashSet<>();
 
@@ -608,13 +651,13 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * Get all interfaces from the specified type
+     * find all interfaces from the specified type
      *
      * @param type             the specified type
      * @param interfaceFilters the filters for interfaces
      * @return non-null read-only {@link Set}
      */
-    public static Set<Class<?>> getAllInterfaces(Class<?> type, Predicate<Class<?>>... interfaceFilters) {
+    public static Set<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
         if (type == null || type.isPrimitive()) {
             return emptySet();
         }
@@ -647,20 +690,19 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * Get all inherited types from the specified type
+     * Find all inherited classes from the specified type
      *
      * @param type        the specified type
      * @param typeFilters the filters for types
      * @return non-null read-only {@link Set}
      */
-    public static Set<Class<?>> getAllInheritedTypes(Class<?> type, Predicate<Class<?>>... typeFilters) {
+    public static Set<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... typeFilters) {
         // Add all super classes
-        Set<Class<?>> types = new LinkedHashSet<>(getAllSuperClasses(type, typeFilters));
+        Set<Class<?>> types = new LinkedHashSet<>(getAllSuperClasses(type));
         // Add all interface classes
-        types.addAll(getAllInterfaces(type, typeFilters));
-        return unmodifiableSet(types);
+        types.addAll(getAllInterfaces(type));
+        return unmodifiableSet(filterSet(types, and(typeFilters)));
     }
-
 
     /**
      * the semantics is same as {@link Class#isAssignableFrom(Class)}
@@ -789,7 +831,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @param classFilters class filters
      * @return non-null read-only {@link Set}
      */
-    public static Set<Class<?>> getAllClasses(Class<?> type, Predicate<Class<?>>... classFilters) {
+    public static Set<Class<?>> getAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return getAllClasses(type, true, classFilters);
     }
 
@@ -801,7 +843,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @param classFilters class filters
      * @return non-null read-only {@link Set}
      */
-    public static Set<Class<?>> getAllClasses(Class<?> type, boolean includedSelf, Predicate<Class<?>>... classFilters) {
+    public static Set<Class<?>> getAllClasses(Class<?> type, boolean includedSelf, Predicate<? super Class<?>>... classFilters) {
         if (type == null || type.isPrimitive()) {
             return emptySet();
         }
