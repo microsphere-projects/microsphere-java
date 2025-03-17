@@ -48,6 +48,7 @@ import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
@@ -110,7 +111,7 @@ public abstract class AnnotationUtils extends BaseUtils {
         if (annotation == null || annotationType == null) {
             return false;
         }
-        return Objects.equals(annotation.annotationType(), annotationType);
+        return annotation.annotationType() == annotationType;
     }
 
     /**
@@ -404,7 +405,7 @@ public abstract class AnnotationUtils extends BaseUtils {
     }
 
     public static boolean isAnnotationMethod(Method attributeMethod) {
-        return attributeMethod != null && Objects.equals(Annotation.class, attributeMethod.getDeclaringClass());
+        return attributeMethod != null && isAssignableFrom(Annotation.class, attributeMethod.getDeclaringClass());
     }
 
     /**
