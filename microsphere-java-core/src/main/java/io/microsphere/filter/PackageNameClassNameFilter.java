@@ -3,8 +3,7 @@
  */
 package io.microsphere.filter;
 
-import io.microsphere.util.ClassUtils;
-
+import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
@@ -38,7 +37,7 @@ public class PackageNameClassNameFilter implements Filter<String> {
         if (isBlank(className)) {
             return false;
         }
-        String packageName = ClassUtils.resolvePackageName(className);
+        String packageName = resolvePackageName(className);
         boolean accepted = packageName.equals(this.packageName);
         if (!accepted && includedSubPackages) {
             accepted = packageName.startsWith(subPackageNamePrefix);
