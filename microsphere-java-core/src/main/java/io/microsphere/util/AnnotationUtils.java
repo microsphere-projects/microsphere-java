@@ -223,19 +223,6 @@ public abstract class AnnotationUtils extends BaseUtils {
         }
     }
 
-    public static List<Annotation> filterAnnotations(Annotation[] annotations,
-                                                     Predicate<? super Annotation>... annotationsToFilter) {
-        return isEmpty(annotations) ? emptyList() : filterAnnotations(ofList(annotations), annotationsToFilter);
-    }
-
-    public static List<Annotation> filterAnnotations(List<Annotation> annotations,
-                                                     Predicate<? super Annotation>... annotationsToFilter) {
-        if (isEmpty(annotations)) {
-            return emptyList();
-        }
-        return isEmpty(annotationsToFilter) ? unmodifiableList(annotations) : filterAll(annotations, annotationsToFilter);
-    }
-
     /**
      * Get all directly declared annotations of the specified type and those all hierarchical types, not including
      * meta annotations.
@@ -278,6 +265,23 @@ public abstract class AnnotationUtils extends BaseUtils {
         }
 
         return filterAnnotations(annotatedElement.getAnnotations(), annotationsToFilter);
+    }
+
+    public static List<Annotation> filterAnnotations(Annotation[] annotations,
+                                                     Predicate<? super Annotation>... annotationsToFilter) {
+        return isEmpty(annotations) ? emptyList() : filterAnnotations(ofList(annotations), annotationsToFilter);
+    }
+
+    public static List<Annotation> filterAnnotations(List<Annotation> annotations,
+                                                     Predicate<? super Annotation>... annotationsToFilter) {
+        if (isEmpty(annotations)) {
+            return emptyList();
+        }
+        if (isEmpty(annotationsToFilter)) {
+            return unmodifiableList(annotations);
+        }
+        List<Annotation> filteredAnnotations = filterAll(annotations, annotationsToFilter);
+        return isEmpty(filteredAnnotations) ? emptyList() : filteredAnnotations;
     }
 
     public static <T> T getAttributeValue(Annotation[] annotations, String attributeName, Class<T> returnType) {
