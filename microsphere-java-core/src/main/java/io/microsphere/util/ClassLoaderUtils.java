@@ -51,6 +51,7 @@ import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
+import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -153,7 +154,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static ClassLoader getDefaultClassLoader() {
         ClassLoader classLoader = null;
         try {
-            classLoader = Thread.currentThread().getContextClassLoader();
+            classLoader = currentThread().getContextClassLoader();
         } catch (Throwable ignored) {
         }
 
