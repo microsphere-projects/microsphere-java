@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
@@ -143,6 +144,11 @@ public abstract class ArrayUtils extends BaseUtils {
      * An empty immutable {@code Type} array
      */
     public static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
+
+    /**
+     * An empty immutable {@code Annotation} array
+     */
+    public static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
     public static <T> T[] of(T... values) {
         return ofArray(values);
