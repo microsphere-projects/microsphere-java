@@ -27,12 +27,18 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Method;
 import java.util.List;
 
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.util.AnnotationUtils.ANNOTATION_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS_NAME;
+import static io.microsphere.util.AnnotationUtils.INHERITED_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NATIVE_ANNOTATION_TYPES;
+import static io.microsphere.util.AnnotationUtils.NON_INHERITED_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
+import static io.microsphere.util.AnnotationUtils.isAnnotationMethod;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
@@ -52,6 +58,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class AnnotationUtilsTest {
 
+    private static final Method equalsMethod = findMethod(String.class, "equals", Object.class);
+
+    private static final Method annotationTypeMethod = findMethod(Annotation.class, "annotationType");
+
+    private static final Method retentionValueMethod = findMethod(Retention.class, "value");
+
+    private static final Method targetValueMethod = findMethod(Target.class, "value");
+
     @Test
     public void testNATIVE_ANNOTATION_TYPES() {
         assertEquals(6, NATIVE_ANNOTATION_TYPES.size());
@@ -65,6 +79,96 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testINHERITED_OBJECT_METHOD_PREDICATE() {
+        assertTrue(INHERITED_OBJECT_METHOD_PREDICATE.test(equalsMethod));
+    }
+
+    @Test
+    public void testINHERITED_OBJECT_METHOD_PREDICATE_OnNull() {
+        assertFalse(INHERITED_OBJECT_METHOD_PREDICATE.test(null));
+    }
+
+    @Test
+    public void testNON_INHERITED_OBJECT_METHOD_PREDICATE() {
+        assertFalse(NON_INHERITED_OBJECT_METHOD_PREDICATE.test(equalsMethod));
+    }
+
+    @Test
+    public void testANNOTATION_METHOD_PREDICATE() {
+        assertTrue(ANNOTATION_METHOD_PREDICATE.test(annotationTypeMethod));
+        assertTrue(ANNOTATION_METHOD_PREDICATE.test(retentionValueMethod));
+        assertTrue(ANNOTATION_METHOD_PREDICATE.test(targetValueMethod));
+    }
+
+    @Test
+    public void testANNOTATION_METHOD_PREDICATE_OnNull() {
+        assertFalse(ANNOTATION_METHOD_PREDICATE.test(null));
+    }
+
+    @Test
+    public void testNON_ANNOTATION_METHOD_PREDICATE() {
+
+    }
+
+    @Test
+    public void testIsType() {
+
+    }
+
+    @Test
+    public void testIsSameType() {
+
+    }
+
+    @Test
+    public void testFindAnnotation() {
+
+    }
+
+    @Test
+    public void testIsMetaAnnotation() {
+        assertTrue(isMetaAnnotation(Monitored.class, ServiceMode.class));
+        assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class));
+    }
+
+    @Test
+    public void testGetAllDeclaredAnnotations() {
+
+    }
+
+    @Test
+    public void testFilterAnnotation() {
+
+    }
+
+    @Test
+    public void testFilterAnnotations() {
+
+    }
+
+    @Test
+    public void testGetDeclaredAnnotations() {
+        List<Annotation> annotations = getDeclaredAnnotations(B.class);
+        assertEquals(1, annotations.size());
+        assertEquals(DataAccess.class, annotations.get(0).annotationType());
+    }
+
+    @Test
+    public void testGetAttributeValue() {
+
+    }
+
+    @Test
+    public void testContains() {
+
+    }
+
+    @Test
+    public void testExists() {
+
+    }
+
+    @Test
+    public void testExistsAnnotated() {
 
     }
 
@@ -76,17 +180,22 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testIsMetaAnnotation() {
-        assertTrue(isMetaAnnotation(Monitored.class, ServiceMode.class));
-        assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class));
+    public void testGetAttributeValues() {
+
     }
 
     @Test
-    public void testGetDeclaredAnnotations() {
-        List<Annotation> annotations = getDeclaredAnnotations(B.class);
-        assertEquals(1, annotations.size());
-        assertEquals(DataAccess.class, annotations.get(0).annotationType());
+    public void testGetAttributesMap() {
+
     }
+
+    @Test
+    public void testIsAnnotationMethod() {
+        isAnnotationMethod(annotationTypeMethod);
+        isAnnotationMethod(retentionValueMethod);
+        isAnnotationMethod(targetValueMethod);
+    }
+
 
     @Test
     public void testIsCallerSensitivePresent() {
