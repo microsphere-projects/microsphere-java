@@ -36,6 +36,7 @@ import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CL
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS_NAME;
 import static io.microsphere.util.AnnotationUtils.INHERITED_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NATIVE_ANNOTATION_TYPES;
+import static io.microsphere.util.AnnotationUtils.NON_ANNOTATION_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.NON_INHERITED_OBJECT_METHOD_PREDICATE;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.isAnnotationMethod;
@@ -106,7 +107,7 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testNON_ANNOTATION_METHOD_PREDICATE() {
-
+        assertTrue(NON_ANNOTATION_METHOD_PREDICATE.test(null));
     }
 
     @Test
