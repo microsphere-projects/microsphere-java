@@ -32,11 +32,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
@@ -55,7 +55,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
-import static java.util.Optional.ofNullable;
 
 /**
  * {@link Annotation} Utilities class
@@ -138,7 +137,7 @@ public abstract class AnnotationUtils extends BaseUtils {
      * @return If found, return first matched-type {@link Annotation annotation}, or <code>null</code>
      */
     public static <A extends Annotation> A findAnnotation(AnnotatedElement annotatedElement,
-                                                          Predicate<Annotation>... annotationFilters) {
+                                                          Predicate<? super Annotation>... annotationFilters) {
         return (A) filterFirst(findAllDeclaredAnnotations(annotatedElement), annotationFilters);
     }
 
@@ -224,23 +223,21 @@ public abstract class AnnotationUtils extends BaseUtils {
         }
     }
 
-    public static <S extends Iterable<Annotation>> Optional<Annotation> filterAnnotation(S annotations,
-                                                                                         Predicate<Annotation>... annotationsToFilter) {
-        return ofNullable(filterFirst(annotations, annotationsToFilter));
-    }
-
     public static List<Annotation> filterAnnotations(Annotation[] annotations,
-                                                     Predicate<Annotation>... annotationsToFilter) {
-        return filterAnnotations(ofList(annotations), annotationsToFilter);
+                                                     Predicate<? super Annotation>... annotationsToFilter) {
+        return isEmpty(annotations) ? emptyList() : filterAnnotations(ofList(annotations), annotationsToFilter);
     }
 
-    public static <S extends Iterable<Annotation>> S filterAnnotations(S annotations,
-                                                                       Predicate<Annotation>... annotationsToFilter) {
-        return filterAll(annotations, annotationsToFilter);
+    public static List<Annotation> filterAnnotations(List<Annotation> annotations,
+                                                     Predicate<? super Annotation>... annotationsToFilter) {
+        if (isEmpty(annotations)) {
+            return emptyList();
+        }
+        return isEmpty(annotationsToFilter) ? unmodifiableList(annotations) : filterAll(annotations, annotationsToFilter);
     }
 
     /**
-     * Get all directly declared annotations of the specified type and its' all hierarchical types, not including
+     * Get all directly declared annotations of the specified type and those all hierarchical types, not including
      * meta annotations.
      *
      * @param type                the specified type
@@ -263,7 +260,7 @@ public abstract class AnnotationUtils extends BaseUtils {
             allAnnotations.addAll(getDeclaredAnnotations(inheritedClass));
         }
 
-        return filterAll(allAnnotations, annotationsToFilter);
+        return filterAnnotations(allAnnotations, annotationsToFilter);
     }
 
     /**
@@ -280,9 +277,7 @@ public abstract class AnnotationUtils extends BaseUtils {
             return emptyList();
         }
 
-        List<Annotation> annotations = ofList(annotatedElement.getAnnotations());
-
-        return isEmpty(annotationsToFilter) ? annotations : unmodifiableList(filterAll(annotations, annotationsToFilter));
+        return filterAnnotations(annotatedElement.getAnnotations(), annotationsToFilter);
     }
 
     public static <T> T getAttributeValue(Annotation[] annotations, String attributeName, Class<T> returnType) {
