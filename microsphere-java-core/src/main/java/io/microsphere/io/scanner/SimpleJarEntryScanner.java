@@ -17,6 +17,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.util.jar.JarUtils.filter;
+import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
+import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -63,8 +66,8 @@ public class SimpleJarEntryScanner {
      */
     @Nonnull
     public Set<JarEntry> scan(URL jarURL, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
-        String relativePath = JarUtils.resolveRelativePath(jarURL);
-        JarFile jarFile = JarUtils.toJarFile(jarURL);
+        String relativePath = resolveRelativePath(jarURL);
+        JarFile jarFile = toJarFile(jarURL);
         return scan(jarFile, relativePath, recursive, jarEntryFilter);
     }
 
@@ -96,7 +99,7 @@ public class SimpleJarEntryScanner {
 
     protected Set<JarEntry> scan(JarFile jarFile, String relativePath, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
         Set<JarEntry> jarEntriesSet = new LinkedHashSet<>();
-        List<JarEntry> jarEntriesList = JarUtils.filter(jarFile, jarEntryFilter);
+        List<JarEntry> jarEntriesList = filter(jarFile, jarEntryFilter);
 
         for (JarEntry jarEntry : jarEntriesList) {
             String jarEntryName = jarEntry.getName();
