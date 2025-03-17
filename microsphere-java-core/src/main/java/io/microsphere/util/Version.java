@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import io.microsphere.lang.ClassDataRepository;
-import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
