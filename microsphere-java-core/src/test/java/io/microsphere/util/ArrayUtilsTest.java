@@ -19,6 +19,7 @@ package io.microsphere.util;
 import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -26,6 +27,7 @@ import java.util.Enumeration;
 import static io.microsphere.collection.EnumerationUtils.ofEnums;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ArrayUtils.EMPTY_ANNOTATION_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
@@ -106,6 +108,7 @@ public class ArrayUtilsTest {
         assertEmptyArray(EMPTY_CLASS_ARRAY, Class.class);
         assertEmptyArray(EMPTY_STRING_ARRAY, String.class);
         assertEmptyArray(EMPTY_PARAMETER_ARRAY, Parameter.class);
+        assertEmptyArray(EMPTY_ANNOTATION_ARRAY, Annotation.class);
     }
 
     @Test
@@ -1070,7 +1073,6 @@ public class ArrayUtilsTest {
         });
     }
 
-
     private static <T> T[] array(T... values) {
         return values;
     }
@@ -1081,7 +1083,7 @@ public class ArrayUtilsTest {
     }
 
     private <E> void assertEmptyArray(E[] array, Class<E> expectedComponentType) {
-        assertEquals(0, length(array));
+        assertEquals(0, array.length);
         assertEquals(expectedComponentType, getTopComponentType(array));
     }
 }
