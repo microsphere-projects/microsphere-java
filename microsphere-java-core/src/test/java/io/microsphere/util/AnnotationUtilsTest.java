@@ -43,6 +43,8 @@ import static io.microsphere.util.AnnotationUtils.isAnnotationMethod;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
+import static io.microsphere.util.AnnotationUtils.isSameType;
+import static io.microsphere.util.AnnotationUtils.isType;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -112,12 +114,27 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsType() {
+        assertTrue(isType(A.class));
+    }
 
+    @Test
+    public void testIsType_OnNull() {
+        assertFalse(isType(null));
     }
 
     @Test
     public void testIsSameType() {
+        DataAccess dataAccess = A.class.getAnnotation(DataAccess.class);
+        assertTrue(isSameType(dataAccess, DataAccess.class));
 
+        dataAccess = B.class.getAnnotation(DataAccess.class);
+        assertTrue(isSameType(dataAccess, DataAccess.class));
+    }
+
+    @Test
+    public void testIsSameTypeOnNull() {
+        assertFalse(isSameType(null, DataAccess.class));
+        assertFalse(isSameType(A.class.getAnnotation(DataAccess.class), null));
     }
 
     @Test
