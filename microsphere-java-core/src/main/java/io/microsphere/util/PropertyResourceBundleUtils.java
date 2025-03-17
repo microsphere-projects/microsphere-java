@@ -8,6 +8,8 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+
 /**
  * {@link PropertyResourceBundle} Utility class
  *
@@ -34,7 +36,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName) {
-        return getBundle(baseName, SystemUtils.FILE_ENCODING);
+        return getBundle(baseName, FILE_ENCODING);
     }
 
     /**
