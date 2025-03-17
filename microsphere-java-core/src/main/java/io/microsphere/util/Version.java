@@ -37,6 +37,7 @@ import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.Version.Operator.GT;
 import static io.microsphere.util.Version.Operator.LE;
 import static io.microsphere.util.Version.Operator.LT;
+import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static java.lang.Integer.compare;
 
 /**
@@ -133,7 +134,7 @@ public class Version implements Comparable<Version>, Serializable {
         if (version == null) {
             ClassDataRepository repository = ClassDataRepository.INSTANCE;
             URL classResource = repository.getCodeSourceLocation(targetClass);
-            String jarFilePath = JarUtils.resolveRelativePath(classResource);
+            String jarFilePath = resolveRelativePath(classResource);
             String errorMessage = format("The \"Implementation-Version\" manifest attribute can't be fetched from " + "the jar file[path : '{}'] by the target class[name :'{}']", jarFilePath, targetClass.getName());
             throw new IllegalArgumentException(errorMessage);
         }
