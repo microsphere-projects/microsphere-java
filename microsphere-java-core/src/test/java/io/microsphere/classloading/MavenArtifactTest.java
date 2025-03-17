@@ -16,11 +16,18 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.net.URL;
+
+import static io.microsphere.classloading.Artifact.UNKNOWN;
 import static io.microsphere.classloading.MavenArtifact.create;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,25 +41,79 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MavenArtifactTest {
 
+    private static final String GROUP_ID = "io.github.microsphere-projects";
+
+    private static final String ARTIFACT_ID = "microsphere-core";
+
+    private static final String VERSION = "1.0.0";
+
+    private static final URL LOCATION = getClassResource(getDefaultClassLoader(), MavenArtifactTest.class);
+
+    private MavenArtifact artifact;
+
+    @BeforeEach
+    public void init() {
+        this.artifact = create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION);
+    }
+
     @Test
-    public void test() {
-        MavenArtifact artifact = create("io.github.microsphere-projects", "microsphere-core", "1.0.0");
-
-        assertTrue(create("io.github.microsphere-projects", "microsphere-core", "1.0.0").equals(artifact));
-
-        assertEquals("io.github.microsphere-projects", artifact.getGroupId());
-        assertEquals("microsphere-core", artifact.getArtifactId());
-        assertEquals("1.0.0", artifact.getVersion());
+    public void testCreateOnGroupIdAndArtifactId() {
+        MavenArtifact artifact = create(GROUP_ID, ARTIFACT_ID);
+        assertEquals(GROUP_ID, artifact.getGroupId());
+        assertEquals(ARTIFACT_ID, artifact.getArtifactId());
+        assertEquals(UNKNOWN, artifact.getVersion());
         assertNull(artifact.getLocation());
+    }
 
+    @Test
+    public void testCreateOnGroupIdAndArtifactIdAndVersion() {
+        MavenArtifact artifact = create(GROUP_ID, ARTIFACT_ID, VERSION);
+        assertEquals(GROUP_ID, artifact.getGroupId());
+        assertEquals(ARTIFACT_ID, artifact.getArtifactId());
+        assertEquals(VERSION, artifact.getVersion());
+        assertNull(artifact.getLocation());
+    }
+
+    @Test
+    public void testCreateOnGroupIdAndArtifactIdAndVersionAndLocation() {
+        MavenArtifact artifact = create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION);
+        assertEquals(GROUP_ID, artifact.getGroupId());
+        assertEquals(ARTIFACT_ID, artifact.getArtifactId());
+        assertEquals(VERSION, artifact.getVersion());
+        assertEquals(LOCATION, artifact.getLocation());
+    }
+
+    @Test
+    public void testEquals() {
+        assertTrue(artifact.equals(create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION)));
+
+        assertFalse(artifact.equals(null));
+        assertFalse(artifact.equals(create(GROUP_ID)));
+        assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID)));
+        assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID, VERSION)));
+        assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID, "-")));
+        assertFalse(artifact.equals(create(GROUP_ID, "-", "-")));
+        assertFalse(artifact.equals(create("-", "-", "-")));
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(artifact.hashCode(), create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION).hashCode());
+    }
+
+    @Test
+    public void testToString() {
+        assertNotNull(artifact.toString());
+    }
+
+    @Test
+    public void testMatches() {
         assertTrue(create("*", "*", "*").matches(artifact));
-        assertTrue(create("io.github.microsphere-projects", "*", "*").matches(artifact));
-        assertTrue(create("io.github.microsphere-projects", "microsphere-core", "*").matches(artifact));
-        assertTrue(create("io.github.microsphere-projects", "microsphere-core", "1.0.0").matches(artifact));
-
-        assertFalse(create("-", "microsphere-core", "1.0.0").matches(artifact));
-        assertFalse(create("io.github.microsphere-projects", "-", "1.0.0").matches(artifact));
-        assertFalse(create("io.github.microsphere-projects", "microsphere-core", "-").matches(artifact));
-
+        assertTrue(create(GROUP_ID, "*", "*").matches(artifact));
+        assertTrue(create(GROUP_ID, ARTIFACT_ID, "*").matches(artifact));
+        assertTrue(create(GROUP_ID, ARTIFACT_ID, VERSION).matches(artifact));
+        assertFalse(create("-", ARTIFACT_ID, VERSION).matches(artifact));
+        assertFalse(create(GROUP_ID, "-", VERSION).matches(artifact));
+        assertFalse(create(GROUP_ID, ARTIFACT_ID, "-").matches(artifact));
     }
 }
