@@ -43,20 +43,19 @@ import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
+import static io.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.findAllInheritedClasses;
-import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.stream.Stream.of;
 
 /**
  * {@link Annotation} Utilities class
@@ -75,13 +74,13 @@ public abstract class AnnotationUtils extends BaseUtils {
             Repeatable.class
     );
 
-    static final Predicate<Method> INHERITED_OBJECT_METHOD_PREDICATE = AnnotationUtils::isInheritedObjectMethod;
+    static final Predicate<? super Method> NON_OBJECT_METHOD_PREDICATE = and(Objects::nonNull, OBJECT_METHOD_PREDICATE.negate());
 
-    static final Predicate<Method> NON_INHERITED_OBJECT_METHOD_PREDICATE = INHERITED_OBJECT_METHOD_PREDICATE.negate();
+    static final Predicate<? super Method> ANNOTATION_INTERFACE_METHOD_PREDICATE = AnnotationUtils::isAnnotationInterfaceMethod;
 
-    static final Predicate<Method> ANNOTATION_METHOD_PREDICATE = AnnotationUtils::isAnnotationMethod;
+    static final Predicate<? super Method> NON_ANNOTATION_INTERFACE_METHOD_PREDICATE = ANNOTATION_INTERFACE_METHOD_PREDICATE.negate();
 
-    static final Predicate<Method> NON_ANNOTATION_METHOD_PREDICATE = ANNOTATION_METHOD_PREDICATE.negate();
+    static final Predicate<? super Method> ANNOTATION_DECLARED_METHOD_PREDICATE = and(NON_OBJECT_METHOD_PREDICATE, NON_ANNOTATION_INTERFACE_METHOD_PREDICATE);
 
     /**
      * The annotation class name of {@linkplain jdk.internal.reflect.CallerSensitive}
@@ -326,6 +325,10 @@ public abstract class AnnotationUtils extends BaseUtils {
         return attributeMethod == null ? null : invokeMethod(annotation, attributeMethod);
     }
 
+    public static Map<String, Object> getAttributesMap(Annotation annotation) {
+        return findAttributesMap(annotation, EMPTY_PREDICATE_ARRAY);
+    }
+
     public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
         return exists(ofList(annotations), annotationType);
     }
@@ -341,7 +344,6 @@ public abstract class AnnotationUtils extends BaseUtils {
         if (annotations == null || annotationType == null) {
             return false;
         }
-
         boolean found = false;
         for (Annotation annotation : annotations) {
             if (Objects.equals(annotation.annotationType(), annotationType)) {
@@ -349,7 +351,6 @@ public abstract class AnnotationUtils extends BaseUtils {
                 break;
             }
         }
-
         return found;
     }
 
@@ -408,14 +409,11 @@ public abstract class AnnotationUtils extends BaseUtils {
         return isAnnotationPresent(annotation.annotationType(), annotationTypes);
     }
 
-    public static Object[] getAttributeValues(Annotation annotation, Predicate<Method>... attributesToFilter) {
-        return getAttributeMethods(annotation, attributesToFilter)
-                .map(method -> execute(() -> method.invoke(annotation)))
-                .toArray(Object[]::new);
-    }
-
-    public static Map<String, Object> getAttributesMap(Annotation annotation, Predicate<Method>... attributesToFilter) {
+    public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<Method>... attributesToFilter) {
         Map<String, Object> attributesMap = new LinkedHashMap<>();
+
+
+
         getAttributeMethods(annotation, attributesToFilter)
                 .forEach(method -> {
                     Object value = execute(() -> method.invoke(annotation));
@@ -424,8 +422,14 @@ public abstract class AnnotationUtils extends BaseUtils {
         return attributesMap.isEmpty() ? emptyMap() : unmodifiableMap(attributesMap);
     }
 
-    public static boolean isAnnotationMethod(Method attributeMethod) {
-        return attributeMethod != null && isAssignableFrom(Annotation.class, attributeMethod.getDeclaringClass());
+    /**
+     * Is the specified method declared by the {@link Annotation} interface or not
+     *
+     * @param attributeMethod the attribute method
+     * @return <code>true</code> if the specified method declared by the {@link Annotation} interface
+     */
+    public static boolean isAnnotationInterfaceMethod(Method attributeMethod) {
+        return attributeMethod != null && Annotation.class == attributeMethod.getDeclaringClass();
     }
 
     /**
@@ -438,25 +442,10 @@ public abstract class AnnotationUtils extends BaseUtils {
         return CALLER_SENSITIVE_ANNOTATION_CLASS != null;
     }
 
-    private static boolean isInheritedObjectMethod(Method attributeMethod) {
-        boolean inherited = false;
-
-        for (Method method : OBJECT_PUBLIC_METHODS) {
-            if (overrides(attributeMethod, method)) {
-                inherited = true;
-                break;
-            }
-        }
-
-        return inherited;
-    }
-
-    private static Stream<Method> getAttributeMethods(Annotation annotation, Predicate<Method>... attributesToFilter) {
+    private static Stream<Method> getAttributeMethods(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
         Class<? extends Annotation> annotationType = annotation.annotationType();
-        return Stream.of(annotationType.getMethods())
-                .filter(NON_INHERITED_OBJECT_METHOD_PREDICATE
-                        .and(NON_ANNOTATION_METHOD_PREDICATE)
-                        .and(and(attributesToFilter)));
+        return of(annotationType.getMethods())
+                .filter(and(ANNOTATION_DECLARED_METHOD_PREDICATE, and(attributesToFilter)));
     }
 
 }
