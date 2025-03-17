@@ -16,9 +16,15 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.net.URL;
+
+import static io.microsphere.classloading.Artifact.UNKNOWN;
 import static io.microsphere.classloading.Artifact.create;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,26 +40,72 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ArtifactTest {
 
+    private static final String ARTIFACT_ID = "microsphere-core";
+
+    private static final String VERSION = "1.0.0";
+
+    private static final URL LOCATION = getClassResource(getDefaultClassLoader(), ArtifactTest.class);
+
+    private Artifact artifact;
+
+    @BeforeEach
+    public void init() {
+        this.artifact = create(ARTIFACT_ID, VERSION, LOCATION);
+    }
+
     @Test
-    public void test() {
-        Artifact artifact = create("microsphere-core", "1.0.0");
-
-        assertTrue(artifact.equals(artifact));
-        assertEquals(create("microsphere-core", "1.0.0"), artifact);
-        assertFalse(artifact.equals("test"));
-
-        assertEquals("microsphere-core", artifact.getArtifactId());
-        assertEquals("1.0.0", artifact.getVersion());
+    public void testCreateOnArtifactId() {
+        Artifact artifact = create(ARTIFACT_ID);
+        assertEquals(ARTIFACT_ID, artifact.getArtifactId());
+        assertEquals(UNKNOWN, artifact.getVersion());
         assertNull(artifact.getLocation());
+    }
 
-        assertTrue(create("*", "*").matches(artifact));
-        assertTrue(create("microsphere-core", "*").matches(artifact));
-        assertTrue(create("*", "1.0.0").matches(artifact));
+    @Test
+    public void testCreateOnArtifactIdAndVersion() {
+        Artifact artifact = create(ARTIFACT_ID, VERSION);
+        assertEquals(ARTIFACT_ID, artifact.getArtifactId());
+        assertEquals(VERSION, artifact.getVersion());
+        assertNull(artifact.getLocation());
+    }
 
-        assertFalse(create("-", "-").matches(artifact));
-        assertFalse(create("-", "*").matches(artifact));
-        assertFalse(create("microsphere-core", "-").matches(artifact));
+    @Test
+    public void testCreateOnArtifactIdAndVersionAndLocation() {
+        Artifact artifact = create(ARTIFACT_ID, VERSION, LOCATION);
+        assertEquals(ARTIFACT_ID, artifact.getArtifactId());
+        assertEquals(VERSION, artifact.getVersion());
+        assertEquals(LOCATION, artifact.getLocation());
+    }
 
+    @Test
+    public void testEquals() {
+        assertTrue(artifact.equals(create(ARTIFACT_ID, VERSION, LOCATION)));
+
+        assertFalse(artifact.equals(null));
+        assertFalse(artifact.equals(create(ARTIFACT_ID)));
+        assertFalse(artifact.equals(create(ARTIFACT_ID, VERSION)));
+        assertFalse(artifact.equals(create(ARTIFACT_ID, "-")));
+        assertFalse(artifact.equals(create("-")));
+        assertFalse(artifact.equals(create("-", "-")));
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(artifact.hashCode(), create(ARTIFACT_ID, VERSION, LOCATION).hashCode());
+    }
+
+    @Test
+    public void testToString() {
         assertNotNull(artifact.toString());
+    }
+
+    @Test
+    public void testMatches() {
+        assertTrue(create("*", "*").matches(artifact));
+        assertTrue(create("*", "*").matches(artifact));
+        assertTrue(create(ARTIFACT_ID, "*").matches(artifact));
+        assertTrue(create(ARTIFACT_ID, VERSION).matches(artifact));
+        assertFalse(create(VERSION).matches(artifact));
+        assertFalse(create(ARTIFACT_ID, "-").matches(artifact));
     }
 }
