@@ -1,7 +1,6 @@
 package io.microsphere.classloading;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,6 +17,7 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 
 /**
  * The executor for the banned artifacts that are loading by {@link ClassLoader}.
@@ -43,7 +43,7 @@ public class BannedArtifactClassLoadingExecutor {
 
     private static final Logger logger = getLogger(BannedArtifactClassLoadingExecutor.class);
 
-    private static final String ENCODING = SystemUtils.FILE_ENCODING;
+    private static final String ENCODING = FILE_ENCODING;
 
     private final ClassLoader classLoader;
 
