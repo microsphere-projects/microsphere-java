@@ -72,7 +72,7 @@ public abstract class JarUtils extends BaseUtils {
     protected static void assertJarURLProtocol(URL jarURL) throws NullPointerException, IllegalArgumentException {
         final String protocol = jarURL.getProtocol(); //NPE check
         if (!JAR_PROTOCOL.equals(protocol) && !FILE_PROTOCOL.equals(protocol)) {
-            String message = format("jarURL Protocol['{}'] is unsupported ,except '{}' and '{}' ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
+            String message = format("the protocol['{}'] of 'jarURL' is unsupported, except '{}' and '{}' ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
             throw new IllegalArgumentException(message);
         }
     }
