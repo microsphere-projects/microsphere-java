@@ -66,7 +66,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link ClassUtils} Test
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassUtilsTest
  * @since 1.0.0
  */
