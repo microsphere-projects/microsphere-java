@@ -147,7 +147,7 @@ public abstract class AnnotationUtils extends BaseUtils {
 
     public static boolean isMetaAnnotation(Annotation annotation,
                                            Class<? extends Annotation>... metaAnnotationTypes) {
-        if (metaAnnotationTypes == null) {
+        if (annotation == null || isEmpty(metaAnnotationTypes)) {
             return false;
         }
         return isMetaAnnotation(annotation, ofList(metaAnnotationTypes));
@@ -169,7 +169,7 @@ public abstract class AnnotationUtils extends BaseUtils {
     public static boolean isMetaAnnotation(Class<? extends Annotation> annotationType,
                                            Iterable<Class<? extends Annotation>> metaAnnotationTypes) {
 
-        if (NATIVE_ANNOTATION_TYPES.contains(annotationType)) {
+        if (annotationType == null || NATIVE_ANNOTATION_TYPES.contains(annotationType)) {
             return false;
         }
 
