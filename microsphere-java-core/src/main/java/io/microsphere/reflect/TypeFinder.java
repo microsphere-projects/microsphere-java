@@ -218,7 +218,7 @@ public class TypeFinder<T extends Type> {
     /**
      * The enumeration for the type finder includes
      */
-    public static enum Include {
+    public enum Include {
 
         SELF,
 
@@ -226,6 +226,6 @@ public class TypeFinder<T extends Type> {
 
         SUPER_CLASS,
 
-        INTERFACES;
+        INTERFACES
     }
 }
