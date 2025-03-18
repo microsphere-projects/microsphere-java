@@ -38,6 +38,8 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
+import static io.microsphere.reflect.TypeFinder.of;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
@@ -497,106 +499,14 @@ public abstract class TypeUtils extends BaseUtils {
     protected static List<Type> findTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                           boolean includeGenericSuperclass, boolean includeGenericInterfaces,
                                           Predicate<Type>... typeFilters) {
-        List<Type> types = doFindTypes(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces, typeFilters);
-        return types.isEmpty() ? emptyList() : unmodifiableList(types);
+        if (type == null || isObjectType(type)) {
+            return emptyList();
+        }
+        return genericTypeFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
     }
 
     protected static List<Type> doGetHierarchicalTypes(Type type) {
-        return doFindTypes(type, false, true, true, true, EMPTY_PREDICATE_ARRAY);
-    }
-
-    protected static List<Type> doFindTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
-                                            boolean includeGenericSuperclass, boolean includeGenericInterfaces,
-                                            Predicate<Type>[] typeFilters) {
-        if (type == null) {
-            return emptyList();
-        }
-        List<Type> allTypes = newLinkedList();
-
-        if (includeSelf) {
-            // add self
-            allTypes.add(type);
-        }
-
-        // Add all hierarchical types in declaration order
-        addSuperTypes(allTypes, type, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces);
-
-        if (isNotEmpty(typeFilters)) {
-            // filter types by the chain
-            allTypes = filterList(allTypes, and(typeFilters));
-        }
-
-        return allTypes;
-    }
-
-    protected static List<Type> getSuperTypes(Type type, boolean includeGenericSuperclass, boolean includedGenericInterfaces) {
-
-        Class<?> klass = asClass(type);
-
-        Type genericSuperclass = includeGenericSuperclass && klass != null ? klass.getGenericSuperclass() : null;
-
-        boolean hasGenericSuperclass = genericSuperclass != null;
-
-        if (!hasGenericSuperclass && !includedGenericInterfaces) {
-            return emptyList();
-        }
-
-        Type[] interfaceTypes = includedGenericInterfaces ? klass.getGenericInterfaces() : EMPTY_TYPE_ARRAY;
-        int interfaceTypesLength = interfaceTypes.length;
-
-        int size = interfaceTypesLength + (hasGenericSuperclass ? 1 : 0);
-
-        if (size == 0) {
-            return emptyList();
-        }
-
-        List<Type> types = newArrayList(size);
-
-        if (hasGenericSuperclass) {
-            if (!types.contains(genericSuperclass)) {
-                types.add(genericSuperclass);
-            }
-        }
-
-        for (int i = 0; i < interfaceTypesLength; i++) {
-            Type interfaceType = interfaceTypes[i];
-            if (!types.contains(interfaceType)) {
-                types.add(interfaceType);
-            }
-        }
-        return types;
-    }
-
-    protected static void addSuperTypes(List<Type> allTypes, Type type, boolean includeHierarchicalTypes, boolean includeGenericSuperclass, boolean includeGenericInterfaces) {
-        if (isObjectType(type)) {
-            return;
-        }
-
-        List<Type> superTypes = getSuperTypes(type, includeGenericSuperclass, includeGenericInterfaces);
-
-        int superTypesSize = superTypes.size();
-
-        if (!includeGenericSuperclass && includeHierarchicalTypes) { // add super types recursively if necessary
-            List<Type> parentTypes = getSuperTypes(type, true, false);
-            int size = parentTypes.size();
-            for (int i = 0; i < size; i++) {
-                addSuperTypes(allTypes, parentTypes.get(i), true, false, includeGenericInterfaces);
-            }
-        }
-
-        if (superTypesSize < 1) {
-            return;
-        }
-
-        for (int i = 0; i < superTypesSize; i++) {
-            Type superType = superTypes.get(i);
-            if (!allTypes.contains(superType)) {
-                allTypes.add(superType);
-            }
-            if (includeHierarchicalTypes) {
-                addSuperTypes(allTypes, superType, true, includeGenericSuperclass, includeGenericInterfaces);
-            }
-        }
+        return genericTypeFinder(type, false, true, true, true).doFindTypes(EMPTY_PREDICATE_ARRAY);
     }
 
     public static String getClassName(Type type) {
