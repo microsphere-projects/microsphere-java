@@ -14,7 +14,6 @@ import static io.microsphere.util.SystemUtils.FILE_ENCODING;
  * {@link PropertyResourceBundle} Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PropertyResourceBundle
  * @since 1.0.0
  */
