@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
@@ -106,7 +107,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class TypeUtilsTest {
+public class TypeUtilsTest extends AbstractTestCase {
 
     @Test
     public void testConstantFilters() {
@@ -1051,18 +1052,6 @@ public class TypeUtilsTest {
         assertDGenericInterfaces(types);
     }
 
-    private void assertTypes(List<Type> types, Type... expectedTypes) {
-        assertTypes(types, expectedTypes.length, expectedTypes);
-    }
-
-    private void assertTypes(List<Type> types, int expectedSize, Type... expectedTypes) {
-        assertEquals(expectedSize, types.size());
-        assertEquals(newHashSet(expectedTypes), newHashSet(types));
-    }
-
-    private void assertType(Type expect, Type actual) {
-        assertEquals(asClass(expect), asClass(actual));
-    }
 }
 
 
