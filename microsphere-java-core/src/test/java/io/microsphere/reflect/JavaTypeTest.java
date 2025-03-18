@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.test.StringIntegerBooleanHashMap;
+import io.microsphere.test.StringIntegerHashMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ResolvableType;
 
