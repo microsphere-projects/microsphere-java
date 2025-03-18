@@ -424,15 +424,16 @@ public abstract class AnnotationUtils extends BaseUtils {
         if (annotatedElement == null || annotationTypes == null) {
             return false;
         }
-
+        boolean hasNext = false;
         boolean annotated = true;
         for (Class<? extends Annotation> annotationType : annotationTypes) {
+            hasNext = true;
             if (!isAnnotationPresent(annotatedElement, annotationType)) {
                 annotated = false;
                 break;
             }
         }
-        return annotated;
+        return hasNext & annotated;
     }
 
     public static boolean isAnnotationPresent(Annotation annotation, Iterable<Class<? extends Annotation>> annotationTypes) {
