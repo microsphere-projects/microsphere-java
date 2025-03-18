@@ -10,7 +10,6 @@ import static io.microsphere.util.StringUtils.isBlank;
  * {@link PackageNameClassNameFilter}
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PackageNameClassNameFilter
  * @since 1.0.0
  */
