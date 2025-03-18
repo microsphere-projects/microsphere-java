@@ -16,14 +16,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
@@ -45,18 +42,18 @@ import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.Predicates.and;
-import static io.microsphere.lang.function.Streams.filterAll;
-import static io.microsphere.lang.function.Streams.filterSet;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
+import static io.microsphere.reflect.Modifier.ANNOTATION;
+import static io.microsphere.reflect.Modifier.ENUM;
+import static io.microsphere.reflect.Modifier.SYNTHETIC;
+import static io.microsphere.reflect.TypeFinder.classFinder;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.isEmpty;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static io.microsphere.util.StringUtils.replace;
@@ -67,8 +64,8 @@ import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.reverse;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -89,21 +86,6 @@ public abstract class ClassUtils extends BaseUtils {
      * Suffix for array class names: "[]"
      */
     public static final String ARRAY_SUFFIX = "[]";
-
-    /**
-     * @see {@link Class#ANNOTATION}
-     */
-    private static final int ANNOTATION = 0x00002000;
-
-    /**
-     * @see {@link Class#ENUM}
-     */
-    private static final int ENUM = 0x00004000;
-
-    /**
-     * @see {@link Class#SYNTHETIC}
-     */
-    private static final int SYNTHETIC = 0x00001000;
 
     /**
      * Simple Types including:
@@ -419,30 +401,14 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents an annotation type; false otherwise
-     * @see Class#isAnnotation()
+     * Resolve package name under specified class
+     *
+     * @param targetClass target class
+     * @return package name
      */
-    public static boolean isAnnotation(int modifiers) {
-        return (modifiers & ANNOTATION) != 0;
-    }
-
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents an enumeration type; false otherwise
-     * @see Class#isEnum()
-     */
-    public static boolean isEnum(int modifiers) {
-        return (modifiers & ENUM) != 0;
-    }
-
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents a synthetic type; false otherwise
-     * @see Class#isSynthetic()
-     */
-    public static boolean isSynthetic(int modifiers) {
-        return (modifiers & SYNTHETIC) != 0;
+    @Nullable
+    public static String resolvePackageName(Class<?> targetClass) {
+        return isPrimitive(targetClass) ? null : resolvePackageName(getTypeName(targetClass));
     }
 
     /**
@@ -593,9 +559,9 @@ public abstract class ClassUtils extends BaseUtils {
      * Get all super classes from the specified type
      *
      * @param type the specified type
-     * @return non-null read-only {@link Set}
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllSuperClasses(Class<?> type) {
+    public static List<Class<?>> getAllSuperClasses(Class<?> type) {
         return findAllSuperClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -603,9 +569,9 @@ public abstract class ClassUtils extends BaseUtils {
      * Get all interfaces from the specified type
      *
      * @param type the specified type
-     * @return non-null read-only {@link Set}
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllInterfaces(Class<?> type) {
+    public static List<Class<?>> getAllInterfaces(Class<?> type) {
         return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -613,9 +579,9 @@ public abstract class ClassUtils extends BaseUtils {
      * Get all inherited types from the specified type
      *
      * @param type the specified type
-     * @return non-null read-only {@link Set}
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllInheritedTypes(Class<?> type) {
+    public static List<Class<?>> getAllInheritedTypes(Class<?> type) {
         return getAllInheritedClasses(type);
     }
 
@@ -623,10 +589,20 @@ public abstract class ClassUtils extends BaseUtils {
      * Get all inherited classes from the specified type
      *
      * @param type the specified type
-     * @return non-null read-only {@link Set}
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllInheritedClasses(Class<?> type) {
+    public static List<Class<?>> getAllInheritedClasses(Class<?> type) {
         return findAllInheritedClasses(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all classes from the specified type
+     *
+     * @param type the specified type
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> getAllClasses(Class<?> type) {
+        return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
@@ -634,20 +610,10 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @param type         the specified type
      * @param classFilters the filters for classes
-     * @return non-null read-only {@link Set}
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
-
-        Set<Class<?>> allSuperClasses = new LinkedHashSet<>();
-
-        Class<?> superClass = type.getSuperclass();
-        while (superClass != null) {
-            // add current super class
-            allSuperClasses.add(superClass);
-            superClass = superClass.getSuperclass();
-        }
-
-        return unmodifiableSet(filterAll(allSuperClasses, classFilters));
+    public static List<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+        return findTypes(type, false, true, true, false, classFilters);
     }
 
     /**
@@ -655,53 +621,42 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @param type             the specified type
      * @param interfaceFilters the filters for interfaces
-     * @return non-null read-only {@link Set}
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
-        if (type == null || type.isPrimitive()) {
-            return emptySet();
-        }
-
-        Set<Class<?>> allInterfaces = new LinkedHashSet<>();
-        Set<Class<?>> resolved = new LinkedHashSet<>();
-        Queue<Class<?>> waitResolve = new LinkedList<>();
-
-        resolved.add(type);
-        Class<?> clazz = type;
-        while (clazz != null) {
-
-            Class<?>[] interfaces = clazz.getInterfaces();
-
-            if (isNotEmpty(interfaces)) {
-                // add current interfaces
-                Arrays.stream(interfaces).filter(resolved::add).forEach(cls -> {
-                    allInterfaces.add(cls);
-                    waitResolve.add(cls);
-                });
-            }
-
-            // add all super classes to waitResolve
-            getAllSuperClasses(clazz).stream().filter(resolved::add).forEach(waitResolve::add);
-
-            clazz = waitResolve.poll();
-        }
-
-        return filterAll(allInterfaces, interfaceFilters);
+    public static List<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
+        return findTypes(type, false, true, false, true, interfaceFilters);
     }
 
     /**
      * Find all inherited classes from the specified type
      *
-     * @param type        the specified type
-     * @param typeFilters the filters for types
-     * @return non-null read-only {@link Set}
+     * @param type         the specified type
+     * @param classFilters the filters for types
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... typeFilters) {
-        // Add all super classes
-        Set<Class<?>> types = new LinkedHashSet<>(getAllSuperClasses(type));
-        // Add all interface classes
-        types.addAll(getAllInterfaces(type));
-        return unmodifiableSet(filterSet(types, and(typeFilters)));
+    public static List<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+        return findTypes(type, false, true, true, true, classFilters);
+
+    }
+
+    /**
+     * Find all classes from the specified type with filters
+     *
+     * @param type         the specified type
+     * @param classFilters class filters
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> findAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+        return findTypes(type, true, true, true, true, classFilters);
+    }
+
+    protected static List<Class<?>> findTypes(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes,
+                                              boolean includeGenericSuperclass, boolean includeGenericInterfaces,
+                                              Predicate<? super Class<?>>... typeFilters) {
+        if (type == null || isPrimitive(type)) {
+            return emptyList();
+        }
+        return classFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
     }
 
     /**
@@ -797,6 +752,7 @@ public abstract class ClassUtils extends BaseUtils {
         return getSimpleName(type, array);
     }
 
+
     private static String getSimpleName(Class<?> type, boolean array) {
         if (array) {
             return getSimpleName(type.getComponentType()) + "[]";
@@ -821,51 +777,6 @@ public abstract class ClassUtils extends BaseUtils {
 
     private static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';
-    }
-
-
-    /**
-     * Get all classes from the specified type with filters
-     *
-     * @param type         the specified type
-     * @param classFilters class filters
-     * @return non-null read-only {@link Set}
-     */
-    public static Set<Class<?>> getAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
-        return getAllClasses(type, true, classFilters);
-    }
-
-    /**
-     * Get all classes(may include self type) from the specified type with filters
-     *
-     * @param type         the specified type
-     * @param includedSelf included self type or not
-     * @param classFilters class filters
-     * @return non-null read-only {@link Set}
-     */
-    public static Set<Class<?>> getAllClasses(Class<?> type, boolean includedSelf, Predicate<? super Class<?>>... classFilters) {
-        if (type == null || type.isPrimitive()) {
-            return emptySet();
-        }
-
-        List<Class<?>> allClasses = new LinkedList<>();
-
-        Class<?> superClass = type.getSuperclass();
-        while (superClass != null) {
-            // add current super class
-            allClasses.add(superClass);
-            superClass = superClass.getSuperclass();
-        }
-
-        // FIFO -> FILO
-        reverse(allClasses);
-
-        if (includedSelf) {
-            allClasses.add(type);
-        }
-
-        // Keep the same order from List
-        return ofSet(filterAll(allClasses, classFilters));
     }
 
     /**
@@ -951,5 +862,35 @@ public abstract class ClassUtils extends BaseUtils {
             return null;
         }
         return castType.isInstance(object) ? castType.cast(object) : null;
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an annotation type; false otherwise
+     * @see Class#isAnnotation()
+     * @see io.microsphere.reflect.Modifier#ANNOTATION
+     */
+    static boolean isAnnotation(int modifiers) {
+        return ANNOTATION.matches(modifiers);
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an enumeration type; false otherwise
+     * @see Class#isEnum()
+     * @see io.microsphere.reflect.Modifier#ENUM
+     */
+    static boolean isEnum(int modifiers) {
+        return ENUM.matches(modifiers);
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents a synthetic type; false otherwise
+     * @see Class#isSynthetic()
+     * @see io.microsphere.reflect.Modifier#SYNTHETIC
+     */
+    static boolean isSynthetic(int modifiers) {
+        return SYNTHETIC.matches(modifiers);
     }
 }
