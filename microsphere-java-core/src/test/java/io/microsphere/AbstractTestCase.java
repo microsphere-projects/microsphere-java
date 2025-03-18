@@ -133,7 +133,7 @@ public abstract class AbstractTestCase {
     protected File newTempFile(String path) {
         return new File(tempDir, path);
     }
-    
+
     protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
         assertThrowable(action, throwable -> {
             assertEquals(throwableType, throwable.getClass());
@@ -151,13 +151,13 @@ public abstract class AbstractTestCase {
         failureHandler.accept(failure);
     }
 
-    protected void assertTypes(List<Type> types, Type... expectedTypes) {
-        assertTypes(types, expectedTypes.length, expectedTypes);
+    protected void assertValues(List<?> values, Object... expectedValues) {
+        assertValues(values, expectedValues.length, expectedValues);
     }
 
-    protected void assertTypes(List<Type> types, int expectedSize, Type... expectedTypes) {
-        assertEquals(expectedSize, types.size());
-        assertEquals(newHashSet(expectedTypes), newHashSet(types));
+    protected void assertValues(List<?> values, int expectedSize, Object... expectedTypes) {
+        assertEquals(expectedSize, values.size());
+        assertEquals(newHashSet(expectedTypes), newHashSet(values));
     }
 
     protected void assertType(Type expect, Type actual) {
