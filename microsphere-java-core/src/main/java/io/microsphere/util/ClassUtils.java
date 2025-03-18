@@ -636,7 +636,6 @@ public abstract class ClassUtils extends BaseUtils {
      */
     public static List<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, true, classFilters);
-
     }
 
     /**
