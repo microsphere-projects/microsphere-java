@@ -14,18 +14,24 @@ import java.lang.reflect.Array;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.cast;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
+import static io.microsphere.util.ClassUtils.findAllClasses;
 import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
+import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -41,9 +47,12 @@ import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isTopLevelClass;
 import static io.microsphere.util.ClassUtils.isWrapperType;
 import static io.microsphere.util.ClassUtils.newInstance;
+import static io.microsphere.util.ClassUtils.resolveClassName;
+import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,6 +71,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class ClassUtilsTest extends AbstractTestCase {
+
+    @Test
+    public void testIsArray() {
+
+        // Primitive-Type array
+        assertTrue(isArray(int[].class));
+
+        // Object-Type array
+        assertTrue(isArray(Object[].class));
+
+        // Dynamic-Type array
+        assertTrue(isArray(Array.newInstance(int.class, 0).getClass()));
+        assertTrue(isArray(Array.newInstance(Object.class, 0).getClass()));
+
+        // Dynamic multiple-dimension array
+        assertTrue(isArray(Array.newInstance(int.class, 0, 3).getClass()));
+        assertTrue(isArray(Array.newInstance(Object.class, 0, 3).getClass()));
+
+        // non-array
+        assertFalse(isArray(Object.class));
+        assertFalse(isArray(int.class));
+    }
 
     @Test
     public void testIsConcreteClass() {
@@ -169,28 +200,6 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsArray() {
-
-        // Primitive-Type array
-        assertTrue(isArray(int[].class));
-
-        // Object-Type array
-        assertTrue(isArray(Object[].class));
-
-        // Dynamic-Type array
-        assertTrue(isArray(Array.newInstance(int.class, 0).getClass()));
-        assertTrue(isArray(Array.newInstance(Object.class, 0).getClass()));
-
-        // Dynamic multiple-dimension array
-        assertTrue(isArray(Array.newInstance(int.class, 0, 3).getClass()));
-        assertTrue(isArray(Array.newInstance(Object.class, 0, 3).getClass()));
-
-        // non-array
-        assertFalse(isArray(Object.class));
-        assertFalse(isArray(int.class));
-    }
-
-    @Test
     public void testIsFinal() {
         assertTrue(isFinal(Boolean.TYPE));
         assertTrue(isFinal(Boolean.class));
@@ -282,22 +291,6 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolvePrimitiveClassName() {
-        assertNull(resolvePrimitiveClassName(null));
-        assertNull(resolvePrimitiveClassName(""));
-        assertNull(resolvePrimitiveClassName(" "));
-        assertNull(resolvePrimitiveClassName("java.lang.String"));
-        assertEquals(boolean.class, resolvePrimitiveClassName("boolean"));
-        assertEquals(byte.class, resolvePrimitiveClassName("byte"));
-        assertEquals(char.class, resolvePrimitiveClassName("char"));
-        assertEquals(short.class, resolvePrimitiveClassName("short"));
-        assertEquals(int.class, resolvePrimitiveClassName("int"));
-        assertEquals(long.class, resolvePrimitiveClassName("long"));
-        assertEquals(float.class, resolvePrimitiveClassName("float"));
-        assertEquals(double.class, resolvePrimitiveClassName("double"));
-    }
-
-    @Test
     public void testArrayTypeEquals() {
         assertFalse(arrayTypeEquals(null, null));
         assertFalse(arrayTypeEquals(Object.class, Object.class));
@@ -320,6 +313,137 @@ public class ClassUtilsTest extends AbstractTestCase {
         anotherArrayType = int[].class;
         assertFalse(arrayTypeEquals(oneArrayType, anotherArrayType));
     }
+
+    @Test
+    public void testResolvePrimitiveClassName() {
+        assertNull(resolvePrimitiveClassName(null));
+        assertNull(resolvePrimitiveClassName(""));
+        assertNull(resolvePrimitiveClassName(" "));
+        assertNull(resolvePrimitiveClassName("java.lang.String"));
+        assertEquals(boolean.class, resolvePrimitiveClassName("boolean"));
+        assertEquals(byte.class, resolvePrimitiveClassName("byte"));
+        assertEquals(char.class, resolvePrimitiveClassName("char"));
+        assertEquals(short.class, resolvePrimitiveClassName("short"));
+        assertEquals(int.class, resolvePrimitiveClassName("int"));
+        assertEquals(long.class, resolvePrimitiveClassName("long"));
+        assertEquals(float.class, resolvePrimitiveClassName("float"));
+        assertEquals(double.class, resolvePrimitiveClassName("double"));
+    }
+
+    @Test
+    public void testResolvePackageName() {
+        assertEquals("java.lang", resolvePackageName(Object.class));
+    }
+
+    @Test
+    public void testResolvePackageNameOnPrimitiveType() {
+        PRIMITIVE_TYPES.forEach(t -> assertNull(resolvePackageName(t)));
+    }
+
+    @Test
+    public void testFindClassNamesInClassPath() {
+        assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInClassPath);
+        assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInClassPath);
+    }
+
+    @Test
+    public void testFindClassNamesInDirectory() {
+        assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInDirectory);
+    }
+
+    @Test
+    public void testFindClassNamesInJarFile() {
+        assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInJarFile);
+    }
+
+    @Test
+    public void testResolveClassName() {
+        assertEquals("java.lang.String", resolveClassName("java/lang/String.class"));
+    }
+
+    @Test
+    public void testGetAllSuperClasses() {
+        List<Class<?>> allSuperClasses = getAllSuperClasses(Object.class);
+        assertSame(emptyList(), allSuperClasses);
+
+        allSuperClasses = getAllSuperClasses(Map.class);
+        assertSame(emptyList(), allSuperClasses);
+
+    }
+
+    @Test
+    public void testGetAllSuperClassesOnNull() {
+
+    }
+
+    @Test
+    public void testGetAllSuperClassesOnPrimitiveType() {
+
+    }
+
+    @Test
+    public void testGetAllInterfaces() {
+        assertSame(emptyList(), getAllInterfaces(null));
+        assertSame(emptyList(), getAllInterfaces(int.class));
+    }
+
+    @Test
+    public void testGetAllClasses() {
+        List<Class<?>> allClasses = getAllClasses(Object.class);
+        assertEquals(1, allClasses.size());
+        assertTrue(allClasses.contains(Object.class));
+
+        allClasses = getAllClasses(String.class);
+        assertTrue(allClasses.size() > 5);
+        assertTrue(allClasses.contains(Object.class));
+        assertTrue(allClasses.contains(Serializable.class));
+        assertTrue(allClasses.contains(Comparable.class));
+        assertTrue(allClasses.contains(CharSequence.class));
+        assertTrue(allClasses.contains(String.class));
+
+        allClasses = getAllClasses(TreeMap.class);
+        assertTrue(allClasses.size() >= 8);
+        assertTrue(allClasses.contains(Object.class));
+        assertTrue(allClasses.contains(Cloneable.class));
+        assertTrue(allClasses.contains(Serializable.class));
+        assertTrue(allClasses.contains(Map.class));
+        assertTrue(allClasses.contains(SortedMap.class));
+        assertTrue(allClasses.contains(NavigableMap.class));
+        assertTrue(allClasses.contains(AbstractMap.class));
+        assertTrue(allClasses.contains(TreeMap.class));
+    }
+
+    @Test
+    public void testGetAllClassesOnNull() {
+        assertSame(emptyList(), getAllClasses(null));
+    }
+
+    @Test
+    public void testGetAllClassesOnPrimitiveType() {
+        PRIMITIVE_TYPES.forEach(t -> assertSame(emptyList(), getAllClasses(t)));
+    }
+
+    @Test
+    public void testFindAllClasses() {
+        List<Class<?>> allClasses = findAllClasses(TreeMap.class, klass -> isAssignableFrom(Map.class, klass));
+        assertTrue(allClasses.size() >= 5);
+        assertTrue(allClasses.contains(Map.class));
+        assertTrue(allClasses.contains(SortedMap.class));
+        assertTrue(allClasses.contains(NavigableMap.class));
+        assertTrue(allClasses.contains(AbstractMap.class));
+        assertTrue(allClasses.contains(TreeMap.class));
+    }
+
+    @Test
+    public void testFindAllClassesOnNull() {
+        assertSame(emptyList(), findAllClasses(null, t -> true));
+    }
+
+    @Test
+    public void testFindAllClassesOnPrimitiveType() {
+        PRIMITIVE_TYPES.forEach(t -> assertSame(emptyList(), findAllClasses(t, a -> true)));
+    }
+
 
     @Test
     public void testGetTypeName() {
@@ -398,36 +522,6 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testCast() {
-        assertNull(cast(null, Integer.class));
-        assertNull(cast("test", null));
-        assertNull(cast("test", Integer.class));
-        assertEquals("test", cast("test", CharSequence.class));
-    }
-
-    @Test
-    public void testFindClassNamesInClassPath() {
-        assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInClassPath);
-        assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInClassPath);
-    }
-
-    @Test
-    public void testFindClassNamesInDirectory() {
-        assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInDirectory);
-    }
-
-    @Test
-    public void testFindClassNamesInJarFile() {
-        assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInJarFile);
-    }
-
-    @Test
-    public void testGetAllInterfaces() {
-        assertSame(emptySet(), getAllInterfaces(null));
-        assertSame(emptySet(), getAllInterfaces(int.class));
-    }
-
-    @Test
     public void testIsAssignableFrom() {
         assertFalse(isAssignableFrom(null, null));
         assertFalse(isAssignableFrom(String.class, null));
@@ -446,36 +540,6 @@ public class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllClasses() {
-        assertSame(emptySet(), getAllClasses(null));
-        assertSame(emptySet(), getAllClasses(int.class));
-
-        Set<Class<?>> allClasses = getAllClasses(Object.class);
-        assertEquals(1, allClasses.size());
-        assertTrue(allClasses.contains(Object.class));
-
-        allClasses = getAllClasses(String.class);
-        assertEquals(2, allClasses.size());
-        assertTrue(allClasses.contains(Object.class));
-        assertTrue(allClasses.contains(String.class));
-
-        allClasses = getAllClasses(TreeMap.class);
-        assertEquals(3, allClasses.size());
-        assertTrue(allClasses.contains(Object.class));
-        assertTrue(allClasses.contains(AbstractMap.class));
-        assertTrue(allClasses.contains(TreeMap.class));
-
-        allClasses = getAllClasses(TreeMap.class, klass -> isAssignableFrom(Map.class, klass));
-        assertEquals(2, allClasses.size());
-        assertTrue(allClasses.contains(AbstractMap.class));
-        assertTrue(allClasses.contains(TreeMap.class));
-
-        allClasses = getAllClasses(TreeMap.class, false, klass -> isAssignableFrom(Map.class, klass));
-        assertEquals(1, allClasses.size());
-        assertTrue(allClasses.contains(AbstractMap.class));
-    }
-
-    @Test
     public void testIsDerived() {
         assertFalse(isDerived(null, null));
         assertFalse(isDerived(String.class, null));
@@ -489,6 +553,14 @@ public class ClassUtilsTest extends AbstractTestCase {
     public void testNewInstance() {
         assertEquals("test", newInstance(String.class, "test"));
         assertThrows(IllegalArgumentException.class, () -> newInstance(String.class, 1));
+    }
+
+    @Test
+    public void testCast() {
+        assertNull(cast(null, Integer.class));
+        assertNull(cast("test", null));
+        assertNull(cast("test", Integer.class));
+        assertEquals("test", cast("test", CharSequence.class));
     }
 
     private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
