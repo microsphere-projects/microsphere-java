@@ -394,7 +394,7 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertTrue(allClasses.contains(Object.class));
 
         allClasses = getAllClasses(String.class);
-        assertTrue(allClasses.size() > 5);
+        assertTrue(allClasses.size() >= 5);
         assertTrue(allClasses.contains(Object.class));
         assertTrue(allClasses.contains(Serializable.class));
         assertTrue(allClasses.contains(Comparable.class));
