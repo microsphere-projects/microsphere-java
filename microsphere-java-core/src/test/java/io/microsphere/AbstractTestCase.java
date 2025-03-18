@@ -94,23 +94,6 @@ public abstract class AbstractTestCase {
         }
     }
 
-    protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
-        assertThrowable(action, throwable -> {
-            assertEquals(throwableType, throwable.getClass());
-        });
-    }
-
-    protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
-        Throwable failure = null;
-        try {
-            action.execute();
-        } catch (Throwable t) {
-            failure = t;
-        }
-        assertNotNull(failure);
-        failureHandler.accept(failure);
-    }
-
     protected File createRandomTempDirectory() {
         File tempDir = newTempFile(buildRandomFileName());
         assertTrue(tempDir.mkdir());
@@ -149,6 +132,23 @@ public abstract class AbstractTestCase {
 
     protected File newTempFile(String path) {
         return new File(tempDir, path);
+    }
+    
+    protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
+        assertThrowable(action, throwable -> {
+            assertEquals(throwableType, throwable.getClass());
+        });
+    }
+
+    protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
+        Throwable failure = null;
+        try {
+            action.execute();
+        } catch (Throwable t) {
+            failure = t;
+        }
+        assertNotNull(failure);
+        failureHandler.accept(failure);
     }
 
     protected void assertTypes(List<Type> types, Type... expectedTypes) {
