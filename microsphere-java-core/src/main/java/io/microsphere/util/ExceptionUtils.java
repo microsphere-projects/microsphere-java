@@ -58,31 +58,25 @@ public abstract class ExceptionUtils extends BaseUtils {
         return newInstance(thrownType, args);
     }
 
-    private static <T extends Throwable> Object[] resolveArguments(T source) {
-        String message = source.getMessage();
-        Throwable cause = source.getCause() == null ? source : source.getCause();
-        return message == null ? new Object[]{cause} : new Object[]{message, cause};
-    }
-
-    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
-        String message = format(messagePattern, args);
-        return create(throwableClass, message, cause);
-    }
-
-    public static <T extends Throwable> T create(Class<T> throwableClass, String message, Throwable cause) {
-        return newInstance(throwableClass, message, cause);
-    }
-
-    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause) {
-        return newInstance(throwableClass, cause);
+    public static <T extends Throwable> T create(Class<T> throwableClass) {
+        return newInstance(throwableClass);
     }
 
     public static <T extends Throwable> T create(Class<T> throwableClass, String message) {
         return newInstance(throwableClass, message);
     }
 
-    public static <T extends Throwable> T create(Class<T> throwableClass) {
-        return newInstance(throwableClass);
+    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause) {
+        return newInstance(throwableClass, cause);
+    }
+
+    public static <T extends Throwable> T create(Class<T> throwableClass, String message, Throwable cause) {
+        return newInstance(throwableClass, message, cause);
+    }
+
+    public static <T extends Throwable> T create(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
+        String message = format(messagePattern, args);
+        return create(throwableClass, message, cause);
     }
 
     public static <T extends Throwable> T create(Class<T> throwableClass, Object... args) {
@@ -91,5 +85,11 @@ public abstract class ExceptionUtils extends BaseUtils {
 
     public static <T extends Throwable, TT extends Throwable> TT throwTarget(T source, Class<TT> thrownType) throws TT {
         throw wrap(source, thrownType);
+    }
+
+    private static <T extends Throwable> Object[] resolveArguments(T source) {
+        String message = source.getMessage();
+        Throwable cause = source.getCause() == null ? source : source.getCause();
+        return message == null ? new Object[]{cause} : new Object[]{message, cause};
     }
 }
