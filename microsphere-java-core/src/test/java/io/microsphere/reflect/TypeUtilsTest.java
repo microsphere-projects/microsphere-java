@@ -44,7 +44,6 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.TypeUtils.GENERIC_ARRAY_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
