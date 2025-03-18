@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class JarUtilsTest {
 
     private final static File tempDirectory = new File(JAVA_IO_TMPDIR);
-    
+
     private final static File targetDirectory = new File(tempDirectory, "jar-util-extract");
 
     private final ClassLoader classLoader = getClassLoader(getClass());
