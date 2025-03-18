@@ -68,6 +68,7 @@ public interface URLClassPathHandle extends Prioritized {
 
     /**
      * Get the priority
+     *
      * @return the default value is {@link Prioritized#MIN_PRIORITY}
      */
     default int getPriority() {
