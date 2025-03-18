@@ -69,7 +69,6 @@ import static java.util.Collections.unmodifiableMap;
  * {@link URL} Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see URL
  * @see URLEncoder
  * @see URLDecoder
