@@ -31,7 +31,6 @@ import static io.microsphere.util.SystemUtils.FILE_ENCODING;
  * Properties} files
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PropertyResourceBundle
  * @see ResourceBundle.Control
  * @since 1.0.0
@@ -65,7 +64,6 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      *
      * @param encoding
      * @return an existed instance of {@link PropertyResourceBundleControl}.
-     * @version 1.0.0
      * @since 1.0.0
      */
     private static final ResourceBundle.Control getControl(final String encoding) {
@@ -78,7 +76,6 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @param encoding Encoding
      * @return Control
      * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
-     * @version 1.0.0
      * @since 1.0.0
      */
     public static final ResourceBundle.Control newControl(final String encoding) throws UnsupportedCharsetException {
@@ -149,7 +146,6 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * Sets the encoding of properties file.
      *
      * @return the encoding
-     * @version 1.0.0
      * @since 1.0.0
      */
     public String getEncoding() {
