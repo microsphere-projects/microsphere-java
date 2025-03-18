@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
@@ -21,7 +22,9 @@ import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
+import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.util.Collections.emptyList;
@@ -146,5 +149,18 @@ public abstract class AbstractTestCase {
 
     protected File newTempFile(String path) {
         return new File(tempDir, path);
+    }
+
+    protected void assertTypes(List<Type> types, Type... expectedTypes) {
+        assertTypes(types, expectedTypes.length, expectedTypes);
+    }
+
+    protected void assertTypes(List<Type> types, int expectedSize, Type... expectedTypes) {
+        assertEquals(expectedSize, types.size());
+        assertEquals(newHashSet(expectedTypes), newHashSet(types));
+    }
+
+    protected void assertType(Type expect, Type actual) {
+        assertEquals(asClass(expect), asClass(actual));
     }
 }
