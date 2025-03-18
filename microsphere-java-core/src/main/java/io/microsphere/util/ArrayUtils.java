@@ -23,6 +23,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -30,6 +31,7 @@ import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ClassUtils.isArray;
 import static java.lang.System.arraycopy;
 import static java.lang.reflect.Array.newInstance;
+import static java.util.Arrays.binarySearch;
 import static java.util.Collections.list;
 
 /**
@@ -407,35 +409,35 @@ public abstract class ArrayUtils extends BaseUtils {
         return newArray;
     }
 
-    public static <T> void forEach(boolean[] values, Consumer<Boolean> consumer) {
+    public static void forEach(boolean[] values, Consumer<Boolean> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(char[] values, Consumer<Character> consumer) {
+    public static void forEach(byte[] values, Consumer<Byte> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(byte[] values, Consumer<Byte> consumer) {
+    public static void forEach(char[] values, Consumer<Character> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(short[] values, Consumer<Short> consumer) {
+    public static void forEach(short[] values, Consumer<Short> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(int[] values, Consumer<Integer> consumer) {
+    public static void forEach(int[] values, Consumer<Integer> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(long[] values, Consumer<Long> consumer) {
+    public static void forEach(long[] values, Consumer<Long> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(float[] values, Consumer<Float> consumer) {
+    public static void forEach(float[] values, Consumer<Float> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(double[] values, Consumer<Double> consumer) {
+    public static void forEach(double[] values, Consumer<Double> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
@@ -443,7 +445,7 @@ public abstract class ArrayUtils extends BaseUtils {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    public static <T> void forEach(boolean[] values, BiConsumer<Integer, Boolean> indexedElementConsumer) {
+    public static void forEach(boolean[] values, BiConsumer<Integer, Boolean> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Boolean value = values[i];
@@ -451,15 +453,7 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void forEach(char[] values, BiConsumer<Integer, Character> indexedElementConsumer) {
-        int length = length(values);
-        for (int i = 0; i < length; i++) {
-            Character value = values[i];
-            indexedElementConsumer.accept(i, value);
-        }
-    }
-
-    public static <T> void forEach(byte[] values, BiConsumer<Integer, Byte> indexedElementConsumer) {
+    public static void forEach(byte[] values, BiConsumer<Integer, Byte> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Byte value = values[i];
@@ -467,7 +461,15 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void forEach(short[] values, BiConsumer<Integer, Short> indexedElementConsumer) {
+    public static void forEach(char[] values, BiConsumer<Integer, Character> indexedElementConsumer) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            Character value = values[i];
+            indexedElementConsumer.accept(i, value);
+        }
+    }
+
+    public static void forEach(short[] values, BiConsumer<Integer, Short> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Short value = values[i];
@@ -475,7 +477,7 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void forEach(int[] values, BiConsumer<Integer, Integer> indexedElementConsumer) {
+    public static void forEach(int[] values, BiConsumer<Integer, Integer> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Integer value = values[i];
@@ -483,7 +485,7 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void forEach(long[] values, BiConsumer<Integer, Long> indexedElementConsumer) {
+    public static void forEach(long[] values, BiConsumer<Integer, Long> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Long value = values[i];
@@ -491,7 +493,7 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void forEach(float[] values, BiConsumer<Integer, Float> indexedElementConsumer) {
+    public static void forEach(float[] values, BiConsumer<Integer, Float> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Float value = values[i];
@@ -499,7 +501,7 @@ public abstract class ArrayUtils extends BaseUtils {
         }
     }
 
-    public static <T> void forEach(double[] values, BiConsumer<Integer, Double> indexedElementConsumer) {
+    public static void forEach(double[] values, BiConsumer<Integer, Double> indexedElementConsumer) {
         int length = length(values);
         for (int i = 0; i < length; i++) {
             Double value = values[i];
@@ -513,6 +515,57 @@ public abstract class ArrayUtils extends BaseUtils {
             T value = values[i];
             indexedElementConsumer.accept(i, value);
         }
+    }
+
+    public static boolean contains(boolean[] values, boolean value) {
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            if (values[i] == value) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean contains(byte[] values, byte value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(char[] values, char value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(short[] values, short value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(int[] values, int value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(long[] values, long value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(float[] values, float value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(double[] values, double value) {
+        return binarySearch(values, value) > -1;
+    }
+
+    public static boolean contains(Object[] values, Object value) {
+        if (value instanceof Comparable) {
+            return binarySearch(values, value) > -1;
+        }
+        int length = length(values);
+        for (int i = 0; i < length; i++) {
+            if (Objects.equals(values[i], value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
