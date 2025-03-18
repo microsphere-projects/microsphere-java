@@ -408,7 +408,7 @@ public abstract class AnnotationUtils extends BaseUtils {
         return isAnnotationPresent(annotation.annotationType(), annotationTypes);
     }
 
-    public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<Method>... attributesToFilter) {
+    public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
         Map<String, Object> attributesMap = new LinkedHashMap<>();
 
 
