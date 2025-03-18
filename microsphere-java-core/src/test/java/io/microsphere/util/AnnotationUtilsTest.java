@@ -32,8 +32,10 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.AnnotationUtils.ANNOTATION_INTERFACE_METHOD_PREDICATE;
@@ -48,9 +50,11 @@ import static io.microsphere.util.AnnotationUtils.filterAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAllDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.AnnotationUtils.findAttributeValue;
+import static io.microsphere.util.AnnotationUtils.findAttributesMap;
 import static io.microsphere.util.AnnotationUtils.findDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAllDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAttributeValue;
+import static io.microsphere.util.AnnotationUtils.getAttributesMap;
 import static io.microsphere.util.AnnotationUtils.getDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.isAnnotationInterfaceMethod;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
@@ -60,10 +64,20 @@ import static io.microsphere.util.AnnotationUtils.isSameType;
 import static io.microsphere.util.AnnotationUtils.isType;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PACKAGE;
+import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.TYPE_PARAMETER;
+import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -349,12 +363,37 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testGetAttributesMap() {
+        Map<String, Object> attributesMap = getAttributesMap(B.class.getAnnotation(Since.class));
+        assertEquals(2, attributesMap.size());
+        assertEquals(ofMap("module", "microsphere-java-core", "value", "1.0.0"), attributesMap);
 
+        attributesMap = getAttributesMap(Since.class.getAnnotation(Target.class));
+        assertEquals(1, attributesMap.size());
+        assertArrayEquals(ofArray(TYPE, FIELD, METHOD, PARAMETER, CONSTRUCTOR, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE, TYPE_PARAMETER, TYPE_USE), (ElementType[]) attributesMap.get("value"));
     }
 
     @Test
-    public void testFindAttributesMap() {
+    public void testGetAttributesMapOnNull() {
+        assertSame(emptyMap(), getAttributesMap(null));
+    }
 
+    @Test
+    public void testGetAttributesMapOnNoNoAttribute() {
+        assertSame(emptyMap(), getAttributesMap(Target.class.getAnnotation(Documented.class)));
+    }
+
+    @Test
+    public void testFindAttributesMapWithAttributesNames() {
+        Map<String, Object> attributesMap = findAttributesMap(B.class.getAnnotation(Since.class), "module", "value");
+        assertEquals(2, attributesMap.size());
+        assertEquals(ofMap("module", "microsphere-java-core", "value", "1.0.0"), attributesMap);
+
+        attributesMap = findAttributesMap(B.class.getAnnotation(Since.class), "module");
+        assertEquals(1, attributesMap.size());
+        assertEquals(ofMap("module", "microsphere-java-core"), attributesMap);
+
+        attributesMap = findAttributesMap(B.class.getAnnotation(Since.class), "notFound");
+        assertSame(emptyMap(), attributesMap);
     }
 
     @Test
