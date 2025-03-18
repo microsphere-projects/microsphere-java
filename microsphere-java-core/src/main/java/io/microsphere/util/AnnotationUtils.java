@@ -27,25 +27,26 @@ import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.findMethods;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
+import static io.microsphere.util.ArrayUtils.contains;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -53,8 +54,6 @@ import static io.microsphere.util.ClassUtils.findAllInheritedClasses;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
-import static java.util.Collections.unmodifiableMap;
-import static java.util.stream.Stream.of;
 
 /**
  * {@link Annotation} Utilities class
@@ -324,8 +323,44 @@ public abstract class AnnotationUtils extends BaseUtils {
         return attributeMethod == null ? null : invokeMethod(annotation, attributeMethod);
     }
 
+    /**
+     * Get the attributes map from the specified annotation
+     *
+     * @param annotation the specified annotation
+     * @return non-null read-only {@link Map}
+     */
     public static Map<String, Object> getAttributesMap(Annotation annotation) {
         return findAttributesMap(annotation, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Find the attributes map from the specified annotation by the attribute names
+     *
+     * @param annotation             the specified annotation
+     * @param attributeNamesToFilter the attribute names to filter
+     * @return non-null read-only {@link Map}
+     */
+    public static Map<String, Object> findAttributesMap(Annotation annotation, String... attributeNamesToFilter) {
+        return findAttributesMap(annotation, method -> contains(attributeNamesToFilter, method.getName()));
+    }
+
+    /**
+     * Find the attributes map from the specified annotation by the {@link Method attribute method}
+     *
+     * @param annotation         the specified annotation
+     * @param attributesToFilter the attribute methods to filter
+     * @return non-null read-only {@link Map}
+     */
+    public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
+        if (annotation == null) {
+            return emptyMap();
+        }
+
+        Predicate<? super Method> predicate = and(ANNOTATION_DECLARED_METHOD_PREDICATE, and(attributesToFilter));
+
+        List<Method> attributeMethods = findMethods(annotation.annotationType(), predicate);
+
+        return toFixedMap(attributeMethods, method -> ofEntry(method.getName(), invokeMethod(annotation, method)));
     }
 
     public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
@@ -407,18 +442,6 @@ public abstract class AnnotationUtils extends BaseUtils {
         return isAnnotationPresent(annotation.annotationType(), annotationTypes);
     }
 
-    public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
-        Map<String, Object> attributesMap = new LinkedHashMap<>();
-
-
-        getAttributeMethods(annotation, attributesToFilter)
-                .forEach(method -> {
-                    Object value = execute(() -> method.invoke(annotation));
-                    attributesMap.put(method.getName(), value);
-                });
-        return attributesMap.isEmpty() ? emptyMap() : unmodifiableMap(attributesMap);
-    }
-
     /**
      * Is the specified method declared by the {@link Annotation} interface or not
      *
@@ -439,10 +462,5 @@ public abstract class AnnotationUtils extends BaseUtils {
         return CALLER_SENSITIVE_ANNOTATION_CLASS != null;
     }
 
-    private static Stream<Method> getAttributeMethods(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
-        Class<? extends Annotation> annotationType = annotation.annotationType();
-        return of(annotationType.getMethods())
-                .filter(and(ANNOTATION_DECLARED_METHOD_PREDICATE, and(attributesToFilter)));
-    }
 
 }
