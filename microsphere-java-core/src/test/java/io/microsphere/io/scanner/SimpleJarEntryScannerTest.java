@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link SimpleJarEntryScanner} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see SimpleJarEntryScannerTest
  * @since 1.0.0
  */
