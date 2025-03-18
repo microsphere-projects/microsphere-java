@@ -24,7 +24,6 @@ import static java.util.Collections.unmodifiableList;
  * {@link ServiceLoader} Utility
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ServiceLoader
  * @since 1.0.0
  */
