@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Disabled;
  * {@link AbstractPerformanceTest}
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see AbstractPerformanceTest
  * @since 1.0.0
  */
