@@ -353,8 +353,7 @@ public abstract class AnnotationUtils extends BaseUtils {
         return found;
     }
 
-
-    public static boolean existsAnnotated(AnnotatedElement[] annotatedElements, Class<? extends Annotation> annotationType) {
+    public static boolean isAnnotationPresent(AnnotatedElement[] annotatedElements, Class<? extends Annotation> annotationType) {
         int length = length(annotatedElements);
         if (length < 1 || annotationType == null) {
             return false;
@@ -410,7 +409,6 @@ public abstract class AnnotationUtils extends BaseUtils {
 
     public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
         Map<String, Object> attributesMap = new LinkedHashMap<>();
-
 
 
         getAttributeMethods(annotation, attributesToFilter)
