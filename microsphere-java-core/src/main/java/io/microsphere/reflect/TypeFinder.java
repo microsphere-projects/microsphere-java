@@ -34,6 +34,8 @@ import static io.microsphere.reflect.TypeUtils.isObjectType;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.contains;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.Assert.assertNoNullElements;
+import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -65,7 +67,15 @@ public class TypeFinder<T extends Type> {
     }
 
     protected TypeFinder(T type, boolean generic, Include[] includes) {
-        this(type, generic, contains(includes, SELF), contains(includes, HIERARCHICAL), contains(includes, SUPER_CLASS), contains(includes, INTERFACES));
+        assertNotNull(type, () -> "The 'type' must not be null");
+        assertNotEmpty(includes, () -> "The 'includes' must not be empty");
+        assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
+        this.type = type;
+        this.generic = generic;
+        this.includeSelf = contains(includes, SELF);
+        this.includeHierarchicalTypes = contains(includes, HIERARCHICAL);
+        this.includeSuperclass = contains(includes, SUPER_CLASS);
+        this.includeInterfaces = contains(includes, INTERFACES);
     }
 
     protected TypeFinder(T type, boolean generic, boolean includeSelf, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
