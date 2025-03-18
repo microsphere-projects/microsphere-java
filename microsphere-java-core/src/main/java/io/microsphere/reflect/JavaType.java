@@ -68,7 +68,7 @@ public class JavaType implements Serializable {
 
     // Local cache fields
 
-    private volatile JavaType source;
+    private final JavaType source;
 
     private volatile JavaType superType;
 
