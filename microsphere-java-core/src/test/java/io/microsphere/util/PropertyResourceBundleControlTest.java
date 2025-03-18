@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * {@link PropertyResourceBundleControl} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PropertyResourceBundleControlTest
  * @since 1.0.0
  */
