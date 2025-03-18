@@ -237,7 +237,7 @@ public abstract class TypeUtils extends BaseUtils {
                 return emptyList();
             }
 
-            Predicate<Type> baseClassFilter = t -> isAssignableFrom(baseClass, t);
+            Predicate<? super Type> baseClassFilter = t -> isAssignableFrom(baseClass, t);
 
             List<Type> hierarchicalTypes = filterList(doGetHierarchicalTypes(type), baseClassFilter);
 
@@ -442,7 +442,7 @@ public abstract class TypeUtils extends BaseUtils {
      * @return non-null read-only {@link Set}
      * @see Class#getGenericSuperclass()
      */
-    public static List<Type> findAllGenericSuperclasses(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findAllGenericSuperclasses(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, false, typeFilters);
     }
 
@@ -454,7 +454,7 @@ public abstract class TypeUtils extends BaseUtils {
      * @return non-null read-only {@link Set}
      * @see Class#getGenericInterfaces()
      */
-    public static List<Type> findAllGenericInterfaces(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findAllGenericInterfaces(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, false, true, typeFilters);
     }
 
