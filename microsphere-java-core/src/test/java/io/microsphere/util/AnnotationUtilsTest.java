@@ -62,6 +62,7 @@ import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
 import static io.microsphere.util.AnnotationUtils.isSameType;
 import static io.microsphere.util.AnnotationUtils.isType;
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
@@ -104,6 +105,11 @@ public class AnnotationUtilsTest {
     private static final Annotation[] annotationsOfA = A.class.getAnnotations();
 
     private static final Annotation[] annotationsOfB = B.class.getAnnotations();
+
+    private static final DataAccess dataAccessOfA = A.class.getAnnotation(DataAccess.class);
+
+    private static final DataAccess dataAccessOfB = B.class.getAnnotation(DataAccess.class);
+
 
     @Test
     public void testNATIVE_ANNOTATION_TYPES() {
@@ -159,38 +165,55 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsSameType() {
-        DataAccess dataAccess = A.class.getAnnotation(DataAccess.class);
-        assertTrue(isSameType(dataAccess, DataAccess.class));
-
-        dataAccess = B.class.getAnnotation(DataAccess.class);
-        assertTrue(isSameType(dataAccess, DataAccess.class));
+        assertTrue(isSameType(dataAccessOfA, DataAccess.class));
+        assertTrue(isSameType(dataAccessOfB, DataAccess.class));
     }
 
     @Test
     public void testIsSameTypeOnNull() {
         assertFalse(isSameType(null, DataAccess.class));
-        assertFalse(isSameType(A.class.getAnnotation(DataAccess.class), null));
+        assertFalse(isSameType(dataAccessOfA, null));
     }
 
     @Test
     public void testFindAnnotation() {
         DataAccess dataAccess = findAnnotation(A.class, DataAccess.class);
-        assertNotNull(dataAccess);
+        assertSame(dataAccessOfA, dataAccess);
+
         assertSame(dataAccess, findAnnotation(B.class, DataAccess.class));
-        assertSame(dataAccess, B.class.getAnnotation(DataAccess.class));
+        assertSame(dataAccessOfB, dataAccess);
     }
 
     @Test
-    public void testIsMetaAnnotationOnAnnotationObject() {
+    public void testIsMetaAnnotationWithAnnotationObject() {
         DataAccess dataAccess = findAnnotation(A.class, DataAccess.class);
         assertTrue(isMetaAnnotation(dataAccess, Monitored.class));
         assertTrue(isMetaAnnotation(dataAccess, ServiceMode.class));
     }
 
     @Test
-    public void testIsMetaAnnotation() {
+    public void testIsMetaAnnotationWithAnnotationObjectOnNull() {
+        assertFalse(isMetaAnnotation((Annotation) null, ServiceMode.class));
+        assertFalse(isMetaAnnotation((Annotation) null, ofList(ServiceMode.class)));
+        assertFalse(isMetaAnnotation(dataAccessOfA, (Class[]) null));
+        assertFalse(isMetaAnnotation(dataAccessOfA, (Iterable) null));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationObjectOnEmpty() {
+        assertFalse(isMetaAnnotation(dataAccessOfA, (Class[]) EMPTY_CLASS_ARRAY));
+        assertFalse(isMetaAnnotation(dataAccessOfA, emptyList()));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationType() {
         assertTrue(isMetaAnnotation(Monitored.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeOnNull() {
+        assertFalse(isMetaAnnotation((Class<? extends Annotation>) null, ServiceMode.class));
     }
 
     @Test
@@ -456,26 +479,26 @@ public class AnnotationUtilsTest {
 
     @Test
     public void testIsAnnotatedPresentWithAnnotation() {
-        assertFalse(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), DataAccess.class));
-        assertFalse(isAnnotationPresent(A.class.getAnnotation(DataAccess.class), DataAccess.class));
-        assertTrue(isAnnotationPresent(A.class.getAnnotation(DataAccess.class), Monitored.class));
+        assertFalse(isAnnotationPresent(dataAccessOfB, DataAccess.class));
+        assertFalse(isAnnotationPresent(dataAccessOfA, DataAccess.class));
+        assertTrue(isAnnotationPresent(dataAccessOfA, Monitored.class));
     }
 
     @Test
     public void testIsAnnotatedPresentWithAnnotationElementOnNull() {
         assertFalse(isAnnotationPresent((Annotation) null, DataAccess.class));
-        assertFalse(isAnnotationPresent(A.class.getAnnotation(DataAccess.class), (Class) null));
+        assertFalse(isAnnotationPresent(dataAccessOfA, (Class) null));
     }
 
     @Test
     public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypes() {
-        assertTrue(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), ofList(Inherited.class, Monitored.class)));
+        assertTrue(isAnnotationPresent(dataAccessOfB, ofList(Inherited.class, Monitored.class)));
     }
 
     @Test
     public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((Annotation) null, ofList(DataAccess.class, Monitored.class)));
-        assertFalse(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), (Iterable) null));
+        assertFalse(isAnnotationPresent(dataAccessOfB, (Iterable) null));
     }
 
     @Test
