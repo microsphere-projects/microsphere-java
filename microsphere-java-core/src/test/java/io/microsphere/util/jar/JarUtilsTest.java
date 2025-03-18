@@ -17,6 +17,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.net.URLUtils.ofURL;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static io.microsphere.util.jar.JarUtils.assertJarURLProtocol;
@@ -39,8 +40,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class JarUtilsTest {
 
     private final static File tempDirectory = new File(JAVA_IO_TMPDIR);
+    
     private final static File targetDirectory = new File(tempDirectory, "jar-util-extract");
-    private final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+
+    private final ClassLoader classLoader = getClassLoader(getClass());
 
     private URL resourceURL;
 
