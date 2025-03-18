@@ -18,7 +18,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
+import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static io.microsphere.util.jar.JarUtils.assertJarURLProtocol;
 import static io.microsphere.util.jar.JarUtils.findJarEntry;
 import static io.microsphere.util.jar.JarUtils.resolveJarAbsolutePath;
 import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
@@ -44,6 +46,12 @@ public class JarUtilsTest {
     public void init() throws IOException {
         deleteDirectory(targetDirectory);
         targetDirectory.mkdirs();
+    }
+
+    @Test
+    public void testAssertJarURLProtocol() {
+        URL url = ofURL("http://localhost");
+        assertThrows(IllegalArgumentException.class, () -> assertJarURLProtocol(url));
     }
 
     @Test
