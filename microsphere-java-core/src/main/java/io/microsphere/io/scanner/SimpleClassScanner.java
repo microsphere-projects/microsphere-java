@@ -32,7 +32,6 @@ import static java.util.Collections.unmodifiableSet;
  * Simple {@link Class} Scanner
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see SimpleClassScanner
  * @since 1.0.0
  */
