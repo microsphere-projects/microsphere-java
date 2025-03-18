@@ -31,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * {@link JarUtils} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see JarUtilsTest
  * @since 1.0.0
  */
