@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * {@link PropertyResourceBundleUtils} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PropertyResourceBundleUtilsTest
  * @since 1.0.0
  */
