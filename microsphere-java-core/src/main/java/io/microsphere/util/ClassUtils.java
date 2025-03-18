@@ -810,6 +810,9 @@ public abstract class ClassUtils extends BaseUtils {
             for (int i = 0; i < length; i++) {
                 Object arg = args[i];
                 Class<?> parameterType = parameterTypes[i];
+                if (isPrimitive(parameterType)) {
+                    parameterType = resolveWrapperType(parameterType);
+                }
                 if (!parameterType.isInstance(arg)) {
                     return false;
                 }
