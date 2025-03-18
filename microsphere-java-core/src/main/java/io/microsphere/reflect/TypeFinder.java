@@ -185,8 +185,12 @@ public class TypeFinder<T extends Type> {
         }
     }
 
-    public static TypeFinder<Class> classFinder(Class<?> type, Include... includes) {
+    public static TypeFinder<Class<?>> classFinder(Class<?> type, Include... includes) {
         return new TypeFinder<>(type, includes);
+    }
+
+    public static TypeFinder<Class<?>> classFinder(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+        return of(type, false, includeSelf, includeHierarchicalTypes, includeSuperclass, includeInterfaces);
     }
 
     public static TypeFinder<Type> genericTypeFinder(Type type, Include... includes) {
