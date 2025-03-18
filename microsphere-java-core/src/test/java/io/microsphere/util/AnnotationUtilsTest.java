@@ -28,6 +28,7 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
@@ -57,6 +58,7 @@ import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
 import static io.microsphere.util.AnnotationUtils.isSameType;
 import static io.microsphere.util.AnnotationUtils.isType;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
@@ -367,15 +369,49 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testExistsAnnotated() {
-
+    public void testIsAnnotatedPresentWithArray() {
+        assertTrue(isAnnotationPresent(ofArray(A.class), DataAccess.class));
+        assertTrue(isAnnotationPresent(ofArray(B.class), DataAccess.class));
+        assertFalse(isAnnotationPresent(ofArray(A.class, B.class), Monitored.class));
+        assertFalse(isAnnotationPresent(ofArray(B.class, A.class), Monitored.class));
     }
 
     @Test
-    public void testIsAnnotatedPresent() {
+    public void testIsAnnotatedPresentWithArrayOnNull() {
+        assertFalse(isAnnotationPresent((AnnotatedElement[]) null, DataAccess.class));
+        assertFalse(isAnnotationPresent(ofArray(A.class), null));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithArrayOnEmptyArray() {
+        assertFalse(isAnnotationPresent(ofArray(), DataAccess.class));
+        assertFalse(isAnnotationPresent(ofArray(), Monitored.class));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithAnnotatedElement() {
         assertTrue(isAnnotationPresent(B.class, DataAccess.class));
         assertTrue(isAnnotationPresent(A.class, DataAccess.class));
         assertFalse(isAnnotationPresent(A.class, Monitored.class));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithAnnotatedElementOnNull() {
+        assertFalse(isAnnotationPresent((AnnotatedElement) null, DataAccess.class));
+        assertFalse(isAnnotationPresent(A.class, (Class) null));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithAnnotation() {
+        assertFalse(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), DataAccess.class));
+        assertFalse(isAnnotationPresent(A.class.getAnnotation(DataAccess.class), DataAccess.class));
+        assertTrue(isAnnotationPresent(A.class.getAnnotation(DataAccess.class), Monitored.class));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithAnnotationElementOnNull() {
+        assertFalse(isAnnotationPresent((Annotation) null, DataAccess.class));
+        assertFalse(isAnnotationPresent(A.class.getAnnotation(DataAccess.class), (Class) null));
     }
 
     @Test
