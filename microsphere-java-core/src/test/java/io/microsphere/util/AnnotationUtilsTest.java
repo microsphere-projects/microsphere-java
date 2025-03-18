@@ -16,7 +16,7 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.reflect.MethodUtils;
+import io.microsphere.annotation.Since;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -189,10 +189,11 @@ public class AnnotationUtilsTest {
     @Test
     public void testGetAllDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = getAllDeclaredAnnotations(B.class);
-        assertEquals(2, annotations.size());
-        assertSame(annotations.get(0), annotations.get(1));
+        assertEquals(3, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
-        assertEquals(DataAccess.class, annotations.get(1).annotationType());
+        assertSame(Since.class, annotations.get(1).annotationType());
+        assertEquals(DataAccess.class, annotations.get(2).annotationType());
+        assertSame(annotations.get(0), annotations.get(2));
     }
 
     @Test
@@ -220,8 +221,9 @@ public class AnnotationUtilsTest {
     @Test
     public void testGetDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = findDeclaredAnnotations(B.class);
-        assertEquals(1, annotations.size());
+        assertEquals(2, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
+        assertEquals(Since.class, annotations.get(1).annotationType());
     }
 
     @Test
@@ -249,10 +251,11 @@ public class AnnotationUtilsTest {
     @Test
     public void testFindAllDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = findAllDeclaredAnnotations(B.class, annotation -> true);
-        assertEquals(2, annotations.size());
-        assertSame(annotations.get(0), annotations.get(1));
+        assertEquals(3, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
-        assertEquals(DataAccess.class, annotations.get(1).annotationType());
+        assertEquals(Since.class, annotations.get(1).annotationType());
+        assertEquals(DataAccess.class, annotations.get(2).annotationType());
+        assertSame(annotations.get(0), annotations.get(2));
     }
 
     @Test
@@ -280,8 +283,9 @@ public class AnnotationUtilsTest {
     @Test
     public void testFindDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = findDeclaredAnnotations(B.class, annotation -> true);
-        assertEquals(1, annotations.size());
+        assertEquals(2, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
+        assertEquals(Since.class, annotations.get(1).annotationType());
     }
 
     @Test
@@ -341,6 +345,16 @@ public class AnnotationUtilsTest {
     @Test
     public void testGetAttributeValueOnAttributeNotFound() {
         assertNull(getAttributeValue(DataAccess.class.getAnnotation(Target.class), "notFound"));
+    }
+
+    @Test
+    public void testGetAttributesMap() {
+
+    }
+
+    @Test
+    public void testFindAttributesMap() {
+
     }
 
     @Test
@@ -415,16 +429,6 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testGetAttributeValues() {
-
-    }
-
-    @Test
-    public void testGetAttributesMap() {
-
-    }
-
-    @Test
     public void testIsAnnotationInterfaceMethod() {
         assertTrue(isAnnotationInterfaceMethod(annotationTypeMethod));
         assertFalse(isAnnotationInterfaceMethod(retentionValueMethod));
@@ -451,7 +455,7 @@ public class AnnotationUtilsTest {
     class A {
     }
 
-
+    @Since(module = "microsphere-java-core", value = "1.0.0")
     class B extends A {
 
     }
