@@ -19,10 +19,8 @@ import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
 import static io.microsphere.reflect.TypeFinder.of;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static java.util.Collections.emptyList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link TypeFinder} Test
