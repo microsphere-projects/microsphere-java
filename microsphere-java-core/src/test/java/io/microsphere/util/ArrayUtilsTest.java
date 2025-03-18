@@ -51,6 +51,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ArrayUtils.combine;
+import static io.microsphere.util.ArrayUtils.contains;
 import static io.microsphere.util.ArrayUtils.forEach;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
@@ -894,7 +895,7 @@ public class ArrayUtilsTest {
     // Test forEach(...) methods
 
     @Test
-    public void testForEach1OnBooleanArray() {
+    public void testForEachWithConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -904,7 +905,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnByteArray() {
+    public void testForEachWithConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -914,7 +915,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnCharArray() {
+    public void testForEachWithConsumerOnCharArray() {
         char[] values = ofChars('A');
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -924,7 +925,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnShortArray() {
+    public void testForEachWithConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -934,7 +935,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnIntArray() {
+    public void testForEachWithConsumerOnIntArray() {
         int[] values = ofInts(1);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -944,7 +945,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnLongArray() {
+    public void testForEachWithConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -954,7 +955,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnFloatArray() {
+    public void testForEachWithConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -964,7 +965,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnDoubleArray() {
+    public void testForEachWithConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -974,7 +975,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach1OnObjectArray() {
+    public void testForEachWithConsumerOnObjectArray() {
         Object[] values = of("A");
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -984,7 +985,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnBooleanArray() {
+    public void testForEachWithBiConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -994,7 +995,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnByteArray() {
+    public void testForEachWithBiConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1004,7 +1005,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnCharArray() {
+    public void testForEachWithBiConsumerOnCharArray() {
         char[] values = ofChars('A');
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1014,7 +1015,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnShortArray() {
+    public void testForEachWithBiConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1024,7 +1025,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnIntArray() {
+    public void testForEachWithBiConsumerOnIntArray() {
         int[] values = ofInts(1);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1034,7 +1035,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnLongArray() {
+    public void testForEachWithBiConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1044,7 +1045,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnFloatArray() {
+    public void testForEachWithBiConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1054,7 +1055,7 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnDoubleArray() {
+    public void testForEachWithBiConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1064,13 +1065,83 @@ public class ArrayUtilsTest {
     }
 
     @Test
-    public void testForEach2OnObjectArray() {
+    public void testForEachWithBiConsumerOnObjectArray() {
         Object[] values = of("A");
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
                 logger.trace("forEach(index : {} , value : {})", index, value);
             }
         });
+    }
+
+    @Test
+    public void testContainsOnBooleanArray() {
+        boolean[] values = ofBooleans(true);
+        assertTrue(contains(values, true));
+        assertFalse(contains(values, false));
+    }
+
+    @Test
+    public void testContainsOnByteArray() {
+        byte[] values = ofBytes((byte) 1);
+        assertTrue(contains(values, (byte) 1));
+        assertFalse(contains(values, (byte) 2));
+    }
+
+    @Test
+    public void testContainsOnCharArray() {
+        char[] values = ofChars('A');
+        assertTrue(contains(values, 'A'));
+        assertFalse(contains(values, 'B'));
+    }
+
+    @Test
+    public void testContainsOnShortArray() {
+        short[] values = ofShorts((short) 1);
+        assertTrue(contains(values, (short) 1));
+        assertFalse(contains(values, (short) 2));
+    }
+
+    @Test
+    public void testContainsOnIntArray() {
+        int[] values = ofInts(1);
+        assertTrue(contains(values, 1));
+        assertFalse(contains(values, 2));
+    }
+
+    @Test
+    public void testContainsOnLongArray() {
+        long[] values = ofLongs(1L);
+        assertTrue(contains(values, 1L));
+        assertFalse(contains(values, 2L));
+    }
+
+    @Test
+    public void testContainsOnFloatArray() {
+        float[] values = ofFloats(1F);
+        assertTrue(contains(values, 1F));
+        assertFalse(contains(values, 2F));
+    }
+
+    @Test
+    public void testContainsOnDoubleArray() {
+        double[] values = ofDoubles(1D);
+        assertTrue(contains(values, 1D));
+        assertFalse(contains(values, 2D));
+    }
+
+    @Test
+    public void testContainsOnComparableArray() {
+        Object[] values = of("A");
+        assertTrue(contains(values, "A"));
+        assertFalse(contains(values, "B"));
+    }
+
+    @Test
+    public void testContainsOnObjectArray() {
+        Object[] values = of(ofList("A"));
+        assertTrue(contains(values, ofList("A")));
+        assertFalse(contains(values, ofList("B")));
     }
 
     private static <T> T[] array(T... values) {
