@@ -405,7 +405,7 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testExistsOnCollection() {
+    public void testExistsWithCollection() {
         assertTrue(exists(ofList(annotationsOfA), DataAccess.class));
         assertTrue(exists(ofList(annotationsOfA), DataAccess.class));
 
@@ -468,16 +468,27 @@ public class AnnotationUtilsTest {
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotationAndTypes() {
+    public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypes() {
         assertTrue(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), ofList(Inherited.class, Monitored.class)));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotationAndTypesOnNull() {
+    public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((Annotation) null, ofList(DataAccess.class, Monitored.class)));
         assertFalse(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), (Iterable) null));
     }
 
+    @Test
+    public void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypes() {
+        assertTrue(isAnnotationPresent(B.class, ofList(DataAccess.class, Since.class)));
+        assertFalse(isAnnotationPresent(B.class, ofList()));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNull() {
+        assertFalse(isAnnotationPresent((AnnotatedElement) null, ofList(DataAccess.class, Since.class)));
+        assertFalse(isAnnotationPresent(B.class, (Iterable) null));
+    }
 
     @Test
     public void testIsAnnotationInterfaceMethod() {
