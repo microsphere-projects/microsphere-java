@@ -74,11 +74,11 @@ public abstract class ShutdownHookUtils extends BaseUtils {
         return filterShutdownHookThreads(t -> true);
     }
 
-    public static Set<Thread> filterShutdownHookThreads(Predicate<Thread> hookThreadFilter) {
+    public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter) {
         return filterShutdownHookThreads(hookThreadFilter, false);
     }
 
-    public static Set<Thread> filterShutdownHookThreads(Predicate<Thread> hookThreadFilter, boolean removed) {
+    public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter, boolean removed) {
         Map<Thread, Thread> hooksRef = findHooks();
 
         if (hooksRef == null || hooksRef.isEmpty()) {
