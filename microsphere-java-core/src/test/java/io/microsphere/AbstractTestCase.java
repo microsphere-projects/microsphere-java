@@ -39,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Abstract Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see AbstractTestCase
  * @since 1.0.0
  */
