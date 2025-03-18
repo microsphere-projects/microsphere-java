@@ -132,13 +132,13 @@ public class SimpleClassScanner {
     }
 
     public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,
-                              Predicate<Class<?>>... classFilters) {
+                              Predicate<? super Class<?>>... classFilters) {
         File archiveFile = resolveArchiveFile(resourceInArchive);
         return scan(classLoader, archiveFile, requiredLoad, classFilters);
     }
 
     public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
-                              Predicate<Class<?>>... classFilters) {
+                              Predicate<? super Class<?>>... classFilters) {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
         Set<Class<?>> classesSet = new LinkedHashSet<>();
         for (String className : classNames) {
