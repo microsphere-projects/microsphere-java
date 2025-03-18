@@ -74,7 +74,6 @@ import static java.util.Collections.unmodifiableSet;
  * {@link Class} utility class
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassUtils
  * @since 1.0.0
  */
