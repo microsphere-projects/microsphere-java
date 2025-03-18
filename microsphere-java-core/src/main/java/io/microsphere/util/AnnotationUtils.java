@@ -32,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -244,7 +243,7 @@ public abstract class AnnotationUtils extends BaseUtils {
         }
 
         List<Annotation> allAnnotations = new LinkedList<>();
-        Set<Class<?>> allInheritedClasses = findAllInheritedClasses(type, NON_OBJECT_CLASS_FILTER);
+        List<Class<?>> allInheritedClasses = findAllInheritedClasses(type, NON_OBJECT_CLASS_FILTER);
 
         // Add the declared annotations
         allAnnotations.addAll(getDeclaredAnnotations(type));
