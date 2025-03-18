@@ -217,10 +217,6 @@ public abstract class FileUtils extends BaseUtils {
             fileInCanonicalDir = new File(canonicalDir, file.getName());
         }
 
-        if (fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile())) {
-            return false;
-        } else {
-            return true;
-        }
+        return !fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile());
     }
 }
