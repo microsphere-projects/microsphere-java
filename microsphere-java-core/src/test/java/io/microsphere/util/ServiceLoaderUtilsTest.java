@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * {@link ServiceLoaderUtilsTest}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ServiceLoaderUtilsTest
  * @since 1.0.0
  */
