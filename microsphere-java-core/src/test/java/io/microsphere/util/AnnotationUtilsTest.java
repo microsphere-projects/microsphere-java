@@ -468,6 +468,18 @@ public class AnnotationUtilsTest {
     }
 
     @Test
+    public void testIsAnnotatedPresentWithAnnotationAndTypes() {
+        assertTrue(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), ofList(Inherited.class, Monitored.class)));
+    }
+
+    @Test
+    public void testIsAnnotatedPresentWithAnnotationAndTypesOnNull() {
+        assertFalse(isAnnotationPresent((Annotation) null, ofList(DataAccess.class, Monitored.class)));
+        assertFalse(isAnnotationPresent(B.class.getAnnotation(DataAccess.class), (Iterable) null));
+    }
+
+
+    @Test
     public void testIsAnnotationInterfaceMethod() {
         assertTrue(isAnnotationInterfaceMethod(annotationTypeMethod));
         assertFalse(isAnnotationInterfaceMethod(retentionValueMethod));
