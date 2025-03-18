@@ -59,7 +59,7 @@ public abstract class TypeUtils extends BaseUtils {
 
     public static final Predicate<? super Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
 
-    public static final Predicate<? super Class<?>> NON_OBJECT_CLASS_FILTER = (Predicate) NON_OBJECT_TYPE_FILTER;
+    public static final Predicate<? super Class<?>> NON_OBJECT_CLASS_FILTER = NON_OBJECT_TYPE_FILTER;
 
     public static final Predicate<? super Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
 
