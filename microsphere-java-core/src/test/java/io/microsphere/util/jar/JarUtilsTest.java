@@ -5,7 +5,6 @@ package io.microsphere.util.jar;
 
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.ClassLoaderUtils;
-import io.microsphere.util.ClassPathUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,14 +12,15 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.net.URLUtils.ofURL;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static io.microsphere.util.jar.JarUtils.assertJarURLProtocol;
+import static io.microsphere.util.jar.JarUtils.extract;
 import static io.microsphere.util.jar.JarUtils.findJarEntry;
 import static io.microsphere.util.jar.JarUtils.resolveJarAbsolutePath;
 import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
@@ -42,10 +42,13 @@ public class JarUtilsTest {
     private final static File targetDirectory = new File(tempDirectory, "jar-util-extract");
     private final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
+    private URL resourceURL;
+
     @BeforeEach
     public void init() throws IOException {
         deleteDirectory(targetDirectory);
         targetDirectory.mkdirs();
+        this.resourceURL = getClassResource(classLoader, Nonnull.class);
     }
 
     @Test
@@ -56,7 +59,6 @@ public class JarUtilsTest {
 
     @Test
     public void testResolveRelativePath() {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
         String relativePath = resolveRelativePath(resourceURL);
         String expectedPath = "javax/annotation/Nonnull.class";
         assertEquals(expectedPath, relativePath);
@@ -64,14 +66,12 @@ public class JarUtilsTest {
 
     @Test
     public void testResolveJarAbsolutePath() throws Exception {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
         String jarAbsolutePath = resolveJarAbsolutePath(resourceURL);
         assertNotNull(jarAbsolutePath);
     }
 
     @Test
     public void testToJarFile() throws Exception {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
         JarFile jarFile = toJarFile(resourceURL);
         assertNotNull(jarFile);
     }
@@ -85,27 +85,21 @@ public class JarUtilsTest {
 
     @Test
     public void testFindJarEntry() throws Exception {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+        URL resourceURL = getClassResource(classLoader, Nonnull.class);
         JarEntry jarEntry = findJarEntry(resourceURL);
         assertNotNull(jarEntry);
     }
 
     @Test
     public void testExtract() throws IOException {
-        Set<String> classPaths = ClassPathUtils.getBootstrapClassPaths();
-        for (String classPath : classPaths) {
-            File jarFile = new File(classPath);
-            if (jarFile.exists()) {
-                JarUtils.extract(jarFile, targetDirectory);
-                break;
-            }
-        }
+        String jarAbsolutePath = resolveJarAbsolutePath(resourceURL);
+        extract(new File(jarAbsolutePath), targetDirectory);
     }
 
     @Test
     public void testExtractWithURL() throws IOException {
         URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, "javax.annotation");
-        JarUtils.extract(resourceURL, targetDirectory, new JarEntryFilter() {
+        extract(resourceURL, targetDirectory, new JarEntryFilter() {
             @Override
             public boolean accept(JarEntry filteredObject) {
                 return !filteredObject.isDirectory();
