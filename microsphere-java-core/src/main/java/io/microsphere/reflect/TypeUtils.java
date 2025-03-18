@@ -57,17 +57,17 @@ import static java.util.stream.StreamSupport.stream;
  */
 public abstract class TypeUtils extends BaseUtils {
 
-    public static final Predicate<Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
+    public static final Predicate<? super Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
 
-    public static final Predicate<Class<?>> NON_OBJECT_CLASS_FILTER = (Predicate) NON_OBJECT_TYPE_FILTER;
+    public static final Predicate<? super Class<?>> NON_OBJECT_CLASS_FILTER = (Predicate) NON_OBJECT_TYPE_FILTER;
 
-    public static final Predicate<Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
+    public static final Predicate<? super Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
 
-    public static final Predicate<Type> PARAMETERIZED_TYPE_FILTER = TypeUtils::isParameterizedType;
+    public static final Predicate<? super Type> PARAMETERIZED_TYPE_FILTER = TypeUtils::isParameterizedType;
 
-    public static final Predicate<Type> WILDCARD_TYPE_FILTER = TypeUtils::isWildcardType;
+    public static final Predicate<? super Type> WILDCARD_TYPE_FILTER = TypeUtils::isWildcardType;
 
-    public static final Predicate<Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
+    public static final Predicate<? super Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
 
     public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = "microsphere.reflect.resolved-generic-types.cache.size";
 
@@ -480,11 +480,11 @@ public abstract class TypeUtils extends BaseUtils {
         return findAllTypes(type, parameterizedTypePredicate(typeFilters));
     }
 
-    public static List<Type> findHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findHierarchicalTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, true, typeFilters);
     }
 
-    public static List<Type> findAllTypes(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findAllTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, true, true, true, true, typeFilters);
     }
 
@@ -495,7 +495,7 @@ public abstract class TypeUtils extends BaseUtils {
 
     protected static List<Type> findTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                           boolean includeGenericSuperclass, boolean includeGenericInterfaces,
-                                          Predicate<Type>... typeFilters) {
+                                          Predicate<? super Type>... typeFilters) {
         if (type == null || isObjectType(type)) {
             return emptyList();
         }
