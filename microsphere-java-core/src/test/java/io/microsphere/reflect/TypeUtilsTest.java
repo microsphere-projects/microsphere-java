@@ -19,6 +19,14 @@ package io.microsphere.reflect;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
+import io.microsphere.test.A;
+import io.microsphere.test.B;
+import io.microsphere.test.C;
+import io.microsphere.test.D;
+import io.microsphere.test.E;
+import io.microsphere.test.StringBooleanToInteger;
+import io.microsphere.test.StringIntegerBooleanHashMap;
+import io.microsphere.test.StringIntegerToBoolean;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -26,7 +34,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1036,7 +1043,6 @@ public class TypeUtilsTest {
         assertTrue(types.contains(RandomAccess.class));
     }
 
-
     private void assertDGenericInterfaces(List<Type> types) {
         assertCGenericInterfaces(types);
     }
@@ -1057,61 +1063,6 @@ public class TypeUtilsTest {
     private void assertType(Type expect, Type actual) {
         assertEquals(asClass(expect), asClass(actual));
     }
-}
-
-class A implements Serializable {
-}
-
-class B extends A implements Comparable<B> {
-    @Override
-    public int compareTo(B o) {
-        return 0;
-    }
-}
-
-class C<T> extends B implements RandomAccess {
-}
-
-class D extends C<String> {
-}
-
-class E extends C implements Serializable {
-}
-
-class MyHashMap<A, B extends Serializable, C> extends HashMap<A, B> implements Map<A, B> {
-
-}
-
-class StringIntegerHashMap extends HashMap<String, Integer> {
-
-}
-
-class StringIntegerBooleanHashMap extends MyHashMap<String, Integer, Boolean> {
-
-}
-
-interface BF3<T, U, R> extends BiFunction<T, U, R> {
-
-}
-
-interface StringBF2<U, R> extends BF3<String, U, R> {
-
-}
-
-interface StringIntegerF1<R> extends StringBF2<Integer, R> {
-
-}
-
-interface StringToIntegerF1<U> extends StringBF2<U, Integer> {
-
-}
-
-interface StringBooleanToInteger extends StringToIntegerF1<Boolean> {
-
-}
-
-interface StringIntegerToBoolean extends StringIntegerF1<Boolean> {
-
 }
 
 
