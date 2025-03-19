@@ -92,6 +92,14 @@ import static io.microsphere.constants.Constants.WILDCARD_CHAR;
 import static io.microsphere.constants.Constants.ZIP;
 import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
+import static io.microsphere.constants.Constants.PIPE;
+import static io.microsphere.constants.Constants.VERTICAL_BAR;
+import static io.microsphere.constants.Constants.DOUBLE_QUOTE;
+import static io.microsphere.constants.Constants.QUOTE;
+import static io.microsphere.constants.Constants.SINGLE_QUOTATION;
+import static io.microsphere.constants.Constants.DOUBLE_QUOTE_CHAR;
+import static io.microsphere.constants.Constants.QUOTE_CHAR;
+import static io.microsphere.constants.Constants.SINGLE_QUOTATION_CHAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -143,6 +151,9 @@ public class ConstantsTest {
         assertEquals(',', COMMA_CHAR);
         assertEquals(' ', SPACE_CHAR);
         assertEquals('!', EXCLAMATION_CHAR);
+        assertEquals('\'', QUOTE_CHAR);
+        assertEquals('"', DOUBLE_QUOTE_CHAR);
+        assertEquals('\'', SINGLE_QUOTATION_CHAR);
         assertEquals('"', DOUBLE_QUOTATION_CHAR);
         assertEquals('$', DOLLAR_CHAR);
         assertEquals('.', DOT_CHAR);
@@ -160,10 +171,15 @@ public class ConstantsTest {
         assertEquals('_', UNDER_SCORE_CHAR);
         assertEquals('-', HYPHEN_CHAR);
         assertEquals('*', WILDCARD_CHAR);
+        assertEquals("|", VERTICAL_BAR);
+        assertEquals("|", PIPE);
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
         assertEquals("!", EXCLAMATION);
+        assertEquals("'", QUOTE);
+        assertEquals("\"", DOUBLE_QUOTE);
+        assertEquals("'", SINGLE_QUOTATION);
         assertEquals("\"", DOUBLE_QUOTATION);
         assertEquals("$", DOLLAR);
         assertEquals(".", DOT);
@@ -183,5 +199,7 @@ public class ConstantsTest {
         assertEquals("_", UNDER_SCORE);
         assertEquals("-", HYPHEN);
         assertEquals("*", WILDCARD);
+        assertEquals("|", VERTICAL_BAR);
+        assertEquals("|", PIPE);
     }
 }
