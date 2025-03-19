@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 
 /**
  * The {@link Comparator} for the annotation {@link javax.annotation.Priority}
@@ -33,7 +34,7 @@ import static io.microsphere.util.AnnotationUtils.findAnnotation;
  */
 public class PriorityComparator implements Comparator<Object> {
 
-    private static final Class PRIORITY_CLASS = ClassLoaderUtils.resolveClass("javax.annotation.Priority");
+    private static final Class PRIORITY_CLASS = resolveClass("javax.annotation.Priority");
 
     private static final int UNDEFINED_VALUE = -1;
 
@@ -44,7 +45,7 @@ public class PriorityComparator implements Comparator<Object> {
 
     @Override
     public int compare(Object o1, Object o2) {
-        return compare(resolveClass(o1), resolveClass(o2));
+        return compare(asClass(o1), asClass(o2));
     }
 
     public static int compare(Class<?> type1, Class<?> type2) {
@@ -61,7 +62,7 @@ public class PriorityComparator implements Comparator<Object> {
         return Integer.compare(priorityValue1, priorityValue2);
     }
 
-    private static Class<?> resolveClass(Object object) {
+    private static Class<?> asClass(Object object) {
         return object instanceof Class ? (Class) object : object.getClass();
     }
 

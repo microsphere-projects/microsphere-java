@@ -16,14 +16,25 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Queue;
+
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ShutdownHookUtils.SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
+import static io.microsphere.util.ShutdownHookUtils.clearShutdownHookCallbacks;
+import static io.microsphere.util.ShutdownHookUtils.filterShutdownHookThreads;
 import static io.microsphere.util.ShutdownHookUtils.getShutdownHookCallbacks;
 import static io.microsphere.util.ShutdownHookUtils.getShutdownHookThreads;
+import static io.microsphere.util.ShutdownHookUtils.registerShutdownHook;
 import static io.microsphere.util.ShutdownHookUtils.removeShutdownHookCallback;
+import static io.microsphere.util.ShutdownHookUtils.shutdownHookCallbacks;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,9 +48,72 @@ public class ShutdownHookUtilsTest {
 
     private static final Logger logger = getLogger(ShutdownHookUtilsTest.class);
 
+    @BeforeEach
+    public void init() {
+        registerShutdownHook();
+    }
+
+    @AfterEach
+    public void destroy() {
+        clearShutdownHookCallbacks();
+    }
+
+    @Test
+    public void testRegisterShutdownHook() {
+        testFilterShutdownHookThreadsWithRemoved();
+        registerShutdownHook();
+        assertFalse(filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER).isEmpty());
+    }
+
     @Test
     public void testGetShutdownHookThreads() {
         assertFalse(getShutdownHookThreads().isEmpty());
+    }
+
+    @Test
+    public void testFilterShutdownHookThreads() {
+        assertTrue(filterShutdownHookThreads(t -> false).isEmpty());
+    }
+
+    @Test
+    public void testFilterShutdownHookThreadsWithRemoved() {
+        assertFalse(filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER, true).isEmpty());
+    }
+
+    @Test
+    public void testAddShutdownHookCallback() {
+        int times = 3;
+        for (int i = 0; i < times; i++) {
+            addShutdownHookCallback(new ShutdownHookCallback(i));
+        }
+
+        for (int i = 0; i < times; i++) {
+            ShutdownHookCallback shutdownHookCallback = (ShutdownHookCallback) shutdownHookCallbacks.poll();
+            assertEquals(i, shutdownHookCallback.getPriority());
+        }
+    }
+
+    @Test
+    public void testRemoveShutdownHookCallback() {
+        int times = 3;
+        for (int i = 0; i < times; i++) {
+            addShutdownHookCallback(new ShutdownHookCallback(i));
+        }
+
+        Queue<Runnable> shutdownHookCallbacks = getShutdownHookCallbacks();
+
+        for (int i = 0; i < times; i++) {
+            ShutdownHookCallback shutdownHookCallback = (ShutdownHookCallback) shutdownHookCallbacks.peek();
+            assertTrue(removeShutdownHookCallback(shutdownHookCallback));
+        }
+
+        assertTrue(shutdownHookCallbacks.isEmpty());
+
+    }
+
+    @Test
+    public void testRemoveShutdownHookCallbackOnNull() {
+        assertFalse(removeShutdownHookCallback(null));
     }
 
     @Test
@@ -74,5 +148,25 @@ public class ShutdownHookUtilsTest {
         assertTrue(getShutdownHookCallbacks().size() > 0);
 
         thread.start();
+    }
+
+    static class ShutdownHookCallback implements Runnable, Prioritized {
+
+        private final int priority;
+
+        ShutdownHookCallback(int priority) {
+            this.priority = priority;
+        }
+
+        @Override
+        public void run() {
+            logger.trace("Run an instance of ShutdownHookCallback[priority : {}] : {}", priority, this);
+        }
+
+        @Override
+        public int getPriority() {
+            return priority;
+        }
+
     }
 }

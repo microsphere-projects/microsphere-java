@@ -94,7 +94,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
         return sortedListeners(e -> true);
     }
 
-    protected Stream<EventListener> sortedListeners(Predicate<Map.Entry<Class<? extends Event>, List<EventListener>>> predicate) {
+    protected Stream<EventListener> sortedListeners(Predicate<? super Map.Entry<Class<? extends Event>, List<EventListener>>> predicate) {
         return listenersCache
                 .entrySet()
                 .stream()

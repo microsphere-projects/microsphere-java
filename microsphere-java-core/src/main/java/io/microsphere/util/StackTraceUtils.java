@@ -118,6 +118,11 @@ public abstract class StackTraceUtils extends BaseUtils {
 
     private static final Object stackWalkerInstance;
 
+    /**
+     * The testing propose to test whether {@linkplain java.lang.StackWalker} is supported or not.
+     */
+    static boolean stackWalkerSupportedForTesting;
+
     private static final Function<Stream<?>, Object> getClassNamesFunction = StackTraceUtils::getCallerClassNames;
 
     /**
@@ -148,6 +153,7 @@ public abstract class StackTraceUtils extends BaseUtils {
             getClassNameMethod = findMethod(stackWalkerStackFrameClass, GET_CLASS_NAME_METHOD_NAME);
             getClassNameMethod.setAccessible(true);
             stackWalker = invokeStaticMethod(stackWalkerClass, GET_INSTANCE_METHOD_NAME);
+            stackWalkerSupportedForTesting = true;
         }
 
         STACK_WALKER_CLASS = stackWalkerClass;
@@ -183,11 +189,7 @@ public abstract class StackTraceUtils extends BaseUtils {
             }
             invocationFrame++;
         }
-        // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
-        // Plugs 1 , because Invocation getCallerClassName() method was considered as increment invocation frame
-        // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM() method was considered as increment invocation frame
-        // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM(int) method was considered as increment invocation frame
-        stackTraceElementInvocationFrame = invocationFrame + 4;
+        stackTraceElementInvocationFrame = invocationFrame;
     }
 
     /**
@@ -200,8 +202,11 @@ public abstract class StackTraceUtils extends BaseUtils {
     }
 
     public static String getCallerClassName() {
-        if (stackWalkerInstance == null) {
-            return getCallerClassNameInGeneralJVM();
+        if (stackWalkerInstance == null || !stackWalkerSupportedForTesting) {
+            // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+            // Plugs 1 , because Invocation getCallerClassName() method was considered as increment invocation frame
+            // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM(int) method was considered as increment invocation frame
+            return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame + 3);
         }
         List<String> callerClassNames = getCallerClassNames();
         String className = callerClassNames.get(stackWalkerInvocationFrame);
@@ -229,7 +234,10 @@ public abstract class StackTraceUtils extends BaseUtils {
      * @see #getCallerClassNameInGeneralJVM(int)
      */
     static String getCallerClassNameInGeneralJVM() {
-        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
+        // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+        // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM() method was considered as increment invocation frame
+        // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM(int) method was considered as increment invocation frame
+        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame + 3);
     }
 
     /**

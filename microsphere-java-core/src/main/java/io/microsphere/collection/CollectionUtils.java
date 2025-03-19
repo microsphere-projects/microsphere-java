@@ -31,7 +31,6 @@ import static io.microsphere.util.ArrayUtils.length;
  * The utilities class for Java Collection
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @version 1.0.0
  * @see Collections
  */
 public abstract class CollectionUtils extends BaseUtils {

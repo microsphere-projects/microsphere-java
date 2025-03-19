@@ -28,7 +28,6 @@ import static java.lang.reflect.Modifier.isStatic;
  * ConstructorUtils}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @version 1.0.0
  * @see Method
  * @see Field
  * @see Constructor

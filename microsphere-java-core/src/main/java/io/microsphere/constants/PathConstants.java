@@ -7,7 +7,6 @@ package io.microsphere.constants;
  * Path Constants Definition
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PathConstants
  * @since 1.0.0
  */

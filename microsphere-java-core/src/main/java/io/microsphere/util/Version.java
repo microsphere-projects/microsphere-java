@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import io.microsphere.lang.ClassDataRepository;
-import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.Serializable;
@@ -26,18 +25,25 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.function.BiPredicate;
 
+import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.EQUAL;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN_OR_EQUAL_TO;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN_OR_EQUAL_TO;
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
+import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.Assert.assertNotBlank;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Version.Operator.EQ;
 import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.Version.Operator.GT;
 import static io.microsphere.util.Version.Operator.LE;
 import static io.microsphere.util.Version.Operator.LT;
 import static java.lang.Integer.compare;
+import static java.lang.Integer.parseInt;
 
 /**
  * The value object to represent a version consisting of major, minor and patch part.
@@ -67,94 +73,6 @@ public class Version implements Comparable<Version>, Serializable {
         this.major = major;
         this.minor = minor;
         this.patch = patch;
-    }
-
-    public static Version of(int major) {
-        return ofVersion(major);
-    }
-
-    public static Version of(int major, int minor) {
-        return ofVersion(major, minor);
-    }
-
-    public static Version of(int major, int minor, int patch) {
-        return ofVersion(major, minor, patch);
-    }
-
-    public static Version of(String version) {
-        return ofVersion(version);
-    }
-
-    public static Version ofVersion(int major) {
-        return new Version(major);
-    }
-
-    public static Version ofVersion(int major, int minor) {
-        return new Version(major, minor);
-    }
-
-    public static Version ofVersion(int major, int minor, int patch) {
-        return new Version(major, minor, patch);
-    }
-
-
-    public static Version ofVersion(String version) {
-
-        if (version == null) {
-            throw new NullPointerException("The 'version' argument must not be null!");
-        }
-
-        version = version.trim();
-
-        if (version.isEmpty()) {
-            throw new IllegalArgumentException("The 'version' argument must not be blank!");
-        }
-
-        StringTokenizer st = new StringTokenizer(version, ".");
-
-        int major = getValue(st);
-        int minor = getValue(st);
-        int patch = getValue(st);
-
-        return of(major, minor, patch);
-    }
-
-
-    /**
-     * Class that exposes the version. Fetches the "Implementation-Version" manifest attribute from the jar file.
-     *
-     * @param targetClass the class to exposes the version
-     * @return non-null
-     */
-    @Nonnull
-    public static Version getVersion(Class<?> targetClass) {
-        Package targetPackage = targetClass.getPackage();
-        String version = targetPackage.getImplementationVersion();
-        if (version == null) {
-            ClassDataRepository repository = ClassDataRepository.INSTANCE;
-            URL classResource = repository.getCodeSourceLocation(targetClass);
-            String jarFilePath = JarUtils.resolveRelativePath(classResource);
-            String errorMessage = format("The \"Implementation-Version\" manifest attribute can't be fetched from " + "the jar file[path : '{}'] by the target class[name :'{}']", jarFilePath, targetClass.getName());
-            throw new IllegalArgumentException(errorMessage);
-        }
-        return of(version);
-    }
-
-    static int getValue(StringTokenizer st) {
-        if (st.hasMoreTokens()) {
-            return getValue(st.nextToken());
-        }
-        return 0;
-    }
-
-    static int getValue(String part) {
-        final int value;
-        try {
-            value = Integer.parseInt(part);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("The 'version' argument contains the non-number part : " + part, e);
-        }
-        return value;
     }
 
     /**
@@ -204,7 +122,6 @@ public class Version implements Comparable<Version>, Serializable {
      */
     public boolean isGreaterThan(Version that) {
         return GT.test(this, that);
-
     }
 
     /**
@@ -336,11 +253,90 @@ public class Version implements Comparable<Version>, Serializable {
 
     @Override
     public String toString() {
-        String sb = "Version{" + "major=" + major +
+        return "Version{" +
+                "major=" + major +
                 ", minor=" + minor +
                 ", patch=" + patch +
                 '}';
-        return sb;
+    }
+
+    public static Version of(int major) {
+        return ofVersion(major);
+    }
+
+    public static Version of(int major, int minor) {
+        return ofVersion(major, minor);
+    }
+
+    public static Version of(int major, int minor, int patch) {
+        return ofVersion(major, minor, patch);
+    }
+
+    public static Version of(String version) {
+        return ofVersion(version);
+    }
+
+    public static Version ofVersion(int major) {
+        return new Version(major);
+    }
+
+    public static Version ofVersion(int major, int minor) {
+        return new Version(major, minor);
+    }
+
+    public static Version ofVersion(int major, int minor, int patch) {
+        return new Version(major, minor, patch);
+    }
+
+    public static Version ofVersion(String version) {
+        assertNotNull(version, () -> "The 'version' argument must not be null!");
+        assertNotBlank(version, () -> "The 'version' argument must not be blank!");
+
+        StringTokenizer st = new StringTokenizer(version.trim(), DOT);
+
+        int major = getValue(st);
+        int minor = getValue(st);
+        int patch = getValue(st);
+
+        return of(major, minor, patch);
+    }
+
+
+    /**
+     * Class that exposes the version. Fetches the "Implementation-Version" manifest attribute from the jar file.
+     *
+     * @param targetClass the class to exposes the version
+     * @return non-null
+     * @throws IllegalArgumentException if the "Implementation-Version" manifest attribute can't be fetched from the jar file.
+     */
+    @Nonnull
+    public static Version getVersion(Class<?> targetClass) throws IllegalArgumentException {
+        Package targetPackage = targetClass.getPackage();
+        String version = targetPackage.getImplementationVersion();
+        if (version == null) {
+            ClassDataRepository repository = ClassDataRepository.INSTANCE;
+            URL classResource = repository.getCodeSourceLocation(targetClass);
+            String errorMessage = format("The 'Implementation-Version' manifest attribute can't be fetched from the jar file[class resource : '{}'] by the target class[name :'{}']", classResource, targetClass.getName());
+            throw new IllegalArgumentException(errorMessage);
+        }
+        return of(version);
+    }
+
+    static int getValue(StringTokenizer st) {
+        if (st.hasMoreTokens()) {
+            return getValue(st.nextToken());
+        }
+        return 0;
+    }
+
+    static int getValue(String part) {
+        final int value;
+        try {
+            value = parseInt(part.trim());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("The 'version' argument contains the non-number part : " + part, e);
+        }
+        return value;
     }
 
     public enum Operator implements BiPredicate<Version, Version> {
@@ -368,7 +364,7 @@ public class Version implements Comparable<Version>, Serializable {
             @Override
             public boolean test(Version v1, Version v2) {
                 if (v1 == v2) {
-                    return true;
+                    return false;
                 }
                 if (v2 == null) return false;
                 return v1.compareTo(v2) < 0;
@@ -396,7 +392,7 @@ public class Version implements Comparable<Version>, Serializable {
             @Override
             public boolean test(Version v1, Version v2) {
                 if (v1 == v2) {
-                    return true;
+                    return false;
                 }
                 if (v2 == null) return false;
                 return v1.compareTo(v2) > 0;
@@ -430,12 +426,28 @@ public class Version implements Comparable<Version>, Serializable {
          * @return <code>null</code> if can't be found
          */
         public static Operator of(String symbol) {
-            for (Operator operator : values()) {
+            Operator[] operators = values();
+            for (Operator operator : operators) {
                 if (Objects.equals(symbol, operator.symbol)) {
                     return operator;
                 }
             }
-            throw new IllegalArgumentException(format("The Operator can't be parsed by the symbol '{}'!", symbol));
+
+            StringBuilder messageBuilder = new StringBuilder("The Operator can't be parsed by the symbol : ")
+                    .append(QUOTE_CHAR).append(symbol).append(QUOTE_CHAR)
+                    .append(", only supports : ");
+
+            for (int i = 0; i < operators.length; i++) {
+                Operator operator = operators[i];
+                // append '${operator.symbol}'
+                messageBuilder.append(QUOTE_CHAR).append(operator.symbol).append(QUOTE_CHAR);
+                if (i < operators.length - 1) {
+                    // append ", "
+                    messageBuilder.append(COMMA_CHAR).append(SPACE_CHAR);
+                }
+            }
+
+            throw new IllegalArgumentException(messageBuilder.toString());
         }
 
     }

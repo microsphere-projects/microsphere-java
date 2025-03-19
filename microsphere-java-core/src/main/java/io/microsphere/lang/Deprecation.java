@@ -124,7 +124,7 @@ public final class Deprecation implements Serializable {
     /**
      * Deprecation Level
      */
-    public static enum Level {
+    public enum Level {
 
         /**
          * Default

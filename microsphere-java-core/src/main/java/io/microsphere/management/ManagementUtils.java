@@ -14,7 +14,6 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * Management Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ManagementUtils
  * @since 1.0.0
  */

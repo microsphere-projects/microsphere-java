@@ -10,7 +10,6 @@ import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
  * {@link ClassLoaderUtils} Performance Test
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassLoaderUtilsPerformanceTest
  * @since 1.0.0
  */
@@ -19,6 +18,6 @@ public class ClassLoaderUtilsPerformanceTest extends AbstractPerformanceTest {
 
     @Test
     public void testFind() {
-        super.execute(() -> findLoadedClassesInClassPath(classLoader));
+        super.execute(() -> findLoadedClassesInClassPath(TEST_CLASS_LOADER));
     }
 }

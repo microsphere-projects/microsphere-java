@@ -6,7 +6,6 @@ import static io.microsphere.util.ArrayUtils.length;
  * {@link Filter} Operator enumeration , which contains {@link #AND}��{@link #OR}��{@link #XOR}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @version 1.0.0
  * @see Filter
  * @see #AND
  * @see #OR
@@ -72,8 +71,6 @@ public enum FilterOperator {
      * @param filteredObject Filtered object
      * @param filters        multiple {@link Filter}
      * @return If accepted return <code>true</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public abstract <T> boolean accept(T filteredObject, Filter<T>... filters);
 

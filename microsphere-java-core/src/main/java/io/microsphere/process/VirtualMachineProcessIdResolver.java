@@ -61,7 +61,7 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
         } catch (Throwable e) {
             logger.warn("It's failed to invoke the native method 'sun.management.VMManagementImpl#getProcessId()'", e);
         }
-        return new Long(processId.longValue());
+        return Long.valueOf(processId.longValue());
     }
 
     @Override

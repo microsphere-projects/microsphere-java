@@ -38,8 +38,11 @@ import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.buildKey;
 import static io.microsphere.reflect.MethodUtils.buildSignature;
 import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
-import static io.microsphere.reflect.MethodUtils.filterMethods;
+import static io.microsphere.reflect.MethodUtils.findAllDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.findAllMethods;
+import static io.microsphere.reflect.MethodUtils.findDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.findMethods;
 import static io.microsphere.reflect.MethodUtils.findNearestOverriddenMethod;
 import static io.microsphere.reflect.MethodUtils.findOverriddenMethod;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
@@ -117,87 +120,12 @@ public class MethodUtilsTest {
     }
 
     @Test
-    void testFilterMethodsOnNull() {
-        testFilterMethodsOnEmptyList(null);
-
-//        methods = getMethods(null);
-//        assertSame(emptyList(), methods);
-    }
-
-    @Test
-    public void testFilterMethodsOnPrimitive() {
-
-        PRIMITIVE_TYPES.forEach(primitiveType -> {
-            testFilterMethodsOnEmptyList(primitiveType);
-        });
-
-//        methods = getMethods(primitiveType);
-//        assertEquals(emptyList(), methods);
-    }
-
-    @Test
-    public void testFilterMethodsOnArray() {
-        Class<?> arrayClass = EMPTY_CLASS_ARRAY.getClass();
-        List<Method> methods = filterMethods(arrayClass, true, true);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
-
-        methods = filterMethods(arrayClass, false, true);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
-
-        methods = filterMethods(arrayClass, true, false);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
-
-        methods = filterMethods(arrayClass, false, false);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
-    }
-
-    @Test
-    void testFilterMethodsOnClass() {
-        List<Method> objectMethods = filterMethods(Object.class, true, true);
-
-        List<Method> methods = filterMethods(TestClass.class, true, true);
-        assertEquals(1 + objectMethods.size(), methods.size());
-
-        methods = filterMethods(TestClass.class, false, true);
-        assertEquals(1, methods.size());
-
-        methods = filterMethods(TestClass.class, false, false);
-        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
-
-        methods = filterMethods(TestClass.class, true, false);
-        objectMethods = filterMethods(Object.class, true, false);
-
-        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT + objectMethods.size(), methods.size());
-    }
-
-    @Test
-    void testFilterMethodsFromInterface() {
-        List<Method> methods = filterMethods(TestInterface.class, true, true);
-        assertEquals(2, methods.size()); // method + useLambda
-
-        methods = filterMethods(TestInterface.class, true, false);
-        assertEquals(3 + JACOCO_ADDED_METHOD_COUNT, methods.size()); // method + useLambda + generated lambda method by compiler
-
-        List<Method> subMethods = filterMethods(TestSubInterface.class, false, true);
-        assertEquals(1, subMethods.size()); // subMethod
-
-        subMethods = filterMethods(TestSubInterface.class, true, true);
-        assertEquals(3, subMethods.size()); // method + useLambda + subMethod
-    }
-
-    @Test
     public void testGetDeclaredMethods() {
         List<Method> methods = getDeclaredMethods(Object.class);
         assertEquals(OBJECT_DECLARED_METHODS, methods);
 
-        methods = getDeclaredMethods(Object.class, PUBLIC_METHOD_PREDICATE);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
-
         methods = getDeclaredMethods(TestClass.class);
         assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
-
-        methods = getDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
-        assertEquals(1, methods.size());
     }
 
     @Test
@@ -205,13 +133,13 @@ public class MethodUtilsTest {
         List<Method> methods = getMethods(Object.class);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
-        methods = getMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        methods = getMethods(Object.class);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getMethods(TestClass.class);
         assertEquals(1, methods.size());
 
-        methods = getMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
+        methods = getMethods(TestClass.class);
         assertEquals(1, methods.size());
     }
 
@@ -220,14 +148,8 @@ public class MethodUtilsTest {
         List<Method> methods = getAllDeclaredMethods(Object.class);
         assertEquals(OBJECT_DECLARED_METHODS, methods);
 
-        methods = getAllDeclaredMethods(Object.class, PUBLIC_METHOD_PREDICATE);
-        assertEquals(OBJECT_PUBLIC_METHODS, methods);
-
         methods = getAllDeclaredMethods(TestClass.class);
         assertEquals(OBJECT_DECLARED_METHODS.size() + 7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
-
-        methods = getAllDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
-        assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
     }
 
     @Test
@@ -235,11 +157,124 @@ public class MethodUtilsTest {
         List<Method> methods = getAllMethods(Object.class);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
-        methods = getAllMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        methods = getAllMethods(Object.class);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
         methods = getAllMethods(TestClass.class);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+    }
+
+    @Test
+    public void testFindDeclaredMethods() {
+        List<Method> methods = findDeclaredMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findDeclaredMethods(TestClass.class);
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+
+        methods = findDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(1, methods.size());
+    }
+
+    @Test
+    public void testFindMethods() {
+        List<Method> methods = findMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findMethods(TestClass.class);
+        assertEquals(1, methods.size());
+
+        methods = findMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(1, methods.size());
+    }
+
+    @Test
+    public void testFindAllDeclaredMethods() {
+        List<Method> methods = findAllDeclaredMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findAllDeclaredMethods(TestClass.class);
+        assertEquals(OBJECT_DECLARED_METHODS.size() + 7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+
+        methods = findAllDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+    }
+
+    @Test
+    public void testFindAllMethods() {
+        List<Method> methods = findAllMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findAllMethods(Object.class, PUBLIC_METHOD_PREDICATE);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = getAllMethods(TestClass.class);
+        assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+    }
+
+    @Test
+    void testFindMethodsOnNull() {
+        testFindMethodsOnEmptyList(null);
+    }
+
+    @Test
+    public void testFindMethodsOnPrimitive() {
+        PRIMITIVE_TYPES.forEach(primitiveType -> {
+            testFindMethodsOnEmptyList(primitiveType);
+        });
+    }
+
+    @Test
+    public void testFindMethodsOnArray() {
+        Class<?> arrayClass = EMPTY_CLASS_ARRAY.getClass();
+        List<Method> methods = findMethods(arrayClass, true, true);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findMethods(arrayClass, false, true);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findMethods(arrayClass, true, false);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+
+        methods = findMethods(arrayClass, false, false);
+        assertEquals(OBJECT_PUBLIC_METHODS, methods);
+    }
+
+    @Test
+    public void testFindMethodsOnClass() {
+        List<Method> objectMethods = findMethods(Object.class, true, true);
+
+        List<Method> methods = findMethods(TestClass.class, true, true);
+        assertEquals(1 + objectMethods.size(), methods.size());
+
+        methods = findMethods(TestClass.class, false, true);
+        assertEquals(1, methods.size());
+
+        methods = findMethods(TestClass.class, false, false);
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+
+        methods = findMethods(TestClass.class, true, false);
+        objectMethods = findMethods(Object.class, true, false);
+
+        assertEquals(7 + JACOCO_ADDED_METHOD_COUNT + objectMethods.size(), methods.size());
+    }
+
+    @Test
+    public void testFindMethodsFromInterface() {
+        List<Method> methods = findMethods(TestInterface.class, true, true);
+        assertEquals(2, methods.size()); // method + useLambda
+
+        methods = findMethods(TestInterface.class, true, false);
+        assertEquals(3 + JACOCO_ADDED_METHOD_COUNT, methods.size()); // method + useLambda + generated lambda method by compiler
+
+        List<Method> subMethods = findMethods(TestSubInterface.class, false, true);
+        assertEquals(1, subMethods.size()); // subMethod
+
+        subMethods = findMethods(TestSubInterface.class, true, true);
+        assertEquals(3, subMethods.size()); // method + useLambda + subMethod
     }
 
     @Test
@@ -523,17 +558,17 @@ public class MethodUtilsTest {
         assertEquals(methodKey1.toString(), buildSignature(methodKey1.declaredClass, methodKey1.methodName, methodKey1.parameterTypes));
     }
 
-    private void testFilterMethodsOnEmptyList(Class<?> type) {
-        List<Method> methods = filterMethods(type, true, true);
+    private void testFindMethodsOnEmptyList(Class<?> type) {
+        List<Method> methods = findMethods(type, true, true);
         assertSame(emptyList(), methods);
 
-        methods = filterMethods(type, true, false);
+        methods = findMethods(type, true, false);
         assertSame(emptyList(), methods);
 
-        methods = filterMethods(type, false, true);
+        methods = findMethods(type, false, true);
         assertSame(emptyList(), methods);
 
-        methods = filterMethods(type, false, false);
+        methods = findMethods(type, false, false);
         assertSame(emptyList(), methods);
     }
 

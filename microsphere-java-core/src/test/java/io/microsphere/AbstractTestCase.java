@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
@@ -21,7 +22,9 @@ import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
+import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.util.Collections.emptyList;
@@ -36,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Abstract Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see AbstractTestCase
  * @since 1.0.0
  */
@@ -45,37 +47,37 @@ public abstract class AbstractTestCase {
 
     public static final String TEST_ELEMENT = "test";
 
-    public static final Collection<?> NULL_COLLECTION = null;
+    public static final Collection<?> TEST_NULL_COLLECTION = null;
 
-    public static final List<?> NULL_LIST = null;
+    public static final List<?> TEST_NULL_LIST = null;
 
-    public static final Set<?> NULL_SET = null;
+    public static final Set<?> TEST_NULL_SET = null;
 
-    public static final Queue<?> NULL_QUEUE = null;
+    public static final Queue<?> TEST_NULL_QUEUE = null;
 
-    public static final Deque<?> NULL_DEQUE = null;
+    public static final Deque<?> TEST_NULL_DEQUE = null;
 
-    public static final Collection<?> EMPTY_COLLECTION = emptySet();
+    public static final Collection<?> TEST_EMPTY_COLLECTION = emptySet();
 
-    public static final List<?> EMPTY_LIST = emptyList();
+    public static final List<?> TEST_EMPTY_LIST = emptyList();
 
-    public static final Set<?> EMPTY_SET = emptySet();
+    public static final Set<?> TEST_EMPTY_SET = emptySet();
 
-    public static final Queue<?> EMPTY_QUEUE = emptyQueue();
+    public static final Queue<?> TEST_EMPTY_QUEUE = emptyQueue();
 
-    public static final Deque<?> EMPTY_DEQUE = emptyDeque();
+    public static final Deque<?> TEST_EMPTY_DEQUE = emptyDeque();
 
-    public static final List<?> SINGLETON_LIST = singletonList(TEST_ELEMENT);
+    public static final List<?> TEST_SINGLETON_LIST = singletonList(TEST_ELEMENT);
 
-    public static final Set<?> SINGLETON_SET = singleton(TEST_ELEMENT);
+    public static final Set<?> TEST_SINGLETON_SET = singleton(TEST_ELEMENT);
 
-    public static final Queue<?> SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
+    public static final Queue<?> TEST_SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
 
-    public static final Deque<?> SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
+    public static final Deque<?> TEST_SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
-    public static final File tempDir = new File(JAVA_IO_TMPDIR);
+    public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
-    protected final ClassLoader classLoader = getDefaultClassLoader();
+    public static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
 
     protected final Logger logger = getLogger(getClass());
 
@@ -89,23 +91,6 @@ public abstract class AbstractTestCase {
         if (logger.isTraceEnabled()) {
             logger.trace(object, args);
         }
-    }
-
-    protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
-        assertThrowable(action, throwable -> {
-            assertEquals(throwableType, throwable.getClass());
-        });
-    }
-
-    protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
-        Throwable failure = null;
-        try {
-            action.execute();
-        } catch (Throwable t) {
-            failure = t;
-        }
-        assertNotNull(failure);
-        failureHandler.accept(failure);
     }
 
     protected File createRandomTempDirectory() {
@@ -145,6 +130,36 @@ public abstract class AbstractTestCase {
     }
 
     protected File newTempFile(String path) {
-        return new File(tempDir, path);
+        return new File(TEST_TEMP_DIR, path);
+    }
+
+    protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
+        assertThrowable(action, throwable -> {
+            assertEquals(throwableType, throwable.getClass());
+        });
+    }
+
+    protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
+        Throwable failure = null;
+        try {
+            action.execute();
+        } catch (Throwable t) {
+            failure = t;
+        }
+        assertNotNull(failure);
+        failureHandler.accept(failure);
+    }
+
+    protected void assertValues(List<?> values, Object... expectedValues) {
+        assertValues(values, expectedValues.length, expectedValues);
+    }
+
+    protected void assertValues(List<?> values, int expectedSize, Object... expectedTypes) {
+        assertEquals(expectedSize, values.size());
+        assertEquals(newHashSet(expectedTypes), newHashSet(values));
+    }
+
+    protected void assertType(Type expect, Type actual) {
+        assertEquals(asClass(expect), asClass(actual));
     }
 }
