@@ -40,25 +40,25 @@ public class PropertyResourceBundleUtilsTest {
     }
 
     @Test
-    public void testGetBundle() {
+    public void testGetBundleWithBaseName() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME);
         assertResourceBundle(resourceBundle);
     }
 
     @Test
-    public void testGetBundleWithEncoding() {
+    public void testGetBundleWithBaseNameAndEncoding() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME, TEST_ENCODING);
         assertResourceBundle(resourceBundle);
     }
 
     @Test
-    public void testGetBundleWithLocaleAndEncoding() {
+    public void testGetBundleWithBaseNameAndLocaleAndEncoding() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME, TEST_LOCALE, TEST_ENCODING);
         assertResourceBundle(resourceBundle);
     }
 
     @Test
-    public void testGetBundleWithLocaleAndEncodingAndClassLoader() {
+    public void testGetBundleWithBaseNameAndLocaleAndEncodingAndClassLoader() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME, TEST_LOCALE, TEST_CLASS_LOADER, TEST_ENCODING);
         assertResourceBundle(resourceBundle);
     }
