@@ -17,9 +17,18 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.util.Version.Operator;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Priority;
+
+import static io.microsphere.util.Version.Operator.EQ;
+import static io.microsphere.util.Version.Operator.GE;
+import static io.microsphere.util.Version.Operator.GT;
+import static io.microsphere.util.Version.Operator.LE;
+import static io.microsphere.util.Version.Operator.LT;
 import static io.microsphere.util.Version.getValue;
+import static io.microsphere.util.Version.getVersion;
 import static io.microsphere.util.Version.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -30,25 +39,74 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link Version} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Version
  * @since 1.0.0
  */
 public class VersionTest extends AbstractTestCase {
 
+    private static final int MAJOR = 1;
+
+    private static final int MINOR = 2;
+
+    private static final int PATCH = 3;
+
+    private static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
+
+    private static final Version TEST_VERSION = of(VERSION);
+
     @Test
     public void testGetValue() {
-        assertEquals(1, getValue("1"));
+        assertEquals(MAJOR, getValue("1"));
+        assertEquals(MINOR, getValue("2"));
+        assertEquals(PATCH, getValue("3"));
+
+        assertEquals(MAJOR, getValue(" 1"));
+        assertEquals(MINOR, getValue("2 "));
+        assertEquals(PATCH, getValue(" 3 "));
     }
 
     @Test
     public void testGetValueOnFailed() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            assertEquals(1, getValue("a"));
-        });
+        assertThrows(IllegalArgumentException.class, () -> getValue(""));
+        assertThrows(IllegalArgumentException.class, () -> getValue(" "));
+        assertThrows(IllegalArgumentException.class, () -> getValue("a"));
+    }
+
+    @Test
+    public void testOfWithMajor() {
+        Version version = of(MAJOR);
+        assertEquals(MAJOR, version.getMajor());
+        assertEquals(0, version.getMinor());
+        assertEquals(0, version.getPatch());
+    }
+
+    @Test
+    public void testOfWithMajorAndMinor() {
+        Version version = of(MAJOR, MINOR);
+        assertEquals(MAJOR, version.getMajor());
+        assertEquals(MINOR, version.getMinor());
+        assertEquals(0, version.getPatch());
+    }
+
+    @Test
+    public void testOfWithMajorAndMinorAndPatch() {
+        Version version = of(MAJOR, MINOR, PATCH);
+        assertEquals(MAJOR, version.getMajor());
+        assertEquals(MINOR, version.getMinor());
+        assertEquals(PATCH, version.getPatch());
+    }
+
+    @Test
+    public void testOfWithVersion() {
+        Version version = of(VERSION);
+        assertEquals(MAJOR, version.getMajor());
+        assertEquals(MINOR, version.getMinor());
+        assertEquals(PATCH, version.getPatch());
     }
 
     @Test
     public void testOfOnNullPointException() {
-        assertThrows(NullPointerException.class, () -> of(null));
+        assertThrows(IllegalArgumentException.class, () -> of(null));
     }
 
     @Test
@@ -57,91 +115,84 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOf() {
-        Version version = of("1.2.3");
-        assertEquals(1, version.getMajor());
-        assertEquals(2, version.getMinor());
-        assertEquals(3, version.getPatch());
-    }
-
-    @Test
     public void testEquals() {
-        Version version = of("1.2.3");
-        assertTrue(version.eq(of("1.2.3")));
-        assertTrue(version.equals((Object) of("1.2.3")));
+        assertTrue(TEST_VERSION.eq(of("1.2.3")));
+        assertTrue(TEST_VERSION.equals(of("1.2.3")));
+        assertTrue(TEST_VERSION.equals((Object) of("1.2.3")));
     }
 
     @Test
     public void testGt() {
-        Version version = of("1.2.3");
-        assertFalse(version.gt(of("1.2.3")));
-        assertTrue(version.gt(of("1.2.2")));
-        assertTrue(version.gt(of("1.2.1")));
-        assertTrue(version.gt(of("1.2.0")));
-        assertTrue(version.gt(of("1.2")));
-        assertTrue(version.gt(of("1.1.0")));
-        assertTrue(version.gt(of("1.1")));
-        assertTrue(version.gt(of("1")));
+        assertFalse(TEST_VERSION.gt(of("1.2.3")));
+        assertTrue(TEST_VERSION.gt(of("1.2.2")));
+        assertTrue(TEST_VERSION.gt(of("1.2.1")));
+        assertTrue(TEST_VERSION.gt(of("1.2.0")));
+        assertTrue(TEST_VERSION.gt(of("1.2")));
+        assertTrue(TEST_VERSION.gt(of("1.1.0")));
+        assertTrue(TEST_VERSION.gt(of("1.1")));
+        assertTrue(TEST_VERSION.gt(of("1")));
     }
 
     @Test
     public void testGe() {
-        Version version = of("1.2.3");
-        assertTrue(version.ge(of("1.2.3")));
-        assertTrue(version.gt(of("1.2.2")));
-        assertTrue(version.gt(of("1.2.1")));
-        assertTrue(version.gt(of("1.2.0")));
-        assertTrue(version.gt(of("1.2")));
-        assertTrue(version.gt(of("1.1.0")));
-        assertTrue(version.gt(of("1.1")));
-        assertTrue(version.gt(of("1")));
+        assertTrue(TEST_VERSION.ge(of("1.2.3")));
+        assertTrue(TEST_VERSION.gt(of("1.2.2")));
+        assertTrue(TEST_VERSION.gt(of("1.2.1")));
+        assertTrue(TEST_VERSION.gt(of("1.2.0")));
+        assertTrue(TEST_VERSION.gt(of("1.2")));
+        assertTrue(TEST_VERSION.gt(of("1.1.0")));
+        assertTrue(TEST_VERSION.gt(of("1.1")));
+        assertTrue(TEST_VERSION.gt(of("1")));
     }
 
     @Test
     public void testLt() {
-        Version version = of("1.2.3");
-        assertFalse(version.lt(of("1.2.3")));
-        assertFalse(version.lt(of("1.2.2")));
-        assertFalse(version.lt(of("1.2.1")));
-        assertFalse(version.lt(of("1.2.0")));
-        assertFalse(version.lt(of("1.2")));
-        assertFalse(version.lt(of("1.1.0")));
-        assertFalse(version.lt(of("1.1")));
-        assertFalse(version.lt(of("1")));
+        assertFalse(TEST_VERSION.lt(of("1.2.3")));
+        assertFalse(TEST_VERSION.lt(of("1.2.2")));
+        assertFalse(TEST_VERSION.lt(of("1.2.1")));
+        assertFalse(TEST_VERSION.lt(of("1.2.0")));
+        assertFalse(TEST_VERSION.lt(of("1.2")));
+        assertFalse(TEST_VERSION.lt(of("1.1.0")));
+        assertFalse(TEST_VERSION.lt(of("1.1")));
+        assertFalse(TEST_VERSION.lt(of("1")));
     }
 
     @Test
     public void testLe() {
-        Version version = of("1.2.3");
-        assertTrue(version.le(of("1.2.3")));
-        assertFalse(version.le(of("1.2.2")));
-        assertFalse(version.le(of("1.2.1")));
-        assertFalse(version.le(of("1.2.0")));
-        assertFalse(version.le(of("1.2")));
-        assertFalse(version.le(of("1.1.0")));
-        assertFalse(version.le(of("1.1")));
-        assertFalse(version.le(of("1")));
+        assertTrue(TEST_VERSION.le(of("1.2.3")));
+        assertFalse(TEST_VERSION.le(of("1.2.2")));
+        assertFalse(TEST_VERSION.le(of("1.2.1")));
+        assertFalse(TEST_VERSION.le(of("1.2.0")));
+        assertFalse(TEST_VERSION.le(of("1.2")));
+        assertFalse(TEST_VERSION.le(of("1.1.0")));
+        assertFalse(TEST_VERSION.le(of("1.1")));
+        assertFalse(TEST_VERSION.le(of("1")));
     }
 
     @Test
     public void testGetVersion() {
-        Version version = Version.getVersion(Test.class);
-        assertEquals(5, version.getMajor());
-        assertEquals(8, version.getMinor());
+        Version version = getVersion(Priority.class);
+        assertEquals(1, version.getMajor());
+        assertEquals(3, version.getMinor());
         assertEquals(2, version.getPatch());
     }
 
     @Test
+    public void testGetVersionOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> getVersion(VersionTest.class));
+    }
+
+    @Test
     public void testOperator() {
-        assertEquals(Version.Operator.EQ, Version.Operator.of("="));
-        assertEquals(Version.Operator.LT, Version.Operator.of("<"));
-        assertEquals(Version.Operator.LE, Version.Operator.of("<="));
-        assertEquals(Version.Operator.GT, Version.Operator.of(">"));
-        assertEquals(Version.Operator.GE, Version.Operator.of(">="));
+        assertEquals(EQ, Operator.of("="));
+        assertEquals(LT, Operator.of("<"));
+        assertEquals(LE, Operator.of("<="));
+        assertEquals(GT, Operator.of(">"));
+        assertEquals(GE, Operator.of(">="));
     }
 
     @Test
     public void testToString() {
-        assertEquals("Version{major=1, minor=2, patch=3}", of("1.2.3").toString());
+        assertEquals("Version{major=1, minor=2, patch=3}", TEST_VERSION.toString());
     }
 }
