@@ -49,8 +49,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetRuntimeClassLocation() {
-        URL location = null;
-        location = getRuntimeClassLocation(String.class);
+        URL location = getRuntimeClassLocation(String.class);
         assertNotNull(location);
         log(location);
 
@@ -75,5 +74,12 @@ public class ClassPathUtilsTest extends AbstractTestCase {
             }
         }
 
+    }
+
+    @Test
+    public void testGetRuntimeClassLocationWithClassName() {
+        URL location = getRuntimeClassLocation(String.class.getName());
+        assertNotNull(location);
+        log(location);
     }
 }
