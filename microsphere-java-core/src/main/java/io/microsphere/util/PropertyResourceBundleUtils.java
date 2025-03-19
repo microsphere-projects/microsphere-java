@@ -26,12 +26,12 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
     /**
      * The property name of encoding for {@link PropertyResourceBundle}
      */
-    public static final String ENCODING_PROPERTY_NAME = "java.util.PropertyResourceBundle.encoding";
+    public static final String DEFAULT_ENCODING_PROPERTY_NAME = "java.util.PropertyResourceBundle.encoding";
 
     /**
      * The default encoding for {@link PropertyResourceBundle}
      */
-    public static final String DEFAULT_ENCODING = getProperty(ENCODING_PROPERTY_NAME, FILE_ENCODING);
+    public static final String DEFAULT_ENCODING = getProperty(DEFAULT_ENCODING_PROPERTY_NAME, FILE_ENCODING);
 
     /**
      * {@link ResourceBundle#getBundle(String, Locale)} with {@link #DEFAULT_ENCODING default file encoding}
