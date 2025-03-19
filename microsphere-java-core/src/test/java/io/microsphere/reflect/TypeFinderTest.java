@@ -1,7 +1,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.reflect.generics.ParameterizedTypeImpl;
 import io.microsphere.test.BF3;
 import io.microsphere.test.StringBF2;
 import io.microsphere.test.StringIntegerF1;
@@ -22,7 +21,6 @@ import static io.microsphere.reflect.TypeFinder.classFinder;
 import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
 import static io.microsphere.reflect.TypeFinder.of;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
-import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
