@@ -20,8 +20,6 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.util.Version.Operator;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.Priority;
-
 import static io.microsphere.util.Version.Operator.EQ;
 import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.Version.Operator.GT;
@@ -117,10 +115,27 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testEquals() {
+        assertTrue(TEST_VERSION.equals(TEST_VERSION));
+        assertTrue(TEST_VERSION.equals((Object) TEST_VERSION));
+        assertTrue(TEST_VERSION.equals(of("1.2.3")));
+    }
+
+    @Test
+    public void testEqualsOnNull() {
+        assertFalse(TEST_VERSION.equals(null));
+        assertFalse(TEST_VERSION.equals((Object) null));
+    }
+
+    @Test
+    public void testEq() {
         assertTrue(TEST_VERSION.eq(TEST_VERSION));
         assertTrue(TEST_VERSION.eq(of("1.2.3")));
-        assertTrue(TEST_VERSION.equals(of("1.2.3")));
-        assertTrue(TEST_VERSION.equals((Object) of("1.2.3")));
+    }
+
+    @Test
+    public void testEqOnNull() {
+        assertFalse(TEST_VERSION.eq(null));
+        assertFalse(TEST_VERSION.equals(null));
     }
 
     @Test
@@ -137,6 +152,11 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
+    public void testGtOnNull() {
+        assertFalse(TEST_VERSION.gt(null));
+    }
+
+    @Test
     public void testGe() {
         assertTrue(TEST_VERSION.ge(TEST_VERSION));
         assertTrue(TEST_VERSION.ge(of("1.2.3")));
@@ -147,6 +167,11 @@ public class VersionTest extends AbstractTestCase {
         assertTrue(TEST_VERSION.gt(of("1.1.0")));
         assertTrue(TEST_VERSION.gt(of("1.1")));
         assertTrue(TEST_VERSION.gt(of("1")));
+    }
+
+    @Test
+    public void testGeOnNull() {
+        assertFalse(TEST_VERSION.ge(null));
     }
 
     @Test
@@ -163,6 +188,11 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
+    public void testLtOnNull() {
+        assertFalse(TEST_VERSION.lt(null));
+    }
+
+    @Test
     public void testLe() {
         assertTrue(TEST_VERSION.le(TEST_VERSION));
         assertTrue(TEST_VERSION.le(of("1.2.3")));
@@ -173,6 +203,11 @@ public class VersionTest extends AbstractTestCase {
         assertFalse(TEST_VERSION.le(of("1.1.0")));
         assertFalse(TEST_VERSION.le(of("1.1")));
         assertFalse(TEST_VERSION.le(of("1")));
+    }
+
+    @Test
+    public void testLeOnNull() {
+        assertFalse(TEST_VERSION.le(null));
     }
 
     @Test
