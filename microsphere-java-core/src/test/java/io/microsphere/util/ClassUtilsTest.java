@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.cast;
@@ -70,6 +71,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class ClassUtilsTest extends AbstractTestCase {
+
+    @Test
+    public void testConstants() {
+        assertEquals("[]", ARRAY_SUFFIX);
+    }
 
     @Test
     public void testIsArray() {
