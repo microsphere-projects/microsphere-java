@@ -265,7 +265,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         // ClassLoaderUtilsTest.class -> classLoader
         assertSame(classLoader, getClassLoader(currentClass));
         // String.class -> Bootstrap ClassLoader(null)
-        assertSame(getDefaultClassLoader(), getClassLoader(String.class));
+        assertSame(TEST_CLASS_LOADER, getClassLoader(String.class));
     }
 
     @Test
@@ -293,7 +293,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testRemoveClassPathURL() {
         assertFalse(removeClassPathURL(new TestClassLoader(), null));
 
-        ClassLoader classLoader = getDefaultClassLoader();
+        ClassLoader classLoader = TEST_CLASS_LOADER;
         Set<URL> urls = findAllClassPathURLs(classLoader);
         for (URL url : urls) {
             String path = url.getPath();
