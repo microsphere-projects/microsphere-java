@@ -24,7 +24,6 @@ import static java.util.Collections.emptySet;
  * {@link ClassPathUtils}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassPathUtils
  * @since 1.0.0
  */
@@ -57,9 +56,7 @@ public abstract class ClassPathUtils extends BaseUtils {
      * Get Bootstrap Class Paths {@link Set}
      *
      * @return If {@link RuntimeMXBean#isBootClassPathSupported()} == <code>false</code>, will return empty set.
-     * @version 1.0.0
-     * @since 1.0.0
-     **/
+     */
     @Nonnull
     public static Set<String> getBootstrapClassPaths() {
         return bootstrapClassPaths;
@@ -69,8 +66,6 @@ public abstract class ClassPathUtils extends BaseUtils {
      * Get {@link #classPaths}
      *
      * @return Class Paths {@link Set}
-     * @version 1.0.0
-     * @since 1.0.0
      **/
     @Nonnull
     public static Set<String> getClassPaths() {

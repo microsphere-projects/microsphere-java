@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
-import static io.microsphere.util.ClassUtils.getAllInterfaces;
+import static io.microsphere.util.ClassUtils.findAllInterfaces;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
 /**
@@ -73,7 +73,7 @@ public abstract class StringToIterableConverter<T extends Iterable> implements S
 
     @Override
     public final int getPriority() {
-        int level = getAllInterfaces(getSupportedType(), type -> isAssignableFrom(Iterable.class, type)).size();
+        int level = findAllInterfaces(getSupportedType(), type -> isAssignableFrom(Iterable.class, type)).size();
         return MIN_PRIORITY - level;
     }
 }

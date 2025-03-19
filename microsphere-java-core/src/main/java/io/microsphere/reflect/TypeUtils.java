@@ -41,8 +41,7 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
-import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.lang.Integer.getInteger;
 import static java.util.Collections.emptyList;
@@ -58,17 +57,17 @@ import static java.util.stream.StreamSupport.stream;
  */
 public abstract class TypeUtils extends BaseUtils {
 
-    public static final Predicate<Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
+    public static final Predicate<? super Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
 
-    public static final Predicate<Class<?>> NON_OBJECT_CLASS_FILTER = (Predicate) NON_OBJECT_TYPE_FILTER;
+    public static final Predicate<? super Class<?>> NON_OBJECT_CLASS_FILTER = NON_OBJECT_TYPE_FILTER;
 
-    public static final Predicate<Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
+    public static final Predicate<? super Type> TYPE_VARIABLE_FILTER = TypeUtils::isTypeVariable;
 
-    public static final Predicate<Type> PARAMETERIZED_TYPE_FILTER = TypeUtils::isParameterizedType;
+    public static final Predicate<? super Type> PARAMETERIZED_TYPE_FILTER = TypeUtils::isParameterizedType;
 
-    public static final Predicate<Type> WILDCARD_TYPE_FILTER = TypeUtils::isWildcardType;
+    public static final Predicate<? super Type> WILDCARD_TYPE_FILTER = TypeUtils::isWildcardType;
 
-    public static final Predicate<Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
+    public static final Predicate<? super Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
 
     public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = "microsphere.reflect.resolved-generic-types.cache.size";
 
@@ -238,7 +237,7 @@ public abstract class TypeUtils extends BaseUtils {
                 return emptyList();
             }
 
-            Predicate<Type> baseClassFilter = t -> isAssignableFrom(baseClass, t);
+            Predicate<? super Type> baseClassFilter = t -> isAssignableFrom(baseClass, t);
 
             List<Type> hierarchicalTypes = filterList(doGetHierarchicalTypes(type), baseClassFilter);
 
@@ -443,7 +442,7 @@ public abstract class TypeUtils extends BaseUtils {
      * @return non-null read-only {@link Set}
      * @see Class#getGenericSuperclass()
      */
-    public static List<Type> findAllGenericSuperclasses(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findAllGenericSuperclasses(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, false, typeFilters);
     }
 
@@ -455,7 +454,7 @@ public abstract class TypeUtils extends BaseUtils {
      * @return non-null read-only {@link Set}
      * @see Class#getGenericInterfaces()
      */
-    public static List<Type> findAllGenericInterfaces(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findAllGenericInterfaces(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, false, true, typeFilters);
     }
 
@@ -481,11 +480,11 @@ public abstract class TypeUtils extends BaseUtils {
         return findAllTypes(type, parameterizedTypePredicate(typeFilters));
     }
 
-    public static List<Type> findHierarchicalTypes(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findHierarchicalTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, true, typeFilters);
     }
 
-    public static List<Type> findAllTypes(Type type, Predicate<Type>... typeFilters) {
+    public static List<Type> findAllTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, true, true, true, true, typeFilters);
     }
 
@@ -496,107 +495,15 @@ public abstract class TypeUtils extends BaseUtils {
 
     protected static List<Type> findTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                           boolean includeGenericSuperclass, boolean includeGenericInterfaces,
-                                          Predicate<Type>... typeFilters) {
-        List<Type> types = doFindTypes(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces, typeFilters);
-        return types.isEmpty() ? emptyList() : unmodifiableList(types);
+                                          Predicate<? super Type>... typeFilters) {
+        if (type == null || isObjectType(type)) {
+            return emptyList();
+        }
+        return genericTypeFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
     }
 
     protected static List<Type> doGetHierarchicalTypes(Type type) {
-        return doFindTypes(type, false, true, true, true, EMPTY_PREDICATE_ARRAY);
-    }
-
-    protected static List<Type> doFindTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
-                                            boolean includeGenericSuperclass, boolean includeGenericInterfaces,
-                                            Predicate<Type>[] typeFilters) {
-        if (type == null) {
-            return emptyList();
-        }
-        List<Type> allTypes = newLinkedList();
-
-        if (includeSelf) {
-            // add self
-            allTypes.add(type);
-        }
-
-        // Add all hierarchical types in declaration order
-        addSuperTypes(allTypes, type, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces);
-
-        if (isNotEmpty(typeFilters)) {
-            // filter types by the chain
-            allTypes = filterList(allTypes, and(typeFilters));
-        }
-
-        return allTypes;
-    }
-
-    protected static List<Type> getSuperTypes(Type type, boolean includeGenericSuperclass, boolean includedGenericInterfaces) {
-
-        Class<?> klass = asClass(type);
-
-        Type genericSuperclass = includeGenericSuperclass && klass != null ? klass.getGenericSuperclass() : null;
-
-        boolean hasGenericSuperclass = genericSuperclass != null;
-
-        if (!hasGenericSuperclass && !includedGenericInterfaces) {
-            return emptyList();
-        }
-
-        Type[] interfaceTypes = includedGenericInterfaces ? klass.getGenericInterfaces() : EMPTY_TYPE_ARRAY;
-        int interfaceTypesLength = interfaceTypes.length;
-
-        int size = interfaceTypesLength + (hasGenericSuperclass ? 1 : 0);
-
-        if (size == 0) {
-            return emptyList();
-        }
-
-        List<Type> types = newArrayList(size);
-
-        if (hasGenericSuperclass) {
-            if (!types.contains(genericSuperclass)) {
-                types.add(genericSuperclass);
-            }
-        }
-
-        for (int i = 0; i < interfaceTypesLength; i++) {
-            Type interfaceType = interfaceTypes[i];
-            if (!types.contains(interfaceType)) {
-                types.add(interfaceType);
-            }
-        }
-        return types;
-    }
-
-    protected static void addSuperTypes(List<Type> allTypes, Type type, boolean includeHierarchicalTypes, boolean includeGenericSuperclass, boolean includeGenericInterfaces) {
-        if (isObjectType(type)) {
-            return;
-        }
-
-        List<Type> superTypes = getSuperTypes(type, includeGenericSuperclass, includeGenericInterfaces);
-
-        int superTypesSize = superTypes.size();
-
-        if (!includeGenericSuperclass && includeHierarchicalTypes) { // add super types recursively if necessary
-            List<Type> parentTypes = getSuperTypes(type, true, false);
-            int size = parentTypes.size();
-            for (int i = 0; i < size; i++) {
-                addSuperTypes(allTypes, parentTypes.get(i), true, false, includeGenericInterfaces);
-            }
-        }
-
-        if (superTypesSize < 1) {
-            return;
-        }
-
-        for (int i = 0; i < superTypesSize; i++) {
-            Type superType = superTypes.get(i);
-            if (!allTypes.contains(superType)) {
-                allTypes.add(superType);
-            }
-            if (includeHierarchicalTypes) {
-                addSuperTypes(allTypes, superType, true, includeGenericSuperclass, includeGenericInterfaces);
-            }
-        }
+        return genericTypeFinder(type, false, true, true, true).doFindTypes(EMPTY_PREDICATE_ARRAY);
     }
 
     public static String getClassName(Type type) {

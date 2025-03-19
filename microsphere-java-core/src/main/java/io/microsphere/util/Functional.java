@@ -45,7 +45,7 @@ public class Functional<V> {
         this.value = value;
     }
 
-    public Functional<V> on(Predicate<V> predicate) {
+    public Functional<V> on(Predicate<? super V> predicate) {
         if (isSkip()) {
             return this;
         }

@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * {@link SimpleFileScanner} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see SimpleFileScanner
  * @since 1.0.0
  */

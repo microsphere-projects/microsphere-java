@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * {@link ClassPathUtils} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
@@ -70,7 +69,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
 
         Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
-            if (!isLoadedClass(classLoader, className)) {
+            if (!isLoadedClass(TEST_CLASS_LOADER, className)) {
                 location = getRuntimeClassLocation(className);
                 assertNull(location);
             }

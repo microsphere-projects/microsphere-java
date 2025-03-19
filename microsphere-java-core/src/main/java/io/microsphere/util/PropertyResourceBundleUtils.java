@@ -8,21 +8,33 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import static io.microsphere.util.PropertyResourceBundleControl.newControl;
+import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static java.lang.System.getProperty;
+import static java.lang.Thread.currentThread;
+import static java.util.Locale.getDefault;
+
 /**
  * {@link PropertyResourceBundle} Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PropertyResourceBundle
  * @since 1.0.0
  */
 public abstract class PropertyResourceBundleUtils extends BaseUtils {
 
-    private PropertyResourceBundleUtils() {
-    }
+    /**
+     * The property name of encoding for {@link PropertyResourceBundle}
+     */
+    public static final String DEFAULT_ENCODING_PROPERTY_NAME = "java.util.PropertyResourceBundle.encoding";
 
     /**
-     * {@link ResourceBundle#getBundle(String, Locale)} with {@link SystemUtils#FILE_ENCODING default file encoding}
+     * The default encoding for {@link PropertyResourceBundle}
+     */
+    public static final String DEFAULT_ENCODING = getProperty(DEFAULT_ENCODING_PROPERTY_NAME, FILE_ENCODING);
+
+    /**
+     * {@link ResourceBundle#getBundle(String, Locale)} with {@link #DEFAULT_ENCODING default file encoding}
      * encoding and {@link Locale#getDefault() default Locale} under {@link Thread#getContextClassLoader() Thread
      * context ClassLoader}
      *
@@ -34,7 +46,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName) {
-        return getBundle(baseName, SystemUtils.FILE_ENCODING);
+        return getBundle(baseName, DEFAULT_ENCODING);
     }
 
     /**
@@ -50,7 +62,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName, String encoding) {
-        return getBundle(baseName, Locale.getDefault(), encoding);
+        return getBundle(baseName, getDefault(), encoding);
     }
 
     /**
@@ -67,7 +79,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName, Locale locale, String encoding) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = currentThread().getContextClassLoader();
         return getBundle(baseName, locale, classLoader, encoding);
     }
 
@@ -85,7 +97,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName, Locale locale, ClassLoader classLoader, String encoding) {
-        ResourceBundle.Control control = PropertyResourceBundleControl.newControl(encoding);
+        ResourceBundle.Control control = newControl(encoding);
         return ResourceBundle.getBundle(baseName, locale, classLoader, control);
     }
 

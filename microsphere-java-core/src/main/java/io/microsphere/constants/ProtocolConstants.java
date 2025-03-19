@@ -7,7 +7,6 @@ package io.microsphere.constants;
  * Protocol Constants Definition
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ProtocolConstants
  * @since 1.0.0
  */

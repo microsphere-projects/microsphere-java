@@ -51,6 +51,7 @@ import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
+import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -60,7 +61,6 @@ import static java.util.Collections.unmodifiableSet;
  * {@link ClassLoader} Utility
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassLoader
  * @since 1.0.0
  */
@@ -154,7 +154,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static ClassLoader getDefaultClassLoader() {
         ClassLoader classLoader = null;
         try {
-            classLoader = Thread.currentThread().getContextClassLoader();
+            classLoader = currentThread().getContextClassLoader();
         } catch (Throwable ignored) {
         }
 
@@ -415,7 +415,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     public static URL getResource(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
-        return normalizedResourceName == null ?  null : classLoader.getResource(normalizedResourceName);
+        return normalizedResourceName == null ? null : classLoader.getResource(normalizedResourceName);
     }
 
 
@@ -439,8 +439,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param type        {@link Class type}
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static URL getClassResource(ClassLoader classLoader, Class<?> type) {
         String resourceName = type.getName();
@@ -633,7 +631,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         URL[] classPathURLs = urlClassPathHandle.getURLs(classLoader);
 
-        addAll(allClassPathURLs,classPathURLs);
+        addAll(allClassPathURLs, classPathURLs);
 
         ClassLoader parentClassLoader = classLoader.getParent();
         if (parentClassLoader != null) {

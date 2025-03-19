@@ -3,15 +3,13 @@
  */
 package io.microsphere.filter;
 
-import io.microsphere.util.ClassUtils;
-
+import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
  * {@link PackageNameClassNameFilter}
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PackageNameClassNameFilter
  * @since 1.0.0
  */
@@ -38,7 +36,7 @@ public class PackageNameClassNameFilter implements Filter<String> {
         if (isBlank(className)) {
             return false;
         }
-        String packageName = ClassUtils.resolvePackageName(className);
+        String packageName = resolvePackageName(className);
         boolean accepted = packageName.equals(this.packageName);
         if (!accepted && includedSubPackages) {
             accepted = packageName.startsWith(subPackageNamePrefix);

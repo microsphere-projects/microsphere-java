@@ -65,7 +65,7 @@ public interface Logger {
      * accompanying message.
      *
      * @param message the message accompanying the exception
-     * @param t   the exception (throwable) to log
+     * @param t       the exception (throwable) to log
      */
     void trace(String message, Throwable t);
 
@@ -98,7 +98,7 @@ public interface Logger {
      * accompanying message.
      *
      * @param message the message accompanying the exception
-     * @param t   the exception (throwable) to log
+     * @param t       the exception (throwable) to log
      */
     void debug(String message, Throwable t);
 
@@ -131,7 +131,7 @@ public interface Logger {
      * accompanying message.
      *
      * @param message the message accompanying the exception
-     * @param t   the exception (throwable) to log
+     * @param t       the exception (throwable) to log
      */
     void info(String message, Throwable t);
 
@@ -164,7 +164,7 @@ public interface Logger {
      * accompanying message.
      *
      * @param message the message accompanying the exception
-     * @param t   the exception (throwable) to log
+     * @param t       the exception (throwable) to log
      */
     void warn(String message, Throwable t);
 
@@ -197,7 +197,7 @@ public interface Logger {
      * accompanying message.
      *
      * @param message the message accompanying the exception
-     * @param t   the exception (throwable) to log
+     * @param t       the exception (throwable) to log
      */
     void error(String message, Throwable t);
 

@@ -11,7 +11,6 @@ import static java.util.Collections.unmodifiableMap;
  * {@link Process} Manager
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ProcessManager
  * @since 1.0.0
  */

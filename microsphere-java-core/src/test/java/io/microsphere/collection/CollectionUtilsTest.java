@@ -50,43 +50,43 @@ public class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsEmpty() {
-        assertTrue(isEmpty(NULL_COLLECTION));
-        assertTrue(isEmpty(NULL_LIST));
-        assertTrue(isEmpty(NULL_SET));
-        assertTrue(isEmpty(NULL_QUEUE));
-        assertTrue(isEmpty(NULL_DEQUE));
+        assertTrue(isEmpty(TEST_NULL_COLLECTION));
+        assertTrue(isEmpty(TEST_NULL_LIST));
+        assertTrue(isEmpty(TEST_NULL_SET));
+        assertTrue(isEmpty(TEST_NULL_QUEUE));
+        assertTrue(isEmpty(TEST_NULL_DEQUE));
 
-        assertTrue(isEmpty(EMPTY_COLLECTION));
-        assertTrue(isEmpty(EMPTY_LIST));
-        assertTrue(isEmpty(EMPTY_SET));
-        assertTrue(isEmpty(EMPTY_QUEUE));
-        assertTrue(isEmpty(EMPTY_DEQUE));
+        assertTrue(isEmpty(TEST_EMPTY_COLLECTION));
+        assertTrue(isEmpty(TEST_EMPTY_LIST));
+        assertTrue(isEmpty(TEST_EMPTY_SET));
+        assertTrue(isEmpty(TEST_EMPTY_QUEUE));
+        assertTrue(isEmpty(TEST_EMPTY_DEQUE));
 
-        assertFalse(isEmpty(SINGLETON_LIST));
-        assertFalse(isEmpty(SINGLETON_SET));
-        assertFalse(isEmpty(SINGLETON_QUEUE));
-        assertFalse(isEmpty(SINGLETON_DEQUE));
+        assertFalse(isEmpty(TEST_SINGLETON_LIST));
+        assertFalse(isEmpty(TEST_SINGLETON_SET));
+        assertFalse(isEmpty(TEST_SINGLETON_QUEUE));
+        assertFalse(isEmpty(TEST_SINGLETON_DEQUE));
     }
 
     @Test
     public void testIsNotEmpty() {
 
-        assertFalse(isNotEmpty(NULL_COLLECTION));
-        assertFalse(isNotEmpty(NULL_LIST));
-        assertFalse(isNotEmpty(NULL_SET));
-        assertFalse(isNotEmpty(NULL_QUEUE));
-        assertFalse(isNotEmpty(NULL_DEQUE));
+        assertFalse(isNotEmpty(TEST_NULL_COLLECTION));
+        assertFalse(isNotEmpty(TEST_NULL_LIST));
+        assertFalse(isNotEmpty(TEST_NULL_SET));
+        assertFalse(isNotEmpty(TEST_NULL_QUEUE));
+        assertFalse(isNotEmpty(TEST_NULL_DEQUE));
 
-        assertFalse(isNotEmpty(EMPTY_COLLECTION));
-        assertFalse(isNotEmpty(EMPTY_LIST));
-        assertFalse(isNotEmpty(EMPTY_SET));
-        assertFalse(isNotEmpty(EMPTY_QUEUE));
-        assertFalse(isNotEmpty(EMPTY_DEQUE));
+        assertFalse(isNotEmpty(TEST_EMPTY_COLLECTION));
+        assertFalse(isNotEmpty(TEST_EMPTY_LIST));
+        assertFalse(isNotEmpty(TEST_EMPTY_SET));
+        assertFalse(isNotEmpty(TEST_EMPTY_QUEUE));
+        assertFalse(isNotEmpty(TEST_EMPTY_DEQUE));
 
-        assertTrue(isNotEmpty(SINGLETON_LIST));
-        assertTrue(isNotEmpty(SINGLETON_SET));
-        assertTrue(isNotEmpty(SINGLETON_QUEUE));
-        assertTrue(isNotEmpty(SINGLETON_DEQUE));
+        assertTrue(isNotEmpty(TEST_SINGLETON_LIST));
+        assertTrue(isNotEmpty(TEST_SINGLETON_SET));
+        assertTrue(isNotEmpty(TEST_SINGLETON_QUEUE));
+        assertTrue(isNotEmpty(TEST_SINGLETON_DEQUE));
     }
 
     @Test
@@ -110,46 +110,46 @@ public class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
     public void testSize() {
-        assertEquals(0, size(NULL_COLLECTION));
-        assertEquals(0, size(NULL_LIST));
-        assertEquals(0, size(NULL_SET));
-        assertEquals(0, size(NULL_QUEUE));
-        assertEquals(0, size(NULL_DEQUE));
+        assertEquals(0, size(TEST_NULL_COLLECTION));
+        assertEquals(0, size(TEST_NULL_LIST));
+        assertEquals(0, size(TEST_NULL_SET));
+        assertEquals(0, size(TEST_NULL_QUEUE));
+        assertEquals(0, size(TEST_NULL_DEQUE));
 
-        assertEquals(0, size(EMPTY_COLLECTION));
-        assertEquals(0, size(EMPTY_LIST));
-        assertEquals(0, size(EMPTY_SET));
-        assertEquals(0, size(EMPTY_QUEUE));
-        assertEquals(0, size(EMPTY_DEQUE));
+        assertEquals(0, size(TEST_EMPTY_COLLECTION));
+        assertEquals(0, size(TEST_EMPTY_LIST));
+        assertEquals(0, size(TEST_EMPTY_SET));
+        assertEquals(0, size(TEST_EMPTY_QUEUE));
+        assertEquals(0, size(TEST_EMPTY_DEQUE));
 
-        assertEquals(1, size(SINGLETON_LIST));
-        assertEquals(1, size(SINGLETON_SET));
-        assertEquals(1, size(SINGLETON_QUEUE));
-        assertEquals(1, size(SINGLETON_DEQUE));
+        assertEquals(1, size(TEST_SINGLETON_LIST));
+        assertEquals(1, size(TEST_SINGLETON_SET));
+        assertEquals(1, size(TEST_SINGLETON_QUEUE));
+        assertEquals(1, size(TEST_SINGLETON_DEQUE));
 
-        assertEquals(1, size((Iterable) SINGLETON_LIST));
+        assertEquals(1, size((Iterable) TEST_SINGLETON_LIST));
         assertEquals(1, size(singletonIterable(TEST_ELEMENT)));
     }
 
     @Test
     public void testEquals() {
-        assertFalse(CollectionUtils.equals(null, SINGLETON_LIST));
-        assertFalse(CollectionUtils.equals(SINGLETON_LIST, null));
+        assertFalse(CollectionUtils.equals(null, TEST_SINGLETON_LIST));
+        assertFalse(CollectionUtils.equals(TEST_SINGLETON_LIST, null));
 
         assertTrue(CollectionUtils.equals(null, null));
-        assertTrue(CollectionUtils.equals(EMPTY_LIST, EMPTY_SET));
-        assertTrue(CollectionUtils.equals(EMPTY_LIST, EMPTY_QUEUE));
-        assertTrue(CollectionUtils.equals(EMPTY_LIST, EMPTY_DEQUE));
-        assertTrue(CollectionUtils.equals(SINGLETON_LIST, SINGLETON_LIST));
-        assertTrue(CollectionUtils.equals(SINGLETON_LIST, SINGLETON_SET));
-        assertTrue(CollectionUtils.equals(SINGLETON_LIST, SINGLETON_QUEUE));
-        assertTrue(CollectionUtils.equals(SINGLETON_LIST, SINGLETON_DEQUE));
+        assertTrue(CollectionUtils.equals(TEST_EMPTY_LIST, TEST_EMPTY_SET));
+        assertTrue(CollectionUtils.equals(TEST_EMPTY_LIST, TEST_EMPTY_QUEUE));
+        assertTrue(CollectionUtils.equals(TEST_EMPTY_LIST, TEST_EMPTY_DEQUE));
+        assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_LIST));
+        assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_SET));
+        assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_QUEUE));
+        assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_DEQUE));
     }
 
     @Test
     public void testAddAll() {
         List<String> values = new LinkedList<>();
-        assertEquals(0, addAll(EMPTY_LIST));
+        assertEquals(0, addAll(TEST_EMPTY_LIST));
         assertEquals(0, addAll(null, "A"));
         assertEquals(0, addAll(values));
         assertEquals(2, addAll(values, "A", "B"));
@@ -161,13 +161,13 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertNull(first((Collection) null));
         assertNull(first((Iterator) null));
         assertNull(first((Iterable) null));
-        assertNull(first(EMPTY_LIST));
-        assertNull(first(EMPTY_SET));
-        assertNull(first(EMPTY_QUEUE));
-        assertNull(first(EMPTY_DEQUE));
-        assertEquals(TEST_ELEMENT, first(SINGLETON_LIST));
-        assertEquals(TEST_ELEMENT, first(SINGLETON_SET));
-        assertEquals(TEST_ELEMENT, first(toIterable(SINGLETON_LIST)));
+        assertNull(first(TEST_EMPTY_LIST));
+        assertNull(first(TEST_EMPTY_SET));
+        assertNull(first(TEST_EMPTY_QUEUE));
+        assertNull(first(TEST_EMPTY_DEQUE));
+        assertEquals(TEST_ELEMENT, first(TEST_SINGLETON_LIST));
+        assertEquals(TEST_ELEMENT, first(TEST_SINGLETON_SET));
+        assertEquals(TEST_ELEMENT, first(toIterable(TEST_SINGLETON_LIST)));
     }
 
 }
