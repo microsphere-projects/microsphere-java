@@ -25,12 +25,15 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.function.BiPredicate;
 
+import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.EQUAL;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN_OR_EQUAL_TO;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN_OR_EQUAL_TO;
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
+import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -423,12 +426,28 @@ public class Version implements Comparable<Version>, Serializable {
          * @return <code>null</code> if can't be found
          */
         public static Operator of(String symbol) {
-            for (Operator operator : values()) {
+            Operator[] operators = values();
+            for (Operator operator : operators) {
                 if (Objects.equals(symbol, operator.symbol)) {
                     return operator;
                 }
             }
-            throw new IllegalArgumentException(format("The Operator can't be parsed by the symbol '{}'!", symbol));
+
+            StringBuilder messageBuilder = new StringBuilder("The Operator can't be parsed by the symbol : ")
+                    .append(QUOTE_CHAR).append(symbol).append(QUOTE_CHAR)
+                    .append(", only supports : ");
+
+            for (int i = 0; i < operators.length; i++) {
+                Operator operator = operators[i];
+                // append '${operator.symbol}'
+                messageBuilder.append(QUOTE_CHAR).append(operator.symbol).append(QUOTE_CHAR);
+                if (i < operators.length - 1) {
+                    // append ", "
+                    messageBuilder.append(COMMA_CHAR).append(SPACE_CHAR);
+                }
+            }
+
+            throw new IllegalArgumentException(messageBuilder.toString());
         }
 
     }
