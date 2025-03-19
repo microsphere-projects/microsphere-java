@@ -18,6 +18,6 @@ public class ClassLoaderUtilsPerformanceTest extends AbstractPerformanceTest {
 
     @Test
     public void testFind() {
-        super.execute(() -> findLoadedClassesInClassPath(classLoader));
+        super.execute(() -> findLoadedClassesInClassPath(TEST_CLASS_LOADER));
     }
 }
