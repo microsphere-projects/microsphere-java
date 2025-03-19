@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Disabled;
 public abstract class AbstractPerformanceTest extends AbstractTestCase {
 
     protected <T> void execute(PerformanceAction<T> action) {
-        long startTime = System.currentTimeMillis();
+        long startTime = System.nanoTime();
         T returnValue = action.execute();
-        long costTime = System.currentTimeMillis() - startTime;
-        log("execution {} return {} costs {} ms", action, returnValue, costTime);
+        long costTime = System.nanoTime() - startTime;
+        log("action returns {}, it costs {} ns", action, returnValue, costTime);
     }
 }
