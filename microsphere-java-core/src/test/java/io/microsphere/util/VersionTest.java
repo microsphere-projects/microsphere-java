@@ -117,6 +117,7 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testEquals() {
+        assertTrue(TEST_VERSION.eq(TEST_VERSION));
         assertTrue(TEST_VERSION.eq(of("1.2.3")));
         assertTrue(TEST_VERSION.equals(of("1.2.3")));
         assertTrue(TEST_VERSION.equals((Object) of("1.2.3")));
@@ -124,6 +125,7 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testGt() {
+        assertFalse(TEST_VERSION.gt(TEST_VERSION));
         assertFalse(TEST_VERSION.gt(of("1.2.3")));
         assertTrue(TEST_VERSION.gt(of("1.2.2")));
         assertTrue(TEST_VERSION.gt(of("1.2.1")));
@@ -136,6 +138,7 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testGe() {
+        assertTrue(TEST_VERSION.ge(TEST_VERSION));
         assertTrue(TEST_VERSION.ge(of("1.2.3")));
         assertTrue(TEST_VERSION.gt(of("1.2.2")));
         assertTrue(TEST_VERSION.gt(of("1.2.1")));
@@ -148,6 +151,7 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testLt() {
+        assertFalse(TEST_VERSION.lt(TEST_VERSION));
         assertFalse(TEST_VERSION.lt(of("1.2.3")));
         assertFalse(TEST_VERSION.lt(of("1.2.2")));
         assertFalse(TEST_VERSION.lt(of("1.2.1")));
@@ -160,6 +164,7 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testLe() {
+        assertTrue(TEST_VERSION.le(TEST_VERSION));
         assertTrue(TEST_VERSION.le(of("1.2.3")));
         assertFalse(TEST_VERSION.le(of("1.2.2")));
         assertFalse(TEST_VERSION.le(of("1.2.1")));
