@@ -1,6 +1,5 @@
 package io.microsphere.util;
 
-import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
 import java.util.Collections;
