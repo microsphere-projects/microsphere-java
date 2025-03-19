@@ -117,7 +117,11 @@ public class VersionTest extends AbstractTestCase {
     public void testEquals() {
         assertTrue(TEST_VERSION.equals(TEST_VERSION));
         assertTrue(TEST_VERSION.equals((Object) TEST_VERSION));
-        assertTrue(TEST_VERSION.equals(of("1.2.3")));
+        assertTrue(TEST_VERSION.equals(of(MAJOR, MINOR, PATCH)));
+
+        assertFalse(TEST_VERSION.equals(of(0)));
+        assertFalse(TEST_VERSION.equals(of(MAJOR)));
+        assertFalse(TEST_VERSION.equals(of(MAJOR, MINOR)));
     }
 
     @Test
@@ -129,7 +133,7 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testEq() {
         assertTrue(TEST_VERSION.eq(TEST_VERSION));
-        assertTrue(TEST_VERSION.eq(of("1.2.3")));
+        assertTrue(TEST_VERSION.eq(of(MAJOR, MINOR, PATCH)));
     }
 
     @Test
@@ -141,14 +145,19 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testGt() {
         assertFalse(TEST_VERSION.gt(TEST_VERSION));
-        assertFalse(TEST_VERSION.gt(of("1.2.3")));
-        assertTrue(TEST_VERSION.gt(of("1.2.2")));
-        assertTrue(TEST_VERSION.gt(of("1.2.1")));
-        assertTrue(TEST_VERSION.gt(of("1.2.0")));
-        assertTrue(TEST_VERSION.gt(of("1.2")));
-        assertTrue(TEST_VERSION.gt(of("1.1.0")));
-        assertTrue(TEST_VERSION.gt(of("1.1")));
-        assertTrue(TEST_VERSION.gt(of("1")));
+
+        assertFalse(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH - 1)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH - 2)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH - 3)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR, MINOR)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR, MINOR - 1)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR, MINOR - 2)));
+        assertTrue(TEST_VERSION.gt(of(MAJOR)));
+
+        assertFalse(TEST_VERSION.gt(of(MAJOR + 1)));
+        assertFalse(TEST_VERSION.gt(of(MAJOR, MINOR + 1)));
+        assertFalse(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH + 1)));
     }
 
     @Test
@@ -159,14 +168,19 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testGe() {
         assertTrue(TEST_VERSION.ge(TEST_VERSION));
-        assertTrue(TEST_VERSION.ge(of("1.2.3")));
-        assertTrue(TEST_VERSION.gt(of("1.2.2")));
-        assertTrue(TEST_VERSION.gt(of("1.2.1")));
-        assertTrue(TEST_VERSION.gt(of("1.2.0")));
-        assertTrue(TEST_VERSION.gt(of("1.2")));
-        assertTrue(TEST_VERSION.gt(of("1.1.0")));
-        assertTrue(TEST_VERSION.gt(of("1.1")));
-        assertTrue(TEST_VERSION.gt(of("1")));
+
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH - 1)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH - 2)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH - 3)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR - 1)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR - 2)));
+        assertTrue(TEST_VERSION.ge(of(MAJOR)));
+
+        assertFalse(TEST_VERSION.ge(of(MAJOR + 1)));
+        assertFalse(TEST_VERSION.ge(of(MAJOR, MINOR + 1)));
+        assertFalse(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH + 1)));
     }
 
     @Test
@@ -177,14 +191,19 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testLt() {
         assertFalse(TEST_VERSION.lt(TEST_VERSION));
-        assertFalse(TEST_VERSION.lt(of("1.2.3")));
-        assertFalse(TEST_VERSION.lt(of("1.2.2")));
-        assertFalse(TEST_VERSION.lt(of("1.2.1")));
-        assertFalse(TEST_VERSION.lt(of("1.2.0")));
-        assertFalse(TEST_VERSION.lt(of("1.2")));
-        assertFalse(TEST_VERSION.lt(of("1.1.0")));
-        assertFalse(TEST_VERSION.lt(of("1.1")));
-        assertFalse(TEST_VERSION.lt(of("1")));
+
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH - 2)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH - 3)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR - 1)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR - 2)));
+        assertFalse(TEST_VERSION.lt(of(MAJOR)));
+
+        assertTrue(TEST_VERSION.lt(of(MAJOR + 1)));
+        assertTrue(TEST_VERSION.lt(of(MAJOR, MINOR + 1)));
+        assertTrue(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH + 1)));
     }
 
     @Test
@@ -195,14 +214,19 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testLe() {
         assertTrue(TEST_VERSION.le(TEST_VERSION));
-        assertTrue(TEST_VERSION.le(of("1.2.3")));
-        assertFalse(TEST_VERSION.le(of("1.2.2")));
-        assertFalse(TEST_VERSION.le(of("1.2.1")));
-        assertFalse(TEST_VERSION.le(of("1.2.0")));
-        assertFalse(TEST_VERSION.le(of("1.2")));
-        assertFalse(TEST_VERSION.le(of("1.1.0")));
-        assertFalse(TEST_VERSION.le(of("1.1")));
-        assertFalse(TEST_VERSION.le(of("1")));
+
+        assertTrue(TEST_VERSION.le(of(MAJOR, MINOR, PATCH)));
+        assertFalse(TEST_VERSION.le(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_VERSION.le(of(MAJOR, MINOR, PATCH - 2)));
+        assertFalse(TEST_VERSION.le(of(MAJOR, MINOR, PATCH - 3)));
+        assertFalse(TEST_VERSION.le(of(MAJOR, MINOR)));
+        assertFalse(TEST_VERSION.le(of(MAJOR, MINOR - 1)));
+        assertFalse(TEST_VERSION.le(of(MAJOR, MINOR - 2)));
+        assertFalse(TEST_VERSION.le(of(MAJOR)));
+
+        assertTrue(TEST_VERSION.le(of(MAJOR + 1)));
+        assertTrue(TEST_VERSION.le(of(MAJOR, MINOR + 1)));
+        assertTrue(TEST_VERSION.le(of(MAJOR, MINOR, PATCH + 1)));
     }
 
     @Test
@@ -228,6 +252,11 @@ public class VersionTest extends AbstractTestCase {
         assertEquals(LE, Operator.of("<="));
         assertEquals(GT, Operator.of(">"));
         assertEquals(GE, Operator.of(">="));
+    }
+
+    @Test
+    public void testOperatorOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> Operator.of(""));
     }
 
     @Test
