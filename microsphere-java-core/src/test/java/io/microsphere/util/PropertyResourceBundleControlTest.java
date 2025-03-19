@@ -10,7 +10,7 @@ import java.nio.charset.UnsupportedCharsetException;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.util.PropertyResourceBundleControl.DEFAULT_CONTROL;
 import static io.microsphere.util.PropertyResourceBundleControl.newControl;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
@@ -34,8 +34,6 @@ public class PropertyResourceBundleControlTest {
     private static final String BASE_NAME = "META-INF.test";
 
     private static final String TEST_FORMAT = FORMAT_PROPERTIES.get(0);
-
-    private static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
 
     @Test
     public void testDefaultConstructor() {
