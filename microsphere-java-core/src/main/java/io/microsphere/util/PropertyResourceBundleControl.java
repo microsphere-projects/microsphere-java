@@ -10,9 +10,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.charset.Charset;
 import java.nio.charset.UnsupportedCharsetException;
-import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.List;
@@ -24,7 +22,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.io.IOUtils.close;
-import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.PropertyResourceBundleUtils.DEFAULT_ENCODING;
+import static java.nio.charset.Charset.forName;
+import static java.security.AccessController.doPrivileged;
 
 /**
  * {@link PropertyResourceBundle} {@link ResourceBundle.Control} Implementation which supports encoding {@link
@@ -37,57 +38,40 @@ import static io.microsphere.util.SystemUtils.FILE_ENCODING;
  */
 public class PropertyResourceBundleControl extends ResourceBundle.Control {
 
+    /**
+     * The suffix of the properties file
+     */
+    public static final String SUFFIX = "properties";
+
     private static final ConcurrentMap<String, ResourceBundle.Control> encodingControlMap = new ConcurrentHashMap<String, ResourceBundle.Control>();
 
+    /**
+     * The singleton instance of {@link PropertyResourceBundleControl} as default
+     */
+    public static final PropertyResourceBundleControl DEFAULT_CONTROL;
+
     static {
-        addEncodingControlMap(newControl(FILE_ENCODING));
-        addEncodingControlMap(newControl("UTF-8"));
+        DEFAULT_CONTROL = new PropertyResourceBundleControl();
+        // Add a Control as default
+        encodingControlMap.put(DEFAULT_CONTROL.getEncoding(), DEFAULT_CONTROL);
+        // Add "UTF-8" Control
+        newControl("UTF-8");
     }
 
     private final String encoding;
 
-    protected PropertyResourceBundleControl(final String encoding) {
-        this.encoding = encoding;
-    }
-
-    protected PropertyResourceBundleControl() {
-        this(FILE_ENCODING);
-    }
-
-    private static final void addEncodingControlMap(ResourceBundle.Control control) {
-        PropertyResourceBundleControl control_ = (PropertyResourceBundleControl) control;
-        encodingControlMap.putIfAbsent(control_.getEncoding(), control_);
+    protected PropertyResourceBundleControl() throws UnsupportedCharsetException {
+        this(DEFAULT_ENCODING);
     }
 
     /**
-     * Gets an existed instance of {@link PropertyResourceBundleControl}.
-     *
-     * @param encoding
-     * @return an existed instance of {@link PropertyResourceBundleControl}.
-     * @since 1.0.0
-     */
-    private static final ResourceBundle.Control getControl(final String encoding) {
-        return encodingControlMap.get(encoding);
-    }
-
-    /**
-     * Creates a new instance of {@link PropertyResourceBundleControl} if absent.
-     *
-     * @param encoding Encoding
-     * @return Control
+     * @param encoding the encoding
      * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
-     * @since 1.0.0
      */
-    public static final ResourceBundle.Control newControl(final String encoding) throws UnsupportedCharsetException {
+    protected PropertyResourceBundleControl(final String encoding) throws UnsupportedCharsetException {
         // check encoding
-        Charset.forName(encoding);
-        final ResourceBundle.Control existedControl = getControl(encoding);
-        ResourceBundle.Control control = existedControl;
-        if (existedControl == null) {
-            control = new PropertyResourceBundleControl(encoding);
-            encodingControlMap.put(encoding, control);
-        }
-        return control;
+        forName(encoding);
+        this.encoding = encoding;
     }
 
     public final List<String> getFormats(String baseName) {
@@ -97,33 +81,34 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
         return FORMAT_PROPERTIES;
     }
 
-
-    public ResourceBundle newBundle(String baseName, Locale locale, String format, final ClassLoader classLoader, final boolean reload) throws IllegalAccessException, InstantiationException, IOException {
+    public ResourceBundle newBundle(String baseName, Locale locale, String format, final ClassLoader classLoader, final boolean reload) throws IOException {
         String bundleName = super.toBundleName(baseName, locale);
-        final String resourceName = super.toResourceName(bundleName, "properties");
+        final String resourceName = super.toResourceName(bundleName, SUFFIX);
         InputStream stream = null;
         Reader reader = null;
         ResourceBundle bundle = null;
         try {
-            stream = AccessController.doPrivileged(new PrivilegedExceptionAction<InputStream>() {
-                public InputStream run() throws IOException {
-                    InputStream is = null;
-                    if (reload) {
-                        URL url = classLoader.getResource(resourceName);
-                        if (url != null) {
-                            URLConnection connection = url.openConnection();
-                            if (connection != null) {
-                                // Disable caches to get fresh data for
-                                // reloading.
-                                connection.setUseCaches(false);
-                                is = connection.getInputStream();
-                            }
+            stream = doPrivileged((PrivilegedExceptionAction<InputStream>) () -> {
+                InputStream is = null;
+                if (reload) {
+                    URL url = classLoader.getResource(resourceName);
+                    if (url != null) {
+                        URLConnection connection = url.openConnection();
+                        if (connection != null) {
+                            // Disable caches to get fresh data for
+                            // reloading.
+                            connection.setUseCaches(false);
+                            is = connection.getInputStream();
                         }
-                    } else {
-                        is = classLoader.getResourceAsStream(resourceName);
                     }
-                    return is;
+                } else {
+                    is = classLoader.getResourceAsStream(resourceName);
                 }
+                if (is == null) {
+                    String message = format("The resource[name : '{}' , baseName : '{}' , locale : '{}' , reload : {}] can't be found in the ClassLoader : {}", resourceName, baseName, locale, reload, classLoader);
+                    throw new IOException(message);
+                }
+                return is;
             });
         } catch (PrivilegedActionException e) {
             throw (IOException) e.getException();
@@ -146,9 +131,20 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * Sets the encoding of properties file.
      *
      * @return the encoding
-     * @since 1.0.0
      */
     public String getEncoding() {
         return encoding;
     }
+
+    /**
+     * Creates a new instance of {@link PropertyResourceBundleControl} if absent.
+     *
+     * @param encoding Encoding
+     * @return Control
+     * @throws UnsupportedCharsetException If <code>encoding</code> is not supported
+     */
+    public static ResourceBundle.Control newControl(final String encoding) throws UnsupportedCharsetException {
+        return encodingControlMap.computeIfAbsent(encoding, PropertyResourceBundleControl::new);
+    }
+
 }
