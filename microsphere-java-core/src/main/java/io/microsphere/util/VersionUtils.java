@@ -20,6 +20,7 @@ import javax.lang.model.SourceVersion;
 
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
+import static io.microsphere.util.Version.Operator.of;
 import static io.microsphere.util.Version.ofVersion;
 import static javax.lang.model.SourceVersion.latest;
 
@@ -40,7 +41,7 @@ public abstract class VersionUtils extends BaseUtils {
     /**
      * The {@link Version} instance for current Java Version
      */
-    public static final Version CURRENT_JAVA_VERSION = ofVersion(currentJavaVersion());
+    public static final Version CURRENT_JAVA_VERSION = ofVersion(currentJavaMajorVersion());
 
     /**
      * The {@link Version} instance for Java 8
@@ -120,17 +121,62 @@ public abstract class VersionUtils extends BaseUtils {
     /**
      * Determine whether the current Java version matches the specified version
      *
-     * @param comparedVersion the {@link Version} to be compared
-     * @param versionOperator the {@link Version.Operator}
+     * @param operatorSymbol    the {@link Version.Operator}
+     * @param referencedVersion the {@link Version} to be referenced
      * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
-     * {@link #CURRENT_JAVA_VERSION current version} and <code>comparedVersion</code>
+     * {@link #CURRENT_JAVA_VERSION current version} and <code>referencedVersion</code>
      */
-    public static boolean testCurrentJavaVersion(Version comparedVersion, Version.Operator versionOperator) {
-        return versionOperator.test(CURRENT_JAVA_VERSION, comparedVersion);
+    public static boolean testCurrentJavaVersion(String operatorSymbol, Version referencedVersion) {
+        return testCurrentJavaVersion(of(operatorSymbol), referencedVersion);
     }
 
-    private static String currentJavaVersion() {
-        String javaVersion = JAVA_VERSION;
+    /**
+     * Determine whether the current Java version matches the specified version
+     *
+     * @param versionOperator   the {@link Version.Operator}
+     * @param referencedVersion the {@link Version} to be referenced
+     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     * {@link #CURRENT_JAVA_VERSION current version} and <code>referencedVersion</code>
+     */
+    public static boolean testCurrentJavaVersion(Version.Operator versionOperator, Version referencedVersion) {
+        return testVersion(CURRENT_JAVA_VERSION, versionOperator, referencedVersion);
+    }
+
+    /**
+     * Determine whether the base version matches the referenced version
+     *
+     * @param baseVersion       the {@link Version} to be tested
+     * @param operatorSymbol    the  symbol of {@link Version.Operator}
+     * @param referencedVersion the {@link Version} to be referenced
+     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     */
+    public static boolean testVersion(String baseVersion, String operatorSymbol, String referencedVersion) {
+        if (baseVersion == null || operatorSymbol == null || referencedVersion == null) {
+            return false;
+        }
+        return testVersion(ofVersion(baseVersion), of(operatorSymbol), ofVersion(referencedVersion));
+    }
+
+    /**
+     * Determine whether the base version matches the referenced version
+     *
+     * @param baseVersion       the {@link Version} to be tested
+     * @param versionOperator   the {@link Version.Operator}
+     * @param referencedVersion the {@link Version} to be referenced
+     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     */
+    public static boolean testVersion(Version baseVersion, Version.Operator versionOperator, Version referencedVersion) {
+        if (baseVersion == null || versionOperator == null || referencedVersion == null) {
+            return false;
+        }
+        return versionOperator.test(baseVersion, referencedVersion);
+    }
+
+    static String currentJavaMajorVersion() {
+        return detectJavaMajorVersion(JAVA_VERSION);
+    }
+
+    static String detectJavaMajorVersion(String javaVersion) {
         int firstDotIndex = javaVersion.indexOf(DOT_CHAR);
         if (firstDotIndex > -1) {
             String majorVersion = javaVersion.substring(0, firstDotIndex);
@@ -139,8 +185,8 @@ public abstract class VersionUtils extends BaseUtils {
                 int startIndex = firstDotIndex + 1;
                 int endIndex = javaVersion.indexOf(DOT_CHAR, startIndex);
                 majorVersion = javaVersion.substring(startIndex, endIndex);
-                return majorVersion;
             }
+            return majorVersion;
         }
         return javaVersion;
     }
