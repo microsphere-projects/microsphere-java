@@ -21,10 +21,10 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.classloading.Artifact.UNKNOWN;
 import static io.microsphere.classloading.MavenArtifact.create;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,7 +47,7 @@ public class MavenArtifactTest {
 
     private static final String VERSION = "1.0.0";
 
-    private static final URL LOCATION = getClassResource(getDefaultClassLoader(), MavenArtifactTest.class);
+    private static final URL LOCATION = getClassResource(TEST_CLASS_LOADER, MavenArtifactTest.class);
 
     private MavenArtifact artifact;
 
