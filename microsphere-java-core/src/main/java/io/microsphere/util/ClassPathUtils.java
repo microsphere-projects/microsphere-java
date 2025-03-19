@@ -15,9 +15,10 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.StringUtils.split;
-import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 
 /**
@@ -81,17 +82,11 @@ public abstract class ClassPathUtils extends BaseUtils {
      * @see #getRuntimeClassLocation(Class)
      */
     public static URL getRuntimeClassLocation(String className) {
-        ClassLoader classLoader = currentThread().getContextClassLoader();
-        URL location = null;
-        if (classLoader != null) {
-            if (isLoadedClass(classLoader, className)) {
-                try {
-                    location = getRuntimeClassLocation(classLoader.loadClass(className));
-                } catch (ClassNotFoundException ignored) {
-                }
-            }
+        ClassLoader classLoader = getDefaultClassLoader();
+        if (isLoadedClass(classLoader, className)) {
+            return getRuntimeClassLocation(resolveClass(className, classLoader));
         }
-        return location;
+        return null;
     }
 
     /**
