@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.util.PropertyResourceBundleUtils.DEFAULT_ENCODING;
 import static io.microsphere.util.PropertyResourceBundleUtils.DEFAULT_ENCODING_PROPERTY_NAME;
 import static io.microsphere.util.PropertyResourceBundleUtils.getBundle;
@@ -28,8 +28,6 @@ public class PropertyResourceBundleUtilsTest {
     private static final String BASE_NAME = "META-INF.test";
 
     private static final Locale TEST_LOCALE = ROOT;
-
-    private static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
 
     private static final String TEST_ENCODING = DEFAULT_ENCODING;
 
