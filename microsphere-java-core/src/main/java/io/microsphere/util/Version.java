@@ -361,7 +361,7 @@ public class Version implements Comparable<Version>, Serializable {
             @Override
             public boolean test(Version v1, Version v2) {
                 if (v1 == v2) {
-                    return true;
+                    return false;
                 }
                 if (v2 == null) return false;
                 return v1.compareTo(v2) < 0;
@@ -389,7 +389,7 @@ public class Version implements Comparable<Version>, Serializable {
             @Override
             public boolean test(Version v1, Version v2) {
                 if (v1 == v2) {
-                    return true;
+                    return false;
                 }
                 if (v2 == null) return false;
                 return v1.compareTo(v2) > 0;
