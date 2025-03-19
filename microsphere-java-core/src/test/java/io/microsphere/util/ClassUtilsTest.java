@@ -155,6 +155,8 @@ public class ClassUtilsTest extends AbstractTestCase {
         assertFalse(isGeneralClass(AbstractCollection.class));
         // test concrete class
         assertTrue(isGeneralClass(Object.class));
+        // test concrete class
+        assertTrue(isGeneralClass(Object.class, null));
     }
 
     @Test
