@@ -14,7 +14,6 @@ import static io.microsphere.constants.SymbolConstants.EXCLAMATION;
  * <p/>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @since 1.0.0
  */
 public interface SeparatorConstants {

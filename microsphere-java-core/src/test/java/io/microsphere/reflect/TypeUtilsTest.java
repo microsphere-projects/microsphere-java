@@ -16,9 +16,18 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
+import io.microsphere.test.A;
+import io.microsphere.test.B;
+import io.microsphere.test.C;
+import io.microsphere.test.D;
+import io.microsphere.test.E;
+import io.microsphere.test.StringBooleanToInteger;
+import io.microsphere.test.StringIntegerBooleanHashMap;
+import io.microsphere.test.StringIntegerToBoolean;
 import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
@@ -26,7 +35,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +44,6 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.TypeUtils.GENERIC_ARRAY_TYPE_FILTER;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_CLASS_FILTER;
@@ -99,7 +106,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class TypeUtilsTest {
+public class TypeUtilsTest extends AbstractTestCase {
 
     @Test
     public void testConstantFilters() {
@@ -317,22 +324,22 @@ public class TypeUtilsTest {
     @Test
     public void testResolveActualTypeArguments() {
         List<Type> actualTypeArguments = resolveActualTypeArguments(B.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        assertValues(actualTypeArguments, B.class);
 
         actualTypeArguments = resolveActualTypeArguments(C.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        assertValues(actualTypeArguments, B.class);
 
         actualTypeArguments = resolveActualTypeArguments(D.class, C.class);
-        assertTypes(actualTypeArguments, String.class);
+        assertValues(actualTypeArguments, String.class);
 
         actualTypeArguments = resolveActualTypeArguments(E.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        assertValues(actualTypeArguments, B.class);
 
         actualTypeArguments = resolveActualTypeArguments(StringToStringConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, String.class);
+        assertValues(actualTypeArguments, String.class, String.class);
 
         actualTypeArguments = resolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
+        assertValues(actualTypeArguments, String.class, Integer.class);
     }
 
     @Test
@@ -474,22 +481,22 @@ public class TypeUtilsTest {
     @Test
     public void testGetHierarchicalTypes() {
         List<Type> types = getHierarchicalTypes(A.class);
-        assertTypes(types, Object.class, Serializable.class);
+        assertValues(types, Object.class, Serializable.class);
 
         types = getHierarchicalTypes(B.class);
-        assertTypes(types, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
+        assertValues(types, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = getHierarchicalTypes(C.class);
-        assertTypes(types, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
+        assertValues(types, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = getHierarchicalTypes(D.class);
-        assertTypes(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
+        assertValues(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = getHierarchicalTypes(D.class);
-        assertTypes(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
+        assertValues(types, of(C.class, String.class), B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class, Serializable.class);
 
         types = getHierarchicalTypes(E.class);
-        assertTypes(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class);
+        assertValues(types, C.class, Serializable.class, B.class, RandomAccess.class, A.class, of(Comparable.class, B.class), Object.class);
     }
 
     @Test
@@ -630,7 +637,7 @@ public class TypeUtilsTest {
     @Test
     public void testFindHierarchicalTypes() {
         List<Type> types = findHierarchicalTypes(A.class, NON_OBJECT_TYPE_FILTER);
-        assertTypes(types, Serializable.class);
+        assertValues(types, Serializable.class);
 
         types = findHierarchicalTypes(E.class, WILDCARD_TYPE_FILTER);
         assertTrue(types.isEmpty());
@@ -744,32 +751,32 @@ public class TypeUtilsTest {
         List<Type> actualTypeArguments = null;
 
         actualTypeArguments = doResolveActualTypeArguments(StringIntegerToBoolean.class, BiFunction.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class, Boolean.class);
+        assertValues(actualTypeArguments, String.class, Integer.class, Boolean.class);
 
         actualTypeArguments = doResolveActualTypeArguments(StringBooleanToInteger.class, BiFunction.class);
-        assertTypes(actualTypeArguments, String.class, Boolean.class, Integer.class);
+        assertValues(actualTypeArguments, String.class, Boolean.class, Integer.class);
 
         actualTypeArguments = doResolveActualTypeArguments(StringToIntegerConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
+        assertValues(actualTypeArguments, String.class, Integer.class);
 
         actualTypeArguments = doResolveActualTypeArguments(B.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        assertValues(actualTypeArguments, B.class);
 
         actualTypeArguments = doResolveActualTypeArguments(C.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        assertValues(actualTypeArguments, B.class);
 
         actualTypeArguments = doResolveActualTypeArguments(D.class, C.class);
-        assertTypes(actualTypeArguments, String.class);
+        assertValues(actualTypeArguments, String.class);
 
         actualTypeArguments = doResolveActualTypeArguments(E.class, Comparable.class);
-        assertTypes(actualTypeArguments, B.class);
+        assertValues(actualTypeArguments, B.class);
 
         actualTypeArguments = doResolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
-        assertTypes(actualTypeArguments, String.class, Integer.class);
+        assertValues(actualTypeArguments, String.class, Integer.class);
 
 
         actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
-        assertTypes(actualTypeArguments, String.class, String.class);
+        assertValues(actualTypeArguments, String.class, String.class);
 
     }
 
@@ -1036,7 +1043,6 @@ public class TypeUtilsTest {
         assertTrue(types.contains(RandomAccess.class));
     }
 
-
     private void assertDGenericInterfaces(List<Type> types) {
         assertCGenericInterfaces(types);
     }
@@ -1044,73 +1050,6 @@ public class TypeUtilsTest {
     private void assertEGenericInterfaces(List<Type> types) {
         assertDGenericInterfaces(types);
     }
-
-    private void assertTypes(List<Type> types, Type... expectedTypes) {
-        assertTypes(types, expectedTypes.length, expectedTypes);
-    }
-
-    private void assertTypes(List<Type> types, int expectedSize, Type... expectedTypes) {
-        assertEquals(expectedSize, types.size());
-        assertEquals(newHashSet(expectedTypes), newHashSet(types));
-    }
-
-    private void assertType(Type expect, Type actual) {
-        assertEquals(asClass(expect), asClass(actual));
-    }
-}
-
-class A implements Serializable {
-}
-
-class B extends A implements Comparable<B> {
-    @Override
-    public int compareTo(B o) {
-        return 0;
-    }
-}
-
-class C<T> extends B implements RandomAccess {
-}
-
-class D extends C<String> {
-}
-
-class E extends C implements Serializable {
-}
-
-class MyHashMap<A, B extends Serializable, C> extends HashMap<A, B> implements Map<A, B> {
-
-}
-
-class StringIntegerHashMap extends HashMap<String, Integer> {
-
-}
-
-class StringIntegerBooleanHashMap extends MyHashMap<String, Integer, Boolean> {
-
-}
-
-interface BF3<T, U, R> extends BiFunction<T, U, R> {
-
-}
-
-interface StringBF2<U, R> extends BF3<String, U, R> {
-
-}
-
-interface StringIntegerF1<R> extends StringBF2<Integer, R> {
-
-}
-
-interface StringToIntegerF1<U> extends StringBF2<U, Integer> {
-
-}
-
-interface StringBooleanToInteger extends StringToIntegerF1<Boolean> {
-
-}
-
-interface StringIntegerToBoolean extends StringIntegerF1<Boolean> {
 
 }
 

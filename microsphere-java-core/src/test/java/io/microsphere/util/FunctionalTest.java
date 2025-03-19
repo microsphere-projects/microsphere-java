@@ -18,8 +18,10 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.Functional.of;
 import static io.microsphere.util.Functional.value;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * {@link Functional} Test
@@ -33,25 +35,43 @@ public class FunctionalTest {
     private ValueHolder<Object> valueHolder = new ValueHolder();
 
     @Test
-    public void test() {
+    public void testValueAndOn() {
 
         assertValue(value(1).on(v -> v > 0), 1);
-
-        assertValue(value(1).on(v -> v > 0).as(String::valueOf), "1");
 
         assertValue(value(1).on(v -> v < 0), null);
 
         assertValue(value(1).on(v -> v < 0).on(v -> v > 0), null);
 
+    }
+
+    @Test
+    public void testValueAndOnAndAs() {
+
         assertValue(value(1).on(v -> v < 0).as(String::valueOf), null);
 
         assertValue(value(1).on(v -> v < 0).as(String::valueOf).as(Integer::new), null);
+    }
 
+    @Test
+    public void testValueSupplier() {
+        assertValue(value(() -> 1).on(v -> v > 0), 1);
+    }
+
+    @Test
+    public void testOfWithNameAndValue() {
+        assertValue(of("test", 1).on(v -> v > 0).as(String::valueOf), "1");
+    }
+
+    @Test
+    public void testOfWithNameAndValueSupplier() {
+        assertValue(of("test", () -> 1).on(v -> v > 0).as(String::valueOf), "1");
     }
 
     private <T> void assertValue(Functional<T> functional, T expected) {
         functional.apply(valueHolder::setValue);
         assertEquals(expected, valueHolder.getValue());
+        assertNotNull(functional.toString());
         valueHolder.reset();
     }
 

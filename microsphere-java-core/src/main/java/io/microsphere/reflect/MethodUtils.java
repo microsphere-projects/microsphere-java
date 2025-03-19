@@ -39,6 +39,7 @@ import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -123,7 +124,99 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     /**
-     * Filter all {@link Method methods} of the target class by the specified {@link Predicate}
+     * Get all declared {@link Method methods} of the target class, excluding the inherited methods
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findDeclaredMethods(Class, Predicate...)
+     */
+    public static List<Method> getDeclaredMethods(Class<?> targetClass) {
+        return findDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all public {@link Method methods} of the target class, excluding the inherited methods.
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, Predicate...)
+     */
+    public static List<Method> getMethods(Class<?> targetClass) {
+        return findMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all declared {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findAllDeclaredMethods(Class, Predicate...)
+     */
+    public static List<Method> getAllDeclaredMethods(Class<?> targetClass) {
+        return findAllDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all public {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findAllMethods(Class, Predicate...)
+     */
+    public static List<Method> getAllMethods(Class<?> targetClass) {
+        return findAllMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Find all declared {@link Method methods} of the target class, excluding the inherited methods
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, false, false, methodsToFilter);
+    }
+
+    /**
+     * Find all public {@link Method methods} of the target class, excluding the inherited methods.
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, false, true, methodsToFilter);
+    }
+
+    /**
+     * Get all declared {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, true, false, methodsToFilter);
+    }
+
+    /**
+     * Get all public {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, true, true, methodsToFilter);
+    }
+
+    /**
+     * Find all {@link Method methods} of the target class by the specified {@link Predicate}
      *
      * @param targetClass           the target class
      * @param includeInheritedTypes include the inherited types, e,g. super classes or interfaces
@@ -131,8 +224,8 @@ public abstract class MethodUtils extends BaseUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    public static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
-                                             Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
+                                           Predicate<? super Method>... methodsToFilter) {
 
         if (targetClass == null || isPrimitive(targetClass)) {
             return emptyList();
@@ -164,54 +257,6 @@ public abstract class MethodUtils extends BaseUtils {
         }
 
         return unmodifiableList(allMethods);
-    }
-
-    /**
-     * Get all declared {@link Method methods} of the target class, excluding the inherited methods
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, false, false, methodsToFilter);
-    }
-
-    /**
-     * Get all public {@link Method methods} of the target class, excluding the inherited methods.
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, false, true, methodsToFilter);
-    }
-
-    /**
-     * Get all declared {@link Method methods} of the target class, including the inherited methods.
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, true, false, methodsToFilter);
-    }
-
-    /**
-     * Get all public {@link Method methods} of the target class, including the inherited methods.
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, true, true, methodsToFilter);
     }
 
     /**
@@ -513,7 +558,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return if found, the overrider <code>method</code>, or <code>null</code>
      */
     public static Method findOverriddenMethod(Method overrider, Class<?> targetClass) {
-        List<Method> matchedMethods = getDeclaredMethods(targetClass, method -> overrides(overrider, method));
+        List<Method> matchedMethods = findDeclaredMethods(targetClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
     }
 

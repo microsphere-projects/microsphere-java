@@ -20,6 +20,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
@@ -52,7 +53,6 @@ import static io.microsphere.net.URLUtils.resolveSubProtocols;
 import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
@@ -72,7 +72,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link URLUtils} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see URLUtilsTest
  * @since 1.0.0
  */
@@ -106,11 +105,10 @@ public class URLUtilsTest {
 
     @BeforeAll
     public static void beforeAll() throws Throwable {
-        ClassLoader classLoader = getDefaultClassLoader();
         userDirURL = get(USER_DIR).toUri().toURL();
-        classPathURL = getResource(classLoader, "/");
-        classFileURL = getClassResource(classLoader, StringUtils.class);
-        classArchiveEntryURL = getClassResource(classLoader, Nonnull.class);
+        classPathURL = getResource(TEST_CLASS_LOADER, "/");
+        classFileURL = getClassResource(TEST_CLASS_LOADER, StringUtils.class);
+        classArchiveEntryURL = getClassResource(TEST_CLASS_LOADER, Nonnull.class);
     }
 
     @AfterEach
@@ -130,8 +128,7 @@ public class URLUtilsTest {
 
     @Test
     public void testResolveArchiveEntryPath() {
-        ClassLoader classLoader = getDefaultClassLoader();
-        URL resourceURL = getClassResource(classLoader, Nonnull.class);
+        URL resourceURL = getClassResource(TEST_CLASS_LOADER, Nonnull.class);
         String expectedPath = "javax/annotation/Nonnull.class";
         String relativePath = resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
@@ -277,8 +274,7 @@ public class URLUtilsTest {
 
     @Test
     public void testIsDirectoryURL() throws Exception {
-        ClassLoader classLoader = getDefaultClassLoader();
-        URL resourceURL = getClassResource(classLoader, StringUtils.class);
+        URL resourceURL = getClassResource(TEST_CLASS_LOADER, StringUtils.class);
         assertFalse(isDirectoryURL(classFileURL));
 
         String externalForm = null;
@@ -286,10 +282,10 @@ public class URLUtilsTest {
         resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
 
-        resourceURL = getClassResource(classLoader, String.class);
+        resourceURL = getClassResource(TEST_CLASS_LOADER, String.class);
         assertFalse(isDirectoryURL(resourceURL));
 
-        resourceURL = getClassResource(classLoader, getClass());
+        resourceURL = getClassResource(TEST_CLASS_LOADER, getClass());
         assertFalse(isDirectoryURL(resourceURL));
 
         externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");

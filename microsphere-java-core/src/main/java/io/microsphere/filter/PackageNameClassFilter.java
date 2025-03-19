@@ -7,7 +7,6 @@ package io.microsphere.filter;
  * {@link PackageNameClassFilter}
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PackageNameClassFilter
  * @since 1.0.0
  */

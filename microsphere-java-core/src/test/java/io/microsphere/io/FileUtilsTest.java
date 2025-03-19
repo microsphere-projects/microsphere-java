@@ -33,9 +33,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class FileUtilsTest extends AbstractTestCase {
 
-    private final URL classFileResource = getClassResource(classLoader, FileUtilsTest.class);
+    private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);
 
-    private final URL packageResource = getResource(classLoader, "io.microsphere");
+    private final URL packageResource = getResource(TEST_CLASS_LOADER, "io.microsphere");
 
     private final File classFile = new File(classFileResource.getFile());
 

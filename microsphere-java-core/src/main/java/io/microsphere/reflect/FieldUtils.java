@@ -102,7 +102,7 @@ public abstract class FieldUtils extends BaseUtils {
      * @param predicates zero or more {@link Predicate}
      * @return null if not found
      */
-    public static Field findField(Class<?> klass, String fieldName, Predicate<Field>... predicates) {
+    public static Field findField(Class<?> klass, String fieldName, Predicate<? super Field>... predicates) {
         Field field = findField(klass, fieldName);
         return and(predicates).test(field) ? field : null;
     }
@@ -141,7 +141,7 @@ public abstract class FieldUtils extends BaseUtils {
         return setFieldValue(null, field, fieldValue);
     }
 
-    public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
+    public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
         Set<Field> allFields = new LinkedHashSet<>();
         addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
@@ -150,7 +150,7 @@ public abstract class FieldUtils extends BaseUtils {
         return filter(allFields, and(fieldFilters));
     }
 
-    public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<Field>... fieldFilters) {
+    public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
         Set<Field> allDeclaredFields = new LinkedHashSet<>();
         addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {

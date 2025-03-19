@@ -8,7 +8,6 @@ package io.microsphere.filter;
  *
  * @param <T> the type of Filtered object
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see Filter
  * @since 1.0.0
  */

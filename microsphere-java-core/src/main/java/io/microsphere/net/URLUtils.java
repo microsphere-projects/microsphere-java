@@ -4,10 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
-import io.microsphere.util.ClassPathUtils;
-import io.microsphere.util.jar.JarUtils;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -51,6 +48,8 @@ import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -60,6 +59,7 @@ import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -69,7 +69,6 @@ import static java.util.Collections.unmodifiableMap;
  * {@link URL} Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see URL
  * @see URLEncoder
  * @see URLDecoder
@@ -292,7 +291,7 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static File resolveArchiveDirectory(URL resourceURL) {
         String resourcePath = new File(resourceURL.getFile()).toString();
-        Set<String> classPaths = ClassPathUtils.getClassPaths();
+        Set<String> classPaths = getClassPaths();
         File archiveDirectory = null;
         for (String classPath : classPaths) {
             if (resourcePath.contains(classPath)) {
@@ -449,8 +448,8 @@ public abstract class URLUtils extends BaseUtils {
             String protocol = url.getProtocol();
             try {
                 if (JAR_PROTOCOL.equals(protocol)) {
-                    JarFile jarFile = JarUtils.toJarFile(url); // Test whether valid jar or not
-                    final String relativePath = JarUtils.resolveRelativePath(url);
+                    JarFile jarFile = toJarFile(url); // Test whether valid jar or not
+                    final String relativePath = resolveRelativePath(url);
                     if (EMPTY.equals(relativePath)) { // root directory in jar
                         isDirectory = true;
                     } else {
@@ -535,7 +534,7 @@ public abstract class URLUtils extends BaseUtils {
      * @return URI
      */
     public static String buildURI(String... paths) {
-        int length = ArrayUtils.length(paths);
+        int length = length(paths);
         if (length < 1) {
             return SLASH;
         }
@@ -892,7 +891,7 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
         String[] params = split(paramsString, separatorChar);
-        int paramsLen = ArrayUtils.length(params);
+        int paramsLen = length(params);
         if (paramsLen == 0) {
             return emptyMap();
         }
@@ -919,7 +918,7 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static String buildString(String name, String[] values, char separator, char joiner) {
-        int len = ArrayUtils.length(values);
+        int len = length(values);
 
         if (len == 0) {
             return null;

@@ -16,8 +16,7 @@
  */
 package io.microsphere.convert;
 
-import io.microsphere.util.ClassLoaderUtils;
-
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 
 /**
@@ -30,7 +29,7 @@ public class StringToClassConverter implements StringConverter<Class> {
 
     public static final StringToClassConverter INSTANCE = new StringToClassConverter();
 
-    private static final ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
+    private static final ClassLoader classLoader = getDefaultClassLoader();
 
     @Override
     public Class convert(String className) {
