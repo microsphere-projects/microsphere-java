@@ -8,7 +8,10 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import static io.microsphere.util.PropertyResourceBundleControl.newControl;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static java.lang.Thread.currentThread;
+import static java.util.Locale.getDefault;
 
 /**
  * {@link PropertyResourceBundle} Utility class
@@ -18,9 +21,6 @@ import static io.microsphere.util.SystemUtils.FILE_ENCODING;
  * @since 1.0.0
  */
 public abstract class PropertyResourceBundleUtils extends BaseUtils {
-
-    private PropertyResourceBundleUtils() {
-    }
 
     /**
      * {@link ResourceBundle#getBundle(String, Locale)} with {@link SystemUtils#FILE_ENCODING default file encoding}
@@ -51,7 +51,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName, String encoding) {
-        return getBundle(baseName, Locale.getDefault(), encoding);
+        return getBundle(baseName, getDefault(), encoding);
     }
 
     /**
@@ -68,7 +68,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName, Locale locale, String encoding) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = currentThread().getContextClassLoader();
         return getBundle(baseName, locale, classLoader, encoding);
     }
 
@@ -86,7 +86,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName, Locale locale, ClassLoader classLoader, String encoding) {
-        ResourceBundle.Control control = PropertyResourceBundleControl.newControl(encoding);
+        ResourceBundle.Control control = newControl(encoding);
         return ResourceBundle.getBundle(baseName, locale, classLoader, control);
     }
 
