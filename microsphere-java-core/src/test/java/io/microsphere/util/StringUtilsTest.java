@@ -187,6 +187,11 @@ public class StringUtilsTest {
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, TEST_EMPTY_STRING, 0));
 
+        assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, null, null));
+        assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, TEST_EMPTY_STRING, null));
+        assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, COMMA, null));
+        assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 0));
+
         assertEquals("a|b|c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR));
         assertEquals("a|b,c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 1));
     }
