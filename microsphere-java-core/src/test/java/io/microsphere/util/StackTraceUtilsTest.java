@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.util.StackTraceUtils.getCallerClassName;
 import static io.microsphere.util.StackTraceUtils.getCallerClassNameInGeneralJVM;
 import static io.microsphere.util.StackTraceUtils.getCallerClassNames;
-import static io.microsphere.util.Version.Operator.LT;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +38,7 @@ public class StackTraceUtilsTest {
 
     @Test
     public void testGetCallerClassNames() {
-        if (testCurrentJavaVersion(JAVA_VERSION_9, LT)) {
+        if (testCurrentJavaVersion("<", JAVA_VERSION_9)) {
             assertThrows(NullPointerException.class, () -> getCallerClassNames());
         } else {
             assertTrue(getCallerClassNames().contains(CALLER_CLASS_NAME));
