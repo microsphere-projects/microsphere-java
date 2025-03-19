@@ -47,37 +47,37 @@ public abstract class AbstractTestCase {
 
     public static final String TEST_ELEMENT = "test";
 
-    public static final Collection<?> NULL_COLLECTION = null;
+    public static final Collection<?> TEST_NULL_COLLECTION = null;
 
-    public static final List<?> NULL_LIST = null;
+    public static final List<?> TEST_NULL_LIST = null;
 
-    public static final Set<?> NULL_SET = null;
+    public static final Set<?> TEST_NULL_SET = null;
 
-    public static final Queue<?> NULL_QUEUE = null;
+    public static final Queue<?> TEST_NULL_QUEUE = null;
 
-    public static final Deque<?> NULL_DEQUE = null;
+    public static final Deque<?> TEST_NULL_DEQUE = null;
 
-    public static final Collection<?> EMPTY_COLLECTION = emptySet();
+    public static final Collection<?> TEST_EMPTY_COLLECTION = emptySet();
 
-    public static final List<?> EMPTY_LIST = emptyList();
+    public static final List<?> TEST_EMPTY_LIST = emptyList();
 
-    public static final Set<?> EMPTY_SET = emptySet();
+    public static final Set<?> TEST_EMPTY_SET = emptySet();
 
-    public static final Queue<?> EMPTY_QUEUE = emptyQueue();
+    public static final Queue<?> TEST_EMPTY_QUEUE = emptyQueue();
 
-    public static final Deque<?> EMPTY_DEQUE = emptyDeque();
+    public static final Deque<?> TEST_EMPTY_DEQUE = emptyDeque();
 
-    public static final List<?> SINGLETON_LIST = singletonList(TEST_ELEMENT);
+    public static final List<?> TEST_SINGLETON_LIST = singletonList(TEST_ELEMENT);
 
-    public static final Set<?> SINGLETON_SET = singleton(TEST_ELEMENT);
+    public static final Set<?> TEST_SINGLETON_SET = singleton(TEST_ELEMENT);
 
-    public static final Queue<?> SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
+    public static final Queue<?> TEST_SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
 
-    public static final Deque<?> SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
+    public static final Deque<?> TEST_SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
-    public static final File tempDir = new File(JAVA_IO_TMPDIR);
+    public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
-    protected final ClassLoader classLoader = getDefaultClassLoader();
+    public static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
 
     protected final Logger logger = getLogger(getClass());
 
@@ -130,7 +130,7 @@ public abstract class AbstractTestCase {
     }
 
     protected File newTempFile(String path) {
-        return new File(tempDir, path);
+        return new File(TEST_TEMP_DIR, path);
     }
 
     protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
