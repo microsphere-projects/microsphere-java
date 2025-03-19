@@ -69,7 +69,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
 
         Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
-            if (!isLoadedClass(classLoader, className)) {
+            if (!isLoadedClass(TEST_CLASS_LOADER, className)) {
                 location = getRuntimeClassLocation(className);
                 assertNull(location);
             }
