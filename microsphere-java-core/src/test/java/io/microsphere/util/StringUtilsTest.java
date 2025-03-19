@@ -7,6 +7,7 @@ import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
+import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
@@ -18,11 +19,13 @@ import static io.microsphere.util.StringUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static io.microsphere.util.StringUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.length;
+import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -179,11 +182,15 @@ public class StringUtilsTest {
 
     @Test
     public void testReplace() {
+        assertNull(replace(null, null, null));
+        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
+        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
+        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, TEST_EMPTY_STRING, 0));
+
+        assertEquals("a|b|c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR));
+        assertEquals("a|b,c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 1));
     }
 
-    @Test
-    public void testTestReplace() {
-    }
 
     @Test
     public void testSubstringBetween() {
