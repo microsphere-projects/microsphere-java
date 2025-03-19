@@ -22,6 +22,11 @@ import static io.microsphere.util.StringUtils.length;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
+import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.StringUtils.substringAfterLast;
+import static io.microsphere.util.StringUtils.substringBefore;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
+import static io.microsphere.util.StringUtils.substringBetween;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -193,31 +198,80 @@ public class StringUtilsTest {
         assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 0));
 
         assertEquals("a|b|c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR));
+        assertEquals("a|b|c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 100));
         assertEquals("a|b,c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 1));
     }
 
-
     @Test
     public void testSubstringBetween() {
-    }
+        assertNull(substringBetween(null, null));
+        assertNull(substringBetween(TEST_EMPTY_STRING, null));
+        assertNull(substringBetween(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
+        assertNull(substringBetween(TEST_CSV_STRING, "."));
+        assertNull(substringBetween(TEST_CSV_STRING, ",", "."));
 
-    @Test
-    public void testTestSubstringBetween() {
+        assertNull(substringBetween(TEST_CSV_STRING, "a"));
+        assertEquals("", substringBetween(TEST_CSV_STRING, "a", ","));
+        assertEquals(",", substringBetween(TEST_CSV_STRING, "a", "b"));
+        assertEquals(",b,", substringBetween(TEST_CSV_STRING, "a", "c"));
     }
 
     @Test
     public void testSubstringBefore() {
+        assertNull(substringBefore(null, null));
+        assertSame(TEST_EMPTY_STRING, substringBefore(TEST_EMPTY_STRING, null));
+        assertSame(TEST_CSV_STRING, substringBefore(TEST_CSV_STRING, null));
+        assertSame(TEST_EMPTY_STRING, substringBefore(TEST_CSV_STRING, TEST_EMPTY_STRING));
+
+        assertEquals("a", substringBefore(TEST_CSV_STRING, ","));
+        assertEquals("a,", substringBefore(TEST_CSV_STRING, "b"));
+        assertEquals("a,b", substringBefore(TEST_CSV_STRING, ",c"));
+        assertEquals("a,b,", substringBefore(TEST_CSV_STRING, "c"));
+        assertEquals("a,b,c", substringBefore(TEST_CSV_STRING, "1"));
     }
 
     @Test
     public void testSubstringAfter() {
+        assertNull(substringAfter(null, null));
+        assertSame(TEST_EMPTY_STRING, substringAfter(TEST_EMPTY_STRING, null));
+        assertSame(TEST_EMPTY_STRING, substringAfter(TEST_CSV_STRING, null));
+        assertSame(TEST_CSV_STRING, substringAfter(TEST_CSV_STRING, TEST_EMPTY_STRING));
+
+        assertEquals(",b,c", substringAfter(TEST_CSV_STRING, "a"));
+        assertEquals("b,c", substringAfter(TEST_CSV_STRING, ","));
+        assertEquals("b,c", substringAfter(TEST_CSV_STRING, "a,"));
+        assertEquals(",c", substringAfter(TEST_CSV_STRING, "a,b"));
+        assertEquals("c", substringAfter(TEST_CSV_STRING, "a,b,"));
+        assertEquals("", substringAfter(TEST_CSV_STRING, "a,b,c"));
+        assertEquals("", substringAfter(TEST_CSV_STRING, ",c"));
+        assertEquals("", substringAfter(TEST_CSV_STRING, "c"));
+        assertEquals("", substringAfter(TEST_CSV_STRING, "1"));
     }
 
     @Test
     public void testSubstringBeforeLast() {
+        assertNull(substringBeforeLast(null, null));
+        assertSame(TEST_EMPTY_STRING, substringBeforeLast(TEST_EMPTY_STRING, null));
+        assertSame(TEST_CSV_STRING, substringBeforeLast(TEST_CSV_STRING, null));
+        assertSame(TEST_CSV_STRING, substringBeforeLast(TEST_CSV_STRING, TEST_EMPTY_STRING));
+
+        assertEquals("a,b", substringBeforeLast(TEST_CSV_STRING, ","));
+        assertEquals("a,", substringBeforeLast(TEST_CSV_STRING, "b"));
+        assertEquals("a,b", substringBeforeLast(TEST_CSV_STRING, ",c"));
+        assertEquals("a,b,", substringBeforeLast(TEST_CSV_STRING, "c"));
+        assertEquals("", substringBeforeLast(TEST_CSV_STRING, "a"));
     }
 
     @Test
     public void testSubstringAfterLast() {
+        assertNull(substringAfterLast(null, null));
+        assertSame(TEST_EMPTY_STRING, substringAfterLast(TEST_EMPTY_STRING, null));
+        assertSame(TEST_EMPTY_STRING, substringAfterLast(TEST_CSV_STRING, null));
+        assertSame(TEST_EMPTY_STRING, substringAfterLast(TEST_CSV_STRING, TEST_EMPTY_STRING));
+
+        assertEquals(",b,c", substringAfterLast(TEST_CSV_STRING, "a"));
+        assertEquals(",c", substringAfterLast(TEST_CSV_STRING, "b"));
+        assertEquals("c", substringAfterLast(TEST_CSV_STRING, ","));
+        assertEquals("", substringAfterLast(TEST_CSV_STRING, "c"));
     }
 }
