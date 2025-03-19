@@ -45,9 +45,28 @@ public interface SymbolConstants {
     char EXCLAMATION_CHAR = '!';
 
     /**
-     * The exclamation char : '"'
+     * The single quote char : '\''
      */
-    char DOUBLE_QUOTATION_CHAR = '"';
+    char QUOTE_CHAR = '\'';
+
+    /**
+     * The double quote char : '"'
+     */
+    char DOUBLE_QUOTE_CHAR = '"';
+
+    /**
+     * The double quotes char : '\''
+     *
+     * @see #QUOTE_CHAR
+     */
+    char SINGLE_QUOTATION_CHAR = QUOTE_CHAR;
+
+    /**
+     * The double quotes char : '"'
+     *
+     * @see #DOUBLE_QUOTE_CHAR
+     */
+    char DOUBLE_QUOTATION_CHAR = DOUBLE_QUOTE_CHAR;
 
     /**
      * The dollar char : '$'
