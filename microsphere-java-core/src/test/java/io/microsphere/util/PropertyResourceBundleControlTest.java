@@ -35,7 +35,7 @@ public class PropertyResourceBundleControlTest {
 
     private static final String TEST_FORMAT = FORMAT_PROPERTIES.get(0);
 
-    private static final ClassLoader classLoader = getDefaultClassLoader();
+    private static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
 
     @Test
     public void testDefaultConstructor() {
@@ -93,6 +93,6 @@ public class PropertyResourceBundleControlTest {
     }
 
     private ResourceBundle newBundle(String baseName, boolean reload) throws IOException {
-        return DEFAULT_CONTROL.newBundle(baseName, SIMPLIFIED_CHINESE, TEST_FORMAT, classLoader, reload);
+        return DEFAULT_CONTROL.newBundle(baseName, SIMPLIFIED_CHINESE, TEST_FORMAT, TEST_CLASS_LOADER, reload);
     }
 }
