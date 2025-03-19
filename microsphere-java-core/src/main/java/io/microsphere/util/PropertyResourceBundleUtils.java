@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import static io.microsphere.util.PropertyResourceBundleControl.newControl;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static java.lang.System.getProperty;
 import static java.lang.Thread.currentThread;
 import static java.util.Locale.getDefault;
 
@@ -23,7 +24,17 @@ import static java.util.Locale.getDefault;
 public abstract class PropertyResourceBundleUtils extends BaseUtils {
 
     /**
-     * {@link ResourceBundle#getBundle(String, Locale)} with {@link SystemUtils#FILE_ENCODING default file encoding}
+     * The property name of encoding for {@link PropertyResourceBundle}
+     */
+    public static final String ENCODING_PROPERTY_NAME = "java.util.PropertyResourceBundle.encoding";
+
+    /**
+     * The default encoding for {@link PropertyResourceBundle}
+     */
+    public static final String DEFAULT_ENCODING = getProperty(ENCODING_PROPERTY_NAME, FILE_ENCODING);
+
+    /**
+     * {@link ResourceBundle#getBundle(String, Locale)} with {@link #DEFAULT_ENCODING default file encoding}
      * encoding and {@link Locale#getDefault() default Locale} under {@link Thread#getContextClassLoader() Thread
      * context ClassLoader}
      *
@@ -35,7 +46,7 @@ public abstract class PropertyResourceBundleUtils extends BaseUtils {
      *                                  returns null.) Note that validation of <code>control</code> is performed as needed.
      */
     public static ResourceBundle getBundle(String baseName) {
-        return getBundle(baseName, FILE_ENCODING);
+        return getBundle(baseName, DEFAULT_ENCODING);
     }
 
     /**
