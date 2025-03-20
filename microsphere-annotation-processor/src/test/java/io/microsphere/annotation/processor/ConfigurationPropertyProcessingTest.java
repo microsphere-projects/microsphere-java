@@ -52,5 +52,8 @@ public class ConfigurationPropertyProcessingTest extends AbstractAnnotationProce
         TypeElement type = getType(ManifestArtifactResolver.class);
         List<VariableElement> fields = getDeclaredFields(type);
         assertNotNull(fields);
+        for (VariableElement field : fields) {
+
+        }
     }
 }
