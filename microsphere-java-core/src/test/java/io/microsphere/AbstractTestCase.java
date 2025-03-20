@@ -25,7 +25,7 @@ import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.TypeUtils.asClass;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -77,7 +77,7 @@ public abstract class AbstractTestCase {
 
     public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
-    public static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
+    public static final ClassLoader TEST_CLASS_LOADER = getClassLoader(AbstractTestCase.class);
 
     protected final Logger logger = getLogger(getClass());
 
