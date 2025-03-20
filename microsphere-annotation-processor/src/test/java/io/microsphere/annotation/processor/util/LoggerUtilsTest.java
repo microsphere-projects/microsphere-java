@@ -18,6 +18,7 @@ package io.microsphere.annotation.processor.util;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.annotation.processor.util.LoggerUtils.LOGGER;
 import static io.microsphere.annotation.processor.util.LoggerUtils.info;
 import static io.microsphere.annotation.processor.util.LoggerUtils.warn;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -31,7 +32,7 @@ public class LoggerUtilsTest {
 
     @Test
     public void testLogger() {
-        assertNotNull(LoggerUtils.LOGGER);
+        assertNotNull(LOGGER);
     }
 
     @Test
