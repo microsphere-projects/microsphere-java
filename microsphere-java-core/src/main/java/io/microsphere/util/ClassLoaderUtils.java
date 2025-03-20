@@ -647,7 +647,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return urlClassPathHandle.removeURL(classLoader, url);
     }
 
-    public static URLClassLoader findURLClassLoader(ClassLoader classLoader) {
+    @Nullable
+    public static URLClassLoader findURLClassLoader(@Nullable ClassLoader classLoader) {
         if (classLoader == null) {
             return null;
         }
