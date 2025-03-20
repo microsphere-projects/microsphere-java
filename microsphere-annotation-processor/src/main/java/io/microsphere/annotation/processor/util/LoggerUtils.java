@@ -17,11 +17,9 @@
 package io.microsphere.annotation.processor.util;
 
 
-
-
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.lang.String.format;
 
 /**
@@ -31,7 +29,7 @@ import static java.lang.String.format;
  */
 public interface LoggerUtils {
 
-    Logger LOGGER = LoggerFactory.getLogger(LoggerUtils.class);
+    Logger LOGGER = getLogger(LoggerUtils.class);
 
     static void info(String format, Object... args) {
         if (LOGGER.isInfoEnabled()) {
