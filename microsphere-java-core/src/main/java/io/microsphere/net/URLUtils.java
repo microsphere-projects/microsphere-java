@@ -5,6 +5,7 @@ package io.microsphere.net;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
 import java.io.File;
@@ -86,7 +87,7 @@ public abstract class URLUtils extends BaseUtils {
     /**
      * The empty array of {@link URL}
      */
-    public static final URL[] EMPTY_URL_ARRAY = new URL[0];
+    public static final URL[] EMPTY_URL_ARRAY = ArrayUtils.EMPTY_URL_ARRAY;
 
     /**
      * The length of {@link #ARCHIVE_ENTRY_SEPARATOR_LENGTH}
