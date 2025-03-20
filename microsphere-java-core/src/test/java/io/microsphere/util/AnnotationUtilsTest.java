@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.annotation.Since;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +92,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class AnnotationUtilsTest {
+public class AnnotationUtilsTest extends AbstractTestCase {
 
     private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);
 
@@ -438,7 +438,7 @@ public class AnnotationUtilsTest {
     @Test
     public void testExistsOnNull() {
         assertFalse(exists((Annotation[]) null, DataAccess.class));
-        assertFalse(exists((Collection) null, DataAccess.class));
+        assertFalse(exists(TEST_NULL_COLLECTION, DataAccess.class));
         assertFalse(exists((Iterable) null, DataAccess.class));
         assertFalse(exists(annotationsOfA, null));
         assertFalse(exists(ofList(annotationsOfA), null));
