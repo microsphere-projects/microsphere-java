@@ -3,13 +3,13 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.classloading.URLClassPathHandle;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ReflectionUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.invoke.MethodHandle;
 import java.lang.management.ClassLoadingMXBean;
