@@ -18,7 +18,7 @@ package io.microsphere.collection;
 
 import io.microsphere.util.BaseUtils;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
