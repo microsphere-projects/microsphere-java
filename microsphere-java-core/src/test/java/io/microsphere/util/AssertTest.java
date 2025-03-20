@@ -109,9 +109,9 @@ public class AssertTest extends AbstractTestCase {
         assertNotEmpty(array, () -> "array");
         assertNotEmpty(array, (Supplier<String>) null);
 
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_OBJECT_ARRAY, "null"));
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_OBJECT_ARRAY, () -> "null"));
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_OBJECT_ARRAY, (Supplier<String>) null));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_NULL_OBJECT_ARRAY, "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_NULL_OBJECT_ARRAY, () -> "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_NULL_OBJECT_ARRAY, (Supplier<String>) null));
 
         Object[] emptyArray = {};
 
@@ -164,9 +164,9 @@ public class AssertTest extends AbstractTestCase {
         assertNoNullElements(array, (Supplier<String>) null);
 
 
-        assertNoNullElements(TEST_OBJECT_ARRAY, "null");
-        assertNoNullElements(TEST_OBJECT_ARRAY, () -> "null");
-        assertNoNullElements(TEST_OBJECT_ARRAY, (Supplier<String>) null);
+        assertNoNullElements(TEST_NULL_OBJECT_ARRAY, "null");
+        assertNoNullElements(TEST_NULL_OBJECT_ARRAY, () -> "null");
+        assertNoNullElements(TEST_NULL_OBJECT_ARRAY, (Supplier<String>) null);
 
         Object[] emptyArray = {};
 
