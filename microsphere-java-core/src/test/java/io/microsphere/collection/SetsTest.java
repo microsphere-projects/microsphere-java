@@ -74,7 +74,7 @@ public class SetsTest extends AbstractTestCase {
 
     @Test
     public void testOfSet() {
-        assertEquals(emptySet(), ofSet(TEST_OBJECT_ARRAY));
+        assertEquals(emptySet(), ofSet(TEST_NULL_OBJECT_ARRAY));
         assertEquals(of(1, 2, 3), ofSet(1, 2, 3));
     }
 }
