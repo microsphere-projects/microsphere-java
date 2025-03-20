@@ -4,7 +4,7 @@ package io.microsphere.io.scanner;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.filter.TrueFileFilter;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
