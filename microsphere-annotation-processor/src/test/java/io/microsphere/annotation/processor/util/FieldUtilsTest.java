@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static io.microsphere.annotation.processor.util.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.annotation.processor.util.FieldUtils.findDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.FieldUtils.getAllDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.getAllNonStaticFields;
@@ -81,13 +83,13 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getDeclaredFields((Element) null).isEmpty());
         assertTrue(getDeclaredFields((TypeMirror) null).isEmpty());
 
-        fields = getDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
+        fields = findDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
         assertEquals(1, fields.size());
         assertEquals("f", fields.get(0).getSimpleName().toString());
     }
 
     @Test
-    public void testFindAllDeclaredFields() {
+    public void testGetAllDeclaredFields() {
         TypeElement type = getType(Model.class);
 
         List<VariableElement> fields = getAllDeclaredFields(type);
@@ -97,7 +99,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getAllDeclaredFields((Element) null).isEmpty());
         assertTrue(getAllDeclaredFields((TypeMirror) null).isEmpty());
 
-        fields = getAllDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
+        fields = findAllDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
         assertEquals(1, fields.size());
         assertEquals("f", fields.get(0).getSimpleName().toString());
     }
