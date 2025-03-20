@@ -34,6 +34,11 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
+import static io.microsphere.annotation.processor.util.TypeUtils.isTypeElement;
+import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
@@ -61,34 +66,23 @@ public abstract class AnnotationUtils {
     }
 
     public static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, CharSequence annotationClassName) {
-        return getAnnotations(annotatedConstruct, annotation -> TypeUtils.isSameType(annotation.getAnnotationType(), annotationClassName));
+        return findAnnotations(annotatedConstruct, annotation -> isSameType(annotation.getAnnotationType(), annotationClassName));
     }
 
     public static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct) {
-        return getAnnotations(annotatedConstruct, EMPTY_PREDICATE_ARRAY);
-    }
-
-    public static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, Predicate<AnnotationMirror>... annotationFilters) {
-
-        AnnotatedConstruct actualAnnotatedConstruct = annotatedConstruct;
-
-        if (annotatedConstruct instanceof TypeMirror) {
-            actualAnnotatedConstruct = TypeUtils.ofTypeElement((TypeMirror) actualAnnotatedConstruct);
-        }
-
-        return actualAnnotatedConstruct == null ? emptyList() : filterAll((List<AnnotationMirror>) actualAnnotatedConstruct.getAnnotationMirrors(), annotationFilters);
+        return findAnnotations(annotatedConstruct, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<AnnotationMirror> getAllAnnotations(TypeMirror type) {
-        return getAllAnnotations(TypeUtils.ofTypeElement(type));
+        return getAllAnnotations(ofTypeElement(type));
     }
 
     public static List<AnnotationMirror> getAllAnnotations(Element element) {
-        return getAllAnnotations(element, EMPTY_PREDICATE_ARRAY);
+        return findAllAnnotations(element, EMPTY_PREDICATE_ARRAY);
     }
 
     public static List<AnnotationMirror> getAllAnnotations(TypeMirror type, Class<? extends Annotation> annotationClass) {
-        return getAllAnnotations(TypeUtils.ofTypeElement(type), annotationClass);
+        return getAllAnnotations(ofTypeElement(type), annotationClass);
     }
 
     public static List<AnnotationMirror> getAllAnnotations(Element element, Class<? extends Annotation> annotationClass) {
@@ -96,34 +90,45 @@ public abstract class AnnotationUtils {
     }
 
     public static List<AnnotationMirror> getAllAnnotations(TypeMirror type, CharSequence annotationClassName) {
-        return getAllAnnotations(TypeUtils.ofTypeElement(type), annotationClassName);
+        return getAllAnnotations(ofTypeElement(type), annotationClassName);
     }
 
     public static List<AnnotationMirror> getAllAnnotations(Element element, CharSequence annotationClassName) {
-        return getAllAnnotations(element, annotation -> TypeUtils.isSameType(annotation.getAnnotationType(), annotationClassName));
+        return findAllAnnotations(element, annotation -> isSameType(annotation.getAnnotationType(), annotationClassName));
     }
 
-    public static List<AnnotationMirror> getAllAnnotations(TypeMirror type, Predicate<AnnotationMirror>... annotationFilters) {
-        return getAllAnnotations(TypeUtils.ofTypeElement(type), annotationFilters);
+    public static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType) {
+        return findAllAnnotations(processingEnv, annotatedType, EMPTY_PREDICATE_ARRAY);
     }
 
-    public static List<AnnotationMirror> getAllAnnotations(Element element, Predicate<AnnotationMirror>... annotationFilters) {
+    public static List<AnnotationMirror> findAnnotations(AnnotatedConstruct annotatedConstruct, Predicate<? super AnnotationMirror>... annotationFilters) {
 
-        List<AnnotationMirror> allAnnotations = TypeUtils.isTypeElement(element) ? TypeUtils.getHierarchicalTypes(TypeUtils.ofTypeElement(element)).stream().map(AnnotationUtils::getAnnotations).flatMap(Collection::stream).collect(Collectors.toList()) : element == null ? emptyList() : (List<AnnotationMirror>) element.getAnnotationMirrors();
+        AnnotatedConstruct actualAnnotatedConstruct = annotatedConstruct;
+
+        if (annotatedConstruct instanceof TypeMirror) {
+            actualAnnotatedConstruct = ofTypeElement((TypeMirror) actualAnnotatedConstruct);
+        }
+
+        return actualAnnotatedConstruct == null ? emptyList() : filterAll((List<AnnotationMirror>) actualAnnotatedConstruct.getAnnotationMirrors(), annotationFilters);
+    }
+
+    public static List<AnnotationMirror> findAllAnnotations(TypeMirror type, Predicate<? super AnnotationMirror>... annotationFilters) {
+        return findAllAnnotations(ofTypeElement(type), annotationFilters);
+    }
+
+    public static List<AnnotationMirror> findAllAnnotations(Element element, Predicate<? super AnnotationMirror>... annotationFilters) {
+
+        List<AnnotationMirror> allAnnotations = isTypeElement(element) ? getHierarchicalTypes(ofTypeElement(element)).stream().map(AnnotationUtils::getAnnotations).flatMap(Collection::stream).collect(Collectors.toList()) : element == null ? emptyList() : (List<AnnotationMirror>) element.getAnnotationMirrors();
 
         return filterAll(allAnnotations, annotationFilters);
     }
 
-    public static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType) {
-        return getAllAnnotations(processingEnv, annotatedType, EMPTY_PREDICATE_ARRAY);
+    public static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType, Predicate<? super AnnotationMirror>... annotationFilters) {
+        return annotatedType == null ? emptyList() : findAllAnnotations(processingEnv, annotatedType.getTypeName(), annotationFilters);
     }
 
-    public static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType, Predicate<AnnotationMirror>... annotationFilters) {
-        return annotatedType == null ? emptyList() : getAllAnnotations(processingEnv, annotatedType.getTypeName(), annotationFilters);
-    }
-
-    public static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, CharSequence annotatedTypeName, Predicate<AnnotationMirror>... annotationFilters) {
-        return getAllAnnotations(TypeUtils.getType(processingEnv, annotatedTypeName), annotationFilters);
+    public static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, CharSequence annotatedTypeName, Predicate<? super AnnotationMirror>... annotationFilters) {
+        return findAllAnnotations(getType(processingEnv, annotatedTypeName), annotationFilters);
     }
 
     public static AnnotationMirror findAnnotation(TypeMirror type, Class<? extends Annotation> annotationClass) {
@@ -131,7 +136,7 @@ public abstract class AnnotationUtils {
     }
 
     public static AnnotationMirror findAnnotation(TypeMirror type, CharSequence annotationClassName) {
-        return findAnnotation(TypeUtils.ofTypeElement(type), annotationClassName);
+        return findAnnotation(ofTypeElement(type), annotationClassName);
     }
 
     public static AnnotationMirror findAnnotation(Element element, Class<? extends Annotation> annotationClass) {
@@ -139,7 +144,7 @@ public abstract class AnnotationUtils {
     }
 
     public static AnnotationMirror findAnnotation(Element element, CharSequence annotationClassName) {
-        return filterFirst(getAllAnnotations(element, annotation -> TypeUtils.isSameType(annotation.getAnnotationType(), annotationClassName)));
+        return filterFirst(findAllAnnotations(element, annotation -> isSameType(annotation.getAnnotationType(), annotationClassName)));
     }
 
     public static AnnotationMirror findMetaAnnotation(Element annotatedConstruct, CharSequence metaAnnotationClassName) {
