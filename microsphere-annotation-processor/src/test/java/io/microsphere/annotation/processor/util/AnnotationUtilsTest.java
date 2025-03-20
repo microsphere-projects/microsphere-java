@@ -121,12 +121,12 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotations() {
+    public void testFindAllAnnotations() {
 
         List<AnnotationMirror> annotations = getAllAnnotations(testType);
         assertEquals(3, annotations.size());
 
-        annotations = getAllAnnotations(testType.asType(), annotation -> true);
+        annotations = AnnotationUtils.findAllAnnotations(testType.asType(), annotation -> true);
         assertEquals(3, annotations.size());
 
         annotations = getAllAnnotations(processingEnv, TestServiceImpl.class);
@@ -141,12 +141,12 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getAllAnnotations((Element) null, (Class) null).isEmpty());
         assertTrue(getAllAnnotations((TypeMirror) null, (String) null).isEmpty());
         assertTrue(getAllAnnotations((ProcessingEnvironment) null, (Class) null).isEmpty());
-        assertTrue(getAllAnnotations((ProcessingEnvironment) null, (String) null).isEmpty());
+        assertTrue(AnnotationUtils.findAllAnnotations((ProcessingEnvironment) null, (String) null).isEmpty());
 
         assertTrue(getAllAnnotations((Element) null).isEmpty());
         assertTrue(getAllAnnotations((TypeMirror) null).isEmpty());
         assertTrue(getAllAnnotations(processingEnv, (Class) null).isEmpty());
-        assertTrue(getAllAnnotations(processingEnv, (String) null).isEmpty());
+        assertTrue(AnnotationUtils.findAllAnnotations(processingEnv, (String) null).isEmpty());
 
 
         assertTrue(getAllAnnotations(testType, (Class) null).isEmpty());
