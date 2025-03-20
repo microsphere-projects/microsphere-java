@@ -45,7 +45,6 @@ public class ConfigurationPropertyProcessingTest extends AbstractAnnotationProce
 
     @Override
     protected void beforeEach() {
-
     }
 
     @Test
