@@ -92,6 +92,9 @@ public abstract class CollectionUtils extends BaseUtils {
      * @return must be positive number
      */
     public static int size(Iterable<?> iterable) {
+        if (iterable == null) {
+            return 0;
+        }
         if (iterable instanceof Collection) {
             return size((Collection) iterable);
         }
