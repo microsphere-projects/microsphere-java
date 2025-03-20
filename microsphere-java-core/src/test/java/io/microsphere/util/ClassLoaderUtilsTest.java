@@ -61,8 +61,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class ClassLoaderUtilsTest extends AbstractTestCase {
 
-    private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
     private static final boolean isLessThanJava12 = CURRENT_JAVA_VERSION.isLessThan(JAVA_VERSION_12);
 
     @Test
@@ -70,13 +68,13 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
-        Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
+        Set<ClassLoader> classLoaders = getInheritableClassLoaders(TEST_CLASS_LOADER);
         for (ClassLoader classLoader : classLoaders) {
             log("ClassLoader : {}", classLoader);
             for (Field field : allFields) {
                 if (!Modifier.isStatic(field.getModifiers())) {
                     field.setAccessible(true);
-                    String message = String.format("Field name : %s , value : %s", field.getName(), field.get(classLoader));
+                    String message = String.format("Field name : %s , value : %s", field.getName(), field.get(TEST_CLASS_LOADER));
                     log(message);
                 }
             }
@@ -86,43 +84,43 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetClassResource() {
-        URL classResourceURL = getClassResource(classLoader, ClassLoaderUtilsTest.class);
+        URL classResourceURL = getClassResource(TEST_CLASS_LOADER, ClassLoaderUtilsTest.class);
         assertNotNull(classResourceURL);
         log(classResourceURL);
 
-        classResourceURL = getClassResource(classLoader, String.class.getName());
+        classResourceURL = getClassResource(TEST_CLASS_LOADER, String.class.getName());
         assertNotNull(classResourceURL);
         log(classResourceURL);
     }
 
     @Test
     public void testGetResource() {
-        URL resourceURL = getResource(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
+        URL resourceURL = getResource(TEST_CLASS_LOADER, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURL);
         log(resourceURL);
 
-        resourceURL = getResource(classLoader, "///java/lang/CharSequence.class");
+        resourceURL = getResource(TEST_CLASS_LOADER, "///java/lang/CharSequence.class");
         assertNotNull(resourceURL);
         log(resourceURL);
 
-        resourceURL = getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
+        resourceURL = getResource(TEST_CLASS_LOADER, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURL);
         log(resourceURL);
     }
 
     @Test
     public void testGetResources() throws IOException {
-        Set<URL> resourceURLs = getResources(classLoader, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
+        Set<URL> resourceURLs = getResources(TEST_CLASS_LOADER, ClassLoaderUtilsTest.class.getName() + CLASS_EXTENSION);
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         log(resourceURLs);
 
-        resourceURLs = getResources(classLoader, "///java/lang/CharSequence.class");
+        resourceURLs = getResources(TEST_CLASS_LOADER, "///java/lang/CharSequence.class");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         log(resourceURLs);
 
-        resourceURLs = getResources(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
+        resourceURLs = getResources(TEST_CLASS_LOADER, "//META-INF/services/io.microsphere.event.EventListener");
         assertNotNull(resourceURLs);
         assertEquals(1, resourceURLs.size());
         log(resourceURLs);
@@ -142,7 +140,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetInheritableClassLoaders() {
-        Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
+        Set<ClassLoader> classLoaders = getInheritableClassLoaders(TEST_CLASS_LOADER);
         assertNotNull(classLoaders);
         assertTrue(classLoaders.size() > 1);
         log(classLoaders);
@@ -151,7 +149,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testGetLoadedClasses() {
         if (isLessThanJava12) {
-            Set<Class<?>> classesSet = getLoadedClasses(classLoader);
+            Set<Class<?>> classesSet = getLoadedClasses(TEST_CLASS_LOADER);
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
 
@@ -166,7 +164,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testGetAllLoadedClasses() {
         if (isLessThanJava12) {
-            Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
+            Set<Class<?>> classesSet = getAllLoadedClasses(TEST_CLASS_LOADER);
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
 
@@ -181,7 +179,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testGetAllLoadedClassesMap() {
         if (isLessThanJava12) {
-            Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
+            Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(TEST_CLASS_LOADER);
             assertNotNull(allLoadedClassesMap);
             assertFalse(allLoadedClassesMap.isEmpty());
         }
@@ -193,33 +191,33 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
         Class<?> type = null;
         if (isLessThanJava12) {
-            for (Class<?> class_ : getAllLoadedClasses(classLoader)) {
-                type = findLoadedClass(classLoader, class_.getName());
+            for (Class<?> class_ : getAllLoadedClasses(TEST_CLASS_LOADER)) {
+                type = findLoadedClass(TEST_CLASS_LOADER, class_.getName());
                 assertEquals(class_, type);
             }
         }
 
-        type = findLoadedClass(classLoader, String.class.getName());
+        type = findLoadedClass(TEST_CLASS_LOADER, String.class.getName());
         assertEquals(String.class, type);
 
-        type = findLoadedClass(classLoader, Double.class.getName());
+        type = findLoadedClass(TEST_CLASS_LOADER, Double.class.getName());
         assertEquals(Double.class, type);
     }
 
     @Test
     public void testIsLoadedClass() {
-        assertTrue(isLoadedClass(classLoader, String.class));
-        assertTrue(isLoadedClass(classLoader, Double.class));
-        assertTrue(isLoadedClass(classLoader, Double.class.getName()));
+        assertTrue(isLoadedClass(TEST_CLASS_LOADER, String.class));
+        assertTrue(isLoadedClass(TEST_CLASS_LOADER, Double.class));
+        assertTrue(isLoadedClass(TEST_CLASS_LOADER, Double.class.getName()));
     }
 
 
     @Test
     public void testFindLoadedClassesInClassPath() {
         Double d = null;
-        Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPath(classLoader);
+        Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPath(TEST_CLASS_LOADER);
 
-        Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
+        Set<Class<?>> classesSet = getAllLoadedClasses(TEST_CLASS_LOADER);
 
         Set<Class<?>> remainingClasses = new LinkedHashSet<>(allLoadedClasses);
 
@@ -252,7 +250,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testFindLoadedClassesInClassPaths() {
-        Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPaths(classLoader, ClassPathUtils.getClassPaths());
+        Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPaths(TEST_CLASS_LOADER, ClassPathUtils.getClassPaths());
         assertFalse(allLoadedClasses.isEmpty());
     }
 
