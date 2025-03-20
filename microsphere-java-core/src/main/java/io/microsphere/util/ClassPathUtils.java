@@ -4,7 +4,8 @@
 package io.microsphere.util;
 
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
+
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.security.CodeSource;
