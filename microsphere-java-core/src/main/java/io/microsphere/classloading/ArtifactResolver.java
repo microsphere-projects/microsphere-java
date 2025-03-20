@@ -1,13 +1,16 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
+import static java.util.Collections.emptySet;
 
 /**
  * {@link Artifact} Resolver
@@ -24,8 +27,8 @@ public interface ArtifactResolver extends Prioritized {
      * @return the non-null read-only {@link Set}
      */
     @Nonnull
-    default Set<Artifact> resolve(Collection<URL> classPathURLs) {
-        return resolve(classPathURLs.toArray(EMPTY_URL_ARRAY));
+    default Set<Artifact> resolve(@Nullable Collection<URL> classPathURLs) {
+        return isEmpty(classPathURLs) ? emptySet() : resolve(classPathURLs.toArray(EMPTY_URL_ARRAY));
     }
 
     /**
@@ -35,5 +38,5 @@ public interface ArtifactResolver extends Prioritized {
      * @return the non-null read-only {@link Set}
      */
     @Nonnull
-    Set<Artifact> resolve(URL... classPathURLs);
+    Set<Artifact> resolve(@Nullable URL... classPathURLs);
 }
