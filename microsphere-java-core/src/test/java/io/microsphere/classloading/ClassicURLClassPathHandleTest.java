@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 import java.util.Set;
 
-import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
@@ -59,7 +58,6 @@ public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTes
 
     @Test
     public void test() {
-        ClassLoader classLoader = TEST_CLASS_LOADER;
         if (handle.supports()) {
             Set<URL> urls = findAllClassPathURLs(classLoader);
             for (URL url : urls) {
