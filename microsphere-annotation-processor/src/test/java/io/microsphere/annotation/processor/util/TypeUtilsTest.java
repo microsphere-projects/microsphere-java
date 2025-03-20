@@ -86,9 +86,9 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> classesToBeCompiled) {
-        classesToBeCompiled.add(ArrayTypeModel.class);
-        classesToBeCompiled.add(Color.class);
+    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
+        compiledClasses.add(ArrayTypeModel.class);
+        compiledClasses.add(Color.class);
     }
 
     @Override
