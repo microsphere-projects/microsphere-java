@@ -3,10 +3,10 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.BaseUtils;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
