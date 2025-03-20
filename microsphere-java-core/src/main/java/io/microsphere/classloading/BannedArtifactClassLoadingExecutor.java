@@ -1,5 +1,6 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.io.BufferedReader;
@@ -52,7 +53,7 @@ public class BannedArtifactClassLoadingExecutor {
         this(null);
     }
 
-    public BannedArtifactClassLoadingExecutor(ClassLoader classLoader) {
+    public BannedArtifactClassLoadingExecutor(@Nullable ClassLoader classLoader) {
         this.artifactDetector = new ArtifactDetector(classLoader);
         this.classLoader = this.artifactDetector.classLoader;
     }
