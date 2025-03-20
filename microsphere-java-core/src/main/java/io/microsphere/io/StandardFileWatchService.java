@@ -20,7 +20,7 @@ import io.microsphere.event.EventDispatcher;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
