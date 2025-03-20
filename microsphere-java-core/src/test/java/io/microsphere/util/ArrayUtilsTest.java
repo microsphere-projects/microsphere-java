@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
@@ -83,7 +84,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ArrayUtilsTest {
+public class ArrayUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ArrayUtilsTest.class);
 
@@ -195,7 +196,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testSizeOnNull() {
-        assertEquals(0, size(ofArray((Object[]) null)));
+        assertEquals(0, size(ofArray(TEST_OBJECT_ARRAY)));
     }
 
     @Test
@@ -349,7 +350,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testLengthOnNull() {
-        assertEquals(0, length(ofArray((Object[]) null)));
+        assertEquals(0, length(ofArray(TEST_OBJECT_ARRAY)));
     }
 
     @Test
@@ -507,7 +508,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testIsEmptyOnNull() {
-        assertTrue(isEmpty((Object[]) null));
+        assertTrue(isEmpty(TEST_OBJECT_ARRAY));
     }
 
     // Test isNotEmpty(...) methods
@@ -660,7 +661,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testIsNotEmptyOnNull() {
-        assertFalse(isNotEmpty((Object[]) null));
+        assertFalse(isNotEmpty(TEST_OBJECT_ARRAY));
     }
 
     // Test arrayEquals(...) methods;
@@ -842,7 +843,7 @@ public class ArrayUtilsTest {
 
     @Test
     public void testArrayEqualsOnNullObjectArray() {
-        assertTrue(arrayEquals((Object[]) null, (Object[]) null));
+        assertTrue(arrayEquals(TEST_OBJECT_ARRAY, TEST_OBJECT_ARRAY));
     }
 
     // Test asArray methods
