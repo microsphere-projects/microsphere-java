@@ -7,7 +7,7 @@ import io.microsphere.constants.PathConstants;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.jar.JarUtils;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashSet;
