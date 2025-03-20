@@ -16,9 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.ClassDataRepository;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
