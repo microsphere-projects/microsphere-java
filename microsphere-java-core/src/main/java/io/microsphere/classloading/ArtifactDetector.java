@@ -35,7 +35,7 @@ public class ArtifactDetector {
 
     private static final String JAVA_HOME_PATH = JAVA_HOME;
 
-    private final ClassLoader classLoader;
+    final ClassLoader classLoader;
 
     private final List<ArtifactResolver> artifactResolvers;
 
