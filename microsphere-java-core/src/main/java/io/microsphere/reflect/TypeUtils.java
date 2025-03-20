@@ -16,11 +16,11 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.ClassUtils;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
