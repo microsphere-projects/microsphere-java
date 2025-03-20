@@ -62,19 +62,19 @@ public interface FieldUtils {
         return findAllDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<VariableElement> findDeclaredFields(Element element, Predicate<VariableElement>... fieldFilters) {
+    static List<VariableElement> findDeclaredFields(Element element, Predicate<? super VariableElement>... fieldFilters) {
         return element == null ? emptyList() : findDeclaredFields(element.asType(), fieldFilters);
     }
 
-    static List<VariableElement> findDeclaredFields(TypeMirror type, Predicate<VariableElement>... fieldFilters) {
+    static List<VariableElement> findDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
         return filterAll(fieldsIn(getDeclaredMembers(type)), fieldFilters);
     }
 
-    static List<VariableElement> findAllDeclaredFields(Element element, Predicate<VariableElement>... fieldFilters) {
+    static List<VariableElement> findAllDeclaredFields(Element element, Predicate<? super VariableElement>... fieldFilters) {
         return element == null ? emptyList() : findAllDeclaredFields(element.asType(), fieldFilters);
     }
 
-    static List<VariableElement> findAllDeclaredFields(TypeMirror type, Predicate<VariableElement>... fieldFilters) {
+    static List<VariableElement> findAllDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
         return getHierarchicalTypes(type)
                 .stream()
                 .map(t -> findDeclaredFields(t, fieldFilters))
