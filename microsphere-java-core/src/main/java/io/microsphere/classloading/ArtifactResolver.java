@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
+import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
+
 /**
  * {@link Artifact} Resolver
  *
@@ -14,8 +16,6 @@ import java.util.Set;
  * @since 1.0.0
  */
 public interface ArtifactResolver extends Prioritized {
-
-    URL[] EMPTY_URLS = new URL[0];
 
     /**
      * Resolve the {@link Artifact artifacts}
@@ -25,7 +25,7 @@ public interface ArtifactResolver extends Prioritized {
      */
     @Nonnull
     default Set<Artifact> resolve(Collection<URL> classPathURLs) {
-        return resolve(classPathURLs.toArray(EMPTY_URLS));
+        return resolve(classPathURLs.toArray(EMPTY_URL_ARRAY));
     }
 
     /**
