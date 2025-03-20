@@ -49,6 +49,10 @@ public abstract class AbstractTestCase {
 
     public static final String TEST_ELEMENT = "test";
 
+    public static final String TEST_NULL_STRING = null;
+
+    public static final Object[] TEST_OBJECT_ARRAY = null;
+
     public static final String[] TEST_NULL_STRING_ARRAY = null;
 
     public static final Enumeration TEST_NULL_ENUMERATION = null;
