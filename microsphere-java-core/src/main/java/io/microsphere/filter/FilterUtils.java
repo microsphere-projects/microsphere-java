@@ -5,7 +5,7 @@ package io.microsphere.filter;
 
 import io.microsphere.util.BaseUtils;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
