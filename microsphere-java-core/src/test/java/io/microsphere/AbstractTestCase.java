@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -48,6 +50,10 @@ public abstract class AbstractTestCase {
     public static final String TEST_ELEMENT = "test";
 
     public static final String[] TEST_NULL_STRING_ARRAY = null;
+
+    public static final Enumeration TEST_NULL_ENUMERATION = null;
+
+    public static final Iterator TEST_NULL_ITERATOR = null;
 
     public static final Iterable TEST_NULL_ITERABLE = null;
 
