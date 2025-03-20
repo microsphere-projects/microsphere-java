@@ -1,10 +1,10 @@
 package io.microsphere.io.scanner;
 
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.filter.TrueFileFilter;
 
-import io.microsphere.annotation.Nonnull;
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
