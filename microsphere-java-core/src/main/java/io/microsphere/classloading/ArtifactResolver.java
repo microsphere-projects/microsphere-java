@@ -2,7 +2,7 @@ package io.microsphere.classloading;
 
 import io.microsphere.lang.Prioritized;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
