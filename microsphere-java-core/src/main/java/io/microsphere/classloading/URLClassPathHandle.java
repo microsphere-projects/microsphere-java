@@ -17,6 +17,7 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.net.URL;
@@ -49,7 +50,7 @@ public interface URLClassPathHandle extends Prioritized {
      * @return the non-null array of {@link URL URLs}
      */
     @Nonnull
-    default URL[] getURLs(ClassLoader classLoader) {
+    default URL[] getURLs(@Nullable ClassLoader classLoader) {
         URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
         if (urlClassLoader == null) {
             return EMPTY_URL_ARRAY;
@@ -64,7 +65,7 @@ public interface URLClassPathHandle extends Prioritized {
      * @param url         the Class-Path {@link URL}
      * @return if removed, return <code>true</code>, otherwise <code>false</code>
      */
-    boolean removeURL(ClassLoader classLoader, URL url);
+    boolean removeURL(@Nullable ClassLoader classLoader, @Nullable URL url);
 
     /**
      * Get the priority
