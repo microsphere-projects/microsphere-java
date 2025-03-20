@@ -38,8 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class ConfigurationPropertyProcessingTest extends AbstractAnnotationProcessingTest {
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> classesToBeCompiled) {
-        classesToBeCompiled.add(ManifestArtifactResolver.class);
+    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
+        compiledClasses.add(ManifestArtifactResolver.class);
     }
 
 
