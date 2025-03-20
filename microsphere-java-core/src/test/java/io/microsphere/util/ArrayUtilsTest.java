@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 
@@ -48,6 +49,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_PARAMETER_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ArrayUtils.combine;
@@ -108,6 +110,7 @@ public class ArrayUtilsTest {
         assertEmptyArray(EMPTY_DOUBLE_OBJECT_ARRAY, Double.class);
         assertEmptyArray(EMPTY_CLASS_ARRAY, Class.class);
         assertEmptyArray(EMPTY_STRING_ARRAY, String.class);
+        assertEmptyArray(EMPTY_URL_ARRAY, URL.class);
         assertEmptyArray(EMPTY_PARAMETER_ARRAY, Parameter.class);
         assertEmptyArray(EMPTY_ANNOTATION_ARRAY, Annotation.class);
     }
