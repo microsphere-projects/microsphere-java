@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Iterator
+ * @see EmptyIterable
  * @since 1.0.0
  */
 public class EmptyIterator<E> implements Iterator<E> {
