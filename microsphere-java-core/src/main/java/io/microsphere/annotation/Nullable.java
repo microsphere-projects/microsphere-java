@@ -17,10 +17,11 @@
 package io.microsphere.annotation;
 
 import javax.annotation.meta.TypeQualifierNickname;
-import javax.annotation.meta.When;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static javax.annotation.meta.When.MAYBE;
 
 /**
  * A common Microsphere annotation to declare that annotated elements can be {@code null} under
@@ -31,8 +32,8 @@ import java.lang.annotation.RetentionPolicy;
  * @since 1.0.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
-@javax.annotation.Nonnull(when = When.MAYBE)
+@Retention(RUNTIME)
+@javax.annotation.Nonnull(when = MAYBE)
 @TypeQualifierNickname
 public @interface Nullable {
 }
