@@ -33,13 +33,13 @@ public class CompilerInvocationInterceptor implements InvocationInterceptor {
     public void interceptTestMethod(Invocation<Void> invocation,
                                     ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        Set<Class<?>> classesToBeCompiled = new LinkedHashSet<>();
+        Set<Class<?>> compiledClasses = new LinkedHashSet<>();
         AbstractAnnotationProcessingTest abstractAnnotationProcessingTest = testInstanceHolder.get();
-        classesToBeCompiled.add(getClass());
-        abstractAnnotationProcessingTest.addCompiledClasses(classesToBeCompiled);
+        compiledClasses.add(getClass());
+        abstractAnnotationProcessingTest.addCompiledClasses(compiledClasses);
         Compiler compiler = new Compiler();
-        compiler.sourcePaths(classesToBeCompiled);
+        compiler.sourcePaths(compiledClasses);
         compiler.processors(new AnnotationProcessingTestProcessor(abstractAnnotationProcessingTest, invocation, invocationContext, extensionContext));
-        compiler.compile(classesToBeCompiled.toArray(new Class[0]));
+        compiler.compile(compiledClasses.toArray(new Class[0]));
     }
 }
