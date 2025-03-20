@@ -110,6 +110,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
     public void testSize() {
+        assertEquals(0, size(TEST_NULL_ITERABLE));
         assertEquals(0, size(TEST_NULL_COLLECTION));
         assertEquals(0, size(TEST_NULL_LIST));
         assertEquals(0, size(TEST_NULL_SET));
