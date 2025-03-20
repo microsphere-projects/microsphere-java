@@ -19,7 +19,7 @@ package io.microsphere.classloading;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collection;
