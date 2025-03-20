@@ -47,33 +47,37 @@ public abstract class AbstractTestCase {
 
     public static final String TEST_ELEMENT = "test";
 
-    public static final Collection<?> TEST_NULL_COLLECTION = null;
+    public static final String[] TEST_NULL_STRING_ARRAY = null;
 
-    public static final List<?> TEST_NULL_LIST = null;
+    public static final Iterable TEST_NULL_ITERABLE = null;
 
-    public static final Set<?> TEST_NULL_SET = null;
+    public static final Collection TEST_NULL_COLLECTION = null;
 
-    public static final Queue<?> TEST_NULL_QUEUE = null;
+    public static final List TEST_NULL_LIST = null;
 
-    public static final Deque<?> TEST_NULL_DEQUE = null;
+    public static final Set TEST_NULL_SET = null;
 
-    public static final Collection<?> TEST_EMPTY_COLLECTION = emptySet();
+    public static final Queue TEST_NULL_QUEUE = null;
 
-    public static final List<?> TEST_EMPTY_LIST = emptyList();
+    public static final Deque TEST_NULL_DEQUE = null;
 
-    public static final Set<?> TEST_EMPTY_SET = emptySet();
+    public static final Collection TEST_EMPTY_COLLECTION = emptySet();
 
-    public static final Queue<?> TEST_EMPTY_QUEUE = emptyQueue();
+    public static final List TEST_EMPTY_LIST = emptyList();
 
-    public static final Deque<?> TEST_EMPTY_DEQUE = emptyDeque();
+    public static final Set TEST_EMPTY_SET = emptySet();
 
-    public static final List<?> TEST_SINGLETON_LIST = singletonList(TEST_ELEMENT);
+    public static final Queue TEST_EMPTY_QUEUE = emptyQueue();
 
-    public static final Set<?> TEST_SINGLETON_SET = singleton(TEST_ELEMENT);
+    public static final Deque TEST_EMPTY_DEQUE = emptyDeque();
 
-    public static final Queue<?> TEST_SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
+    public static final List TEST_SINGLETON_LIST = singletonList(TEST_ELEMENT);
 
-    public static final Deque<?> TEST_SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
+    public static final Set TEST_SINGLETON_SET = singleton(TEST_ELEMENT);
+
+    public static final Queue TEST_SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
+
+    public static final Deque TEST_SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
     public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
