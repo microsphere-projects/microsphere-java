@@ -94,6 +94,9 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
 
     @Override
     public final boolean removeURL(ClassLoader classLoader, URL url) {
+        if (classLoader == null || url == null) {
+            return false;
+        }
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         Collection<URL> urls = getFieldValue(ucp, getUrlsField());
         Collection<URL> path = getFieldValue(ucp, getPathField());
