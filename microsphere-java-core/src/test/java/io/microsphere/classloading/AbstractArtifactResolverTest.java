@@ -27,10 +27,6 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
 
     private AbstractArtifactResolver artifactResolver;
 
-    private static final Set<URL> TEST_URLS = findAllClassPathURLs(TEST_CLASS_LOADER);
-
-    private static final URL[] TEST_URL_ARRAY = TEST_URLS.toArray(new URL[0]);
-
     @BeforeEach
     public void init() {
         this.artifactResolver = createArtifactResolver();
@@ -42,7 +38,8 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
 
     @Test
     public void testResolve() {
-        assertFalse(artifactResolver.resolve(TEST_URLS).isEmpty());
+        Set<URL> urls = findAllClassPathURLs(TEST_CLASS_LOADER);
+        assertFalse(artifactResolver.resolve(urls).isEmpty());
     }
 
     @Test
@@ -57,7 +54,9 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
 
     @Test
     public void testResolveWithURLArray() {
-        assertFalse(artifactResolver.resolve(TEST_URL_ARRAY).isEmpty());
+        Set<URL> urls = findAllClassPathURLs(TEST_CLASS_LOADER);
+        URL[] urlsArray = urls.toArray(EMPTY_URL_ARRAY);
+        assertFalse(artifactResolver.resolve(urlsArray).isEmpty());
     }
 
     @Test
