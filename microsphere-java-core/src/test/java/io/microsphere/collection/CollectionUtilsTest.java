@@ -25,17 +25,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.CollectionUtils.emptyIterable;
+import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.CollectionUtils.singletonIterable;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyEnumeration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -104,6 +108,16 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertFalse(iterator.hasNext());
         assertThrowable(iterator::next, NoSuchElementException.class);
         assertThrowable(iterator::remove, UnsupportedOperationException.class);
+    }
+
+    @Test
+    public void testEmptyIterator() {
+        assertSame(INSTANCE, emptyIterator());
+    }
+
+    @Test
+    public void testEmptyIterable() {
+        assertSame(EmptyIterable.INSTANCE, emptyIterable());
     }
 
     @Test
