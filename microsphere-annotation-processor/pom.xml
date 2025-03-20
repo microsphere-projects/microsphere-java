@@ -25,7 +25,7 @@
 
     <dependencies>
 
-        <!-- microsphere-->
+        <!-- Microsphere Java Core -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-java-core</artifactId>
