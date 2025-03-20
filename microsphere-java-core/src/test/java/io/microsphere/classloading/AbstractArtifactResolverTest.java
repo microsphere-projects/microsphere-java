@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
+import java.util.Collection;
 import java.util.Set;
 
 import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
@@ -50,6 +51,11 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
     }
 
     @Test
+    public void testResolveOnNullCollection() {
+        assertSame(emptySet(), artifactResolver.resolve((Collection) null));
+    }
+
+    @Test
     public void testResolveWithURLArray() {
         assertFalse(artifactResolver.resolve(TEST_URL_ARRAY).isEmpty());
     }
@@ -57,6 +63,11 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
     @Test
     public void testResolveWithURLArrayOnEmptyArray() {
         assertSame(emptySet(), artifactResolver.resolve(EMPTY_URL_ARRAY));
+    }
+
+    @Test
+    public void testResolveWithURLArrayOnNullArray() {
+        assertSame(emptySet(), artifactResolver.resolve((URL[]) null));
     }
 
     @Test
