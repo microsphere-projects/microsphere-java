@@ -55,7 +55,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> classesToBeCompiled) {
+    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
     }
 
     @Override
