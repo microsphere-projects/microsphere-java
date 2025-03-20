@@ -17,6 +17,7 @@
 package io.microsphere.beans;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -37,6 +38,7 @@ public class BeanProperty {
     @Nonnull
     private final String name;
 
+    @Nullable
     private Object value;
 
     @Nonnull
@@ -45,16 +47,18 @@ public class BeanProperty {
     @Nonnull
     private final PropertyDescriptor descriptor;
 
-    public BeanProperty(@Nonnull String name, Class<?> beanClass, PropertyDescriptor descriptor) {
+    public BeanProperty(@Nonnull String name, @Nonnull Class<?> beanClass, @Nonnull PropertyDescriptor descriptor) {
         this.name = name;
         this.beanClass = beanClass;
         this.descriptor = descriptor;
     }
 
+    @Nonnull
     public String getName() {
         return name;
     }
 
+    @Nullable
     public Object getValue() {
         return value;
     }
@@ -63,10 +67,12 @@ public class BeanProperty {
         this.value = value;
     }
 
+    @Nonnull
     public Class<?> getBeanClass() {
         return beanClass;
     }
 
+    @Nonnull
     public PropertyDescriptor getDescriptor() {
         return descriptor;
     }
@@ -110,6 +116,7 @@ public class BeanProperty {
      * @param bean         bean instance
      * @param propertyName the name of bean property
      * @return a {@link BeanProperty} instance
+     * @throws IllegalArgumentException if the bean or propertyName is null
      */
     public static BeanProperty of(@Nonnull Object bean, @Nonnull String propertyName) {
         assertNotNull(bean, "The 'bean' argument must not be null");
