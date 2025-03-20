@@ -119,57 +119,77 @@ public abstract class VersionUtils extends BaseUtils {
     public static final Version JAVA_VERSION_22 = ofVersion(22);
 
     /**
-     * Determine whether the current Java version matches the specified version
-     *
-     * @param operatorSymbol    the {@link Version.Operator}
-     * @param referencedVersion the {@link Version} to be referenced
-     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
-     * {@link #CURRENT_JAVA_VERSION current version} and <code>referencedVersion</code>
+     * The {@link Version} instance for Java 23
      */
-    public static boolean testCurrentJavaVersion(String operatorSymbol, Version referencedVersion) {
-        return testCurrentJavaVersion(of(operatorSymbol), referencedVersion);
+    public static final Version JAVA_VERSION_23 = ofVersion(23);
+
+    /**
+     * The {@link Version} instance for Java 24
+     */
+    public static final Version JAVA_VERSION_24 = ofVersion(24);
+
+    /**
+     * Determine whether {@link #CURRENT_JAVA_VERSION current Java version} matches the specified version
+     *
+     * @param operatorSymbol  the {@link Version.Operator}
+     * @param comparedVersion the {@link Version} to be compared
+     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     * {@link #CURRENT_JAVA_VERSION current Java version} and <code>comparedVersion</code>
+     */
+    public static boolean testCurrentJavaVersion(String operatorSymbol, Version comparedVersion) {
+        return testCurrentJavaVersion(of(operatorSymbol), comparedVersion);
     }
 
     /**
-     * Determine whether the current Java version matches the specified version
+     * Determine whether {@link #CURRENT_JAVA_VERSION current Java version} matches the specified version
      *
-     * @param versionOperator   the {@link Version.Operator}
-     * @param referencedVersion the {@link Version} to be referenced
+     * @param versionOperator the {@link Version.Operator}
+     * @param comparedVersion the {@link Version} to be compared
      * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
-     * {@link #CURRENT_JAVA_VERSION current version} and <code>referencedVersion</code>
+     * {@link #CURRENT_JAVA_VERSION current Java version} and <code>comparedVersion</code>
      */
-    public static boolean testCurrentJavaVersion(Version.Operator versionOperator, Version referencedVersion) {
-        return testVersion(CURRENT_JAVA_VERSION, versionOperator, referencedVersion);
+    public static boolean testCurrentJavaVersion(Version.Operator versionOperator, Version comparedVersion) {
+        return testVersion(CURRENT_JAVA_VERSION, versionOperator, comparedVersion);
     }
 
     /**
-     * Determine whether the base version matches the referenced version
+     * Determine whether the base version matches the compared version
      *
-     * @param baseVersion       the {@link Version} to be tested
-     * @param operatorSymbol    the  symbol of {@link Version.Operator}
-     * @param referencedVersion the {@link Version} to be referenced
+     * <pre>
+     * VersionUtils.testVersion("1.8", "=", "1.8.0") == true
+     * VersionUtils.testVersion("1.8", ">=", "1.7") == true
+     * VersionUtils.testVersion("1.8", "<=", "1.7") == false
+     * VersionUtils.testVersion("1.8", "<", "1.7") == false
+     * VersionUtils.testVersion("1.8", ">", "1.7") == true
+     * </pre>
+     *
+     * @param baseVersion     the {@link Version} to be tested
+     * @param operatorSymbol  the  symbol of {@link Version.Operator}
+     * @param comparedVersion the {@link Version} to be compared
      * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     * @throws IllegalArgumentException if the base version or the compared version can't be resolved
+     *                                  or the operator symbol is not supported, only supports "=", ">=", "<=", "<", ">"
      */
-    public static boolean testVersion(String baseVersion, String operatorSymbol, String referencedVersion) {
-        if (baseVersion == null || operatorSymbol == null || referencedVersion == null) {
+    public static boolean testVersion(String baseVersion, String operatorSymbol, String comparedVersion) {
+        if (baseVersion == null || operatorSymbol == null || comparedVersion == null) {
             return false;
         }
-        return testVersion(ofVersion(baseVersion), of(operatorSymbol), ofVersion(referencedVersion));
+        return testVersion(ofVersion(baseVersion), of(operatorSymbol), ofVersion(comparedVersion));
     }
 
     /**
-     * Determine whether the base version matches the referenced version
+     * Determine whether the base version matches the compared version
      *
-     * @param baseVersion       the {@link Version} to be tested
-     * @param versionOperator   the {@link Version.Operator}
-     * @param referencedVersion the {@link Version} to be referenced
+     * @param baseVersion     the {@link Version} to be tested
+     * @param versionOperator the {@link Version.Operator}
+     * @param comparedVersion the {@link Version} to be compared
      * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
      */
-    public static boolean testVersion(Version baseVersion, Version.Operator versionOperator, Version referencedVersion) {
-        if (baseVersion == null || versionOperator == null || referencedVersion == null) {
+    public static boolean testVersion(Version baseVersion, Version.Operator versionOperator, Version comparedVersion) {
+        if (baseVersion == null || versionOperator == null || comparedVersion == null) {
             return false;
         }
-        return versionOperator.test(baseVersion, referencedVersion);
+        return versionOperator.test(baseVersion, comparedVersion);
     }
 
     static String currentJavaMajorVersion() {
