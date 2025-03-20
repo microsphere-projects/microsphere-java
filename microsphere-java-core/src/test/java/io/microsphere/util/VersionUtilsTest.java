@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.StringUtils.substringAfter;
@@ -55,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see VersionUtils
  * @since 1.0.0
  */
-public class VersionUtilsTest {
+public class VersionUtilsTest extends AbstractTestCase {
 
     private static final String TEST_VERSION_STRING_1_1_0 = "1.1.0";
 
@@ -132,7 +133,7 @@ public class VersionUtilsTest {
 
     @Test
     public void testTestVersionWithStringArgsOnNull() {
-        assertFalse(testVersion((String) null, null, null));
+        assertFalse(testVersion(TEST_NULL_STRING, null, null));
         assertFalse(testVersion(TEST_VERSION_STRING_1_2_3, null, null));
         assertFalse(testVersion(TEST_VERSION_STRING_1_2_3, TEST_OPERATOR_STRING_GREATER_THAN, null));
     }
