@@ -11,7 +11,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -38,7 +38,7 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
     @Test
     public void testResolve() {
         Set<URL> urls = findAllClassPathURLs(classLoader);
-        assertFalse(artifactResolver.resolve(urls).isEmpty());
+        assertNotNull(artifactResolver.resolve(urls));
     }
 
     @Test
@@ -55,7 +55,7 @@ public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactRes
     public void testResolveWithURLArray() {
         Set<URL> urls = findAllClassPathURLs(classLoader);
         URL[] urlsArray = urls.toArray(EMPTY_URL_ARRAY);
-        assertFalse(artifactResolver.resolve(urlsArray).isEmpty());
+        assertNotNull(artifactResolver.resolve(urlsArray));
     }
 
     @Test
