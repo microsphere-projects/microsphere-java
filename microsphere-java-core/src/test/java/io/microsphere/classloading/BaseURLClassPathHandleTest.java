@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
-import static java.lang.Thread.currentThread;
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -50,7 +50,7 @@ public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
 
     @Test
     public void test() {
-        ClassLoader classLoader = currentThread().getContextClassLoader();
+        ClassLoader classLoader = TEST_CLASS_LOADER;
         if (handle.supports()) {
             URL[] urls = handle.getURLs(classLoader);
             for (URL url : urls) {
