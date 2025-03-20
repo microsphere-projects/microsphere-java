@@ -16,7 +16,7 @@
  */
 package io.microsphere.beans;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Objects;
