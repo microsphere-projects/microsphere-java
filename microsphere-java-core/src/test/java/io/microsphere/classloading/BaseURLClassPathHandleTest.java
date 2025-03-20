@@ -23,6 +23,10 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 
 import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
+import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
+import static io.microsphere.net.URLUtils.ofURL;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -60,5 +64,20 @@ public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
                 }
             }
         }
+    }
+
+    @Test
+    public void testGetURLsOnNullClassLoader() {
+        assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
+    }
+
+    @Test
+    public void testRemoveURLOnNullClassLoader() {
+        assertFalse(handle.removeURL(null, ofURL("file://a.jar")));
+    }
+
+    @Test
+    public void testRemoveURLOnNullURL() {
+        assertFalse(handle.removeURL(TEST_CLASS_LOADER, null));
     }
 }
