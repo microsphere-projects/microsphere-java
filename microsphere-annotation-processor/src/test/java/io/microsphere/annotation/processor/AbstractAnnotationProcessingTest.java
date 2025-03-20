@@ -25,7 +25,6 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -46,7 +45,7 @@ public abstract class AbstractAnnotationProcessingTest {
     protected Types types;
 
     @BeforeEach
-    public final void init() throws IOException {
+    public final void init() {
         testInstanceHolder.set(this);
     }
 
@@ -55,7 +54,7 @@ public abstract class AbstractAnnotationProcessingTest {
         testInstanceHolder.remove();
     }
 
-    protected abstract void addCompiledClasses(Set<Class<?>> classesToBeCompiled);
+    protected abstract void addCompiledClasses(Set<Class<?>> compiledClasses);
 
     protected abstract void beforeEach();
 
