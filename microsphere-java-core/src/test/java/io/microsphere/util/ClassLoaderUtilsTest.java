@@ -16,14 +16,20 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
 import java.util.Comparator;
+import java.util.EventListener;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClasses;
@@ -74,8 +80,18 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     private static final boolean verbose = isVerbose();
 
-    @javax.annotation.Nonnull
     private static final Class<?> currentClass = ClassLoaderUtilsTest.class;
+
+    private static final List<Class<?>> testClasses = ofList(currentClass, Nonnull.class, CharSequence.class, EventListener.class);
+
+    private static final Map<Class<?>, String> testClassNamesMap = toFixedMap(testClasses, type -> ofEntry(type, type.getName()));
+
+    private static final String[] testResources = ofArray(
+            currentClass.getName() + CLASS_EXTENSION,
+            "javax.annotation.Nonnull.class",
+            "/java/lang/CharSequence.class",
+            "///META-INF//services/io.microsphere.event.EventListener"
+    );
 
     @AfterAll
     public static void afterAll() {
@@ -135,6 +151,18 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    public void testClassLoadingMXBean() {
+        ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
+        assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), getTotalLoadedClassCount());
+        assertEquals(classLoadingMXBean.getLoadedClassCount(), getLoadedClassCount());
+        assertEquals(classLoadingMXBean.getUnloadedClassCount(), getUnloadedClassCount());
+        assertEquals(classLoadingMXBean.isVerbose(), isVerbose());
+
+        setVerbose(true);
+        assertTrue(isVerbose());
+    }
+
+    @Test
     public void testGetDefaultClassLoader() {
         Thread currentThread = currentThread();
         ClassLoader classLoader = currentThread.getContextClassLoader();
@@ -147,17 +175,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             // recovery
             currentThread.setContextClassLoader(classLoader);
         }
-    }
-
-    @Test
-    public void testGetClassResource() {
-        URL classResourceURL = getClassResource(classLoader, currentClass);
-        assertNotNull(classResourceURL);
-        log(classResourceURL);
-
-        classResourceURL = getClassResource(classLoader, String.class.getName());
-        assertNotNull(classResourceURL);
-        log(classResourceURL);
     }
 
     @Test
@@ -221,18 +238,23 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsLoadedClassOnClass() {
-        assertTrue(isLoadedClass(classLoader, currentClass));
-        assertTrue(isLoadedClass(classLoader, javax.annotation.Nonnull.class));
-        assertTrue(isLoadedClass(classLoader, String.class));
+        assertIsLoadedClass(classLoader, false);
     }
 
     @Test
     public void testIsLoadedClassOnClassName() {
-        assertTrue(isLoadedClass(classLoader, "java.lang.String"));
-        assertTrue(isLoadedClass(classLoader, "javax.annotation.Nonnull"));
-        assertTrue(isLoadedClass(classLoader, currentClass.getName()));
+        assertIsLoadedClass(classLoader, true);
     }
 
+    @Test
+    public void testIsLoadedClassOnNull() {
+        assertIsLoadedClass(null, true);
+        assertIsLoadedClass(null, false);
+    }
+
+    private void assertIsLoadedClass(ClassLoader classLoader, boolean testClassName) {
+        testClassNamesMap.forEach((type, name) -> assertTrue(testClassName ? isLoadedClass(classLoader, name) : isLoadedClass(classLoader, type)));
+    }
 
     @Test
     public void testFindLoadedClass() {
@@ -253,9 +275,7 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadClass() {
-        assertLoadClass(currentClass);
-        assertLoadClass(Nonnull.class);
-        assertLoadClass(String.class);
+        assertLoadClass(classLoader);
     }
 
     @Test
@@ -265,28 +285,21 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadClassOnNull() {
-        assertLoadClass(null, currentClass);
-        assertLoadClass(null, Nonnull.class);
-        assertLoadClass(null, String.class);
+        assertLoadClass(null);
     }
 
     @Test
     public void testLoadClassWithCached() {
-        assertLoadClass(classLoader, currentClass, true);
-        assertLoadClass(classLoader, Nonnull.class, false);
-        assertLoadClass(classLoader, String.class, true);
+        assertLoadClass(classLoader, false);
+        assertLoadClass(classLoader, true);
     }
 
-    private void assertLoadClass(Class<?> type) {
-        assertLoadClass(classLoader, type);
+    private void assertLoadClass(ClassLoader classLoader) {
+        testClassNamesMap.forEach((type, name) -> assertSame(type, loadClass(classLoader, name)));
     }
 
-    private void assertLoadClass(ClassLoader classLoader, Class<?> type) {
-        assertLoadClass(classLoader, type, false);
-    }
-
-    private void assertLoadClass(ClassLoader classLoader, Class<?> type, boolean cached) {
-        assertSame(type, loadClass(classLoader, type.getName(), cached));
+    private void assertLoadClass(ClassLoader classLoader, boolean cached) {
+        testClassNamesMap.forEach((type, name) -> assertSame(type, loadClass(classLoader, name, cached)));
     }
 
     @Test
@@ -300,52 +313,44 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     private void assertGetResources(ClassLoader classLoader) throws IOException {
-        Set<URL> resourceURLs = getResources(classLoader, currentClass.getName() + CLASS_EXTENSION);
-        assertNotNull(resourceURLs);
-        assertEquals(1, resourceURLs.size());
-        log(resourceURLs);
-
-        resourceURLs = getResources(classLoader, "javax.annotation.Nonnull.class");
-        assertNotNull(resourceURLs);
-        assertEquals(1, resourceURLs.size());
-        log(resourceURLs);
-
-        resourceURLs = getResources(classLoader, "/java/lang/CharSequence.class");
-        assertNotNull(resourceURLs);
-        assertEquals(1, resourceURLs.size());
-        log(resourceURLs);
-
-        resourceURLs = getResources(classLoader, "///META-INF//services/io.microsphere.event.EventListener");
-        assertNotNull(resourceURLs);
-        assertEquals(1, resourceURLs.size());
-        log(resourceURLs);
+        for (String testResource : testResources) {
+            Set<URL> resourceURLs = getResources(classLoader, testResource);
+            assertNotNull(resourceURLs);
+            assertEquals(1, resourceURLs.size());
+            log(resourceURLs);
+        }
     }
 
     @Test
     public void testGetResource() {
-        URL resourceURL = getResource(classLoader, currentClass.getName() + CLASS_EXTENSION);
-        assertNotNull(resourceURL);
-        log(resourceURL);
-
-        resourceURL = getResource(classLoader, "///java/lang/CharSequence.class");
-        assertNotNull(resourceURL);
-        log(resourceURL);
-
-        resourceURL = getResource(classLoader, "//META-INF/services/io.microsphere.event.EventListener");
-        assertNotNull(resourceURL);
-        log(resourceURL);
+        assertGetResource(classLoader);
     }
 
     @Test
-    public void testClassLoadingMXBean() {
-        ClassLoadingMXBean classLoadingMXBean = ClassLoaderUtils.classLoadingMXBean;
-        assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), getTotalLoadedClassCount());
-        assertEquals(classLoadingMXBean.getLoadedClassCount(), getLoadedClassCount());
-        assertEquals(classLoadingMXBean.getUnloadedClassCount(), getUnloadedClassCount());
-        assertEquals(classLoadingMXBean.isVerbose(), isVerbose());
+    public void testGetResourceOnNullClassLoader() {
+        assertGetResource(null);
+    }
 
-        ClassLoaderUtils.setVerbose(true);
-        assertTrue(isVerbose());
+    private void assertGetResource(ClassLoader classLoader) {
+        for (String testResource : testResources) {
+            URL resourceURL = getResource(classLoader, testResource);
+            assertNotNull(resourceURL);
+            log(resourceURL);
+        }
+    }
+
+    @Test
+    public void testGetClassResource() {
+        assertGetClassResource(this.classLoader);
+    }
+
+    @Test
+    public void testGetClassResourceOnNullClassLoader() {
+        assertGetClassResource(null);
+    }
+
+    private void assertGetClassResource(ClassLoader classLoader) {
+        testClasses.forEach(type -> assertNotNull(getClassResource(classLoader, type)));
     }
 
     @Test
@@ -357,17 +362,11 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetLoadedClasses() {
+    public void testGetAllLoadedClassesMap() {
         if (isLessThanJava12) {
-            Set<Class<?>> classesSet = getLoadedClasses(classLoader);
-            assertNotNull(classesSet);
-            assertFalse(classesSet.isEmpty());
-
-
-            classesSet = getLoadedClasses(getSystemClassLoader());
-            assertNotNull(classesSet);
-            assertFalse(classesSet.isEmpty());
-            log(classesSet);
+            Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
+            assertNotNull(allLoadedClassesMap);
+            assertFalse(allLoadedClassesMap.isEmpty());
         }
     }
 
@@ -378,7 +377,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
 
-
             classesSet = getAllLoadedClasses(getSystemClassLoader());
             assertNotNull(classesSet);
             assertFalse(classesSet.isEmpty());
@@ -387,11 +385,16 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllLoadedClassesMap() {
+    public void testGetLoadedClasses() {
         if (isLessThanJava12) {
-            Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
-            assertNotNull(allLoadedClassesMap);
-            assertFalse(allLoadedClassesMap.isEmpty());
+            Set<Class<?>> classesSet = getLoadedClasses(classLoader);
+            assertNotNull(classesSet);
+            assertFalse(classesSet.isEmpty());
+
+            classesSet = getLoadedClasses(getSystemClassLoader());
+            assertNotNull(classesSet);
+            assertFalse(classesSet.isEmpty());
+            log(classesSet);
         }
     }
 
