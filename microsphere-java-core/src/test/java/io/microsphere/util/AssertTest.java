@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -46,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see Assert
  * @since 1.0.0
  */
-public class AssertTest {
+public class AssertTest extends AbstractTestCase {
 
     @Test
     public void testAssertTrue() {
@@ -82,10 +83,10 @@ public class AssertTest {
     public void testAssertNotEmpty() {
         assertNotEmpty("abc", "abc");
         assertNotEmpty("abc", () -> "abc");
-        assertNotEmpty("abc", (String) null);
+        assertNotEmpty("abc", TEST_NULL_STRING);
         assertNotEmpty("abc", (Supplier<String>) null);
 
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty((String) null, "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_NULL_STRING, "null"));
         assertThrows(IllegalArgumentException.class, () -> assertNotEmpty("", () -> "empty"));
     }
 
@@ -93,10 +94,10 @@ public class AssertTest {
     public void testAssertNotBlank() {
         assertNotBlank("abc", "abc");
         assertNotBlank("abc", () -> "abc");
-        assertNotBlank("abc", (String) null);
+        assertNotBlank("abc", TEST_NULL_STRING);
         assertNotBlank("abc", (Supplier<String>) null);
 
-        assertThrows(IllegalArgumentException.class, () -> assertNotBlank((String) null, "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotBlank(TEST_NULL_STRING, "null"));
         assertThrows(IllegalArgumentException.class, () -> assertNotBlank("", () -> "empty"));
         assertThrows(IllegalArgumentException.class, () -> assertNotBlank(" ", () -> "blank"));
     }
@@ -108,9 +109,9 @@ public class AssertTest {
         assertNotEmpty(array, () -> "array");
         assertNotEmpty(array, (Supplier<String>) null);
 
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty((Object[]) null, "null"));
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty((Object[]) null, () -> "null"));
-        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty((Object[]) null, (Supplier<String>) null));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_OBJECT_ARRAY, "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_OBJECT_ARRAY, () -> "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotEmpty(TEST_OBJECT_ARRAY, (Supplier<String>) null));
 
         Object[] emptyArray = {};
 
@@ -163,9 +164,9 @@ public class AssertTest {
         assertNoNullElements(array, (Supplier<String>) null);
 
 
-        assertNoNullElements((Object[]) null, "null");
-        assertNoNullElements((Object[]) null, () -> "null");
-        assertNoNullElements((Object[]) null, (Supplier<String>) null);
+        assertNoNullElements(TEST_OBJECT_ARRAY, "null");
+        assertNoNullElements(TEST_OBJECT_ARRAY, () -> "null");
+        assertNoNullElements(TEST_OBJECT_ARRAY, (Supplier<String>) null);
 
         Object[] emptyArray = {};
 
