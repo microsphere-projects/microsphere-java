@@ -15,12 +15,11 @@ import java.util.stream.Collectors;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static java.lang.System.getProperty;
+import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -34,7 +33,7 @@ public class ArtifactDetector {
 
     private static final Logger logger = getLogger(ArtifactDetector.class);
 
-    private static final String JAVA_HOME_PATH = normalizePath(getProperty("java.home"));
+    private static final String JAVA_HOME_PATH = JAVA_HOME;
 
     private final ClassLoader classLoader;
 
