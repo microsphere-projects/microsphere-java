@@ -79,6 +79,8 @@ public abstract class AbstractTestCase {
 
     public static final ClassLoader TEST_CLASS_LOADER = getClassLoader(AbstractTestCase.class);
 
+    protected final ClassLoader classLoader = getClassLoader(getClass());
+
     protected final Logger logger = getLogger(getClass());
 
     public void log(Object object) {
