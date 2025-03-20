@@ -45,6 +45,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Logback -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
         <!-- JAX-RS API -->
         <dependency>
             <groupId>javax.ws.rs</groupId>
