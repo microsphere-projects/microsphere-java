@@ -196,7 +196,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void testSizeOnNull() {
-        assertEquals(0, size(ofArray(TEST_OBJECT_ARRAY)));
+        assertEquals(0, size(ofArray(TEST_NULL_OBJECT_ARRAY)));
     }
 
     @Test
@@ -350,7 +350,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLengthOnNull() {
-        assertEquals(0, length(ofArray(TEST_OBJECT_ARRAY)));
+        assertEquals(0, length(ofArray(TEST_NULL_OBJECT_ARRAY)));
     }
 
     @Test
@@ -508,7 +508,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsEmptyOnNull() {
-        assertTrue(isEmpty(TEST_OBJECT_ARRAY));
+        assertTrue(isEmpty(TEST_NULL_OBJECT_ARRAY));
     }
 
     // Test isNotEmpty(...) methods
@@ -661,7 +661,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsNotEmptyOnNull() {
-        assertFalse(isNotEmpty(TEST_OBJECT_ARRAY));
+        assertFalse(isNotEmpty(TEST_NULL_OBJECT_ARRAY));
     }
 
     // Test arrayEquals(...) methods;
@@ -843,7 +843,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void testArrayEqualsOnNullObjectArray() {
-        assertTrue(arrayEquals(TEST_OBJECT_ARRAY, TEST_OBJECT_ARRAY));
+        assertTrue(arrayEquals(TEST_NULL_OBJECT_ARRAY, TEST_NULL_OBJECT_ARRAY));
     }
 
     // Test asArray methods
