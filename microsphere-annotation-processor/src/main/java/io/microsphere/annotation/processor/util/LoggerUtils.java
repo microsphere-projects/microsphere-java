@@ -20,7 +20,6 @@ package io.microsphere.annotation.processor.util;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static java.lang.String.format;
 
 /**
  * Logger Utils
@@ -29,17 +28,35 @@ import static java.lang.String.format;
  */
 public interface LoggerUtils {
 
-    Logger LOGGER = getLogger(LoggerUtils.class);
+    Logger LOGGER = getLogger("microsphere-annotation-processor");
+
+    static void trace(String format, Object... args) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(format, args);
+        }
+    }
+
+    static void debug(String format, Object... args) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(format, args);
+        }
+    }
 
     static void info(String format, Object... args) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(format(format, args));
+            LOGGER.info(format, args);
         }
     }
 
     static void warn(String format, Object... args) {
         if (LOGGER.isWarnEnabled()) {
-            LOGGER.warn(format(format, args));
+            LOGGER.warn(format, args);
+        }
+    }
+
+    static void error(String format, Object... args) {
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(format, args);
         }
     }
 }
