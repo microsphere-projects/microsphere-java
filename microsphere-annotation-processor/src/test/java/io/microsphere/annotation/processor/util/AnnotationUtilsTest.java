@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.annotation.processor.util.AnnotationUtils.findAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findMetaAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAllAnnotations;
@@ -126,7 +127,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         List<AnnotationMirror> annotations = getAllAnnotations(testType);
         assertEquals(3, annotations.size());
 
-        annotations = AnnotationUtils.findAllAnnotations(testType.asType(), annotation -> true);
+        annotations = findAllAnnotations(testType.asType(), annotation -> true);
         assertEquals(3, annotations.size());
 
         annotations = getAllAnnotations(processingEnv, TestServiceImpl.class);
@@ -141,12 +142,12 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getAllAnnotations((Element) null, (Class) null).isEmpty());
         assertTrue(getAllAnnotations((TypeMirror) null, (String) null).isEmpty());
         assertTrue(getAllAnnotations((ProcessingEnvironment) null, (Class) null).isEmpty());
-        assertTrue(AnnotationUtils.findAllAnnotations((ProcessingEnvironment) null, (String) null).isEmpty());
+        assertTrue(findAllAnnotations((ProcessingEnvironment) null, (String) null).isEmpty());
 
         assertTrue(getAllAnnotations((Element) null).isEmpty());
         assertTrue(getAllAnnotations((TypeMirror) null).isEmpty());
         assertTrue(getAllAnnotations(processingEnv, (Class) null).isEmpty());
-        assertTrue(AnnotationUtils.findAllAnnotations(processingEnv, (String) null).isEmpty());
+        assertTrue(findAllAnnotations(processingEnv, (String) null).isEmpty());
 
 
         assertTrue(getAllAnnotations(testType, (Class) null).isEmpty());
