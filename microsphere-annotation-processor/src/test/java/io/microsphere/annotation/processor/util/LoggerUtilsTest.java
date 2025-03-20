@@ -19,7 +19,10 @@ package io.microsphere.annotation.processor.util;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.annotation.processor.util.LoggerUtils.LOGGER;
+import static io.microsphere.annotation.processor.util.LoggerUtils.debug;
+import static io.microsphere.annotation.processor.util.LoggerUtils.error;
 import static io.microsphere.annotation.processor.util.LoggerUtils.info;
+import static io.microsphere.annotation.processor.util.LoggerUtils.trace;
 import static io.microsphere.annotation.processor.util.LoggerUtils.warn;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -36,16 +39,37 @@ public class LoggerUtilsTest {
     }
 
     @Test
+    public void testTrace() {
+        trace("Hello,World");
+        trace("Hello,{}", "World");
+        trace("{},{}", "Hello", "World");
+    }
+
+    @Test
+    public void testDebug() {
+        debug("Hello,World");
+        debug("Hello,{}", "World");
+        debug("{},{}", "Hello", "World");
+    }
+    
+    @Test
     public void testInfo() {
         info("Hello,World");
-        info("Hello,%s", "World");
-        info("%s,%s", "Hello", "World");
+        info("Hello,{}", "World");
+        info("{},{}", "Hello", "World");
     }
 
     @Test
     public void testWarn() {
         warn("Hello,World");
-        warn("Hello,%s", "World");
-        warn("%s,%s", "Hello", "World");
+        warn("Hello,{}", "World");
+        warn("{},{}", "Hello", "World");
+    }
+
+    @Test
+    public void testError() {
+        error("Hello,World");
+        error("Hello,{}", "World");
+        error("{},{}", "Hello", "World");
     }
 }
