@@ -20,12 +20,15 @@ import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.classloading.ManifestArtifactResolver;
 import org.junit.jupiter.api.Test;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
 import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
+import static io.microsphere.annotation.processor.util.LoggerUtils.trace;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -53,7 +56,15 @@ public class ConfigurationPropertyProcessingTest extends AbstractAnnotationProce
         List<VariableElement> fields = getDeclaredFields(type);
         assertNotNull(fields);
         for (VariableElement field : fields) {
-
+            AnnotationMirror annotation = getAnnotation(field, ConfigurationProperty.class);
+            if (annotation != null) {
+                trace("Field[name : '{}' , constant value : '{}' , annotation[type : '{}' , attributes : {}]",
+                        field.getSimpleName(),
+                        field.getConstantValue(),
+                        annotation.getAnnotationType(),
+                        annotation.getElementValues()
+                );
+            }
         }
     }
 }
