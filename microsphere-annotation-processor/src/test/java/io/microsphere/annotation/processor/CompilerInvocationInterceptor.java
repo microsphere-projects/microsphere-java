@@ -38,6 +38,7 @@ public class CompilerInvocationInterceptor implements InvocationInterceptor {
         classesToBeCompiled.add(getClass());
         abstractAnnotationProcessingTest.addCompiledClasses(classesToBeCompiled);
         Compiler compiler = new Compiler();
+        compiler.sourcePaths(classesToBeCompiled);
         compiler.processors(new AnnotationProcessingTestProcessor(abstractAnnotationProcessingTest, invocation, invocationContext, extensionContext));
         compiler.compile(classesToBeCompiled.toArray(new Class[0]));
     }
