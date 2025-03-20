@@ -20,7 +20,8 @@ package io.microsphere.annotation;
 import javax.annotation.meta.TypeQualifierNickname;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * A common Microsphere annotation to declare that annotated elements cannot be {@code null}.
@@ -30,7 +31,7 @@ import java.lang.annotation.RetentionPolicy;
  * @since 1.0.0
  */
 @Documented
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RUNTIME)
 @javax.annotation.Nonnull
 @TypeQualifierNickname
 public @interface Nonnull {
