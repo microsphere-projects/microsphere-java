@@ -26,6 +26,7 @@ import java.lang.annotation.RetentionPolicy;
  * A common Microsphere annotation to declare that annotated elements cannot be {@code null}.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see javax.annotation.Nonnull
  * @since 1.0.0
  */
 @Documented
