@@ -1,7 +1,7 @@
 package io.microsphere.classloading;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import java.net.URL;
 import java.util.Objects;
 
