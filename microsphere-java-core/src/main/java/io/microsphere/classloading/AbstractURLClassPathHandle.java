@@ -88,6 +88,9 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
     @Nonnull
     @Override
     public URL[] getURLs(ClassLoader classLoader) {
+        if (classLoader == null) {
+            return EMPTY_URL_ARRAY;
+        }
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(ucp, "getURLs");
     }
