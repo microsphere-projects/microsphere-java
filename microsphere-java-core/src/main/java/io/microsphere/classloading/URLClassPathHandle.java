@@ -16,9 +16,9 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 
-import io.microsphere.annotation.Nonnull;
 import java.net.URL;
 import java.net.URLClassLoader;
 
