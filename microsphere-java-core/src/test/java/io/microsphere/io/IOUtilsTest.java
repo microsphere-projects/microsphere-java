@@ -1,5 +1,6 @@
 package io.microsphere.io;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see IOUtils
  * @since 1.0.0
  */
-public class IOUtilsTest {
+public class IOUtilsTest extends AbstractTestCase {
 
     private static final String TEST_VALUE = "Hello";
 
@@ -57,7 +58,7 @@ public class IOUtilsTest {
 
     @Test
     public void testToStringOnNullEncoding() throws IOException {
-        assertEquals(TEST_VALUE, IOUtils.toString(inputStream, (String) null));
+        assertEquals(TEST_VALUE, IOUtils.toString(inputStream, TEST_NULL_STRING));
     }
 
     @Test
@@ -98,12 +99,12 @@ public class IOUtilsTest {
 
     @Test
     public void testToStringOnNull1() throws IOException {
-        assertNull(IOUtils.toString(null, (String) null));
+        assertNull(IOUtils.toString(null, TEST_NULL_STRING));
     }
 
     @Test
     public void testCopyToStringOnNullEncoding() throws IOException {
-        assertEquals(TEST_VALUE, copyToString(inputStream, (String) null));
+        assertEquals(TEST_VALUE, copyToString(inputStream, TEST_NULL_STRING));
     }
 
     @Test
@@ -143,7 +144,7 @@ public class IOUtilsTest {
 
     @Test
     public void testCopyToStringOnNull1() throws IOException {
-        assertNull(copyToString(null, (String) null));
+        assertNull(copyToString(null, TEST_NULL_STRING));
     }
 
     @Test
