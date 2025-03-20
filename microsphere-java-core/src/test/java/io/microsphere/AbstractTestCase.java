@@ -51,7 +51,7 @@ public abstract class AbstractTestCase {
 
     public static final String TEST_NULL_STRING = null;
 
-    public static final Object[] TEST_OBJECT_ARRAY = null;
+    public static final Object[] TEST_NULL_OBJECT_ARRAY = null;
 
     public static final String[] TEST_NULL_STRING_ARRAY = null;
 
