@@ -19,7 +19,6 @@ import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,8 +28,9 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
+import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
-import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
@@ -113,6 +113,15 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
+     * Returns the total number of classes that have been loaded since the Java virtual machine has started execution.
+     *
+     * @return the total number of classes loaded.
+     */
+    public static long getTotalLoadedClassCount() {
+        return classLoadingMXBean.getTotalLoadedClassCount();
+    }
+
+    /**
      * Tests if the verbose output for the class loading system is enabled.
      *
      * @return <tt>true</tt> if the verbose output for the class loading system is enabled; <tt>false</tt> otherwise.
@@ -134,15 +143,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     public static void setVerbose(boolean value) {
         classLoadingMXBean.setVerbose(value);
-    }
-
-    /**
-     * Returns the total number of classes that have been loaded since the Java virtual machine has started execution.
-     *
-     * @return the total number of classes loaded.
-     */
-    public static long getTotalLoadedClassCount() {
-        return classLoadingMXBean.getTotalLoadedClassCount();
     }
 
     /**
@@ -217,18 +217,14 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Return the ClassLoader from the caller class
+     * Find Loaded {@link Class} under specified inheritable {@link ClassLoader} and class names
      *
-     * @return the ClassLoader (only {@code null} if the caller class was absent
-     * @see ReflectionUtils#getCallerClass()
+     * @param classLoader {@link ClassLoader}
+     * @param classNames  class names
+     * @return {@link Class} if loaded, or <code>null</code>
      */
-    private static ClassLoader getCallerClassLoader(int invocationFrame) {
-        ClassLoader classLoader = null;
-        Class<?> callerClass = getCallerClass(invocationFrame);
-        if (callerClass != null) {
-            classLoader = callerClass.getClassLoader();
-        }
-        return classLoader;
+    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, String... classNames) {
+        return findLoadedClasses(classLoader, ofSet(classNames));
     }
 
     /**
@@ -238,8 +234,12 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param classNames  class names set
      * @return {@link Class} if loaded, or <code>null</code>
      */
-    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, Set<String> classNames) {
-        Set<Class<?>> loadedClasses = new LinkedHashSet();
+    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, Iterable<String> classNames) {
+        int size = size(classNames);
+        if (size < 1) {
+            return emptySet();
+        }
+        Set<Class<?>> loadedClasses = newLinkedHashSet(size);
         for (String className : classNames) {
             Class<?> class_ = findLoadedClass(classLoader, className);
             if (class_ != null) {
@@ -512,7 +512,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     @Nonnull
     public static Set<Class<?>> getAllLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
-        Set<Class<?>> allLoadedClassesSet = new LinkedHashSet();
+        Set<Class<?>> allLoadedClassesSet = newLinkedHashSet();
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
         for (Set<Class<?>> loadedClassesSet : allLoadedClassesMap.values()) {
             allLoadedClassesSet.addAll(loadedClassesSet);
@@ -647,13 +647,15 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     public static Set<URL> findAllClassPathURLs(@Nullable ClassLoader classLoader) {
 
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
+
         Set<URL> allClassPathURLs = newLinkedHashSet();
 
-        URL[] classPathURLs = urlClassPathHandle.getURLs(classLoader);
+        URL[] classPathURLs = urlClassPathHandle.getURLs(actualClassLoader);
 
         addAll(allClassPathURLs, classPathURLs);
 
-        ClassLoader parentClassLoader = classLoader.getParent();
+        ClassLoader parentClassLoader = actualClassLoader.getParent();
         if (parentClassLoader != null) {
             allClassPathURLs.addAll(findAllClassPathURLs(parentClassLoader));
         }
@@ -681,11 +683,25 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return urlClassLoader;
     }
 
+    /**
+     * Return the ClassLoader from the caller class
+     *
+     * @return the ClassLoader (only {@code null} if the caller class was absent
+     * @see ReflectionUtils#getCallerClass()
+     */
+    static ClassLoader getCallerClassLoader(int invocationFrame) {
+        ClassLoader classLoader = null;
+        Class<?> callerClass = getCallerClass(invocationFrame);
+        if (callerClass != null) {
+            classLoader = callerClass.getClassLoader();
+        }
+        return classLoader;
+    }
+
     @Nullable
     static ClassLoader findClassLoader(@Nullable ClassLoader classLoader) {
         return classLoader == null ? getDefaultClassLoader() : classLoader;
     }
-
 
     /**
      * Invoke the {@link MethodHandle} of {@link ClassLoader#findLoadedClass(String)}
@@ -706,7 +722,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return loadedClass;
     }
 
-    private static String buildCacheKey(ClassLoader classLoader, String className) {
+    static String buildCacheKey(ClassLoader classLoader, String className) {
         String cacheKey = className + classLoader.hashCode();
         return cacheKey;
     }
