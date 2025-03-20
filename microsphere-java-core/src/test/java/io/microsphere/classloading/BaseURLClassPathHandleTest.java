@@ -16,13 +16,13 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
-import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.net.URLUtils.ofURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @Disabled
-public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
+public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> extends AbstractTestCase {
 
     protected H handle;
 
@@ -54,7 +54,6 @@ public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
 
     @Test
     public void test() {
-        ClassLoader classLoader = TEST_CLASS_LOADER;
         if (handle.supports()) {
             URL[] urls = handle.getURLs(classLoader);
             for (URL url : urls) {
@@ -78,6 +77,6 @@ public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> {
 
     @Test
     public void testRemoveURLOnNullURL() {
-        assertFalse(handle.removeURL(TEST_CLASS_LOADER, null));
+        assertFalse(handle.removeURL(classLoader, null));
     }
 }
