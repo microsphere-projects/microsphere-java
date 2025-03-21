@@ -32,6 +32,7 @@ import java.util.List;
  *     <li>Comparing to the type names of parameters {@link String#compareTo(String) lexicographically}</li>
  * </ol>
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class ExecutableElementComparator implements Comparator<ExecutableElement> {
