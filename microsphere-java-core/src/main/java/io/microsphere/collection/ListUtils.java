@@ -70,7 +70,7 @@ public abstract class ListUtils extends BaseUtils {
         if (iterable == null) {
             return emptyList();
         } else if (isList(iterable)) {
-            return (List) iterable;
+            return unmodifiableList((List) iterable);
         } else {
             return ofList(iterable.iterator());
         }
