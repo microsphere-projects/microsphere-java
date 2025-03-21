@@ -53,11 +53,13 @@ public class AnnotationProcessingTestProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (!roundEnv.processingOver()) {
             prepare();
-            abstractAnnotationProcessingTest.beforeEach();
+            abstractAnnotationProcessingTest.beforeTest();
             try {
                 invocation.proceed();
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
+            } finally {
+                abstractAnnotationProcessingTest.afterTest();
             }
         }
         return false;
