@@ -64,12 +64,12 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Override
     protected void beforeTest() {
-        testType = getType(TestServiceImpl.class);
+        testType = getTypeElement(TestServiceImpl.class);
     }
 
     @Test
     public void testGetDeclaredFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         List<VariableElement> fields = getDeclaredFields(type);
         assertModelFields(fields);
 
@@ -86,7 +86,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllDeclaredFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getAllDeclaredFields(type);
 
@@ -102,7 +102,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetDeclaredField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         testGetDeclaredField(type, "f", float.class);
         testGetDeclaredField(type, "d", double.class);
         testGetDeclaredField(type, "tu", TimeUnit.class);
@@ -122,7 +122,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         testFindField(type, "f", float.class);
         testFindField(type, "d", double.class);
         testFindField(type, "tu", TimeUnit.class);
@@ -147,7 +147,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsEnumField() {
-        TypeElement type = getType(Color.class);
+        TypeElement type = getTypeElement(Color.class);
         VariableElement field = findField(type, "RED");
         assertTrue(isEnumMemberField(field));
 
@@ -157,7 +157,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         field = findField(type, "BLUE");
         assertTrue(isEnumMemberField(field));
 
-        type = getType(Model.class);
+        type = getTypeElement(Model.class);
         field = findField(type, "f");
         assertFalse(isEnumMemberField(field));
 
@@ -166,20 +166,20 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsNonStaticField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         assertTrue(isNonStaticField(findField(type, "f")));
 
-        type = getType(Color.class);
+        type = getTypeElement(Color.class);
         assertFalse(isNonStaticField(findField(type, "BLUE")));
     }
 
     @Test
     public void testIsField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         assertTrue(isField(findField(type, "f")));
         assertTrue(isField(findField(type, "f"), PRIVATE));
 
-        type = getType(Color.class);
+        type = getTypeElement(Color.class);
         assertTrue(isField(findField(type, "BLUE"), PUBLIC, STATIC, FINAL));
 
 
@@ -189,7 +189,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetNonStaticFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getNonStaticFields(type);
         assertModelFields(fields);
@@ -203,7 +203,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllNonStaticFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getAllNonStaticFields(type);
         assertModelAllFields(fields);
