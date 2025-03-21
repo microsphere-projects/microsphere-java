@@ -22,8 +22,8 @@ import javax.xml.ws.ServiceMode;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
  */
 @Service("testService")
 @ServiceMode
