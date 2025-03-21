@@ -30,7 +30,6 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.annotation.processor.util.FieldUtils.findAllDeclaredFields;
@@ -63,11 +62,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-    }
-
-    @Override
-    protected void beforeEach() {
+    protected void beforeTest() {
         testType = getType(TestServiceImpl.class);
     }
 
