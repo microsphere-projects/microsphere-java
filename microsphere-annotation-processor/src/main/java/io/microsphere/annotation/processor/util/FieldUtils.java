@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
 import static io.microsphere.annotation.processor.util.MemberUtils.matches;
-import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
@@ -76,7 +76,7 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> findAllDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
-        return getHierarchicalTypes(type)
+        return getAllDeclaredTypes(type)
                 .stream()
                 .map(t -> findDeclaredFields(t, fieldFilters))
                 .flatMap(Collection::stream)
