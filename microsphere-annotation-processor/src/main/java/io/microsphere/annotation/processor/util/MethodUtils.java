@@ -47,6 +47,7 @@ import static javax.lang.model.util.ElementFilter.methodsIn;
 /**
  * The utilities class for method in the package "javax.lang.model."
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public interface MethodUtils {
