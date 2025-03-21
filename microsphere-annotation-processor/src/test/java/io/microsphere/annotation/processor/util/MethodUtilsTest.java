@@ -26,7 +26,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
-import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
@@ -52,11 +51,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-    }
-
-    @Override
-    protected void beforeEach() {
+    protected void beforeTest() {
         testType = getType(TestServiceImpl.class);
     }
 
