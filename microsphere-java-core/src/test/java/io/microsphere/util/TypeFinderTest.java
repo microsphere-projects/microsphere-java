@@ -1,4 +1,4 @@
-package io.microsphere.reflect;
+package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.test.BF3;
@@ -6,6 +6,7 @@ import io.microsphere.test.StringBF2;
 import io.microsphere.test.StringIntegerF1;
 import io.microsphere.test.StringIntegerToBoolean;
 import io.microsphere.test.StringIntegerToBooleanClass;
+import io.microsphere.util.TypeFinder.Include;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.ParameterizedType;
@@ -14,13 +15,12 @@ import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.function.BiFunction;
 
-import static io.microsphere.reflect.TypeFinder.Include.HIERARCHICAL;
-import static io.microsphere.reflect.TypeFinder.Include.INTERFACES;
-import static io.microsphere.reflect.TypeFinder.Include.SUPER_CLASS;
-import static io.microsphere.reflect.TypeFinder.classFinder;
-import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
-import static io.microsphere.reflect.TypeFinder.of;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
+import static io.microsphere.util.TypeFinder.Include.HIERARCHICAL;
+import static io.microsphere.util.TypeFinder.Include.INTERFACES;
+import static io.microsphere.util.TypeFinder.Include.SUPER_CLASS;
+import static io.microsphere.util.TypeFinder.classFinder;
+import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -32,17 +32,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link TypeFinder} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see TypeFinder
+ * @see io.microsphere.util.ClassFinder
  * @since 1.0.0
  */
 public class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testConstructorOnNullType() {
-        assertThrows(IllegalArgumentException.class, () -> of(null, true, true, true, true, true));
-        assertThrows(IllegalArgumentException.class, () -> classFinder(null, TypeFinder.Include.values()));
         assertThrows(IllegalArgumentException.class, () -> classFinder(null, true, true, true, true));
-        assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(null, TypeFinder.Include.values()));
+        assertThrows(IllegalArgumentException.class, () -> classFinder(null, Include.values()));
+        assertThrows(IllegalArgumentException.class, () -> classFinder(null, true, true, true, true));
+        assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(null, Include.values()));
         assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(null, true, true, true, true));
     }
 
@@ -54,14 +54,14 @@ public class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testConstructorOnEmptyIncludes() {
-        assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, new TypeFinder.Include[0]));
-        assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, new TypeFinder.Include[0]));
+        assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, new Include[0]));
+        assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, new Include[0]));
     }
 
     @Test
     public void testConstructorOnNullTypeAndIncludes() {
-        assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, new TypeFinder.Include[]{null}));
-        assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, new TypeFinder.Include[]{null}));
+        assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, new Include[]{null}));
+        assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, new Include[]{null}));
     }
 
     @Test
@@ -87,7 +87,7 @@ public class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testGetAllClasses() {
-        TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, TypeFinder.Include.values());
+        TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Class<?>> types = classFinder.getTypes();
         assertValues(types, StringIntegerToBooleanClass.class, Object.class, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
@@ -115,7 +115,7 @@ public class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testFindAllClasses() {
-        TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, TypeFinder.Include.values());
+        TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Class<?>> types = classFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertValues(types, StringIntegerToBooleanClass.class, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
@@ -146,7 +146,7 @@ public class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testGetAllGenericClasses() {
-        TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, TypeFinder.Include.values());
+        TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Type> types = genericTypeFinder.getTypes();
         assertEquals(7, types.size());
         assertEquals(StringIntegerToBooleanClass.class, types.get(0));
@@ -179,7 +179,7 @@ public class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testFindAllGenericClasses() {
-        TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, TypeFinder.Include.values());
+        TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Type> types = genericTypeFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertEquals(6, types.size());
         assertEquals(StringIntegerToBooleanClass.class, types.get(0));

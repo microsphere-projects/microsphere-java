@@ -41,8 +41,8 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
-import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassFinder.genericClassFinder;
 import static java.lang.Integer.getInteger;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -499,11 +499,11 @@ public abstract class TypeUtils extends BaseUtils {
         if (type == null || isObjectType(type)) {
             return emptyList();
         }
-        return genericTypeFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
+        return genericClassFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
     }
 
     protected static List<Type> doGetHierarchicalTypes(Type type) {
-        return genericTypeFinder(type, false, true, true, true).doFindTypes(EMPTY_PREDICATE_ARRAY);
+        return genericClassFinder(type, false, true, true, true).findTypes(EMPTY_PREDICATE_ARRAY);
     }
 
     public static String getClassName(Type type) {
