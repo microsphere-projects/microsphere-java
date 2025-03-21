@@ -16,14 +16,13 @@
  */
 package io.microsphere.annotation.processor.util;
 
-import io.microsphere.util.ClassUtils;
+import io.microsphere.util.TypeFinder;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.FileObject;
@@ -32,27 +31,32 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
+import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.util.ArrayUtils.isEmpty;
+import static io.microsphere.util.ClassUtils.SIMPLE_TYPES;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.of;
-import static java.util.stream.StreamSupport.stream;
 import static javax.lang.model.element.ElementKind.ANNOTATION_TYPE;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.ENUM;
 import static javax.lang.model.element.ElementKind.INTERFACE;
+import static javax.lang.model.type.TypeKind.ARRAY;
 
 /**
  * The utilities class for type in the package "javax.lang.model.*"
@@ -62,19 +66,33 @@ import static javax.lang.model.element.ElementKind.INTERFACE;
  */
 public interface TypeUtils {
 
-    List<String> SIMPLE_TYPES = ofList(
-            ClassUtils.SIMPLE_TYPES
+    List<String> SIMPLE_TYPE_NAMES = ofList(
+            SIMPLE_TYPES
                     .stream()
                     .map(Class::getName)
                     .toArray(String[]::new)
     );
+
+    /**
+     * Get the superclass of the specified type
+     */
+    Function<TypeElement, TypeElement> TYPE_ELEMENT_GET_SUPERCLASS = type -> ofTypeElement(type.getSuperclass());
+
+    /**
+     * Get the interfaces of the specified type
+     */
+    Function<TypeElement, TypeElement[]> TYPE_ELEMENT_GET_INTERFACES = type -> type.getInterfaces()
+            .stream()
+            .map(TypeUtils::ofTypeElement)
+            .toArray(TypeElement[]::new);
+
 
     static boolean isSimpleType(Element element) {
         return element != null && isSimpleType(element.asType());
     }
 
     static boolean isSimpleType(TypeMirror type) {
-        return type != null && SIMPLE_TYPES.contains(type.toString());
+        return type != null && SIMPLE_TYPE_NAMES.contains(type.toString());
     }
 
     static boolean isSameType(TypeMirror type, CharSequence typeName) {
@@ -89,7 +107,7 @@ public interface TypeUtils {
     }
 
     static boolean isArrayType(TypeMirror type) {
-        return type != null && TypeKind.ARRAY.equals(type.getKind());
+        return type != null && ARRAY == type.getKind();
     }
 
     static boolean isArrayType(Element element) {
@@ -98,7 +116,7 @@ public interface TypeUtils {
 
     static boolean isEnumType(TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
-        return declaredType != null && ENUM.equals(declaredType.asElement().getKind());
+        return declaredType != null && ENUM == declaredType.asElement().getKind();
     }
 
     static boolean isEnumType(Element element) {
@@ -111,7 +129,7 @@ public interface TypeUtils {
     }
 
     static boolean isClassType(Element element) {
-        return element != null && CLASS.equals(element.getKind());
+        return element != null && CLASS == element.getKind();
     }
 
     static boolean isPrimitiveType(TypeMirror type) {
@@ -128,7 +146,7 @@ public interface TypeUtils {
     }
 
     static boolean isInterfaceType(Element element) {
-        return element != null && INTERFACE.equals(element.getKind());
+        return element != null && INTERFACE == element.getKind();
     }
 
     static boolean isAnnotationType(TypeMirror type) {
@@ -137,150 +155,7 @@ public interface TypeUtils {
     }
 
     static boolean isAnnotationType(Element element) {
-        return element != null && ANNOTATION_TYPE.equals(element.getKind());
-    }
-
-    static Set<TypeElement> getHierarchicalTypes(TypeElement type) {
-        return getHierarchicalTypes(type, true, true, true);
-    }
-
-    static Set<DeclaredType> getHierarchicalTypes(TypeMirror type) {
-        return getHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static Set<DeclaredType> getHierarchicalTypes(TypeMirror type, Predicate<DeclaredType>... typeFilters) {
-        return filterAll(ofDeclaredTypes(getHierarchicalTypes(ofTypeElement(type))), typeFilters);
-    }
-
-    static Set<DeclaredType> getHierarchicalTypes(TypeMirror type, Type... excludedTypes) {
-        return getHierarchicalTypes(type, of(excludedTypes).map(Type::getTypeName).toArray(String[]::new));
-    }
-
-    static Set<DeclaredType> getHierarchicalTypes(TypeMirror type, CharSequence... excludedTypeNames) {
-        Set<String> typeNames = of(excludedTypeNames).map(CharSequence::toString).collect(toSet());
-        return getHierarchicalTypes(type, t -> !typeNames.contains(t.toString()));
-    }
-
-    static Set<TypeElement> getHierarchicalTypes(TypeElement type,
-                                                 boolean includeSelf,
-                                                 boolean includeSuperTypes,
-                                                 boolean includeSuperInterfaces,
-                                                 Predicate<TypeElement>... typeFilters) {
-
-        if (type == null) {
-            return emptySet();
-        }
-
-        Set<TypeElement> hierarchicalTypes = new LinkedHashSet<>();
-
-        if (includeSelf) {
-            hierarchicalTypes.add(type);
-        }
-
-        if (includeSuperTypes) {
-            hierarchicalTypes.addAll(getAllSuperTypes(type));
-        }
-
-        if (includeSuperInterfaces) {
-            hierarchicalTypes.addAll(getAllInterfaces(type));
-        }
-
-        return filterAll(hierarchicalTypes, typeFilters);
-    }
-
-    static Set<DeclaredType> getHierarchicalTypes(TypeMirror type,
-                                                  boolean includeSelf,
-                                                  boolean includeSuperTypes,
-                                                  boolean includeSuperInterfaces) {
-        return ofDeclaredTypes(getHierarchicalTypes(ofTypeElement(type),
-                includeSelf,
-                includeSuperTypes,
-                includeSuperInterfaces));
-    }
-
-    static List<TypeMirror> getInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
-        return type == null ? emptyList() : filterAll((List<TypeMirror>) ofTypeElement(type).getInterfaces(), interfaceFilters);
-    }
-
-    static List<TypeMirror> getInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
-        return getInterfaces(ofTypeElement(type), interfaceFilters);
-    }
-
-    static Set<TypeElement> getAllInterfaces(TypeElement type, Predicate<TypeElement>... interfaceFilters) {
-        return type == null ? emptySet() : filterAll(ofTypeElements(getAllInterfaces(type.asType())), interfaceFilters);
-    }
-
-    static Set<? extends TypeMirror> getAllInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
-        if (type == null) {
-            return emptySet();
-        }
-        Set<TypeMirror> allInterfaces = new LinkedHashSet<>();
-        getInterfaces(type).forEach(i -> {
-            // Add current type's interfaces
-            allInterfaces.add(i);
-            // Add
-            allInterfaces.addAll(getAllInterfaces(i));
-        });
-        // Add all super types' interfaces
-        getAllSuperTypes(type).forEach(superType -> allInterfaces.addAll(getAllInterfaces(superType)));
-        return filterAll(allInterfaces, interfaceFilters);
-    }
-
-    static TypeMirror findInterface(TypeMirror type, CharSequence interfaceClassName) {
-        return filterFirst(getAllInterfaces(type), t -> isSameType(t, interfaceClassName));
-    }
-
-    static TypeElement getType(ProcessingEnvironment processingEnv, Type type) {
-        return type == null ? null : getType(processingEnv, type.getTypeName());
-    }
-
-    static TypeElement getType(ProcessingEnvironment processingEnv, TypeMirror type) {
-        return type == null ? null : getType(processingEnv, type.toString());
-    }
-
-    static TypeElement getType(ProcessingEnvironment processingEnv, CharSequence typeName) {
-        if (processingEnv == null || typeName == null) {
-            return null;
-        }
-        Elements elements = processingEnv.getElementUtils();
-        return elements.getTypeElement(typeName);
-    }
-
-    static TypeElement getSuperType(TypeElement type) {
-        return type == null ? null : ofTypeElement(type.getSuperclass());
-    }
-
-    static DeclaredType getSuperType(TypeMirror type) {
-        TypeElement superType = getSuperType(ofTypeElement(type));
-        return superType == null ? null : ofDeclaredType(superType.asType());
-    }
-
-    static Set<TypeElement> getAllSuperTypes(TypeElement type) {
-        return getAllSuperTypes(type, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static Set<TypeElement> getAllSuperTypes(TypeElement type, Predicate<TypeElement>... typeFilters) {
-        if (type == null) {
-            return emptySet();
-        }
-
-        Set<TypeElement> allSuperTypes = new LinkedHashSet<>();
-        TypeElement superType = getSuperType(type);
-        if (superType != null) {
-            // add super type
-            allSuperTypes.add(superType);
-            // add ancestors' types
-            allSuperTypes.addAll(getAllSuperTypes(superType));
-        }
-        return filterAll(allSuperTypes, typeFilters);
-    }
-
-    static Set<DeclaredType> getAllSuperTypes(TypeMirror type) {
-        return getAllSuperTypes(type, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static Set<DeclaredType> getAllSuperTypes(TypeMirror type, Predicate<DeclaredType>... typeFilters) {
-        return filterAll(ofDeclaredTypes(getAllSuperTypes(ofTypeElement(type))), typeFilters);
+        return element != null && ANNOTATION_TYPE == element.getKind();
     }
 
     static boolean isDeclaredType(Element element) {
@@ -314,38 +189,240 @@ public interface TypeUtils {
 
     static TypeElement ofTypeElement(TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
+        return ofTypeElement(declaredType);
+    }
+
+    static TypeElement ofTypeElement(DeclaredType declaredType) {
         if (declaredType != null) {
             return ofTypeElement(declaredType.asElement());
         }
         return null;
     }
 
-    static Set<DeclaredType> ofDeclaredTypes(Iterable<? extends Element> elements) {
-        return elements == null ?
-                emptySet() :
-                stream(elements.spliterator(), false)
+    static List<DeclaredType> ofDeclaredTypes(Element... elements) {
+        return ofDeclaredTypes(ofList(elements));
+    }
+
+    static List<DeclaredType> ofDeclaredTypes(Collection<? extends Element> elements) {
+        return ofDeclaredTypes(elements, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<DeclaredType> ofDeclaredTypes(Collection<? extends Element> elements,
+                                              Predicate<? super DeclaredType>... typeFilters) {
+        return isEmpty(elements) ? emptyList() :
+                elements.stream()
                         .map(TypeUtils::ofTypeElement)
                         .filter(Objects::nonNull)
                         .map(Element::asType)
                         .map(TypeUtils::ofDeclaredType)
                         .filter(Objects::nonNull)
-                        .collect(LinkedHashSet::new, Set::add, Set::addAll);
+                        .filter(and(typeFilters))
+                        .collect(toList());
     }
 
-    static Set<TypeElement> ofTypeElements(Iterable<? extends TypeMirror> types) {
-        return types == null ?
-                emptySet() :
-                stream(types.spliterator(), false)
-                        .map(TypeUtils::ofTypeElement)
-                        .filter(Objects::nonNull)
-                        .collect(LinkedHashSet::new, Set::add, Set::addAll);
+    static List<TypeElement> ofTypeElements(TypeMirror... types) {
+        return ofTypeElements(ofList(types));
     }
 
-    static List<DeclaredType> listDeclaredTypes(Iterable<? extends Element> elements) {
+    static List<TypeElement> ofTypeElements(Collection<? extends TypeMirror> types) {
+        return ofTypeElements(types, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeElement> ofTypeElements(Collection<? extends TypeMirror> types, Predicate<? super TypeElement>... typeFilters) {
+        return isEmpty(types) ? emptyList() :
+                types.stream().map(TypeUtils::ofTypeElement).filter(Objects::nonNull).filter(and(typeFilters))
+                        .collect(toList());
+    }
+
+    static List<TypeMirror> ofTypeMirrors(Element... elements) {
+        return ofTypeMirrors(ofList(elements));
+    }
+
+    static List<TypeMirror> ofTypeMirrors(Collection<? extends Element> elements) {
+        return ofTypeMirrors(elements, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeMirror> ofTypeMirrors(Collection<? extends Element> elements, Predicate<? super TypeMirror>... typeFilters) {
+        return isEmpty(elements) ? emptyList() :
+                elements.stream().map(Element::asType).filter(and(typeFilters)).collect(toList());
+    }
+
+    static List<TypeElement> getTypeElements(ProcessingEnvironment processingEnv, Type... types) {
+        return isEmpty(types) ? emptyList() : of(types).map(t -> getTypeElement(processingEnv, t)).collect(toList());
+    }
+
+    static TypeElement getTypeElement(ProcessingEnvironment processingEnv, Type type) {
+        return type == null ? null : getTypeElement(processingEnv, type.getTypeName());
+    }
+
+    static TypeElement getTypeElement(ProcessingEnvironment processingEnv, TypeMirror type) {
+        return type == null ? null : getTypeElement(processingEnv, type.toString());
+    }
+
+    static TypeElement getTypeElement(ProcessingEnvironment processingEnv, CharSequence typeName) {
+        if (processingEnv == null || typeName == null) {
+            return null;
+        }
+        Elements elements = processingEnv.getElementUtils();
+        return elements.getTypeElement(typeName);
+    }
+
+    static TypeElement getSuperTypeElement(TypeElement type) {
+        return type == null ? null : ofTypeElement(type.getSuperclass());
+    }
+
+    static List<TypeElement> getAllSuperTypeElements(TypeElement type) {
+        return findAllSuperTypeElements(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeElement> getAllTypeElements(TypeElement type) {
+        return getTypeElements(type, true, true, true, true);
+    }
+
+    static List<TypeElement> getInterfaceTypeElements(TypeElement type) {
+        return findInterfaceTypeElements(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeElement> getAllInterfaceTypeElements(TypeElement type) {
+        return findAllInterfaceTypeElements(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeElement> getTypeElements(TypeElement type,
+                                             boolean includeSelf,
+                                             boolean includeHierarchicalTypes,
+                                             boolean includeSuperTypes,
+                                             boolean includeSuperInterfaces) {
+        return findTypeElements(type, includeSelf, includeHierarchicalTypes, includeSuperTypes, includeSuperInterfaces, EMPTY_PREDICATE_ARRAY);
+    }
+
+
+    static List<TypeElement> findInterfaceTypeElements(TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
+        return findTypeElements(type, false, false, false, true, interfaceFilters);
+    }
+
+    static List<TypeElement> findAllInterfaceTypeElements(TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
+        return findTypeElements(type, false, true, false, true, interfaceFilters);
+    }
+
+
+    static List<TypeElement> findAllSuperTypeElements(TypeElement type, Predicate<? super TypeElement>... typeFilters) {
+        return findTypeElements(type, false, true, true, true, typeFilters);
+    }
+
+    static List<TypeElement> findTypeElements(TypeElement type,
+                                              boolean includeSelf,
+                                              boolean includeHierarchicalTypes,
+                                              boolean includeSuperTypes,
+                                              boolean includeSuperInterfaces,
+                                              Predicate<? super TypeElement>... typeFilters) {
+        return typeElementFinder(type, includeSelf, includeHierarchicalTypes, includeSuperTypes, includeSuperInterfaces).findTypes(typeFilters);
+    }
+
+    static List<DeclaredType> getAllDeclaredTypes(TypeMirror type) {
+        return findAllDeclaredTypes(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Type... excludedTypes) {
+        return findAllDeclaredTypes(type, of(excludedTypes).map(Type::getTypeName).toArray(String[]::new));
+    }
+
+    static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+        return filterAll(ofDeclaredTypes(getAllTypeElements(ofTypeElement(type))), typeFilters);
+    }
+
+    static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
+        Set<String> typeNames = of(excludedTypeNames).map(CharSequence::toString).collect(toSet());
+        return findAllDeclaredTypes(type, t -> !typeNames.contains(t.toString()));
+    }
+
+    static List<DeclaredType> getDeclaredTypes(TypeElement type,
+                                               boolean includeSelf,
+                                               boolean includeHierarchicalTypes,
+                                               boolean includeSuperTypes,
+                                               boolean includeSuperInterfaces) {
+        return getDeclaredTypes(type.asType(), includeSelf, includeHierarchicalTypes, includeSuperTypes, includeSuperInterfaces);
+    }
+
+    static List<DeclaredType> getDeclaredTypes(TypeMirror type,
+                                               boolean includeSelf,
+                                               boolean includeHierarchicalTypes,
+                                               boolean includeSuperTypes,
+                                               boolean includeSuperInterfaces) {
+        return findDeclaredTypes(type, includeSelf, includeHierarchicalTypes, includeSuperTypes, includeSuperInterfaces, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<DeclaredType> findDeclaredTypes(TypeElement type,
+                                                boolean includeSelf,
+                                                boolean includeHierarchicalTypes,
+                                                boolean includeSuperTypes,
+                                                boolean includeSuperInterfaces,
+                                                Predicate<? super DeclaredType>... typeFilters) {
+        return findDeclaredTypes(type.asType(), includeSelf, includeHierarchicalTypes, includeSuperTypes, includeSuperInterfaces, typeFilters);
+    }
+
+    static List<DeclaredType> findDeclaredTypes(TypeMirror type,
+                                                boolean includeSelf,
+                                                boolean includeHierarchicalTypes,
+                                                boolean includeSuperTypes,
+                                                boolean includeSuperInterfaces,
+                                                Predicate<? super DeclaredType>... typeFilters) {
+        return ofDeclaredTypes(getTypeElements(ofTypeElement(type), includeSelf, includeHierarchicalTypes, includeSuperTypes, includeSuperInterfaces), typeFilters);
+    }
+
+    static DeclaredType getSuperDeclaredType(TypeMirror type) {
+        TypeElement superType = getSuperTypeElement(ofTypeElement(type));
+        return superType == null ? null : ofDeclaredType(superType.asType());
+    }
+
+    static List<DeclaredType> getAllSuperDeclaredTypes(TypeMirror type) {
+        return getAllSuperDeclaredTypes(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<DeclaredType> getAllSuperDeclaredTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
+        return filterAll(ofDeclaredTypes(getAllSuperTypeElements(ofTypeElement(type))), typeFilters);
+    }
+
+    static List<TypeMirror> getInterfaceTypeMirrors(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
+        return type == null ? emptyList() : filterAll((List<TypeMirror>) ofTypeElement(type).getInterfaces(), interfaceFilters);
+    }
+
+    static List<TypeMirror> getInterfaceTypeMirrors(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+        return getInterfaceTypeMirrors(ofTypeElement(type), interfaceFilters);
+    }
+
+    static List<? extends TypeMirror> getAllInterfaces(TypeMirror type) {
+        return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<? extends TypeMirror> findAllInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+        if (type == null) {
+            return emptyList();
+        }
+        List<TypeElement> interfaces = getTypeElements(ofTypeElement(type), false, true, false, true);
+        return interfaces.stream()
+                .map(TypeElement::asType)
+                .filter(and(interfaceFilters))
+                .collect(toList());
+    }
+
+    static TypeMirror findInterfaceTypeMirror(TypeMirror type, CharSequence interfaceClassName) {
+        return filterFirst(getAllInterfaces(type), t -> isSameType(t, interfaceClassName));
+    }
+
+    static List<TypeMirror> getTypeMirrors(ProcessingEnvironment processingEnv, Type... types) {
+        return isEmpty(types) ? emptyList() : of(types).map(t -> getTypeMirror(processingEnv, t)).collect(toList());
+    }
+
+    static TypeMirror getTypeMirror(ProcessingEnvironment processingEnv, Type type) {
+        TypeElement typeElement = getTypeElement(processingEnv, type);
+        return typeElement == null ? null : typeElement.asType();
+    }
+
+    static List<DeclaredType> listDeclaredTypes(Collection<? extends Element> elements) {
         return new ArrayList<>(ofDeclaredTypes(elements));
     }
 
-    static List<TypeElement> listTypeElements(Iterable<? extends TypeMirror> types) {
+    static List<TypeElement> listTypeElements(Collection<? extends TypeMirror> types) {
         return new ArrayList<>(ofTypeElements(types));
     }
 
@@ -397,5 +474,11 @@ public interface TypeUtils {
             }
         }
         return type.toString();
+    }
+
+    static TypeFinder<TypeElement> typeElementFinder(TypeElement typeElement, boolean includeSelf,
+                                                     boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+        return new TypeFinder(typeElement, TYPE_ELEMENT_GET_SUPERCLASS, TYPE_ELEMENT_GET_INTERFACES, includeSelf,
+                includeHierarchicalTypes, includeSuperclass, includeInterfaces);
     }
 }
