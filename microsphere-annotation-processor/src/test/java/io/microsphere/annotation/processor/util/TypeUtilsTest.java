@@ -92,7 +92,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Override
-    protected void beforeEach() {
+    protected void beforeTest() {
         testType = getType(TestServiceImpl.class);
     }
 
