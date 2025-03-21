@@ -45,6 +45,9 @@ import static javax.tools.ToolProvider.getSystemJavaCompiler;
 
 /**
  * The Java Compiler
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
  */
 public class Compiler {
 
