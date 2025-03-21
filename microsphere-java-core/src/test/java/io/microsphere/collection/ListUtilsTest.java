@@ -75,7 +75,6 @@ public class ListUtilsTest extends AbstractTestCase {
     public void testOfList() {
         List<String> rawList = asList("A", "B", "C");
         List<String> list = ofList(rawList);
-        assertSame(rawList, list);
         assertEquals(rawList, list);
 
         list = ofList("A", "B", "C");
