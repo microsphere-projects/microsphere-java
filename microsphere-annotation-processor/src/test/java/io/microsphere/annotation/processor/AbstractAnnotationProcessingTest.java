@@ -31,6 +31,7 @@ import java.util.Set;
 /**
  * Abstract {@link Annotation} Processing Test case
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 @ExtendWith(CompilerInvocationInterceptor.class)
