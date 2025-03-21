@@ -30,6 +30,12 @@ import java.util.Set;
 
 import static javax.lang.model.SourceVersion.latestSupported;
 
+/**
+ * {@link AnnotationProcessingTestProcessor}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
+ */
 @SupportedAnnotationTypes("*")
 public class AnnotationProcessingTestProcessor extends AbstractProcessor {
 
