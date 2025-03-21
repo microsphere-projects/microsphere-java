@@ -27,6 +27,12 @@ import java.util.Set;
 import static io.microsphere.annotation.processor.AbstractAnnotationProcessingTest.testInstanceHolder;
 
 
+/**
+ * {@link InvocationInterceptor} based on Java {@link Compiler}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
+ */
 public class CompilerInvocationInterceptor implements InvocationInterceptor {
 
     @Override
