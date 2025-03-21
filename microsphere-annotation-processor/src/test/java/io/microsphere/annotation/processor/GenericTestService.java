@@ -22,6 +22,7 @@ import java.util.EventListener;
 /**
  * {@link TestService} Implementation
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class GenericTestService extends DefaultTestService implements TestService, EventListener {
