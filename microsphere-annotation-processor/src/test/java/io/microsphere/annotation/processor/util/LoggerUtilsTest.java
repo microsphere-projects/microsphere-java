@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * {@link LoggerUtils} Test
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class LoggerUtilsTest {
@@ -51,7 +52,7 @@ public class LoggerUtilsTest {
         debug("Hello,{}", "World");
         debug("{},{}", "Hello", "World");
     }
-    
+
     @Test
     public void testInfo() {
         info("Hello,World");
