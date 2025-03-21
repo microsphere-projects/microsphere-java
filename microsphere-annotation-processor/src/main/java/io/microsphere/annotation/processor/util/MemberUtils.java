@@ -37,6 +37,7 @@ import static javax.lang.model.element.Modifier.STATIC;
 /**
  * The utilities class for the members in the package "javax.lang.model.", such as "field", "method", "constructor"
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public interface MemberUtils {
