@@ -53,12 +53,12 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Override
     protected void beforeTest() {
-        testType = getType(TestServiceImpl.class);
+        testType = getTypeElement(TestServiceImpl.class);
     }
 
     @Test
     public void testDeclaredMethods() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         List<ExecutableElement> methods = getDeclaredMethods(type);
         assertEquals(12, methods.size());
 
@@ -102,7 +102,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindMethod() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         // Test methods from java.lang.Object
         // Object#toString()
         String methodName = "toString";
@@ -162,7 +162,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         ExecutableElement overrideMethod = getOverrideMethod(processingEnv, testType, methods.get(0));
         assertNull(overrideMethod);
 
-        ExecutableElement declaringMethod = findMethod(getType(TestService.class), "echo", "java.lang.String");
+        ExecutableElement declaringMethod = findMethod(getTypeElement(TestService.class), "echo", "java.lang.String");
 
         overrideMethod = getOverrideMethod(processingEnv, testType, declaringMethod);
         assertEquals(methods.get(0), overrideMethod);
