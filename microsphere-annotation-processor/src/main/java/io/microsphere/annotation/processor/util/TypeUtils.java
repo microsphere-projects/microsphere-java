@@ -57,6 +57,7 @@ import static javax.lang.model.element.ElementKind.INTERFACE;
 /**
  * The utilities class for type in the package "javax.lang.model.*"
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public interface TypeUtils {
