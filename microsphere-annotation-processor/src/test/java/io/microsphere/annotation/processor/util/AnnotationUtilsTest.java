@@ -28,6 +28,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.ws.rs.Path;
+import java.lang.annotation.Annotation;
 import java.util.Iterator;
 import java.util.List;
 
@@ -62,20 +63,37 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAnnotation() {
-        AnnotationMirror serviceAnnotation = getAnnotation(testType, Service.class);
-        assertEquals("testService", getAttribute(serviceAnnotation, "value"));
+        asserGetAnnotation(Service.class);
+    }
 
+    @Test
+    public void testGetAnnotationWithClassName() {
+        asserGetAnnotation(Service.class.getName());
+    }
+
+    @Test
+    public void testGetAnnotationOnNull() {
         assertNull(getAnnotation(testType, (Class) null));
         assertNull(getAnnotation(testType, (String) null));
 
         assertNull(getAnnotation(testType.asType(), (Class) null));
         assertNull(getAnnotation(testType.asType(), (String) null));
 
-        assertNull(getAnnotation((Element) null, (Class) null));
-        assertNull(getAnnotation((Element) null, (String) null));
+        assertNull(getAnnotation(null, (Class) null));
+        assertNull(getAnnotation(null, (String) null));
 
-        assertNull(getAnnotation((TypeElement) null, (Class) null));
-        assertNull(getAnnotation((TypeElement) null, (String) null));
+        assertNull(getAnnotation(null, (Class) null));
+        assertNull(getAnnotation(null, (String) null));
+    }
+
+    private void asserGetAnnotation(Class<? extends Annotation> annotationClass) {
+        AnnotationMirror serviceAnnotation = getAnnotation(testType, annotationClass);
+        assertEquals(annotationClass.getName(), serviceAnnotation.getAnnotationType().toString());
+    }
+
+    private void asserGetAnnotation(String annotationClassName) {
+        AnnotationMirror serviceAnnotation = getAnnotation(testType, annotationClassName);
+        assertEquals(annotationClassName, serviceAnnotation.getAnnotationType().toString());
     }
 
     @Test
