@@ -52,7 +52,7 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Override
     protected void beforeTest() {
-        testType = getType(TestServiceImpl.class);
+        testType = getTypeElement(TestServiceImpl.class);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testDeclaredMembers() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         List<? extends Element> members = getDeclaredMembers(type.asType());
         List<VariableElement> fields = fieldsIn(members);
         assertEquals(19, members.size());
