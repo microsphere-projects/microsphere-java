@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -69,7 +69,7 @@ public interface MemberUtils {
     }
 
     static List<? extends Element> getAllDeclaredMembers(TypeMirror type) {
-        return getHierarchicalTypes(type)
+        return getAllDeclaredTypes(type)
                 .stream()
                 .map(MemberUtils::getDeclaredMembers)
                 .flatMap(Collection::stream)
