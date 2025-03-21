@@ -79,7 +79,7 @@ public class TypeFinder<T> {
 
     private final Function<T, ? super T[]> getInterfacesFunction;
 
-    protected TypeFinder(T type, Function<T, T> getSuperClassFunction,
+    public TypeFinder(T type, Function<T, T> getSuperClassFunction,
                          Function<T, T[]> getInterfacesFunction, boolean includeSelf,
                          boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         assertNotNull(type, () -> "The 'type' must not be null");
