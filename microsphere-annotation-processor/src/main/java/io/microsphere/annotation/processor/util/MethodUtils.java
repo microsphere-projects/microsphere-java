@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
-import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.filter.FilterUtils.filter;
@@ -81,7 +81,7 @@ public interface MethodUtils {
     }
 
     static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
-        return getHierarchicalTypes(type).stream().map(t -> findDeclaredMethods(t, methodFilters)).flatMap(Collection::stream).collect(Collectors.toList());
+        return getAllDeclaredTypes(type).stream().map(t -> findDeclaredMethods(t, methodFilters)).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     static List<ExecutableElement> findAllDeclaredMethods(TypeElement type, Type... excludedTypes) {
@@ -89,7 +89,7 @@ public interface MethodUtils {
     }
 
     static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Type... excludedTypes) {
-        return getHierarchicalTypes(type, excludedTypes).stream().map(t -> findDeclaredMethods(t)).flatMap(Collection::stream).collect(Collectors.toList());
+        return TypeUtils.findAllDeclaredTypes(type, excludedTypes).stream().map(t -> findDeclaredMethods(t)).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     static List<ExecutableElement> findPublicNonStaticMethods(TypeElement type, Type... excludedTypes) {
