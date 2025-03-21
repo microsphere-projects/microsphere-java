@@ -48,6 +48,7 @@ import static java.util.Collections.emptyList;
 /**
  * The utilities class for annotation in the package "javax.lang.model.*"
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public abstract class AnnotationUtils {
