@@ -30,7 +30,6 @@ import javax.lang.model.type.TypeMirror;
 import javax.ws.rs.Path;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
@@ -56,11 +55,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-    }
-
-    @Override
-    protected void beforeEach() {
+    protected void beforeTest() {
         testType = getType(TestServiceImpl.class);
     }
 
