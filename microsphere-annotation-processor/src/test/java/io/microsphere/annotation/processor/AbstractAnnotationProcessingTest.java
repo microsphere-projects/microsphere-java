@@ -54,9 +54,14 @@ public abstract class AbstractAnnotationProcessingTest {
         testInstanceHolder.remove();
     }
 
-    protected abstract void addCompiledClasses(Set<Class<?>> compiledClasses);
+    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
+    }
 
-    protected abstract void beforeEach();
+    protected void beforeTest() {
+    }
+
+    protected void afterTest() {
+    }
 
     protected TypeElement getType(Class<?> type) {
         return TypeUtils.getType(processingEnv, type);
