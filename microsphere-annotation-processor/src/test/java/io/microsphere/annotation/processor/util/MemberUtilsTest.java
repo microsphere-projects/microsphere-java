@@ -26,7 +26,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
-import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
@@ -51,11 +50,7 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-    }
-
-    @Override
-    protected void beforeEach() {
+    protected void beforeTest() {
         testType = getType(TestServiceImpl.class);
     }
 
