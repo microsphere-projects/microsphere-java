@@ -45,11 +45,6 @@ public class ConfigurationPropertyProcessingTest extends AbstractAnnotationProce
         compiledClasses.add(ManifestArtifactResolver.class);
     }
 
-
-    @Override
-    protected void beforeEach() {
-    }
-
     @Test
     public void test() {
         TypeElement type = getType(ManifestArtifactResolver.class);
