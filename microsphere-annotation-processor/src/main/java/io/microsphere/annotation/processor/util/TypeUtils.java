@@ -40,7 +40,6 @@ import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
-import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ArrayUtils.contains;
@@ -94,26 +93,20 @@ public interface TypeUtils {
     }
 
     static boolean isSameType(Element element, Type type) {
-        if (element == null || type == null) {
-            return false;
-        }
-        return isSameType(element.asType(), type);
+        return isSameType(element == null ? null : element.asType(), type);
     }
 
     static boolean isSameType(Element type, CharSequence typeName) {
-        if (type == null || typeName == null) {
-            return false;
-        }
-        return isSameType(type.asType(), typeName);
+        return isSameType(type == null ? null : type.asType(), typeName);
     }
 
     static boolean isSameType(TypeMirror typeMirror, Type type) {
-        return type != null && isSameType(typeMirror, type.getTypeName());
+        return isSameType(typeMirror, type == null ? null : type.getTypeName());
     }
 
     static boolean isSameType(TypeMirror type, CharSequence typeName) {
-        if (type == null || typeName == null) {
-            return false;
+        if (type == null && typeName == null) {
+            return true;
         }
         return Objects.equals(valueOf(type), valueOf(typeName));
     }
@@ -249,15 +242,21 @@ public interface TypeUtils {
 
     static List<DeclaredType> ofDeclaredTypes(Collection<? extends Element> elements,
                                               Predicate<? super DeclaredType>... typeFilters) {
-        return isEmpty(elements) ? emptyList() :
-                elements.stream()
-                        .map(TypeUtils::ofTypeElement)
-                        .filter(Objects::nonNull)
-                        .map(Element::asType)
-                        .map(TypeUtils::ofDeclaredType)
-                        .filter(Objects::nonNull)
-                        .filter(and(typeFilters))
-                        .collect(toList());
+
+        if (isEmpty(elements)) {
+            return emptyList();
+        }
+
+        List<DeclaredType> declaredTypes = elements.stream()
+                .map(TypeUtils::ofTypeElement)
+                .filter(Objects::nonNull)
+                .map(Element::asType)
+                .map(TypeUtils::ofDeclaredType)
+                .filter(Objects::nonNull)
+                .filter(and(typeFilters))
+                .collect(toList());
+
+        return declaredTypes.isEmpty() ? emptyList() : declaredTypes;
     }
 
     static TypeElement getTypeElementOfSuperclass(TypeElement type) {
@@ -456,27 +455,58 @@ public interface TypeUtils {
         return ofDeclaredTypes(getTypeElements(ofTypeElement(type), includeSelf, includeHierarchicalTypes, includeSuperClasses, includeSuperInterfaces), typeFilters);
     }
 
-    static List<TypeMirror> getInterfaceTypeMirrors(Element type, Predicate<TypeMirror>... interfaceFilters) {
-        return type == null ? emptyList() : filterAll((List<TypeMirror>) ofTypeElement(type).getInterfaces(), interfaceFilters);
+    static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeMirror type) {
+        return type == null ? emptyList() : findTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<TypeMirror> getInterfaceTypeMirrors(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
-        return getInterfaceTypeMirrors(ofTypeElement(type), interfaceFilters);
+    static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeElement type) {
+        return type == null ? emptyList() : findTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<? extends TypeMirror> getAllInterfaces(TypeMirror type) {
-        return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
+    static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+        return findTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
     }
 
-    static List<? extends TypeMirror> findAllInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+    static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
         if (type == null) {
             return emptyList();
         }
-        List<TypeElement> interfaces = getTypeElements(ofTypeElement(type), false, true, false, true);
-        return interfaces.stream()
+        List<TypeMirror> typeMirrors = getTypeElementsOfInterfaces(type).stream()
                 .map(TypeElement::asType)
                 .filter(and(interfaceFilters))
                 .collect(toList());
+        return typeMirrors.isEmpty() ? emptyList() : typeMirrors;
+    }
+
+    static List<TypeMirror> getAllTypeMirrorsOfInterfaces(TypeMirror type) {
+        return findAllTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeMirror> getAllTypeMirrorsOfInterfaces(TypeElement type) {
+        return findAllTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<TypeMirror> findAllTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
+        return type == null ? emptyList() : findAllTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
+    }
+
+    static List<TypeMirror> findAllTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
+        if (type == null) {
+            return emptyList();
+        }
+        List<TypeMirror> typeMirrors = getAllTypeElementsOfInterfaces(type).stream()
+                .map(TypeElement::asType)
+                .filter(and(interfaceFilters))
+                .collect(toList());
+        return typeMirrors.isEmpty() ? emptyList() : typeMirrors;
+    }
+
+    static TypeMirror findInterfaceTypeMirror(Element type, Type interfaceType) {
+        return findInterfaceTypeMirror(type, interfaceType.getTypeName());
+    }
+
+    static TypeMirror findInterfaceTypeMirror(TypeMirror type, Type interfaceType) {
+        return findInterfaceTypeMirror(type, interfaceType.getTypeName());
     }
 
     static TypeMirror findInterfaceTypeMirror(Element type, CharSequence interfaceClassName) {
@@ -484,11 +514,19 @@ public interface TypeUtils {
     }
 
     static TypeMirror findInterfaceTypeMirror(TypeMirror type, CharSequence interfaceClassName) {
-        return filterFirst(getAllInterfaces(type), t -> isSameType(t, interfaceClassName));
+        return filterFirst(getAllTypeMirrorsOfInterfaces(type), t -> isSameType(t, interfaceClassName));
     }
 
     static List<TypeMirror> getTypeMirrors(ProcessingEnvironment processingEnv, Type... types) {
-        return isEmpty(types) ? emptyList() : of(types).map(t -> getTypeMirror(processingEnv, t)).collect(toList());
+        if (isEmpty(types)) {
+            return emptyList();
+        }
+        List<TypeMirror> typeMirrors = of(types)
+                .filter(Objects::nonNull)
+                .map(t -> getTypeMirror(processingEnv, t))
+                .filter(Objects::nonNull)
+                .collect(toList());
+        return typeMirrors.isEmpty() ? emptyList() : typeMirrors;
     }
 
     static TypeMirror getTypeMirror(ProcessingEnvironment processingEnv, Type type) {
@@ -496,13 +534,16 @@ public interface TypeUtils {
         return typeElement == null ? null : typeElement.asType();
     }
 
-    static TypeMirror getTypeMirror(ProcessingEnvironment processingEnv, TypeMirror type) {
-        TypeElement typeElement = getTypeElement(processingEnv, type);
-        return typeElement == null ? null : typeElement.asType();
-    }
-
     static List<TypeElement> getTypeElements(ProcessingEnvironment processingEnv, Type... types) {
-        return isEmpty(types) ? emptyList() : of(types).map(t -> getTypeElement(processingEnv, t)).collect(toList());
+        if (isEmpty(types)) {
+            return emptyList();
+        }
+        List<TypeElement> typeElements = of(types)
+                .filter(Objects::nonNull)
+                .map(t -> getTypeElement(processingEnv, t))
+                .filter(Objects::nonNull)
+                .collect(toList());
+        return typeElements.isEmpty() ? emptyList() : typeElements;
     }
 
     static TypeElement getTypeElement(ProcessingEnvironment processingEnv, Type type) {
@@ -520,7 +561,6 @@ public interface TypeUtils {
         Elements elements = processingEnv.getElementUtils();
         return elements.getTypeElement(typeName);
     }
-
 
     static DeclaredType getDeclaredType(ProcessingEnvironment processingEnv, Type type) {
         return type == null ? null : getDeclaredType(processingEnv, type.getTypeName());
