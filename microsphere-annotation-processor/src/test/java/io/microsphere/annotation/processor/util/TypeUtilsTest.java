@@ -1535,9 +1535,15 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testToString() {
+    public void testToStringOnClasses() {
         assertToStringOnClasses();
     }
+
+    @Test
+    public void testToStringOnArrayTypes() {
+        assertToStringOnArrayTypes();
+    }
+
 
     @Test
     public void testToStringOnNull() {
@@ -1724,6 +1730,15 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         }
     }
 
+    private void assertToStringOnArrayTypes() {
+        TypeMirror typeMirror = getTypeMirror(ArrayTypeModel.class);
+        assertToString(findField(typeMirror, "integers").asType());
+        assertToString(findField(typeMirror, "strings").asType());
+        assertToString(findField(typeMirror, "primitiveTypeModels").asType());
+        assertToString(findField(typeMirror, "models").asType());
+        assertToString(findField(typeMirror, "colors").asType());
+    }
+
     private void assertToStringOnClasses() {
         assertToString(NULL_TYPE);
         assertToString(SELF_TYPE);
@@ -1754,5 +1769,9 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
             TypeMirror typeMirror = getTypeMirror(types[i]);
             assertEquals(types[i].getTypeName(), TypeUtils.toString(typeMirror));
         }
+    }
+
+    private void assertToString(TypeMirror type) {
+        assertEquals(type.toString(), TypeUtils.toString(type));
     }
 }
