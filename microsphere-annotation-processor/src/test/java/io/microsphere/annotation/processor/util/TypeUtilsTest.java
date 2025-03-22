@@ -22,7 +22,9 @@ import io.microsphere.annotation.processor.GenericTestService;
 import io.microsphere.annotation.processor.TestService;
 import io.microsphere.annotation.processor.TestServiceImpl;
 import io.microsphere.annotation.processor.model.ArrayTypeModel;
+import io.microsphere.annotation.processor.model.CollectionTypeModel;
 import io.microsphere.annotation.processor.model.Color;
+import io.microsphere.annotation.processor.model.MapTypeModel;
 import io.microsphere.annotation.processor.model.Model;
 import io.microsphere.annotation.processor.model.PrimitiveTypeModel;
 import org.junit.jupiter.api.Disabled;
@@ -231,7 +233,9 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
         compiledClasses.add(ArrayTypeModel.class);
+        compiledClasses.add(CollectionTypeModel.class);
         compiledClasses.add(Color.class);
+        compiledClasses.add(MapTypeModel.class);
     }
 
     @Override
@@ -297,7 +301,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsArrayTypeOnTypeMirror() {
-        assertIsArrayType(getDeclaredType(ArrayTypeModel.class));
+        assertIsArrayType(ArrayTypeModel.class);
     }
 
     @Test
@@ -1544,6 +1548,10 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertToStringOnArrayTypes();
     }
 
+    @Test
+    public void testToStringOnCollectionTypes() {
+        assertToStringOnCollectionTypes();
+    }
 
     @Test
     public void testToStringOnNull() {
@@ -1611,12 +1619,12 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertDeclaredTypes(declaredTypes, types);
     }
 
-    private void assertIsArrayType(TypeMirror type) {
-        assertTrue(isArrayType(findField(type, "integers").asType()));
-        assertTrue(isArrayType(findField(type, "strings").asType()));
-        assertTrue(isArrayType(findField(type, "primitiveTypeModels").asType()));
-        assertTrue(isArrayType(findField(type, "models").asType()));
-        assertTrue(isArrayType(findField(type, "colors").asType()));
+    private void assertIsArrayType(Type type) {
+        assertTrue(isArrayType(getFieldType(type, "integers")));
+        assertTrue(isArrayType(getFieldType(type, "strings")));
+        assertTrue(isArrayType(getFieldType(type, "primitiveTypeModels")));
+        assertTrue(isArrayType(getFieldType(type, "models")));
+        assertTrue(isArrayType(getFieldType(type, "colors")));
     }
 
     private void assertIsArrayType(Element element) {
@@ -1730,13 +1738,25 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         }
     }
 
+    private void assertToStringOnCollectionTypes() {
+        assertToString(getFieldType(CollectionTypeModel.class, "strings"));
+        assertToString(getFieldType(CollectionTypeModel.class, "colors"));
+        assertToString(getFieldType(CollectionTypeModel.class, "primitiveTypeModels"));
+        assertToString(getFieldType(CollectionTypeModel.class, "models"));
+        assertToString(getFieldType(CollectionTypeModel.class, "modelArrays"));
+    }
+
     private void assertToStringOnArrayTypes() {
-        TypeMirror typeMirror = getTypeMirror(ArrayTypeModel.class);
-        assertToString(findField(typeMirror, "integers").asType());
-        assertToString(findField(typeMirror, "strings").asType());
-        assertToString(findField(typeMirror, "primitiveTypeModels").asType());
-        assertToString(findField(typeMirror, "models").asType());
-        assertToString(findField(typeMirror, "colors").asType());
+        assertToString(getFieldType(ArrayTypeModel.class, "integers"));
+        assertToString(getFieldType(ArrayTypeModel.class, "strings"));
+        assertToString(getFieldType(ArrayTypeModel.class, "primitiveTypeModels"));
+        assertToString(getFieldType(ArrayTypeModel.class, "models"));
+        assertToString(getFieldType(ArrayTypeModel.class, "colors"));
+    }
+
+    private TypeMirror getFieldType(Type type, String fieldName) {
+        TypeMirror typeMirror = getTypeMirror(type);
+        return findField(typeMirror, fieldName).asType();
     }
 
     private void assertToStringOnClasses() {
