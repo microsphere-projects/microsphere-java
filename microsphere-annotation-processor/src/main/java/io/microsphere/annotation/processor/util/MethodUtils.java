@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
-import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.filter.FilterUtils.filter;
@@ -47,48 +47,57 @@ import static javax.lang.model.util.ElementFilter.methodsIn;
 /**
  * The utilities class for method in the package "javax.lang.model."
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public interface MethodUtils {
 
-    static List<ExecutableElement> getDeclaredMethods(TypeElement type, Predicate<ExecutableElement>... methodFilters) {
-        return type == null ? emptyList() : getDeclaredMethods(type.asType(), methodFilters);
+    static List<ExecutableElement> getDeclaredMethods(TypeElement type) {
+        return findDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<ExecutableElement> getDeclaredMethods(TypeMirror type, Predicate<ExecutableElement>... methodFilters) {
-        return filterAll(methodsIn(getDeclaredMembers(type)), methodFilters);
-    }
-
-    static List<ExecutableElement> getAllDeclaredMethods(TypeElement type, Predicate<ExecutableElement>... methodFilters) {
-        return type == null ? emptyList() : getAllDeclaredMethods(type.asType(), methodFilters);
+    static List<ExecutableElement> getDeclaredMethods(TypeMirror type) {
+        return findDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<ExecutableElement> getAllDeclaredMethods(TypeElement type) {
-        return getAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static List<ExecutableElement> getAllDeclaredMethods(TypeMirror type, Predicate<ExecutableElement>... methodFilters) {
-        return getHierarchicalTypes(type).stream().map(t -> getDeclaredMethods(t, methodFilters)).flatMap(Collection::stream).collect(Collectors.toList());
+        return findAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<ExecutableElement> getAllDeclaredMethods(TypeMirror type) {
-        return getAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
+        return findAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<ExecutableElement> getAllDeclaredMethods(TypeElement type, Type... excludedTypes) {
-        return type == null ? emptyList() : getAllDeclaredMethods(type.asType(), excludedTypes);
+    static List<ExecutableElement> findDeclaredMethods(TypeElement type, Predicate<? super ExecutableElement>... methodFilters) {
+        return type == null ? emptyList() : findDeclaredMethods(type.asType(), methodFilters);
     }
 
-    static List<ExecutableElement> getAllDeclaredMethods(TypeMirror type, Type... excludedTypes) {
-        return getHierarchicalTypes(type, excludedTypes).stream().map(t -> getDeclaredMethods(t)).flatMap(Collection::stream).collect(Collectors.toList());
+    static List<ExecutableElement> findDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
+        return filterAll(methodsIn(getDeclaredMembers(type)), methodFilters);
     }
 
-    static List<ExecutableElement> getPublicNonStaticMethods(TypeElement type, Type... excludedTypes) {
-        return getPublicNonStaticMethods(ofDeclaredType(type), excludedTypes);
+    static List<ExecutableElement> findAllDeclaredMethods(TypeElement type, Predicate<? super ExecutableElement>... methodFilters) {
+        return type == null ? emptyList() : findAllDeclaredMethods(type.asType(), methodFilters);
     }
 
-    static List<ExecutableElement> getPublicNonStaticMethods(TypeMirror type, Type... excludedTypes) {
-        return filter(getAllDeclaredMethods(type, excludedTypes), MethodUtils::isPublicNonStaticMethod);
+    static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
+        return getAllDeclaredTypes(type).stream().map(t -> findDeclaredMethods(t, methodFilters)).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    static List<ExecutableElement> findAllDeclaredMethods(TypeElement type, Type... excludedTypes) {
+        return type == null ? emptyList() : findAllDeclaredMethods(type.asType(), excludedTypes);
+    }
+
+    static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Type... excludedTypes) {
+        return TypeUtils.findAllDeclaredTypes(type, excludedTypes).stream().map(t -> findDeclaredMethods(t)).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    static List<ExecutableElement> findPublicNonStaticMethods(TypeElement type, Type... excludedTypes) {
+        return findPublicNonStaticMethods(ofDeclaredType(type), excludedTypes);
+    }
+
+    static List<ExecutableElement> findPublicNonStaticMethods(TypeMirror type, Type... excludedTypes) {
+        return filter(findAllDeclaredMethods(type, excludedTypes), MethodUtils::isPublicNonStaticMethod);
     }
 
     static boolean isMethod(ExecutableElement method) {
@@ -122,7 +131,6 @@ public interface MethodUtils {
         Elements elements = processingEnv.getElementUtils();
         return filterFirst(getAllDeclaredMethods(type), method -> elements.overrides(method, declaringMethod, type));
     }
-
 
     static String getMethodName(ExecutableElement method) {
         return method == null ? null : method.getSimpleName().toString();

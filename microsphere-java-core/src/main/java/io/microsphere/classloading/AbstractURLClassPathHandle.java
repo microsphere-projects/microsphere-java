@@ -16,10 +16,10 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collection;
@@ -88,12 +88,18 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
     @Nonnull
     @Override
     public URL[] getURLs(ClassLoader classLoader) {
+        if (classLoader == null) {
+            return EMPTY_URL_ARRAY;
+        }
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(ucp, "getURLs");
     }
 
     @Override
     public final boolean removeURL(ClassLoader classLoader, URL url) {
+        if (classLoader == null || url == null) {
+            return false;
+        }
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         Collection<URL> urls = getFieldValue(ucp, getUrlsField());
         Collection<URL> path = getFieldValue(ucp, getPathField());

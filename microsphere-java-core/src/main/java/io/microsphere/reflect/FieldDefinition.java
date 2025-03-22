@@ -16,11 +16,11 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 
 import static io.microsphere.reflect.FieldUtils.findField;

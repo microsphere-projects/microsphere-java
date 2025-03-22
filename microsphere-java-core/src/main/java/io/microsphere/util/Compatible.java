@@ -16,7 +16,8 @@
  */
 package io.microsphere.util;
 
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nullable;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;

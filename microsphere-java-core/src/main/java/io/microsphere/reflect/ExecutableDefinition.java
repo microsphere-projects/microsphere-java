@@ -16,10 +16,10 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;

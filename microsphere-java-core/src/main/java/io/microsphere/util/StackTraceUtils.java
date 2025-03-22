@@ -16,9 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Function;

@@ -16,12 +16,9 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
-
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
 
-import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyMap;
@@ -34,7 +31,7 @@ import static java.util.Collections.singletonMap;
  * @see MapUtils
  * @since 1.0.0
  */
-public abstract class Maps extends BaseUtils {
+public abstract class Maps extends MapUtils {
 
     /**
      * The {@link MethodHandle} of {@link Map#of()} since JDK 9
@@ -104,7 +101,7 @@ public abstract class Maps extends BaseUtils {
      * @return an empty {@code Map}
      */
     @SuppressWarnings("unchecked")
-    static <K, V> Map<K, V> ofMap() {
+    public static <K, V> Map<K, V> ofMap() {
         if (of0MethodHandle == null) {
             return emptyMap();
         }
@@ -125,7 +122,7 @@ public abstract class Maps extends BaseUtils {
      * @return a {@code Map} containing the specified mapping
      * @throws NullPointerException if the key or the value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1) {
         if (of1MethodHandle == null) {
             return singletonMap(k1, v1);
         }
@@ -149,7 +146,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if the keys are duplicates
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2) {
         if (of2MethodHandle == null) {
             return of(k1, v1, k2, v2);
         }
@@ -175,7 +172,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3) {
         if (of3MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3);
         }
@@ -203,7 +200,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
         if (of4MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4);
         }
@@ -233,7 +230,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
         if (of5MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
         }
@@ -265,7 +262,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
         if (of6MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
         }
@@ -299,7 +296,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
         if (of7MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
         }
@@ -335,7 +332,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                   K k8, V v8) {
         if (of8MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
@@ -374,7 +371,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                   K k8, V v8, K k9, V v9) {
         if (of9MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
@@ -415,7 +412,7 @@ public abstract class Maps extends BaseUtils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
-    static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
+    public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                   K k8, V v8, K k9, V v9, K k10, V v10) {
         if (of10MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
@@ -455,7 +452,7 @@ public abstract class Maps extends BaseUtils {
      */
     @SafeVarargs
     @SuppressWarnings("varargs")
-    static <K, V> Map<K, V> ofMap(Map.Entry<? extends K, ? extends V>... entries) {
+    public static <K, V> Map<K, V> ofMap(Map.Entry<? extends K, ? extends V>... entries) {
         if (length(entries) < 1) {
             return emptyMap();
         }

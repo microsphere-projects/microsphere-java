@@ -4,9 +4,9 @@
 package io.microsphere.io.scanner;
 
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.filter.Filter;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**

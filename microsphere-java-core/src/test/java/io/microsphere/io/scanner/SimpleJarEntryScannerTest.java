@@ -3,6 +3,7 @@
  */
 package io.microsphere.io.scanner;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.util.jar.JarUtils;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,6 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
@@ -27,13 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see SimpleJarEntryScannerTest
  * @since 1.0.0
  */
-public class SimpleJarEntryScannerTest  {
+public class SimpleJarEntryScannerTest extends AbstractTestCase {
 
     private static final SimpleJarEntryScanner simpleJarEntryScanner = INSTANCE;
 
     @Test
     public void testScanInJarURL() throws IOException {
-        URL resourceURL = getClassResource(TEST_CLASS_LOADER, Nonnull.class);
+        URL resourceURL = getClassResource(classLoader, Nonnull.class);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(resourceURL, true);
         assertEquals(1, jarEntrySet.size());
 
@@ -45,7 +45,7 @@ public class SimpleJarEntryScannerTest  {
 
     @Test
     public void testScanInJarFile() throws IOException {
-        URL resourceURL = getClassResource(TEST_CLASS_LOADER, Nonnull.class);
+        URL resourceURL = getClassResource(classLoader, Nonnull.class);
         JarFile jarFile = JarUtils.toJarFile(resourceURL);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(jarFile, true);
         assertTrue(jarEntrySet.size() > 1);

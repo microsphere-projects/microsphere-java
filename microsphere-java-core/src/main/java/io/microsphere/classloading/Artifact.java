@@ -1,9 +1,9 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Objects;
 import java.util.function.Function;
@@ -20,10 +20,13 @@ public class Artifact {
 
     public static final String UNKNOWN = SymbolConstants.QUESTION_MARK;
 
+    @Nonnull
     private final String artifactId;
 
+    @Nullable
     private final String version;
 
+    @Nullable
     private final URL location;
 
     public Artifact(@Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
@@ -44,14 +47,32 @@ public class Artifact {
         return create(artifactId, UNKNOWN);
     }
 
+    /**
+     * Get the artifact Id
+     *
+     * @return non-null
+     */
+    @Nonnull
     public String getArtifactId() {
         return artifactId;
     }
 
+    /**
+     * Get the version
+     *
+     * @return nullable
+     */
+    @Nullable
     public String getVersion() {
         return version;
     }
 
+    /**
+     * Get the location of artifact resource
+     *
+     * @return nullable
+     */
+    @Nullable
     public URL getLocation() {
         return location;
     }

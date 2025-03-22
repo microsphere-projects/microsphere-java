@@ -1,7 +1,8 @@
 package io.microsphere.classloading;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.net.URL;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
  */
 public class MavenArtifact extends Artifact {
 
+    @Nonnull
     private final String groupId;
 
     public MavenArtifact(@Nonnull String groupId, @Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
@@ -34,6 +36,11 @@ public class MavenArtifact extends Artifact {
         return create(groupId, artifactId, UNKNOWN);
     }
 
+    /**
+     * Get the group id of Maven Artifact
+     * @return non-null
+     */
+    @Nonnull
     public String getGroupId() {
         return groupId;
     }

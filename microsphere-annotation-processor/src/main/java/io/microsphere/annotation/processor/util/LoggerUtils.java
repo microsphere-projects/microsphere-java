@@ -17,31 +17,47 @@
 package io.microsphere.annotation.processor.util;
 
 
-
-
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 
-import static java.lang.String.format;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * Logger Utils
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public interface LoggerUtils {
 
-    Logger LOGGER = LoggerFactory.getLogger(LoggerUtils.class);
+    Logger LOGGER = getLogger("microsphere-annotation-processor");
+
+    static void trace(String format, Object... args) {
+        if (LOGGER.isTraceEnabled()) {
+            LOGGER.trace(format, args);
+        }
+    }
+
+    static void debug(String format, Object... args) {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(format, args);
+        }
+    }
 
     static void info(String format, Object... args) {
         if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(format(format, args));
+            LOGGER.info(format, args);
         }
     }
 
     static void warn(String format, Object... args) {
         if (LOGGER.isWarnEnabled()) {
-            LOGGER.warn(format(format, args));
+            LOGGER.warn(format, args);
+        }
+    }
+
+    static void error(String format, Object... args) {
+        if (LOGGER.isErrorEnabled()) {
+            LOGGER.error(format, args);
         }
     }
 }

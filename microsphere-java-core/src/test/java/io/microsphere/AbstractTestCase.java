@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
@@ -25,7 +27,7 @@ import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.TypeUtils.asClass;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -47,37 +49,51 @@ public abstract class AbstractTestCase {
 
     public static final String TEST_ELEMENT = "test";
 
-    public static final Collection<?> TEST_NULL_COLLECTION = null;
+    public static final String TEST_NULL_STRING = null;
 
-    public static final List<?> TEST_NULL_LIST = null;
+    public static final Object[] TEST_NULL_OBJECT_ARRAY = null;
 
-    public static final Set<?> TEST_NULL_SET = null;
+    public static final String[] TEST_NULL_STRING_ARRAY = null;
 
-    public static final Queue<?> TEST_NULL_QUEUE = null;
+    public static final Enumeration TEST_NULL_ENUMERATION = null;
 
-    public static final Deque<?> TEST_NULL_DEQUE = null;
+    public static final Iterator TEST_NULL_ITERATOR = null;
 
-    public static final Collection<?> TEST_EMPTY_COLLECTION = emptySet();
+    public static final Iterable TEST_NULL_ITERABLE = null;
 
-    public static final List<?> TEST_EMPTY_LIST = emptyList();
+    public static final Collection TEST_NULL_COLLECTION = null;
 
-    public static final Set<?> TEST_EMPTY_SET = emptySet();
+    public static final List TEST_NULL_LIST = null;
 
-    public static final Queue<?> TEST_EMPTY_QUEUE = emptyQueue();
+    public static final Set TEST_NULL_SET = null;
 
-    public static final Deque<?> TEST_EMPTY_DEQUE = emptyDeque();
+    public static final Queue TEST_NULL_QUEUE = null;
 
-    public static final List<?> TEST_SINGLETON_LIST = singletonList(TEST_ELEMENT);
+    public static final Deque TEST_NULL_DEQUE = null;
 
-    public static final Set<?> TEST_SINGLETON_SET = singleton(TEST_ELEMENT);
+    public static final Collection TEST_EMPTY_COLLECTION = emptySet();
 
-    public static final Queue<?> TEST_SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
+    public static final List TEST_EMPTY_LIST = emptyList();
 
-    public static final Deque<?> TEST_SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
+    public static final Set TEST_EMPTY_SET = emptySet();
+
+    public static final Queue TEST_EMPTY_QUEUE = emptyQueue();
+
+    public static final Deque TEST_EMPTY_DEQUE = emptyDeque();
+
+    public static final List TEST_SINGLETON_LIST = singletonList(TEST_ELEMENT);
+
+    public static final Set TEST_SINGLETON_SET = singleton(TEST_ELEMENT);
+
+    public static final Queue TEST_SINGLETON_QUEUE = singletonQueue(TEST_ELEMENT);
+
+    public static final Deque TEST_SINGLETON_DEQUE = singletonDeque(TEST_ELEMENT);
 
     public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
-    public static final ClassLoader TEST_CLASS_LOADER = getDefaultClassLoader();
+    public static final ClassLoader TEST_CLASS_LOADER = getClassLoader(AbstractTestCase.class);
+
+    protected final ClassLoader classLoader = getClassLoader(getClass());
 
     protected final Logger logger = getLogger(getClass());
 

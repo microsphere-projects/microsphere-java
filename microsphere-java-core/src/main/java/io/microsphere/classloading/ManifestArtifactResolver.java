@@ -1,6 +1,8 @@
 package io.microsphere.classloading;
 
 
+import io.microsphere.annotation.ConfigurationProperty;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -12,7 +14,10 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
+import static io.microsphere.constants.SymbolConstants.COMMA;
 import static io.microsphere.net.URLUtils.isArchiveURL;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.System.getProperty;
@@ -27,37 +32,40 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
 
     public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
 
-    public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = "microsphere.artifact-id.manifest-attribute-names";
+    public static final String DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE = "Bundle-Name,Automatic-Module-Name,Implementation-Title";
 
-    public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = "microsphere.artifact-version.manifest-attribute-names";
+    public static final String DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE = "Bundle-Version,Implementation-Version";
 
-    private static final String[] DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES = {
-            "Bundle-Name",
-            "Automatic-Module-Name",
-            "Implementation-Title"
-    };
+    @ConfigurationProperty(
+            type = String[].class,
+            defaultValue = DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE,
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id"
+    )
+    public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-id.manifest-attribute-names";
 
-    private static final String[] DEFAULT_VERSION_ATTRIBUTE_NAMES = {
-            "Bundle-Version",
-            "Implementation-Version"
-    };
+    @ConfigurationProperty(
+            type = String[].class,
+            defaultValue = DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE,
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version"
+    )
+    public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-version.manifest-attribute-names";
 
     private static final String[] ARTIFACT_ID_ATTRIBUTE_NAMES = getArtifactIdAttributeNames();
 
     private static final String[] VERSION_ATTRIBUTE_NAMES = getVersionAttributeNames();
 
     private static String[] getArtifactIdAttributeNames() {
-        return getPropertyValues(ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES);
+        return getPropertyValues(ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE);
     }
 
     private static String[] getVersionAttributeNames() {
-        return getPropertyValues(VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_VERSION_ATTRIBUTE_NAMES);
+        return getPropertyValues(VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE);
     }
 
-    private static String[] getPropertyValues(String propertyName, String... defaultValues) {
-        String propertyValue = getProperty(propertyName);
-        String[] values = split(propertyValue, ",");
-        return isNotEmpty(values) ? values : defaultValues;
+    private static String[] getPropertyValues(String propertyName, String defaultValue) {
+        String propertyValue = getProperty(propertyName, defaultValue);
+        String[] values = split(propertyValue, COMMA);
+        return isNotEmpty(values) ? values : EMPTY_STRING_ARRAY;
     }
 
     public static final int DEFAULT_PRIORITY = 2;

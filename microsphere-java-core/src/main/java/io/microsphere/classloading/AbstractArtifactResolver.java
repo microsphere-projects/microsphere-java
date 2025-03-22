@@ -12,6 +12,8 @@ import java.util.Set;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
+import static io.microsphere.util.ArrayUtils.isEmpty;
+import static java.util.Collections.emptySet;
 
 /**
  * Abstract {@link ArtifactResolver}
@@ -27,6 +29,9 @@ public abstract class AbstractArtifactResolver implements ArtifactResolver {
 
     @Override
     public final Set<Artifact> resolve(URL... classPathURLs) {
+        if (isEmpty(classPathURLs)) {
+            return emptySet();
+        }
         URLClassLoader urlClassLoader = newURLClassLoader(classPathURLs);
         Set<Artifact> artifactSet = new LinkedHashSet<>(classPathURLs.length);
         doResolve(artifactSet, urlClassLoader);

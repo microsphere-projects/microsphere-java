@@ -16,9 +16,12 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.StringUtils.substringAfter;
+import static io.microsphere.util.Version.Operator.of;
+import static io.microsphere.util.Version.ofVersion;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_10;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_11;
@@ -36,10 +39,15 @@ import static io.microsphere.util.VersionUtils.JAVA_VERSION_22;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.LATEST_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.detectJavaMajorVersion;
+import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
+import static io.microsphere.util.VersionUtils.testVersion;
 import static java.lang.String.valueOf;
 import static javax.lang.model.SourceVersion.latest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link VersionUtils} Test
@@ -48,15 +56,31 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see VersionUtils
  * @since 1.0.0
  */
-public class VersionUtilsTest {
+public class VersionUtilsTest extends AbstractTestCase {
+
+    private static final String TEST_VERSION_STRING_1_1_0 = "1.1.0";
+
+    private static final String TEST_VERSION_STRING_1_2_3 = "1.2.3";
+
+    private static final String TEST_VERSION_STRING_1_3_0 = "1.3.0";
+
+    private static final Version TEST_VERSION_1_1_0 = ofVersion(TEST_VERSION_STRING_1_1_0);
+
+    private static final Version TEST_VERSION_1_2_3 = ofVersion(TEST_VERSION_STRING_1_2_3);
+
+    private static final Version TEST_VERSION_1_3_0 = ofVersion(TEST_VERSION_STRING_1_3_0);
+
+    private static final String TEST_OPERATOR_STRING_GREATER_THAN = ">";
+
+    private static final Version.Operator TEST_OPERATOR_GREATER_THAN = of(TEST_OPERATOR_STRING_GREATER_THAN);
 
     @Test
-    public void testLatestJavaVersion() {
+    public void testVersionLatestJavaVersion() {
         assertSame(LATEST_JAVA_VERSION, latest());
     }
 
     @Test
-    public void testCurrentJavaVersion() {
+    public void testVersionCurrentJavaMajorVersion() {
         String releaseVersion = LATEST_JAVA_VERSION.name();
         String version = substringAfter(releaseVersion, "RELEASE_");
         assertEquals(LATEST_JAVA_VERSION.ordinal(), CURRENT_JAVA_VERSION.getMajor());
@@ -64,7 +88,7 @@ public class VersionUtilsTest {
     }
 
     @Test
-    public void testJavaVersions() {
+    public void testVersionJavaVersions() {
         assertEquals(8, JAVA_VERSION_8.getMajor());
         assertEquals(9, JAVA_VERSION_9.getMajor());
         assertEquals(10, JAVA_VERSION_10.getMajor());
@@ -80,5 +104,48 @@ public class VersionUtilsTest {
         assertEquals(20, JAVA_VERSION_20.getMajor());
         assertEquals(21, JAVA_VERSION_21.getMajor());
         assertEquals(22, JAVA_VERSION_22.getMajor());
+    }
+
+    @Test
+    public void testTestCurrentJavaVersion() {
+        assertEquals(testCurrentJavaVersion(TEST_OPERATOR_GREATER_THAN, JAVA_VERSION_8),
+                TEST_OPERATOR_GREATER_THAN.test(CURRENT_JAVA_VERSION, JAVA_VERSION_8));
+    }
+
+    @Test
+    public void testTestVersion() {
+        assertTrue(testVersion(TEST_VERSION_1_2_3, TEST_OPERATOR_GREATER_THAN, TEST_VERSION_1_1_0));
+        assertFalse(testVersion(TEST_VERSION_1_2_3, TEST_OPERATOR_GREATER_THAN, TEST_VERSION_1_3_0));
+    }
+
+    @Test
+    public void testTestVersionOnNull() {
+        assertFalse(testVersion((Version) null, null, null));
+        assertFalse(testVersion(TEST_VERSION_1_2_3, null, null));
+        assertFalse(testVersion(TEST_VERSION_1_2_3, TEST_OPERATOR_GREATER_THAN, null));
+    }
+
+    @Test
+    public void testTestVersionWithStringArgs() {
+        assertTrue(testVersion(TEST_VERSION_STRING_1_2_3, TEST_OPERATOR_STRING_GREATER_THAN, TEST_VERSION_STRING_1_1_0));
+        assertFalse(testVersion(TEST_VERSION_STRING_1_2_3, TEST_OPERATOR_STRING_GREATER_THAN, TEST_VERSION_STRING_1_3_0));
+    }
+
+    @Test
+    public void testTestVersionWithStringArgsOnNull() {
+        assertFalse(testVersion(TEST_NULL_STRING, null, null));
+        assertFalse(testVersion(TEST_VERSION_STRING_1_2_3, null, null));
+        assertFalse(testVersion(TEST_VERSION_STRING_1_2_3, TEST_OPERATOR_STRING_GREATER_THAN, null));
+    }
+
+    @Test
+    public void testDetectJavaMajorVersion() {
+        assertEquals("1", detectJavaMajorVersion("1"));
+        assertEquals("9", detectJavaMajorVersion("9.0.0"));
+        assertEquals("11", detectJavaMajorVersion("11.0.0"));
+        assertEquals("17", detectJavaMajorVersion("17.0.0"));
+        assertEquals("21", detectJavaMajorVersion("21.0.0"));
+        assertEquals("5", detectJavaMajorVersion("1.5.0"));
+        assertEquals("8", detectJavaMajorVersion("1.8.0"));
     }
 }

@@ -17,10 +17,15 @@
 package io.microsphere.annotation;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.CONSTRUCTOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 /**
  * The marker annotation indicates a feature is experimental, it could be changed or even be removed in the future.
@@ -28,13 +33,13 @@ import java.lang.annotation.Target;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(SOURCE)
 @Target({
-        ElementType.ANNOTATION_TYPE,
-        ElementType.CONSTRUCTOR,
-        ElementType.FIELD,
-        ElementType.METHOD,
-        ElementType.TYPE
+        ANNOTATION_TYPE,
+        CONSTRUCTOR,
+        FIELD,
+        METHOD,
+        TYPE
 })
 @Documented
 public @interface Experimental {

@@ -55,7 +55,7 @@ public interface SymbolConstants {
     char DOUBLE_QUOTE_CHAR = '"';
 
     /**
-     * The double quotes char : '\''
+     * The single quotes char : '\''
      *
      * @see #QUOTE_CHAR
      */
@@ -149,6 +149,16 @@ public interface SymbolConstants {
     char WILDCARD_CHAR = '*';
 
     /**
+     * The vertical bar char : '|'
+     */
+    char VERTICAL_BAR_CHAR = '|';
+
+    /**
+     * The pipe char : '|'
+     */
+    char PIPE_CHAR = VERTICAL_BAR_CHAR;
+
+    /**
      * The comma symbol : ","
      */
     String COMMA = ",";
@@ -169,9 +179,27 @@ public interface SymbolConstants {
     String EXCLAMATION = "!";
 
     /**
-     * The double quotation symbol : """
+     * The single quote symbol : "'"
      */
-    String DOUBLE_QUOTATION = "\"";
+    String QUOTE = "'";
+
+    /**
+     * The double quote symbol : "\""
+     * @see #DOUBLE_QUOTATION
+     */
+    String DOUBLE_QUOTE = "\"";
+
+    /**
+     * The single quotes symbol : "'"
+     *
+     * @see #QUOTE
+     */
+    String SINGLE_QUOTATION = QUOTE;
+
+    /**
+     * The double quotation symbol : "\""
+     */
+    String DOUBLE_QUOTATION = DOUBLE_QUOTE;
 
     /**
      * The dollar symbol : '$'
@@ -263,4 +291,14 @@ public interface SymbolConstants {
      * The wildcard symbol : "*"
      */
     String WILDCARD = "*";
+
+    /**
+     * The vertical bar symbol : "|"
+     */
+    String VERTICAL_BAR = "|";
+
+    /**
+     * The pipe symbol : "|"
+     */
+    String PIPE = VERTICAL_BAR;
 }

@@ -16,11 +16,11 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.ClassUtils;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -41,8 +41,8 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
-import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.lang.Integer.getInteger;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -503,7 +503,7 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     protected static List<Type> doGetHierarchicalTypes(Type type) {
-        return genericTypeFinder(type, false, true, true, true).doFindTypes(EMPTY_PREDICATE_ARRAY);
+        return genericTypeFinder(type, false, true, true, true).findTypes(EMPTY_PREDICATE_ARRAY);
     }
 
     public static String getClassName(Type type) {

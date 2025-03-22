@@ -26,15 +26,15 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
-import java.util.Set;
 
+import static io.microsphere.annotation.processor.util.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
+import static io.microsphere.annotation.processor.util.MethodUtils.findPublicNonStaticMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getMethodName;
 import static io.microsphere.annotation.processor.util.MethodUtils.getMethodParameterTypes;
 import static io.microsphere.annotation.processor.util.MethodUtils.getOverrideMethod;
-import static io.microsphere.annotation.processor.util.MethodUtils.getPublicNonStaticMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getReturnType;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -44,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link MethodUtils} Test
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
@@ -51,17 +52,13 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> classesToBeCompiled) {
-    }
-
-    @Override
-    protected void beforeEach() {
-        testType = getType(TestServiceImpl.class);
+    protected void beforeTest() {
+        testType = getTypeElement(TestServiceImpl.class);
     }
 
     @Test
     public void testDeclaredMethods() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         List<ExecutableElement> methods = getDeclaredMethods(type);
         assertEquals(12, methods.size());
 
@@ -72,40 +69,40 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getAllDeclaredMethods((TypeMirror) null).isEmpty());
     }
 
-    private List<? extends ExecutableElement> doGetAllDeclaredMethods() {
-        return getAllDeclaredMethods(testType, Object.class);
+    private List<? extends ExecutableElement> doFindAllDeclaredMethods() {
+        return findAllDeclaredMethods(testType, Object.class);
     }
 
     @Test
-    public void testGetAllDeclaredMethods() {
-        List<? extends ExecutableElement> methods = doGetAllDeclaredMethods();
+    public void testFindAllDeclaredMethods() {
+        List<? extends ExecutableElement> methods = doFindAllDeclaredMethods();
         assertEquals(14, methods.size());
     }
 
     @Test
-    public void testGetPublicNonStaticMethods() {
-        List<? extends ExecutableElement> methods = getPublicNonStaticMethods(testType, Object.class);
+    public void testFindPublicNonStaticMethods() {
+        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testType, Object.class);
         assertEquals(14, methods.size());
 
-        methods = getPublicNonStaticMethods(testType.asType(), Object.class);
+        methods = findPublicNonStaticMethods(testType.asType(), Object.class);
         assertEquals(14, methods.size());
     }
 
     @Test
     public void testIsMethod() {
-        List<? extends ExecutableElement> methods = getPublicNonStaticMethods(testType, Object.class);
+        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testType, Object.class);
         assertEquals(14, methods.stream().map(MethodUtils::isMethod).count());
     }
 
     @Test
     public void testIsPublicNonStaticMethod() {
-        List<? extends ExecutableElement> methods = getPublicNonStaticMethods(testType, Object.class);
+        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testType, Object.class);
         assertEquals(14, methods.stream().map(MethodUtils::isPublicNonStaticMethod).count());
     }
 
     @Test
     public void testFindMethod() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         // Test methods from java.lang.Object
         // Object#toString()
         String methodName = "toString";
@@ -160,12 +157,12 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetOverrideMethod() {
-        List<? extends ExecutableElement> methods = doGetAllDeclaredMethods();
+        List<? extends ExecutableElement> methods = doFindAllDeclaredMethods();
 
         ExecutableElement overrideMethod = getOverrideMethod(processingEnv, testType, methods.get(0));
         assertNull(overrideMethod);
 
-        ExecutableElement declaringMethod = findMethod(getType(TestService.class), "echo", "java.lang.String");
+        ExecutableElement declaringMethod = findMethod(getTypeElement(TestService.class), "echo", "java.lang.String");
 
         overrideMethod = getOverrideMethod(processingEnv, testType, declaringMethod);
         assertEquals(methods.get(0), overrideMethod);

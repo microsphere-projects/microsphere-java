@@ -16,8 +16,9 @@
  */
 package io.microsphere.management;
 
-import javax.annotation.Nonnull;
-import javax.annotation.meta.When;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
@@ -40,7 +41,7 @@ public class MBeanAttribute {
 
     public MBeanAttribute(@Nonnull MBeanInfo declaringMBeanInfo,
                           @Nonnull MBeanAttributeInfo attributeInfo,
-                          @Nonnull(when = When.MAYBE) Object value) {
+                          @Nullable Object value) {
         Objects.requireNonNull(declaringMBeanInfo, "The declaring MBeanInfo argument must not be null!");
         Objects.requireNonNull(attributeInfo, "The MBeanAttributeInfo argument must not be null!");
         this.declaringMBeanInfo = declaringMBeanInfo;

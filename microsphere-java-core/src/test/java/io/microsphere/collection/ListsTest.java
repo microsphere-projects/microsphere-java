@@ -1,5 +1,6 @@
 package io.microsphere.collection;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.ListUtils.of;
@@ -14,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Lists
  * @since 1.0.0
  */
-public class ListsTest {
+public class ListsTest extends AbstractTestCase {
 
     @Test
-    public void testOfList0(){
+    public void testOfList0() {
         assertEquals(emptyList(), ofList());
     }
 
@@ -73,7 +74,7 @@ public class ListsTest {
 
     @Test
     public void testOfList() {
-        assertEquals(emptyList(), ofList(null));
+        assertEquals(emptyList(), ofList(TEST_NULL_OBJECT_ARRAY));
         assertEquals(of(1, 2, 3), ofList(1, 2, 3));
     }
 }

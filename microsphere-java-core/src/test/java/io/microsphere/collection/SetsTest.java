@@ -1,5 +1,6 @@
 package io.microsphere.collection;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.SetUtils.of;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Sets
  * @since 1.0.0
  */
-public class SetsTest {
+public class SetsTest extends AbstractTestCase {
 
     @Test
     public void testOfSet0() {
@@ -73,7 +74,7 @@ public class SetsTest {
 
     @Test
     public void testOfSet() {
-        assertEquals(emptySet(), ofSet(null));
+        assertEquals(emptySet(), ofSet(TEST_NULL_OBJECT_ARRAY));
         assertEquals(of(1, 2, 3), ofSet(1, 2, 3));
     }
 }

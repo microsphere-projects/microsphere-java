@@ -40,7 +40,7 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadServicesListWithServiceTypeAndClassLoader() {
-        List<EventListener> eventListeners = loadServicesList(TEST_CLASS, TEST_CLASS_LOADER);
+        List<EventListener> eventListeners = loadServicesList(TEST_CLASS, classLoader);
         assertEventListeners(eventListeners);
     }
 
@@ -52,7 +52,7 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadServicesListWithServiceTypeAndClassLoaderAndCached() {
-        List<EventListener> eventListeners = loadServicesList(TEST_CLASS, TEST_CLASS_LOADER, TEST_CACHED);
+        List<EventListener> eventListeners = loadServicesList(TEST_CLASS, classLoader, TEST_CACHED);
         assertEventListeners(eventListeners);
 
         eventListeners = loadServicesList(TEST_CLASS, null, TEST_CACHED);
@@ -62,8 +62,8 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testLoadServicesListOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> loadServicesList(Set.class));
-        assertThrows(IllegalArgumentException.class, () -> loadServicesList(Set.class, TEST_CLASS_LOADER));
-        assertThrows(IllegalArgumentException.class, () -> loadServicesList(Set.class, TEST_CLASS_LOADER, true));
+        assertThrows(IllegalArgumentException.class, () -> loadServicesList(Set.class, classLoader));
+        assertThrows(IllegalArgumentException.class, () -> loadServicesList(Set.class, classLoader, true));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadServicesWithServiceTypeAndClassLoader() {
-        EventListener[] eventListeners = loadServices(TEST_CLASS, TEST_CLASS_LOADER);
+        EventListener[] eventListeners = loadServices(TEST_CLASS, classLoader);
         assertEventListeners(eventListeners);
     }
 
@@ -86,15 +86,15 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadServicesWithServiceTypeAndClassLoaderAndCached() {
-        EventListener[] eventListeners = loadServices(TEST_CLASS, TEST_CLASS_LOADER, TEST_CACHED);
+        EventListener[] eventListeners = loadServices(TEST_CLASS, classLoader, TEST_CACHED);
         assertEventListeners(eventListeners);
     }
 
     @Test
     public void testLoadServicesOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> loadServices(Set.class));
-        assertThrows(IllegalArgumentException.class, () -> loadServices(Set.class, TEST_CLASS_LOADER));
-        assertThrows(IllegalArgumentException.class, () -> loadServices(Set.class, TEST_CLASS_LOADER, true));
+        assertThrows(IllegalArgumentException.class, () -> loadServices(Set.class, classLoader));
+        assertThrows(IllegalArgumentException.class, () -> loadServices(Set.class, classLoader, true));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadFirstServiceWithServiceTypeAndClassLoader() {
-        EventListener eventListener = loadFirstService(TEST_CLASS, TEST_CLASS_LOADER);
+        EventListener eventListener = loadFirstService(TEST_CLASS, classLoader);
         assertFirstEventListener(eventListener);
     }
 
@@ -117,15 +117,15 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadFirstServiceWithServiceTypeAndClassLoaderAndCached() {
-        EventListener eventListener = loadFirstService(TEST_CLASS, TEST_CLASS_LOADER, TEST_CACHED);
+        EventListener eventListener = loadFirstService(TEST_CLASS, classLoader, TEST_CACHED);
         assertFirstEventListener(eventListener);
     }
 
     @Test
     public void testLoadFirstServiceOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> loadFirstService(Set.class));
-        assertThrows(IllegalArgumentException.class, () -> loadFirstService(Set.class, TEST_CLASS_LOADER));
-        assertThrows(IllegalArgumentException.class, () -> loadFirstService(Set.class, TEST_CLASS_LOADER, true));
+        assertThrows(IllegalArgumentException.class, () -> loadFirstService(Set.class, classLoader));
+        assertThrows(IllegalArgumentException.class, () -> loadFirstService(Set.class, classLoader, true));
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadLastServiceWithServiceTypeAndClassLoader() {
-        EventListener eventListener = loadLastService(TEST_CLASS, TEST_CLASS_LOADER);
+        EventListener eventListener = loadLastService(TEST_CLASS, classLoader);
         assertLastEventListener(eventListener);
     }
 
@@ -148,15 +148,15 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testLoadLastServiceWithServiceTypeAndClassLoaderAndCached() {
-        EventListener eventListener = loadLastService(TEST_CLASS, TEST_CLASS_LOADER, TEST_CACHED);
+        EventListener eventListener = loadLastService(TEST_CLASS, classLoader, TEST_CACHED);
         assertLastEventListener(eventListener);
     }
 
     @Test
     public void testLoadLastServiceOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> loadLastService(Set.class));
-        assertThrows(IllegalArgumentException.class, () -> loadLastService(Set.class, TEST_CLASS_LOADER));
-        assertThrows(IllegalArgumentException.class, () -> loadLastService(Set.class, TEST_CLASS_LOADER, true));
+        assertThrows(IllegalArgumentException.class, () -> loadLastService(Set.class, classLoader));
+        assertThrows(IllegalArgumentException.class, () -> loadLastService(Set.class, classLoader, true));
     }
 
     private void assertEventListeners(EventListener[] eventListeners) {
@@ -167,8 +167,8 @@ public class ServiceLoaderUtilsTest extends AbstractTestCase {
         assertEquals(2, eventListeners.size());
 
         EventListener eventListener = eventListeners.get(0);
-        EventListener firstService = loadFirstService(TEST_CLASS, TEST_CLASS_LOADER);
-        EventListener lastService = loadLastService(TEST_CLASS, TEST_CLASS_LOADER);
+        EventListener firstService = loadFirstService(TEST_CLASS, classLoader);
+        EventListener lastService = loadLastService(TEST_CLASS, classLoader);
 
         assertNotNull(eventListener);
         assertEquals(eventListener, firstService);

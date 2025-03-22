@@ -1,5 +1,6 @@
 package io.microsphere.collection;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see SetUtils
  * @since 1.0.0
  */
-public class SetUtilsTest {
+public class SetUtilsTest extends AbstractTestCase {
 
     private static final String[] ELEMENTS = new String[]{"a", "b", "c"};
 
@@ -45,7 +46,7 @@ public class SetUtilsTest {
         Set<String> set = ofSet();
         assertEquals(emptySet(), set);
 
-        set = ofSet(((String[]) null));
+        set = ofSet((TEST_NULL_STRING_ARRAY));
         assertEquals(emptySet(), set);
 
         set = ofSet("A", "B", "C");

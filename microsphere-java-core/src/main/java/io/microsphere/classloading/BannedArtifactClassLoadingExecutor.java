@@ -1,5 +1,6 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.io.BufferedReader;
@@ -13,7 +14,6 @@ import java.util.List;
 
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
@@ -45,17 +45,17 @@ public class BannedArtifactClassLoadingExecutor {
 
     private static final String ENCODING = FILE_ENCODING;
 
-    private final ClassLoader classLoader;
-
     private final ArtifactDetector artifactDetector;
 
+    private final ClassLoader classLoader;
+
     public BannedArtifactClassLoadingExecutor() {
-        this(getDefaultClassLoader());
+        this(null);
     }
 
-    public BannedArtifactClassLoadingExecutor(ClassLoader classLoader) {
-        this.classLoader = classLoader;
+    public BannedArtifactClassLoadingExecutor(@Nullable ClassLoader classLoader) {
         this.artifactDetector = new ArtifactDetector(classLoader);
+        this.classLoader = this.artifactDetector.classLoader;
     }
 
     public void execute() {

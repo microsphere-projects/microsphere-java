@@ -58,7 +58,6 @@ public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTes
 
     @Test
     public void test() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (handle.supports()) {
             Set<URL> urls = findAllClassPathURLs(classLoader);
             for (URL url : urls) {

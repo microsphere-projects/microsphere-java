@@ -21,7 +21,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ArtifactDetector} Test
@@ -38,5 +41,18 @@ public class ArtifactDetectorTest {
         List<Artifact> artifacts = instance.detect();
         assertFalse(artifacts.isEmpty());
     }
+
+    @Test
+    public void testDetectOnNullSet() {
+        ArtifactDetector instance = new ArtifactDetector(getDefaultClassLoader());
+        assertTrue(instance.detect(null).isEmpty());
+    }
+
+    @Test
+    public void testDetectOnEmptySet() {
+        ArtifactDetector instance = new ArtifactDetector(null);
+        assertTrue(instance.detect(emptySet()).isEmpty());
+    }
+
 
 }

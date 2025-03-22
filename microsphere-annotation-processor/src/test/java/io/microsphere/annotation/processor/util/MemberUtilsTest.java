@@ -26,7 +26,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
-import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
@@ -44,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link MemberUtils} Test
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
@@ -51,12 +51,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> classesToBeCompiled) {
-    }
-
-    @Override
-    protected void beforeEach() {
-        testType = getType(TestServiceImpl.class);
+    protected void beforeTest() {
+        testType = getTypeElement(TestServiceImpl.class);
     }
 
     @Test
@@ -75,7 +71,7 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testDeclaredMembers() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         List<? extends Element> members = getDeclaredMembers(type.asType());
         List<VariableElement> fields = fieldsIn(members);
         assertEquals(19, members.size());
