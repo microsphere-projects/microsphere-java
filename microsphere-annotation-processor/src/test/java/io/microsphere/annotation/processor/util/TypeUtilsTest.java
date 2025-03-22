@@ -1536,7 +1536,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testToString() {
-        // TODO
+        assertToStringOnClasses();
     }
 
     @Test
@@ -1721,6 +1721,38 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
             Type type = types[i];
             TypeMirror typeMirror = TypeUtils.getDeclaredType(NULL_PROCESSING_ENVIRONMENT, type);
             assertNull(typeMirror);
+        }
+    }
+
+    private void assertToStringOnClasses() {
+        assertToString(NULL_TYPE);
+        assertToString(SELF_TYPE);
+        assertToString(SUPER_CLASS);
+        assertToString(ALL_TYPES);
+        assertToString(ALL_SUPER_TYPES);
+        assertToString(ALL_SUPER_CLASSES);
+        assertToString(ALL_SUPER_INTERFACES);
+        assertToString(SUPER_INTERFACES);
+        assertToString(SUPER_TYPES);
+
+        assertToString(SELF_TYPE_PLUS_ALL_SUPER_TYPES);
+        assertToString(SELF_TYPE_PLUS_ALL_SUPER_CLASSES);
+        assertToString(SELF_TYPE_PLUS_ALL_SUPER_INTERFACES);
+        assertToString(SELF_TYPE_PLUS_SUPER_CLASS);
+        assertToString(SELF_TYPE_PLUS_SUPER_INTERFACES);
+        assertToString(SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES);
+    }
+
+    private void assertToString(Type... types) {
+        int length = length(types);
+        for (int i = 0; i < length; i++) {
+            if (types[i] == null) {
+                length--;
+            }
+        }
+        for (int i = 0; i < length; i++) {
+            TypeMirror typeMirror = getTypeMirror(types[i]);
+            assertEquals(types[i].getTypeName(), TypeUtils.toString(typeMirror));
         }
     }
 }
