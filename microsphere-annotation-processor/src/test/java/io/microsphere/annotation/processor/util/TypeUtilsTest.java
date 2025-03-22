@@ -49,8 +49,13 @@ import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
+import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypesOfInterfaces;
+import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypesOfSuperTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypesOfSuperclasses;
 import static io.microsphere.annotation.processor.util.TypeUtils.findAllTypeElementsOfInterfaces;
 import static io.microsphere.annotation.processor.util.TypeUtils.findAllTypeElementsOfSuperclasses;
+import static io.microsphere.annotation.processor.util.TypeUtils.findDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.findDeclaredTypesOfInterfaces;
 import static io.microsphere.annotation.processor.util.TypeUtils.findTypeElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.findTypeElementsOfInterfaces;
@@ -511,21 +516,6 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeElement() {
-        assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, testClassName));
-    }
-
-    @Test
-    public void testGetTypeElementOnTypeMirror() {
-        assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, testTypeMirror));
-    }
-
-    @Test
-    public void testGetTypeElementOnType() {
-        assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, TestServiceImpl.class));
-    }
-
-    @Test
     public void testGetTypeElementOfSuperclass() {
         TypeElement superTypeElement = getTypeElementOfSuperclass(testTypeElement);
         assertEquals(getTypeElement(GenericTestService.class), superTypeElement);
@@ -961,7 +951,6 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertSame(emptyList(), declaredTypes);
     }
 
-
     @Test
     public void testFindDeclaredTypesOfInterfaces() {
         List<DeclaredType> declaredTypes = findDeclaredTypesOfInterfaces(testTypeMirror, alwaysTrue());
@@ -973,133 +962,280 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindDeclaredTypesOfInterfacesOnNull() {
-        assertTrue(getDeclaredTypesOfInterfaces(NULL_ELEMENT).isEmpty());
-        assertTrue(getDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR).isEmpty());
+        assertTrue(findDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue()).isEmpty());
     }
 
     @Test
     public void testFindAllDeclaredTypesOfSuperclasses() {
-        List<DeclaredType> declaredTypes = getAllDeclaredTypesOfSuperclasses(testTypeMirror);
+        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperclasses(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_CLASSES);
+
+        declaredTypes = findAllDeclaredTypesOfSuperclasses(testTypeMirror, alwaysFalse());
+        assertSame(emptyList(), declaredTypes);
     }
 
     @Test
     public void testFindAllDeclaredTypesOfSuperclassesOnNull() {
-        assertTrue(getAllDeclaredTypesOfSuperclasses(NULL_ELEMENT).isEmpty());
-        assertTrue(getAllDeclaredTypesOfSuperclasses(NULL_TYPE_MIRROR).isEmpty());
+        assertTrue(findAllDeclaredTypesOfSuperclasses(NULL_ELEMENT, alwaysTrue()).isEmpty());
+        assertTrue(findAllDeclaredTypesOfSuperclasses(NULL_ELEMENT, alwaysFalse()).isEmpty());
+        assertTrue(findAllDeclaredTypesOfSuperclasses(NULL_TYPE_MIRROR, alwaysTrue()).isEmpty());
+        assertTrue(findAllDeclaredTypesOfSuperclasses(NULL_TYPE_MIRROR, alwaysFalse()).isEmpty());
     }
 
     @Test
     public void testFindAllDeclaredTypesOfInterfaces() {
-        List<DeclaredType> declaredTypes = getAllDeclaredTypesOfInterfaces(testTypeMirror);
+        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfInterfaces(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_INTERFACES);
+
+        declaredTypes = findAllDeclaredTypesOfInterfaces(testTypeMirror, alwaysFalse());
+        assertSame(emptyList(), declaredTypes);
     }
 
     @Test
     public void testFindAllDeclaredTypesOfInterfacesOnNull() {
-        assertTrue(getAllDeclaredTypesOfInterfaces(NULL_ELEMENT).isEmpty());
-        assertTrue(getAllDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR).isEmpty());
+        assertTrue(findAllDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysTrue()).isEmpty());
+        assertTrue(findAllDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysFalse()).isEmpty());
+        assertTrue(findAllDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue()).isEmpty());
+        assertTrue(findAllDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR, alwaysFalse()).isEmpty());
     }
 
     @Test
     public void testFindAllDeclaredTypesOfSuperTypes() {
-        List<DeclaredType> declaredTypes = getAllDeclaredTypesOfSuperTypes(testTypeMirror);
+        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperTypes(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+
+        declaredTypes = findAllDeclaredTypesOfSuperTypes(testTypeMirror, alwaysFalse());
+        assertSame(emptyList(), declaredTypes);
     }
 
     @Test
     public void testFindAllDeclaredTypesOfSuperTypesOnNull() {
-        assertTrue(getAllDeclaredTypesOfSuperTypes(NULL_ELEMENT).isEmpty());
-        assertTrue(getAllDeclaredTypesOfSuperTypes(NULL_TYPE_MIRROR).isEmpty());
+        assertTrue(findAllDeclaredTypesOfSuperTypes(NULL_ELEMENT).isEmpty());
+        assertTrue(findAllDeclaredTypesOfSuperTypes(NULL_TYPE_MIRROR).isEmpty());
     }
 
     @Test
     public void testFindAllDeclaredTypes() {
-        List<DeclaredType> declaredTypes = getAllDeclaredTypes(testTypeMirror);
+        List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
+
+        declaredTypes = findAllDeclaredTypes(testTypeMirror, alwaysFalse());
+        assertSame(emptyList(), declaredTypes);
     }
 
     @Test
     public void testFindAllDeclaredTypesOnNull() {
-        assertTrue(getAllDeclaredTypes(NULL_ELEMENT).isEmpty());
-        assertTrue(getAllDeclaredTypes(NULL_TYPE_MIRROR).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_ELEMENT, alwaysTrue()).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_ELEMENT, alwaysFalse()).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, alwaysTrue()).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, alwaysFalse()).isEmpty());
     }
 
     @Test
     public void testFindDeclaredTypes() {
         // true true true true : all types
-        List<DeclaredType> declaredTypes = getDeclaredTypes(testTypeElement, true, true, true, true);
+        List<DeclaredType> declaredTypes = findDeclaredTypes(testTypeElement, true, true, true, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
         assertEquals(getAllDeclaredTypes(testTypeElement), declaredTypes);
 
         // true true true false : self type + all super classes
-        declaredTypes = getDeclaredTypes(testTypeElement, true, true, true, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, true, true, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE_PLUS_ALL_SUPER_CLASSES);
 
         // true true false true : self type + all super interfaces
-        declaredTypes = getDeclaredTypes(testTypeElement, true, true, false, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, true, false, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE_PLUS_ALL_SUPER_INTERFACES);
 
         // true true false false : self type
-        declaredTypes = getDeclaredTypes(testTypeElement, true, true, false, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, true, false, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE);
 
         // true false true true : self type + super class + super interfaces
-        declaredTypes = getDeclaredTypes(testTypeElement, true, false, true, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, false, true, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES);
 
         // true false true false : self type + super class
-        declaredTypes = getDeclaredTypes(testTypeElement, true, false, true, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, false, true, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE_PLUS_SUPER_CLASS);
 
         // true false false true : self type + super interfaces
-        declaredTypes = getDeclaredTypes(testTypeElement, true, false, false, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, false, false, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE_PLUS_SUPER_INTERFACES);
 
         // true false false false : self type
-        declaredTypes = getDeclaredTypes(testTypeElement, true, false, false, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, true, false, false, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SELF_TYPE);
 
         // false true true true : all super types
-        declaredTypes = getDeclaredTypes(testTypeElement, false, true, true, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, true, true, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
         assertEquals(getAllDeclaredTypesOfSuperTypes(testTypeElement), declaredTypes);
 
         // false true true false : all super classes
-        declaredTypes = getDeclaredTypes(testTypeElement, false, true, true, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, true, true, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_CLASSES);
         assertEquals(getAllDeclaredTypesOfSuperclasses(testTypeElement), declaredTypes);
 
         // false true false true : all super interfaces
-        declaredTypes = getDeclaredTypes(testTypeElement, false, true, false, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, true, false, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_INTERFACES);
         assertEquals(getAllDeclaredTypesOfInterfaces(testTypeElement), declaredTypes);
 
         // false true false false : nothing
-        declaredTypes = getDeclaredTypes(testTypeElement, false, true, false, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, true, false, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes);
         assertSame(emptyList(), declaredTypes);
 
         // false false true true : super class + super interfaces
-        declaredTypes = getDeclaredTypes(testTypeElement, false, false, true, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, false, true, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SUPER_TYPES);
 
         // false false true false : super class
-        declaredTypes = getDeclaredTypes(testTypeElement, false, false, true, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, false, true, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SUPER_CLASS);
         assertEquals(ofList(getDeclaredTypeOfSuperclass(testTypeElement)), declaredTypes);
 
         // false false false true : super interfaces
-        declaredTypes = getDeclaredTypes(testTypeElement, false, false, false, true);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, false, false, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
         assertEquals(ofList(getDeclaredTypesOfInterfaces(testTypeElement)), declaredTypes);
 
         // false false false false : nothing
-        declaredTypes = getDeclaredTypes(testTypeElement, false, false, false, false);
+        declaredTypes = findDeclaredTypes(testTypeElement, false, false, false, false, alwaysTrue());
         assertDeclaredTypes(declaredTypes);
         assertSame(emptyList(), declaredTypes);
     }
 
+    @Test
+    public void testFindDeclaredTypesOnNull() {
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, true, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, true, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, true, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, true, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, false, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, false, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, false, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, false, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, false, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, false, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, true, false, true, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, false, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, true, false, true, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, true, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, true, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, true, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, true, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, true, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, true, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, false, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, false, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, true, false, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, true, false, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, true, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, true, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, true, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, true, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, true, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, true, false, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, true, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, true, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, true, alwaysFalse()).isEmpty());
+
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_ELEMENT, false, false, false, false, alwaysFalse()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, false, alwaysTrue()).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, false, false, false, false, alwaysFalse()).isEmpty());
+    }
+
+    @Test
+    public void testFindInterfaceTypeMirror() {
+        // TODO
+    }
+
+    @Test
+    public void testFindInterfaceTypeMirrorOnNull() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTypeMirrors() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTypeMirrorsOnNull() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTypeElementsWithProcessingEnvironment() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTypeElementsWithProcessingEnvironmentOnNull() {
+        // TODO
+    }
+
+    @Test
+    public void testGetTypeElement() {
+        assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, testClassName));
+    }
+
+    @Test
+    public void testGetTypeElementOnTypeMirror() {
+        assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, testTypeMirror));
+    }
+
+    @Test
+    public void testGetTypeElementOnType() {
+        assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, TestServiceImpl.class));
+    }
 
     @Test
     public void testGetTypeElementOnNull() {
@@ -1107,6 +1243,16 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertNull(TypeUtils.getTypeElement(processingEnv, NULL_TYPE_MIRROR));
         assertNull(TypeUtils.getTypeElement(processingEnv, (CharSequence) null));
         assertNull(TypeUtils.getTypeElement(null, (CharSequence) null));
+    }
+
+    @Test
+    public void testGetDeclaredType() {
+        // TODO
+    }
+
+    @Test
+    public void testGetDeclaredTypeOnNull() {
+        // TODO
     }
 
     @Test
@@ -1125,6 +1271,21 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     public void testGetResourceName() {
         assertEquals("java/lang/String.class", getResourceName("java.lang.String"));
         assertNull(getResourceName(null));
+    }
+
+    @Test
+    public void testToString() {
+        // TODO
+    }
+
+    @Test
+    public void testToStringOnNull() {
+        // TODO
+    }
+
+    @Test
+    public void testTypeElementFinderOnNull() {
+
     }
 
     private void assertDeclaredTypes(List<DeclaredType> declaredTypes, Type... types) {
