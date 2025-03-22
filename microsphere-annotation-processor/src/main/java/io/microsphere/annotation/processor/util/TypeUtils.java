@@ -615,7 +615,7 @@ public interface TypeUtils {
                     if (i > 0) {
                         typeBuilder.append(", ");
                     }
-                    typeBuilder.append(typeMirrors.get(i).toString());
+                    typeBuilder.append(toString(typeMirrors.get(i)));
                 }
                 typeBuilder.append(">");
                 return typeBuilder.toString();
