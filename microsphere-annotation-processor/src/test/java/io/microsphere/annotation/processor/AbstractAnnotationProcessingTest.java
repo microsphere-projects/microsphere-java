@@ -24,6 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
@@ -68,14 +69,6 @@ public abstract class AbstractAnnotationProcessingTest {
     protected void afterTest() {
     }
 
-    protected List<TypeElement> getTypeElements(Type... types) {
-        return TypeUtils.getTypeElements(processingEnv, types);
-    }
-
-    protected TypeElement getTypeElement(Type type) {
-        return TypeUtils.getTypeElement(processingEnv, type);
-    }
-
     protected List<TypeMirror> getTypeMirrors(Type... types) {
         return TypeUtils.getTypeMirrors(processingEnv, types);
     }
@@ -84,7 +77,20 @@ public abstract class AbstractAnnotationProcessingTest {
         return TypeUtils.getTypeMirror(processingEnv, type);
     }
 
+    protected List<TypeElement> getTypeElements(Type... types) {
+        return TypeUtils.getTypeElements(processingEnv, types);
+    }
+
+    protected TypeElement getTypeElement(Type type) {
+        return TypeUtils.getTypeElement(processingEnv, type);
+    }
+
     protected Element[] getElements(Type... types) {
         return getTypeMirrors(types).stream().map(TypeUtils::ofTypeElement).toArray(Element[]::new);
     }
+
+    protected DeclaredType getDeclaredType(Type type) {
+        return TypeUtils.getDeclaredType(processingEnv, type);
+    }
+
 }
