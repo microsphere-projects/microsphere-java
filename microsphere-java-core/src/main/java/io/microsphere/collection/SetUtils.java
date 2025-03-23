@@ -16,10 +16,10 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.BaseUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -120,7 +120,7 @@ public abstract class SetUtils extends BaseUtils {
     }
 
     public static <T> Set<T> ofSet(Collection<T> elements) {
-        return ofSet(elements, null);
+        return ofSet(elements, (T[]) null);
     }
 
     public static <T> Set<T> ofSet(Collection<T> elements, T... others) {

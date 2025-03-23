@@ -27,18 +27,25 @@ import java.util.Set;
 import static io.microsphere.annotation.processor.AbstractAnnotationProcessingTest.testInstanceHolder;
 
 
+/**
+ * {@link InvocationInterceptor} based on Java {@link Compiler}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
+ */
 public class CompilerInvocationInterceptor implements InvocationInterceptor {
 
     @Override
     public void interceptTestMethod(Invocation<Void> invocation,
                                     ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        Set<Class<?>> classesToBeCompiled = new LinkedHashSet<>();
+        Set<Class<?>> compiledClasses = new LinkedHashSet<>();
         AbstractAnnotationProcessingTest abstractAnnotationProcessingTest = testInstanceHolder.get();
-        classesToBeCompiled.add(getClass());
-        abstractAnnotationProcessingTest.addCompiledClasses(classesToBeCompiled);
+        compiledClasses.add(getClass());
+        abstractAnnotationProcessingTest.addCompiledClasses(compiledClasses);
         Compiler compiler = new Compiler();
+        compiler.sourcePaths(compiledClasses);
         compiler.processors(new AnnotationProcessingTestProcessor(abstractAnnotationProcessingTest, invocation, invocationContext, extensionContext));
-        compiler.compile(classesToBeCompiled.toArray(new Class[0]));
+        compiler.compile(compiledClasses.toArray(new Class[0]));
     }
 }

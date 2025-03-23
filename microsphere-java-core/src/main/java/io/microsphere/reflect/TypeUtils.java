@@ -16,11 +16,12 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.BaseUtils;
 import io.microsphere.util.ClassUtils;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -41,13 +42,17 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
-import static io.microsphere.reflect.TypeFinder.genericTypeFinder;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.Assert.assertNoNullElements;
+import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.lang.Integer.getInteger;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Stream.of;
 import static java.util.stream.StreamSupport.stream;
 
 /**
@@ -503,7 +508,7 @@ public abstract class TypeUtils extends BaseUtils {
     }
 
     protected static List<Type> doGetHierarchicalTypes(Type type) {
-        return genericTypeFinder(type, false, true, true, true).doFindTypes(EMPTY_PREDICATE_ARRAY);
+        return genericTypeFinder(type, false, true, true, true).findTypes(EMPTY_PREDICATE_ARRAY);
     }
 
     public static String getClassName(Type type) {
@@ -611,6 +616,33 @@ public abstract class TypeUtils extends BaseUtils {
             Class klass = asClass(type);
             return klass != null ? klass.getComponentType() : null;
         }
+    }
+
+
+    /**
+     * Get the type name safely
+     *
+     * @param type the {@link Type}
+     * @return <code>null</code> if <code>type</code> is null
+     */
+    public static String getTypeName(@Nullable Type type) {
+        return type == null ? null : type.getTypeName();
+    }
+
+    /**
+     * Get the type names of the specified <code>types</code>
+     *
+     * @param types the {@link Type} array
+     * @return non-null
+     * @throws IllegalArgumentException if any element of <code>types</code> is <code>null</code>
+     */
+    @Nonnull
+    public static String[] getTypeNames(@Nullable Type... types) throws IllegalArgumentException {
+        if (isEmpty(types)) {
+            return EMPTY_STRING_ARRAY;
+        }
+        assertNoNullElements(types, "Any element of 'types' must not be null");
+        return of(types).map(TypeUtils::getTypeName).toArray(String[]::new);
     }
 
 }

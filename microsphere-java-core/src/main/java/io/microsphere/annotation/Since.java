@@ -20,7 +20,6 @@ import io.microsphere.util.Version;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
@@ -33,6 +32,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * The annotation that indicates the API is introduced in the first time.
@@ -42,7 +42,7 @@ import static java.lang.annotation.ElementType.TYPE_USE;
  * @see Experimental
  * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RUNTIME)
 @Target({
         TYPE,
         FIELD,

@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.annotation.Since;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +92,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class AnnotationUtilsTest {
+public class AnnotationUtilsTest extends AbstractTestCase {
 
     private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);
 
@@ -196,7 +196,7 @@ public class AnnotationUtilsTest {
         assertFalse(isMetaAnnotation((Annotation) null, ServiceMode.class));
         assertFalse(isMetaAnnotation((Annotation) null, ofList(ServiceMode.class)));
         assertFalse(isMetaAnnotation(dataAccessOfA, (Class[]) null));
-        assertFalse(isMetaAnnotation(dataAccessOfA, (Iterable) null));
+        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_ITERABLE));
     }
 
     @Test
@@ -355,7 +355,7 @@ public class AnnotationUtilsTest {
     @Test
     public void testFilterAnnotationsOnNull() {
         assertSame(emptyList(), filterAnnotations((Annotation[]) null, annotation -> true));
-        assertSame(emptyList(), filterAnnotations((List) null, annotation -> true));
+        assertSame(emptyList(), filterAnnotations(TEST_NULL_LIST, annotation -> true));
     }
 
     @Test
@@ -438,8 +438,8 @@ public class AnnotationUtilsTest {
     @Test
     public void testExistsOnNull() {
         assertFalse(exists((Annotation[]) null, DataAccess.class));
-        assertFalse(exists((Collection) null, DataAccess.class));
-        assertFalse(exists((Iterable) null, DataAccess.class));
+        assertFalse(exists(TEST_NULL_COLLECTION, DataAccess.class));
+        assertFalse(exists(TEST_NULL_ITERABLE, DataAccess.class));
         assertFalse(exists(annotationsOfA, null));
         assertFalse(exists(ofList(annotationsOfA), null));
     }
@@ -498,7 +498,7 @@ public class AnnotationUtilsTest {
     @Test
     public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((Annotation) null, ofList(DataAccess.class, Monitored.class)));
-        assertFalse(isAnnotationPresent(dataAccessOfB, (Iterable) null));
+        assertFalse(isAnnotationPresent(dataAccessOfB, TEST_NULL_ITERABLE));
     }
 
     @Test
@@ -510,7 +510,7 @@ public class AnnotationUtilsTest {
     @Test
     public void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement) null, ofList(DataAccess.class, Since.class)));
-        assertFalse(isAnnotationPresent(B.class, (Iterable) null));
+        assertFalse(isAnnotationPresent(B.class, TEST_NULL_ITERABLE));
     }
 
     @Test

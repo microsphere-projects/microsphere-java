@@ -118,7 +118,7 @@ public class SimpleClassScanner {
             }
 
             for (String className : classNames) {
-                Class<?> class_ = requiredLoad ? loadClass(className, classLoader) : findLoadedClass(classLoader, className);
+                Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
                 if (class_ != null) {
                     classesSet.add(class_);
                 }
@@ -141,7 +141,7 @@ public class SimpleClassScanner {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
         Set<Class<?>> classesSet = new LinkedHashSet<>();
         for (String className : classNames) {
-            Class<?> class_ = requiredLoad ? loadClass(className, classLoader) : findLoadedClass(classLoader, className);
+            Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
             if (class_ != null) {
                 classesSet.add(class_);
             }

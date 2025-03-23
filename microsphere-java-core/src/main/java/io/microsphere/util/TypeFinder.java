@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.reflect;
+package io.microsphere.util;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
@@ -25,10 +26,6 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
-import static io.microsphere.reflect.TypeFinder.Include.HIERARCHICAL;
-import static io.microsphere.reflect.TypeFinder.Include.INTERFACES;
-import static io.microsphere.reflect.TypeFinder.Include.SELF;
-import static io.microsphere.reflect.TypeFinder.Include.SUPER_CLASS;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.isObjectType;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
@@ -37,22 +34,38 @@ import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.TypeFinder.Include.HIERARCHICAL;
+import static io.microsphere.util.TypeFinder.Include.INTERFACES;
+import static io.microsphere.util.TypeFinder.Include.SELF;
+import static io.microsphere.util.TypeFinder.Include.SUPER_CLASS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * The finder class for {@link Type}
+ * The finder class for Type
  *
- * @param <T> the type of {@link Type}
+ * @param <T> the type
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Type
  * @since 1.0.0
  */
-public class TypeFinder<T extends Type> {
+public class TypeFinder<T> {
+
+    /**
+     * The enumeration for the type finder includes
+     */
+    public static enum Include {
+
+        SELF,
+
+        HIERARCHICAL,
+
+        SUPER_CLASS,
+
+        INTERFACES
+    }
 
     private final T type;
-
-    private final boolean generic;
 
     private final boolean includeSelf;
 
@@ -62,26 +75,19 @@ public class TypeFinder<T extends Type> {
 
     private final boolean includeInterfaces;
 
-    protected TypeFinder(T type, Include[] includes) {
-        this(type, false, includes);
-    }
+    private final Function<T, ? super T> getSuperClassFunction;
 
-    protected TypeFinder(T type, boolean generic, Include[] includes) {
-        assertNotNull(type, () -> "The 'type' must not be null");
-        assertNotEmpty(includes, () -> "The 'includes' must not be empty");
-        assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
-        this.type = type;
-        this.generic = generic;
-        this.includeSelf = contains(includes, SELF);
-        this.includeHierarchicalTypes = contains(includes, HIERARCHICAL);
-        this.includeSuperclass = contains(includes, SUPER_CLASS);
-        this.includeInterfaces = contains(includes, INTERFACES);
-    }
+    private final Function<T, ? super T[]> getInterfacesFunction;
 
-    protected TypeFinder(T type, boolean generic, boolean includeSelf, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+    public TypeFinder(T type, Function<T, T> getSuperClassFunction,
+                         Function<T, T[]> getInterfacesFunction, boolean includeSelf,
+                         boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         assertNotNull(type, () -> "The 'type' must not be null");
+        assertNotNull(getSuperClassFunction, () -> "The 'getSuperClassFunction' must not be null");
+        assertNotNull(getInterfacesFunction, () -> "The 'getInterfacesFunction' must not be null");
         this.type = type;
-        this.generic = generic;
+        this.getSuperClassFunction = getSuperClassFunction;
+        this.getInterfacesFunction = getInterfacesFunction;
         this.includeSelf = includeSelf;
         this.includeHierarchicalTypes = includeHierarchicalTypes;
         this.includeSuperclass = includeSuperclass;
@@ -117,11 +123,9 @@ public class TypeFinder<T extends Type> {
         return allTypes;
     }
 
-    protected List<T> getSuperTypes(Type type, boolean includeSuperclass, boolean includedGenericInterfaces) {
+    protected List<T> getSuperTypes(T type, boolean includeSuperclass, boolean includedGenericInterfaces) {
 
-        Class<?> klass = asClass(type);
-
-        T superclass = includeSuperclass && klass != null ? getSuperClass(klass) : null;
+        T superclass = includeSuperclass && type != null ? getSuperClass(type) : null;
 
         boolean hasSuperclass = superclass != null;
 
@@ -129,7 +133,7 @@ public class TypeFinder<T extends Type> {
             return emptyList();
         }
 
-        T[] interfaceTypes = includedGenericInterfaces ? getInterfaces(klass) : (T[]) EMPTY_TYPE_ARRAY;
+        T[] interfaceTypes = includedGenericInterfaces ? getInterfaces(type) : (T[]) EMPTY_TYPE_ARRAY;
         int interfaceTypesLength = interfaceTypes.length;
 
         int size = interfaceTypesLength + (hasSuperclass ? 1 : 0);
@@ -155,15 +159,15 @@ public class TypeFinder<T extends Type> {
         return types;
     }
 
-    protected T getSuperClass(Class<?> klass) {
-        return generic ? (T) klass.getGenericSuperclass() : (T) klass.getSuperclass();
+    protected T getSuperClass(T type) {
+        return (T) getSuperClassFunction.apply(type);
     }
 
-    protected T[] getInterfaces(Class<?> klass) {
-        return generic ? (T[]) klass.getGenericInterfaces() : (T[]) klass.getInterfaces();
+    protected T[] getInterfaces(T type) {
+        return (T[]) getInterfacesFunction.apply(type);
     }
 
-    protected void addSuperTypes(List<T> allTypes, Type type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+    protected void addSuperTypes(List<T> allTypes, T type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         if (isObjectType(type)) {
             return;
         }
@@ -195,37 +199,44 @@ public class TypeFinder<T extends Type> {
         }
     }
 
-    public static TypeFinder<Class<?>> classFinder(Class<?> type, Include... includes) {
-        return new TypeFinder<>(type, includes);
+    final static Function<Class, Class> classGetSuperClassFunction = Class::getSuperclass;
+
+    final static Function<Class, Class[]> classGetInterfacesFunction = Class::getInterfaces;
+
+    final static Function<Type, Type> genericTypeGetSuperClassFunction = type -> {
+        Class<?> klass = asClass(type);
+        return klass == null ? null : klass.getGenericSuperclass();
+    };
+
+    final static Function<Type, Type[]> genericTypeGetInterfacesFunction = type -> {
+        Class<?> klass = asClass(type);
+        return klass == null ? null : klass.getGenericInterfaces();
+    };
+
+    public static TypeFinder<Class<?>> classFinder(Class type, TypeFinder.Include... includes) {
+        assertNotEmpty(includes, () -> "The 'includes' must not be empty");
+        assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
+        return classFinder(type, contains(includes, SELF), contains(includes, HIERARCHICAL),
+                contains(includes, SUPER_CLASS), contains(includes, INTERFACES));
     }
 
-    public static TypeFinder<Class<?>> classFinder(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
-        return of(type, false, includeSelf, includeHierarchicalTypes, includeSuperclass, includeInterfaces);
+    public static TypeFinder<Class<?>> classFinder(Class type, boolean includeSelf, boolean includeHierarchicalTypes,
+                                                   boolean includeSuperclass, boolean includeInterfaces) {
+        return new TypeFinder(type, classGetSuperClassFunction, classGetInterfacesFunction, includeSelf,
+                includeHierarchicalTypes, includeSuperclass, includeInterfaces);
     }
 
-    public static TypeFinder<Type> genericTypeFinder(Type type, Include... includes) {
-        return new TypeFinder<>(type, true, includes);
+    public static TypeFinder<Type> genericTypeFinder(Type type, TypeFinder.Include... includes) {
+        assertNotEmpty(includes, () -> "The 'includes' must not be empty");
+        assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
+        return genericTypeFinder(type, contains(includes, SELF), contains(includes, HIERARCHICAL),
+                contains(includes, SUPER_CLASS), contains(includes, INTERFACES));
     }
 
-    public static <T extends Type> TypeFinder<T> genericTypeFinder(T type, boolean includeSelf, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
-        return of(type, true, includeSelf, includeHierarchicalTypes, includeSuperclass, includeInterfaces);
+    public static TypeFinder<Type> genericTypeFinder(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
+                                                     boolean includeSuperclass, boolean includeInterfaces) {
+        return new TypeFinder(type, genericTypeGetSuperClassFunction, genericTypeGetInterfacesFunction, includeSelf,
+                includeHierarchicalTypes, includeSuperclass, includeInterfaces);
     }
 
-    public static <T extends Type> TypeFinder<T> of(T type, boolean generic, boolean includeSelf, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
-        return new TypeFinder(type, generic, includeSelf, includeHierarchicalTypes, includeSuperclass, includeInterfaces);
-    }
-
-    /**
-     * The enumeration for the type finder includes
-     */
-    public enum Include {
-
-        SELF,
-
-        HIERARCHICAL,
-
-        SUPER_CLASS,
-
-        INTERFACES
-    }
 }

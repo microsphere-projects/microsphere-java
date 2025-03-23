@@ -1,9 +1,9 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.ClassUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -11,16 +11,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static java.lang.System.getProperty;
+import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -34,20 +33,24 @@ public class ArtifactDetector {
 
     private static final Logger logger = getLogger(ArtifactDetector.class);
 
-    private static final String JAVA_HOME_PATH = normalizePath(getProperty("java.home"));
+    private static final String JAVA_HOME_PATH = JAVA_HOME;
 
-    private static final ClassLoader DEFAULT_CLASS_LOADER = getClassLoader(ArtifactDetector.class);
+    final ClassLoader classLoader;
 
-    private static final List<ArtifactResolver> ARTIFACT_INFO_RESOLVERS = loadServicesList(ArtifactResolver.class, DEFAULT_CLASS_LOADER);
-
-    private final @Nonnull ClassLoader classLoader;
+    private final List<ArtifactResolver> artifactResolvers;
 
     public ArtifactDetector() {
-        this(DEFAULT_CLASS_LOADER);
+        this(null);
     }
 
     public ArtifactDetector(@Nullable ClassLoader classLoader) {
-        this.classLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
+        ClassLoader actualClassLoader = classLoader == null ? getClassLoader(getClass()) : classLoader;
+        List<ArtifactResolver> artifactResolvers = loadServicesList(ArtifactResolver.class, actualClassLoader, true);
+        this.classLoader = actualClassLoader;
+        this.artifactResolvers = artifactResolvers;
+        if (logger.isTraceEnabled()) {
+            logger.trace("ClassLoader[argument : {} , actual : {}] , ArtifactResolver List : {}", classLoader, actualClassLoader, getArtifactResolverClassNames(artifactResolvers));
+        }
     }
 
     public List<Artifact> detect() {
@@ -63,8 +66,9 @@ public class ArtifactDetector {
         if (isEmpty(classPathURLs)) {
             return emptyList();
         }
+
         List<Artifact> artifactList = new LinkedList<>();
-        for (ArtifactResolver artifactResolver : ARTIFACT_INFO_RESOLVERS) {
+        for (ArtifactResolver artifactResolver : artifactResolvers) {
             Set<Artifact> artifactSet = artifactResolver.resolve(classPathURLs);
             for (Artifact artifact : artifactSet) {
                 artifactList.add(artifact);
@@ -102,6 +106,13 @@ public class ArtifactDetector {
                 iterator.remove();
             }
         }
+    }
+
+    private List<String> getArtifactResolverClassNames(List<ArtifactResolver> artifactResolvers) {
+        return artifactResolvers.stream()
+                .map(Object::getClass)
+                .map(ClassUtils::getTypeName)
+                .collect(Collectors.toList());
     }
 
 }

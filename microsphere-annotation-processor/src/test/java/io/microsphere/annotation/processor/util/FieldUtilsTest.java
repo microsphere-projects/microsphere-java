@@ -30,9 +30,10 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import static io.microsphere.annotation.processor.util.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.annotation.processor.util.FieldUtils.findDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.FieldUtils.getAllDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.getAllNonStaticFields;
@@ -54,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link FieldUtils} Test
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
@@ -61,17 +63,13 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeElement testType;
 
     @Override
-    protected void addCompiledClasses(Set<Class<?>> classesToBeCompiled) {
-    }
-
-    @Override
-    protected void beforeEach() {
-        testType = getType(TestServiceImpl.class);
+    protected void beforeTest() {
+        testType = getTypeElement(TestServiceImpl.class);
     }
 
     @Test
     public void testGetDeclaredFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         List<VariableElement> fields = getDeclaredFields(type);
         assertModelFields(fields);
 
@@ -81,14 +79,14 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getDeclaredFields((Element) null).isEmpty());
         assertTrue(getDeclaredFields((TypeMirror) null).isEmpty());
 
-        fields = getDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
+        fields = findDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
         assertEquals(1, fields.size());
         assertEquals("f", fields.get(0).getSimpleName().toString());
     }
 
     @Test
-    public void testFindAllDeclaredFields() {
-        TypeElement type = getType(Model.class);
+    public void testGetAllDeclaredFields() {
+        TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getAllDeclaredFields(type);
 
@@ -97,14 +95,14 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(getAllDeclaredFields((Element) null).isEmpty());
         assertTrue(getAllDeclaredFields((TypeMirror) null).isEmpty());
 
-        fields = getAllDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
+        fields = findAllDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
         assertEquals(1, fields.size());
         assertEquals("f", fields.get(0).getSimpleName().toString());
     }
 
     @Test
     public void testGetDeclaredField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         testGetDeclaredField(type, "f", float.class);
         testGetDeclaredField(type, "d", double.class);
         testGetDeclaredField(type, "tu", TimeUnit.class);
@@ -124,7 +122,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         testFindField(type, "f", float.class);
         testFindField(type, "d", double.class);
         testFindField(type, "tu", TimeUnit.class);
@@ -149,7 +147,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsEnumField() {
-        TypeElement type = getType(Color.class);
+        TypeElement type = getTypeElement(Color.class);
         VariableElement field = findField(type, "RED");
         assertTrue(isEnumMemberField(field));
 
@@ -159,7 +157,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         field = findField(type, "BLUE");
         assertTrue(isEnumMemberField(field));
 
-        type = getType(Model.class);
+        type = getTypeElement(Model.class);
         field = findField(type, "f");
         assertFalse(isEnumMemberField(field));
 
@@ -168,20 +166,20 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsNonStaticField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         assertTrue(isNonStaticField(findField(type, "f")));
 
-        type = getType(Color.class);
+        type = getTypeElement(Color.class);
         assertFalse(isNonStaticField(findField(type, "BLUE")));
     }
 
     @Test
     public void testIsField() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
         assertTrue(isField(findField(type, "f")));
         assertTrue(isField(findField(type, "f"), PRIVATE));
 
-        type = getType(Color.class);
+        type = getTypeElement(Color.class);
         assertTrue(isField(findField(type, "BLUE"), PUBLIC, STATIC, FINAL));
 
 
@@ -191,7 +189,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetNonStaticFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getNonStaticFields(type);
         assertModelFields(fields);
@@ -205,7 +203,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllNonStaticFields() {
-        TypeElement type = getType(Model.class);
+        TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getAllNonStaticFields(type);
         assertModelAllFields(fields);

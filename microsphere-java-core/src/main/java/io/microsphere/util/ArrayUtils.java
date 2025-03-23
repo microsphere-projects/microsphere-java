@@ -20,6 +20,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -136,6 +137,11 @@ public abstract class ArrayUtils extends BaseUtils {
      * An empty immutable {@code String} array.
      */
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /**
+     * An empty immutable {@code URL} array.
+     */
+    public static final URL[] EMPTY_URL_ARRAY = new URL[0];
 
     /**
      * An empty immutable {@code Parameter} array.
@@ -556,9 +562,6 @@ public abstract class ArrayUtils extends BaseUtils {
     }
 
     public static boolean contains(Object[] values, Object value) {
-        if (value instanceof Comparable) {
-            return binarySearch(values, value) > -1;
-        }
         int length = length(values);
         for (int i = 0; i < length; i++) {
             if (Objects.equals(values[i], value)) {

@@ -75,6 +75,8 @@ import static io.microsphere.reflect.TypeUtils.getHierarchicalTypes;
 import static io.microsphere.reflect.TypeUtils.getParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.getRawType;
+import static io.microsphere.reflect.TypeUtils.getTypeName;
+import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
 import static io.microsphere.reflect.TypeUtils.isClass;
@@ -91,8 +93,12 @@ import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
 import static io.microsphere.reflect.TypeUtils.resolveTypeArguments;
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -986,6 +992,42 @@ public class TypeUtilsTest extends AbstractTestCase {
     @Test
     public void testGetComponentTypeOnWildcardType() {
         assertNull(getComponentType(getWildcardType()));
+    }
+
+    @Test
+    public void testGetTypeName() {
+        assertEquals("java.lang.String", getTypeName(String.class));
+        assertEquals("java.lang.Comparable<java.lang.String>", getTypeName(of(Comparable.class, String.class)));
+        assertEquals("java.util.Map<java.lang.String, java.lang.Integer>", getTypeName(of(Map.class, String.class, Integer.class)));
+    }
+
+    @Test
+    public void testGetTypeNameOnNull() {
+        assertNull(getTypeName(null));
+    }
+
+    @Test
+    public void testGetTypeNames() {
+        assertArrayEquals(ofArray("java.lang.String"), getTypeNames(String.class));
+        assertArrayEquals(ofArray("java.lang.String", "java.lang.Comparable<java.lang.String>"),
+                getTypeNames(String.class, of(Comparable.class, String.class)));
+        assertArrayEquals(ofArray("java.lang.String", "java.lang.Comparable<java.lang.String>", "java.util.Map<java.lang.String, java.lang.Integer>"),
+                getTypeNames(String.class, of(Comparable.class, String.class), of(Map.class, String.class, Integer.class)));
+    }
+
+    @Test
+    public void testGetTypeNamesOnNull() {
+        assertArrayEquals(EMPTY_STRING_ARRAY, getTypeNames(null));
+    }
+
+    @Test
+    public void testGetTypeNamesOnEmptyTypeArray() {
+        assertArrayEquals(EMPTY_STRING_ARRAY, getTypeNames(EMPTY_TYPE_ARRAY));
+    }
+
+    @Test
+    public void testGetTypeNamesOnNullElementTypeArray() {
+        assertThrows(IllegalArgumentException.class, () -> getTypeNames(ofArray((Type) null)));
     }
 
     private Type getGenericArrayType() {

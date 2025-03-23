@@ -26,15 +26,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 /**
  * The utilities class for the members in the package "javax.lang.model.", such as "field", "method", "constructor"
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public interface MemberUtils {
@@ -61,16 +64,16 @@ public interface MemberUtils {
     }
 
     static List<? extends Element> getDeclaredMembers(TypeMirror type) {
-        TypeElement element = TypeUtils.ofTypeElement(type);
+        TypeElement element = ofTypeElement(type);
         return element == null ? emptyList() : element.getEnclosedElements();
     }
 
     static List<? extends Element> getAllDeclaredMembers(TypeMirror type) {
-        return TypeUtils.getHierarchicalTypes(type)
+        return getAllDeclaredTypes(type)
                 .stream()
                 .map(MemberUtils::getDeclaredMembers)
                 .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     static boolean matchParameterTypes(List<? extends VariableElement> parameters, CharSequence... parameterTypes) {

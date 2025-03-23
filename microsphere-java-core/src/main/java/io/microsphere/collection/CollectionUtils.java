@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.BaseUtils;
 
 import java.util.AbstractSet;
@@ -25,6 +27,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
+import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static io.microsphere.util.ArrayUtils.length;
 
 /**
@@ -35,44 +38,74 @@ import static io.microsphere.util.ArrayUtils.length;
  */
 public abstract class CollectionUtils extends BaseUtils {
 
-    public static boolean isEmpty(Collection<?> collection) {
+    public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
 
-    public static boolean isNotEmpty(Collection<?> collection) {
+    public static boolean isNotEmpty(@Nullable Collection<?> collection) {
         return !isEmpty(collection);
     }
 
-    public static <E> Iterable<E> toIterable(Collection<E> collection) {
+    @Nullable
+    public static <E> Iterable<E> toIterable(@Nullable Collection<E> collection) {
         return collection;
     }
 
+    @Nonnull
     public static <E> Iterable<E> toIterable(Iterator<E> iterator) {
         return new IterableAdapter(iterator);
     }
 
-    public static <E> Iterator<E> toIterator(Enumeration<E> enumeration) {
+    @Nonnull
+    public static <E> Iterator<E> toIterator(@Nullable Enumeration<E> enumeration) {
         return new EnumerationIteratorAdapter(enumeration);
     }
 
-    public static <E> Iterable<E> toIterable(Enumeration<E> enumeration) {
+    @Nonnull
+    public static <E> Iterable<E> toIterable(@Nullable Enumeration<E> enumeration) {
         return toIterable(toIterator(enumeration));
     }
 
-    public static <E> Iterable<E> singletonIterable(E element) {
+    @Nonnull
+    public static <E> Iterable<E> singletonIterable(@Nullable E element) {
         return toIterable(singletonIterator(element));
     }
 
-    public static <E> Iterator<E> singletonIterator(E element) {
+    @Nonnull
+    public static <E> Iterator<E> singletonIterator(@Nullable E element) {
         return new SingletonIterator<>(element);
     }
 
-    public static <E> Enumeration<E> singletonEnumeration(E element) {
+    @Nonnull
+    public static <E> Enumeration<E> singletonEnumeration(@Nullable E element) {
         return new SingletonEnumeration<>(element);
     }
 
-    public static <E> Iterator<E> unmodifiableIterator(Iterator<E> iterator) {
+    @Nonnull
+    public static <E> Iterator<E> unmodifiableIterator(@Nullable Iterator<E> iterator) {
         return new UnmodifiableIterator(iterator);
+    }
+
+    /**
+     * Get the empty {@link Iterator}
+     *
+     * @param <E> the element type
+     * @return non-null
+     */
+    @Nonnull
+    public static <E> Iterator<E> emptyIterator() {
+        return INSTANCE;
+    }
+
+    /**
+     * Get the empty {@link Iterable}
+     *
+     * @param <E> the element type
+     * @return non-null
+     */
+    @Nonnull
+    public static <E> Iterable<E> emptyIterable() {
+        return EmptyIterable.INSTANCE;
     }
 
     /**
@@ -81,7 +114,7 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param collection the specified {@link Collection}
      * @return must be positive number
      */
-    public static int size(Collection<?> collection) {
+    public static int size(@Nullable Collection<?> collection) {
         return collection == null ? 0 : collection.size();
     }
 
@@ -91,7 +124,10 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param iterable the specified {@link Iterable}
      * @return must be positive number
      */
-    public static int size(Iterable<?> iterable) {
+    public static int size(@Nullable Iterable<?> iterable) {
+        if (iterable == null) {
+            return 0;
+        }
         if (iterable instanceof Collection) {
             return size((Collection) iterable);
         }
@@ -112,7 +148,7 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param another {@link Collection}
      * @return if equals, return <code>true</code>, or <code>false</code>
      */
-    public static boolean equals(Collection<?> one, Collection<?> another) {
+    public static boolean equals(@Nullable Collection<?> one, @Nullable Collection<?> another) {
 
         if (one == another) {
             return true;
@@ -141,15 +177,15 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param <T>        the type of values
      * @return the effected count after added
      */
-    public static <T> int addAll(Collection<T> collection, T... values) {
+    public static <T> int addAll(@Nullable Collection<T> collection, T... values) {
+
+        if (collection == null) {
+            return 0;
+        }
 
         int size = length(values);
 
         if (size < 1) {
-            return 0;
-        }
-
-        if (collection == null) {
             return 0;
         }
 
@@ -170,7 +206,8 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param <T>    the type of element of collection
      * @return if found, return the first one, or <code>null</code>
      */
-    public static <T> T first(Collection<T> values) {
+    @Nullable
+    public static <T> T first(@Nullable Collection<T> values) {
         if (isEmpty(values)) {
             return null;
         }
@@ -189,7 +226,8 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param <T>    the type of element of {@link Iterable}
      * @return if found, return the first one, or <code>null</code>
      */
-    public static <T> T first(Iterable<T> values) {
+    @Nullable
+    public static <T> T first(@Nullable Iterable<T> values) {
         return values == null ? null : first(values.iterator());
     }
 
@@ -200,7 +238,8 @@ public abstract class CollectionUtils extends BaseUtils {
      * @param <T>    the type of element of {@lin Iterator}
      * @return if found, return the first one, or <code>null</code>
      */
-    public static <T> T first(Iterator<T> values) {
+    @Nullable
+    public static <T> T first(@Nullable Iterator<T> values) {
         if (values == null || !values.hasNext()) {
             return null;
         }
