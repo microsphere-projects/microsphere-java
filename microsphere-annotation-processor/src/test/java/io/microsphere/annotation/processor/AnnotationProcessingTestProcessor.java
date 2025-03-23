@@ -30,6 +30,12 @@ import java.util.Set;
 
 import static javax.lang.model.SourceVersion.latestSupported;
 
+/**
+ * {@link AnnotationProcessingTestProcessor}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
+ */
 @SupportedAnnotationTypes("*")
 public class AnnotationProcessingTestProcessor extends AbstractProcessor {
 
@@ -53,11 +59,13 @@ public class AnnotationProcessingTestProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (!roundEnv.processingOver()) {
             prepare();
-            abstractAnnotationProcessingTest.beforeEach();
+            abstractAnnotationProcessingTest.beforeTest();
             try {
                 invocation.proceed();
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
+            } finally {
+                abstractAnnotationProcessingTest.afterTest();
             }
         }
         return false;

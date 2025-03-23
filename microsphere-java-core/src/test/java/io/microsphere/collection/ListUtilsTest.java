@@ -16,12 +16,11 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
-public class ListUtilsTest {
+public class ListUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ListUtilsTest.class);
 
@@ -76,7 +75,6 @@ public class ListUtilsTest {
     public void testOfList() {
         List<String> rawList = asList("A", "B", "C");
         List<String> list = ofList(rawList);
-        assertSame(rawList, list);
         assertEquals(rawList, list);
 
         list = ofList("A", "B", "C");
@@ -89,19 +87,19 @@ public class ListUtilsTest {
         list = ofList(enumeration(rawList));
         assertEquals(rawList, list);
 
-        list = ofList((List) null);
+        list = ofList(TEST_NULL_LIST);
         assertSame(emptyList(), list);
         assertEquals(emptyList(), list);
 
-        list = ofList((Iterable) null);
+        list = ofList(TEST_NULL_ITERABLE);
         assertSame(emptyList(), list);
         assertEquals(emptyList(), list);
 
-        list = ofList((Iterator) null);
+        list = ofList(TEST_NULL_ITERATOR);
         assertSame(emptyList(), list);
         assertEquals(emptyList(), list);
 
-        list = ofList((Enumeration) null);
+        list = ofList(TEST_NULL_ENUMERATION);
         assertEquals(emptyList(), list);
     }
 

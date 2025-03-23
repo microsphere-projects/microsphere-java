@@ -22,16 +22,21 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Abstract {@link Annotation} Processing Test case
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 @ExtendWith(CompilerInvocationInterceptor.class)
@@ -46,7 +51,7 @@ public abstract class AbstractAnnotationProcessingTest {
     protected Types types;
 
     @BeforeEach
-    public final void init() throws IOException {
+    public final void init() {
         testInstanceHolder.set(this);
     }
 
@@ -55,11 +60,37 @@ public abstract class AbstractAnnotationProcessingTest {
         testInstanceHolder.remove();
     }
 
-    protected abstract void addCompiledClasses(Set<Class<?>> classesToBeCompiled);
-
-    protected abstract void beforeEach();
-
-    protected TypeElement getType(Class<?> type) {
-        return TypeUtils.getType(processingEnv, type);
+    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
     }
+
+    protected void beforeTest() {
+    }
+
+    protected void afterTest() {
+    }
+
+    protected List<TypeMirror> getTypeMirrors(Type... types) {
+        return TypeUtils.getTypeMirrors(processingEnv, types);
+    }
+
+    protected TypeMirror getTypeMirror(Type type) {
+        return TypeUtils.getTypeMirror(processingEnv, type);
+    }
+
+    protected List<TypeElement> getTypeElements(Type... types) {
+        return TypeUtils.getTypeElements(processingEnv, types);
+    }
+
+    protected TypeElement getTypeElement(Type type) {
+        return TypeUtils.getTypeElement(processingEnv, type);
+    }
+
+    protected Element[] getElements(Type... types) {
+        return getTypeMirrors(types).stream().map(TypeUtils::ofTypeElement).toArray(Element[]::new);
+    }
+
+    protected DeclaredType getDeclaredType(Type type) {
+        return TypeUtils.getDeclaredType(processingEnv, type);
+    }
+
 }

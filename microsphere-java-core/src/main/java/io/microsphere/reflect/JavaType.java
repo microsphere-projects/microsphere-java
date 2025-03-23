@@ -16,8 +16,9 @@
  */
 package io.microsphere.reflect;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;

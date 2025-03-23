@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Test Service
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 @Path("/echo")

@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.util.StackTraceUtils.getCallerClassName;
 import static io.microsphere.util.StackTraceUtils.getCallerClassNameInGeneralJVM;
 import static io.microsphere.util.StackTraceUtils.getCallerClassNames;
-import static io.microsphere.util.Version.Operator.LT;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,7 +38,7 @@ public class StackTraceUtilsTest {
 
     @Test
     public void testGetCallerClassNames() {
-        if (testCurrentJavaVersion(JAVA_VERSION_9, LT)) {
+        if (testCurrentJavaVersion("<", JAVA_VERSION_9)) {
             assertThrows(NullPointerException.class, () -> getCallerClassNames());
         } else {
             assertTrue(getCallerClassNames().contains(CALLER_CLASS_NAME));
@@ -49,6 +49,11 @@ public class StackTraceUtilsTest {
     public void testGetCallerClassNameInGeneralJVM() {
         String callerClassName = getCallerClassNameInGeneralJVM();
         assertEquals(CALLER_CLASS_NAME, callerClassName);
+    }
+
+    @Test
+    public void testGetCallerClassNameInGeneralJVMOnOverStack() {
+        assertNull(getCallerClassNameInGeneralJVM(Integer.MAX_VALUE));
     }
 
 }

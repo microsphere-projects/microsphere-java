@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * {@link TestService} Implementation
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class DefaultTestService implements TestService {

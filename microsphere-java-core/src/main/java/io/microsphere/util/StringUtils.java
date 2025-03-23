@@ -32,7 +32,7 @@ public abstract class StringUtils extends BaseUtils {
 
     public final static String EMPTY = "";
 
-    public final static String EMPTY_STRING = "";
+    public final static String EMPTY_STRING = EMPTY;
 
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
 
@@ -70,7 +70,7 @@ public abstract class StringUtils extends BaseUtils {
     }
 
     public static String[] split(String value, String delimiter) {
-        if (isEmpty(value)) {
+        if (isEmpty(value) || isEmpty(delimiter)) {
             return EMPTY_STRING_ARRAY;
         }
         StringTokenizer stringTokenizer = new StringTokenizer(value, delimiter);
@@ -79,21 +79,21 @@ public abstract class StringUtils extends BaseUtils {
 
     public static boolean contains(String value, CharSequence part) {
         if (value != null && part != null) {
-            return value.contains(part);
+            return value == part ? true : value.contains(part);
         }
         return false;
     }
 
     public static boolean startsWith(String value, String part) {
         if (value != null && part != null) {
-            return value.startsWith(part);
+            return value == part ? true : value.startsWith(part);
         }
         return false;
     }
 
     public static boolean endsWith(String value, String part) {
         if (value != null && part != null) {
-            return value.endsWith(part);
+            return value == part ? true : value.endsWith(part);
         }
         return false;
     }

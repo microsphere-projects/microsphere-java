@@ -16,7 +16,8 @@
  */
 package io.microsphere.util;
 
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nullable;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.Collection;

@@ -3,14 +3,14 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.io.scanner.SimpleJarEntryScanner;
 import io.microsphere.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
@@ -49,7 +49,6 @@ import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.reflect.Modifier.ANNOTATION;
 import static io.microsphere.reflect.Modifier.ENUM;
 import static io.microsphere.reflect.Modifier.SYNTHETIC;
-import static io.microsphere.reflect.TypeFinder.classFinder;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayToString;
@@ -62,6 +61,7 @@ import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
+import static io.microsphere.util.TypeFinder.classFinder;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Collections.emptyList;

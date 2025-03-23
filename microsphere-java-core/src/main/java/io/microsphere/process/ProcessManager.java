@@ -1,6 +1,7 @@
 package io.microsphere.process;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

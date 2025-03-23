@@ -16,9 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.ClassDataRepository;
 
-import javax.annotation.Nonnull;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
@@ -342,7 +342,7 @@ public class Version implements Comparable<Version>, Serializable {
     public enum Operator implements BiPredicate<Version, Version> {
 
         /**
-         * The Operator : "Equal to"
+         * The Operator : "Equal to" , whose symbol is : "="
          */
         EQ(EQUAL) {
             @Override
@@ -358,7 +358,7 @@ public class Version implements Comparable<Version>, Serializable {
         },
 
         /**
-         * The Operator : "Less than"
+         * The Operator : "Less than" , whose symbol is : "<"
          */
         LT(LESS_THAN) {
             @Override
@@ -372,7 +372,7 @@ public class Version implements Comparable<Version>, Serializable {
         },
 
         /**
-         * The Operator : "Less than or equal to"
+         * The Operator : "Less than or equal to" , whose symbol is : "<="
          */
         LE(LESS_THAN_OR_EQUAL_TO) {
             @Override
@@ -386,7 +386,7 @@ public class Version implements Comparable<Version>, Serializable {
         },
 
         /**
-         * The Operator : "Greater than"
+         * The Operator : "Greater than" , whose symbol is : ">"
          */
         GT(GREATER_THAN) {
             @Override
@@ -400,7 +400,7 @@ public class Version implements Comparable<Version>, Serializable {
         },
 
         /**
-         * The Operator : "Greater than or equal to"
+         * The Operator : "Greater than or equal to" , whose symbol is : ">="
          */
         GE(GREATER_THAN_OR_EQUAL_TO) {
             @Override
@@ -424,6 +424,7 @@ public class Version implements Comparable<Version>, Serializable {
          *
          * @param symbol the operators' symbol
          * @return <code>null</code> if can't be found
+         * @throws IllegalArgumentException if the symbol is not supported, only supports "=", ">=", "<=", "<", ">"
          */
         public static Operator of(String symbol) {
             Operator[] operators = values();

@@ -19,25 +19,27 @@ package io.microsphere.collection;
 import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.CollectionUtils.emptyIterable;
+import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.CollectionUtils.singletonIterable;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyEnumeration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -94,7 +96,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
         Iterable iterable = toIterable(emptyEnumeration());
         assertEmptyIterable(iterable);
 
-        iterable = toIterable((Enumeration) null);
+        iterable = toIterable(TEST_NULL_ENUMERATION);
         assertEmptyIterable(iterable);
     }
 
@@ -109,7 +111,18 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    public void testEmptyIterator() {
+        assertSame(INSTANCE, emptyIterator());
+    }
+
+    @Test
+    public void testEmptyIterable() {
+        assertSame(EmptyIterable.INSTANCE, emptyIterable());
+    }
+
+    @Test
     public void testSize() {
+        assertEquals(0, size(TEST_NULL_ITERABLE));
         assertEquals(0, size(TEST_NULL_COLLECTION));
         assertEquals(0, size(TEST_NULL_LIST));
         assertEquals(0, size(TEST_NULL_SET));
@@ -150,7 +163,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
     public void testAddAll() {
         List<String> values = new LinkedList<>();
         assertEquals(0, addAll(TEST_EMPTY_LIST));
-        assertEquals(0, addAll(null, "A"));
+        assertEquals(0, addAll(TEST_NULL_COLLECTION, "A"));
         assertEquals(0, addAll(values));
         assertEquals(2, addAll(values, "A", "B"));
         assertEquals(ofList("A", "B"), values);
@@ -158,9 +171,9 @@ public class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
     public void testFirst() {
-        assertNull(first((Collection) null));
-        assertNull(first((Iterator) null));
-        assertNull(first((Iterable) null));
+        assertNull(first(TEST_NULL_ITERATOR));
+        assertNull(first(TEST_NULL_ITERABLE));
+        assertNull(first(TEST_NULL_COLLECTION));
         assertNull(first(TEST_EMPTY_LIST));
         assertNull(first(TEST_EMPTY_SET));
         assertNull(first(TEST_EMPTY_QUEUE));
