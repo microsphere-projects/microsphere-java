@@ -27,7 +27,6 @@ import io.microsphere.annotation.processor.model.Color;
 import io.microsphere.annotation.processor.model.MapTypeModel;
 import io.microsphere.annotation.processor.model.Model;
 import io.microsphere.annotation.processor.model.PrimitiveTypeModel;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -37,13 +36,10 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
@@ -77,8 +73,6 @@ import static io.microsphere.annotation.processor.util.TypeUtils.getAllTypeMirro
 import static io.microsphere.annotation.processor.util.TypeUtils.getDeclaredTypeOfSuperclass;
 import static io.microsphere.annotation.processor.util.TypeUtils.getDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.getDeclaredTypesOfInterfaces;
-import static io.microsphere.annotation.processor.util.TypeUtils.getResource;
-import static io.microsphere.annotation.processor.util.TypeUtils.getResourceName;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeElementOfSuperclass;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeElementsOfInterfaces;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeMirrorsOfInterfaces;
@@ -101,13 +95,13 @@ import static io.microsphere.annotation.processor.util.TypeUtils.typeElementFind
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
+import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.combine;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -933,6 +927,43 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testFindDeclaredTypesWithExcludedTypes() {
+        List<DeclaredType> declaredTypes = findDeclaredTypes(testTypeElement, SUPER_CLASS);
+        assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
+
+        declaredTypes = findDeclaredTypes(testTypeElement, getTypeNames(SUPER_CLASS));
+        assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
+
+        declaredTypes = findDeclaredTypes(testTypeElement, SUPER_INTERFACES);
+        assertDeclaredTypes(declaredTypes, SUPER_CLASS);
+
+        declaredTypes = findDeclaredTypes(testTypeElement, getTypeNames(SUPER_INTERFACES));
+        assertDeclaredTypes(declaredTypes, SUPER_CLASS);
+
+        declaredTypes = findDeclaredTypes(testTypeMirror, SUPER_CLASS);
+        assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
+
+        declaredTypes = findDeclaredTypes(testTypeMirror, getTypeNames(SUPER_CLASS));
+        assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
+
+        declaredTypes = findDeclaredTypes(testTypeMirror, SUPER_INTERFACES);
+        assertDeclaredTypes(declaredTypes, SUPER_CLASS);
+
+        declaredTypes = findDeclaredTypes(testTypeMirror, getTypeNames(SUPER_INTERFACES));
+        assertDeclaredTypes(declaredTypes, SUPER_CLASS);
+    }
+
+    @Test
+    public void testFindDeclaredTypesWithExcludedTypesOnNull() {
+        assertTrue(findDeclaredTypes(NULL_ELEMENT, NULL_TYPE_ARRAY).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_ELEMENT, EMPTY_TYPE_ARRAY).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_ELEMENT, ALL_TYPES).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, NULL_TYPE_ARRAY).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, EMPTY_TYPE_ARRAY).isEmpty());
+        assertTrue(findDeclaredTypes(NULL_TYPE_MIRROR, ALL_TYPES).isEmpty());
+    }
+
+    @Test
     public void testFindDeclaredTypesOfInterfaces() {
         List<DeclaredType> declaredTypes = findDeclaredTypesOfInterfaces(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
@@ -951,7 +982,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllDeclaredTypesOfSuperclasses() {
-        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperclasses(testTypeMirror, alwaysTrue());
+        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperclasses(testTypeElement, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_CLASSES);
 
         declaredTypes = findAllDeclaredTypesOfSuperclasses(testTypeMirror, alwaysFalse());
@@ -968,7 +999,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllDeclaredTypesOfInterfaces() {
-        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfInterfaces(testTypeMirror, alwaysTrue());
+        List<DeclaredType> declaredTypes = findAllDeclaredTypesOfInterfaces(testTypeElement, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_INTERFACES);
 
         declaredTypes = findAllDeclaredTypesOfInterfaces(testTypeMirror, alwaysFalse());
@@ -1000,7 +1031,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllDeclaredTypes() {
-        List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeMirror, alwaysTrue());
+        List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
 
         declaredTypes = findAllDeclaredTypes(testTypeMirror, alwaysFalse());
@@ -1013,6 +1044,31 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertTrue(findAllDeclaredTypes(NULL_ELEMENT, alwaysFalse()).isEmpty());
         assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, alwaysTrue()).isEmpty());
         assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, alwaysFalse()).isEmpty());
+    }
+
+    @Test
+    public void testFindAllDeclaredTypesWithExcludedTypes() {
+        List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, testClass);
+        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+
+        declaredTypes = findAllDeclaredTypes(testTypeElement, testClassName);
+        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+
+        declaredTypes = findAllDeclaredTypes(testTypeMirror, testClass);
+        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+
+        declaredTypes = findAllDeclaredTypes(testTypeMirror, testClassName);
+        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+    }
+
+    @Test
+    public void testFindAllDeclaredTypesWithExcludedTypesOnNull() {
+        assertTrue(findAllDeclaredTypes(NULL_ELEMENT, NULL_TYPE_ARRAY).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_ELEMENT, EMPTY_TYPE_ARRAY).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_ELEMENT, ALL_TYPES).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, NULL_TYPE_ARRAY).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, EMPTY_TYPE_ARRAY).isEmpty());
+        assertTrue(findAllDeclaredTypes(NULL_TYPE_MIRROR, ALL_TYPES).isEmpty());
     }
 
     @Test
@@ -1518,24 +1574,6 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertGetDeclaredTypeOnNullProcessingEnvironment(SELF_TYPE_PLUS_SUPER_CLASS);
         assertGetDeclaredTypeOnNullProcessingEnvironment(SELF_TYPE_PLUS_SUPER_INTERFACES);
         assertGetDeclaredTypeOnNullProcessingEnvironment(SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES);
-    }
-
-    @Test
-    @Disabled("Failed due to github action env problem")
-    public void testGetResource() throws URISyntaxException {
-        URL resource = getResource(processingEnv, testTypeElement);
-        assertNotNull(resource);
-        assertTrue(new File(resource.toURI()).exists());
-        assertEquals(resource, getResource(processingEnv, testTypeMirror));
-        assertEquals(resource, getResource(processingEnv, testClassName));
-
-        assertThrows(RuntimeException.class, () -> getResource(processingEnv, "NotFound"));
-    }
-
-    @Test
-    public void testGetResourceName() {
-        assertEquals("java/lang/String.class", getResourceName("java.lang.String"));
-        assertNull(getResourceName(null));
     }
 
     @Test
