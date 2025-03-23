@@ -597,6 +597,9 @@ public interface TypeUtils {
     }
 
     static String toString(TypeMirror type) {
+        if (type == null) {
+            return null;
+        }
         TypeElement element = ofTypeElement(type);
         if (element != null) {
             List<? extends TypeParameterElement> typeParameterElements = element.getTypeParameters();
