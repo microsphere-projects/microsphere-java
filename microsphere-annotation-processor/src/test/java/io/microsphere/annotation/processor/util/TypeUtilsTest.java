@@ -1592,8 +1592,13 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testToStringMapTypes() {
+        assertToStringOnMapTypes();
+    }
+
+    @Test
     public void testToStringOnNull() {
-        // TODO
+        assertNull(TypeUtils.toString(NULL_TYPE_MIRROR));
     }
 
     @Test
@@ -1774,6 +1779,14 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
             TypeMirror typeMirror = TypeUtils.getDeclaredType(NULL_PROCESSING_ENVIRONMENT, type);
             assertNull(typeMirror);
         }
+    }
+
+    private void assertToStringOnMapTypes() {
+        assertToString(getFieldType(MapTypeModel.class, "strings"));
+        assertToString(getFieldType(MapTypeModel.class, "colors"));
+        assertToString(getFieldType(MapTypeModel.class, "primitiveTypeModels"));
+        assertToString(getFieldType(MapTypeModel.class, "models"));
+        assertToString(getFieldType(MapTypeModel.class, "modelArrays"));
     }
 
     private void assertToStringOnCollectionTypes() {
