@@ -562,9 +562,6 @@ public abstract class ArrayUtils extends BaseUtils {
     }
 
     public static boolean contains(Object[] values, Object value) {
-        if (value instanceof Comparable) {
-            return binarySearch(values, value) > -1;
-        }
         int length = length(values);
         for (int i = 0; i < length; i++) {
             if (Objects.equals(values[i], value)) {
