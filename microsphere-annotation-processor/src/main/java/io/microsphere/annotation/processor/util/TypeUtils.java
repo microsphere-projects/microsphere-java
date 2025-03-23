@@ -25,11 +25,7 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
-import javax.tools.FileObject;
-import javax.tools.StandardLocation;
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -42,8 +38,10 @@ import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.contains;
 import static io.microsphere.util.ArrayUtils.isEmpty;
+import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.ClassUtils.SIMPLE_TYPES;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
@@ -307,12 +305,19 @@ public interface TypeUtils {
         return findTypeElements(type, false, true, true, true, typeFilters);
     }
 
+    /**
+     * @throws IllegalArgumentException if Any element of <code>typeFilters</code> array must not be null
+     */
     static List<TypeElement> findTypeElements(TypeElement type,
                                               boolean includeSelf,
                                               boolean includeHierarchicalTypes,
                                               boolean includeSuperclass,
                                               boolean includeSuperInterfaces,
-                                              Predicate<? super TypeElement>... typeFilters) {
+                                              Predicate<? super TypeElement>... typeFilters) throws IllegalArgumentException {
+        if (type == null) {
+            return emptyList();
+        }
+        assertNoNullElements(typeFilters, () -> "Any element of 'typeFilters' array must not be null");
         return type == null ? emptyList() : typeElementFinder(type, includeSelf, includeHierarchicalTypes, includeSuperclass, includeSuperInterfaces).findTypes(typeFilters);
     }
 
@@ -381,12 +386,29 @@ public interface TypeUtils {
         return findDeclaredTypes(type, includeSelf, includeHierarchicalTypes, includeSuperClasses, includeSuperInterfaces, EMPTY_PREDICATE_ARRAY);
     }
 
+
+    static List<DeclaredType> findDeclaredTypes(TypeMirror type, Type... excludedTypes) {
+        return type == null ? emptyList() : findDeclaredTypes(ofTypeElement(type), excludedTypes);
+    }
+
+    static List<DeclaredType> findDeclaredTypes(Element type, Type... excludedTypes) {
+        return type == null ? emptyList() : findDeclaredTypes(type, getTypeNames(excludedTypes));
+    }
+
+    static List<DeclaredType> findDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
+        return type == null ? emptyList() : findDeclaredTypes(ofTypeElement(type), excludedTypeNames);
+    }
+
+    static List<DeclaredType> findDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
+        return type == null ? emptyList() : findDeclaredTypes(type, false, false, true, true, t -> !contains(excludedTypeNames, t.toString()));
+    }
+
     static List<DeclaredType> findDeclaredTypesOfInterfaces(Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findDeclaredTypesOfInterfaces(type.asType(), typeFilters);
     }
 
     static List<DeclaredType> findDeclaredTypesOfInterfaces(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
-        return ofDeclaredTypes(getTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
+        return type == null ? emptyList() : ofDeclaredTypes(getTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
     }
 
     static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(Element type, Predicate<? super DeclaredType>... typeFilters) {
@@ -394,7 +416,7 @@ public interface TypeUtils {
     }
 
     static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
-        return ofDeclaredTypes(getAllTypeElementsOfSuperclasses(ofTypeElement(type)), typeFilters);
+        return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfSuperclasses(ofTypeElement(type)), typeFilters);
     }
 
     static List<DeclaredType> findAllDeclaredTypesOfInterfaces(Element type, Predicate<? super DeclaredType>... typeFilters) {
@@ -402,7 +424,7 @@ public interface TypeUtils {
     }
 
     static List<DeclaredType> findAllDeclaredTypesOfInterfaces(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
-        return ofDeclaredTypes(getAllTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
+        return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
     }
 
     static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(Element type, Predicate<? super DeclaredType>... typeFilters) {
@@ -410,23 +432,23 @@ public interface TypeUtils {
     }
 
     static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
-        return ofDeclaredTypes(getAllTypeElementsOfSuperTypes(ofTypeElement(type)), typeFilters);
-    }
-
-    static List<DeclaredType> findAllDeclaredTypes(Element type, Type... excludedTypes) {
-        return type == null ? emptyList() : findAllDeclaredTypes(type.asType(), excludedTypes);
+        return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfSuperTypes(ofTypeElement(type)), typeFilters);
     }
 
     static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Type... excludedTypes) {
-        return findAllDeclaredTypes(type, of(excludedTypes).map(Type::getTypeName).toArray(String[]::new));
+        return type == null ? emptyList() : findAllDeclaredTypes(ofTypeElement(type), excludedTypes);
     }
 
-    static List<DeclaredType> findAllDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
-        return type == null ? emptyList() : findAllDeclaredTypes(type.asType(), excludedTypeNames);
+    static List<DeclaredType> findAllDeclaredTypes(Element type, Type... excludedTypes) {
+        return type == null ? emptyList() : findAllDeclaredTypes(type, getTypeNames(excludedTypes));
     }
 
     static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
-        return findAllDeclaredTypes(type, t -> contains(excludedTypeNames, t.toString()));
+        return type == null ? emptyList() : findAllDeclaredTypes(ofTypeElement(type), excludedTypeNames);
+    }
+
+    static List<DeclaredType> findAllDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
+        return type == null ? emptyList() : findAllDeclaredTypes(type, t -> !contains(excludedTypeNames, t.toString()));
     }
 
     static List<DeclaredType> findAllDeclaredTypes(Element type, Predicate<? super DeclaredType>... typeFilters) {
@@ -434,7 +456,7 @@ public interface TypeUtils {
     }
 
     static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
-        return ofDeclaredTypes(getAllTypeElements(ofTypeElement(type)), typeFilters);
+        return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElements(ofTypeElement(type)), typeFilters);
     }
 
     static List<DeclaredType> findDeclaredTypes(Element type,
@@ -452,7 +474,7 @@ public interface TypeUtils {
                                                 boolean includeSuperClasses,
                                                 boolean includeSuperInterfaces,
                                                 Predicate<? super DeclaredType>... typeFilters) {
-        return ofDeclaredTypes(getTypeElements(ofTypeElement(type), includeSelf, includeHierarchicalTypes, includeSuperClasses, includeSuperInterfaces), typeFilters);
+        return type == null ? emptyList() : ofDeclaredTypes(getTypeElements(ofTypeElement(type), includeSelf, includeHierarchicalTypes, includeSuperClasses, includeSuperInterfaces), typeFilters);
     }
 
     static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeMirror type) {
@@ -464,7 +486,7 @@ public interface TypeUtils {
     }
 
     static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
-        return findTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
+        return type == null ? emptyList() : findTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
     }
 
     static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
@@ -572,35 +594,6 @@ public interface TypeUtils {
 
     static DeclaredType getDeclaredType(ProcessingEnvironment processingEnv, CharSequence typeName) {
         return ofDeclaredType(getTypeElement(processingEnv, typeName));
-    }
-
-    static URL getResource(ProcessingEnvironment processingEnv, Element type) {
-        return getResource(processingEnv, ofDeclaredType(type));
-    }
-
-    static URL getResource(ProcessingEnvironment processingEnv, TypeMirror type) {
-        return type == null ? null : getResource(processingEnv, type.toString());
-    }
-
-    static URL getResource(ProcessingEnvironment processingEnv, CharSequence type) {
-        String relativeName = getResourceName(type);
-        URL resource = null;
-        try {
-            if (relativeName != null) {
-                FileObject fileObject = processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", relativeName);
-                resource = fileObject.toUri().toURL();
-                // try to open it
-                resource.getContent();
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        return resource;
-    }
-
-    static String getResourceName(CharSequence type) {
-        return type == null ? null : type.toString().replace('.', '/').concat(".class");
     }
 
     static String toString(TypeMirror type) {
