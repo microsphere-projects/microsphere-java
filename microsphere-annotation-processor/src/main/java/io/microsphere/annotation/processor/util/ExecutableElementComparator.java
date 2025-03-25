@@ -37,6 +37,9 @@ import java.util.List;
  */
 public class ExecutableElementComparator implements Comparator<ExecutableElement> {
 
+    /**
+     * The singleton instance
+     */
     public static final ExecutableElementComparator INSTANCE = new ExecutableElementComparator();
 
     private ExecutableElementComparator() {
@@ -61,7 +64,7 @@ public class ExecutableElementComparator implements Comparator<ExecutableElement
 
             if (value == 0) { // Step 3
                 for (int i = 0; i < ps1.size(); i++) {
-                    value = CharSequenceComparator.INSTANCE.compare(ps1.get(i).getSimpleName(), ps2.get(i).getSimpleName());
+                    value = CharSequenceComparator.INSTANCE.compare(ps1.get(i).asType().toString(), ps2.get(i).asType().toString());
                     if (value != 0) {
                         break;
                     }

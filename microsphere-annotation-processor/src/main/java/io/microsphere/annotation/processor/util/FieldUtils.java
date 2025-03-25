@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
-import static io.microsphere.annotation.processor.util.MemberUtils.matches;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
@@ -117,7 +117,7 @@ public interface FieldUtils {
     }
 
     static boolean isField(VariableElement field) {
-        return matches(field, FIELD) || isEnumMemberField(field);
+        return matchesElementKind(field, FIELD) || isEnumMemberField(field);
     }
 
     static boolean isField(VariableElement field, Modifier... modifiers) {

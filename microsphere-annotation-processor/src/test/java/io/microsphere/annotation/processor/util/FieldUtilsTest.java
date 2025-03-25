@@ -17,7 +17,6 @@
 package io.microsphere.annotation.processor.util;
 
 import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.microsphere.annotation.processor.TestServiceImpl;
 import io.microsphere.annotation.processor.model.Color;
 import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
@@ -59,13 +58,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
-
-    private TypeElement testType;
-
-    @Override
-    protected void beforeTest() {
-        testType = getTypeElement(TestServiceImpl.class);
-    }
 
     @Test
     public void testGetDeclaredFields() {
