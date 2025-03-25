@@ -47,8 +47,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
-    private TypeElement testTypeElement;
-
     @Test
     public void testIsPublicNonStatic() {
         assertFalse(isPublicNonStatic(null));
