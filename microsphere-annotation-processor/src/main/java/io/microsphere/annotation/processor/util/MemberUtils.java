@@ -22,18 +22,21 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -47,7 +50,7 @@ import static javax.lang.model.element.Modifier.STATIC;
  */
 public interface MemberUtils {
 
-    static boolean matches(Element member, ElementKind kind) {
+    static boolean matchesElementKind(Element member, ElementKind kind) {
         return member == null || kind == null ? false : kind.equals(member.getKind());
     }
 
@@ -73,7 +76,7 @@ public interface MemberUtils {
     }
 
     static List<? extends Element> getDeclaredMembers(TypeElement type) {
-        return findDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
+        return type == null ? emptyList() : findDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<? extends Element> getAllDeclaredMembers(TypeMirror type) {
@@ -81,7 +84,7 @@ public interface MemberUtils {
     }
 
     static List<? extends Element> getAllDeclaredMembers(TypeElement type) {
-        return findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
+        return type == null ? emptyList() : findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<? extends Element> findDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
@@ -122,17 +125,25 @@ public interface MemberUtils {
         return members.isEmpty() ? emptyList() : members;
     }
 
-    static boolean matchParameterTypes(List<? extends VariableElement> parameters, CharSequence... parameterTypes) {
+    static boolean matchParameterTypes(List<? extends VariableElement> parameters, Type... parameterTypes) {
+        return parameters == null || parameterTypes == null ? false : matchParameterTypeNames(parameters, getTypeNames(parameterTypes));
+    }
 
+    static boolean matchParameterTypeNames(List<? extends VariableElement> parameters, CharSequence... parameterTypeNames) {
+        if (parameters == null || parameterTypeNames == null) {
+            return false;
+        }
+
+        int length = length(parameterTypeNames);
         int size = parameters.size();
 
-        if (size != parameterTypes.length) {
+        if (size != length) {
             return false;
         }
 
         for (int i = 0; i < size; i++) {
             VariableElement parameter = parameters.get(i);
-            if (!Objects.equals(parameter.asType().toString(), parameterTypes[i])) {
+            if (!isSameType(parameter, parameterTypeNames[i])) {
                 return false;
             }
         }
