@@ -17,7 +17,6 @@
 package io.microsphere.annotation.processor.util;
 
 import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.microsphere.annotation.processor.TestServiceImpl;
 import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 
@@ -48,23 +47,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
-    private TypeElement testType;
-
-    @Override
-    protected void beforeTest() {
-        testType = getTypeElement(TestServiceImpl.class);
-    }
+    private TypeElement testTypeElement;
 
     @Test
     public void testIsPublicNonStatic() {
         assertFalse(isPublicNonStatic(null));
-        methodsIn(getDeclaredMembers(testType.asType())).forEach(method -> assertTrue(isPublicNonStatic(method)));
+        methodsIn(getDeclaredMembers(testTypeElement.asType())).forEach(method -> assertTrue(isPublicNonStatic(method)));
     }
 
     @Test
     public void testHasModifiers() {
         assertFalse(hasModifiers(null));
-        List<? extends Element> members = getAllDeclaredMembers(testType.asType());
+        List<? extends Element> members = getAllDeclaredMembers(testTypeElement.asType());
         List<VariableElement> fields = fieldsIn(members);
         assertTrue(hasModifiers(fields.get(0), PRIVATE));
     }
@@ -101,7 +95,7 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypes() {
-        ExecutableElement method = findMethod(testType, "echo", "java.lang.String");
+        ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertTrue(matchParameterTypes(method.getParameters(), "java.lang.String"));
         assertFalse(matchParameterTypes(method.getParameters(), "java.lang.Object"));
     }
