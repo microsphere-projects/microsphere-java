@@ -25,26 +25,32 @@ import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.annotation.processor.util.MethodUtils.filterMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.findPublicNonStaticMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getDeclaredMethods;
+import static io.microsphere.annotation.processor.util.MethodUtils.getEnclosingElement;
 import static io.microsphere.annotation.processor.util.MethodUtils.getMethodName;
+import static io.microsphere.annotation.processor.util.MethodUtils.getMethodParameterTypeMirrors;
 import static io.microsphere.annotation.processor.util.MethodUtils.getMethodParameterTypeNames;
 import static io.microsphere.annotation.processor.util.MethodUtils.getOverrideMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.getReturnTypeName;
 import static io.microsphere.annotation.processor.util.MethodUtils.isMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.isPublicNonStaticMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.matches;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
+import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Collections.emptyList;
@@ -267,6 +273,10 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     public void testFindMethodOnNull() {
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString"));
         assertNull(findMethod(NULL_TYPE_MIRROR, "toString"));
+        assertNull(findMethod(testTypeElement, null));
+        assertNull(findMethod(testTypeMirror, null));
+        assertNull(findMethod(testTypeElement, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeMirror, "toString", NULL_STRING_ARRAY));
     }
 
     @Test
@@ -280,6 +290,30 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
         overrideMethod = getOverrideMethod(processingEnv, testTypeElement, declaringMethod);
         assertEquals(methods.get(0), overrideMethod);
+    }
+
+    @Test
+    public void testFilterMethods() {
+
+    }
+
+    @Test
+    public void testFilterMethodsOnNull() {
+        assertSame(emptyList(), filterMethods(null, alwaysTrue()));
+        assertSame(emptyList(), filterMethods(null, null));
+    }
+
+    @Test
+    public void testFilterMethodsOnEmpty() {
+        assertSame(emptyList(), filterMethods(emptyList(), alwaysTrue()));
+        assertSame(emptyList(), filterMethods(emptyList(), null));
+    }
+
+    @Test
+    public void testFilterMethodsOnReturningEmptyList() {
+        List<ExecutableElement> methods = getDeclaredMethods(testTypeElement);
+        assertSame(emptyList(), filterMethods(methods, alwaysFalse()));
+        assertSame(methods, filterMethods(methods));
     }
 
     @Test
@@ -317,17 +351,93 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(null));
     }
 
-    private void assertFindMethod(Type type, String methodName, Type... parameterTypes) {
-        TypeElement typeElement = getTypeElement(type);
-        ExecutableElement method = findMethod(typeElement, methodName, parameterTypes);
-        assertMethod(method, methodName, parameterTypes);
+    @Test
+    public void testMatchParameterTypes() {
+        ExecutableElement method = findMethod(testTypeElement, "toString");
+        assertSame(emptyList(), getMethodParameterTypeMirrors(method));
 
-        method = findMethod(typeElement.asType(), methodName, parameterTypes);
-        assertMethod(method, methodName, parameterTypes);
+        method = findMethod(testTypeElement, "equals", Object.class);
+        List<TypeMirror> parameterTypes = getMethodParameterTypeMirrors(method);
+        assertEquals(ofList(parameterTypes.toArray(EMPTY_TYPE_MIRROR_ARRAY)), parameterTypes);
     }
 
-    private void assertMethod(ExecutableElement method, String methodName, Type... parameterTypes) {
+    @Test
+    public void testMatchParameterTypesOnNull() {
+        assertSame(emptyList(), getMethodParameterTypeMirrors(null));
+    }
+
+    @Test
+    public void testMatches() {
+        assertFindMethod(testClass, "echo", String.class);
+    }
+
+    @Test
+    public void tstMatchesOnFalse() {
+        ExecutableElement method = findMethod(testTypeElement, "echo", String.class);
+
+        Type[] parameterTypes = ofArray(String.class, String.class);
+        String[] parameterTypeNames = getTypeNames(parameterTypes);
+        assertFalse(matches(method, "echo", parameterTypes));
+        assertFalse(matches(method, "echo", parameterTypeNames));
+
+        parameterTypes = ofArray(Object.class);
+        parameterTypeNames = getTypeNames(parameterTypes);
+        assertFalse(matches(method, "echo", parameterTypes));
+        assertFalse(matches(method, "echo", parameterTypeNames));
+    }
+
+    @Test
+    public void testMatchesOnNull() {
+        String methodName = "echo";
+        Type[] parameterTypes = ofArray(String.class);
+        String[] parameterTypeNames = getTypeNames(parameterTypes);
+        ExecutableElement method = findMethod(testTypeElement, methodName, parameterTypes);
+
+        assertFalse(matches(null, NULL_STRING, parameterTypes));
+        assertFalse(matches(method, NULL_STRING, parameterTypes));
+        assertFalse(matches(method, methodName, NULL_TYPE_ARRAY));
+
+        assertFalse(matches(null, NULL_STRING, parameterTypeNames));
+        assertFalse(matches(method, NULL_STRING, parameterTypeNames));
+        assertFalse(matches(method, methodName, NULL_STRING_ARRAY));
+    }
+
+    @Test
+    public void testGetEnclosingElement() {
+        String methodName = "echo";
+        Type[] parameterTypes = ofArray(String.class);
+        ExecutableElement method = findMethod(testTypeElement, methodName, parameterTypes);
+        assertSame(testTypeElement, getEnclosingElement(method));
+    }
+
+    @Test
+    public void testGetEnclosingElementOnNull() {
+        assertNull(getEnclosingElement(null));
+    }
+
+    private void assertFindMethod(Type type, String methodName, Type... parameterTypes) {
+        TypeElement typeElement = getTypeElement(type);
+        String[] parameterTypeNames = getTypeNames(parameterTypes);
+
+        ExecutableElement method = findMethod(typeElement, methodName, parameterTypes);
+        assertMatchesMethod(method, methodName, parameterTypes);
+
+        method = findMethod(typeElement, methodName, parameterTypeNames);
+        assertMatchesMethod(method, methodName, parameterTypes);
+
+        method = findMethod(typeElement.asType(), methodName, parameterTypes);
+        assertMatchesMethod(method, methodName, parameterTypes);
+
+        method = findMethod(typeElement.asType(), methodName, parameterTypeNames);
+        assertMatchesMethod(method, methodName, parameterTypeNames);
+    }
+
+    private void assertMatchesMethod(ExecutableElement method, String methodName, Type... parameterTypes) {
         assertTrue(matches(method, methodName, parameterTypes));
+    }
+
+    private void assertMatchesMethod(ExecutableElement method, String methodName, String... parameterTypeNames) {
+        assertTrue(matches(method, methodName, parameterTypeNames));
     }
 
     private List<? extends ExecutableElement> findAllDeclaredMethodsWithoutObjectType() {
