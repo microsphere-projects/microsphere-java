@@ -29,7 +29,6 @@ import io.microsphere.annotation.processor.model.Model;
 import io.microsphere.annotation.processor.model.PrimitiveTypeModel;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -40,7 +39,6 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
@@ -115,34 +113,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
-    private static final TypeMirror NULL_TYPE_MIRROR = null;
-
-    private static final TypeMirror[] EMPTY_TYPE_MIRROR_ARRAY = new TypeMirror[0];
-
-    private static final TypeMirror[] NULL_TYPE_MIRROR_ARRAY = null;
-
-    private static final Collection[] EMPTY_COLLECTION_ARRAY = new Collection[0];
-
-    private static final Collection NULL_COLLECTION = null;
-
-    private static final Element NULL_ELEMENT = null;
-
-    private static final Element[] EMPTY_ELEMENT_ARRAY = new Element[0];
-
-    private static final Element[] NULL_ELEMENT_ARRAY = null;
-
-    private static final TypeElement NULL_TYPE_ELEMENT = null;
-
-    private static final Type[] NULL_TYPE_ARRAY = null;
-
-    private static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
-
-    private static final Type NULL_TYPE = null;
-
-    private static final ProcessingEnvironment NULL_PROCESSING_ENVIRONMENT = null;
-
-    private static final String NULL_STRING = null;
-
     /**
      * self type
      */
@@ -213,32 +183,12 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
      */
     private static final Type[] SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES = combine(SELF_TYPE, SUPER_TYPES);
 
-
-    private Class<?> testClass;
-
-    private String testClassName;
-
-    private TypeElement testTypeElement;
-
-    private TypeMirror testTypeMirror;
-
-    private DeclaredType testDeclaredType;
-
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
         compiledClasses.add(ArrayTypeModel.class);
         compiledClasses.add(CollectionTypeModel.class);
         compiledClasses.add(Color.class);
         compiledClasses.add(MapTypeModel.class);
-    }
-
-    @Override
-    protected void beforeTest() {
-        this.testClass = SELF_TYPE;
-        this.testClassName = SELF_TYPE.getName();
-        this.testTypeElement = getTypeElement(testClass);
-        this.testTypeMirror = this.testTypeElement.asType();
-        this.testDeclaredType = ofDeclaredType(this.testTypeElement);
     }
 
     @Test
@@ -1592,8 +1542,13 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testToStringMapTypes() {
+        assertToStringOnMapTypes();
+    }
+
+    @Test
     public void testToStringOnNull() {
-        // TODO
+        assertNull(TypeUtils.toString(NULL_TYPE_MIRROR));
     }
 
     @Test
@@ -1774,6 +1729,14 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
             TypeMirror typeMirror = TypeUtils.getDeclaredType(NULL_PROCESSING_ENVIRONMENT, type);
             assertNull(typeMirror);
         }
+    }
+
+    private void assertToStringOnMapTypes() {
+        assertToString(getFieldType(MapTypeModel.class, "strings"));
+        assertToString(getFieldType(MapTypeModel.class, "colors"));
+        assertToString(getFieldType(MapTypeModel.class, "primitiveTypeModels"));
+        assertToString(getFieldType(MapTypeModel.class, "models"));
+        assertToString(getFieldType(MapTypeModel.class, "modelArrays"));
     }
 
     private void assertToStringOnCollectionTypes() {

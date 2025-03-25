@@ -30,8 +30,11 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 
 /**
  * Abstract {@link Annotation} Processing Test case
@@ -42,6 +45,36 @@ import java.util.Set;
 @ExtendWith(CompilerInvocationInterceptor.class)
 public abstract class AbstractAnnotationProcessingTest {
 
+    protected static final TypeMirror NULL_TYPE_MIRROR = null;
+
+    protected static final TypeMirror[] EMPTY_TYPE_MIRROR_ARRAY = new TypeMirror[0];
+
+    protected static final TypeMirror[] NULL_TYPE_MIRROR_ARRAY = null;
+
+    protected static final Collection[] EMPTY_COLLECTION_ARRAY = new Collection[0];
+
+    protected static final Collection NULL_COLLECTION = null;
+
+    protected static final Element NULL_ELEMENT = null;
+
+    protected static final Element[] EMPTY_ELEMENT_ARRAY = new Element[0];
+
+    protected static final Element[] NULL_ELEMENT_ARRAY = null;
+
+    protected static final TypeElement NULL_TYPE_ELEMENT = null;
+
+    protected static final Type[] NULL_TYPE_ARRAY = null;
+
+    protected static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
+
+    protected static final Type NULL_TYPE = null;
+
+    protected static final ProcessingEnvironment NULL_PROCESSING_ENVIRONMENT = null;
+
+    protected static final String NULL_STRING = null;
+
+    protected static final String[] NULL_STRING_ARRAY = null;
+
     static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
 
     protected ProcessingEnvironment processingEnv;
@@ -49,6 +82,16 @@ public abstract class AbstractAnnotationProcessingTest {
     protected Elements elements;
 
     protected Types types;
+
+    protected Class<?> testClass;
+
+    protected String testClassName;
+
+    protected TypeElement testTypeElement;
+
+    protected TypeMirror testTypeMirror;
+
+    protected DeclaredType testDeclaredType;
 
     @BeforeEach
     public final void init() {
@@ -64,6 +107,11 @@ public abstract class AbstractAnnotationProcessingTest {
     }
 
     protected void beforeTest() {
+        this.testClass = TestServiceImpl.class;
+        this.testClassName = TestServiceImpl.class.getName();
+        this.testTypeElement = getTypeElement(testClass);
+        this.testTypeMirror = this.testTypeElement.asType();
+        this.testDeclaredType = ofDeclaredType(this.testTypeElement);
     }
 
     protected void afterTest() {
