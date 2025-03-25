@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
+import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static io.microsphere.collection.CollectionUtils.addAll;
@@ -89,7 +90,7 @@ public interface MethodUtils {
     }
 
     static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Type... excludedTypes) {
-        return TypeUtils.findAllDeclaredTypes(type, excludedTypes).stream().map(t -> findDeclaredMethods(t)).flatMap(Collection::stream).collect(Collectors.toList());
+        return findAllDeclaredTypes(type, excludedTypes).stream().map(t -> findDeclaredMethods(t)).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     static List<ExecutableElement> findPublicNonStaticMethods(TypeElement type, Type... excludedTypes) {
