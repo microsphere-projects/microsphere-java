@@ -16,6 +16,7 @@
  */
 package io.microsphere.annotation.processor;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.xml.ws.ServiceMode;
@@ -30,6 +31,7 @@ import java.io.Serializable;
 public class TestServiceImpl extends GenericTestService implements TestService, AutoCloseable, Serializable {
 
     @Override
+    @Cacheable(cacheNames = {"cache-1", "cache-2"})
     public String echo(String message) {
         return "[ECHO] " + message;
     }
