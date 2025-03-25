@@ -21,22 +21,33 @@ import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import java.util.List;
 
+import static io.microsphere.annotation.processor.util.MemberUtils.filterMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.findAllDeclaredMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.findDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
 import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypeNames;
 import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
+import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.lang.function.Predicates.alwaysFalse;
+import static io.microsphere.lang.function.Predicates.alwaysTrue;
+import static java.util.Collections.emptyList;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.methodsIn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -47,9 +58,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
-    @Test
-    public void testMatches() {
+    private ExecutableElement echoMethod;
 
+    @Override
+    protected void beforeTest() {
+        super.beforeTest();
+        this.echoMethod = findMethod(testTypeElement, "echo", "java.lang.String");
+    }
+
+    @Test
+    public void testMatchesElementKind() {
+        assertTrue(matchesElementKind(echoMethod, ElementKind.METHOD));
+        assertFalse(matchesElementKind(echoMethod, ElementKind.FIELD));
+    }
+
+    @Test
+    public void testMatchesElementKindOnNull() {
+        assertFalse(matchesElementKind(null, ElementKind.FIELD));
+        assertFalse(matchesElementKind(echoMethod, null));
     }
 
     @Test
@@ -67,9 +93,122 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testDeclaredMembers() {
+    public void testGetDeclaredMembers() {
+        assertGetDeclaredMembersOfModel();
+    }
+
+    @Test
+    public void testGetDeclaredMembersOnNul() {
+        assertSame(emptyList(), getDeclaredMembers(NULL_TYPE_ELEMENT));
+        assertSame(emptyList(), getDeclaredMembers(NULL_TYPE_MIRROR));
+    }
+
+    @Test
+    public void testGetAllDeclaredMembers() {
+        assertGetAllDeclaredMembersOfModel();
+    }
+
+    @Test
+    public void testGetAllDeclaredMembersOnNul() {
+        assertSame(emptyList(), getAllDeclaredMembers(NULL_TYPE_ELEMENT));
+        assertSame(emptyList(), getAllDeclaredMembers(NULL_TYPE_MIRROR));
+    }
+
+    @Test
+    public void testFindDeclaredMembers() {
+        assertFindDeclaredMembersOfModel();
+    }
+
+    @Test
+    public void testFindDeclaredMembersOnNul() {
+        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
+        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_MIRROR, alwaysFalse()));
+    }
+
+    @Test
+    public void testFindAllDeclaredMembers() {
+        assertFindAllDeclaredMembersOfModel();
+    }
+
+    @Test
+    public void testFindAllDeclaredMembersOnNul() {
+        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
+        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysFalse()));
+    }
+
+    @Test
+    public void testFilterMembers() {
+        assertSame(emptyList(), filterMembers(ofList(testTypeElement), alwaysFalse()));
+
+    }
+
+    @Test
+    public void testFilterMembersOnNull() {
+        assertSame(emptyList(), filterMembers(null, alwaysTrue()));
+        List<ExecutableElement> methods = ofList(echoMethod);
+        assertSame(methods, filterMembers(methods, null));
+    }
+
+    @Test
+    public void testFilterMembersOnEmpty() {
+        assertSame(emptyList(), filterMembers(emptyList(), alwaysTrue()));
+        List<ExecutableElement> methods = ofList(echoMethod);
+        assertSame(methods, filterMembers(methods));
+    }
+
+    @Test
+    public void testMatchParameterTypes() {
+        assertTrue(matchParameterTypes(echoMethod.getParameters(), String.class));
+        assertFalse(matchParameterTypes(echoMethod.getParameters(), Object.class));
+    }
+
+    @Test
+    public void testMatchParameterTypesOnNull() {
+        assertFalse(matchParameterTypes(null, String.class));
+        assertFalse(matchParameterTypes(emptyList(), null));
+    }
+
+    @Test
+    public void testMatchParameterTypeNames() {
+        assertTrue(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.String"));
+        assertFalse(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.Object"));
+    }
+
+    @Test
+    public void testMatchParameterTypeNamesOnNull() {
+        assertFalse(matchParameterTypeNames(null, "java.lang.String"));
+        assertFalse(matchParameterTypeNames(emptyList(), null));
+    }
+
+    private void assertFindDeclaredMembersOfModel() {
         TypeElement type = getTypeElement(Model.class);
-        List<? extends Element> members = getDeclaredMembers(type.asType());
+        assertGetDeclaredMembersOfModel(findDeclaredMembers(type, alwaysTrue(), alwaysTrue()));
+        assertGetDeclaredMembersOfModel(findDeclaredMembers(type.asType(), alwaysTrue()));
+
+        assertSame(emptyList(), findDeclaredMembers(type, alwaysFalse()));
+        assertSame(emptyList(), findDeclaredMembers(type.asType(), alwaysFalse()));
+    }
+
+    private void assertFindAllDeclaredMembersOfModel() {
+        TypeElement type = getTypeElement(Model.class);
+        assertGetAllDeclaredMembersOfModel(findAllDeclaredMembers(type, alwaysTrue(), alwaysTrue()));
+        assertGetAllDeclaredMembersOfModel(findAllDeclaredMembers(type.asType(), alwaysTrue()));
+
+        assertSame(emptyList(), findAllDeclaredMembers(type, alwaysFalse()));
+        assertSame(emptyList(), findAllDeclaredMembers(type.asType(), alwaysFalse()));
+    }
+
+    private void assertGetDeclaredMembersOfModel() {
+        TypeElement type = getTypeElement(Model.class);
+        assertGetDeclaredMembersOfModel(getDeclaredMembers(type));
+        assertGetDeclaredMembersOfModel(getDeclaredMembers(type.asType()));
+    }
+
+    private void assertGetDeclaredMembersOfModel(List<? extends Element> members) {
         List<VariableElement> fields = fieldsIn(members);
         assertEquals(19, members.size());
         assertEquals(6, fields.size());
@@ -79,9 +218,16 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals("str", fields.get(3).getSimpleName().toString());
         assertEquals("bi", fields.get(4).getSimpleName().toString());
         assertEquals("bd", fields.get(5).getSimpleName().toString());
+    }
 
-        members = getAllDeclaredMembers(type.asType());
-        fields = fieldsIn(members);
+    private void assertGetAllDeclaredMembersOfModel() {
+        TypeElement type = getTypeElement(Model.class);
+        assertGetAllDeclaredMembersOfModel(getAllDeclaredMembers(type));
+        assertGetAllDeclaredMembersOfModel(getAllDeclaredMembers(type.asType()));
+    }
+
+    private void assertGetAllDeclaredMembersOfModel(List<? extends Element> members) {
+        List<VariableElement> fields = fieldsIn(members);
         assertEquals(11, fields.size());
         assertEquals("f", fields.get(0).getSimpleName().toString());
         assertEquals("d", fields.get(1).getSimpleName().toString());
@@ -94,12 +240,5 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals("i", fields.get(8).getSimpleName().toString());
         assertEquals("l", fields.get(9).getSimpleName().toString());
         assertEquals("z", fields.get(10).getSimpleName().toString());
-    }
-
-    @Test
-    public void testMatchParameterTypes() {
-        ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
-        assertTrue(matchParameterTypes(method.getParameters(), "java.lang.String"));
-        assertFalse(matchParameterTypes(method.getParameters(), "java.lang.Object"));
     }
 }
