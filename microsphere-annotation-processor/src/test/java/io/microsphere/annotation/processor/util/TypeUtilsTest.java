@@ -183,17 +183,6 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
      */
     private static final Type[] SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES = combine(SELF_TYPE, SUPER_TYPES);
 
-
-    private Class<?> testClass;
-
-    private String testClassName;
-
-    private TypeElement testTypeElement;
-
-    private TypeMirror testTypeMirror;
-
-    private DeclaredType testDeclaredType;
-
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
         compiledClasses.add(ArrayTypeModel.class);
