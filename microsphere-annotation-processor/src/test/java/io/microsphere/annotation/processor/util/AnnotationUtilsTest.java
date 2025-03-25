@@ -20,15 +20,20 @@ import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
 import io.microsphere.annotation.processor.TestService;
 import io.microsphere.annotation.processor.TestServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.ws.rs.Path;
 import javax.xml.ws.ServiceMode;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,7 +46,12 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnota
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getValue;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.isAnnotationPresent;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.util.ArrayUtils.ofArray;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -194,12 +204,16 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertNull(getAttribute(findAnnotation(testTypeElement, Path.class), null));
         assertNull(getAttribute(findAnnotation(testTypeElement, (Class) null), null));
 
-//        ExecutableElement method = findMethod(getType(SpringRestService.class), "param", String.class);
-//
-//        AnnotationMirror annotation = findAnnotation(method, GetMapping.class);
-//
-//        assertArrayEquals(new String[]{"/param"}, (String[]) getAttribute(annotation, "value"));
-//        assertNull(getAttribute(annotation, "path"));
+        ExecutableElement echoMethod = findMethod(testTypeElement, "echo", String.class);
+        AnnotationMirror cacheableAnnotation = findAnnotation(echoMethod, Cacheable.class);
+        String[] cacheNames = getAttribute(cacheableAnnotation, "cacheNames");
+        assertArrayEquals(ofArray("cache-1", "cache-2"), cacheNames);
+
+        DeclaredType cacheableAnnotationType = cacheableAnnotation.getAnnotationType();
+        AnnotationMirror targetAnnotation = findAnnotation(cacheableAnnotationType, Target.class);
+        ElementType[] elementTypes = getAttribute(targetAnnotation, "value");
+        assertArrayEquals(ofArray(TYPE, METHOD), elementTypes);
+
     }
 
     @Test
