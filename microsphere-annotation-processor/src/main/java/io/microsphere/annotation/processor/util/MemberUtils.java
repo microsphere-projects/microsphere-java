@@ -26,9 +26,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -64,16 +69,57 @@ public interface MemberUtils {
     }
 
     static List<? extends Element> getDeclaredMembers(TypeMirror type) {
-        TypeElement element = ofTypeElement(type);
-        return element == null ? emptyList() : element.getEnclosedElements();
+        return type == null ? emptyList() : getDeclaredMembers(ofTypeElement(type));
+    }
+
+    static List<? extends Element> getDeclaredMembers(TypeElement type) {
+        return findDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<? extends Element> getAllDeclaredMembers(TypeMirror type) {
-        return getAllDeclaredTypes(type)
+        return type == null ? emptyList() : findAllDeclaredMembers(ofTypeElement(type), EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<? extends Element> getAllDeclaredMembers(TypeElement type) {
+        return findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<? extends Element> findDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
+        return type == null ? emptyList() : findDeclaredMembers(ofTypeElement(type), memberFilters);
+    }
+
+    static List<? extends Element> findDeclaredMembers(TypeElement type, Predicate<? super Element>... memberFilters) {
+        if (type == null) {
+            return emptyList();
+        }
+        return filterMembers(type.getEnclosedElements(), memberFilters);
+    }
+
+    static List<? extends Element> findAllDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
+        return type == null ? emptyList() : findAllDeclaredMembers(ofTypeElement(type), memberFilters);
+    }
+
+    static List<? extends Element> findAllDeclaredMembers(TypeElement type, Predicate<? super Element>... memberFilters) {
+        if (type == null) {
+            return emptyList();
+        }
+        List<? extends Element> declaredMembers = getAllDeclaredTypes(type)
                 .stream()
                 .map(MemberUtils::getDeclaredMembers)
                 .flatMap(Collection::stream)
                 .collect(toList());
+        return filterMembers(declaredMembers, memberFilters);
+    }
+
+    static List<? extends Element> filterMembers(List<? extends Element> members, Predicate<? super Element>... memberFilters) {
+        if (isEmpty(members)) {
+            return emptyList();
+        }
+        if (isNotEmpty(memberFilters)) {
+            Predicate predicate = and(memberFilters);
+            members = (List) members.stream().filter(predicate).collect(toList());
+        }
+        return members.isEmpty() ? emptyList() : members;
     }
 
     static boolean matchParameterTypes(List<? extends VariableElement> parameters, CharSequence... parameterTypes) {
