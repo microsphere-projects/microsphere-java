@@ -94,11 +94,6 @@ public abstract class AbstractAnnotationProcessingTest {
     @BeforeEach
     public final void init() {
         testInstanceHolder.set(this);
-        this.testClass = TestServiceImpl.class;
-        this.testClassName = TestServiceImpl.class.getName();
-        this.testTypeElement = getTypeElement(testClass);
-        this.testTypeMirror = this.testTypeElement.asType();
-        this.testDeclaredType = ofDeclaredType(this.testTypeElement);
     }
 
     @AfterEach
@@ -110,6 +105,11 @@ public abstract class AbstractAnnotationProcessingTest {
     }
 
     protected void beforeTest() {
+        this.testClass = TestServiceImpl.class;
+        this.testClassName = TestServiceImpl.class.getName();
+        this.testTypeElement = getTypeElement(testClass);
+        this.testTypeMirror = this.testTypeElement.asType();
+        this.testDeclaredType = ofDeclaredType(this.testTypeElement);
     }
 
     protected void afterTest() {
