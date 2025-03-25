@@ -73,6 +73,8 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected static final String NULL_STRING = null;
 
+    protected static final String[] NULL_STRING_ARRAY = null;
+
     static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
 
     protected ProcessingEnvironment processingEnv;
