@@ -27,10 +27,12 @@ import javax.lang.model.util.Elements;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypeNames;
 import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
@@ -39,7 +41,7 @@ import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterFirst;
-import static io.microsphere.reflect.TypeUtils.getTypeNames;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Collections.emptyList;
@@ -164,7 +166,11 @@ public interface MethodUtils {
     }
 
     static ExecutableElement findMethod(TypeMirror type, String methodName, Type... parameterTypes) {
-        return type == null ? null : findMethod(type, methodName, getTypeNames(parameterTypes));
+        if (type == null || methodName == null || parameterTypes == null) {
+            return null;
+        }
+        List<ExecutableElement> allDeclaredMethods = findAllDeclaredMethods(type, method -> matches(method, methodName, parameterTypes));
+        return allDeclaredMethods.isEmpty() ? null : allDeclaredMethods.get(0);
     }
 
     static ExecutableElement findMethod(TypeElement type, String methodName, CharSequence... parameterTypeNames) {
@@ -172,7 +178,11 @@ public interface MethodUtils {
     }
 
     static ExecutableElement findMethod(TypeMirror type, String methodName, CharSequence... parameterTypeNames) {
-        return filterFirst(getAllDeclaredMethods(type), method -> method.getSimpleName().toString().equals(methodName), method -> matchParameterTypes(method.getParameters(), parameterTypeNames));
+        if (type == null || methodName == null || parameterTypeNames == null) {
+            return null;
+        }
+        List<ExecutableElement> allDeclaredMethods = findAllDeclaredMethods(type, method -> matches(method, methodName, parameterTypeNames));
+        return allDeclaredMethods.isEmpty() ? null : allDeclaredMethods.get(0);
     }
 
     static ExecutableElement getOverrideMethod(ProcessingEnvironment processingEnv, TypeElement type, ExecutableElement declaringMethod) {
@@ -202,8 +212,68 @@ public interface MethodUtils {
         return method == null ? null : TypeUtils.toString(method.getReturnType());
     }
 
+    static List<TypeMirror> getMethodParameterTypeMirrors(ExecutableElement method) {
+        if (method == null) {
+            return emptyList();
+        }
+
+        List<? extends VariableElement> parameters = method.getParameters();
+        if (parameters.isEmpty()) {
+            return emptyList();
+        }
+
+        List<TypeMirror> parameterTypes = parameters.stream()
+                .map(VariableElement::asType)
+                .collect(toList());
+
+        return parameterTypes.isEmpty() ? emptyList() : parameterTypes;
+    }
+
     static String[] getMethodParameterTypeNames(ExecutableElement method) {
-        return method == null ? new String[0] : method.getParameters().stream().map(VariableElement::asType).map(TypeUtils::toString).toArray(String[]::new);
+        List<TypeMirror> parameterTypes = getMethodParameterTypeMirrors(method);
+        return parameterTypes.isEmpty() ? EMPTY_STRING_ARRAY : parameterTypes.stream().map(TypeUtils::toString).toArray(String[]::new);
+    }
+
+    static boolean matches(ExecutableElement method, String methodName, Type... parameterTypes) {
+        return matchesMethod(method, methodName, parameterTypes);
+    }
+
+    static boolean matches(ExecutableElement method, String methodName, CharSequence... parameterTypeNames) {
+        return matchesMethod(method, methodName, parameterTypeNames);
+    }
+
+    static boolean matchesMethod(ExecutableElement method, String methodName, Type... parameterTypes) {
+        if (method == null || methodName == null || parameterTypes == null) {
+            return false;
+        }
+
+        // matches the name of method
+        if (!Objects.equals(getMethodName(method), methodName)) {
+            return false;
+        }
+
+        if (!matchParameterTypes(method.getParameters(), parameterTypes)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    static boolean matchesMethod(ExecutableElement method, String methodName, CharSequence... parameterTypeNames) {
+        if (method == null || methodName == null || parameterTypeNames == null) {
+            return false;
+        }
+
+        // matches the name of method
+        if (!Objects.equals(getMethodName(method), methodName)) {
+            return false;
+        }
+
+        if (!matchParameterTypeNames(method.getParameters(), parameterTypeNames)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
