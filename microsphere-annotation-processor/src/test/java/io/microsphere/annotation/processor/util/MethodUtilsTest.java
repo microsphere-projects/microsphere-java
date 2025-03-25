@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
@@ -39,11 +40,17 @@ import static io.microsphere.annotation.processor.util.MethodUtils.getMethodName
 import static io.microsphere.annotation.processor.util.MethodUtils.getMethodParameterTypeNames;
 import static io.microsphere.annotation.processor.util.MethodUtils.getOverrideMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.getReturnTypeName;
+import static io.microsphere.annotation.processor.util.MethodUtils.isMethod;
+import static io.microsphere.annotation.processor.util.MethodUtils.isPublicNonStaticMethod;
+import static io.microsphere.annotation.processor.util.MethodUtils.matches;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,7 +63,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
-    private List<ExecutableElement> methodsFromObject;
+    private List<ExecutableElement> objectMethods;
+
+    private int objectMethodsSize;
 
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
@@ -68,7 +77,8 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         super.beforeTest();
         TypeElement type = getTypeElement(Object.class);
         List<ExecutableElement> methods = getDeclaredMethods(type);
-        this.methodsFromObject = methods;
+        this.objectMethods = methods;
+        this.objectMethodsSize = methods.size();
     }
 
     @Test
@@ -91,10 +101,10 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     public void testGetAllDeclaredMethods() {
         TypeElement type = getTypeElement(Model.class);
         List<ExecutableElement> methods = getAllDeclaredMethods(type);
-        assertTrue(methods.size() >= 33);
+        assertEquals(objectMethodsSize + 22, methods.size());
 
         methods = getAllDeclaredMethods(type.asType());
-        assertTrue(methods.size() >= 33);
+        assertEquals(objectMethodsSize + 22, methods.size());
     }
 
     @Test
@@ -135,10 +145,10 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testFindAllDeclaredMethods() {
         List<ExecutableElement> methods = findAllDeclaredMethods(testTypeElement, alwaysTrue());
-        assertEquals(methodsFromObject.size() + 14, methods.size());
+        assertEquals(objectMethodsSize + 14, methods.size());
 
         methods = findAllDeclaredMethods(testTypeMirror, alwaysTrue());
-        assertEquals(methodsFromObject.size() + 14, methods.size());
+        assertEquals(objectMethodsSize + 14, methods.size());
 
         methods = findAllDeclaredMethods(testTypeElement, alwaysFalse());
         assertSame(emptyList(), methods);
@@ -191,9 +201,20 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testFindPublicNonStaticMethodsOnNull() {
+        assertSame(emptyList(), findPublicNonStaticMethods(NULL_TYPE_ELEMENT, Object.class));
+        assertSame(emptyList(), findPublicNonStaticMethods(NULL_TYPE_MIRROR, Object.class));
+    }
+
+    @Test
     public void testIsMethod() {
         List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testTypeElement, Object.class);
         assertEquals(14, methods.stream().map(MethodUtils::isMethod).count());
+    }
+
+    @Test
+    public void testIsMethodOnNull() {
+        assertFalse(isMethod(null));
     }
 
     @Test
@@ -203,58 +224,49 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testIsPublicNonStaticMethodOnNull() {
+        assertFalse(isPublicNonStaticMethod(null));
+    }
+
+    @Test
     public void testFindMethod() {
-        TypeElement type = getTypeElement(Model.class);
         // Test methods from java.lang.Object
         // Object#toString()
-        String methodName = "toString";
-        ExecutableElement method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        Type type = Model.class;
+        assertFindMethod(type, "toString");
 
         // Object#hashCode()
-        methodName = "hashCode";
-        method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "hashCode");
 
         // Object#getClass()
-        methodName = "getClass";
-        method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "getClass");
 
         // Object#finalize()
-        methodName = "finalize";
-        method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "finalize");
 
         // Object#clone()
-        methodName = "clone";
-        method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "clone");
 
         // Object#notify()
-        methodName = "notify";
-        method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "notify");
 
         // Object#notifyAll()
-        methodName = "notifyAll";
-        method = findMethod(type.asType(), methodName);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "notifyAll");
 
         // Object#wait(long)
-        methodName = "wait";
-        method = findMethod(type.asType(), methodName, long.class);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "wait", long.class);
 
         // Object#wait(long,int)
-        methodName = "wait";
-        method = findMethod(type.asType(), methodName, long.class, int.class);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "wait", long.class, int.class);
 
         // Object#equals(Object)
-        methodName = "equals";
-        method = findMethod(type.asType(), methodName, Object.class);
-        assertEquals(method.getSimpleName().toString(), methodName);
+        assertFindMethod(type, "equals", Object.class);
+    }
+
+    @Test
+    public void testFindMethodOnNull() {
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString"));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString"));
     }
 
     @Test
@@ -278,19 +290,45 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testReturnType() {
+    public void testGetMethodNameOnNull() {
+        assertNull(getMethodName(null));
+    }
+
+    @Test
+    public void testReturnTypeName() {
         ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertEquals("java.lang.String", getReturnTypeName(method));
+    }
+
+    @Test
+    public void testReturnTypeNameOnNull() {
         assertNull(getReturnTypeName(null));
     }
 
     @Test
-    public void testMatchParameterTypes() {
-        ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
-        assertArrayEquals(new String[]{"java.lang.String"}, getMethodParameterTypeNames(method));
-        assertTrue(getMethodParameterTypeNames(null).length == 0);
+    public void testMatchParameterTypeNames() {
+        String[] parameterTypeNames = ofArray("java.lang.String");
+        ExecutableElement method = findMethod(testTypeElement, "echo", parameterTypeNames);
+        assertArrayEquals(parameterTypeNames, getMethodParameterTypeNames(method));
     }
 
+    @Test
+    public void testMatchParameterTypeNamesOnNull() {
+        assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(null));
+    }
+
+    private void assertFindMethod(Type type, String methodName, Type... parameterTypes) {
+        TypeElement typeElement = getTypeElement(type);
+        ExecutableElement method = findMethod(typeElement, methodName, parameterTypes);
+        assertMethod(method, methodName, parameterTypes);
+
+        method = findMethod(typeElement.asType(), methodName, parameterTypes);
+        assertMethod(method, methodName, parameterTypes);
+    }
+
+    private void assertMethod(ExecutableElement method, String methodName, Type... parameterTypes) {
+        assertTrue(matches(method, methodName, parameterTypes));
+    }
 
     private List<? extends ExecutableElement> findAllDeclaredMethodsWithoutObjectType() {
         return findAllDeclaredMethods(testTypeElement, Object.class);
