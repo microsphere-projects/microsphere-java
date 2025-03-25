@@ -598,6 +598,10 @@ public interface TypeUtils {
     }
 
     static String toString(TypeMirror type) {
+        return getTypeName(type);
+    }
+
+    static String getTypeName(TypeMirror type) {
         if (type == null) {
             return null;
         }
