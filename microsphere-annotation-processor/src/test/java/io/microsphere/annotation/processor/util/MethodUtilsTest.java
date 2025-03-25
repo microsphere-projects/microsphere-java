@@ -48,8 +48,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
-    private TypeElement testTypeElement;
-
     @Test
     public void testDeclaredMethods() {
         TypeElement type = getTypeElement(Model.class);
