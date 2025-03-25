@@ -29,7 +29,6 @@ import io.microsphere.annotation.processor.model.Model;
 import io.microsphere.annotation.processor.model.PrimitiveTypeModel;
 import org.junit.jupiter.api.Test;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -40,7 +39,6 @@ import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Collection;
 import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
@@ -114,34 +112,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
-
-    private static final TypeMirror NULL_TYPE_MIRROR = null;
-
-    private static final TypeMirror[] EMPTY_TYPE_MIRROR_ARRAY = new TypeMirror[0];
-
-    private static final TypeMirror[] NULL_TYPE_MIRROR_ARRAY = null;
-
-    private static final Collection[] EMPTY_COLLECTION_ARRAY = new Collection[0];
-
-    private static final Collection NULL_COLLECTION = null;
-
-    private static final Element NULL_ELEMENT = null;
-
-    private static final Element[] EMPTY_ELEMENT_ARRAY = new Element[0];
-
-    private static final Element[] NULL_ELEMENT_ARRAY = null;
-
-    private static final TypeElement NULL_TYPE_ELEMENT = null;
-
-    private static final Type[] NULL_TYPE_ARRAY = null;
-
-    private static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
-
-    private static final Type NULL_TYPE = null;
-
-    private static final ProcessingEnvironment NULL_PROCESSING_ENVIRONMENT = null;
-
-    private static final String NULL_STRING = null;
 
     /**
      * self type
@@ -230,15 +200,6 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         compiledClasses.add(CollectionTypeModel.class);
         compiledClasses.add(Color.class);
         compiledClasses.add(MapTypeModel.class);
-    }
-
-    @Override
-    protected void beforeTest() {
-        this.testClass = SELF_TYPE;
-        this.testClassName = SELF_TYPE.getName();
-        this.testTypeElement = getTypeElement(testClass);
-        this.testTypeMirror = this.testTypeElement.asType();
-        this.testDeclaredType = ofDeclaredType(this.testTypeElement);
     }
 
     @Test
