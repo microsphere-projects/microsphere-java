@@ -226,7 +226,7 @@ public interface MethodUtils {
                 .map(VariableElement::asType)
                 .collect(toList());
 
-        return parameterTypes.isEmpty() ? emptyList() : parameterTypes;
+        return parameterTypes;
     }
 
     static String[] getMethodParameterTypeNames(ExecutableElement method) {
@@ -282,14 +282,14 @@ public interface MethodUtils {
      * @param method {@link ExecutableElement}
      * @return <code>null</code> if <code>method</code> is <code>null</code>
      */
-    static Element getDeclaredType(ExecutableElement method) {
+    static Element getEnclosingElement(ExecutableElement method) {
         return method == null ? null : method.getEnclosingElement();
     }
 
     static Predicate<? super ExecutableElement> methodPredicateForExcludedTypes(Type... excludedTypes) {
         return method -> {
             boolean excluded = true;
-            Element declaredType = getDeclaredType(method);
+            Element declaredType = getEnclosingElement(method);
             for (Type excludedType : excludedTypes) {
                 if (isSameType(declaredType, excludedType)) {
                     excluded = false;
