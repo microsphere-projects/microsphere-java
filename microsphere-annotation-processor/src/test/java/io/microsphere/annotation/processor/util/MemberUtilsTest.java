@@ -42,6 +42,7 @@ import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static java.util.Collections.emptyList;
+import static javax.lang.model.element.ElementKind.FIELD;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.methodsIn;
@@ -69,24 +70,24 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testMatchesElementKind() {
         assertTrue(matchesElementKind(echoMethod, ElementKind.METHOD));
-        assertFalse(matchesElementKind(echoMethod, ElementKind.FIELD));
+        assertFalse(matchesElementKind(echoMethod, FIELD));
     }
 
     @Test
     public void testMatchesElementKindOnNull() {
-        assertFalse(matchesElementKind(null, ElementKind.FIELD));
-        assertFalse(matchesElementKind(echoMethod, null));
+        assertFalse(matchesElementKind(NULL_ELEMENT, FIELD));
+        assertFalse(matchesElementKind(echoMethod, NULL_ELEMENT_KIND));
     }
 
     @Test
     public void testIsPublicNonStatic() {
-        assertFalse(isPublicNonStatic(null));
+        assertFalse(isPublicNonStatic(NULL_ELEMENT));
         methodsIn(getDeclaredMembers(testTypeElement.asType())).forEach(method -> assertTrue(isPublicNonStatic(method)));
     }
 
     @Test
     public void testHasModifiers() {
-        assertFalse(hasModifiers(null));
+        assertFalse(hasModifiers(NULL_ELEMENT));
         List<? extends Element> members = getAllDeclaredMembers(testTypeElement.asType());
         List<VariableElement> fields = fieldsIn(members);
         assertTrue(hasModifiers(fields.get(0), PRIVATE));
@@ -148,9 +149,9 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFilterMembersOnNull() {
-        assertSame(emptyList(), filterMembers(null, alwaysTrue()));
+        assertSame(emptyList(), filterMembers(NULL_LIST, alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
-        assertSame(methods, filterMembers(methods, null));
+        assertSame(methods, filterMembers(methods, NULL_PREDICATE_ARRAY));
     }
 
     @Test
@@ -168,8 +169,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypesOnNull() {
-        assertFalse(matchParameterTypes(null, String.class));
-        assertFalse(matchParameterTypes(emptyList(), null));
+        assertFalse(matchParameterTypes(NULL_LIST, String.class));
+        assertFalse(matchParameterTypes(emptyList(), NULL_CLASS_ARRAY));
     }
 
     @Test
@@ -180,8 +181,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypeNamesOnNull() {
-        assertFalse(matchParameterTypeNames(null, "java.lang.String"));
-        assertFalse(matchParameterTypeNames(emptyList(), null));
+        assertFalse(matchParameterTypeNames(NULL_LIST, "java.lang.String"));
+        assertFalse(matchParameterTypeNames(emptyList(), NULL_STRING_ARRAY));
     }
 
     private void assertFindDeclaredMembersOfModel() {
