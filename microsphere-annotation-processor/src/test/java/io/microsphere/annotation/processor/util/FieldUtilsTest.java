@@ -163,6 +163,15 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
         type = getTypeElement(Color.class);
         assertFalse(isNonStaticField(findField(type, "BLUE")));
+
+    }
+
+    @Test
+    public void testIsNonStaticFieldOnStaticField() {
+        TypeElement type = getTypeElement(Color.class);
+        for (Color color : Color.values()) {
+            assertFalse(isNonStaticField(findField(type, color.name())));
+        }
     }
 
     @Test
