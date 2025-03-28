@@ -25,6 +25,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.lang.annotation.ElementType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -154,7 +155,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = findAllDeclaredFields(type, alwaysTrue());
-        assertModelFields(fields);
+        assertModelAllFields(fields);
 
         fields = findAllDeclaredFields(type, alwaysFalse());
         assertSame(emptyList(), fields);
@@ -265,7 +266,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetNonStaticFieldsOnEnum() {
-        TypeElement type = getTypeElement(Color.class);
+        TypeElement type = getTypeElement(ElementType.class);
         List<VariableElement> fields = getNonStaticFields(type);
         assertSame(emptyList(), fields);
     }
