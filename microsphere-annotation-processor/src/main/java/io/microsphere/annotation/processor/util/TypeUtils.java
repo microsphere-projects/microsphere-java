@@ -278,6 +278,10 @@ public interface TypeUtils {
         return findAllTypeElementsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
+    static List<TypeElement> getTypeElements(TypeElement type) {
+        return getTypeElements(type, true, false, true, true);
+    }
+
     static List<TypeElement> getAllTypeElements(TypeElement type) {
         return getTypeElements(type, true, true, true, true);
     }
