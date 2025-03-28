@@ -59,7 +59,7 @@ import static java.util.stream.Collectors.toList;
 public interface AnnotationUtils {
 
     static AnnotationMirror getAnnotation(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
-        if (annotationClass == null || annotatedConstruct == null) {
+        if (annotatedConstruct == null || annotationClass == null) {
             return null;
         }
         return getAnnotation(annotatedConstruct, annotationClass.getName());
@@ -71,6 +71,13 @@ public interface AnnotationUtils {
         }
         List<AnnotationMirror> annotations = getAnnotations(annotatedConstruct, annotationClassName);
         return annotations.isEmpty() ? null : annotations.get(0);
+    }
+
+    static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct) {
+        if (annotatedConstruct == null) {
+            return emptyList();
+        }
+        return findAnnotations(annotatedConstruct, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
@@ -85,13 +92,6 @@ public interface AnnotationUtils {
             return emptyList();
         }
         return findAnnotations(annotatedConstruct, annotation -> matchesAnnotationType(annotation, annotationClassName));
-    }
-
-    static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct) {
-        if (annotatedConstruct == null) {
-            return emptyList();
-        }
-        return findAnnotations(annotatedConstruct, EMPTY_PREDICATE_ARRAY);
     }
 
     static List<AnnotationMirror> getAllAnnotations(TypeMirror type) {
@@ -225,6 +225,20 @@ public interface AnnotationUtils {
         return findAllAnnotations(ofTypeElement(type), annotationFilters);
     }
 
+    static List<AnnotationMirror> findAllAnnotations(TypeElement element, Predicate<? super AnnotationMirror>... annotationFilters) {
+        if (element == null) {
+            return emptyList();
+        }
+        return filterAnnotations(element, true, annotationFilters);
+    }
+
+    static List<AnnotationMirror> findAllAnnotations(Element element, Predicate<? super AnnotationMirror>... annotationFilters) {
+        if (element == null) {
+            return emptyList();
+        }
+        return filterAnnotations(element, true, annotationFilters);
+    }
+
     static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (processingEnv == null || annotatedType == null) {
             return emptyList();
@@ -239,12 +253,6 @@ public interface AnnotationUtils {
         return findAllAnnotations(getTypeElement(processingEnv, annotatedTypeName), annotationFilters);
     }
 
-    static List<AnnotationMirror> findAllAnnotations(Element element, Predicate<? super AnnotationMirror>... annotationFilters) {
-        if (element == null) {
-            return emptyList();
-        }
-        return filterAnnotations(element, true, annotationFilters);
-    }
 
     static List<AnnotationMirror> filterAnnotations(Element element, boolean all, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (isTypeElement(element)) {
@@ -265,8 +273,15 @@ public interface AnnotationUtils {
         return isEmpty(annotations) ? emptyList() : annotations;
     }
 
+    static boolean matchesAnnotationType(AnnotationMirror annotationMirror, Type annotationType) {
+        if (annotationMirror == null || annotationType == null) {
+            return false;
+        }
+        return matchesAnnotationType(annotationMirror, annotationType.getTypeName());
+    }
+
     static boolean matchesAnnotationType(AnnotationMirror annotationMirror, CharSequence annotationClassName) {
-        if (annotationMirror == null) {
+        if (annotationMirror == null || annotationClassName == null) {
             return false;
         }
         return isSameType(annotationMirror.getAnnotationType(), annotationClassName);
