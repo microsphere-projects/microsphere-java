@@ -504,6 +504,12 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testGetTypeElementsWithNoArgument() {
+        List<TypeElement> typeElements = TypeUtils.getTypeElements(testTypeElement);
+        assertTypeElements(typeElements, SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES);
+    }
+
+    @Test
     public void testGetTypeElements() {
         // true true true true : all types
         List<TypeElement> typeElements = TypeUtils.getTypeElements(testTypeElement, true, true, true, true);
