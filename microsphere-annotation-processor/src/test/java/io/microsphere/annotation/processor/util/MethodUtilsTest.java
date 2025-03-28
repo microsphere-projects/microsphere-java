@@ -220,7 +220,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsMethodOnNull() {
-        assertFalse(isMethod(null));
+        assertFalse(isMethod(NULL_METHOD));
     }
 
     @Test
@@ -231,7 +231,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsPublicNonStaticMethodOnNull() {
-        assertFalse(isPublicNonStaticMethod(null));
+        assertFalse(isPublicNonStaticMethod(NULL_METHOD));
     }
 
     @Test
@@ -273,8 +273,8 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     public void testFindMethodOnNull() {
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString"));
         assertNull(findMethod(NULL_TYPE_MIRROR, "toString"));
-        assertNull(findMethod(testTypeElement, null));
-        assertNull(findMethod(testTypeMirror, null));
+        assertNull(findMethod(testTypeElement, NULL_STRING));
+        assertNull(findMethod(testTypeMirror, NULL_STRING));
         assertNull(findMethod(testTypeElement, "toString", NULL_TYPE_ARRAY));
         assertNull(findMethod(testTypeMirror, "toString", NULL_STRING_ARRAY));
     }
@@ -299,14 +299,14 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFilterMethodsOnNull() {
-        assertSame(emptyList(), filterMethods(null, alwaysTrue()));
-        assertSame(emptyList(), filterMethods(null, null));
+        assertSame(emptyList(), filterMethods(NULL_LIST, alwaysTrue()));
+        assertSame(emptyList(), filterMethods(NULL_LIST, NULL_PREDICATE_ARRAY));
     }
 
     @Test
     public void testFilterMethodsOnEmpty() {
         assertSame(emptyList(), filterMethods(emptyList(), alwaysTrue()));
-        assertSame(emptyList(), filterMethods(emptyList(), null));
+        assertSame(emptyList(), filterMethods(emptyList(), NULL_PREDICATE_ARRAY));
     }
 
     @Test
@@ -320,12 +320,12 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     public void testGetMethodName() {
         ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertEquals("echo", getMethodName(method));
-        assertNull(getMethodName(null));
+        assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
     public void testGetMethodNameOnNull() {
-        assertNull(getMethodName(null));
+        assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
@@ -336,7 +336,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testReturnTypeNameOnNull() {
-        assertNull(getReturnTypeName(null));
+        assertNull(getReturnTypeName(NULL_METHOD));
     }
 
     @Test
@@ -348,7 +348,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypeNamesOnNull() {
-        assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(null));
+        assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(NULL_METHOD));
     }
 
     @Test
@@ -363,7 +363,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypesOnNull() {
-        assertSame(emptyList(), getMethodParameterTypeMirrors(null));
+        assertSame(emptyList(), getMethodParameterTypeMirrors(NULL_METHOD));
     }
 
     @Test
@@ -393,11 +393,11 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         String[] parameterTypeNames = getTypeNames(parameterTypes);
         ExecutableElement method = findMethod(testTypeElement, methodName, parameterTypes);
 
-        assertFalse(matches(null, NULL_STRING, parameterTypes));
+        assertFalse(matches(NULL_METHOD, NULL_STRING, parameterTypes));
         assertFalse(matches(method, NULL_STRING, parameterTypes));
         assertFalse(matches(method, methodName, NULL_TYPE_ARRAY));
 
-        assertFalse(matches(null, NULL_STRING, parameterTypeNames));
+        assertFalse(matches(NULL_METHOD, NULL_STRING, parameterTypeNames));
         assertFalse(matches(method, NULL_STRING, parameterTypeNames));
         assertFalse(matches(method, methodName, NULL_STRING_ARRAY));
     }
@@ -412,7 +412,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetEnclosingElementOnNull() {
-        assertNull(getEnclosingElement(null));
+        assertNull(getEnclosingElement(NULL_METHOD));
     }
 
     private void assertFindMethod(Type type, String methodName, Type... parameterTypes) {
