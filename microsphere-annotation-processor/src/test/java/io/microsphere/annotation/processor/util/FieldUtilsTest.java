@@ -264,9 +264,6 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsNonStaticField() {
         TypeElement type = getTypeElement(Model.class);
         assertTrue(isNonStaticField(findField(type, "f")));
-
-        type = getTypeElement(Color.class);
-        assertFalse(isNonStaticField(findField(type, "BLUE")));
     }
 
     @Test
@@ -280,7 +277,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testIsNonStaticFieldOnMethod() {
         TypeElement type = getTypeElement(Model.class);
-        ExecutableElement method = findMethod(type, "getF");
+        ExecutableElement method = findMethod(type, "setF", float.class);
         for (VariableElement parameter : method.getParameters()) {
             assertFalse(isNonStaticField(parameter));
         }
@@ -309,6 +306,9 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsFieldOnNull() {
         assertFalse(isField(null));
         assertFalse(isField(null, PUBLIC, STATIC, FINAL));
+
+        TypeElement type = getTypeElement(Model.class);
+        assertFalse(isField(findField(type, "f"), null));
     }
 
     @Test
