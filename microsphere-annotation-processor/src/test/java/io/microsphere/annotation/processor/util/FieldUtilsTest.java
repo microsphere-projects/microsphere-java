@@ -22,6 +22,7 @@ import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
@@ -46,6 +47,7 @@ import static io.microsphere.annotation.processor.util.FieldUtils.getNonStaticFi
 import static io.microsphere.annotation.processor.util.FieldUtils.isEnumMemberField;
 import static io.microsphere.annotation.processor.util.FieldUtils.isField;
 import static io.microsphere.annotation.processor.util.FieldUtils.isNonStaticField;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static java.util.Collections.emptyList;
@@ -276,6 +278,15 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testIsNonStaticFieldOnMethod() {
+        TypeElement type = getTypeElement(Model.class);
+        ExecutableElement method = findMethod(type, "getF");
+        for (VariableElement parameter : method.getParameters()) {
+            assertFalse(isNonStaticField(parameter));
+        }
+    }
+
+    @Test
     public void testIsField() {
         TypeElement type = getTypeElement(Model.class);
         assertTrue(isField(findField(type, "f")));
@@ -283,8 +294,19 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
         type = getTypeElement(Color.class);
         assertTrue(isField(findField(type, "BLUE"), PUBLIC, STATIC, FINAL));
+    }
 
+    @Test
+    public void testIsFieldOnMethod() {
+        TypeElement type = getTypeElement(Model.class);
+        ExecutableElement method = findMethod(type, "getF");
+        for (VariableElement parameter : method.getParameters()) {
+            assertFalse(isField(parameter));
+        }
+    }
 
+    @Test
+    public void testIsFieldOnNull() {
         assertFalse(isField(null));
         assertFalse(isField(null, PUBLIC, STATIC, FINAL));
     }
