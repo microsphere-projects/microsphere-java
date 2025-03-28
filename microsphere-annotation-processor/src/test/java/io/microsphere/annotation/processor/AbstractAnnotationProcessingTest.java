@@ -22,8 +22,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
@@ -33,6 +38,7 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 
@@ -55,7 +61,11 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected static final Collection NULL_COLLECTION = null;
 
+    protected static final List NULL_LIST = null;
+
     protected static final Element NULL_ELEMENT = null;
+
+    protected static final ElementKind NULL_ELEMENT_KIND = null;
 
     protected static final Element[] EMPTY_ELEMENT_ARRAY = new Element[0];
 
@@ -74,6 +84,24 @@ public abstract class AbstractAnnotationProcessingTest {
     protected static final String NULL_STRING = null;
 
     protected static final String[] NULL_STRING_ARRAY = null;
+
+    protected static final Class NULL_CLASS = null;
+
+    protected static final Class[] NULL_CLASS_ARRAY = null;
+
+    protected static final AnnotatedConstruct NULL_ANNOTATED_CONSTRUCT = null;
+
+    protected static final Predicate[] NULL_PREDICATE_ARRAY = null;
+
+    protected static final VariableElement NULL_FIELD = null;
+
+    protected static final Modifier NULL_MODIFIER = null;
+
+    protected static final Modifier[] NULL_MODIFIER_ARRAY = null;
+
+    protected static final ExecutableElement NULL_METHOD = null;
+
+    protected static final ExecutableElement[] NULL_METHOD_ARRAY = null;
 
     static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
 
