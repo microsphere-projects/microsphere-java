@@ -213,7 +213,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsSimpleTypeOnNull() {
-        assertFalse(isSimpleType((TypeElement) null));
+        assertFalse(isSimpleType(NULL_TYPE_ELEMENT));
         assertFalse(isSimpleType(NULL_TYPE_MIRROR));
     }
 
@@ -231,16 +231,16 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertFalse(isSameType(NULL_ELEMENT, testClass));
         assertFalse(isSameType(NULL_ELEMENT, testClassName));
 
-        assertFalse(isSameType(testTypeElement, (Type) null));
-        assertFalse(isSameType(testTypeElement, (String) null));
+        assertFalse(isSameType(testTypeElement, NULL_TYPE));
+        assertFalse(isSameType(testTypeElement, NULL_STRING));
 
-        assertFalse(isSameType(testTypeMirror, (Type) null));
-        assertFalse(isSameType(testTypeMirror, (String) null));
+        assertFalse(isSameType(testTypeMirror, NULL_TYPE));
+        assertFalse(isSameType(testTypeMirror, NULL_STRING));
 
-        assertTrue(isSameType(NULL_TYPE_MIRROR, (Type) null));
-        assertTrue(isSameType(NULL_TYPE_MIRROR, (String) null));
-        assertTrue(isSameType(NULL_ELEMENT, (Type) null));
-        assertTrue(isSameType(NULL_ELEMENT, (String) null));
+        assertTrue(isSameType(NULL_TYPE_MIRROR, NULL_TYPE));
+        assertTrue(isSameType(NULL_TYPE_MIRROR, NULL_STRING));
+        assertTrue(isSameType(NULL_ELEMENT, NULL_TYPE));
+        assertTrue(isSameType(NULL_ELEMENT, NULL_STRING));
     }
 
     @Test
@@ -456,7 +456,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetTypeElementOfSuperclassOnNull() {
-        assertNull(getTypeElementOfSuperclass(null));
+        assertNull(getTypeElementOfSuperclass(NULL_TYPE_ELEMENT));
     }
 
     @Test
@@ -467,7 +467,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllTypeElementsOfSuperclassesOnNull() {
-        assertTrue(getAllTypeElementsOfSuperclasses(null).isEmpty());
+        assertTrue(getAllTypeElementsOfSuperclasses(NULL_TYPE_ELEMENT).isEmpty());
     }
 
     @Test
@@ -478,7 +478,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetTypeElementsOfInterfacesOnNull() {
-        assertTrue(getTypeElementsOfInterfaces(null).isEmpty());
+        assertTrue(getTypeElementsOfInterfaces(NULL_TYPE_ELEMENT).isEmpty());
     }
 
     @Test
@@ -489,7 +489,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllTypeElementsOfInterfacesOnNull() {
-        assertTrue(getAllTypeElementsOfInterfaces(null).isEmpty());
+        assertTrue(getAllTypeElementsOfInterfaces(NULL_TYPE_ELEMENT).isEmpty());
     }
 
     @Test
@@ -500,7 +500,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllTypeElementsOnNull() {
-        assertTrue(getAllTypeElements(null).isEmpty());
+        assertTrue(getAllTypeElements(NULL_TYPE_ELEMENT).isEmpty());
     }
 
     @Test
@@ -618,8 +618,8 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllTypeElementsOfSuperclassesOnNull() {
-        assertSame(emptyList(), findAllTypeElementsOfSuperclasses(null, alwaysTrue()));
-        assertSame(emptyList(), findAllTypeElementsOfSuperclasses(null, alwaysFalse()));
+        assertSame(emptyList(), findAllTypeElementsOfSuperclasses(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertSame(emptyList(), findAllTypeElementsOfSuperclasses(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
@@ -633,8 +633,8 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllTypeElementsOfInterfacesOnNull() {
-        assertSame(emptyList(), findAllTypeElementsOfInterfaces(null, alwaysTrue()));
-        assertSame(emptyList(), findAllTypeElementsOfInterfaces(null, alwaysFalse()));
+        assertSame(emptyList(), findAllTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertSame(emptyList(), findAllTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
@@ -648,8 +648,8 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindTypeElementsOfInterfacesOnNull() {
-        assertSame(emptyList(), findTypeElementsOfInterfaces(null, alwaysTrue()));
-        assertSame(emptyList(), findTypeElementsOfInterfaces(null, alwaysFalse()));
+        assertSame(emptyList(), findTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertSame(emptyList(), findTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
@@ -1481,10 +1481,10 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetTypeElementOnNull() {
-        assertNull(TypeUtils.getTypeElement(processingEnv, (Type) null));
+        assertNull(TypeUtils.getTypeElement(processingEnv, NULL_TYPE));
         assertNull(TypeUtils.getTypeElement(processingEnv, NULL_TYPE_MIRROR));
-        assertNull(TypeUtils.getTypeElement(processingEnv, (CharSequence) null));
-        assertNull(TypeUtils.getTypeElement(null, (CharSequence) null));
+        assertNull(TypeUtils.getTypeElement(processingEnv, NULL_STRING));
+        assertNull(TypeUtils.getTypeElement(NULL_PROCESSING_ENVIRONMENT, NULL_STRING));
     }
 
     @Test
