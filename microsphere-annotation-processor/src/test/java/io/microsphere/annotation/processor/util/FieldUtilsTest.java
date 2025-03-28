@@ -25,6 +25,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -33,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.annotation.processor.util.FieldUtils.equalsFieldName;
+import static io.microsphere.annotation.processor.util.FieldUtils.filterDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.findDeclaredFields;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
@@ -193,6 +195,50 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testFilterDeclaredFieldsOnNull() {
+        assertFilterDeclaredFieldsReturningEmptyList(null);
+    }
+
+    @Test
+    public void testFilterDeclaredFields() {
+        TypeMirror type = getTypeMirror(Model.class);
+        List<VariableElement> fields = filterDeclaredFields(type, true, alwaysTrue());
+        assertModelAllFields(fields);
+
+        fields = filterDeclaredFields(type, true, alwaysFalse());
+        assertSame(emptyList(), fields);
+
+        fields = filterDeclaredFields(type, false, alwaysTrue());
+        assertModelFields(fields);
+
+        fields = filterDeclaredFields(type, false, alwaysFalse());
+        assertSame(emptyList(), fields);
+    }
+
+    @Test
+    public void testFilterDeclaredFieldsOnNoDeclaredMembers() {
+        TypeMirror type = getTypeMirror(Serializable.class);
+        assertFilterDeclaredFieldsReturningEmptyList(type);
+    }
+
+    @Test
+    public void testFilterDeclaredFieldsOnNoDeclaredFields() {
+        TypeMirror type = getTypeMirror(Object.class);
+        assertFilterDeclaredFieldsReturningEmptyList(type);
+    }
+
+    private void assertFilterDeclaredFieldsReturningEmptyList(TypeMirror type) {
+        assertSame(emptyList(), filterDeclaredFields(type, true, alwaysTrue()));
+        assertSame(emptyList(), filterDeclaredFields(type, false, alwaysTrue()));
+        assertSame(emptyList(), filterDeclaredFields(type, true, alwaysFalse()));
+        assertSame(emptyList(), filterDeclaredFields(type, false, alwaysFalse()));
+        assertSame(emptyList(), filterDeclaredFields(type, true, null));
+        assertSame(emptyList(), filterDeclaredFields(type, false, null));
+        assertSame(emptyList(), filterDeclaredFields(type, true));
+        assertSame(emptyList(), filterDeclaredFields(type, false));
+    }
+
+    @Test
     public void testIsEnumField() {
         TypeElement type = getTypeElement(Color.class);
 
@@ -219,7 +265,6 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
         type = getTypeElement(Color.class);
         assertFalse(isNonStaticField(findField(type, "BLUE")));
-
     }
 
     @Test
