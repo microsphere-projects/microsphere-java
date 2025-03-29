@@ -50,7 +50,6 @@ import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
-import static java.util.Collections.emptyList;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -58,7 +57,6 @@ import static javax.lang.model.element.Modifier.STATIC;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -162,7 +160,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertModelAllFields(fields);
 
         fields = findAllDeclaredFields(type, alwaysFalse());
-        assertSame(emptyList(), fields);
+        assertEmptyList(fields);
 
         fields = findDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
         assertEquals(1, fields.size());
@@ -171,8 +169,8 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindDeclaredFieldsOnNull() {
-        assertSame(emptyList(), findDeclaredFields(NULL_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findDeclaredFields(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertEmptyList(findDeclaredFields(NULL_ELEMENT, alwaysTrue()));
+        assertEmptyList(findDeclaredFields(NULL_TYPE_MIRROR, alwaysTrue()));
     }
 
     @Test
@@ -183,7 +181,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertModelAllFields(fields);
 
         fields = findAllDeclaredFields(type, alwaysFalse());
-        assertSame(emptyList(), fields);
+        assertEmptyList(fields);
 
         fields = findAllDeclaredFields(type, f -> "f".equals(f.getSimpleName().toString()));
         assertEquals(1, fields.size());
@@ -192,8 +190,8 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllDeclaredFieldsOnNull() {
-        assertSame(emptyList(), findAllDeclaredFields(NULL_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findAllDeclaredFields(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertEmptyList(findAllDeclaredFields(NULL_ELEMENT, alwaysTrue()));
+        assertEmptyList(findAllDeclaredFields(NULL_TYPE_MIRROR, alwaysTrue()));
     }
 
     @Test
@@ -208,13 +206,13 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
         assertModelAllFields(fields);
 
         fields = filterDeclaredFields(type, true, alwaysFalse());
-        assertSame(emptyList(), fields);
+        assertEmptyList(fields);
 
         fields = filterDeclaredFields(type, false, alwaysTrue());
         assertModelFields(fields);
 
         fields = filterDeclaredFields(type, false, alwaysFalse());
-        assertSame(emptyList(), fields);
+        assertEmptyList(fields);
     }
 
     @Test
@@ -230,14 +228,14 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     private void assertFilterDeclaredFieldsReturningEmptyList(TypeMirror type) {
-        assertSame(emptyList(), filterDeclaredFields(type, true, alwaysTrue()));
-        assertSame(emptyList(), filterDeclaredFields(type, false, alwaysTrue()));
-        assertSame(emptyList(), filterDeclaredFields(type, true, alwaysFalse()));
-        assertSame(emptyList(), filterDeclaredFields(type, false, alwaysFalse()));
-        assertSame(emptyList(), filterDeclaredFields(type, true, NULL_PREDICATE_ARRAY));
-        assertSame(emptyList(), filterDeclaredFields(type, false, NULL_PREDICATE_ARRAY));
-        assertSame(emptyList(), filterDeclaredFields(type, true));
-        assertSame(emptyList(), filterDeclaredFields(type, false));
+        assertEmptyList(filterDeclaredFields(type, true, alwaysTrue()));
+        assertEmptyList(filterDeclaredFields(type, false, alwaysTrue()));
+        assertEmptyList(filterDeclaredFields(type, true, alwaysFalse()));
+        assertEmptyList(filterDeclaredFields(type, false, alwaysFalse()));
+        assertEmptyList(filterDeclaredFields(type, true, NULL_PREDICATE_ARRAY));
+        assertEmptyList(filterDeclaredFields(type, false, NULL_PREDICATE_ARRAY));
+        assertEmptyList(filterDeclaredFields(type, true));
+        assertEmptyList(filterDeclaredFields(type, false));
     }
 
     @Test
@@ -335,7 +333,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     public void testGetNonStaticFieldsOnEnum() {
         TypeElement type = getTypeElement(ElementType.class);
         List<VariableElement> fields = getNonStaticFields(type);
-        assertSame(emptyList(), fields);
+        assertEmptyList(fields);
     }
 
     @Test
