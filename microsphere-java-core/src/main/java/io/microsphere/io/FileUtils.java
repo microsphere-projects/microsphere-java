@@ -3,8 +3,6 @@
  */
 package io.microsphere.io;
 
-import io.microsphere.util.BaseUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
