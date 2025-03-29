@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
@@ -47,6 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypesOfInterfaces;
 import static io.microsphere.annotation.processor.util.TypeUtils.findAllDeclaredTypesOfSuperTypes;
@@ -306,10 +306,11 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testIsPrimitiveType() {
         TypeElement type = getTypeElement(PrimitiveTypeModel.class);
-        getDeclaredFields(type.asType())
-                .stream()
-                .map(VariableElement::asType)
-                .forEach(t -> assertTrue(isPrimitiveType(t)));
+
+        getDeclaredFields(type).forEach(t -> {
+            assertTrue(isPrimitiveType(t));
+            assertTrue(isPrimitiveType(t.asType()));
+        });
 
         assertFalse(isPrimitiveType(getTypeElement(ArrayTypeModel.class)));
     }
@@ -354,6 +355,9 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsTypeElement() {
         assertTrue(isTypeElement(testTypeElement));
         assertTrue(isTypeElement(testTypeMirror));
+
+        // primitive type
+        assertFalse(isTypeElement(getTypeMirror(int.class)));
     }
 
     @Test
@@ -366,11 +370,15 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsDeclaredType() {
         assertTrue(isDeclaredType(testTypeElement));
         assertTrue(isDeclaredType(testTypeMirror));
-        assertFalse(isDeclaredType(NULL_ELEMENT));
-        assertFalse(isDeclaredType(NULL_TYPE_MIRROR));
         assertFalse(isDeclaredType(types.getNullType()));
         assertFalse(isDeclaredType(types.getPrimitiveType(TypeKind.BYTE)));
         assertFalse(isDeclaredType(types.getArrayType(types.getPrimitiveType(TypeKind.BYTE))));
+
+        // field
+        assertFalse(isDeclaredType(findField(getTypeMirror(PrimitiveTypeModel.class), "z")));
+
+        // method
+        assertFalse(isDeclaredType(findMethod(testTypeElement, "close")));
     }
 
     @Test
