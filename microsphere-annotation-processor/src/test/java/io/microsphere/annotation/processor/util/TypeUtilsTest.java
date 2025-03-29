@@ -43,6 +43,7 @@ import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
@@ -247,11 +248,17 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testIsArrayTypeOnTypeMirror() {
         assertIsArrayType(ArrayTypeModel.class);
+
+        assertFalse(isArrayType(getTypeMirror(Color.class)));
+        assertFalse(isArrayType(getTypeMirror(ArrayTypeModel.class)));
     }
 
     @Test
     public void testIsArrayTypeOnElement() {
         assertIsArrayType(getTypeElement(ArrayTypeModel.class));
+
+        assertFalse(isArrayType(getTypeElement(Color.class)));
+        assertFalse(isArrayType(getTypeElement(ArrayTypeModel.class)));
     }
 
     @Test
@@ -274,8 +281,20 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsClassType() {
+        // class
         assertTrue(isClassType(getTypeElement(ArrayTypeModel.class)));
+        assertTrue(isClassType(getDeclaredType(ArrayTypeModel.class)));
+
+        assertTrue(isClassType(getTypeElement(Model.class)));
         assertTrue(isClassType(getDeclaredType(Model.class)));
+
+        // enum
+        assertFalse(isClassType(getTypeElement(TimeUnit.class)));
+        assertFalse(isClassType(getDeclaredType(TimeUnit.class)));
+
+        // interface
+        assertFalse(isClassType(getTypeElement(Serializable.class)));
+        assertFalse(isClassType(getDeclaredType(Serializable.class)));
     }
 
     @Test
@@ -933,7 +952,13 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         List<DeclaredType> declaredTypes = findDeclaredTypesOfInterfaces(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
 
+        findDeclaredTypesOfInterfaces(testTypeElement, alwaysTrue());
+        assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
+
         declaredTypes = findDeclaredTypesOfInterfaces(testTypeMirror, alwaysFalse());
+        assertEmptyList(declaredTypes);
+
+        declaredTypes = findDeclaredTypesOfInterfaces(testTypeElement, alwaysFalse());
         assertEmptyList(declaredTypes);
     }
 
@@ -984,7 +1009,13 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperTypes(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
+        findAllDeclaredTypesOfSuperTypes(testTypeElement, alwaysTrue());
+        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+
         declaredTypes = findAllDeclaredTypesOfSuperTypes(testTypeMirror, alwaysFalse());
+        assertEmptyList(declaredTypes);
+
+        declaredTypes = findAllDeclaredTypesOfSuperTypes(testTypeElement, alwaysFalse());
         assertEmptyList(declaredTypes);
     }
 
@@ -1016,10 +1047,14 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, testClass);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
-        declaredTypes = findAllDeclaredTypes(testTypeElement, testClassName);
-        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
         declaredTypes = findAllDeclaredTypes(testTypeMirror, testClass);
+        assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
+    }
+
+    @Test
+    public void testFindAllDeclaredTypesWithExcludedTypeNames() {
+        List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, testClassName);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
         declaredTypes = findAllDeclaredTypes(testTypeMirror, testClassName);
@@ -1034,6 +1069,14 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, NULL_TYPE_ARRAY));
         assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, EMPTY_TYPE_ARRAY));
         assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, ALL_TYPES));
+    }
+
+    @Test
+    public void testFindAllDeclaredTypesWithExcludedTypeNamesOnNull() {
+        assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, NULL_STRING_ARRAY));
+        assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, EMPTY_STRING_ARRAY));
+        assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, NULL_STRING_ARRAY));
+        assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, EMPTY_STRING_ARRAY));
     }
 
     @Test
@@ -1636,11 +1679,11 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     private void assertIsArrayType(Element element) {
-        assertTrue(isArrayType(findField(element, "integers").asType()));
-        assertTrue(isArrayType(findField(element, "strings").asType()));
-        assertTrue(isArrayType(findField(element, "primitiveTypeModels").asType()));
-        assertTrue(isArrayType(findField(element, "models").asType()));
-        assertTrue(isArrayType(findField(element, "colors").asType()));
+        assertTrue(isArrayType(getFieldType(element, "integers")));
+        assertTrue(isArrayType(getFieldType(element, "strings")));
+        assertTrue(isArrayType(getFieldType(element, "primitiveTypeModels")));
+        assertTrue(isArrayType(getFieldType(element, "models")));
+        assertTrue(isArrayType(getFieldType(element, "colors")));
     }
 
     private void assertTypeMirrors(List<TypeMirror> typeMirrors, Type... types) {
@@ -1773,6 +1816,10 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     private TypeMirror getFieldType(Type type, String fieldName) {
         TypeMirror typeMirror = getTypeMirror(type);
         return findField(typeMirror, fieldName).asType();
+    }
+
+    private TypeMirror getFieldType(Element element, String fieldName) {
+        return findField(element, fieldName).asType();
     }
 
     private void assertToStringOnClasses() {
