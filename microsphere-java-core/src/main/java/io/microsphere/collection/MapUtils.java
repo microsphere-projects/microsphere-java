@@ -47,7 +47,7 @@ import static java.util.Collections.unmodifiableMap;
  * @see Map
  * @since 1.0.0
  */
-public abstract class MapUtils extends BaseUtils {
+public abstract class MapUtils {
 
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}
