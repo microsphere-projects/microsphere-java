@@ -41,7 +41,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see Set
  * @since 1.0.0
  */
-public abstract class SetUtils extends BaseUtils {
+public abstract class SetUtils {
 
     public static boolean isSet(@Nullable Iterable<?> elements) {
         return elements instanceof Set;
