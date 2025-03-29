@@ -444,6 +444,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsAnnotationPresentOnAnnotationClassOnNull() {
         assertFalse(isAnnotationPresent(NULL_ELEMENT, Service.class));
         assertFalse(isAnnotationPresent(testTypeElement, NULL_CLASS));
+        assertFalse(isAnnotationPresent(testTypeElement, Override.class));
     }
 
     @Test
@@ -459,6 +460,8 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsAnnotationPresentOnAnnotationClassNameOnNull() {
         assertFalse(isAnnotationPresent(NULL_ELEMENT, "org.springframework.stereotype.Service"));
         assertFalse(isAnnotationPresent(testTypeElement, NULL_STRING));
+        assertFalse(isAnnotationPresent(testTypeElement, "java.lang.Override"));
+
     }
 
     @Test
