@@ -43,7 +43,7 @@ import static java.util.stream.Collectors.toSet;
  * @see java.lang.ApplicationShutdownHooks
  * @since 1.0.0
  */
-public abstract class ShutdownHookUtils extends BaseUtils {
+public abstract class ShutdownHookUtils {
 
     private static final Logger logger = getLogger(ShutdownHookUtils.class);
 
