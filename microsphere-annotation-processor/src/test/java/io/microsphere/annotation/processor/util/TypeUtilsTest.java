@@ -1857,8 +1857,4 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     private void assertToString(TypeMirror type) {
         assertEquals(type.toString(), TypeUtils.toString(type));
     }
-
-    private void assertEmptyList(List<?> list) {
-        assertSame(emptyList(), list);
-    }
 }
