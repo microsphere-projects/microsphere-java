@@ -44,6 +44,7 @@ import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.Enum.valueOf;
@@ -172,6 +173,13 @@ public interface AnnotationUtils {
         return isEmpty(annotations) ? null : annotations.get(0);
     }
 
+    static AnnotationMirror findMetaAnnotation(Element annotatedConstruct, Class<? extends Annotation> metaAnnotationClass) {
+        if (annotatedConstruct == null || metaAnnotationClass == null) {
+            return null;
+        }
+        return findMetaAnnotation(annotatedConstruct, metaAnnotationClass.getName());
+    }
+
     static AnnotationMirror findMetaAnnotation(Element annotatedConstruct, CharSequence metaAnnotationClassName) {
         if (annotatedConstruct == null || metaAnnotationClassName == null) {
             return null;
@@ -192,6 +200,13 @@ public interface AnnotationUtils {
         return metaAnnotation;
     }
 
+    static boolean isAnnotationPresent(Element element, Class<? extends Annotation> annotationClass) {
+        if (element == null || annotationClass == null) {
+            return false;
+        }
+        return findAnnotation(element, annotationClass) != null || findMetaAnnotation(element, annotationClass) != null;
+    }
+
     static boolean isAnnotationPresent(Element element, CharSequence annotationClassName) {
         if (element == null || annotationClassName == null) {
             return false;
@@ -210,9 +225,7 @@ public interface AnnotationUtils {
         }
 
         if (isNotEmpty(annotationFilters)) {
-            annotations = annotations.stream()
-                    .filter(and(annotationFilters))
-                    .collect(toList());
+            annotations = filterAll(annotations, annotationFilters);
         }
 
         return annotations.isEmpty() ? emptyList() : annotations;
