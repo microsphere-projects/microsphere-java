@@ -28,7 +28,7 @@ import static io.microsphere.util.StringUtils.startsWith;
  * @see System
  * @since 1.0.0
  */
-public abstract class SystemUtils extends BaseUtils {
+public abstract class SystemUtils {
 
     private static final Logger logger = getLogger(SystemUtils.class);
 
