@@ -32,7 +32,7 @@ import static java.util.Collections.unmodifiableMap;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class PropertiesUtils extends BaseUtils {
+public abstract class PropertiesUtils {
 
     /**
      * Get the flatten the specified {@link Map properties}
