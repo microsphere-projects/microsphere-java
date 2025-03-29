@@ -16,8 +16,6 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
-
 import java.util.Collections;
 import java.util.Enumeration;
 
