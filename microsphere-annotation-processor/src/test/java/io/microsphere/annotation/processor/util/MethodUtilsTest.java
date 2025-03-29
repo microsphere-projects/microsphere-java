@@ -23,6 +23,7 @@ import io.microsphere.constants.Constants;
 import io.microsphere.constants.PropertyConstants;
 import org.junit.jupiter.api.Test;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -31,6 +32,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.MethodUtils.filterMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findDeclaredMethods;
@@ -225,8 +228,24 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsPublicNonStaticMethod() {
-        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testTypeElement, Object.class);
-        assertEquals(14, methods.stream().map(MethodUtils::isPublicNonStaticMethod).count());
+        List<? extends Element> members = getDeclaredMembers(testTypeElement);
+        for (Element member : members) {
+            if (member instanceof ExecutableElement) {
+                ExecutableElement element = (ExecutableElement) member;
+                switch (member.getKind()) {
+                    case METHOD:
+                        assertEquals(isPublicNonStaticMethod(element), isPublicNonStatic(element));
+                        break;
+                    case CONSTRUCTOR:
+                        assertFalse(isPublicNonStaticMethod(element));
+                        break;
+                }
+            }
+        }
+
+        // Integer#valueOf(String) is a public static method
+        assertFalse(isPublicNonStaticMethod(findMethod(getTypeElement(Integer.class), "valueOf", String.class)));
+
     }
 
     @Test
