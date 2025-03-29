@@ -59,7 +59,7 @@ import static java.util.Optional.ofNullable;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class JmxUtils extends BaseUtils {
+public abstract class JmxUtils {
 
     private static final Logger logger = getLogger(JmxUtils.class);
 
