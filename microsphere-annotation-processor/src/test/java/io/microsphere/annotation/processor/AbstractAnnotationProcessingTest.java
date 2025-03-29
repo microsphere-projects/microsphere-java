@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.AnnotatedConstruct;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -102,6 +103,8 @@ public abstract class AbstractAnnotationProcessingTest {
     protected static final ExecutableElement NULL_METHOD = null;
 
     protected static final ExecutableElement[] NULL_METHOD_ARRAY = null;
+
+    protected static final AnnotationMirror NULL_ANNOTATION_MIRROR = null;
 
     static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
 
