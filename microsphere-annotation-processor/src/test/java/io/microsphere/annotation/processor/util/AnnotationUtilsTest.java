@@ -64,12 +64,10 @@ import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -115,7 +113,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testGetAnnotationsOnNull() {
         List<AnnotationMirror> annotations = getAnnotations(NULL_ANNOTATED_CONSTRUCT);
-        assertSame(emptyList(), annotations);
+        assertEmptyList(annotations);
     }
 
     @Test
@@ -161,8 +159,8 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllAnnotationsOnNull() {
-        assertSame(emptyList(), getAllAnnotations(NULL_ELEMENT));
-        assertSame(emptyList(), getAllAnnotations(NULL_TYPE_MIRROR));
+        assertEmptyList(getAllAnnotations(NULL_ELEMENT));
+        assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR));
     }
 
     @Test
@@ -185,17 +183,17 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllAnnotationsWithAnnotationClassOnNull() {
-        assertSame(emptyList(), getAllAnnotations(NULL_ELEMENT, NULL_CLASS));
-        assertSame(emptyList(), getAllAnnotations(NULL_TYPE_MIRROR, NULL_CLASS));
-        assertSame(emptyList(), getAllAnnotations(NULL_PROCESSING_ENVIRONMENT, NULL_CLASS));
+        assertEmptyList(getAllAnnotations(NULL_ELEMENT, NULL_CLASS));
+        assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR, NULL_CLASS));
+        assertEmptyList(getAllAnnotations(NULL_PROCESSING_ENVIRONMENT, NULL_CLASS));
 
-        assertSame(emptyList(), getAllAnnotations(NULL_ELEMENT, Service.class));
-        assertSame(emptyList(), getAllAnnotations(NULL_TYPE_MIRROR, Service.class));
-        assertSame(emptyList(), getAllAnnotations(NULL_PROCESSING_ENVIRONMENT, Service.class));
+        assertEmptyList(getAllAnnotations(NULL_ELEMENT, Service.class));
+        assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR, Service.class));
+        assertEmptyList(getAllAnnotations(NULL_PROCESSING_ENVIRONMENT, Service.class));
 
-        assertSame(emptyList(), getAllAnnotations(testTypeElement, NULL_CLASS));
-        assertSame(emptyList(), getAllAnnotations(testTypeMirror, NULL_CLASS));
-        assertSame(emptyList(), getAllAnnotations(processingEnv, NULL_CLASS));
+        assertEmptyList(getAllAnnotations(testTypeElement, NULL_CLASS));
+        assertEmptyList(getAllAnnotations(testTypeMirror, NULL_CLASS));
+        assertEmptyList(getAllAnnotations(processingEnv, NULL_CLASS));
     }
 
     @Test
@@ -209,14 +207,14 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllAnnotationsWithAnnotationClassNameOnNull() {
-        assertSame(emptyList(), getAllAnnotations(NULL_ELEMENT, NULL_STRING));
-        assertSame(emptyList(), getAllAnnotations(NULL_TYPE_MIRROR, NULL_STRING));
+        assertEmptyList(getAllAnnotations(NULL_ELEMENT, NULL_STRING));
+        assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR, NULL_STRING));
 
         assertTrue(getAllAnnotations(NULL_ELEMENT, "org.springframework.stereotype.Service").isEmpty());
         assertTrue(getAllAnnotations(NULL_TYPE_MIRROR, "org.springframework.stereotype.Service").isEmpty());
 
-        assertSame(emptyList(), getAllAnnotations(testTypeElement, NULL_STRING));
-        assertSame(emptyList(), getAllAnnotations(testTypeMirror, NULL_STRING));
+        assertEmptyList(getAllAnnotations(testTypeElement, NULL_STRING));
+        assertEmptyList(getAllAnnotations(testTypeMirror, NULL_STRING));
     }
 
     @Test
@@ -290,7 +288,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals(3, annotations.size());
 
         annotations = findAllAnnotations(testTypeMirror, alwaysFalse());
-        assertSame(emptyList(), annotations);
+        assertEmptyList(annotations);
     }
 
     @Test
@@ -299,7 +297,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals(3, annotations.size());
 
         annotations = findAllAnnotations(testTypeElement, alwaysFalse());
-        assertSame(emptyList(), annotations);
+        assertEmptyList(annotations);
     }
 
     @Test
@@ -347,37 +345,37 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         field = findField(testTypeElement, "environment");
         annotations = findAllAnnotations(field, alwaysTrue());
-        assertSame(emptyList(), annotations);
+        assertEmptyList(annotations);
     }
 
     @Test
     public void testFindAllAnnotationsWithTypeMirrorOnNull() {
-        assertSame(emptyList(), findAllAnnotations(NULL_TYPE_MIRROR, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(NULL_TYPE_MIRROR, alwaysFalse()));
+        assertEmptyList(findAllAnnotations(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(NULL_TYPE_MIRROR, alwaysFalse()));
     }
 
     @Test
     public void testFindAllAnnotationsWithTypeElementOnNull() {
-        assertSame(emptyList(), findAllAnnotations(NULL_TYPE_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(NULL_TYPE_ELEMENT, alwaysFalse()));
+        assertEmptyList(findAllAnnotations(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
     public void testFindAllAnnotationsWithElementOnNull() {
-        assertSame(emptyList(), findAllAnnotations(NULL_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(NULL_ELEMENT, alwaysFalse()));
+        assertEmptyList(findAllAnnotations(NULL_ELEMENT, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(NULL_ELEMENT, alwaysFalse()));
     }
 
     @Test
     public void testFindAllAnnotationsOnNull() {
-        assertSame(emptyList(), findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, Service.class, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, Service.class, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, "org.springframework.stereotype.Service", alwaysFalse()));
-        assertSame(emptyList(), findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, "org.springframework.stereotype.Service", alwaysFalse()));
-        assertSame(emptyList(), findAllAnnotations(processingEnv, NULL_TYPE, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(processingEnv, NULL_TYPE, alwaysFalse()));
-        assertSame(emptyList(), findAllAnnotations(processingEnv, NULL_STRING, alwaysTrue()));
-        assertSame(emptyList(), findAllAnnotations(processingEnv, NULL_STRING, alwaysFalse()));
+        assertEmptyList(findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, Service.class, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, Service.class, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, "org.springframework.stereotype.Service", alwaysFalse()));
+        assertEmptyList(findAllAnnotations(NULL_PROCESSING_ENVIRONMENT, "org.springframework.stereotype.Service", alwaysFalse()));
+        assertEmptyList(findAllAnnotations(processingEnv, NULL_TYPE, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(processingEnv, NULL_TYPE, alwaysFalse()));
+        assertEmptyList(findAllAnnotations(processingEnv, NULL_STRING, alwaysTrue()));
+        assertEmptyList(findAllAnnotations(processingEnv, NULL_STRING, alwaysFalse()));
     }
 
     @Test
@@ -477,17 +475,17 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertAnnotation(annotations.get(1), ServiceMode.class);
 
         annotations = findAnnotations(testTypeElement, alwaysFalse());
-        assertSame(emptyList(), annotations);
+        assertEmptyList(annotations);
     }
 
     @Test
     public void testFindAnnotationsOnNotFound() {
-        assertSame(emptyList(), findAnnotations(getTypeElement(Serializable.class)));
+        assertEmptyList(findAnnotations(getTypeElement(Serializable.class)));
     }
 
     @Test
     public void testFindAnnotationsOnNull() {
-        assertSame(emptyList(), findAnnotations(NULL_ELEMENT));
+        assertEmptyList(findAnnotations(NULL_ELEMENT));
     }
 
     private void assertFindMetaAnnotation(Element element, Class<? extends Annotation> annotationClass) {
