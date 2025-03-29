@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
  * @see Paths
  * @since 1.0.0
  */
-public abstract class IOUtils extends BaseUtils {
+public abstract class IOUtils {
 
     private static final Logger logger = getLogger(IOUtils.class);
 
