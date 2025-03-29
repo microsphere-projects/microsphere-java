@@ -26,14 +26,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.xml.ws.ServiceMode;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
@@ -41,6 +44,7 @@ import java.util.List;
 
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findMetaAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
@@ -60,6 +64,7 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -100,8 +105,8 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     public void testGetAnnotations() {
         List<AnnotationMirror> annotations = getAnnotations(testTypeElement);
         assertEquals(2, annotations.size());
-        assertEquals(Service.class.getName(), annotations.get(0).getAnnotationType().toString());
-        assertEquals(ServiceMode.class.getName(), annotations.get(1).getAnnotationType().toString());
+        assertAnnotation(annotations.get(0), Service.class);
+        assertAnnotation(annotations.get(1), ServiceMode.class);
     }
 
     @Test
@@ -111,20 +116,20 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationType() {
+    public void testGetAnnotationsWithAnnotationClass() {
         assertGetAnnotations(Service.class);
         assertGetAnnotations(ServiceMode.class);
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationTypeOnNull() {
+    public void testGetAnnotationsWithAnnotationClassOnNull() {
         assertTrue(getAnnotations(NULL_ANNOTATED_CONSTRUCT, NULL_CLASS).isEmpty());
         assertTrue(getAnnotations(testTypeElement, NULL_CLASS).isEmpty());
         assertTrue(getAnnotations(NULL_ANNOTATED_CONSTRUCT, Service.class).isEmpty());
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationTypeOnNotFound() {
+    public void testGetAnnotationsWithAnnotationClassOnNotFound() {
         List<AnnotationMirror> annotations = getAnnotations(testTypeElement, Override.class);
         assertEquals(0, annotations.size());
     }
@@ -158,7 +163,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotationsWithAnnotationType() {
+    public void testGetAllAnnotationsWithAnnotationClass() {
         List<AnnotationMirror> annotations = getAllAnnotations(testTypeElement, Override.class);
         assertEquals(0, annotations.size());
 
@@ -176,7 +181,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotationsWithAnnotationTypeOnNull() {
+    public void testGetAllAnnotationsWithAnnotationClassOnNull() {
         assertSame(emptyList(), getAllAnnotations(NULL_ELEMENT, NULL_CLASS));
         assertSame(emptyList(), getAllAnnotations(NULL_TYPE_MIRROR, NULL_CLASS));
         assertSame(emptyList(), getAllAnnotations(NULL_PROCESSING_ENVIRONMENT, NULL_CLASS));
@@ -187,6 +192,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         assertSame(emptyList(), getAllAnnotations(testTypeElement, NULL_CLASS));
         assertSame(emptyList(), getAllAnnotations(testTypeMirror, NULL_CLASS));
+        assertSame(emptyList(), getAllAnnotations(processingEnv, NULL_CLASS));
     }
 
     @Test
@@ -238,16 +244,41 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindMetaAnnotation() {
+    public void testFindMetaAnnotationWithAnnotationClass() {
         getAllDeclaredMethods(getTypeElement(TestService.class)).forEach(method -> {
-            assertEquals("javax.ws.rs.HttpMethod", findMetaAnnotation(method, "javax.ws.rs.HttpMethod").getAnnotationType().toString());
+            assertFindMetaAnnotation(method, HttpMethod.class);
         });
     }
 
     @Test
-    public void testFindMetaAnnotationOnNull() {
+    public void testFindMetaAnnotationWithAnnotationClassOnNotFound() {
+        assertNull(findMetaAnnotation(testTypeElement, Service.class));
+    }
+
+    @Test
+    public void testFindMetaAnnotationWithAnnotationClassNameOnNotFound() {
+        assertNull(findMetaAnnotation(testTypeElement, Service.class.getName()));
+    }
+
+    @Test
+    public void testFindMetaAnnotationWithAnnotationClassOnNull() {
+        assertNull(findMetaAnnotation(NULL_ELEMENT, NULL_CLASS));
+        assertNull(findMetaAnnotation(NULL_ELEMENT, Service.class));
+        assertNull(findMetaAnnotation(testTypeElement, NULL_CLASS));
+    }
+
+    @Test
+    public void testFindMetaAnnotationWithAnnotationClassName() {
+        getAllDeclaredMethods(getTypeElement(TestService.class)).forEach(method -> {
+            assertFindMetaAnnotation(method, HttpMethod.class.getName());
+        });
+    }
+
+    @Test
+    public void testFindMetaAnnotationWithAnnotationClassNameOnNull() {
         assertNull(findMetaAnnotation(NULL_ELEMENT, NULL_STRING));
         assertNull(findMetaAnnotation(NULL_ELEMENT, "test"));
+        assertNull(findMetaAnnotation(testTypeElement, NULL_STRING));
     }
 
     @Test
@@ -274,13 +305,13 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         List<AnnotationMirror> annotations = findAllAnnotations(method, alwaysTrue());
         assertEquals(1, annotations.size());
-        assertTrue(matchesAnnotationType(annotations.get(0), Cacheable.class));
+        assertAnnotation(annotations.get(0), Cacheable.class);
 
         method = findMethod(getTypeElement(TestService.class), "echo", String.class);
 
         annotations = findAllAnnotations(method);
         assertEquals(1, annotations.size());
-        assertTrue(matchesAnnotationType(annotations.get(0), GET.class));
+        assertAnnotation(annotations.get(0), GET.class);
     }
 
     @Test
@@ -291,8 +322,8 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         List<AnnotationMirror> annotations = findAllAnnotations(parameters.get(0), alwaysTrue());
         assertEquals(2, annotations.size());
-        assertTrue(matchesAnnotationType(annotations.get(0), PathParam.class));
-        assertTrue(matchesAnnotationType(annotations.get(1), DefaultValue.class));
+        assertAnnotation(annotations.get(0), PathParam.class);
+        assertAnnotation(annotations.get(1), DefaultValue.class);
 
         method = findMethod(getTypeElement(TestService.class), "model", Model.class);
         parameters = method.getParameters();
@@ -300,7 +331,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         annotations = findAllAnnotations(parameters.get(0));
         assertEquals(1, annotations.size());
-        assertTrue(matchesAnnotationType(annotations.get(0), PathParam.class));
+        assertAnnotation(annotations.get(0), PathParam.class);
     }
 
     @Test
@@ -309,7 +340,7 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         List<AnnotationMirror> annotations = findAllAnnotations(field, alwaysTrue());
         assertEquals(1, annotations.size());
-        assertTrue(matchesAnnotationType(annotations.get(0), Autowired.class));
+        assertAnnotation(annotations.get(0), Autowired.class);
 
         field = findField(testTypeElement, "environment");
         annotations = findAllAnnotations(field, alwaysTrue());
@@ -349,40 +380,100 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsAnnotationPresent() {
+    public void testIsAnnotationPresentOnAnnotationClass() {
+        assertTrue(isAnnotationPresent(testTypeElement, Service.class));
+        assertTrue(isAnnotationPresent(testTypeElement, ServiceMode.class));
+        assertTrue(isAnnotationPresent(testTypeElement, Path.class));
+    }
+
+    @Test
+    public void testIsAnnotationPresentOnAnnotationClassOnNull() {
+        assertFalse(isAnnotationPresent(NULL_ELEMENT, Service.class));
+        assertFalse(isAnnotationPresent(testTypeElement, NULL_CLASS));
+    }
+
+    @Test
+    public void testIsAnnotationPresentOnAnnotationClassName() {
         assertTrue(isAnnotationPresent(testTypeElement, "org.springframework.stereotype.Service"));
         assertTrue(isAnnotationPresent(testTypeElement, "javax.xml.ws.ServiceMode"));
         assertTrue(isAnnotationPresent(testTypeElement, "javax.ws.rs.Path"));
     }
 
-    private void assertFindAnnotation(Class<? extends Annotation> annotationType) {
-        assertTrue(matchesAnnotationType(findAnnotation(testTypeMirror, annotationType), annotationType));
-        assertTrue(matchesAnnotationType(findAnnotation(testTypeElement, annotationType), annotationType));
-        assertTrue(matchesAnnotationType(findAnnotation(testTypeMirror, annotationType.getName()), annotationType));
-        assertTrue(matchesAnnotationType(findAnnotation(testTypeElement, annotationType.getName()), annotationType));
+    @Test
+    public void testIsAnnotationPresentOnAnnotationClassNameOnNull() {
+        assertFalse(isAnnotationPresent(NULL_ELEMENT, "org.springframework.stereotype.Service"));
+        assertFalse(isAnnotationPresent(testTypeElement, NULL_STRING));
     }
 
+    @Test
+    public void testFindAnnotations() {
+        List<AnnotationMirror> annotations = findAnnotations(testTypeElement);
+        assertEquals(2, annotations.size());
+        assertAnnotation(annotations.get(0), Service.class);
+        assertAnnotation(annotations.get(1), ServiceMode.class);
+
+        annotations = findAnnotations(testTypeElement, alwaysTrue());
+        assertEquals(2, annotations.size());
+        assertAnnotation(annotations.get(0), Service.class);
+        assertAnnotation(annotations.get(1), ServiceMode.class);
+
+        annotations = findAnnotations(testTypeElement, alwaysFalse());
+        assertSame(emptyList(), annotations);
+    }
+
+    @Test
+    public void testFindAnnotationsOnNotFound() {
+        assertSame(emptyList(), findAnnotations(getTypeElement(Serializable.class)));
+    }
+
+    @Test
+    public void testFindAnnotationsOnNull() {
+        assertSame(emptyList(), findAnnotations(NULL_ELEMENT));
+    }
+
+    private void assertFindMetaAnnotation(Element element, Class<? extends Annotation> annotationClass) {
+        assertAnnotation(findMetaAnnotation(element, annotationClass), annotationClass);
+    }
+
+    private void assertFindMetaAnnotation(Element element, String annotationClassName) {
+        assertAnnotation(findMetaAnnotation(element, annotationClassName), annotationClassName);
+    }
+
+    private void assertFindAnnotation(Class<? extends Annotation> annotationClass) {
+        assertAnnotation(findAnnotation(testTypeMirror, annotationClass), annotationClass);
+        assertAnnotation(findAnnotation(testTypeElement, annotationClass), annotationClass);
+        assertAnnotation(findAnnotation(testTypeMirror, annotationClass.getName()), annotationClass);
+        assertAnnotation(findAnnotation(testTypeElement, annotationClass.getName()), annotationClass);
+    }
 
     private void asserGetAnnotation(Class<? extends Annotation> annotationClass) {
-        AnnotationMirror serviceAnnotation = getAnnotation(testTypeElement, annotationClass);
-        assertEquals(annotationClass.getName(), serviceAnnotation.getAnnotationType().toString());
+        AnnotationMirror annotation = getAnnotation(testTypeElement, annotationClass);
+        assertAnnotation(annotation, annotationClass);
     }
 
     private void asserGetAnnotation(String annotationClassName) {
-        AnnotationMirror serviceAnnotation = getAnnotation(testTypeElement, annotationClassName);
-        assertEquals(annotationClassName, serviceAnnotation.getAnnotationType().toString());
+        AnnotationMirror annotation = getAnnotation(testTypeElement, annotationClassName);
+        assertAnnotation(annotation, annotationClassName);
     }
 
-    private void assertGetAnnotations(Class<? extends Annotation> annotationType) {
-        List<AnnotationMirror> annotations = getAnnotations(testTypeElement, annotationType);
+    private void assertGetAnnotations(Class<? extends Annotation> annotationClass) {
+        List<AnnotationMirror> annotations = getAnnotations(testTypeElement, annotationClass);
         assertEquals(1, annotations.size());
-        assertTrue(matchesAnnotationType(annotations.get(0), annotationType));
-        assertEquals(annotationType.getName(), annotations.get(0).getAnnotationType().toString());
+        assertAnnotation(annotations.get(0), annotationClass);
     }
 
     private void assertGetAnnotations(String annotationClassName) {
         List<AnnotationMirror> annotations = getAnnotations(testTypeElement, annotationClassName);
         assertEquals(1, annotations.size());
-        assertEquals(annotationClassName, annotations.get(0).getAnnotationType().toString());
+        assertAnnotation(annotations.get(0), annotationClassName);
+    }
+
+    private void assertAnnotation(AnnotationMirror annotationMirror, Class<? extends Annotation> annotationClass) {
+        assertTrue(matchesAnnotationType(annotationMirror, annotationClass));
+        assertAnnotation(annotationMirror, annotationClass.getName());
+    }
+
+    private void assertAnnotation(AnnotationMirror annotationMirror, String annotationClassName) {
+        assertEquals(annotationMirror.getAnnotationType().toString(), annotationClassName);
     }
 }
