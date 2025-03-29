@@ -18,7 +18,6 @@ package io.microsphere.io;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
-import io.microsphere.util.BaseUtils;
 import io.microsphere.util.SystemUtils;
 
 import java.io.Closeable;
