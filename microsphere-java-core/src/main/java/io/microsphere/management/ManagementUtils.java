@@ -17,7 +17,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * @see ManagementUtils
  * @since 1.0.0
  */
-public abstract class ManagementUtils extends BaseUtils {
+public abstract class ManagementUtils {
 
     private static final Logger logger = getLogger(ManagementUtils.class);
 
