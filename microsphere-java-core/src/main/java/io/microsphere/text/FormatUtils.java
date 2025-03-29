@@ -1,7 +1,5 @@
 package io.microsphere.text;
 
-import io.microsphere.util.BaseUtils;
-
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
@@ -10,7 +8,7 @@ import static io.microsphere.util.StringUtils.isBlank;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public abstract class FormatUtils extends BaseUtils {
+public abstract class FormatUtils {
 
     public static final String DEFAULT_PLACEHOLDER = "{}";
 
