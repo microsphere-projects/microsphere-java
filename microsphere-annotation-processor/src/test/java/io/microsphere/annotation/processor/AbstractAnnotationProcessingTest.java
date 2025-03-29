@@ -42,6 +42,8 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
+import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * Abstract {@link Annotation} Processing Test case
@@ -170,6 +172,10 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected DeclaredType getDeclaredType(Type type) {
         return TypeUtils.getDeclaredType(processingEnv, type);
+    }
+
+    protected void assertEmptyList(List<?> list) {
+        assertSame(emptyList(), list);
     }
 
 }
