@@ -323,7 +323,7 @@ public interface TypeUtils {
             return emptyList();
         }
         assertNoNullElements(typeFilters, () -> "Any element of 'typeFilters' array must not be null");
-        return type == null ? emptyList() : typeElementFinder(type, includeSelf, includeHierarchicalTypes, includeSuperclass, includeSuperInterfaces).findTypes(typeFilters);
+        return typeElementFinder(type, includeSelf, includeHierarchicalTypes, includeSuperclass, includeSuperInterfaces).findTypes(typeFilters);
     }
 
     static DeclaredType getDeclaredTypeOfSuperclass(Element typeElement) {
