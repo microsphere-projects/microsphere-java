@@ -81,8 +81,15 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsPublicNonStatic() {
+        methodsIn(getDeclaredMembers(testTypeElement)).forEach(method -> assertTrue(isPublicNonStatic(method)));
+        
+        // Integer#valueOf(String) is a public static method
+        assertFalse(isPublicNonStatic(findMethod(getTypeElement(Integer.class), "valueOf", String.class)));
+    }
+
+    @Test
+    public void testIsPublicNonStaticOnNull() {
         assertFalse(isPublicNonStatic(NULL_ELEMENT));
-        methodsIn(getDeclaredMembers(testTypeElement.asType())).forEach(method -> assertTrue(isPublicNonStatic(method)));
     }
 
     @Test
