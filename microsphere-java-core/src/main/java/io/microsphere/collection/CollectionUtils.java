@@ -18,7 +18,6 @@ package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-import io.microsphere.util.BaseUtils;
 
 import java.util.AbstractSet;
 import java.util.Collection;
