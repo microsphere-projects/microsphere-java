@@ -51,7 +51,7 @@ import static java.lang.invoke.MethodHandles.publicLookup;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodHandleUtils extends BaseUtils {
+public abstract class MethodHandleUtils {
 
     /**
      * A single-bit mask representing {@code module} access,
