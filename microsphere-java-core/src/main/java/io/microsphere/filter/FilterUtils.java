@@ -19,7 +19,7 @@ import static java.util.Collections.unmodifiableList;
  * @see FilterUtils
  * @since 1.0.0
  */
-public abstract class FilterUtils extends BaseUtils {
+public abstract class FilterUtils {
 
     private FilterUtils() {
     }
