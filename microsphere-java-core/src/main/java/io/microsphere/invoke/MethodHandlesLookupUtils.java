@@ -18,7 +18,6 @@ package io.microsphere.invoke;
 
 import io.microsphere.lang.function.ThrowableBiFunction;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
