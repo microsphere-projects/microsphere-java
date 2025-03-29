@@ -1,6 +1,7 @@
 package io.microsphere.annotation.processor.util;
 
 import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.TestService;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.ExecutableElement;
@@ -24,6 +25,7 @@ public class ExecutableElementComparatorTest extends AbstractAnnotationProcessin
 
     @Test
     public void testCompareOnSameMethods() {
+        // Object#toString()
         String methodName = "toString";
         ExecutableElement method = getMethod(methodName);
         assertEquals(0, comparator.compare(method, method));
@@ -35,7 +37,7 @@ public class ExecutableElementComparatorTest extends AbstractAnnotationProcessin
     }
 
     @Test
-    public void testCompareOnOverloadMethods() {
+    public void testCompareOnOverloadMethodsWithSameParameterCount() {
         // Integer#valueOf(int) | Integer#valueOf(String)
         TypeElement typeElement = getTypeElement(Integer.class);
         String methodName = "valueOf";
@@ -43,9 +45,24 @@ public class ExecutableElementComparatorTest extends AbstractAnnotationProcessin
     }
 
     @Test
+    public void testCompareOnOverloadMethodsWithDifferentParameterCount() {
+        // StringBuilder#append(char[]) | StringBuilder#append(char[],int,int)
+        TypeElement typeElement = getTypeElement(StringBuilder.class);
+        String methodName = "append";
+        assertEquals(-2, comparator.compare(
+                findMethod(typeElement, methodName, char[].class),
+                findMethod(typeElement, methodName, char[].class, int.class, int.class)));
+    }
+
+    @Test
     public void testCompare() {
-        // Object#equals
-        assertEquals(0, comparator.compare(getMethod("equals", Object.class), getMethod("equals", Object.class)));
+        // AutoCloseable#close()
+        assertEquals(0, comparator.compare(getMethod("close"),
+                findMethod(getTypeElement(AutoCloseable.class), "close")));
+
+        // TestService#echo(String)
+        assertEquals(0, comparator.compare(getMethod("echo", String.class),
+                findMethod(getTypeElement(TestService.class), "echo", String.class)));
     }
 
     @Override
