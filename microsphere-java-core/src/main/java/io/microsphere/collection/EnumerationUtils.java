@@ -29,7 +29,7 @@ import java.util.Enumeration;
  * @see Collections#enumeration
  * @since 1.0.0
  */
-public abstract class EnumerationUtils extends BaseUtils {
+public abstract class EnumerationUtils {
 
     /**
      * Create a {@link Enumeration} instance from the specified elements
