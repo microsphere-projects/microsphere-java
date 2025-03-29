@@ -100,8 +100,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetDeclaredMembersOnNul() {
-        assertSame(emptyList(), getDeclaredMembers(NULL_TYPE_ELEMENT));
-        assertSame(emptyList(), getDeclaredMembers(NULL_TYPE_MIRROR));
+        assertEmptyList(getDeclaredMembers(NULL_TYPE_ELEMENT));
+        assertEmptyList(getDeclaredMembers(NULL_TYPE_MIRROR));
     }
 
     @Test
@@ -111,8 +111,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetAllDeclaredMembersOnNul() {
-        assertSame(emptyList(), getAllDeclaredMembers(NULL_TYPE_ELEMENT));
-        assertSame(emptyList(), getAllDeclaredMembers(NULL_TYPE_MIRROR));
+        assertEmptyList(getAllDeclaredMembers(NULL_TYPE_ELEMENT));
+        assertEmptyList(getAllDeclaredMembers(NULL_TYPE_MIRROR));
     }
 
     @Test
@@ -122,10 +122,10 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindDeclaredMembersOnNul() {
-        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
-        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
-        assertSame(emptyList(), findDeclaredMembers(NULL_TYPE_MIRROR, alwaysFalse()));
+        assertEmptyList(findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertEmptyList(findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
+        assertEmptyList(findDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertEmptyList(findDeclaredMembers(NULL_TYPE_MIRROR, alwaysFalse()));
     }
 
     @Test
@@ -135,28 +135,28 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllDeclaredMembersOnNul() {
-        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
-        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
-        assertSame(emptyList(), findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysFalse()));
+        assertEmptyList(findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertEmptyList(findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
+        assertEmptyList(findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertEmptyList(findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysFalse()));
     }
 
     @Test
     public void testFilterMembers() {
-        assertSame(emptyList(), filterMembers(ofList(testTypeElement), alwaysFalse()));
+        assertEmptyList(filterMembers(ofList(testTypeElement), alwaysFalse()));
 
     }
 
     @Test
     public void testFilterMembersOnNull() {
-        assertSame(emptyList(), filterMembers(NULL_LIST, alwaysTrue()));
+        assertEmptyList(filterMembers(NULL_LIST, alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
         assertSame(methods, filterMembers(methods, NULL_PREDICATE_ARRAY));
     }
 
     @Test
     public void testFilterMembersOnEmpty() {
-        assertSame(emptyList(), filterMembers(emptyList(), alwaysTrue()));
+        assertEmptyList(filterMembers(emptyList(), alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
         assertSame(methods, filterMembers(methods));
     }
@@ -190,8 +190,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
         assertGetDeclaredMembersOfModel(findDeclaredMembers(type, alwaysTrue(), alwaysTrue()));
         assertGetDeclaredMembersOfModel(findDeclaredMembers(type.asType(), alwaysTrue()));
 
-        assertSame(emptyList(), findDeclaredMembers(type, alwaysFalse()));
-        assertSame(emptyList(), findDeclaredMembers(type.asType(), alwaysFalse()));
+        assertEmptyList(findDeclaredMembers(type, alwaysFalse()));
+        assertEmptyList(findDeclaredMembers(type.asType(), alwaysFalse()));
     }
 
     private void assertFindAllDeclaredMembersOfModel() {
@@ -199,8 +199,8 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
         assertGetAllDeclaredMembersOfModel(findAllDeclaredMembers(type, alwaysTrue(), alwaysTrue()));
         assertGetAllDeclaredMembersOfModel(findAllDeclaredMembers(type.asType(), alwaysTrue()));
 
-        assertSame(emptyList(), findAllDeclaredMembers(type, alwaysFalse()));
-        assertSame(emptyList(), findAllDeclaredMembers(type.asType(), alwaysFalse()));
+        assertEmptyList(findAllDeclaredMembers(type, alwaysFalse()));
+        assertEmptyList(findAllDeclaredMembers(type.asType(), alwaysFalse()));
     }
 
     private void assertGetDeclaredMembersOfModel() {
