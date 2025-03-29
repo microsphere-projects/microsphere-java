@@ -270,12 +270,47 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testFindMethodOnNotFound() {
+        assertNull(findMethod(testTypeElement, "notFound"));
+        assertNull(findMethod(testTypeElement, "notFound", String.class));
+        assertNull(findMethod(testTypeElement, "notFound", "java.lang.String"));
+
+        assertNull(findMethod(testTypeMirror, "notFound"));
+        assertNull(findMethod(testTypeMirror, "notFound", String.class));
+        assertNull(findMethod(testTypeMirror, "notFound", "java.lang.String"));
+    }
+
+    @Test
     public void testFindMethodOnNull() {
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString"));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", String.class));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", "java.lang.String"));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", NULL_STRING_ARRAY));
+
         assertNull(findMethod(NULL_TYPE_MIRROR, "toString"));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", String.class));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", "java.lang.String"));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", NULL_STRING_ARRAY));
+
         assertNull(findMethod(testTypeElement, NULL_STRING));
+        assertNull(findMethod(testTypeElement, NULL_STRING, String.class));
+        assertNull(findMethod(testTypeElement, NULL_STRING, "java.lang.String"));
+        assertNull(findMethod(testTypeElement, NULL_STRING, NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeElement, NULL_STRING, NULL_STRING_ARRAY));
+
         assertNull(findMethod(testTypeMirror, NULL_STRING));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, String.class));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, "java.lang.String"));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, NULL_STRING_ARRAY));
+
+
         assertNull(findMethod(testTypeElement, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeElement, "toString", NULL_STRING_ARRAY));
+
+        assertNull(findMethod(testTypeMirror, "toString", NULL_TYPE_ARRAY));
         assertNull(findMethod(testTypeMirror, "toString", NULL_STRING_ARRAY));
     }
 
