@@ -36,14 +36,11 @@ import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllTypeElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeElement;
-import static io.microsphere.annotation.processor.util.TypeUtils.getTypeElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
-import static io.microsphere.annotation.processor.util.TypeUtils.isTypeElement;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -92,7 +89,7 @@ public interface AnnotationUtils {
         if (annotatedConstruct == null || annotationClassName == null) {
             return emptyList();
         }
-        return findAnnotations(annotatedConstruct, annotation -> matchesAnnotationType(annotation, annotationClassName));
+        return findAnnotations(annotatedConstruct, annotation -> matchesAnnotationClassName(annotation, annotationClassName));
     }
 
     static List<AnnotationMirror> getAllAnnotations(TypeMirror type) {
@@ -134,7 +131,7 @@ public interface AnnotationUtils {
         if (element == null || annotationClassName == null) {
             return emptyList();
         }
-        return findAllAnnotations(element, annotation -> matchesAnnotationType(annotation, annotationClassName));
+        return findAllAnnotations(element, annotation -> matchesAnnotationClassName(annotation, annotationClassName));
     }
 
     static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType) {
@@ -169,7 +166,7 @@ public interface AnnotationUtils {
         if (element == null || annotationClassName == null) {
             return null;
         }
-        List<AnnotationMirror> annotations = findAllAnnotations(element, annotation -> matchesAnnotationType(annotation, annotationClassName));
+        List<AnnotationMirror> annotations = findAllAnnotations(element, annotation -> matchesAnnotationClassName(annotation, annotationClassName));
         return isEmpty(annotations) ? null : annotations.get(0);
     }
 
@@ -242,21 +239,39 @@ public interface AnnotationUtils {
         if (element == null) {
             return emptyList();
         }
-        return filterAnnotations(element, true, annotationFilters);
+        List<TypeElement> typeElements = getAllTypeElements(element);
+
+        List<AnnotationMirror> annotations = typeElements.stream()
+                .map(AnnotationUtils::getAnnotations)
+                .flatMap(Collection::stream)
+                .collect(toList());
+
+        if (isNotEmpty(annotationFilters)) {
+            annotations = filterAll(annotations, annotationFilters);
+        }
+
+        return isEmpty(annotations) ? emptyList() : annotations;
     }
 
     static List<AnnotationMirror> findAllAnnotations(Element element, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (element == null) {
             return emptyList();
         }
-        return filterAnnotations(element, true, annotationFilters);
+
+        TypeElement typeElement = ofTypeElement(element);
+
+        if (typeElement == null) {
+            return findAnnotations(element, annotationFilters);
+        }
+
+        return findAllAnnotations(typeElement, annotationFilters);
     }
 
     static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (processingEnv == null || annotatedType == null) {
             return emptyList();
         }
-        return annotatedType == null ? emptyList() : findAllAnnotations(processingEnv, annotatedType.getTypeName(), annotationFilters);
+        return findAllAnnotations(processingEnv, annotatedType.getTypeName(), annotationFilters);
     }
 
     static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, CharSequence annotatedTypeName, Predicate<? super AnnotationMirror>... annotationFilters) {
@@ -266,34 +281,14 @@ public interface AnnotationUtils {
         return findAllAnnotations(getTypeElement(processingEnv, annotatedTypeName), annotationFilters);
     }
 
-
-    static List<AnnotationMirror> filterAnnotations(Element element, boolean all, Predicate<? super AnnotationMirror>... annotationFilters) {
-        if (isTypeElement(element)) {
-            return filterAnnotations((TypeElement) element, all, annotationFilters);
-        }
-        return findAnnotations(element, annotationFilters);
-    }
-
-    static List<AnnotationMirror> filterAnnotations(TypeElement typeElement, boolean all, Predicate<? super AnnotationMirror>... annotationFilters) {
-        List<TypeElement> typeElements = all ? getAllTypeElements(typeElement) : getTypeElements(typeElement);
-
-        List<AnnotationMirror> annotations = typeElements.stream()
-                .map(AnnotationUtils::getAnnotations)
-                .flatMap(Collection::stream)
-                .filter(and(annotationFilters))
-                .collect(toList());
-
-        return isEmpty(annotations) ? emptyList() : annotations;
-    }
-
-    static boolean matchesAnnotationType(AnnotationMirror annotationMirror, Type annotationType) {
+    static boolean matchesAnnotationClass(AnnotationMirror annotationMirror, Type annotationType) {
         if (annotationMirror == null || annotationType == null) {
             return false;
         }
-        return matchesAnnotationType(annotationMirror, annotationType.getTypeName());
+        return matchesAnnotationClassName(annotationMirror, annotationType.getTypeName());
     }
 
-    static boolean matchesAnnotationType(AnnotationMirror annotationMirror, CharSequence annotationClassName) {
+    static boolean matchesAnnotationClassName(AnnotationMirror annotationMirror, CharSequence annotationClassName) {
         if (annotationMirror == null || annotationClassName == null) {
             return false;
         }
