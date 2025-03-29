@@ -57,6 +57,7 @@ import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Collections.emptyList;
+import static javax.lang.model.element.ElementKind.METHOD;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -217,8 +218,13 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsMethod() {
-        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testTypeElement, Object.class);
-        assertEquals(14, methods.stream().map(MethodUtils::isMethod).count());
+        List<? extends Element> members = getDeclaredMembers(testTypeElement);
+        for (Element member : members) {
+            if (member instanceof ExecutableElement) {
+                ExecutableElement element = (ExecutableElement) member;
+                assertEquals(METHOD == member.getKind(), isMethod(element));
+            }
+        }
     }
 
     @Test
