@@ -38,7 +38,7 @@ import static java.lang.invoke.MethodType.methodType;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodHandlesLookupUtils extends BaseUtils {
+public abstract class MethodHandlesLookupUtils {
 
     /**
      * {@link MethodHandle} for Not-Found
