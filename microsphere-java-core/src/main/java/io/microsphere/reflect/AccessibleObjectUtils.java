@@ -17,7 +17,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.AccessibleObject;
@@ -39,7 +38,7 @@ import static io.microsphere.util.StringUtils.substringBetween;
  * @see AccessibleObject
  * @since 1.0.0
  */
-public abstract class AccessibleObjectUtils extends BaseUtils {
+public abstract class AccessibleObjectUtils {
 
     private static final Logger logger = getLogger(AccessibleObjectUtils.class);
 

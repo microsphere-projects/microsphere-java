@@ -41,7 +41,7 @@ import static java.lang.Thread.currentThread;
  * @see StackTraceElement
  * @since 1.0.0
  */
-public abstract class StackTraceUtils extends BaseUtils {
+public abstract class StackTraceUtils {
 
     private static final Class<?> TYPE = StackTraceUtils.class;
 

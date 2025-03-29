@@ -29,7 +29,7 @@ import static java.util.Collections.emptySet;
  * @see ClassPathUtils
  * @since 1.0.0
  */
-public abstract class ClassPathUtils extends BaseUtils {
+public abstract class ClassPathUtils {
 
     protected static final RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
 

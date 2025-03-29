@@ -32,32 +32,22 @@ public interface LoggerUtils {
     Logger LOGGER = getLogger("microsphere-annotation-processor");
 
     static void trace(String format, Object... args) {
-        if (LOGGER.isTraceEnabled()) {
-            LOGGER.trace(format, args);
-        }
+        LOGGER.trace(format, args);
     }
 
     static void debug(String format, Object... args) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug(format, args);
-        }
+        LOGGER.debug(format, args);
     }
 
     static void info(String format, Object... args) {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info(format, args);
-        }
+        LOGGER.info(format, args);
     }
 
     static void warn(String format, Object... args) {
-        if (LOGGER.isWarnEnabled()) {
-            LOGGER.warn(format, args);
-        }
+        LOGGER.warn(format, args);
     }
 
     static void error(String format, Object... args) {
-        if (LOGGER.isErrorEnabled()) {
-            LOGGER.error(format, args);
-        }
+        LOGGER.error(format, args);
     }
 }

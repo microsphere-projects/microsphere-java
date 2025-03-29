@@ -23,6 +23,7 @@ import io.microsphere.constants.Constants;
 import io.microsphere.constants.PropertyConstants;
 import org.junit.jupiter.api.Test;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -31,6 +32,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
+import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.MethodUtils.filterMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findDeclaredMethods;
@@ -54,6 +57,7 @@ import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Collections.emptyList;
+import static javax.lang.model.element.ElementKind.METHOD;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -128,24 +132,24 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals(2, methods.size());
 
         methods = findDeclaredMethods(testTypeElement, alwaysFalse());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
 
         methods = findDeclaredMethods(testTypeMirror, alwaysFalse());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
     }
 
     @Test
     public void testFindDeclaredMethodsOnNoMemberType() {
         TypeElement typeElement = getTypeElement(Serializable.class);
         List<ExecutableElement> methods = findDeclaredMethods(typeElement, alwaysTrue());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
     }
 
     @Test
     public void testFindDeclaredMethodsOnNoMethodType() {
         TypeElement typeElement = getTypeElement(PropertyConstants.class);
         List<ExecutableElement> methods = findDeclaredMethods(typeElement, alwaysTrue());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
     }
 
     @Test
@@ -157,32 +161,32 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         assertEquals(objectMethodsSize + 14, methods.size());
 
         methods = findAllDeclaredMethods(testTypeElement, alwaysFalse());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
 
         methods = findAllDeclaredMethods(testTypeMirror, alwaysFalse());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
     }
 
     @Test
     public void testFindAllDeclaredMethodsOnNoMemberType() {
         TypeElement typeElement = getTypeElement(Serializable.class);
         List<ExecutableElement> methods = findAllDeclaredMethods(typeElement, alwaysTrue());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
     }
 
     @Test
     public void testFindAllDeclaredMethodsOnNoMethodType() {
         TypeElement typeElement = getTypeElement(Constants.class);
         List<ExecutableElement> methods = findAllDeclaredMethods(typeElement, alwaysTrue());
-        assertSame(emptyList(), methods);
+        assertEmptyList(methods);
     }
 
     @Test
     public void testFindAllDeclaredMethodsOnNull() {
-        assertSame(emptyList(), findAllDeclaredMethods(NULL_TYPE_ELEMENT, alwaysTrue()));
-        assertSame(emptyList(), findAllDeclaredMethods(NULL_TYPE_ELEMENT, alwaysFalse()));
-        assertSame(emptyList(), findAllDeclaredMethods(NULL_TYPE_MIRROR, alwaysTrue()));
-        assertSame(emptyList(), findAllDeclaredMethods(NULL_TYPE_MIRROR, alwaysFalse()));
+        assertEmptyList(findAllDeclaredMethods(NULL_TYPE_ELEMENT, alwaysTrue()));
+        assertEmptyList(findAllDeclaredMethods(NULL_TYPE_ELEMENT, alwaysFalse()));
+        assertEmptyList(findAllDeclaredMethods(NULL_TYPE_MIRROR, alwaysTrue()));
+        assertEmptyList(findAllDeclaredMethods(NULL_TYPE_MIRROR, alwaysFalse()));
     }
 
     @Test
@@ -193,8 +197,8 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindAllDeclaredMethodsWithExcludedTypesOnNull() {
-        assertSame(emptyList(), findAllDeclaredMethods(NULL_TYPE_ELEMENT, Object.class));
-        assertSame(emptyList(), findAllDeclaredMethods(NULL_TYPE_MIRROR, Object.class));
+        assertEmptyList(findAllDeclaredMethods(NULL_TYPE_ELEMENT, Object.class));
+        assertEmptyList(findAllDeclaredMethods(NULL_TYPE_MIRROR, Object.class));
     }
 
     @Test
@@ -208,30 +212,51 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFindPublicNonStaticMethodsOnNull() {
-        assertSame(emptyList(), findPublicNonStaticMethods(NULL_TYPE_ELEMENT, Object.class));
-        assertSame(emptyList(), findPublicNonStaticMethods(NULL_TYPE_MIRROR, Object.class));
+        assertEmptyList(findPublicNonStaticMethods(NULL_TYPE_ELEMENT, Object.class));
+        assertEmptyList(findPublicNonStaticMethods(NULL_TYPE_MIRROR, Object.class));
     }
 
     @Test
     public void testIsMethod() {
-        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testTypeElement, Object.class);
-        assertEquals(14, methods.stream().map(MethodUtils::isMethod).count());
+        List<? extends Element> members = getDeclaredMembers(testTypeElement);
+        for (Element member : members) {
+            if (member instanceof ExecutableElement) {
+                ExecutableElement element = (ExecutableElement) member;
+                assertEquals(METHOD == member.getKind(), isMethod(element));
+            }
+        }
     }
 
     @Test
     public void testIsMethodOnNull() {
-        assertFalse(isMethod(null));
+        assertFalse(isMethod(NULL_METHOD));
     }
 
     @Test
     public void testIsPublicNonStaticMethod() {
-        List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testTypeElement, Object.class);
-        assertEquals(14, methods.stream().map(MethodUtils::isPublicNonStaticMethod).count());
+        List<? extends Element> members = getDeclaredMembers(testTypeElement);
+        for (Element member : members) {
+            if (member instanceof ExecutableElement) {
+                ExecutableElement element = (ExecutableElement) member;
+                switch (member.getKind()) {
+                    case METHOD:
+                        assertEquals(isPublicNonStaticMethod(element), isPublicNonStatic(element));
+                        break;
+                    case CONSTRUCTOR:
+                        assertFalse(isPublicNonStaticMethod(element));
+                        break;
+                }
+            }
+        }
+
+        // Integer#valueOf(String) is a public static method
+        assertFalse(isPublicNonStaticMethod(findMethod(getTypeElement(Integer.class), "valueOf", String.class)));
+
     }
 
     @Test
     public void testIsPublicNonStaticMethodOnNull() {
-        assertFalse(isPublicNonStaticMethod(null));
+        assertFalse(isPublicNonStaticMethod(NULL_METHOD));
     }
 
     @Test
@@ -270,12 +295,47 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testFindMethodOnNotFound() {
+        assertNull(findMethod(testTypeElement, "notFound"));
+        assertNull(findMethod(testTypeElement, "notFound", String.class));
+        assertNull(findMethod(testTypeElement, "notFound", "java.lang.String"));
+
+        assertNull(findMethod(testTypeMirror, "notFound"));
+        assertNull(findMethod(testTypeMirror, "notFound", String.class));
+        assertNull(findMethod(testTypeMirror, "notFound", "java.lang.String"));
+    }
+
+    @Test
     public void testFindMethodOnNull() {
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString"));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", String.class));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", "java.lang.String"));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", NULL_STRING_ARRAY));
+
         assertNull(findMethod(NULL_TYPE_MIRROR, "toString"));
-        assertNull(findMethod(testTypeElement, null));
-        assertNull(findMethod(testTypeMirror, null));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", String.class));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", "java.lang.String"));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(NULL_TYPE_MIRROR, "toString", NULL_STRING_ARRAY));
+
+        assertNull(findMethod(testTypeElement, NULL_STRING));
+        assertNull(findMethod(testTypeElement, NULL_STRING, String.class));
+        assertNull(findMethod(testTypeElement, NULL_STRING, "java.lang.String"));
+        assertNull(findMethod(testTypeElement, NULL_STRING, NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeElement, NULL_STRING, NULL_STRING_ARRAY));
+
+        assertNull(findMethod(testTypeMirror, NULL_STRING));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, String.class));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, "java.lang.String"));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeMirror, NULL_STRING, NULL_STRING_ARRAY));
+
+
         assertNull(findMethod(testTypeElement, "toString", NULL_TYPE_ARRAY));
+        assertNull(findMethod(testTypeElement, "toString", NULL_STRING_ARRAY));
+
+        assertNull(findMethod(testTypeMirror, "toString", NULL_TYPE_ARRAY));
         assertNull(findMethod(testTypeMirror, "toString", NULL_STRING_ARRAY));
     }
 
@@ -299,20 +359,20 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testFilterMethodsOnNull() {
-        assertSame(emptyList(), filterMethods(null, alwaysTrue()));
-        assertSame(emptyList(), filterMethods(null, null));
+        assertEmptyList(filterMethods(NULL_LIST, alwaysTrue()));
+        assertEmptyList(filterMethods(NULL_LIST, NULL_PREDICATE_ARRAY));
     }
 
     @Test
     public void testFilterMethodsOnEmpty() {
-        assertSame(emptyList(), filterMethods(emptyList(), alwaysTrue()));
-        assertSame(emptyList(), filterMethods(emptyList(), null));
+        assertEmptyList(filterMethods(emptyList(), alwaysTrue()));
+        assertEmptyList(filterMethods(emptyList(), NULL_PREDICATE_ARRAY));
     }
 
     @Test
     public void testFilterMethodsOnReturningEmptyList() {
         List<ExecutableElement> methods = getDeclaredMethods(testTypeElement);
-        assertSame(emptyList(), filterMethods(methods, alwaysFalse()));
+        assertEmptyList(filterMethods(methods, alwaysFalse()));
         assertSame(methods, filterMethods(methods));
     }
 
@@ -320,12 +380,12 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     public void testGetMethodName() {
         ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertEquals("echo", getMethodName(method));
-        assertNull(getMethodName(null));
+        assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
     public void testGetMethodNameOnNull() {
-        assertNull(getMethodName(null));
+        assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
@@ -336,7 +396,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testReturnTypeNameOnNull() {
-        assertNull(getReturnTypeName(null));
+        assertNull(getReturnTypeName(NULL_METHOD));
     }
 
     @Test
@@ -348,13 +408,13 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypeNamesOnNull() {
-        assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(null));
+        assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(NULL_METHOD));
     }
 
     @Test
     public void testMatchParameterTypes() {
         ExecutableElement method = findMethod(testTypeElement, "toString");
-        assertSame(emptyList(), getMethodParameterTypeMirrors(method));
+        assertEmptyList(getMethodParameterTypeMirrors(method));
 
         method = findMethod(testTypeElement, "equals", Object.class);
         List<TypeMirror> parameterTypes = getMethodParameterTypeMirrors(method);
@@ -363,7 +423,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchParameterTypesOnNull() {
-        assertSame(emptyList(), getMethodParameterTypeMirrors(null));
+        assertEmptyList(getMethodParameterTypeMirrors(NULL_METHOD));
     }
 
     @Test
@@ -393,11 +453,11 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
         String[] parameterTypeNames = getTypeNames(parameterTypes);
         ExecutableElement method = findMethod(testTypeElement, methodName, parameterTypes);
 
-        assertFalse(matches(null, NULL_STRING, parameterTypes));
+        assertFalse(matches(NULL_METHOD, NULL_STRING, parameterTypes));
         assertFalse(matches(method, NULL_STRING, parameterTypes));
         assertFalse(matches(method, methodName, NULL_TYPE_ARRAY));
 
-        assertFalse(matches(null, NULL_STRING, parameterTypeNames));
+        assertFalse(matches(NULL_METHOD, NULL_STRING, parameterTypeNames));
         assertFalse(matches(method, NULL_STRING, parameterTypeNames));
         assertFalse(matches(method, methodName, NULL_STRING_ARRAY));
     }
@@ -412,7 +472,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testGetEnclosingElementOnNull() {
-        assertNull(getEnclosingElement(null));
+        assertNull(getEnclosingElement(NULL_METHOD));
     }
 
     private void assertFindMethod(Type type, String methodName, Type... parameterTypes) {

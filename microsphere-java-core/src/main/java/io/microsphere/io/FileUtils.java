@@ -3,8 +3,6 @@
  */
 package io.microsphere.io;
 
-import io.microsphere.util.BaseUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,7 +21,7 @@ import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
  * @see FileUtils
  * @since 1.0.0
  */
-public abstract class FileUtils extends BaseUtils {
+public abstract class FileUtils {
 
     /**
      * Resolve Relative Path

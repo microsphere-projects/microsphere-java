@@ -16,8 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.BaseUtils;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -30,7 +28,7 @@ import java.util.function.Predicate;
  *
  * @since 1.0.0
  */
-public abstract class MemberUtils extends BaseUtils {
+public abstract class MemberUtils {
 
     /**
      * The {@link Predicate} reference to {@link #isStatic(Member)}

@@ -17,7 +17,6 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.util.BaseUtils;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -47,7 +46,7 @@ import static java.util.Collections.unmodifiableMap;
  * @see Map
  * @since 1.0.0
  */
-public abstract class MapUtils extends BaseUtils {
+public abstract class MapUtils {
 
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}

@@ -111,7 +111,6 @@ public interface MethodUtils {
 
     static List<ExecutableElement> findPublicNonStaticMethods(TypeElement type, Type... excludedTypes) {
         return type == null ? emptyList() : findPublicNonStaticMethods(ofDeclaredType(type), excludedTypes);
-
     }
 
     static List<ExecutableElement> findPublicNonStaticMethods(TypeMirror type, Type... excludedTypes) {

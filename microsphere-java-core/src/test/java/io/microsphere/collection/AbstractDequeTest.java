@@ -1,9 +1,8 @@
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Deque;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -22,60 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class AbstractDequeTest {
 
-    private final AbstractDeque<String> deque = new AbstractDeque<String>() {
+    private AbstractDeque<String> deque;
 
-        private final Deque<String> values = newLinkedList(ofList("a"));
-
-        @Override
-        public Iterator<String> iterator() {
-            return values.iterator();
-        }
-
-        @Override
-        public Iterator<String> descendingIterator() {
-            return values.descendingIterator();
-        }
-
-        @Override
-        public boolean offerFirst(String s) {
-            return false;
-        }
-
-        @Override
-        public boolean offerLast(String s) {
-            return false;
-        }
-
-        @Override
-        public String pollFirst() {
-            return values.pollFirst();
-        }
-
-        @Override
-        public String pollLast() {
-            return values.pollLast();
-        }
-
-        @Override
-        public String getFirst() {
-            return values.getFirst();
-        }
-
-        @Override
-        public String getLast() {
-            return values.getLast();
-        }
-
-        @Override
-        public boolean removeLastOccurrence(Object o) {
-            return values.removeLastOccurrence(o);
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-    };
+    @BeforeEach
+    public void init() {
+        this.deque = new DelegatingDeque(newLinkedList(ofList("a")));
+    }
 
     @Test
     public void testAddFirst() {

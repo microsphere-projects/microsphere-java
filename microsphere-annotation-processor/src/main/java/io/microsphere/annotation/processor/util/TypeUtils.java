@@ -110,7 +110,6 @@ public interface TypeUtils {
         return Objects.equals(valueOf(type), valueOf(typeName));
     }
 
-
     static boolean isArrayType(TypeMirror type) {
         return type != null && ARRAY == type.getKind();
     }
@@ -278,6 +277,10 @@ public interface TypeUtils {
         return findAllTypeElementsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
+    static List<TypeElement> getTypeElements(TypeElement type) {
+        return getTypeElements(type, true, false, true, true);
+    }
+
     static List<TypeElement> getAllTypeElements(TypeElement type) {
         return getTypeElements(type, true, true, true, true);
     }
@@ -319,7 +322,7 @@ public interface TypeUtils {
             return emptyList();
         }
         assertNoNullElements(typeFilters, () -> "Any element of 'typeFilters' array must not be null");
-        return type == null ? emptyList() : typeElementFinder(type, includeSelf, includeHierarchicalTypes, includeSuperclass, includeSuperInterfaces).findTypes(typeFilters);
+        return typeElementFinder(type, includeSelf, includeHierarchicalTypes, includeSuperclass, includeSuperInterfaces).findTypes(typeFilters);
     }
 
     static DeclaredType getDeclaredTypeOfSuperclass(Element typeElement) {

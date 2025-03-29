@@ -16,8 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.BaseUtils;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
@@ -39,7 +37,7 @@ import static java.lang.reflect.Modifier.isFinal;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class ProxyUtils extends BaseUtils {
+public abstract class ProxyUtils {
 
     /**
      * <ul>

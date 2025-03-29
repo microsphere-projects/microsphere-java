@@ -16,8 +16,6 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -41,7 +39,7 @@ import static java.util.Collections.unmodifiableList;
  * @see List
  * @since 1.0.0
  */
-public abstract class ListUtils extends BaseUtils {
+public abstract class ListUtils {
 
     public static boolean isList(Object values) {
         return values instanceof List;
