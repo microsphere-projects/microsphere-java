@@ -110,7 +110,6 @@ public interface TypeUtils {
         return Objects.equals(valueOf(type), valueOf(typeName));
     }
 
-
     static boolean isArrayType(TypeMirror type) {
         return type != null && ARRAY == type.getKind();
     }
