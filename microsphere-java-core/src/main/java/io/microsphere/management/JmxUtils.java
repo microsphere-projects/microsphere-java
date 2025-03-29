@@ -19,7 +19,6 @@ package io.microsphere.management;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
