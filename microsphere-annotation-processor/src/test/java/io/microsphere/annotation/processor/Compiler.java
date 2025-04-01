@@ -20,12 +20,12 @@ import io.microsphere.logging.Logger;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,6 +39,7 @@ import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.StringUtils.substringBefore;
+import static java.util.Collections.singleton;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 import static javax.tools.ToolProvider.getSystemJavaCompiler;
@@ -73,8 +74,8 @@ public class Compiler {
         this.sourcePaths = newLinkedHashSet(defaultSourceDirectory);
         this.javaCompiler = getSystemJavaCompiler();
         this.javaFileManager = javaCompiler.getStandardFileManager(null, null, null);
-        this.javaFileManager.setLocation(CLASS_OUTPUT, Collections.singleton(targetDirectory));
-        this.javaFileManager.setLocation(SOURCE_OUTPUT, Collections.singleton(targetDirectory));
+        this.javaFileManager.setLocation(CLASS_OUTPUT, singleton(targetDirectory));
+        this.javaFileManager.setLocation(SOURCE_OUTPUT, singleton(targetDirectory));
     }
 
     public Compiler sourcePaths(File... sourcePaths) {
@@ -191,7 +192,7 @@ public class Compiler {
     }
 
     public boolean compile(Class<?>... sourceClasses) {
-        JavaCompiler.CompilationTask task = javaCompiler.getTask(null, this.javaFileManager, null,
+        CompilationTask task = javaCompiler.getTask(null, this.javaFileManager, null,
                 ofList("-parameters", "-Xlint:unchecked", "-nowarn", "-Xlint:deprecation"),
 //                null,
                 null, getJavaFileObjects(sourceClasses));
