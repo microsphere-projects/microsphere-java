@@ -28,25 +28,13 @@ import static java.lang.String.valueOf;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class StringUtils {
+public abstract class StringUtils extends CharSequenceUtils {
 
     public final static String EMPTY = "";
 
     public final static String EMPTY_STRING = EMPTY;
 
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
-
-    public static int length(String value) {
-        return value == null ? 0 : value.length();
-    }
-
-    public static boolean isEmpty(String value) {
-        return length(value) == 0;
-    }
-
-    public static boolean isNotEmpty(String value) {
-        return length(value) > 0;
-    }
 
     public static boolean isBlank(String value) {
         int length = length(value);
