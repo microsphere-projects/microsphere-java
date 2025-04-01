@@ -9,6 +9,10 @@ import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.CharSequenceUtilsTest.TEST_BLANK_STRING;
+import static io.microsphere.util.CharSequenceUtilsTest.TEST_CSV_STRING;
+import static io.microsphere.util.CharSequenceUtilsTest.TEST_EMPTY_STRING;
+import static io.microsphere.util.CharSequenceUtilsTest.TEST_STRING;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
@@ -42,14 +46,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class StringUtilsTest {
-
-    private static final String TEST_EMPTY_STRING = "";
-
-    private static final String TEST_BLANK_STRING = SPACE;
-
-    private static final String TEST_CSV_STRING = "a,b,c";
-
-    private static final String TEST_STRING = "testing";
 
 
     @Test
