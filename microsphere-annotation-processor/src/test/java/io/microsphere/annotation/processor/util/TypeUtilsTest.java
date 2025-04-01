@@ -43,6 +43,7 @@ import java.util.EventListener;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.FieldUtils.getDeclaredFields;
@@ -355,6 +356,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     public void testIsTypeElement() {
         assertTrue(isTypeElement(testTypeElement));
         assertTrue(isTypeElement(testTypeMirror));
+        assertTrue(isTypeElement(getFieldType(testTypeElement, "context")));
 
         // primitive type
         assertFalse(isTypeElement(getTypeMirror(int.class)));
@@ -754,6 +756,13 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
         assertTypeElements(typeElements);
         assertEmptyList(typeElements);
     }
+
+    @Test
+    public void testFindTypeElementsOnNullFilterElement() {
+        assertThrows(IllegalArgumentException.class,
+                () -> findTypeElements(testTypeElement, true, true, true, true, new Predicate[]{null}));
+    }
+
 
     @Test
     public void testGetDeclaredTypeOfSuperclass() {
@@ -1687,11 +1696,11 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     private void assertIsArrayType(Element element) {
-        assertTrue(isArrayType(getFieldType(element, "integers")));
-        assertTrue(isArrayType(getFieldType(element, "strings")));
-        assertTrue(isArrayType(getFieldType(element, "primitiveTypeModels")));
-        assertTrue(isArrayType(getFieldType(element, "models")));
-        assertTrue(isArrayType(getFieldType(element, "colors")));
+        assertTrue(isArrayType(findField(element, "integers")));
+        assertTrue(isArrayType(findField(element, "strings")));
+        assertTrue(isArrayType(findField(element, "primitiveTypeModels")));
+        assertTrue(isArrayType(findField(element, "models")));
+        assertTrue(isArrayType(findField(element, "colors")));
     }
 
     private void assertTypeMirrors(List<TypeMirror> typeMirrors, Type... types) {
