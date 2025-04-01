@@ -19,9 +19,6 @@ package io.microsphere.collection;
 import java.util.Deque;
 import java.util.Iterator;
 
-import static io.microsphere.collection.ListUtils.newLinkedList;
-import static io.microsphere.collection.Lists.ofList;
-
 /**
  * Delegating {@link Deque}
  *
