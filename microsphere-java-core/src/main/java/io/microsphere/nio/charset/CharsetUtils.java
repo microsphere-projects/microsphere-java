@@ -16,6 +16,8 @@
  */
 package io.microsphere.nio.charset;
 
+import io.microsphere.util.BaseUtils;
+
 import java.nio.charset.Charset;
 
 import static java.nio.charset.Charset.defaultCharset;
@@ -27,7 +29,7 @@ import static java.nio.charset.Charset.defaultCharset;
  * @see Charset
  * @since 1.0.0
  */
-public abstract class CharsetUtils {
+public abstract class CharsetUtils extends BaseUtils {
 
     /**
      * The default charset looks up from the JDK system property "file.encoding"
