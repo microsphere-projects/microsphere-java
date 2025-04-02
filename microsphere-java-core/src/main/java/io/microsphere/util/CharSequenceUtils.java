@@ -7,7 +7,7 @@ package io.microsphere.util;
  * @see CharSequence
  * @since 1.0.0
  */
-public class CharSequenceUtils {
+public abstract class CharSequenceUtils {
 
     public static int length(CharSequence value) {
         return value == null ? 0 : value.length();
