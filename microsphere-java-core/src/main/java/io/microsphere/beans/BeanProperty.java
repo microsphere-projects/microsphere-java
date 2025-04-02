@@ -93,10 +93,10 @@ public class BeanProperty {
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
+        int result = name.hashCode();
         result = 31 * result + (value != null ? value.hashCode() : 0);
-        result = 31 * result + (beanClass != null ? beanClass.hashCode() : 0);
-        result = 31 * result + (descriptor != null ? descriptor.hashCode() : 0);
+        result = 31 * result + beanClass.hashCode();
+        result = 31 * result + descriptor.hashCode();
         return result;
     }
 
