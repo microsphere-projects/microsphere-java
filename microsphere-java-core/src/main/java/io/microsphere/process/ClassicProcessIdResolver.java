@@ -18,11 +18,10 @@ package io.microsphere.process;
 
 import io.microsphere.logging.Logger;
 
-import java.lang.management.RuntimeMXBean;
-
 import static io.microsphere.constants.SymbolConstants.AT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
+import static io.microsphere.util.StringUtils.isNumeric;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.Long.valueOf;
 
@@ -37,19 +36,20 @@ public class ClassicProcessIdResolver implements ProcessIdResolver {
 
     private static final Logger logger = getLogger(ClassicProcessIdResolver.class);
 
+    private static final String runtimeName = getRuntimeMXBean().getName();
+
+    private static final String processIdValue = substringBefore(runtimeName, AT);
+
+    @Override
+    public boolean supports() {
+        return isNumeric(processIdValue);
+    }
+
     @Override
     public Long current() {
-        RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
-        String name = runtimeMXBean.getName();
-        Long processId = null;
-        try {
-            String processIdValue = substringBefore(name, AT);
-            processId = valueOf(processIdValue);
-            if (logger.isTraceEnabled()) {
-                logger.trace("The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", name, processId);
-            }
-        } catch (Throwable e) {
-            logger.warn("The PID can't be resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", name, e);
+        Long processId = valueOf(processIdValue);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", runtimeName, processId);
         }
         return processId;
     }
