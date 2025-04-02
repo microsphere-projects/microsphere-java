@@ -17,6 +17,7 @@
 package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
@@ -40,7 +41,7 @@ import static io.microsphere.util.ClassUtils.getTypeName;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class FieldUtils {
+public abstract class FieldUtils extends BaseUtils {
 
     private static final Logger logger = getLogger(FieldUtils.class);
 
