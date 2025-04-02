@@ -9,6 +9,7 @@ import java.util.List;
 import static io.microsphere.management.ManagementUtils.getCurrentProcessId;
 import static io.microsphere.process.ProcessIdResolver.UNKNOWN_PROCESS_ID;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -19,6 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class ManagementUtilsTest extends AbstractTestCase {
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new ManagementUtils(){});
+    }
 
     @Test
     public void testGetCurrentProcessId() {
