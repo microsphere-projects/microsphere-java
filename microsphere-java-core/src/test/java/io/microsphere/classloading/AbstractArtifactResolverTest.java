@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  */
 public abstract class AbstractArtifactResolverTest<A extends AbstractArtifactResolver> extends AbstractTestCase {
 
-    private AbstractArtifactResolver artifactResolver;
+    protected A artifactResolver;
 
     @BeforeEach
     public void init() {
