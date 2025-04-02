@@ -13,6 +13,7 @@ import java.util.Set;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ArrayUtils.isEmpty;
+import static io.microsphere.util.ClassLoaderUtils.newURLClassLoader;
 import static java.util.Collections.emptySet;
 
 /**
@@ -47,10 +48,6 @@ public abstract class AbstractArtifactResolver implements ArtifactResolver {
     }
 
     protected abstract void doResolve(Collection<Artifact> artifactSet, URLClassLoader urlClassLoader);
-
-    protected URLClassLoader newURLClassLoader(URL[] urls) {
-        return new URLClassLoader(urls, null);
-    }
 
     protected URL resolveArtifactResourceURL(URL resourceURL) {
         URL url = null;

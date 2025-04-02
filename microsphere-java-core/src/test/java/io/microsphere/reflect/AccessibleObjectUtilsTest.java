@@ -31,6 +31,7 @@ import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -57,6 +58,11 @@ public class AccessibleObjectUtilsTest {
      * protected constructor in the module "java.compiler" and package "javax.annotation.processing"
      */
     private static final Constructor abstractProcessorConstructor = findConstructor(AbstractProcessor.class);
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new AccessibleObjectUtils() {});
+    }
 
     @Test
     public void testSetAccessible() {

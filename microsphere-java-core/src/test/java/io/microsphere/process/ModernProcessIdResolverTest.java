@@ -3,11 +3,12 @@ package io.microsphere.process;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
+import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ModernProcessIdResolver} Test
@@ -20,17 +21,24 @@ public class ModernProcessIdResolverTest {
 
     private ModernProcessIdResolver resolver;
 
+    private static final boolean isGEJava9 = testCurrentJavaVersion(GE, JAVA_VERSION_9);
+
     @BeforeEach
     public void init() {
         resolver = new ModernProcessIdResolver();
     }
 
     @Test
+    public void testSupports() {
+        assertEquals(isGEJava9, resolver.supports());
+    }
+
+    @Test
     public void testCurrent() {
-        if (JAVA_VERSION_9.le(CURRENT_JAVA_VERSION)) {
+        if (isGEJava9) {
             assertNotNull(resolver.current());
         } else {
-            assertNull(resolver.current());
+            assertThrows(NullPointerException.class, resolver::current);
         }
     }
 

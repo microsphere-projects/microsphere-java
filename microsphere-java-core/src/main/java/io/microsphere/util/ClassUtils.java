@@ -77,7 +77,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ClassUtils
  * @since 1.0.0
  */
-public abstract class ClassUtils extends BaseUtils {
+public abstract class ClassUtils {
 
     private final static Logger logger = getLogger(ClassUtils.class);
 
