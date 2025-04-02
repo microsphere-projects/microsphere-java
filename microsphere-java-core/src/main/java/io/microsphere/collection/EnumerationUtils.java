@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.BaseUtils;
+
 import java.util.Collections;
 import java.util.Enumeration;
 
@@ -27,7 +29,7 @@ import java.util.Enumeration;
  * @see Collections#enumeration
  * @since 1.0.0
  */
-public abstract class EnumerationUtils {
+public abstract class EnumerationUtils extends BaseUtils {
 
     /**
      * Create a {@link Enumeration} instance from the specified elements
