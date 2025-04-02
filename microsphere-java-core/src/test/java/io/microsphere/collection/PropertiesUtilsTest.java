@@ -23,6 +23,7 @@ import java.util.Map;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link PropertiesUtils} Test
@@ -31,6 +32,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 public class PropertiesUtilsTest {
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new PropertiesUtils() {});
+    }
 
     @Test
     public void testFlatProperties() {
