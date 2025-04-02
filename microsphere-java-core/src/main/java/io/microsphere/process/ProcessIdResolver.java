@@ -28,6 +28,18 @@ import io.microsphere.lang.Prioritized;
 public interface ProcessIdResolver extends Prioritized {
 
     /**
+     * The unknown process id
+     */
+    long UNKNOWN_PROCESS_ID = -1L;
+
+    /**
+     * Whether supports to resolve the process id or not?
+     *
+     * @return <code>true</code> if supports, otherwise <code>false</code>
+     */
+    boolean supports();
+
+    /**
      * Resolve the current process id
      *
      * @return <code>>null</code> if can't be resolved
