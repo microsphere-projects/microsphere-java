@@ -4,6 +4,7 @@ package io.microsphere.reflect;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
@@ -36,7 +37,7 @@ import static java.lang.reflect.Modifier.isStatic;
  * @see ConstructorUtils
  * @since 1.0.0
  */
-public abstract class ReflectionUtils {
+public abstract class ReflectionUtils extends BaseUtils {
 
     /**
      * Current Type
