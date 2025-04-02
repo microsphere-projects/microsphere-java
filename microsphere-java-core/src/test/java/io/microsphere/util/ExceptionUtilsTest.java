@@ -40,6 +40,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ExceptionUtilsTest {
 
     @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new ExceptionUtils() {});
+    }
+
+    @Test
     public void testGetStackTrace() {
         String stackTrace = getStackTrace(new RuntimeException("Hello,World"));
         assertNotNull(stackTrace);
