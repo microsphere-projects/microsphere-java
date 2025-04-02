@@ -15,12 +15,13 @@ import static io.microsphere.util.PropertyResourceBundleUtils.getBundle;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.util.Locale.ROOT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link PropertyResourceBundleUtils} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see PropertyResourceBundleUtilsTest
+ * @see PropertyResourceBundleUtils
  * @since 1.0.0
  */
 public class PropertyResourceBundleUtilsTest {
@@ -30,6 +31,11 @@ public class PropertyResourceBundleUtilsTest {
     private static final Locale TEST_LOCALE = ROOT;
 
     private static final String TEST_ENCODING = DEFAULT_ENCODING;
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new PropertyResourceBundleUtils() {});
+    }
 
     @Test
     public void testConstants() {
