@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.BaseUtils;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Deque;
@@ -37,7 +39,7 @@ import static java.util.Collections.emptyIterator;
  * @see Queue
  * @since 1.0.0
  */
-public abstract class QueueUtils {
+public abstract class QueueUtils extends BaseUtils {
 
     private static final Deque EMPTY_DEQUE = new EmptyDeque();
 
