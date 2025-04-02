@@ -18,6 +18,7 @@ package io.microsphere.invoke;
 
 import io.microsphere.lang.function.ThrowableBiFunction;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -37,7 +38,7 @@ import static java.lang.invoke.MethodType.methodType;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodHandlesLookupUtils {
+public abstract class MethodHandlesLookupUtils extends BaseUtils {
 
     /**
      * {@link MethodHandle} for Not-Found
