@@ -42,6 +42,11 @@ public class FileUtilsTest extends AbstractTestCase {
     private final File packageDirectory = new File(packageResource.getFile());
 
     @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new FileUtils(){});
+    }
+
+    @Test
     public void testResolveRelativePath() throws Exception {
         assertEquals("/io/FileUtilsTest.class", resolveRelativePath(packageDirectory, classFile));
     }

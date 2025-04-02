@@ -61,7 +61,7 @@ import static java.util.Collections.unmodifiableList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class AnnotationUtils extends BaseUtils {
+public abstract class AnnotationUtils {
 
     public final static List<Class<? extends Annotation>> NATIVE_ANNOTATION_TYPES = ofList(
             Target.class,

@@ -22,6 +22,7 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -32,6 +33,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class MemberUtilsTest {
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new MemberUtils() {});
+    }
 
     @Test
     public void testSTATIC_METHOD_PREDICATE() {

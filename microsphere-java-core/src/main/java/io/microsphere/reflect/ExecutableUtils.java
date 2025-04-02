@@ -20,7 +20,6 @@ import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.lang.function.ThrowableFunction;
 import io.microsphere.lang.function.ThrowableSupplier;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -40,7 +39,7 @@ import static io.microsphere.util.ExceptionUtils.wrap;
  * @see Executable
  * @since 1.0.0
  */
-public abstract class ExecutableUtils extends BaseUtils {
+public abstract class ExecutableUtils {
 
     private static final Logger logger = getLogger(ExecutableUtils.class);
 

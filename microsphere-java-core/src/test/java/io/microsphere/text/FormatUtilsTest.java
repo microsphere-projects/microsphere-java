@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.text.FormatUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link FormatUtils} Test
@@ -29,6 +30,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @since 1.0.0
  */
 public class FormatUtilsTest {
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new FormatUtils() {});
+    }
 
     @Test
     public void testFormat() {

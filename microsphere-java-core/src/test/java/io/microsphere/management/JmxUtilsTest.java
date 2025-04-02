@@ -54,6 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -78,6 +79,11 @@ public class JmxUtilsTest extends AbstractTestCase {
         objectName = getInstance("java.lang:type=ClassLoading");
         notFoundObjectName = getInstance("java.lang:type=NotFound");
         notFoundAttributeName = "NotFound";
+    }
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new JmxUtils() {});
     }
 
     @Test

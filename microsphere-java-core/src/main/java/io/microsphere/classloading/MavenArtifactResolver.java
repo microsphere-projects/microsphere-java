@@ -1,7 +1,6 @@
 package io.microsphere.classloading;
 
 import io.microsphere.filter.JarEntryFilter;
-import io.microsphere.util.jar.JarUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,6 +15,7 @@ import java.util.jar.JarFile;
 
 import static io.microsphere.net.URLUtils.isJarURL;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
+import static io.microsphere.util.jar.JarUtils.filter;
 import static io.microsphere.util.jar.JarUtils.toJarFile;
 
 /**
@@ -68,16 +68,16 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
         }
     }
 
-    private URL findMavenPomPropertiesResource(URL classPathURL, URLClassLoader urlClassLoader) throws IOException {
+    URL findMavenPomPropertiesResource(URL classPathURL, URLClassLoader urlClassLoader) throws IOException {
         if (isJarURL(classPathURL)) {
             return findMavenPomPropertiesResourceInJar(classPathURL, urlClassLoader);
         }
         return null;
     }
 
-    private URL findMavenPomPropertiesResourceInJar(URL classPathURL, URLClassLoader urlClassLoader) throws IOException {
+    URL findMavenPomPropertiesResourceInJar(URL classPathURL, URLClassLoader urlClassLoader) throws IOException {
         JarFile jarFile = toJarFile(classPathURL);
-        List<JarEntry> entries = JarUtils.filter(jarFile, MAVEN_POM_PROPERTIES_FILTER);
+        List<JarEntry> entries = filter(jarFile, MAVEN_POM_PROPERTIES_FILTER);
         if (entries.isEmpty()) {
             return null;
         }
@@ -86,7 +86,7 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
         return urlClassLoader.getResource(relativePath);
     }
 
-    private Artifact resolveArtifactMetaInfoInMavenPomProperties(URL mavenPomPropertiesResourceURL) {
+    Artifact resolveArtifactMetaInfoInMavenPomProperties(URL mavenPomPropertiesResourceURL) {
         Artifact artifact = null;
         try (InputStream mavenPomPropertiesStream = mavenPomPropertiesResourceURL.openStream()) {
             Properties properties = new Properties();
@@ -99,7 +99,7 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
         return artifact;
     }
 
-    private Artifact resolveArtifactMetaInfoInMavenPomProperties(Properties properties,
+    Artifact resolveArtifactMetaInfoInMavenPomProperties(Properties properties,
                                                                  URL artifactResourceURL) {
         String groupId = properties.getProperty(GROUP_ID_PROPERTY_NAME);
         String artifactId = properties.getProperty(ARTIFACT_ID_PROPERTY_NAME);
@@ -107,7 +107,7 @@ public class MavenArtifactResolver extends AbstractArtifactResolver {
         return MavenArtifact.create(groupId, artifactId, version, artifactResourceURL);
     }
 
-    private static class MavenPomPropertiesFilter implements JarEntryFilter {
+    static class MavenPomPropertiesFilter implements JarEntryFilter {
 
         @Override
         public boolean accept(JarEntry entry) {

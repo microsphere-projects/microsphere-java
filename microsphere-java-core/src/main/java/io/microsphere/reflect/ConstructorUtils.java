@@ -17,7 +17,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
@@ -37,7 +36,7 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class ConstructorUtils extends BaseUtils {
+public abstract class ConstructorUtils {
 
     private static final Logger logger = getLogger(ConstructorUtils.class);
 

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ClassicProcessIdResolver} Test
@@ -20,6 +21,11 @@ public class ClassicProcessIdResolverTest {
     @BeforeEach
     public void init() {
         resolver = new ClassicProcessIdResolver();
+    }
+
+    @Test
+    public void testSupports() {
+        assertTrue(resolver.supports());
     }
 
     @Test
