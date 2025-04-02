@@ -90,6 +90,7 @@ import static io.microsphere.util.SystemUtils.USER_NAME_PROPERTY_KEY;
 import static java.lang.System.getProperty;
 import static javax.lang.model.SourceVersion.latest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link SystemUtils} Test
@@ -131,6 +132,11 @@ public class SystemUtilsTest {
                 .filter(MemberUtils::isStatic)
                 .filter(field -> field.getName().startsWith(IS_JAVA_VERSION_FIELD_NAME_PREFIX))
                 .toArray(Field[]::new);
+    }
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new SystemUtils() {});
     }
 
     @Test
