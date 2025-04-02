@@ -17,6 +17,7 @@
 package io.microsphere.invoke;
 
 import io.microsphere.lang.function.ThrowableBiFunction;
+import io.microsphere.util.BaseUtils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
@@ -50,7 +51,7 @@ import static java.lang.invoke.MethodHandles.publicLookup;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodHandleUtils {
+public abstract class MethodHandleUtils extends BaseUtils {
 
     /**
      * A single-bit mask representing {@code module} access,
