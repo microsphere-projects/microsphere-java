@@ -9,7 +9,7 @@ package io.microsphere.util;
  */
 public abstract class CharSequenceUtils {
 
-    private CharSequenceUtils() {
+    CharSequenceUtils() {
     }
 
     public static int length(CharSequence value) {
