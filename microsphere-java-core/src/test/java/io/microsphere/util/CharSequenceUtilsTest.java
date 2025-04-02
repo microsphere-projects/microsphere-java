@@ -8,6 +8,7 @@ import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -26,6 +27,11 @@ public class CharSequenceUtilsTest {
     static final String TEST_CSV_STRING = "a,b,c";
 
     static final String TEST_STRING = "testing";
+
+    @Test
+    public void testConstructor() {
+        assertThrows(IllegalStateException.class, () -> new CharSequenceUtils(){});
+    }
 
     @Test
     public void testLength() {
