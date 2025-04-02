@@ -19,11 +19,14 @@ package io.microsphere.process;
 import io.microsphere.logging.Logger;
 
 import java.lang.management.RuntimeMXBean;
+import java.lang.reflect.Field;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
+import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static java.lang.Long.valueOf;
 
 /**
  * {@link ProcessIdResolver} class for SUN JVM
@@ -48,20 +51,25 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
      */
     final static String GET_PROCESS_ID_METHOD_NAME = "getProcessId";
 
+    /**
+     * The {@link Field} of "jvm"
+     */
+    final static Field JVM_FIELD = findField(getRuntimeMXBean(), JVM_FIELD_NAME);
+
+    @Override
+    public boolean supports() {
+        return JVM_FIELD != null;
+    }
+
     @Override
     public Long current() {
-        Integer processId = null;
-        try {
-            RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
-            Object jvm = getFieldValue(runtimeMXBean, JVM_FIELD_NAME);
-            processId = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
-            if (logger.isTraceEnabled()) {
-                logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
-            }
-        } catch (Throwable e) {
-            logger.warn("It's failed to invoke the native method 'sun.management.VMManagementImpl#getProcessId()'", e);
+        RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
+        Object jvm = getFieldValue(runtimeMXBean, JVM_FIELD);
+        Integer processId = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
         }
-        return Long.valueOf(processId.longValue());
+        return valueOf(processId.longValue());
     }
 
     @Override
