@@ -19,6 +19,7 @@ package io.microsphere.util;
 import java.util.StringTokenizer;
 
 import static io.microsphere.util.ArrayUtils.asArray;
+import static java.lang.Character.isDigit;
 import static java.lang.Character.isWhitespace;
 import static java.lang.String.valueOf;
 
@@ -396,5 +397,39 @@ public abstract class StringUtils extends CharSequenceUtils {
             return EMPTY;
         }
         return str.substring(pos + separator.length());
+    }
+
+    /**
+     * <p>Checks if the String contains only unicode digits.
+     * A decimal point is not a unicode digit and returns false.</p>
+     *
+     * <p><code>null</code> will return <code>false</code>.
+     * An empty String (length()=0) will return <code>true</code>.</p>
+     *
+     * <pre>
+     * StringUtils.isNumeric(null)   = false
+     * StringUtils.isNumeric("")     = true
+     * StringUtils.isNumeric("  ")   = false
+     * StringUtils.isNumeric("123")  = true
+     * StringUtils.isNumeric("12 3") = false
+     * StringUtils.isNumeric("ab2c") = false
+     * StringUtils.isNumeric("12-3") = false
+     * StringUtils.isNumeric("12.3") = false
+     * </pre>
+     *
+     * @param str the String to check, may be null
+     * @return <code>true</code> if only contains digits, and is non-null
+     */
+    public static boolean isNumeric(String str) {
+        int sz = length(str);
+        if (sz == 0) {
+            return false;
+        }
+        for (int i = 0; i < sz; i++) {
+            if (isDigit(str.charAt(i)) == false) {
+                return false;
+            }
+        }
+        return true;
     }
 }
