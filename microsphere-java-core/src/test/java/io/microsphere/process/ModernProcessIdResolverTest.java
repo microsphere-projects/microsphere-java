@@ -8,7 +8,7 @@ import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ModernProcessIdResolver} Test
@@ -38,7 +38,7 @@ public class ModernProcessIdResolverTest {
         if (isGEJava9) {
             assertNotNull(resolver.current());
         } else {
-            assertNull(resolver.current());
+            assertThrows(NullPointerException.class, resolver::current);
         }
     }
 
