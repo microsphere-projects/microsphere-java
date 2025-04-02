@@ -22,6 +22,7 @@ import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static io.microsphere.util.StringUtils.isNotEmpty;
+import static io.microsphere.util.StringUtils.isNumeric;
 import static io.microsphere.util.StringUtils.length;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
@@ -269,5 +270,17 @@ public class StringUtilsTest {
         assertEquals(",c", substringAfterLast(TEST_CSV_STRING, "b"));
         assertEquals("c", substringAfterLast(TEST_CSV_STRING, COMMA));
         assertEquals(TEST_EMPTY_STRING, substringAfterLast(TEST_CSV_STRING, "c"));
+    }
+
+    @Test
+    public void testIsNumeric() {
+        assertFalse(isNumeric(null));
+        assertFalse(isNumeric(TEST_EMPTY_STRING));
+        assertFalse(isNumeric(TEST_CSV_STRING));
+        assertFalse(isNumeric(TEST_EMPTY_STRING));
+        assertTrue(isNumeric("1"));
+        assertTrue(isNumeric("12"));
+        assertTrue(isNumeric("123"));
+        assertFalse(isNumeric("12a"));
     }
 }
