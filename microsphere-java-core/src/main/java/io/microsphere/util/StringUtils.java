@@ -37,6 +37,10 @@ public abstract class StringUtils extends CharSequenceUtils {
 
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
 
+    private StringUtils() {
+        super();
+    }
+
     public static boolean isBlank(String value) {
         int length = length(value);
         if (length < 1) {
