@@ -16,6 +16,20 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.Test;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import static io.microsphere.classloading.MavenArtifactResolver.DEFAULT_PRIORITY;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.resolveURLClassLoader;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link MavenArtifactResolver} Test
  *
@@ -32,6 +46,32 @@ public class MavenArtifactResolverTest extends AbstractArtifactResolverTest<Mave
 
     @Override
     protected int getPriority() {
-        return MavenArtifactResolver.DEFAULT_PRIORITY;
+        return DEFAULT_PRIORITY;
+    }
+
+    @Test
+    public void testFindMavenPomPropertiesResource() throws IOException {
+        URLClassLoader urlClassLoader = resolveURLClassLoader(this.classLoader);
+        URL mavenPomPropertiesResource = mavenPomPropertiesResourceOfNonnull(urlClassLoader);
+        assertNotNull(mavenPomPropertiesResource);
+
+        URL url = getClassResource(String.class);
+        mavenPomPropertiesResource = artifactResolver.findMavenPomPropertiesResource(url, urlClassLoader);
+        assertNull(mavenPomPropertiesResource);
+    }
+
+    @Test
+    public void testResolveArtifactMetaInfoInMavenPomProperties() throws IOException {
+        URLClassLoader urlClassLoader = resolveURLClassLoader(this.classLoader);
+        URL mavenPomPropertiesResource = mavenPomPropertiesResourceOfNonnull(urlClassLoader);
+
+        MavenArtifact artifact = (MavenArtifact) artifactResolver.resolveArtifactMetaInfoInMavenPomProperties(mavenPomPropertiesResource);
+        assertEquals("com.google.code.findbugs", artifact.getGroupId());
+        assertEquals("jsr305", artifact.getArtifactId());
+    }
+
+    private URL mavenPomPropertiesResourceOfNonnull(URLClassLoader urlClassLoader) throws IOException {
+        URL url = getClassResource(Nonnull.class);
+        return artifactResolver.findMavenPomPropertiesResource(url, urlClassLoader);
     }
 }
