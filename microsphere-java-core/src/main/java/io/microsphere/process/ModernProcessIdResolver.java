@@ -40,22 +40,16 @@ public class ModernProcessIdResolver implements ProcessIdResolver {
     private static final Class<?> PROCESS_HANDLE_CLASS = resolveClass(PROCESS_HANDLE_CLASS_NAME);
 
     @Override
-    public Long current() {
-        if (PROCESS_HANDLE_CLASS == null) {
-            return null;
-        }
+    public boolean supports() {
+        return PROCESS_HANDLE_CLASS != null;
+    }
 
-        Long pid = null;
-        try {
-            Object processHandle = invokeStaticMethod(PROCESS_HANDLE_CLASS, "current");
-            pid = invokeMethod(processHandle, PROCESS_HANDLE_CLASS, "pid");
-            if (logger.isTraceEnabled()) {
-                logger.trace("The PID was resolved from the method 'java.lang.ProcessHandle#pid()' : {}", pid);
-            }
-        } catch (Throwable e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("It's failed to invoke method 'java.lang.ProcessHandle#pid()'", e);
-            }
+    @Override
+    public Long current() {
+        Object processHandle = invokeStaticMethod(PROCESS_HANDLE_CLASS, "current");
+        Long pid = invokeMethod(processHandle, PROCESS_HANDLE_CLASS, "pid");
+        if (logger.isTraceEnabled()) {
+            logger.trace("The PID was resolved from the method 'java.lang.ProcessHandle#pid()' : {}", pid);
         }
         return pid;
     }
