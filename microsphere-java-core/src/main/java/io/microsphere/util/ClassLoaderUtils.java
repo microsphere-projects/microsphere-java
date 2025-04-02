@@ -45,6 +45,9 @@ import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
+import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.Assert.assertNoNullElements;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
@@ -301,7 +304,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return {@link Class} if can be loaded
      */
     @Nullable
-    public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nonnull String className) {
+    public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nullable String className) {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         return doLoadClass(actualClassLoader, className);
     }
@@ -314,7 +317,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param cached      the resolved class is required to be cached or not
      * @return {@link Class} if can be loaded
      */
-    public static Class<?> loadClass(@Nullable ClassLoader classLoader, String className, boolean cached) {
+    public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nullable String className, boolean cached) {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         if (cached) {
             String cacheKey = buildCacheKey(actualClassLoader, className);
@@ -323,7 +326,10 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return doLoadClass(actualClassLoader, className);
     }
 
-    protected static Class<?> doLoadClass(ClassLoader classLoader, @Nonnull String className) {
+    protected static Class<?> doLoadClass(ClassLoader classLoader, String className) {
+        if (isBlank(className)) {
+            return null;
+        }
         try {
             return classLoader.loadClass(className);
         } catch (Throwable e) {
@@ -684,6 +690,77 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls the urls
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls) {
+        return newURLClassLoader(urls, null);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls the urls
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls, @Nullable ClassLoader classLoader) {
+        assertNotNull(urls, () -> "The 'urls' must not be null");
+        URL[] urlsArray = asArray(urls, URL.class);
+        return newURLClassLoader(urlsArray, classLoader);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls the urls
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls) {
+        return newURLClassLoader(urls, null);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls   the urls
+     * @param parent the {@link ClassLoader} as parent
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, @Nullable ClassLoader parent) throws IllegalArgumentException {
+        assertNotNull(urls, () -> "The 'urls' must not be null");
+        assertNoNullElements(urls, () -> "Any element of 'urls' must not be null");
+        return new URLClassLoader(urls, parent);
+    }
+
+    /**
+     * Try to find the instance of {@link URLClassLoader} from the specified {@link ClassLoader},
+     * if it can't be found, it will try to find all the {@link URL} of class-paths from the specified {@link ClassLoader},
+     * and then new a instance of {@link URLClassLoader} upon those urls.
+     *
+     * @param classLoader {@link ClassLoader}
+     * @return non-null {@link URLClassLoader}
+     */
+    @Nonnull
+    public static URLClassLoader resolveURLClassLoader(@Nullable ClassLoader classLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        if (urlClassLoader == null) {
+            Set<URL> urls = findAllClassPathURLs(classLoader);
+            urlClassLoader = newURLClassLoader(urls, classLoader);
+        }
+        return urlClassLoader;
+    }
+
+    /**
      * Return the ClassLoader from the caller class
      *
      * @return the ClassLoader (only {@code null} if the caller class was absent
@@ -716,10 +793,14 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             Method findLoadedClassMethod = findMethod(ClassLoader.class, findLoadedClassMethodName, String.class);
             loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
         } catch (Throwable e) {
-            logger.error("The java.lang.ClassLoader#findLoadedClasss(String) method can't be invoked in the current JVM[vendor : {} , version : {}]",
-                    JAVA_VENDOR, JAVA_VERSION, e.getCause());
+            logOnFindLoadedClassInvocationFailed(classLoader, className, e);
         }
         return loadedClass;
+    }
+
+    static void logOnFindLoadedClassInvocationFailed(ClassLoader classLoader, String className, Throwable e) {
+        logger.error("The findLoadedClass(className : '{}' : String) method of java.lang.ClassLoader[{}] can't be invoked in the current JVM[vendor : {} , version : {}]",
+                className, classLoader, JAVA_VENDOR, JAVA_VERSION, e);
     }
 
     static String buildCacheKey(ClassLoader classLoader, String className) {
