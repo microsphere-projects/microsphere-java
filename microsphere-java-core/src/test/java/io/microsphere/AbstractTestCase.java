@@ -29,6 +29,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -99,7 +100,7 @@ public abstract class AbstractTestCase {
 
     public void log(Object object) {
         if (logger.isTraceEnabled()) {
-            logger.trace(String.valueOf(object));
+            logger.trace(valueOf(object));
         }
     }
 
