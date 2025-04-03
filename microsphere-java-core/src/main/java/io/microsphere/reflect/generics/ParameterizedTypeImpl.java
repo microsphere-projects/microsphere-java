@@ -23,6 +23,8 @@ import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static java.util.Objects.hash;
+
 /**
  * {@link ParameterizedType} Implementation forks {@link sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl}
  *
@@ -198,9 +200,8 @@ public class ParameterizedTypeImpl implements ParameterizedType {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(actualTypeArguments) ^
-                Objects.hashCode(ownerType) ^
-                Objects.hashCode(rawType);
+        return hash(actualTypeArguments) ^
+                hash(ownerType, rawType);
     }
 
     public String toString() {
