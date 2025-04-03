@@ -23,6 +23,7 @@ import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.util.StringUtils.isBlank;
+import static java.lang.System.nanoTime;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.hash;
 
@@ -160,7 +161,7 @@ public class StopWatch {
         private Task(String taskName, boolean reentrant) {
             this.taskName = taskName;
             this.reentrant = reentrant;
-            this.startTimeNanos = System.nanoTime();
+            this.startTimeNanos = nanoTime();
         }
 
         public static Task start(String taskName) {
@@ -172,7 +173,7 @@ public class StopWatch {
         }
 
         public void stop() {
-            this.elapsedNanos = System.nanoTime() - this.startTimeNanos;
+            this.elapsedNanos = nanoTime() - this.startTimeNanos;
         }
 
         public String getTaskName() {
