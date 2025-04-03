@@ -21,9 +21,8 @@ import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.TimeUnit;
-
 import static io.microsphere.util.StopWatch.Task.start;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -68,7 +67,7 @@ public class StopWatchTest {
         assertTrue(task.getStartTimeNanos() > 0);
         assertTrue(task.getElapsedNanos() > 0);
         assertTrue(stopWatch.getTotalTimeNanos() > 0);
-        assertTrue(stopWatch.getTotalTime(TimeUnit.MILLISECONDS) > 0);
+        assertTrue(stopWatch.getTotalTime(MILLISECONDS) > 0);
         logger.info(stopWatch.toString());
     }
 
