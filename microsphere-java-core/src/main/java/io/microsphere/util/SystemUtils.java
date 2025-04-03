@@ -20,6 +20,7 @@ import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StringUtils.startsWith;
+import static java.lang.System.getProperty;
 
 /**
  * The utilities class for {@link System}
@@ -505,7 +506,7 @@ public abstract class SystemUtils extends BaseUtils {
      */
     public static String getSystemProperty(String key, String defaultValue) {
         try {
-            return System.getProperty(key, defaultValue);
+            return getProperty(key, defaultValue);
         } catch (final SecurityException ex) {
             logger.warn("Caught a SecurityException reading the system property '{}'; " + "the SystemUtils property value will be : '{}'", key, defaultValue);
             return defaultValue;

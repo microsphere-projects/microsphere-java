@@ -20,8 +20,10 @@ import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.Objects;
+
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static java.util.Objects.hash;
 
 /**
  * {@link ParameterizedType} Implementation forks {@link sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl}
@@ -190,7 +192,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             return
                     Objects.equals(ownerType, thatOwner) &&
                             Objects.equals(rawType, thatRawType) &&
-                            Arrays.equals(actualTypeArguments, // avoid clone
+                            arrayEquals(actualTypeArguments, // avoid clone
                                     that.getActualTypeArguments());
         } else
             return false;
@@ -198,7 +200,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(actualTypeArguments) ^
+        return hash(actualTypeArguments) ^
                 Objects.hashCode(ownerType) ^
                 Objects.hashCode(rawType);
     }

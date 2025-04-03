@@ -8,6 +8,9 @@ import java.io.File;
 
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.SymbolConstants.EXCLAMATION;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.lang.System.lineSeparator;
 
 /**
  * Separator Constants
@@ -26,16 +29,16 @@ public interface SeparatorConstants {
     /**
      * File Separator : {@link File#separator}
      */
-    String FILE_SEPARATOR = File.separator;
+    String FILE_SEPARATOR = separator;
 
     /**
      * Path Separator : {@link File#pathSeparator}
      */
-    String PATH_SEPARATOR = File.pathSeparator;
+    String PATH_SEPARATOR = pathSeparator;
 
     /**
      * Line Separator : {@link System#lineSeparator()}
      */
-    String LINE_SEPARATOR = System.lineSeparator();
+    String LINE_SEPARATOR = lineSeparator();
 
 }

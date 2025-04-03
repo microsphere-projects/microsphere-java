@@ -3,6 +3,7 @@ package io.microsphere.text;
 import io.microsphere.util.BaseUtils;
 
 import static io.microsphere.util.StringUtils.isBlank;
+import static java.lang.String.valueOf;
 
 /**
  * The utility class of text format
@@ -34,7 +35,7 @@ public abstract class FormatUtils extends BaseUtils {
             if (index == -1) {
                 break;
             }
-            String value = String.valueOf(args[i]);
+            String value = valueOf(args[i]);
             stringBuilder.replace(index, index + offset, value);
         }
         return stringBuilder.toString();

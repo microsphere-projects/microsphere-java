@@ -20,6 +20,7 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.StringUtils.split;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 
 /**
@@ -112,7 +113,7 @@ public abstract class ClassPathUtils {
             }
         } else if (!type.isPrimitive() && !type.isArray() && !type.isSynthetic()) { // Bootstrap ClassLoader
             // Class was loaded by Bootstrap ClassLoader
-            location = getClassResource(ClassLoader.getSystemClassLoader(), type.getName());
+            location = getClassResource(getSystemClassLoader(), type.getName());
         }
         return location;
     }

@@ -43,6 +43,8 @@ import static io.microsphere.net.URLUtils.registerURLStreamHandler;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
+import static java.lang.System.getProperty;
+import static java.lang.System.setProperty;
 import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.sort;
 
@@ -123,7 +125,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @return <code>null</code> if absent
      */
     public static String getHandlePackagesPropertyValue() {
-        return System.getProperty(HANDLER_PACKAGES_PROPERTY_NAME);
+        return getProperty(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
     public void init() {
@@ -367,6 +369,6 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
             handlePackages = currentHandlerPackages + HANDLER_PACKAGES_SEPARATOR_CHAR + handlePackage;
         }
 
-        System.setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
+        setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
     }
 }

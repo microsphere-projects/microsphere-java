@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;
+import static java.util.Objects.hash;
 
 /**
  * The info class for deprecation
@@ -107,7 +108,7 @@ public final class Deprecation implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(since, replacement, reason, link, level);
+        return hash(since, replacement, reason, link, level);
     }
 
     @Override

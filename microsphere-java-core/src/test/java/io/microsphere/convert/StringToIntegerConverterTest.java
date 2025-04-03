@@ -19,6 +19,7 @@ package io.microsphere.convert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,7 +46,7 @@ public class StringToIntegerConverterTest {
 
     @Test
     public void testConvert() {
-        assertEquals(Integer.valueOf("1"), converter.convert("1"));
+        assertEquals(valueOf("1"), converter.convert("1"));
         assertNull(converter.convert(null));
         assertThrows(NumberFormatException.class, () -> {
             converter.convert("ttt");

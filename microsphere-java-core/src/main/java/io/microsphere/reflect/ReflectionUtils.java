@@ -21,6 +21,7 @@ import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
+import static java.lang.Class.forName;
 import static java.lang.reflect.Modifier.isStatic;
 
 /**
@@ -95,7 +96,7 @@ public abstract class ReflectionUtils extends BaseUtils {
         int invocationFrame = 0;
         try {
             // Use sun.reflect.Reflection to calculate frame
-            Class<?> type = Class.forName(SUN_REFLECT_REFLECTION_CLASS_NAME);
+            Class<?> type = forName(SUN_REFLECT_REFLECTION_CLASS_NAME);
             method = type.getMethod(getCallerClassMethodName, int.class);
             method.setAccessible(true);
             // Adapt SUN JDK ,The value of invocation frame in JDK 6/7/8 may be different
@@ -212,7 +213,7 @@ public abstract class ReflectionUtils extends BaseUtils {
         String className = getCallerClassNameInGeneralJVM(invocationFrame + 1);
         Class<?> targetClass = null;
         try {
-            targetClass = className == null ? null : Class.forName(className);
+            targetClass = className == null ? null : forName(className);
         } catch (Throwable ignored) {
         }
         return targetClass;

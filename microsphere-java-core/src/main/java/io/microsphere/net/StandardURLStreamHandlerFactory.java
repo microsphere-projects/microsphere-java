@@ -27,6 +27,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.findField;
+import static java.lang.Class.forName;
 
 /**
  * Standard {@link URLStreamHandlerFactory}
@@ -55,7 +56,7 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
         if (handler == null) { // <= JDK 8 works
             String name = DEFAULT_HANDLER_PACKAGE_PREFIX + "." + protocol + ".Handler";
             try {
-                Object o = Class.forName(name).newInstance();
+                Object o = forName(name).newInstance();
                 return (URLStreamHandler) o;
             } catch (Exception x) {
                 // For compatibility, all Exceptions are ignored.

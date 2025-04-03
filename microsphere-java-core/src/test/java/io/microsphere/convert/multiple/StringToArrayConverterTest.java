@@ -19,6 +19,7 @@ package io.microsphere.convert.multiple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static java.lang.Integer.MAX_VALUE;
 import static java.util.Objects.deepEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -63,6 +64,6 @@ public class StringToArrayConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE, converter.getPriority());
+        assertEquals(MAX_VALUE, converter.getPriority());
     }
 }

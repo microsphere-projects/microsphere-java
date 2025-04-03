@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static java.util.Objects.hash;
+
 /**
  * Artifact entity
  *
@@ -111,7 +113,7 @@ public class Artifact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(artifactId, version, location);
+        return hash(artifactId, version, location);
     }
 
     @Override

@@ -7,6 +7,7 @@ import static io.microsphere.util.StackTraceUtils.getCallerClassNameInGeneralJVM
 import static io.microsphere.util.StackTraceUtils.getCallerClassNames;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
+import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -53,7 +54,7 @@ public class StackTraceUtilsTest {
 
     @Test
     public void testGetCallerClassNameInGeneralJVMOnOverStack() {
-        assertNull(getCallerClassNameInGeneralJVM(Integer.MAX_VALUE));
+        assertNull(getCallerClassNameInGeneralJVM(MAX_VALUE));
     }
 
 }

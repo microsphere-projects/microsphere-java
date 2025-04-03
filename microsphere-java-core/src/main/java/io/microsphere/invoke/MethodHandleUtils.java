@@ -44,6 +44,7 @@ import static java.lang.invoke.MethodHandles.Lookup.PRIVATE;
 import static java.lang.invoke.MethodHandles.Lookup.PROTECTED;
 import static java.lang.invoke.MethodHandles.Lookup.PUBLIC;
 import static java.lang.invoke.MethodHandles.publicLookup;
+import static java.util.Objects.hash;
 
 /**
  * The utilities class for {@link MethodHandle}
@@ -235,7 +236,7 @@ public abstract class MethodHandleUtils extends BaseUtils {
 
         @Override
         public int hashCode() {
-            return Objects.hash(requestedClass, allowedModes);
+            return hash(requestedClass, allowedModes);
         }
 
         static LookupKey buildKey(Class<?> requestedClass, int allowedModes) {

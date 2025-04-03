@@ -37,6 +37,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
+import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -116,6 +117,6 @@ public class StringToBlockingQueueConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertTrue(Integer.MAX_VALUE > converter.getPriority());
+        assertTrue(MAX_VALUE > converter.getPriority());
     }
 }

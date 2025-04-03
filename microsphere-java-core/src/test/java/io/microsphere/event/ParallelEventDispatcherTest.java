@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -46,7 +46,7 @@ public class ParallelEventDispatcherTest {
     @Test
     public void testDispatchEvent() throws InterruptedException {
         eventDispatcher.dispatch(new EchoEvent("Hello,World"));
-        ForkJoinPool.commonPool().awaitTermination(1, TimeUnit.SECONDS);
+        ForkJoinPool.commonPool().awaitTermination(1, SECONDS);
         // event has been handled
         assertEquals(1, listener.getEventOccurs());
     }

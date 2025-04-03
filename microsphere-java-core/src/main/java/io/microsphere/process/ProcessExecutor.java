@@ -7,8 +7,10 @@ import java.util.concurrent.TimeoutException;
 
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
+import static java.lang.Long.MAX_VALUE;
 import static java.lang.Long.getLong;
 import static java.lang.Runtime.getRuntime;
+import static java.lang.System.currentTimeMillis;
 
 /**
  * {@link Process} Executor
@@ -58,7 +60,7 @@ public class ProcessExecutor {
      */
     public void execute(OutputStream outputStream) throws IOException {
         try {
-            this.execute(outputStream, Long.MAX_VALUE);
+            this.execute(outputStream, MAX_VALUE);
         } catch (TimeoutException e) {
         }
     }
@@ -75,7 +77,7 @@ public class ProcessExecutor {
      */
     public void execute(OutputStream outputStream, long timeoutInMilliseconds) throws IOException, TimeoutException {
         Process process = runtime.exec(command);
-        long startTime = System.currentTimeMillis();
+        long startTime = currentTimeMillis();
         long endTime = -1L;
         InputStream processInputStream = process.getInputStream();
         InputStream processErrorInputStream = process.getErrorStream();
@@ -106,7 +108,7 @@ public class ProcessExecutor {
                 // Process is not finished yet;
                 // Sleep a little to save on CPU cycles
                 waitFor(waitForTimeInSecond);
-                endTime = System.currentTimeMillis();
+                endTime = currentTimeMillis();
             } finally {
                 processManager.removeUnfinishedProcess(process, arguments);
             }

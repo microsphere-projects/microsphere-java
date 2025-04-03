@@ -62,6 +62,8 @@ import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static io.microsphere.util.TypeFinder.classFinder;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
 import static java.util.Collections.emptyList;
@@ -237,8 +239,8 @@ public abstract class ClassUtils {
             return true;
         }
 
-        if (isGeneralClass(type, Boolean.FALSE)) {
-            concreteClassCache.put(type, Boolean.TRUE);
+        if (isGeneralClass(type, FALSE)) {
+            concreteClassCache.put(type, TRUE);
             return true;
         }
 
@@ -253,7 +255,7 @@ public abstract class ClassUtils {
      * @return true if type is a abstract class, false otherwise.
      */
     public static boolean isAbstractClass(Class<?> type) {
-        return isGeneralClass(type, Boolean.TRUE);
+        return isGeneralClass(type, TRUE);
     }
 
     /**
@@ -264,7 +266,7 @@ public abstract class ClassUtils {
      * @return true if type is a general class, false otherwise.
      */
     public static boolean isGeneralClass(Class<?> type) {
-        return isGeneralClass(type, Boolean.FALSE);
+        return isGeneralClass(type, FALSE);
     }
 
     /**

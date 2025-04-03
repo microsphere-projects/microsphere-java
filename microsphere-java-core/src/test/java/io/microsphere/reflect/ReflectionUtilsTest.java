@@ -3,7 +3,6 @@ package io.microsphere.reflect;
 import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInSunJVM;
 import static io.microsphere.reflect.ReflectionUtils.isSupportedSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.readFieldsAsMap;
 import static io.microsphere.reflect.ReflectionUtils.toList;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,13 +72,13 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     public void testToList() {
         int[] intArray = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
         List<Integer> list = toList(intArray);
-        Object expectedList = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
+        Object expectedList = asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
         assertEquals(expectedList, list);
 
 
         int[][] intIntArray = new int[][]{{1, 2, 3}, {4, 5, 6,}, {7, 8, 9}};
         list = toList(intIntArray);
-        expectedList = Arrays.asList(Arrays.asList(1, 2, 3), Arrays.asList(4, 5, 6), Arrays.asList(7, 8, 9));
+        expectedList = asList(asList(1, 2, 3), asList(4, 5, 6), asList(7, 8, 9));
         assertEquals(expectedList, list);
     }
 
@@ -87,7 +87,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
         Map<String, Object> map = readFieldsAsMap(new String("abc"));
         assertFalse(map.isEmpty());
 
-        map = readFieldsAsMap(Arrays.asList(1, 2, 3, 4));
+        map = readFieldsAsMap(asList(1, 2, 3, 4));
         assertFalse(map.isEmpty());
 
         Map<String, String> value = new HashMap(3);

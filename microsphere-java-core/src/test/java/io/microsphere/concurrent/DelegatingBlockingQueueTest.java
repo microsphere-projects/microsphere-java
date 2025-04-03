@@ -14,6 +14,7 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static java.lang.Integer.MAX_VALUE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -114,7 +115,7 @@ public class DelegatingBlockingQueueTest {
         assertFalse(queue.remove(3));
 
         // test remainingCapacity
-        assertEquals(Integer.MAX_VALUE, queue.remainingCapacity());
+        assertEquals(MAX_VALUE, queue.remainingCapacity());
 
         // test drainTo
         queue.offer(1);

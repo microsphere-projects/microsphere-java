@@ -31,6 +31,7 @@ import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ShutdownHookCallbacksThread.INSTANCE;
 import static java.lang.ClassLoader.getSystemClassLoader;
+import static java.lang.Integer.getInteger;
 import static java.lang.Runtime.getRuntime;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableSet;
@@ -55,7 +56,7 @@ public abstract class ShutdownHookUtils extends BaseUtils {
     /**
      * The System property value of the capacity of ShutdownHook callbacks, the default value is 512
      */
-    public static final int SHUTDOWN_HOOK_CALLBACKS_CAPACITY = Integer.getInteger(SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME, 512);
+    public static final int SHUTDOWN_HOOK_CALLBACKS_CAPACITY = getInteger(SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME, 512);
 
     /**
      * The {@link Predicate} to filter the type that is {@link ShutdownHookCallbacksThread}
