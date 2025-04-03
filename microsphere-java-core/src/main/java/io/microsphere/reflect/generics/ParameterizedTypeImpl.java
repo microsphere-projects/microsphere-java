@@ -201,7 +201,8 @@ public class ParameterizedTypeImpl implements ParameterizedType {
     @Override
     public int hashCode() {
         return hash(actualTypeArguments) ^
-                hash(ownerType, rawType);
+                Objects.hashCode(ownerType) ^
+                Objects.hashCode(rawType);
     }
 
     public String toString() {
