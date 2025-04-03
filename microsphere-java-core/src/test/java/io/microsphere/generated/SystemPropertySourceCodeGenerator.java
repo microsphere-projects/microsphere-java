@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Properties;
 
 import static io.microsphere.text.FormatUtils.format;
+import static java.nio.file.Files.newBufferedReader;
+import static java.nio.file.Paths.get;
 
 /**
  * System
@@ -54,10 +56,10 @@ public class SystemPropertySourceCodeGenerator {
     public void generate(PrintStream out) throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         URL resource = classLoader.getResource(SYSTEM_PROPERTIES_LOCATION);
-        Path resourcePath = Paths.get(resource.toURI());
+        Path resourcePath = get(resource.toURI());
         List<String> keyLines = new LinkedList<>();
         List<String> valueLines = new LinkedList<>();
-        try (Reader reader = Files.newBufferedReader(resourcePath)) {
+        try (Reader reader = newBufferedReader(resourcePath)) {
             Properties properties = new Properties();
             properties.load(reader);
             for (String key : properties.stringPropertyNames()) {
