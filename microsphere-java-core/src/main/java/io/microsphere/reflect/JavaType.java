@@ -40,6 +40,7 @@ import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
+import static java.util.Objects.hash;
 
 /**
  * Encapsulates a Java Type(Immutable), providing the features:
@@ -285,7 +286,7 @@ public class JavaType implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(type);
+        return hash(type);
     }
 
     @Nonnull
