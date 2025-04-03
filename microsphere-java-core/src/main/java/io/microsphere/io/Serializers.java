@@ -17,8 +17,6 @@
 package io.microsphere.io;
 
 
-import io.microsphere.util.PriorityComparator;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
