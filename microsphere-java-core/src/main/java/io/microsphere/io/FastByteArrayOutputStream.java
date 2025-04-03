@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOf;
 
 /**
@@ -109,7 +110,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
             throw new IndexOutOfBoundsException();
         }
         ensureCapacity(count + len);
-        System.arraycopy(b, off, buf, count, len);
+        arraycopy(b, off, buf, count, len);
         count += len;
     }
 
