@@ -28,7 +28,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,6 +39,7 @@ import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
+import static java.util.Arrays.deepEquals;
 import static java.util.Objects.hash;
 
 /**
@@ -405,7 +405,7 @@ public class JavaType implements Serializable {
 
     private static boolean matches(Type[] typeArguments, GenericDeclaration declaration) {
         TypeVariable[] typeParameters = declaration.getTypeParameters();
-        if (Arrays.deepEquals(typeArguments, typeParameters)) {
+        if (deepEquals(typeArguments, typeParameters)) {
             return true;
         } else if (declaration instanceof Class) { // To find the super class
             Class declaredClass = (Class) declaration;
