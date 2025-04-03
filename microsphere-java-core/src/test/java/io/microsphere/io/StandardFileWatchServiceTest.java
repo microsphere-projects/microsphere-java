@@ -43,6 +43,8 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static java.nio.file.Files.copy;
+import static java.nio.file.Files.write;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
@@ -100,7 +102,7 @@ public class StandardFileWatchServiceTest {
         // create file
         Path sourcePath = this.sourceFile.toPath();
         Path targetFilePath = this.targetFile.toPath();
-        Files.copy(sourcePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+        copy(sourcePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
 
         countDownLatch.await();
     }
@@ -119,7 +121,7 @@ public class StandardFileWatchServiceTest {
             countDownLatch.countDown();
             // modified file
             async(() -> {
-                Files.write(targetFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
+                write(targetFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
             });
         }
 
