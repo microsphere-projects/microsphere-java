@@ -18,11 +18,11 @@ package io.microsphere.reflect;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.combineArray;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static java.util.Objects.hash;
 
 /**
  * Multiple {@link Type}
@@ -40,7 +40,7 @@ public class MultipleType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(types);
+        return hash(types);
     }
 
     @Override
