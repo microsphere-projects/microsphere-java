@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.util.StringUtils.isBlank;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.hash;
 
 /**
  * Stop Watch supports the nest tasks, the default task can't be reentrant, unless {@link Task#isReentrant()} is true by
@@ -200,7 +201,7 @@ public class StopWatch {
 
         @Override
         public int hashCode() {
-            return Objects.hash(taskName);
+            return hash(taskName);
         }
 
         @Override
