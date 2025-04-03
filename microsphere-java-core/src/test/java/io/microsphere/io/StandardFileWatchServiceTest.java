@@ -34,7 +34,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
@@ -45,6 +44,7 @@ import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * {@link StandardFileWatchService} Test
@@ -149,7 +149,7 @@ public class StandardFileWatchServiceTest {
             return null;
         });
         try {
-            future.get(100, TimeUnit.MILLISECONDS);
+            future.get(100, MILLISECONDS);
         } catch (Exception e) {
             if (logger.isTraceEnabled()) {
                 logger.trace("Failed to async(timeout : 100ms) : {}", e.getMessage(), e);
