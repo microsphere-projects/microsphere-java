@@ -235,7 +235,7 @@ public abstract class MethodUtils {
             return doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter);
         }
 
-        if (Object.class.equals(targetClass)) {
+        if (Object.class == targetClass) {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
