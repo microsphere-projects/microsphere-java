@@ -26,6 +26,7 @@ import static io.microsphere.util.StringUtils.isBlank;
 import static java.lang.System.nanoTime;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.hash;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
  * Stop Watch supports the nest tasks, the default task can't be reentrant, unless {@link Task#isReentrant()} is true by
@@ -132,7 +133,7 @@ public class StopWatch {
     }
 
     public long getTotalTime(TimeUnit timeUnit) {
-        return TimeUnit.NANOSECONDS.convert(this.totalTimeNanos, timeUnit);
+        return NANOSECONDS.convert(this.totalTimeNanos, timeUnit);
     }
 
     @Override
