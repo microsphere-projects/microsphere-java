@@ -18,6 +18,8 @@ package io.microsphere.event;
 
 import java.util.EventObject;
 
+import static java.lang.System.currentTimeMillis;
+
 /**
  * An event object is based on the Java standard {@link EventObject event}
  *
@@ -40,7 +42,7 @@ public abstract class Event extends EventObject {
      */
     public Event(Object source) {
         super(source);
-        this.timestamp = System.currentTimeMillis();
+        this.timestamp = currentTimeMillis();
     }
 
     public long getTimestamp() {
