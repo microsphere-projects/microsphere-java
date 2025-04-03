@@ -17,8 +17,8 @@
 package io.microsphere.reflect;
 
 import java.lang.reflect.Type;
-import java.util.Arrays;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.combineArray;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -48,7 +48,7 @@ public class MultipleType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MultipleType that = (MultipleType) o;
-        return Arrays.equals(types, that.types);
+        return arrayEquals(types, that.types);
     }
 
     @Override
