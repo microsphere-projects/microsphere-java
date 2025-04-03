@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
+import static java.lang.Long.MAX_VALUE;
 import static java.lang.Long.getLong;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.currentTimeMillis;
@@ -59,7 +60,7 @@ public class ProcessExecutor {
      */
     public void execute(OutputStream outputStream) throws IOException {
         try {
-            this.execute(outputStream, Long.MAX_VALUE);
+            this.execute(outputStream, MAX_VALUE);
         } catch (TimeoutException e) {
         }
     }
