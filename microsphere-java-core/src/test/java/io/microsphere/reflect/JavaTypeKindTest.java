@@ -48,11 +48,11 @@ public class JavaTypeKindTest {
      *
      * @see C
      */
-    private static final Type C_STRING_PARAMETERIZED_TYPE = D.class.getGenericSuperclass();
+    static final Type C_STRING_PARAMETERIZED_TYPE = D.class.getGenericSuperclass();
 
-    private static final ParameterizedType CLASS_WILDCARD_PARAMETERIZED_TYPE = (ParameterizedType) findMethod(Object.class, "getClass").getGenericReturnType();
+    static final ParameterizedType CLASS_WILDCARD_PARAMETERIZED_TYPE = (ParameterizedType) findMethod(Object.class, "getClass").getGenericReturnType();
 
-    private static final GenericArrayType CLASS_GENERIC_ARRAY_TYPE = (GenericArrayType) findMethod(Class.class, "getClasses").getGenericReturnType();
+    static final GenericArrayType CLASS_GENERIC_ARRAY_TYPE = (GenericArrayType) findMethod(Class.class, "getClasses").getGenericReturnType();
 
     @Test
     public void testValueOf() {
