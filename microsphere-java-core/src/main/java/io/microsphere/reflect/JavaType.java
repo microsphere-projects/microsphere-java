@@ -31,10 +31,12 @@ import java.lang.reflect.WildcardType;
 import java.util.List;
 import java.util.Objects;
 
+import static io.microsphere.reflect.JavaType.Kind.valueOf;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
+import static io.microsphere.reflect.TypeUtils.getTypeName;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
@@ -79,7 +81,7 @@ public class JavaType implements Serializable {
     private volatile JavaType[] genericTypes;
 
     protected JavaType(Type type) {
-        this(type, Kind.valueOf(type));
+        this(type, valueOf(type));
     }
 
     protected JavaType(Type type, Kind kind) {
@@ -87,7 +89,7 @@ public class JavaType implements Serializable {
     }
 
     protected JavaType(Type type, JavaType source) {
-        this(type, Kind.valueOf(type), source);
+        this(type, valueOf(type), source);
     }
 
     protected JavaType(Type type, Kind kind, JavaType source) {
@@ -273,7 +275,7 @@ public class JavaType implements Serializable {
 
     @Override
     public String toString() {
-        return "JavaType : " + type.getTypeName();
+        return "JavaType : " + getTypeName(this.type);
     }
 
     @Override
@@ -398,7 +400,7 @@ public class JavaType implements Serializable {
     }
 
     private static boolean matches(Class<?> targetClass, Type typeToMatch) {
-        JavaType.Kind kind = Kind.valueOf(typeToMatch);
+        JavaType.Kind kind = valueOf(typeToMatch);
         Type rawType = kind.getRawType(typeToMatch);
         return Objects.equals(targetClass, rawType);
     }
