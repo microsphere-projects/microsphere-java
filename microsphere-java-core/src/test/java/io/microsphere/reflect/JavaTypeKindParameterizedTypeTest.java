@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.B;
 import io.microsphere.test.C;
-import io.microsphere.test.D;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
@@ -27,6 +26,7 @@ import java.util.RandomAccess;
 
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaTypeKindTest.C_STRING_PARAMETERIZED_TYPE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,16 +39,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class JavaTypeKindParameterizedTypeTest {
 
-    /**
-     * ParameterizedType : {@link C<String>}
-     *
-     * @see C
-     */
-    private static final Type C_STRING_TYPE = D.class.getGenericSuperclass();
-
     @Test
     public void testGetSuperType() {
-        Type superType = PARAMETERIZED_TYPE.getSuperType(C_STRING_TYPE);
+        Type superType = PARAMETERIZED_TYPE.getSuperType(C_STRING_PARAMETERIZED_TYPE);
         assertSame(B.class, superType);
 
         assertThrows(ClassCastException.class, () -> PARAMETERIZED_TYPE.getSuperType(String.class));
@@ -56,7 +49,7 @@ public class JavaTypeKindParameterizedTypeTest {
 
     @Test
     public void testGetRawType() {
-        Type rawType = PARAMETERIZED_TYPE.getRawType(C_STRING_TYPE);
+        Type rawType = PARAMETERIZED_TYPE.getRawType(C_STRING_PARAMETERIZED_TYPE);
         assertSame(C.class, rawType);
 
         assertThrows(ClassCastException.class, () -> PARAMETERIZED_TYPE.getRawType(String.class));
@@ -65,7 +58,7 @@ public class JavaTypeKindParameterizedTypeTest {
 
     @Test
     public void testGetInterfaces() {
-        Type[] interfaces = PARAMETERIZED_TYPE.getInterfaces(C_STRING_TYPE);
+        Type[] interfaces = PARAMETERIZED_TYPE.getInterfaces(C_STRING_PARAMETERIZED_TYPE);
         assertEquals(1, interfaces.length);
         assertEquals(RandomAccess.class, interfaces[0]);
 
@@ -74,7 +67,7 @@ public class JavaTypeKindParameterizedTypeTest {
 
     @Test
     public void testGetGenericTypes() {
-        Type[] genericTypes = PARAMETERIZED_TYPE.getGenericTypes(from(C_STRING_TYPE));
+        Type[] genericTypes = PARAMETERIZED_TYPE.getGenericTypes(from(C_STRING_PARAMETERIZED_TYPE));
         assertEquals(1, genericTypes.length);
         assertEquals(String.class, genericTypes[0]);
 
