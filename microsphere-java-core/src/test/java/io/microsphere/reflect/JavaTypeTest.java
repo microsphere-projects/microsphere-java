@@ -30,9 +30,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaType.fromMethodReturnType;
+import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.core.ResolvableType.forType;
 
 /**
  * {@link JavaType} Test
@@ -56,19 +61,19 @@ public class JavaTypeTest {
 
     @Test
     public void testFromType() {
-        JavaType javaType = JavaType.from(StringIntegerBooleanHashMap.class);
+        JavaType javaType = from(StringIntegerBooleanHashMap.class);
         assertGenericTypes(javaType);
 
         javaType = javaType.getSuperType();
         assertGenericTypes(javaType, String.class, Integer.class, Boolean.class);
 
-        javaType = JavaType.from(StringIntegerHashMap.class);
+        javaType = from(StringIntegerHashMap.class);
         assertGenericTypes(javaType);
 
         javaType = javaType.getSuperType();
         assertGenericTypes(javaType, String.class, Integer.class);
 
-        javaType = JavaType.from(HashMap.class);
+        javaType = from(HashMap.class);
         assertGenericTypes(javaType, null, null);
 
         javaType = javaType.getSuperType();
@@ -78,8 +83,8 @@ public class JavaTypeTest {
 
     @Test
     public void testFromMethod() {
-        Method method = MethodUtils.findMethod(getClass(), "fromValue", HashMap.class);
-        JavaType methodReturnType = JavaType.fromMethodReturnType(method);
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
+        JavaType methodReturnType = fromMethodReturnType(method);
         assertJavaType(methodReturnType);
 
         JavaType methodParameterType = JavaType.fromMethodParameter(method, 0);
@@ -88,15 +93,15 @@ public class JavaTypeTest {
 
     @Test
     public void testFromField() {
-        Field field = FieldUtils.findField(getClass(), "mapField");
-        JavaType javaType = JavaType.from(field);
+        Field field = findField(getClass(), "mapField");
+        JavaType javaType = from(field);
         assertJavaType(javaType);
     }
 
     private static void assertGenericTypes(JavaType javaType, Class<?>... expectedClasses) {
         int length = expectedClasses.length;
         // Compare with Spring ResolvableType
-        ResolvableType resolvableType = ResolvableType.forType(javaType.getType());
+        ResolvableType resolvableType = forType(javaType.getType());
         JavaType[] genericTypes = javaType.getGenericTypes();
         Class[] genericsClasses = resolvableType.resolveGenerics();
         assertEquals(length, genericTypes.length);
