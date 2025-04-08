@@ -529,12 +529,12 @@ public class JavaType implements Serializable {
 
         /**
          * The type kind presents Java {@link GenericArrayType}
-         * TODO
          */
         GENERIC_ARRAY_TYPE(GenericArrayType.class),
 
-        // TODO More Types
-
+        /**
+         * The unknown type kind
+         */
         UNKNOWN(Type.class);
 
         private final Class<? extends Type> typeClass;
