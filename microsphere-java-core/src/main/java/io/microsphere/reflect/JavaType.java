@@ -31,12 +31,18 @@ import java.lang.reflect.WildcardType;
 import java.util.List;
 import java.util.Objects;
 
+import static io.microsphere.reflect.JavaType.Kind.CLASS;
+import static io.microsphere.reflect.JavaType.Kind.GENERIC_ARRAY_TYPE;
+import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
+import static io.microsphere.reflect.JavaType.Kind.TYPE_VARIABLE;
+import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
+import static io.microsphere.reflect.JavaType.Kind.WILDCARD_TYPE;
 import static io.microsphere.reflect.JavaType.Kind.valueOf;
+import static io.microsphere.reflect.TypeUtils.asGenericArrayType;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
-import static io.microsphere.reflect.TypeUtils.getTypeName;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
@@ -47,7 +53,7 @@ import static java.util.Objects.hash;
 /**
  * Encapsulates a Java Type(Immutable), providing the features:
  * <ul>
- *     <li>{@link #getSuperType() supertypes}</li>
+ *     <li>{@link #getSuperType() supertype}</li>
  *     <li>{@link #getInterfaces() interfaces}</li>
  *     <li>{@link #getGenericTypes() generic parameters}</li>
  *     <li>{@link #getRawType() raw type}</li>
@@ -62,17 +68,17 @@ import static java.util.Objects.hash;
  */
 public class JavaType implements Serializable {
 
-    public static final JavaType[] EMPTY_ARRAY = new JavaType[0];
+    public static final JavaType[] EMPTY_JAVA_TYPE_ARRAY = new JavaType[0];
 
-    public static final JavaType OBJECT_TYPE = new JavaType(Object.class, Kind.CLASS);
+    public static final JavaType OBJECT_JAVA_TYPE = from(Object.class, CLASS);
 
     private final Type type;
 
     private final transient Kind kind;
 
-    // Local cache fields
-
     private final JavaType source;
+
+    // Local cache fields
 
     private volatile JavaType superType;
 
@@ -138,30 +144,6 @@ public class JavaType implements Serializable {
         return this.kind.getRawType(this.type);
     }
 
-    public boolean isSource() {
-        return this.source == null;
-    }
-
-    public boolean isRootSource() {
-        return getRootSource() == null;
-    }
-
-    public boolean isClass() {
-        return Kind.CLASS.equals(this.kind);
-    }
-
-    public boolean isParameterizedType() {
-        return Kind.PARAMETERIZED_TYPE.equals(this.kind);
-    }
-
-    public boolean isTypeVariable() {
-        return Kind.TYPE_VARIABLE.equals(this.kind);
-    }
-
-    public boolean isWildCardType() {
-        return Kind.WILDCARD_TYPE.equals(this.kind);
-    }
-
     @Nullable
     public JavaType getSuperType() {
         JavaType superType = this.superType;
@@ -209,26 +191,12 @@ public class JavaType implements Serializable {
 
     @Nonnull
     protected JavaType[] resolveGenericTypes() {
-        if (!OBJECT_TYPE.equals(this)) {
-            Kind kind = this.kind;
-            Type[] genericTypes = kind.getGenericTypes(this);
-            return from(genericTypes, this);
+        if (OBJECT_JAVA_TYPE.equals(this)) {
+            return EMPTY_JAVA_TYPE_ARRAY;
         }
-        return EMPTY_ARRAY;
-    }
-
-    private static JavaType resolveArgumentGenericType(Type[] typeArguments, JavaType argumentType, int index) {
-        JavaType genericType = argumentType;
-        TypeVariable typeVariable = argumentType.toTypeVariable();
-        if (typeVariable != null) {
-            JavaType source = argumentType.getRootSource();
-            GenericDeclaration declaration = typeVariable.getGenericDeclaration();
-            if (matches(typeArguments, declaration)) {
-                JavaType[] genericTypes = source.getGenericTypes();
-                genericType = index <= genericTypes.length - 1 ? genericTypes[index] : null;
-            }
-        }
-        return genericType;
+        Kind kind = this.kind;
+        Type[] genericTypes = kind.getGenericTypes(this);
+        return from(genericTypes, this);
     }
 
     @Nonnull
@@ -273,22 +241,65 @@ public class JavaType implements Serializable {
         return asWildcardType(this.type);
     }
 
-    @Override
-    public String toString() {
-        return "JavaType : " + getTypeName(this.type);
+    @Nullable
+    public GenericArrayType toGenericArrayType() {
+        return asGenericArrayType(this.type);
+    }
+
+    public boolean isSource() {
+        return this.source == null;
+    }
+
+    public boolean isRootSource() {
+        return getRootSource() == null;
+    }
+
+    public boolean isClass() {
+        return CLASS.equals(this.kind);
+    }
+
+    public boolean isParameterizedType() {
+        return PARAMETERIZED_TYPE.equals(this.kind);
+    }
+
+    public boolean isTypeVariable() {
+        return TYPE_VARIABLE.equals(this.kind);
+    }
+
+    public boolean isWildCardType() {
+        return WILDCARD_TYPE.equals(this.kind);
+    }
+
+    public boolean isGenericArrayType() {
+        return GENERIC_ARRAY_TYPE.equals(this.kind);
+    }
+
+    public boolean isUnknownType() {
+        return UNKNOWN.equals(this.kind);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof JavaType)) return false;
         JavaType javaType = (JavaType) o;
-        return Objects.equals(type, javaType.type);
+        return Objects.equals(type, javaType.type)
+                && kind == javaType.kind
+                && Objects.equals(source, javaType.source);
     }
 
     @Override
     public int hashCode() {
-        return hash(type);
+        return hash(type, kind, source);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("JavaType{");
+        sb.append("type=").append(type);
+        sb.append(", kind=").append(kind);
+        sb.append(", source=").append(source);
+        sb.append('}');
+        return sb.toString();
     }
 
     @Nonnull
@@ -316,7 +327,7 @@ public class JavaType implements Serializable {
 
     @Nonnull
     public static JavaType from(Class<?> targetClass) {
-        return from(targetClass, Kind.CLASS);
+        return from(targetClass, CLASS);
     }
 
     @Nonnull
@@ -348,7 +359,7 @@ public class JavaType implements Serializable {
     protected static JavaType[] from(Type[] types, JavaType source) {
         int length = types == null ? 0 : types.length;
         if (length == 0) {
-            return EMPTY_ARRAY;
+            return EMPTY_JAVA_TYPE_ARRAY;
         }
         JavaType[] javaTypes = new JavaType[length];
         for (int i = 0; i < length; i++) {
@@ -537,7 +548,7 @@ public class JavaType implements Serializable {
          */
         UNKNOWN(Type.class);
 
-        private final Class<? extends Type> typeClass;
+        final Class<? extends Type> typeClass;
 
         Kind(Class<? extends Type> typeClass) {
             this.typeClass = typeClass;
