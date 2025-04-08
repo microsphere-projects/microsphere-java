@@ -76,6 +76,7 @@ public class JavaTypeKindClassTest {
 
         genericTypes = CLASS.getGenericTypes(from(Map.class));
         assertEquals(2, genericTypes.length);
-        assertArrayEquals(ofArray(Object.class, Object.class), genericTypes);
+        assertNull(genericTypes[0]);
+        assertNull(genericTypes[1]);
     }
 }
