@@ -572,7 +572,7 @@ public class JavaType implements Serializable {
         }
 
         public static Kind valueOf(Type type) {
-            Kind kind = Kind.UNKNOWN;
+            Kind kind = UNKNOWN;
             for (Kind e : values()) {
                 if (e.typeClass.isInstance(type)) {
                     kind = e;
