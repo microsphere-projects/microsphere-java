@@ -45,6 +45,7 @@ import static io.microsphere.collection.MapUtils.shallowCloneMap;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
+import static java.lang.Float.MIN_VALUE;
 import static java.lang.Integer.valueOf;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
@@ -66,7 +67,7 @@ public class MapUtilsTest {
 
     @Test
     public void testConstants() {
-        assertEquals(Float.MIN_VALUE, MIN_LOAD_FACTOR);
+        assertEquals(MIN_VALUE, MIN_LOAD_FACTOR);
         assertEquals(1.f, FIXED_LOAD_FACTOR);
     }
 

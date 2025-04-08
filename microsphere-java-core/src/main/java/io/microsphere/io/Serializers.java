@@ -17,14 +17,13 @@
 package io.microsphere.io;
 
 
-import io.microsphere.util.PriorityComparator;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
+import static io.microsphere.util.PriorityComparator.INSTANCE;
 import static java.util.Collections.emptyList;
 import static java.util.ServiceLoader.load;
 
@@ -54,7 +53,7 @@ public class Serializers {
             Class<?> targetClass = typeArguments.isEmpty() ? Object.class : typeArguments.get(0);
             List<Serializer> serializers = typedSerializers.computeIfAbsent(targetClass, k -> new LinkedList());
             serializers.add(serializer);
-            serializers.sort(PriorityComparator.INSTANCE);
+            serializers.sort(INSTANCE);
         }
     }
 

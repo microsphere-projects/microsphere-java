@@ -23,6 +23,7 @@ import java.util.Date;
 import static io.microsphere.convert.Converter.convertIfPossible;
 import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.lang.Boolean.FALSE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -44,7 +45,7 @@ public class ConverterTest {
     @Test
     public void testConvertIfPossible() {
         assertEquals(Integer.valueOf(2), convertIfPossible("2", Integer.class));
-        assertEquals(Boolean.FALSE, convertIfPossible("false", Boolean.class));
+        assertEquals(FALSE, convertIfPossible("false", Boolean.class));
         assertEquals(Double.valueOf(1), convertIfPossible("1", Double.class));
         assertNull(convertIfPossible("1", Date.class));
     }

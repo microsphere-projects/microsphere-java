@@ -18,8 +18,9 @@ package io.microsphere.collection;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.function.Consumer;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Singleton {@link Iterator}
@@ -54,7 +55,7 @@ public class SingletonIterator<E> extends ReadOnlyIterator<E> {
 
     @Override
     public void forEachRemaining(Consumer<? super E> action) {
-        Objects.requireNonNull(action);
+        requireNonNull(action);
         if (hasNext) {
             action.accept(element);
             hasNext = false;

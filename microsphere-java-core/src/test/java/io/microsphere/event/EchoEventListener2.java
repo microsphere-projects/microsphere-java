@@ -17,8 +17,9 @@
 package io.microsphere.event;
 
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.Vector;
+
+import static java.util.Objects.hash;
 
 /**
  * {@link EchoEvent} {@link EventListener} 2
@@ -55,6 +56,6 @@ public class EchoEventListener2 extends Vector<EventListener<Event>> implements 
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getClass());
+        return hash(this.getClass());
     }
 }

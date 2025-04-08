@@ -6,6 +6,8 @@ import io.microsphere.annotation.Nullable;
 import java.net.URL;
 import java.util.Objects;
 
+import static java.util.Objects.hash;
+
 /**
  * Maven {@link Artifact}
  *
@@ -73,7 +75,7 @@ public class MavenArtifact extends Artifact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), groupId);
+        return hash(super.hashCode(), groupId);
     }
 
     @Override

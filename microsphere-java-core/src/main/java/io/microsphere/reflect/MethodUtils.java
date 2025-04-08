@@ -25,7 +25,6 @@ import javax.lang.model.util.Elements;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -49,6 +48,7 @@ import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -57,6 +57,7 @@ import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.hash;
 
 /**
  * The Java Reflection {@link Method} Utility class
@@ -234,7 +235,7 @@ public abstract class MethodUtils {
             return doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter);
         }
 
-        if (Object.class.equals(targetClass)) {
+        if (Object.class == targetClass) {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
@@ -719,14 +720,14 @@ public abstract class MethodUtils {
             if (!Objects.equals(declaredClass, methodKey.declaredClass)) return false;
             if (!Objects.equals(methodName, methodKey.methodName)) return false;
             // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            return Arrays.equals(parameterTypes, methodKey.parameterTypes);
+            return arrayEquals(parameterTypes, methodKey.parameterTypes);
         }
 
         @Override
         public int hashCode() {
             int result = declaredClass != null ? declaredClass.hashCode() : 0;
             result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
-            result = 31 * result + Arrays.hashCode(parameterTypes);
+            result = 31 * result + hash(parameterTypes);
             return result;
         }
 

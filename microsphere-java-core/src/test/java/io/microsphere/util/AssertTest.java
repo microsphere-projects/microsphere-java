@@ -19,7 +19,6 @@ package io.microsphere.util;
 import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -35,6 +34,7 @@ import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Assert.assertNull;
 import static io.microsphere.util.Assert.assertTrue;
 import static java.lang.reflect.Array.newInstance;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -122,7 +122,7 @@ public class AssertTest extends AbstractTestCase {
 
     @Test
     public void testAssertCollectionNotEmpty() {
-        Collection<String> collection = Arrays.asList("a", "b", "c");
+        Collection<String> collection = asList("a", "b", "c");
         assertNotEmpty(collection, "collection");
         assertNotEmpty(collection, () -> "collection");
         assertNotEmpty(collection, (Supplier<String>) null);
@@ -183,7 +183,7 @@ public class AssertTest extends AbstractTestCase {
 
     @Test
     public void testAssertIterableNoNullElements() {
-        Collection<String> collection = Arrays.asList("a", "b", "c");
+        Collection<String> collection = asList("a", "b", "c");
         assertNoNullElements(collection, "collection");
         assertNoNullElements(collection, () -> "collection");
         assertNoNullElements(collection, (Supplier<String>) null);
@@ -199,7 +199,7 @@ public class AssertTest extends AbstractTestCase {
         assertNoNullElements(emptyCollection, () -> "null");
         assertNoNullElements(emptyCollection, (Supplier<String>) null);
 
-        Collection<String> collectionWithNull = Arrays.asList("a", null, "c");
+        Collection<String> collectionWithNull = asList("a", null, "c");
 
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, "collectionWithNull"));
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, () -> "collectionWithNull"));
