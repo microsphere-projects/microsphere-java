@@ -27,7 +27,7 @@ import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.reflect.TypeUtils.asClass;
-import static io.microsphere.reflect.TypeUtils.isObjectClass;
+import static io.microsphere.reflect.TypeUtils.isObjectType;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.contains;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
@@ -168,7 +168,7 @@ public class TypeFinder<T> {
     }
 
     protected void addSuperTypes(List<T> allTypes, T type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
-        if (isObjectClass(type)) {
+        if (isObjectType(type)) {
             return;
         }
 
