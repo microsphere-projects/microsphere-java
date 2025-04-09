@@ -33,6 +33,7 @@ import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link BaseJavaTypeTest} for {@link ParameterizedType}
@@ -122,9 +123,9 @@ public class JavaTypeTestForParameterizedType extends BaseJavaTypeTest<C<String>
         assertEquals(source(), objectType.getRootSource());
 
         // test super type
-        assertEquals(from(null, UNKNOWN, objectType), objectType.getSuperType());
-        assertEquals(from(null, UNKNOWN, objectType), objectType.getSuperType());
-
+        assertNull(objectType.getSuperType());
+        assertNull(objectType.getSuperType());
+        
         // test interfaces
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
