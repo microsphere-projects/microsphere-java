@@ -44,6 +44,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
+import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
@@ -235,7 +236,7 @@ public abstract class MethodUtils {
             return doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter);
         }
 
-        if (Object.class == targetClass) {
+        if (isObjectClass(targetClass)) {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
@@ -609,7 +610,7 @@ public abstract class MethodUtils {
 
     public static boolean isObjectMethod(Method method) {
         if (method != null) {
-            return Object.class.equals(method.getDeclaringClass());
+            return isObjectClass(method.getDeclaringClass());
         }
         return false;
     }
