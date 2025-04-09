@@ -44,6 +44,7 @@ import static io.microsphere.reflect.TypeUtils.asTypeVariable;
 import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.isActualType;
+import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
@@ -212,7 +213,7 @@ public class JavaType implements Serializable {
      */
     @Nullable
     public JavaType as(Class<?> targetClass) {
-        if (Object.class == targetClass) {
+        if (isObjectClass(targetClass)) {
             return from(Object.class, CLASS, this);
         }
         Type typeToMatch = this.type;
