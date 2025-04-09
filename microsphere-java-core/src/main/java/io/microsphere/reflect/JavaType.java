@@ -73,6 +73,8 @@ public class JavaType implements Serializable {
 
     public static final JavaType OBJECT_JAVA_TYPE = from(Object.class, CLASS);
 
+    public static final JavaType NULL_JAVA_TYPE = from(null, UNKNOWN);
+
     private final Type type;
 
     private final transient Kind kind;
