@@ -374,8 +374,7 @@ public class JavaType implements Serializable {
         return javaTypes;
     }
 
-
-    private Type searchSuperType(Class<?> targetClass, Type typeToMatch) {
+    static Type searchSuperType(Class<?> targetClass, Type typeToMatch) {
         Type superType = getSuperType(typeToMatch);
         if (superType == null) {
             return null;
@@ -402,8 +401,7 @@ public class JavaType implements Serializable {
         return targetType;
     }
 
-
-    Type searchInterfaceType(Class<?> targetClass, Type typeToMatch) {
+    static Type searchInterfaceType(Class<?> targetClass, Type typeToMatch) {
         Type targetType = null;
         Type[] interfaces = getInterfaces(typeToMatch);
         for (Type interfaceType : interfaces) {
