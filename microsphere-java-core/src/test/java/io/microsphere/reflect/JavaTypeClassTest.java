@@ -22,7 +22,6 @@ import io.microsphere.test.C;
 import io.microsphere.test.D;
 
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.util.RandomAccess;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
@@ -43,22 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see D
  * @since 1.0.0
  */
-public class JavaTypeClassTest extends BaseJavaTypeTest {
-
-    @Override
-    protected Type type() {
-        return D.class;
-    }
-
-    @Override
-    protected JavaType.Kind kind() {
-        return CLASS;
-    }
-
-    @Override
-    protected JavaType source() {
-        return from(getClass());
-    }
+public class JavaTypeClassTest extends BaseJavaTypeTest<D> {
 
     @Override
     protected void testGetSuperType(JavaType superType) {
