@@ -16,23 +16,29 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.test.B;
+import io.microsphere.test.C;
 import io.microsphere.test.D;
 
 import java.lang.reflect.Type;
+import java.util.RandomAccess;
 
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.reflect.JavaTypeKindTest.C_STRING_PARAMETERIZED_TYPE;
+import static io.microsphere.util.ArrayUtils.ofArray;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link BaseJavaTypeTest} Test
+ * {@link BaseJavaTypeTest} for {@link Class} {@link D}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see D
  * @since 1.0.0
  */
-public class JavaTypeClassTest extends BaseJavaTypeTest {
+public class JavaTypeClassDTest extends BaseJavaTypeTest {
 
     @Override
     protected Type type() {
@@ -56,26 +62,42 @@ public class JavaTypeClassTest extends BaseJavaTypeTest {
 
     @Override
     protected void testGetInterfaces(JavaType[] interfaces) {
-
+        assertEquals(0, interfaces.length);
     }
 
     @Override
     protected void testGetGenericTypes(JavaType[] genericTypes) {
-
+        assertEquals(0, genericTypes.length);
     }
 
     @Override
     protected void testGetGenericType(JavaType genericType, int i) {
-
-    }
-
-    @Override
-    protected void testAs() {
-
     }
 
     @Override
     protected void testGetRootSource(JavaType rootSource) {
-
+        assertEquals(source(), rootSource);
     }
+
+    @Override
+    protected void testAs() {
+        JavaType cType = javaType.as(C.class);
+
+        // test source
+        assertEquals(javaType, cType.getSource());
+        assertEquals(source(), cType.getRootSource());
+
+        // test super type
+        assertEquals(from(B.class, CLASS, cType), cType.getSuperType());
+        assertEquals(from(B.class, CLASS, cType), cType.getSuperType());
+
+        // test interfaces
+        assertArrayEquals(ofArray(from(RandomAccess.class, CLASS, cType)), cType.getInterfaces());
+        assertArrayEquals(ofArray(from(RandomAccess.class, CLASS, cType)), cType.getInterfaces());
+
+        // test generic types
+        assertArrayEquals(ofArray(from(String.class, CLASS, cType)), cType.getGenericTypes());
+        assertArrayEquals(ofArray(from(String.class, CLASS, cType)), cType.getGenericTypes());
+    }
+
 }
