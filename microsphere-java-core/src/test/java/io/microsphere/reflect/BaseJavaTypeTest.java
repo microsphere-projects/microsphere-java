@@ -214,6 +214,10 @@ public abstract class BaseJavaTypeTest<T> {
         assertEquals(source == null, from(type, kind).equals(javaType));
         assertNotEquals(from(type, kind, javaType), javaType);
         assertNotEquals(from(type, UNKNOWN, source), javaType);
+        assertNotEquals(type, javaType);
+        assertNotEquals(javaType, type);
+        assertNotEquals(null, javaType);
+        assertNotEquals(javaType, null);
     }
 
     protected void testHashCode() {
