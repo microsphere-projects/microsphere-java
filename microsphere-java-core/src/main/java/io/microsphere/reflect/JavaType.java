@@ -376,8 +376,11 @@ public class JavaType implements Serializable {
 
 
     private Type searchSuperType(Class<?> targetClass, Type typeToMatch) {
-        Type targetType = null;
         Type superType = getSuperType(typeToMatch);
+        if (superType == null) {
+            return null;
+        }
+        Type targetType = null;
         while (!matches(Object.class, superType)) {
             if (matches(targetClass, superType)) {
                 // super type matched
