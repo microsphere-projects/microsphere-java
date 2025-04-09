@@ -21,14 +21,18 @@ import io.microsphere.test.B;
 import io.microsphere.test.C;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Map;
 import java.util.RandomAccess;
 
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.reflect.JavaTypeKindTest.C_STRING_PARAMETERIZED_TYPE;
+import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -77,5 +81,14 @@ public class JavaTypeKindTestForParameterizedType {
 
         assertThrows(ClassCastException.class, () -> PARAMETERIZED_TYPE.getGenericTypes(from(String.class)));
 
+        // Map#putAll(Map<? extends K, ? extends V> m)
+        Method method = findMethod(Map.class, "putAll", Map.class);
+        Type[] parameterTypes = method.getGenericParameterTypes();
+        Type parameterizedType = parameterTypes[0];
+
+        genericTypes = PARAMETERIZED_TYPE.getGenericTypes(from(parameterizedType));
+        assertEquals(2, genericTypes.length);
+        assertNull(genericTypes[0]);
+        assertNull(genericTypes[1]);
     }
 }
