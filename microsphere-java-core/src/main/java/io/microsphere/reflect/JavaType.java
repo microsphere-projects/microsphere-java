@@ -22,7 +22,6 @@ import io.microsphere.annotation.Nullable;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.GenericDeclaration;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -48,7 +47,6 @@ import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
-import static java.util.Arrays.deepEquals;
 import static java.util.Objects.hash;
 
 /**
@@ -420,13 +418,12 @@ public class JavaType implements Serializable {
         return targetType;
     }
 
-
-    private Type getSuperType(Type type) {
+    static Type getSuperType(Type type) {
         Kind kind = valueOf(type);
         return kind.getSuperType(type);
     }
 
-    private Type[] getInterfaces(Type type) {
+    static Type[] getInterfaces(Type type) {
         Kind kind = valueOf(type);
         return kind.getInterfaces(type);
     }
@@ -437,18 +434,9 @@ public class JavaType implements Serializable {
         return Objects.equals(targetClass, rawType);
     }
 
-    private static boolean matches(Type[] typeArguments, GenericDeclaration declaration) {
-        TypeVariable[] typeParameters = declaration.getTypeParameters();
-        if (deepEquals(typeArguments, typeParameters)) {
-            return true;
-        } else if (declaration instanceof Class) { // To find the super class
-            Class declaredClass = (Class) declaration;
-            return matches(typeArguments, declaredClass.getSuperclass());
-        }
-        return false;
-    }
-
-
+    /**
+     * The kind of Java type
+     */
     public enum Kind {
 
         /**
