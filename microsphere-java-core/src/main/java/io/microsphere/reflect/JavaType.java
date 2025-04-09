@@ -44,9 +44,11 @@ import static io.microsphere.reflect.TypeUtils.asWildcardType;
 import static io.microsphere.reflect.TypeUtils.getRawClass;
 import static io.microsphere.reflect.TypeUtils.isActualType;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
+import static io.microsphere.reflect.TypeUtils.isObjectType;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArguments;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Objects.hash;
 
 /**
@@ -156,8 +158,8 @@ public class JavaType implements Serializable {
     }
 
     protected JavaType resolveSuperType() {
-        Type superType = kind.getSuperType(type);
-        return from(superType, this);
+        Type superType = getSuperType(this.kind, this.type);
+        return superType == null ? null : from(superType, this);
     }
 
     @Nonnull
@@ -192,7 +194,7 @@ public class JavaType implements Serializable {
 
     @Nonnull
     protected JavaType[] resolveGenericTypes() {
-        if (OBJECT_JAVA_TYPE.equals(this)) {
+        if (isObjectType(this.type)) {
             return EMPTY_JAVA_TYPE_ARRAY;
         }
         Kind kind = this.kind;
@@ -361,7 +363,7 @@ public class JavaType implements Serializable {
 
     @Nonnull
     protected static JavaType[] from(Type[] types, JavaType source) {
-        int length = types == null ? 0 : types.length;
+        int length = length(types);
         if (length == 0) {
             return EMPTY_JAVA_TYPE_ARRAY;
         }
@@ -419,7 +421,10 @@ public class JavaType implements Serializable {
     }
 
     static Type getSuperType(Type type) {
-        Kind kind = valueOf(type);
+        return getSuperType(valueOf(type), type);
+    }
+
+    static Type getSuperType(Kind kind, Type type) {
         return kind.getSuperType(type);
     }
 
