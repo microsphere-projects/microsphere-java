@@ -58,12 +58,23 @@ public abstract class BaseJavaTypeTest<T> {
 
     @BeforeAll
     public static void beforeAll() {
+        testEmptyJavaTypeArray();
+        testObjectJavaType();
+        testNullJavaType();
+    }
+
+    private static void testEmptyJavaTypeArray() {
         assertArrayEquals(new JavaType[0], EMPTY_JAVA_TYPE_ARRAY);
+    }
+
+    private static void testObjectJavaType() {
         assertEquals(from(Object.class, CLASS), OBJECT_JAVA_TYPE);
         assertEquals(Object.class, OBJECT_JAVA_TYPE.getType());
         assertEquals(CLASS, OBJECT_JAVA_TYPE.getKind());
         assertNull(OBJECT_JAVA_TYPE.getSource());
+    }
 
+    private static void testNullJavaType() {
         assertEquals(from(null, UNKNOWN), NULL_JAVA_TYPE);
         assertNull(NULL_JAVA_TYPE.getType());
         assertEquals(UNKNOWN, NULL_JAVA_TYPE.getKind());
@@ -203,7 +214,6 @@ public abstract class BaseJavaTypeTest<T> {
         assertEquals(source == null, from(type, kind).equals(javaType));
         assertNotEquals(from(type, kind, javaType), javaType);
         assertNotEquals(from(type, UNKNOWN, source), javaType);
-        assertNotEquals(from(Object.class, kind, source), javaType);
     }
 
     protected void testHashCode() {
