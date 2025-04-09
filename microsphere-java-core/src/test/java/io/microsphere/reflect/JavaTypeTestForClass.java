@@ -66,11 +66,6 @@ public class JavaTypeTestForClass extends BaseJavaTypeTest<D> {
     }
 
     @Override
-    protected void testGetRootSource(JavaType rootSource) {
-        assertEquals(source(), rootSource);
-    }
-
-    @Override
     protected void testAs() {
         testC();
         testB();
