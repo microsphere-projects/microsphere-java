@@ -32,6 +32,7 @@ import static io.microsphere.reflect.JavaType.Kind.TYPE_VARIABLE;
 import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.Kind.WILDCARD_TYPE;
 import static io.microsphere.reflect.JavaType.Kind.valueOf;
+import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.OBJECT_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
 import static java.util.Objects.hash;
@@ -61,6 +62,12 @@ public abstract class BaseJavaTypeTest<T> {
         assertEquals(from(Object.class, CLASS), OBJECT_JAVA_TYPE);
         assertEquals(Object.class, OBJECT_JAVA_TYPE.getType());
         assertEquals(CLASS, OBJECT_JAVA_TYPE.getKind());
+        assertNull(OBJECT_JAVA_TYPE.getSource());
+
+        assertEquals(from(null, UNKNOWN), NULL_JAVA_TYPE);
+        assertNull(NULL_JAVA_TYPE.getType());
+        assertEquals(UNKNOWN, NULL_JAVA_TYPE.getKind());
+        assertNull(NULL_JAVA_TYPE.getSource());
     }
 
     public BaseJavaTypeTest() {
