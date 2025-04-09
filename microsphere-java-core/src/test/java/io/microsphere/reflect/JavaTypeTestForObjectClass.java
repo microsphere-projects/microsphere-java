@@ -17,6 +17,9 @@
 package io.microsphere.reflect;
 
 import io.microsphere.test.A;
+import io.microsphere.test.B;
+import io.microsphere.test.C;
+import io.microsphere.test.D;
 
 import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.from;
@@ -57,11 +60,15 @@ public class JavaTypeTestForObjectClass extends BaseJavaTypeTest<Object> {
 
     @Override
     protected void testAs() {
-        testA();
+        testAs(A.class);
+        testAs(B.class);
+        testAs(C.class);
+        testAs(D.class);
+        testAs(String.class);
     }
 
-    private void testA() {
-        JavaType aType = javaType.as(A.class);
+    private void testAs(Class<?> type) {
+        JavaType aType = javaType.as(type);
         assertNull(aType);
     }
 
