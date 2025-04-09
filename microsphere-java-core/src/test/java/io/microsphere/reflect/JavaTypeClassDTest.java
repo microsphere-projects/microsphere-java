@@ -28,6 +28,7 @@ import java.util.RandomAccess;
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
+import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.reflect.JavaTypeKindTest.C_STRING_PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
@@ -88,6 +89,7 @@ public class JavaTypeClassDTest extends BaseJavaTypeTest {
         testC();
         testB();
         testA();
+        testObject();
     }
 
     private void testC() {
@@ -150,6 +152,26 @@ public class JavaTypeClassDTest extends BaseJavaTypeTest {
         // test generic types
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, aType.getGenericTypes());
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, aType.getGenericTypes());
+    }
+
+    private void testObject() {
+        JavaType objectType = javaType.as(Object.class);
+
+        // test source
+        assertEquals(javaType, objectType.getSource());
+        assertEquals(source(), objectType.getRootSource());
+
+        // test super type
+        assertEquals(from(null, UNKNOWN, objectType), objectType.getSuperType());
+        assertEquals(from(null, UNKNOWN, objectType), objectType.getSuperType());
+
+        // test interfaces
+        assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
+        assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
+
+        // test generic types
+        assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getGenericTypes());
+        assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getGenericTypes());
     }
 
 }
