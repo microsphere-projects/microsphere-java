@@ -102,6 +102,7 @@ public abstract class BaseJavaTypeTest<T> {
         testType();
         testKind();
         testSource();
+        testGetRootSource(javaType.getRootSource());
         testEquals();
         testHashCode();
         testToString();
@@ -112,7 +113,6 @@ public abstract class BaseJavaTypeTest<T> {
         for (int i = 0; i < genericTypes.length; i++) {
             testGetGenericType(genericTypes[i], i);
         }
-        testGetRootSource(javaType.getRootSource());
         testAs();
     }
 
@@ -183,6 +183,10 @@ public abstract class BaseJavaTypeTest<T> {
         assertTrue(source.isSource());
     }
 
+    protected void testGetRootSource(JavaType rootSource) {
+        assertEquals(source(), rootSource);
+    }
+
     protected void testEquals() {
         Type type = type();
         Kind kind = kind();
@@ -223,7 +227,5 @@ public abstract class BaseJavaTypeTest<T> {
     protected abstract void testGetGenericType(JavaType genericType, int i);
 
     protected abstract void testAs();
-
-    protected abstract void testGetRootSource(JavaType rootSource);
 
 }
