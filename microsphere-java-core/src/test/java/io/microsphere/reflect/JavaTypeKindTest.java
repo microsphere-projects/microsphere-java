@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
 
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.GENERIC_ARRAY_TYPE;
@@ -50,17 +51,19 @@ public class JavaTypeKindTest {
      */
     static final Type C_STRING_PARAMETERIZED_TYPE = D.class.getGenericSuperclass();
 
-    static final ParameterizedType CLASS_WILDCARD_PARAMETERIZED_TYPE = (ParameterizedType) findMethod(Object.class, "getClass").getGenericReturnType();
+    static final ParameterizedType TEST_PARAMETERIZED_TYPE = (ParameterizedType) findMethod(Object.class, "getClass").getGenericReturnType();
 
-    static final GenericArrayType CLASS_GENERIC_ARRAY_TYPE = (GenericArrayType) findMethod(Class.class, "getClasses").getGenericReturnType();
+    static final WildcardType TEST_WILDCARD_TYPE = (WildcardType) TEST_PARAMETERIZED_TYPE.getActualTypeArguments()[0];
+
+    static final GenericArrayType TEST_GENERIC_ARRAY_TYPE = (GenericArrayType) findMethod(Class.class, "getClasses").getGenericReturnType();
 
     @Test
     public void testValueOf() {
         assertSame(CLASS, valueOf(String.class));
         assertSame(PARAMETERIZED_TYPE, valueOf(C_STRING_PARAMETERIZED_TYPE));
         assertSame(TYPE_VARIABLE, valueOf(C.class.getTypeParameters()[0]));
-        assertSame(WILDCARD_TYPE, valueOf(CLASS_WILDCARD_PARAMETERIZED_TYPE.getActualTypeArguments()[0]));
-        assertSame(GENERIC_ARRAY_TYPE, valueOf(CLASS_GENERIC_ARRAY_TYPE));
+        assertSame(WILDCARD_TYPE, valueOf(TEST_WILDCARD_TYPE));
+        assertSame(GENERIC_ARRAY_TYPE, valueOf(TEST_GENERIC_ARRAY_TYPE));
         assertSame(UNKNOWN, valueOf((Type) null));
     }
 }
