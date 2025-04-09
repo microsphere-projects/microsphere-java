@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import io.microsphere.test.A;
 import io.microsphere.test.B;
 import io.microsphere.test.C;
-import io.microsphere.test.D;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -39,7 +38,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * {@link BaseJavaTypeTest} for {@link ParameterizedType}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see D
+ * @see JavaType
+ * @see JavaType.Kind#PARAMETERIZED_TYPE
+ * @see ParameterizedType
  * @since 1.0.0
  */
 public class JavaTypeTestForParameterizedType extends BaseJavaTypeTest<C<String>> {
