@@ -31,24 +31,29 @@ import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.JavaType.Kind.TYPE_VARIABLE;
 import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.Kind.WILDCARD_TYPE;
+import static io.microsphere.reflect.JavaType.Kind.valueOf;
 import static io.microsphere.reflect.JavaType.OBJECT_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
 import static java.util.Objects.hash;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Base {@link JavaType} for {@link Class}
  *
+ * @param <T> the type to be tested
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since JavaType
  */
-public abstract class BaseJavaTypeTest {
+public abstract class BaseJavaTypeTest<T> {
 
     protected JavaType javaType;
+
+    private Type type;
 
     @BeforeAll
     public static void beforeAll() {
@@ -56,6 +61,19 @@ public abstract class BaseJavaTypeTest {
         assertEquals(from(Object.class, CLASS), OBJECT_JAVA_TYPE);
         assertEquals(Object.class, OBJECT_JAVA_TYPE.getType());
         assertEquals(CLASS, OBJECT_JAVA_TYPE.getKind());
+    }
+
+    public BaseJavaTypeTest() {
+        this.type = resolveType();
+    }
+
+    protected Type resolveType() {
+        ParameterizedType superType = (ParameterizedType) this.getClass().getGenericSuperclass();
+        Type superRawType;
+        while ((superRawType = superType.getRawType()) != BaseJavaTypeTest.class) {
+            superType = (ParameterizedType) ((Class) superRawType).getGenericSuperclass();
+        }
+        return superType.getActualTypeArguments()[0];
     }
 
     @BeforeEach
@@ -67,11 +85,17 @@ public abstract class BaseJavaTypeTest {
         return from(type(), kind(), source());
     }
 
-    protected abstract Type type();
+    protected Type type() {
+        return type;
+    }
 
-    protected abstract Kind kind();
+    protected Kind kind() {
+        return valueOf(type());
+    }
 
-    protected abstract JavaType source();
+    protected JavaType source() {
+        return from(this.getClass());
+    }
 
     @Test
     public void test() {
@@ -118,7 +142,7 @@ public abstract class BaseJavaTypeTest {
                 break;
             case PARAMETERIZED_TYPE:
                 assertEquals(((ParameterizedType) type).getRawType(), javaType.getRawType());
-                assertNull(javaType.toClass());
+                assertNotNull(javaType.toClass());
                 assertEquals(type, javaType.toParameterizedType());
                 assertNull(javaType.toTypeVariable());
                 assertNull(javaType.toWildcardType());
