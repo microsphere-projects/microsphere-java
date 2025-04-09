@@ -21,8 +21,6 @@ import io.microsphere.test.B;
 import io.microsphere.test.C;
 import io.microsphere.test.D;
 
-import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
-import static io.microsphere.reflect.JavaType.from;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -41,7 +39,7 @@ public class JavaTypeTestForObjectClass extends BaseJavaTypeTest<Object> {
 
     @Override
     protected void testGetSuperType(JavaType superType) {
-        assertEquals(from(null, UNKNOWN, javaType), superType);
+        assertNull(superType);
     }
 
     @Override
