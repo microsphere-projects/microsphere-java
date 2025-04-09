@@ -32,6 +32,7 @@ import java.util.Map;
 
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaType.fromMethodParameter;
 import static io.microsphere.reflect.JavaType.fromMethodReturnType;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -87,7 +88,7 @@ public class JavaTypeTest {
         JavaType methodReturnType = fromMethodReturnType(method);
         assertJavaType(methodReturnType);
 
-        JavaType methodParameterType = JavaType.fromMethodParameter(method, 0);
+        JavaType methodParameterType = fromMethodParameter(method, 0);
         assertJavaType(methodParameterType);
     }
 
