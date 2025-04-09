@@ -39,7 +39,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * {@link BaseJavaTypeTest} for {@link Class}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see D
+ * @see JavaType
+ * @see JavaType.Kind#CLASS
+ * @see Class
  * @since 1.0.0
  */
 public class JavaTypeTestForClass extends BaseJavaTypeTest<D> {
