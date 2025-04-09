@@ -21,10 +21,7 @@ import io.microsphere.test.C;
 import java.lang.reflect.GenericArrayType;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
-import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
-import static io.microsphere.reflect.JavaType.from;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -40,7 +37,7 @@ public class JavaTypeTestForGenericArrayType extends BaseJavaTypeTest<C<String>[
 
     @Override
     protected void testGetSuperType(JavaType superType) {
-        assertEquals(from(null, UNKNOWN, javaType), superType);
+        assertNull(superType);
     }
 
     @Override
