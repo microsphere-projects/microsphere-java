@@ -37,13 +37,13 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link BaseJavaTypeTest} for {@link Class} {@link D}
+ * {@link BaseJavaTypeTest} for {@link Class}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see D
  * @since 1.0.0
  */
-public class JavaTypeClassDTest extends BaseJavaTypeTest {
+public class JavaTypeClassTest extends BaseJavaTypeTest {
 
     @Override
     protected Type type() {
