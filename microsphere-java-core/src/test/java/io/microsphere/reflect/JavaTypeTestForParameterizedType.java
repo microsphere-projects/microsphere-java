@@ -67,11 +67,6 @@ public class JavaTypeTestForParameterizedType extends BaseJavaTypeTest<C<String>
     }
 
     @Override
-    protected void testGetRootSource(JavaType rootSource) {
-        assertEquals(source(), rootSource);
-    }
-
-    @Override
     protected void testAs() {
         testB();
         testA();
