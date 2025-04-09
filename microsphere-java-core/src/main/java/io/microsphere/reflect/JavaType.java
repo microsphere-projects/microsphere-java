@@ -375,8 +375,8 @@ public class JavaType implements Serializable {
 
     private Type searchSuperType(Class<?> targetClass, Type typeToMatch) {
         Type targetType = null;
-        Type superType = kind.getSuperType(typeToMatch);
-        do {
+        Type superType = getSuperType(typeToMatch);
+        while (!matches(Object.class, superType)) {
             if (matches(targetClass, superType)) {
                 // super type matched
                 targetType = superType;
@@ -387,19 +387,20 @@ public class JavaType implements Serializable {
             targetType = searchInterfaceType(targetClass, superType);
 
             if (targetType == null) {
-                superType = this.kind.getSuperType(superType);
+                superType = getSuperType(superType);
             } else {
                 break;
             }
 
-        } while (!matches(Object.class, superType));
+        }
 
         return targetType;
     }
 
-    private Type searchInterfaceType(Class<?> targetClass, Type typeToMatch) {
+
+    Type searchInterfaceType(Class<?> targetClass, Type typeToMatch) {
         Type targetType = null;
-        Type[] interfaces = this.kind.getInterfaces(typeToMatch);
+        Type[] interfaces = getInterfaces(typeToMatch);
         for (Type interfaceType : interfaces) {
             if (matches(targetClass, interfaceType)) {
                 targetType = interfaceType;
@@ -412,6 +413,17 @@ public class JavaType implements Serializable {
             }
         }
         return targetType;
+    }
+
+
+    private Type getSuperType(Type type) {
+        Kind kind = valueOf(type);
+        return kind.getSuperType(type);
+    }
+
+    private Type[] getInterfaces(Type type) {
+        Kind kind = valueOf(type);
+        return kind.getInterfaces(type);
     }
 
     private static boolean matches(Class<?> targetClass, Type typeToMatch) {
