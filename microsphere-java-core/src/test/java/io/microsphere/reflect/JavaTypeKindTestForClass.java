@@ -34,12 +34,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
- * {@link Kind#CLASS} Test
+ * {@link Kind} Test for {@link Class}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see JavaType
+ * @see Kind#CLASS
+ * @see Class
  * @since 1.0.0
  */
-public class JavaTypeKindClassTest {
+public class JavaTypeKindTestForClass {
 
     @Test
     public void testGetSuperType() {
