@@ -212,6 +212,9 @@ public class JavaType implements Serializable {
      */
     @Nullable
     public JavaType as(Class<?> targetClass) {
+        if (Object.class == targetClass) {
+            return from(Object.class, CLASS, this);
+        }
         Type typeToMatch = this.type;
         Type targetType = searchSuperType(targetClass, typeToMatch);
         if (targetType == null) {
