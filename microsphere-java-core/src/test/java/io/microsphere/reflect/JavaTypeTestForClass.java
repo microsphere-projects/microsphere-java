@@ -27,13 +27,13 @@ import java.util.RandomAccess;
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
-import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.reflect.JavaTypeKindTest.C_STRING_PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link BaseJavaTypeTest} for {@link Class}
@@ -143,8 +143,8 @@ public class JavaTypeTestForClass extends BaseJavaTypeTest<D> {
         assertEquals(source(), objectType.getRootSource());
 
         // test super type
-        assertEquals(from(null, UNKNOWN, objectType), objectType.getSuperType());
-        assertEquals(from(null, UNKNOWN, objectType), objectType.getSuperType());
+        assertNull(objectType.getSuperType());
+        assertNull(objectType.getSuperType());
 
         // test interfaces
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
