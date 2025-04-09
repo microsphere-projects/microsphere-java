@@ -20,8 +20,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.AbstractList;
+import java.util.Collection;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static io.microsphere.reflect.JavaType.Kind;
@@ -35,6 +38,7 @@ import static io.microsphere.reflect.JavaType.Kind.valueOf;
 import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.OBJECT_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaType.searchInterfaceType;
 import static java.util.Objects.hash;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,6 +65,7 @@ public abstract class BaseJavaTypeTest<T> {
         testEmptyJavaTypeArray();
         testObjectJavaType();
         testNullJavaType();
+        testSearchInterfaceType();
     }
 
     private static void testEmptyJavaTypeArray() {
@@ -79,6 +84,11 @@ public abstract class BaseJavaTypeTest<T> {
         assertNull(NULL_JAVA_TYPE.getType());
         assertEquals(UNKNOWN, NULL_JAVA_TYPE.getKind());
         assertNull(NULL_JAVA_TYPE.getSource());
+    }
+
+    private static void testSearchInterfaceType() {
+        assertNotNull(searchInterfaceType(Collection.class, AbstractList.class));
+        assertNull(searchInterfaceType(Serializable.class, AbstractList.class));
     }
 
     public BaseJavaTypeTest() {
@@ -213,7 +223,11 @@ public abstract class BaseJavaTypeTest<T> {
         assertEquals(from(type, kind, source), javaType);
         assertEquals(source == null, from(type, kind).equals(javaType));
         assertNotEquals(from(type, kind, javaType), javaType);
-        assertNotEquals(from(type, UNKNOWN, source), javaType);
+        assertNotEquals(from(type, kind), javaType);
+        assertNotEquals(from(type), javaType);
+
+        assertNotEquals(from(type, UNKNOWN), javaType);
+
         assertNotEquals(type, javaType);
         assertNotEquals(javaType, type);
         assertNotEquals(null, javaType);
