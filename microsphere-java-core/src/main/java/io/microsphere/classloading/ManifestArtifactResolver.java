@@ -64,8 +64,7 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
 
     private static String[] getPropertyValues(String propertyName, String defaultValue) {
         String propertyValue = getProperty(propertyName, defaultValue);
-        String[] values = split(propertyValue, COMMA);
-        return isNotEmpty(values) ? values : EMPTY_STRING_ARRAY;
+        return split(propertyValue, COMMA);
     }
 
     public static final int DEFAULT_PRIORITY = 2;
