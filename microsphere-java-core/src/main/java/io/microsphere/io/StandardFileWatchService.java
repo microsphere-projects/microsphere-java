@@ -24,7 +24,6 @@ import io.microsphere.io.event.FileChangedListener;
 import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
@@ -38,9 +37,17 @@ import java.util.concurrent.ExecutorService;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.event.EventDispatcher.parallel;
+import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
+import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
+import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
+import static io.microsphere.util.ArrayUtils.length;
 import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
@@ -54,9 +61,9 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 public class StandardFileWatchService implements FileWatchService {
 
     private static final WatchEvent.Kind<?>[] ALL_WATCH_EVENT_KINDS = {
-            StandardWatchEventKinds.ENTRY_CREATE,
-            StandardWatchEventKinds.ENTRY_DELETE,
-            StandardWatchEventKinds.ENTRY_MODIFY
+            ENTRY_CREATE,
+            ENTRY_DELETE,
+            ENTRY_MODIFY
     };
 
     private WatchService watchService;
@@ -163,7 +170,7 @@ public class StandardFileWatchService implements FileWatchService {
 
     @Nonnull
     private WatchEvent.Kind<?>[] toWatchEventKinds(FileChangedEvent.Kind[] kinds) {
-        int size = kinds == null ? 0 : kinds.length;
+        int size = length(kinds);
         if (size < 1) {
             return ALL_WATCH_EVENT_KINDS;
         }
@@ -177,19 +184,17 @@ public class StandardFileWatchService implements FileWatchService {
 
     @Nonnull
     private WatchEvent.Kind<?> toWatchEventKind(FileChangedEvent.Kind kind) {
-        final WatchEvent.Kind<?> watchEventKind;
+        WatchEvent.Kind<?> watchEventKind = OVERFLOW;
         switch (kind) {
             case CREATED:
-                watchEventKind = StandardWatchEventKinds.ENTRY_CREATE;
+                watchEventKind = ENTRY_CREATE;
                 break;
             case MODIFIED:
-                watchEventKind = StandardWatchEventKinds.ENTRY_MODIFY;
+                watchEventKind = ENTRY_MODIFY;
                 break;
             case DELETED:
-                watchEventKind = StandardWatchEventKinds.ENTRY_DELETE;
+                watchEventKind = ENTRY_DELETE;
                 break;
-            default:
-                watchEventKind = StandardWatchEventKinds.OVERFLOW;
         }
         return watchEventKind;
     }
@@ -197,12 +202,12 @@ public class StandardFileWatchService implements FileWatchService {
     @Nonnull
     private FileChangedEvent.Kind toKind(WatchEvent.Kind<?> watchEventKind) {
         final FileChangedEvent.Kind kind;
-        if (StandardWatchEventKinds.ENTRY_CREATE.equals(watchEventKind)) {
-            kind = FileChangedEvent.Kind.CREATED;
-        } else if (StandardWatchEventKinds.ENTRY_MODIFY.equals(watchEventKind)) {
-            kind = FileChangedEvent.Kind.MODIFIED;
+        if (ENTRY_CREATE.equals(watchEventKind)) {
+            kind = CREATED;
+        } else if (ENTRY_MODIFY.equals(watchEventKind)) {
+            kind = MODIFIED;
         } else {
-            kind = FileChangedEvent.Kind.DELETED;
+            kind = DELETED;
         }
         return kind;
     }
