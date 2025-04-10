@@ -37,6 +37,7 @@ import java.util.concurrent.Future;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
+import static io.microsphere.io.event.FileChangedEvent.Kind.values;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
@@ -45,6 +46,7 @@ import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link StandardFileWatchService} Test
@@ -83,11 +85,13 @@ public class StandardFileWatchServiceTest {
         this.countDownLatch = new CountDownLatch(3);
         this.executor = newSingleThreadExecutor();
 
-        fileWatchService.watch(targetFile, new MyFileChangedListener(this.countDownLatch));
+        fileWatchService.watch(targetFile, new MyFileChangedListener(this.countDownLatch), values());
         fileWatchService.watch(targetFile, new LoggingFileChangedListener());
         fileWatchService.watch(targetFile, new FileChangedListener() {
         });
         fileWatchService.start();
+
+        assertThrows(IllegalStateException.class, fileWatchService::start);
     }
 
     @AfterEach
