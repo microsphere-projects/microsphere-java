@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.ListUtils.forEach;
 import static io.microsphere.collection.ListUtils.isList;
+import static io.microsphere.collection.ListUtils.last;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.of;
@@ -39,6 +41,7 @@ import static java.util.Collections.enumeration;
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -53,12 +56,29 @@ public class ListUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ListUtilsTest.class);
 
+    private static final List<String> TEST_LIST = asList("A", "B", "C");
+
     @Test
     public void testIsList() {
         assertTrue(isList(new ArrayList()));
         assertTrue(isList(emptyList()));
-
         assertFalse(isList(emptyEnumeration()));
+        assertFalse(isList("A"));
+        assertFalse(isList(null));
+    }
+
+    @Test
+    public void testFirst() {
+        assertEquals("A", first(TEST_LIST));
+        assertNull(first(emptyList()));
+        assertNull(first(of()));
+    }
+
+    @Test
+    public void testLast() {
+        assertEquals("C", last(TEST_LIST));
+        assertNull(last(emptyList()));
+        assertNull(last(of()));
     }
 
     @Test
@@ -66,14 +86,14 @@ public class ListUtilsTest extends AbstractTestCase {
         List<String> list = of();
         assertTrue(list.isEmpty());
 
-        List<String> rawList = asList("A", "B", "C");
+        List<String> rawList = TEST_LIST;
         list = of("A", "B", "C");
         assertEquals(rawList, list);
     }
 
     @Test
     public void testOfList() {
-        List<String> rawList = asList("A", "B", "C");
+        List<String> rawList = TEST_LIST;
         List<String> list = ofList(rawList);
         assertEquals(rawList, list);
 
@@ -119,7 +139,7 @@ public class ListUtilsTest extends AbstractTestCase {
 
     @Test
     public void testForEach() {
-        List<String> list = asList("A", "B", "C");
+        List<String> list = TEST_LIST;
         forEach(list, (index, value) -> {
             logger.trace("forEach(index = {} , value = '{}')", index, value);
         });
