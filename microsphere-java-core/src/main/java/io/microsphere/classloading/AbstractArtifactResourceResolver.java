@@ -98,7 +98,7 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
     }
 
     @Nullable
-    protected InputStream readArtifactMetadataDataFromResource(URL resourceURL, ClassLoader classLoader) {
+    protected InputStream readArtifactMetadataDataFromResource(URL resourceURL, ClassLoader classLoader) throws IOException {
         return null;
     }
 
