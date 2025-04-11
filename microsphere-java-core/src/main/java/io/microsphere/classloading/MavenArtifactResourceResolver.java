@@ -45,11 +45,11 @@ public class MavenArtifactResourceResolver extends AbstractArtifactResourceResol
     public static final int DEFAULT_PRIORITY = 1;
 
     public MavenArtifactResourceResolver() {
-        super(DEFAULT_PRIORITY);
+        this(DEFAULT_PRIORITY);
     }
 
-    public MavenArtifactResourceResolver(ClassLoader classLoader) {
-        this(classLoader, DEFAULT_PRIORITY);
+    public MavenArtifactResourceResolver(int priority) {
+        super(priority);
     }
 
     public MavenArtifactResourceResolver(ClassLoader classLoader, int priority) {
