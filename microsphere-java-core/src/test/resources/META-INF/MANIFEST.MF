@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
-Bundle-Name: microsphere-java-core
-Bundle-Version: 1.0.0
+Bundle-Name: FindBugs-jsr305
+Bundle-Version: 3.0.2
 
