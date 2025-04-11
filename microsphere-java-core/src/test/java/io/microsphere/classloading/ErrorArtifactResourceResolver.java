@@ -32,7 +32,15 @@ import java.util.jar.JarEntry;
 public class ErrorArtifactResourceResolver extends AbstractArtifactResourceResolver {
 
     public ErrorArtifactResourceResolver() {
-        super(0);
+        this(0);
+    }
+
+    public ErrorArtifactResourceResolver(int priority) {
+        super(priority);
+    }
+
+    public ErrorArtifactResourceResolver(ClassLoader classLoader, int priority) {
+        super(classLoader, priority);
     }
 
     @Override
