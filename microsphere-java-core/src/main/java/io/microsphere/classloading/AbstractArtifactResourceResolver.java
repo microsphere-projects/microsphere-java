@@ -20,15 +20,20 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.ListUtils.first;
+import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.io.IOUtils.close;
+import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -121,8 +126,16 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
     }
 
     @Nullable
-    protected InputStream readArtifactMetadataDataFromDirectory(File Directory) throws IOException {
-        return null;
+    protected InputStream readArtifactMetadataDataFromDirectory(File directory) throws IOException {
+        Set<File> files = INSTANCE.scan(directory, true, file -> isArtifactMetadataFile(directory, file));
+        File artifactMetadataFile = first(files);
+        if (artifactMetadataFile == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifact metadata file can't be found in the directory[path: '{}']", directory);
+            }
+            return null;
+        }
+        return new FileInputStream(artifactMetadataFile);
     }
 
     protected JarEntry resolveArtifactMetadataEntry(JarFile jarFile) throws IOException {
@@ -130,7 +143,18 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
         return first(entries);
     }
 
-    protected abstract boolean isArtifactMetadataEntry(JarEntry jarEntry);
+    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
+        return isArtifactMetadata(jarEntry.getName());
+    }
+
+    protected boolean isArtifactMetadataFile(File directory, File file) {
+        String path = resolveRelativePath(directory, file);
+        return isArtifactMetadata(path);
+    }
+
+    protected boolean isArtifactMetadata(String path) {
+        return false;
+    }
 
     protected abstract Artifact resolve(URL resourceURL, @Nullable InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
 
