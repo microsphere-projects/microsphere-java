@@ -152,7 +152,7 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
         return isArtifactMetadata(path);
     }
 
-    protected boolean isArtifactMetadata(String path) {
+    protected boolean isArtifactMetadata(String relativePath) {
         return false;
     }
 
