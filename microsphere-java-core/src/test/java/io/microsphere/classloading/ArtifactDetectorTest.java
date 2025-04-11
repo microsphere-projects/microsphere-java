@@ -17,6 +17,7 @@
 package io.microsphere.classloading;
 
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -33,13 +35,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ArtifactDetector
  * @since 1.0.0
  */
-public class ArtifactDetectorTest {
+public class ArtifactDetectorTest extends AbstractTestCase {
 
     @Test
     public void testDetect() {
         ArtifactDetector instance = new ArtifactDetector();
         List<Artifact> artifacts = instance.detect();
-        assertFalse(artifacts.isEmpty());
+        if (JACOCO_AGENT_INSTRUCTED) {
+            assertNotNull(artifacts);
+        } else {
+            assertFalse(artifacts.isEmpty());
+        }
     }
 
     @Test
