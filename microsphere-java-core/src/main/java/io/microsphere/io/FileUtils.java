@@ -10,11 +10,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
-import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
-import static io.microsphere.net.URLUtils.normalizePath;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static java.io.File.separatorChar;
 
 /**
  * {@link File} Utility
@@ -34,12 +34,21 @@ public abstract class FileUtils extends BaseUtils {
      * <code>null</code>
      */
     public static String resolveRelativePath(File parentDirectory, File targetFile) {
-        String parentDirectoryPath = parentDirectory.getAbsolutePath();
-        String targetFilePath = targetFile.getAbsolutePath();
-        if (!targetFilePath.contains(parentDirectoryPath)) {
+        if (!parentDirectory.isDirectory()) {
             return null;
         }
-        return normalizePath(replace(targetFilePath, parentDirectoryPath, FILE_SEPARATOR));
+        String parentDirectoryPath = parentDirectory.getAbsolutePath();
+        String targetFilePath = targetFile.getAbsolutePath();
+        int index = targetFilePath.indexOf(parentDirectoryPath);
+        String relativePath = null;
+        if (index == 0) {
+            relativePath = targetFilePath.substring(parentDirectoryPath.length());
+            if (isEmpty(relativePath)) {
+                return relativePath;
+            }
+            return relativePath.substring(1).replace(separatorChar, SLASH_CHAR);
+        }
+        return null;
     }
 
     /**
