@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MavenArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<MavenArtifactResourceResolver> {
 
     @Override
-    protected void assertArtifactFromFile(Artifact artifact) throws Throwable {
+    protected void assertArtifact(Artifact artifact) throws Throwable {
         assertTrue(artifact instanceof MavenArtifact);
         MavenArtifact mavenArtifact = (MavenArtifact) artifact;
 
