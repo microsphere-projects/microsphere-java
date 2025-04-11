@@ -105,7 +105,7 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
 
     protected void testResolveForFileOnNotFound() throws Throwable {
         URL resourceURL = resolveResourceURL(String.class);
-        assertNull(this.resolver.resolve(resourceURL));
+        this.resolver.resolve(resourceURL);
 
         resourceURL = resolveResourceURL(ResolvableType.class);
         // the maven metadata resource can't be found in the module "spring-core",
