@@ -378,7 +378,16 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetResourceOnNullClassLoader() {
+        assertGetResource();
         assertGetResource(null);
+    }
+
+    private void assertGetResource() {
+        for (String testResource : testResources) {
+            URL resourceURL = getResource(testResource);
+            assertNotNull(resourceURL);
+            log(resourceURL);
+        }
     }
 
     private void assertGetResource(ClassLoader classLoader) {
