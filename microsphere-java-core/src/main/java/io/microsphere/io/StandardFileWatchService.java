@@ -118,7 +118,7 @@ public class StandardFileWatchService implements FileWatchService {
                             FileChangedMetadata metadata = fileChangedMetadataCache.get(dirPath);
                             if (metadata != null) {
                                 Path filePath = dirPath.resolve(fileRelativePath);
-                                if (isDirectory(dirPath) || metadata.filePaths.contains(filePath)) {
+                                if (isDirectory(dirPath, NOFOLLOW_LINKS) || metadata.filePaths.contains(filePath)) {
                                     EventDispatcher eventDispatcher = metadata.eventDispatcher;
                                     WatchEvent.Kind watchEventKind = event.kind();
                                     dispatchFileChangedEvent(filePath, watchEventKind, eventDispatcher);
