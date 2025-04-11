@@ -165,14 +165,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         } catch (Throwable ignored) {
         }
 
-        if (classLoader == null) { // If the ClassLoader is also not found,
-            // try to get the ClassLoader from the Caller class
-            Class<?> callerClass = getCallerClass(3);
-            if (callerClass != null) {
-                classLoader = callerClass.getClassLoader();
-            }
-        }
-
         if (classLoader == null) {
             classLoader = ClassLoaderUtils.class.getClassLoader();
         }
