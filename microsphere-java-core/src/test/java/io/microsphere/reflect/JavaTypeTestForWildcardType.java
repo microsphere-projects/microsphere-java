@@ -25,7 +25,6 @@ import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
-import static io.microsphere.reflect.JavaTypeKindTest.TEST_PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.JavaTypeKindTest.TEST_WILDCARD_TYPE;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
