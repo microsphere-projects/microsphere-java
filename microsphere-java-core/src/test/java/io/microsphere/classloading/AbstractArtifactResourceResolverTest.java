@@ -18,6 +18,7 @@ package io.microsphere.classloading;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.ResolvableType;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -72,22 +73,33 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
 
     @Test
     public void testResolve() throws Throwable {
-        testResolveOnFile();
-        testResolveOnDirectory();
-        testResolveOnInvalidDirectory();
+        testResolveForFile();
+        testResolveForFileOnNotFound();
+        testResolveForDirectory();
+        testResolveForDirectoryOnNotFound();
         testResolveOnResource();
         testResolveOnNull();
     }
 
-    protected void testResolveOnFile() throws Throwable {
+    protected void testResolveForFile() throws Throwable {
         assertArtifact(Nonnull.class);
     }
 
-    protected void testResolveOnDirectory() throws Throwable {
+    protected void testResolveForFileOnNotFound() throws Throwable {
+        URL resourceURL = resolveResourceURL(String.class);
+        assertNull(this.resolver.resolve(resourceURL));
+
+        resourceURL = resolveResourceURL(ResolvableType.class);
+        // the maven metadata resource can't be found in the module "spring-core",
+        // except "META-INF/MANIFEST.MF"
+        this.resolver.resolve(resourceURL);
+    }
+
+    protected void testResolveForDirectory() throws Throwable {
         assertArtifact(AbstractArtifactResourceResolverTest.class);
     }
 
-    protected void testResolveOnInvalidDirectory() throws Throwable {
+    protected void testResolveForDirectoryOnNotFound() throws Throwable {
         URL resourceURL = resolveResourceURL(AbstractArtifactResourceResolver.class);
         assertNull(this.resolver.resolve(resourceURL));
     }
@@ -110,7 +122,7 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     URL resolveResourceURL(Class<?> targetClass) throws MalformedURLException {
         URL classResource = getClassResource(this.resolver.classLoader, targetClass);
         File archiveFile = resolveArchiveFile(classResource);
-        return archiveFile.toURI().toURL();
+        return archiveFile == null ? null : archiveFile.toURI().toURL();
     }
 
 
