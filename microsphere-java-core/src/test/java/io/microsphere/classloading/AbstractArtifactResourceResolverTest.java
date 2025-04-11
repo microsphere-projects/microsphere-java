@@ -22,12 +22,14 @@ import org.springframework.core.ResolvableType;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -53,6 +55,17 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
                 .getGenericType(0)
                 .toClass()
                 .newInstance();
+    }
+
+    @Test
+    public void testNonDefaultConstructor() throws Throwable {
+        Class<?> resolveClass = resolver.getClass();
+
+        Constructor constructor = resolveClass.getConstructor(int.class);
+        assertNotNull(constructor.newInstance(0));
+
+        constructor = resolveClass.getConstructor(ClassLoader.class, int.class);
+        assertNotNull(constructor.newInstance(getDefaultClassLoader(), 0));
     }
 
     @Test
