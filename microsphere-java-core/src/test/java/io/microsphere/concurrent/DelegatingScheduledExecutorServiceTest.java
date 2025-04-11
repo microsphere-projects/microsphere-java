@@ -89,7 +89,7 @@ public class DelegatingScheduledExecutorServiceTest {
 
         // test invokeAny
         assertEquals("Hello,World", instance.invokeAny(ofList(() -> "Hello,World")));
-        assertEquals("Hello,World", instance.invokeAny(ofList(() -> "Hello,World"), 1, MILLISECONDS));
+        assertEquals("Hello,World", instance.invokeAny(ofList(() -> "Hello,World"), 5, MILLISECONDS));
 
         // test execute
         instance.execute(() -> {
