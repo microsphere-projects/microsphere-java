@@ -85,6 +85,11 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     @Test
+    public final void testToString() {
+        assertNotNull(this.resolver.toString());
+    }
+
+    @Test
     public void testResolve() throws Throwable {
         testResolveForFile();
         testResolveForFileOnNotFound();

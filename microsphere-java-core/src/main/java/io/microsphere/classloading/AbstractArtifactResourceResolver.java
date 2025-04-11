@@ -167,4 +167,14 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
     public final int getPriority() {
         return priority;
     }
+
+    @Override
+    public final String toString() {
+        final StringBuilder sb = new StringBuilder(getClass().getSimpleName());
+        sb.append('{');
+        sb.append("classLoader=").append(classLoader);
+        sb.append(", priority=").append(priority);
+        sb.append('}');
+        return sb.toString();
+    }
 }
