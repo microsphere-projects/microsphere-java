@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.Prioritized;
 import org.junit.jupiter.api.Test;
 
@@ -72,7 +73,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class MethodUtilsTest {
+public class MethodUtilsTest extends AbstractTestCase {
 
     private static final int JACOCO_ADDED_METHOD_COUNT;
 
