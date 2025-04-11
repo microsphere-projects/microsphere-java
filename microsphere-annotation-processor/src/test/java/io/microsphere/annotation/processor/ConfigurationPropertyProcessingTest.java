@@ -17,6 +17,7 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.classloading.ManifestArtifactResourceResolver;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -41,12 +42,12 @@ public class ConfigurationPropertyProcessingTest extends AbstractAnnotationProce
 
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-        compiledClasses.add(ManifestArtifactResolver.class);
+        compiledClasses.add(ManifestArtifactResourceResolver.class);
     }
 
     @Test
     public void test() {
-        TypeElement type = getTypeElement(ManifestArtifactResolver.class);
+        TypeElement type = getTypeElement(ManifestArtifactResourceResolver.class);
         List<VariableElement> fields = getDeclaredFields(type);
         assertNotNull(fields);
         for (VariableElement field : fields) {
