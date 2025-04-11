@@ -19,11 +19,11 @@ package io.microsphere.io;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.event.EventDispatcher;
 import io.microsphere.io.event.FileChangedEvent;
+import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.io.event.FileChangedListener;
 
 import java.io.File;
 import java.nio.file.FileSystem;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -31,11 +31,11 @@ import java.nio.file.WatchService;
 import java.nio.file.Watchable;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
+import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
@@ -73,7 +73,7 @@ public class StandardFileWatchService implements FileWatchService {
 
     private final Executor workerExecutor;
 
-    private final Map<Path, FileChangedMetadata> fileChangedMetadataCache = new TreeMap<>();
+    private final Map<Path, FileChangedMetadata> fileChangedMetadataCache = newTreeMap();
 
     private volatile boolean started;
 
@@ -137,7 +137,7 @@ public class StandardFileWatchService implements FileWatchService {
 
     private void dispatchFileChangedEvent(Path filePath, WatchEvent.Kind watchEventKind, EventDispatcher eventDispatcher) {
         File file = filePath.toFile();
-        FileChangedEvent.Kind kind = toKind(watchEventKind);
+        Kind kind = toKind(watchEventKind);
         FileChangedEvent fileChangedEvent = new FileChangedEvent(file, kind);
         eventDispatcher.dispatch(fileChangedEvent);
     }
@@ -152,14 +152,14 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     @Override
-    public void watch(File file, FileChangedListener listener, FileChangedEvent.Kind... kinds) {
+    public void watch(File file, FileChangedListener listener, Kind... kinds) {
         Path filePath = file.toPath();
         FileChangedMetadata metadata = getMetadata(filePath, kinds);
         metadata.filePaths.add(filePath);
         metadata.eventDispatcher.addEventListener(listener);
     }
 
-    private FileChangedMetadata getMetadata(Path filePath, FileChangedEvent.Kind... kinds) {
+    private FileChangedMetadata getMetadata(Path filePath, Kind... kinds) {
         final Path dirPath = isDirectory(filePath, NOFOLLOW_LINKS) ? filePath : filePath.getParent();
         return fileChangedMetadataCache.computeIfAbsent(dirPath, k -> {
             FileChangedMetadata metadata = new FileChangedMetadata();
@@ -170,21 +170,21 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     @Nonnull
-    private WatchEvent.Kind<?>[] toWatchEventKinds(FileChangedEvent.Kind[] kinds) {
+    private WatchEvent.Kind<?>[] toWatchEventKinds(Kind[] kinds) {
         int size = length(kinds);
         if (size < 1) {
             return ALL_WATCH_EVENT_KINDS;
         }
         WatchEvent.Kind<?>[] watchEventKinds = new WatchEvent.Kind[size];
         for (int i = 0; i < size; i++) {
-            FileChangedEvent.Kind kind = kinds[i];
+            Kind kind = kinds[i];
             watchEventKinds[i] = toWatchEventKind(kind);
         }
         return watchEventKinds;
     }
 
     @Nonnull
-    private WatchEvent.Kind<?> toWatchEventKind(FileChangedEvent.Kind kind) {
+    private WatchEvent.Kind<?> toWatchEventKind(Kind kind) {
         WatchEvent.Kind<?> watchEventKind = OVERFLOW;
         switch (kind) {
             case CREATED:
@@ -201,8 +201,8 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     @Nonnull
-    private FileChangedEvent.Kind toKind(WatchEvent.Kind<?> watchEventKind) {
-        final FileChangedEvent.Kind kind;
+    private Kind toKind(WatchEvent.Kind<?> watchEventKind) {
+        final Kind kind;
         if (ENTRY_CREATE.equals(watchEventKind)) {
             kind = CREATED;
         } else if (ENTRY_MODIFY.equals(watchEventKind)) {
