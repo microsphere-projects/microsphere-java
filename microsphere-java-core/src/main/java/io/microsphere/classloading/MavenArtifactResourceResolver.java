@@ -16,20 +16,13 @@
  */
 package io.microsphere.classloading;
 
-import io.microsphere.filter.JarEntryFilter;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 import java.util.Properties;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import static io.microsphere.classloading.MavenArtifact.create;
-import static io.microsphere.net.URLUtils.isJarURL;
-import static io.microsphere.util.jar.JarUtils.filter;
-import static io.microsphere.util.jar.JarUtils.toJarFile;
 
 /**
  * {@link ArtifactResourceResolver} for Maven
@@ -43,8 +36,6 @@ public class MavenArtifactResourceResolver extends AbstractArtifactResourceResol
     public static final String MAVEN_POM_PROPERTIES_RESOURCE_PREFIX = "META-INF/maven/";
 
     public static final String MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX = "/pom.properties";
-
-    public static final MavenPomPropertiesFilter MAVEN_POM_PROPERTIES_FILTER = new MavenPomPropertiesFilter();
 
     public static final String GROUP_ID_PROPERTY_NAME = "groupId";
 
@@ -67,40 +58,23 @@ public class MavenArtifactResourceResolver extends AbstractArtifactResourceResol
     }
 
     @Override
-    protected Artifact doResolve(URL resourceURL, ClassLoader classLoader) throws IOException {
-        URL mavenPomPropertiesResource = findMavenPomPropertiesResource(resourceURL, classLoader);
-        return resolveArtifactMetaInfoInMavenPomProperties(mavenPomPropertiesResource);
+    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
+        String name = jarEntry.getName();
+        int begin = name.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
+        if (begin == 0) {
+            begin += MAVEN_POM_PROPERTIES_RESOURCE_PREFIX.length();
+            int end = name.lastIndexOf(MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX);
+            return end > begin;
+        }
+
+        return false;
     }
 
-    URL findMavenPomPropertiesResource(URL classPathURL, ClassLoader classLoader) throws IOException {
-        if (isJarURL(classPathURL)) {
-            return findMavenPomPropertiesResourceInJar(classPathURL, classLoader);
-        }
-        return null;
-    }
-
-    URL findMavenPomPropertiesResourceInJar(URL resourceURL, ClassLoader classLoader) throws IOException {
-        JarFile jarFile = toJarFile(resourceURL);
-        List<JarEntry> entries = filter(jarFile, MAVEN_POM_PROPERTIES_FILTER);
-        if (entries.isEmpty()) {
-            return null;
-        }
-        JarEntry jarEntry = entries.get(0);
-        String relativePath = jarEntry.getName();
-        return classLoader.getResource(relativePath);
-    }
-
-    Artifact resolveArtifactMetaInfoInMavenPomProperties(URL mavenPomPropertiesResourceURL) throws IOException {
-        Artifact artifact = null;
-        if (mavenPomPropertiesResourceURL != null) {
-            try (InputStream mavenPomPropertiesStream = mavenPomPropertiesResourceURL.openStream()) {
-                Properties properties = new Properties();
-                properties.load(mavenPomPropertiesStream);
-                URL artifactResourceURL = resolveArtifactResourceURL(mavenPomPropertiesResourceURL);
-                artifact = resolveArtifactMetaInfoInMavenPomProperties(properties, artifactResourceURL);
-            }
-        }
-        return artifact;
+    @Override
+    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
+        Properties properties = new Properties();
+        properties.load(artifactMetadataData);
+        return resolveArtifactMetaInfoInMavenPomProperties(properties, resourceURL);
     }
 
     Artifact resolveArtifactMetaInfoInMavenPomProperties(Properties properties,
@@ -109,21 +83,5 @@ public class MavenArtifactResourceResolver extends AbstractArtifactResourceResol
         String artifactId = properties.getProperty(ARTIFACT_ID_PROPERTY_NAME);
         String version = properties.getProperty(VERSION_PROPERTY_NAME);
         return create(groupId, artifactId, version, artifactResourceURL);
-    }
-
-    static class MavenPomPropertiesFilter implements JarEntryFilter {
-
-        @Override
-        public boolean accept(JarEntry entry) {
-            String name = entry.getName();
-            int begin = name.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
-            if (begin == 0) {
-                begin += MAVEN_POM_PROPERTIES_RESOURCE_PREFIX.length();
-                int end = name.lastIndexOf(MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX);
-                return end > begin;
-            }
-
-            return false;
-        }
     }
 }
