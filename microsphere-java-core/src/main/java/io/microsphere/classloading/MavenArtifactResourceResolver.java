@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
-import java.util.jar.JarEntry;
 
 import static io.microsphere.classloading.MavenArtifact.create;
 
@@ -58,15 +57,13 @@ public class MavenArtifactResourceResolver extends AbstractArtifactResourceResol
     }
 
     @Override
-    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
-        String name = jarEntry.getName();
-        int begin = name.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
+    protected boolean isArtifactMetadata(String path) {
+        int begin = path.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
         if (begin == 0) {
             begin += MAVEN_POM_PROPERTIES_RESOURCE_PREFIX.length();
-            int end = name.lastIndexOf(MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX);
+            int end = path.lastIndexOf(MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX);
             return end > begin;
         }
-
         return false;
     }
 
