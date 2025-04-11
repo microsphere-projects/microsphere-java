@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
+import static io.microsphere.reflect.MemberUtils.PUBLIC_MEMBER_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
@@ -96,7 +97,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testPUBLIC_METHOD_PREDICATE() {
-        assertTrue(MemberUtils.PUBLIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
+        assertTrue(PUBLIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
     }
 
     @Test
