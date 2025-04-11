@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.Parameter;
@@ -137,6 +138,11 @@ public abstract class ArrayUtils {
      * An empty immutable {@code String} array.
      */
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
+
+    /**
+     * An empty immutable {@code File} array.
+     */
+    public static final File[] EMPTY_FILE_ARRAY = new File[0];
 
     /**
      * An empty immutable {@code URL} array.
