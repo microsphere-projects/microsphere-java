@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static io.microsphere.io.filter.DirectoryFileFilter.INSTANCE;
 import static io.microsphere.io.filter.FileExtensionFilter.of;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
