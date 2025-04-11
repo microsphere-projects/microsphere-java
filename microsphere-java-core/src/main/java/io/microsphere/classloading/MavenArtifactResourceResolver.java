@@ -57,11 +57,11 @@ public class MavenArtifactResourceResolver extends AbstractArtifactResourceResol
     }
 
     @Override
-    protected boolean isArtifactMetadata(String path) {
-        int begin = path.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
+    protected boolean isArtifactMetadata(String relativePath) {
+        int begin = relativePath.indexOf(MAVEN_POM_PROPERTIES_RESOURCE_PREFIX);
         if (begin == 0) {
             begin += MAVEN_POM_PROPERTIES_RESOURCE_PREFIX.length();
-            int end = path.lastIndexOf(MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX);
+            int end = relativePath.lastIndexOf(MAVEN_POM_PROPERTIES_RESOURCE_SUFFIX);
             return end > begin;
         }
         return false;
