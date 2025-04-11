@@ -17,8 +17,6 @@ import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
 import static io.microsphere.net.URLUtils.isArchiveURL;
-import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.System.getProperty;
 
