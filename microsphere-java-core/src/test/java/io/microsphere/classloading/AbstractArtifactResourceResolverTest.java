@@ -28,6 +28,7 @@ import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link AbstractArtifactResourceResolver} Test
@@ -64,18 +65,34 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     @Test
-    public final void testGetProperty() {
+    public final void testGetPriority() {
         assertEquals(this.resolver.priority, this.resolver.getPriority());
     }
 
     @Test
     public void testResolve() throws Throwable {
-        URL classResource = getClassResource(this.resolver.classLoader, Nonnull.class);
-        URL resourceURL = this.resolver.resolveArtifactResourceURL(classResource);
-        Artifact artifact = this.resolver.resolve(resourceURL);
-        assertArtifact(artifact);
+        testResolveOnFile();
+        testResolveOnDirectory();
+        testResolveOnNull();
     }
 
-    protected abstract void assertArtifact(Artifact artifact) throws Throwable;
+    protected void testResolveOnFile() throws Throwable {
+        URL classResource = getClassResource(this.resolver.classLoader, Nonnull.class);
+        File archiveFile = resolveArchiveFile(classResource);
+        URL resourceURL = archiveFile.toURI().toURL();
+        Artifact artifact = this.resolver.resolve(resourceURL);
+        assertArtifactFromFile(artifact);
+    }
+
+    protected void testResolveOnDirectory() {
+
+    }
+
+    protected void testResolveOnNull() throws Throwable {
+        assertNull(this.resolver.resolve(null));
+    }
+
+
+    protected abstract void assertArtifactFromFile(Artifact artifact) throws Throwable;
 
 }
