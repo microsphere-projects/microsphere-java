@@ -74,6 +74,8 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     public void testResolve() throws Throwable {
         testResolveOnFile();
         testResolveOnDirectory();
+        testResolveOnInvalidDirectory();
+        testResolveOnResource();
         testResolveOnNull();
     }
 
@@ -83,6 +85,20 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
 
     protected void testResolveOnDirectory() throws Throwable {
         assertArtifact(AbstractArtifactResourceResolverTest.class);
+    }
+
+    protected void testResolveOnInvalidDirectory() throws Throwable {
+        URL resourceURL = resolveResourceURL(AbstractArtifactResourceResolver.class);
+        assertNull(this.resolver.resolve(resourceURL));
+    }
+
+    protected void testResolveOnResource() throws Throwable {
+        URL resourceURL = new URL("http://localhost/not-found/");
+        assertNull(this.resolver.resolve(resourceURL));
+    }
+
+    protected void testResolveOnNull() throws Throwable {
+        assertNull(this.resolver.resolve(null));
     }
 
     void assertArtifact(Class<?> targetClass) throws Throwable {
@@ -95,10 +111,6 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
         URL classResource = getClassResource(this.resolver.classLoader, targetClass);
         File archiveFile = resolveArchiveFile(classResource);
         return archiveFile.toURI().toURL();
-    }
-
-    protected void testResolveOnNull() throws Throwable {
-        assertNull(this.resolver.resolve(null));
     }
 
 
