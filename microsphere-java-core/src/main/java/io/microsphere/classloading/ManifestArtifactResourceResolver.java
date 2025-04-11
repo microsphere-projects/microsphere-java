@@ -1,34 +1,48 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.microsphere.classloading;
-
 
 import io.microsphere.annotation.ConfigurationProperty;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import static io.microsphere.classloading.Artifact.create;
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
+import static io.microsphere.constants.SymbolConstants.HYPHEN_CHAR;
 import static io.microsphere.net.URLUtils.isArchiveURL;
-import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.System.getProperty;
 
 /**
- * The class {@link ArtifactResolver} based on the resource "META-INF/MANIFEST.MF"
+ * {@link ArtifactResourceResolver} for Manifest
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see AbstractArtifactResourceResolver
+ * @see ArtifactResourceResolver
  * @since 1.0.0
  */
-public class ManifestArtifactResolver extends AbstractArtifactResolver {
+public class ManifestArtifactResourceResolver extends AbstractArtifactResourceResolver {
 
     public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
 
@@ -64,57 +78,43 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
 
     private static String[] getPropertyValues(String propertyName, String defaultValue) {
         String propertyValue = getProperty(propertyName, defaultValue);
-        String[] values = split(propertyValue, COMMA);
-        return isNotEmpty(values) ? values : EMPTY_STRING_ARRAY;
+        return split(propertyValue, COMMA);
     }
 
     public static final int DEFAULT_PRIORITY = 2;
 
-    public ManifestArtifactResolver() {
-        setPriority(DEFAULT_PRIORITY);
+    public ManifestArtifactResourceResolver() {
+        this(DEFAULT_PRIORITY);
+    }
+
+    public ManifestArtifactResourceResolver(int priority) {
+        super(priority);
+    }
+
+    public ManifestArtifactResourceResolver(ClassLoader classLoader, int priority) {
+        super(classLoader, priority);
     }
 
     @Override
-    protected void doResolve(Collection<Artifact> artifactSet, URLClassLoader urlClassLoader) {
-        try {
-            Enumeration<URL> manifestResourceURLs = urlClassLoader.getResources(MANIFEST_RESOURCE_PATH);
-            while (manifestResourceURLs.hasMoreElements()) {
-                Artifact artifact = resolveArtifactMetaInfoInManifest(manifestResourceURLs.nextElement());
-                if (artifact != null) {
-                    artifactSet.add(artifact);
-                }
-            }
-        } catch (IOException e) {
-            logger.error("{} can't be resolved", MANIFEST_RESOURCE_PATH, e);
-        }
+    protected boolean isArtifactMetadata(String relativePath) {
+        return MANIFEST_RESOURCE_PATH.equals(relativePath);
     }
 
-    private Artifact resolveArtifactMetaInfoInManifest(URL manifestResourceURL) {
-        Artifact artifact = null;
-        try (InputStream inputStream = manifestResourceURL.openStream()) {
-            Manifest manifest = new Manifest(inputStream);
-            artifact = resolveArtifactMetaInfoInManifest(manifest, manifestResourceURL);
-        } catch (IOException e) {
-            logger.error("{}[Path : {}] can't be resolved", MANIFEST_RESOURCE_PATH, manifestResourceURL.getPath(), e);
-        }
-        return artifact;
+    @Override
+    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
+        Manifest manifest = new Manifest(artifactMetadataData);
+        return resolveArtifactMetaInfoInManifest(manifest, resourceURL);
     }
 
-    private Artifact resolveArtifactMetaInfoInManifest(Manifest manifest, URL manifestResourceURL)
-            throws MalformedURLException {
+    private Artifact resolveArtifactMetaInfoInManifest(Manifest manifest, URL resourceURL) throws IOException {
         Attributes mainAttributes = manifest.getMainAttributes();
-        URL artifactResourceURL = resolveArtifactResourceURL(manifestResourceURL);
-        if (artifactResourceURL == null) {
-            return null;
-        }
-
-        boolean isArchiveURL = isArchiveURL(artifactResourceURL);
-        String artifactId = resolveArtifactId(mainAttributes, artifactResourceURL, isArchiveURL);
+        boolean isArchiveURL = isArchiveURL(resourceURL);
+        String artifactId = resolveArtifactId(mainAttributes, resourceURL, isArchiveURL);
         if (artifactId == null) {
             return null;
         }
-        String version = resolveVersion(mainAttributes, artifactId, artifactResourceURL, isArchiveURL);
-        return Artifact.create(artifactId, version, artifactResourceURL);
+        String version = resolveVersion(mainAttributes, artifactId, resourceURL, isArchiveURL);
+        return create(artifactId, version, resourceURL);
     }
 
     private String resolveArtifactId(Attributes attributes, URL artifactResourceURL, boolean isArchiveURL) {
@@ -131,14 +131,13 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
             artifactId = resolveArtifactId(artifactResourceURL);
         }
 
-        if (artifactId == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The artifactId can't be resolved from the {} of artifact[resource: {}] : {}",
-                        artifactResourceURL.getPath(),
-                        MANIFEST_RESOURCE_PATH,
-                        attributes.entrySet()
-                );
-            }
+        if (logger.isTraceEnabled()) {
+            logger.trace("The artifactId was resolved from the '{}' of resource URL['{}'] of  : {} , attributes : {}",
+                    MANIFEST_RESOURCE_PATH,
+                    artifactResourceURL.getPath(),
+                    artifactId,
+                    attributes.entrySet()
+            );
         }
 
         return artifactId;
@@ -146,7 +145,7 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
 
     private String resolveArtifactId(URL artifactResourceURL) {
         String path = artifactResourceURL.getPath();
-        int lastSlashIndex = path.lastIndexOf('/');
+        int lastSlashIndex = path.lastIndexOf(SLASH_CHAR);
         if (lastSlashIndex < 0) {
             return null;
         }
@@ -155,7 +154,7 @@ public class ManifestArtifactResolver extends AbstractArtifactResolver {
             return null;
         }
         String jarFileName = path.substring(lastSlashIndex + 1, fileExtensionIndex);
-        int lastHyphenIndex = jarFileName.lastIndexOf('-');
+        int lastHyphenIndex = jarFileName.lastIndexOf(HYPHEN_CHAR);
         if (lastHyphenIndex < 0) {
             return jarFileName;
         }

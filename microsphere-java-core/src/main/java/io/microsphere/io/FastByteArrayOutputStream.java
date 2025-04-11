@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOf;
 
 /**
@@ -71,7 +73,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
      * Attempts to allocate larger arrays may result in
      * OutOfMemoryError: Requested array size exceeds VM limit
      */
-    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+    private static final int MAX_ARRAY_SIZE = MAX_VALUE - 8;
 
     /**
      * Increases the capacity to ensure that it can hold at least the
@@ -109,7 +111,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
             throw new IndexOutOfBoundsException();
         }
         ensureCapacity(count + len);
-        System.arraycopy(b, off, buf, count, len);
+        arraycopy(b, off, buf, count, len);
         count += len;
     }
 

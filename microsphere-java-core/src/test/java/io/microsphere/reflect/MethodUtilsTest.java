@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import io.microsphere.lang.Prioritized;
 import org.junit.jupiter.api.Test;
 
-import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -27,7 +26,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
+import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
+import static io.microsphere.reflect.MemberUtils.PUBLIC_MEMBER_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
@@ -77,12 +77,8 @@ public class MethodUtilsTest {
     private static final int JACOCO_ADDED_METHOD_COUNT;
 
     static {
-        RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
-        JACOCO_ADDED_METHOD_COUNT = runtimeMXBean.getInputArguments()
-                .stream()
-                .filter(arg -> arg.contains("org.jacoco.agent")).count() > 0 ? 1 : 0;
+        JACOCO_ADDED_METHOD_COUNT = JACOCO_AGENT_INSTRUCTED ? 1 : 0;
     }
-
 
     @Test
     public void testSTATIC_METHOD_PREDICATE() {
@@ -101,7 +97,7 @@ public class MethodUtilsTest {
 
     @Test
     public void testPUBLIC_METHOD_PREDICATE() {
-        assertTrue(MemberUtils.PUBLIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
+        assertTrue(PUBLIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
     }
 
     @Test

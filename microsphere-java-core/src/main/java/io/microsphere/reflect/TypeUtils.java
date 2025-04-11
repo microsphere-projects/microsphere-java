@@ -41,12 +41,15 @@ import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
+import static io.microsphere.reflect.MultipleType.of;
+import static io.microsphere.reflect.generics.TypeArgument.create;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.lang.Integer.getInteger;
+import static java.lang.Math.min;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
@@ -206,7 +209,10 @@ public abstract class TypeUtils {
     }
 
     protected static List<Class> doResolveActualTypeArgumentClasses(Type type, Type baseType) {
-        return doResolveActualTypeArguments(type, baseType).stream().map(TypeUtils::asClass).filter(Objects::nonNull).collect(toList());
+        return doResolveActualTypeArguments(type, baseType).stream()
+                .map(TypeUtils::asClass)
+                .filter(Objects::nonNull)
+                .collect(toList());
     }
 
     protected static List<Type> doResolveActualTypeArguments(Type type, Type baseType) {
@@ -222,7 +228,7 @@ public abstract class TypeUtils {
         if (type == null || baseClass == null) { // the raw class of type or baseType is null
             return emptyList();
         }
-        return resolvedGenericTypesCache.computeIfAbsent(MultipleType.of(type, baseClass), mt -> {
+        return resolvedGenericTypesCache.computeIfAbsent(of(type, baseClass), mt -> {
 
             TypeVariable<Class>[] baseTypeParameters = baseClass.getTypeParameters();
             int baseTypeParametersLength = baseTypeParameters.length;
@@ -321,7 +327,7 @@ public abstract class TypeUtils {
         Type[] actualTypeArguments = type.getActualTypeArguments();
         int actualTypeArgumentsLength = actualTypeArguments.length;
 
-        int length = Math.min(actualTypeArgumentsLength, baseTypeArgumentsLength);
+        int length = min(actualTypeArgumentsLength, baseTypeArgumentsLength);
 
         int actualTypesCount = 0;
 
@@ -329,11 +335,11 @@ public abstract class TypeUtils {
             Type actualTypeArgument = actualTypeArguments[i];
             if (isActualType(actualTypeArgument)) {
                 actualTypesCount++;
-                typeArguments[i] = TypeArgument.create(actualTypeArgument, i);
+                typeArguments[i] = create(actualTypeArgument, i);
             }
         }
 
-        if (klass.equals(baseClass)) { // 'klass' is same as baseClass
+        if (klass == baseClass) { // 'klass' is same as baseClass
             return;
         }
 

@@ -38,6 +38,7 @@ import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TransferQueue;
 
 import static io.microsphere.collection.Lists.ofList;
+import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -113,6 +114,6 @@ public class StringToTransferQueueConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE - 4, converter.getPriority());
+        assertEquals(MAX_VALUE - 4, converter.getPriority());
     }
 }

@@ -18,8 +18,6 @@ package io.microsphere.constants;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
 import static io.microsphere.constants.Constants.AND;
 import static io.microsphere.constants.Constants.AND_CHAR;
 import static io.microsphere.constants.Constants.ARCHIVE_ENTRY_SEPARATOR;
@@ -100,6 +98,9 @@ import static io.microsphere.constants.Constants.WILDCARD_CHAR;
 import static io.microsphere.constants.Constants.ZIP;
 import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.lang.System.lineSeparator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -144,9 +145,9 @@ public class ConstantsTest {
         assertEquals("classpath", CLASSPATH_PROTOCOL);
 
         assertEquals("!/", ARCHIVE_ENTRY_SEPARATOR);
-        assertEquals(File.separator, FILE_SEPARATOR);
-        assertEquals(File.pathSeparator, PATH_SEPARATOR);
-        assertEquals(System.lineSeparator(), LINE_SEPARATOR);
+        assertEquals(separator, FILE_SEPARATOR);
+        assertEquals(pathSeparator, PATH_SEPARATOR);
+        assertEquals(lineSeparator(), LINE_SEPARATOR);
 
         assertEquals(',', COMMA_CHAR);
         assertEquals(' ', SPACE_CHAR);

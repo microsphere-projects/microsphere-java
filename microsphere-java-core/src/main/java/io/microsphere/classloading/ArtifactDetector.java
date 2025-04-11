@@ -2,7 +2,6 @@ package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ClassUtils;
 
 import java.net.URL;
 import java.util.Iterator;
@@ -10,8 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -37,7 +34,7 @@ public class ArtifactDetector {
 
     final ClassLoader classLoader;
 
-    private final List<ArtifactResolver> artifactResolvers;
+    private final List<ArtifactResourceResolver> artifactResourceResolvers;
 
     public ArtifactDetector() {
         this(null);
@@ -45,11 +42,11 @@ public class ArtifactDetector {
 
     public ArtifactDetector(@Nullable ClassLoader classLoader) {
         ClassLoader actualClassLoader = classLoader == null ? getClassLoader(getClass()) : classLoader;
-        List<ArtifactResolver> artifactResolvers = loadServicesList(ArtifactResolver.class, actualClassLoader, true);
+        this.artifactResourceResolvers = loadServicesList(ArtifactResourceResolver.class, actualClassLoader, true);
         this.classLoader = actualClassLoader;
-        this.artifactResolvers = artifactResolvers;
         if (logger.isTraceEnabled()) {
-            logger.trace("ClassLoader[argument : {} , actual : {}] , ArtifactResolver List : {}", classLoader, actualClassLoader, getArtifactResolverClassNames(artifactResolvers));
+            logger.trace("ClassLoader[argument : {} , actual : {}] , ArtifactResolver List : {}",
+                    classLoader, actualClassLoader, this.artifactResourceResolvers);
         }
     }
 
@@ -68,13 +65,16 @@ public class ArtifactDetector {
         }
 
         List<Artifact> artifactList = new LinkedList<>();
-        for (ArtifactResolver artifactResolver : artifactResolvers) {
-            Set<Artifact> artifactSet = artifactResolver.resolve(classPathURLs);
-            for (Artifact artifact : artifactSet) {
-                artifactList.add(artifact);
-                classPathURLs.remove(artifact.getLocation());
+        for (URL resourceURL : classPathURLs) {
+            for (ArtifactResourceResolver artifactResourceResolver : artifactResourceResolvers) {
+                Artifact artifact = artifactResourceResolver.resolve(resourceURL);
+                if (artifact != null) {
+                    artifactList.add(artifact);
+                    break;
+                }
             }
         }
+
         return unmodifiableList(artifactList);
     }
 
@@ -85,12 +85,8 @@ public class ArtifactDetector {
             removeJdkClassPathURLs(classPathURLs);
         }
         if (logger.isTraceEnabled()) {
-            StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-            for (URL classPathURL : classPathURLs) {
-                stringJoiner.add(classPathURL.toString());
-            }
             logger.trace("ClassLoader[{}] covers the URLs[expected: {}, actual: {}], class-path : {}",
-                    classLoader, urls.size(), classPathURLs.size(), stringJoiner);
+                    classLoader, urls.size(), classPathURLs.size(), classPathURLs);
         }
         return classPathURLs;
     }
@@ -106,13 +102,6 @@ public class ArtifactDetector {
                 iterator.remove();
             }
         }
-    }
-
-    private List<String> getArtifactResolverClassNames(List<ArtifactResolver> artifactResolvers) {
-        return artifactResolvers.stream()
-                .map(Object::getClass)
-                .map(ClassUtils::getTypeName)
-                .collect(Collectors.toList());
     }
 
 }

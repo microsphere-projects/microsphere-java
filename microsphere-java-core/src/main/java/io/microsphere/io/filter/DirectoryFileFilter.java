@@ -32,12 +32,11 @@ public class DirectoryFileFilter implements IOFileFilter {
      */
     public static final DirectoryFileFilter INSTANCE = new DirectoryFileFilter();
 
-
     protected DirectoryFileFilter() {
     }
 
     @Override
     public boolean accept(File file) {
-        return file.isDirectory();
+        return file != null && file.isDirectory();
     }
 }

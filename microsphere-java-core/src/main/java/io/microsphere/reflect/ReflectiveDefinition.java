@@ -29,6 +29,7 @@ import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.Version.ofVersion;
+import static java.util.Objects.hash;
 
 /**
  * The abstract definition class for Java Reflection
@@ -166,10 +167,7 @@ public abstract class ReflectiveDefinition implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = this.since.hashCode();
-        result = 31 * result + Objects.hashCode(this.deprecation);
-        result = 31 * result + this.className.hashCode();
-        return result;
+        return hash(this.since, this.deprecation, this.className);
     }
 
     @Override

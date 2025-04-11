@@ -18,6 +18,8 @@ package io.microsphere.lang;
 
 import java.util.Comparator;
 
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Integer.compare;
 
 /**
@@ -48,12 +50,12 @@ public interface Prioritized extends Comparable<Prioritized> {
     /**
      * The maximum priority
      */
-    int MAX_PRIORITY = Integer.MIN_VALUE;
+    int MAX_PRIORITY = MIN_VALUE;
 
     /**
      * The minimum priority
      */
-    int MIN_PRIORITY = Integer.MAX_VALUE;
+    int MIN_PRIORITY = MAX_VALUE;
 
     /**
      * Normal Priority

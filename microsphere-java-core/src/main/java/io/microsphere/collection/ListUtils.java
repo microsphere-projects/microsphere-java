@@ -45,6 +45,29 @@ public abstract class ListUtils {
         return values instanceof List;
     }
 
+    /**
+     * Get the first element of the specified {@link List}
+     *
+     * @param list the specified {@link List}
+     * @param <E>  the type of element
+     * @return the first one if found, or <code>null</code>
+     */
+    public static <E> E first(List<E> list) {
+        return size(list) < 1 ? null : list.get(0);
+    }
+
+    /**
+     * Get the last element of the specified {@link List}
+     *
+     * @param list the specified {@link List}
+     * @param <E>  the type of element
+     * @return the last one if found, or <code>null</code>
+     */
+    public static <E> E last(List<E> list) {
+        int size = size(list);
+        return size < 1 ? null : list.get(size - 1);
+    }
+
     public static <E> List<E> of(E... elements) {
         return ofList(elements);
     }

@@ -16,16 +16,17 @@
  */
 package io.microsphere.io;
 
-import io.microsphere.util.PriorityComparator;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.collection.ListUtils.first;
+import static io.microsphere.collection.ListUtils.last;
 import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.emptyList;
-import static java.util.ServiceLoader.load;
 
 /**
  * {@link Deserializer} Utilities class
@@ -44,16 +45,15 @@ public class Deserializers {
     }
 
     public Deserializers() {
-        this(Thread.currentThread().getContextClassLoader());
+        this(getDefaultClassLoader());
     }
 
     public void loadSPI() {
-        for (Deserializer deserializer : load(Deserializer.class)) {
+        for (Deserializer deserializer : loadServicesList(Deserializer.class, classLoader)) {
             List<Class<?>> typeArguments = resolveTypeArgumentClasses(deserializer.getClass());
-            Class<?> targetClass = typeArguments.isEmpty() ? Object.class : typeArguments.get(0);
+            Class<?> targetClass = first(typeArguments);
             List<Deserializer> deserializers = typedDeserializers.computeIfAbsent(targetClass, k -> new LinkedList());
             deserializers.add(deserializer);
-            deserializers.sort(PriorityComparator.INSTANCE);
         }
     }
 
@@ -80,7 +80,7 @@ public class Deserializers {
      */
     public <T> Deserializer<T> getHighestPriority(Class<?> deserializedType) {
         List<Deserializer<T>> serializers = get(deserializedType);
-        return serializers.isEmpty() ? null : serializers.get(0);
+        return first(serializers);
     }
 
     /**
@@ -92,7 +92,7 @@ public class Deserializers {
      */
     public <T> Deserializer<T> getLowestPriority(Class<?> deserializedType) {
         List<Deserializer<T>> serializers = get(deserializedType);
-        return serializers.isEmpty() ? null : serializers.get(0);
+        return last(serializers);
     }
 
     /**
