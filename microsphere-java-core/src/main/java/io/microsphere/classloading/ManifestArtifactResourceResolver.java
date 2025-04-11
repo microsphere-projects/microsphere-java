@@ -26,8 +26,10 @@ import java.util.jar.Manifest;
 
 import static io.microsphere.classloading.Artifact.create;
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
+import static io.microsphere.constants.SymbolConstants.HYPHEN_CHAR;
 import static io.microsphere.net.URLUtils.isArchiveURL;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.System.getProperty;
@@ -129,14 +131,13 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
             artifactId = resolveArtifactId(artifactResourceURL);
         }
 
-        if (artifactId == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The artifactId can't be resolved from the {} of artifact[resource: {}] : {}",
-                        artifactResourceURL.getPath(),
-                        MANIFEST_RESOURCE_PATH,
-                        attributes.entrySet()
-                );
-            }
+        if (logger.isTraceEnabled()) {
+            logger.trace("The artifactId was resolved from the '{}' of resource URL['{}'] of  : {} , attributes : {}",
+                    MANIFEST_RESOURCE_PATH,
+                    artifactResourceURL.getPath(),
+                    artifactId,
+                    attributes.entrySet()
+            );
         }
 
         return artifactId;
@@ -144,7 +145,7 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
 
     private String resolveArtifactId(URL artifactResourceURL) {
         String path = artifactResourceURL.getPath();
-        int lastSlashIndex = path.lastIndexOf('/');
+        int lastSlashIndex = path.lastIndexOf(SLASH_CHAR);
         if (lastSlashIndex < 0) {
             return null;
         }
@@ -153,7 +154,7 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
             return null;
         }
         String jarFileName = path.substring(lastSlashIndex + 1, fileExtensionIndex);
-        int lastHyphenIndex = jarFileName.lastIndexOf('-');
+        int lastHyphenIndex = jarFileName.lastIndexOf(HYPHEN_CHAR);
         if (lastHyphenIndex < 0) {
             return jarFileName;
         }
