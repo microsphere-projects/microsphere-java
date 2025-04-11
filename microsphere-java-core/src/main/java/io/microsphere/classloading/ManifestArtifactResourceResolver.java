@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
 import java.util.jar.Manifest;
 
 import static io.microsphere.classloading.Artifact.create;
@@ -95,9 +94,8 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
     }
 
     @Override
-    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
-        String name = jarEntry.getName();
-        return MANIFEST_RESOURCE_PATH.equals(name);
+    protected boolean isArtifactMetadata(String path) {
+        return MANIFEST_RESOURCE_PATH.equals(path);
     }
 
     @Override
