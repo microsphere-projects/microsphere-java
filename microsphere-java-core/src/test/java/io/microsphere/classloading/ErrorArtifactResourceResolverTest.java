@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class ErrorArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<ErrorArtifactResourceResolver> {
 
     @Override
-    protected void assertArtifact(Artifact artifact) throws Throwable {
+    protected void assertArtifactFromFile(Artifact artifact) throws Throwable {
         assertNull(artifact);
     }
 }
