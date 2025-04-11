@@ -16,16 +16,24 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
+import static io.microsphere.collection.ListUtils.first;
+import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.jar.JarUtils.filter;
 
 /**
  * Abstract {@link ArtifactResourceResolver} class
@@ -54,29 +62,80 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
 
     @Override
     public final Artifact resolve(URL resourceURL) {
+        if (resourceURL == null) {
+            return null;
+        }
+
+        File archiveFile = resolveArchiveFile(resourceURL);
+        InputStream artifactMetadataData = null;
         Artifact artifact = null;
         try {
-            artifact = doResolve(resourceURL, this.classLoader);
+            if (archiveFile == null) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The resourceURL['{}'] can't be resolved to be an archive file", resourceURL);
+                }
+                artifactMetadataData = readArtifactMetadataDataFromResource(resourceURL, classLoader);
+            } else {
+                artifactMetadataData = readArtifactMetadataDataFromArchiveFile(archiveFile);
+            }
+            artifact = resolve(resourceURL, artifactMetadataData, classLoader);
+
         } catch (IOException e) {
             if (logger.isErrorEnabled()) {
                 logger.error("The Artifact can't be resolved from the resource URL : {}", resourceURL, e);
             }
+        } finally {
+            // close the InputStream
+            close(artifactMetadataData);
         }
         return artifact;
     }
 
-    protected abstract Artifact doResolve(URL resourceURL, ClassLoader classLoader) throws IOException;
+    @Nullable
+    protected InputStream readArtifactMetadataDataFromResource(URL resourceURL, ClassLoader classLoader) {
+        return null;
+    }
+
+    @Nullable
+    protected InputStream readArtifactMetadataDataFromArchiveFile(File archiveFile) throws IOException {
+        InputStream artifactMetadataData = null;
+        if (archiveFile.isFile()) {
+            artifactMetadataData = readArtifactMetadataDataFromFile(archiveFile);
+        } else if (archiveFile.isDirectory()) {
+            artifactMetadataData = readArtifactMetadataDataFromDirectory(archiveFile);
+        }
+        return artifactMetadataData;
+    }
+
+    @Nullable
+    protected InputStream readArtifactMetadataDataFromFile(File archiveFile) throws IOException {
+        JarFile jarFile = new JarFile(archiveFile);
+        JarEntry jarEntry = resolveArtifactMetadataEntry(jarFile);
+        if (jarEntry == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
+            }
+            return null;
+        }
+        return jarFile.getInputStream(jarEntry);
+    }
+
+    @Nullable
+    protected InputStream readArtifactMetadataDataFromDirectory(File Directory) throws IOException {
+        return null;
+    }
+
+    protected JarEntry resolveArtifactMetadataEntry(JarFile jarFile) throws IOException {
+        List<JarEntry> entries = filter(jarFile, this::isArtifactMetadataEntry);
+        return first(entries);
+    }
+
+    protected abstract boolean isArtifactMetadataEntry(JarEntry jarEntry);
+
+    protected abstract Artifact resolve(URL resourceURL, @Nullable InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
 
     @Override
     public final int getPriority() {
         return priority;
-    }
-
-    protected URL resolveArtifactResourceURL(URL resourceURL) throws IOException {
-        File archiveFile = resolveArchiveFile(resourceURL);
-        if (archiveFile != null) {
-            return archiveFile.toURI().toURL();
-        }
-        return null;
     }
 }
