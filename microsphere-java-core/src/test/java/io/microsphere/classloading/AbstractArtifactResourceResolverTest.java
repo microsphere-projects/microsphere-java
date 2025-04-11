@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
@@ -77,15 +78,23 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     protected void testResolveOnFile() throws Throwable {
-        URL classResource = getClassResource(this.resolver.classLoader, Nonnull.class);
-        File archiveFile = resolveArchiveFile(classResource);
-        URL resourceURL = archiveFile.toURI().toURL();
-        Artifact artifact = this.resolver.resolve(resourceURL);
-        assertArtifactFromFile(artifact);
+        assertArtifact(Nonnull.class);
     }
 
-    protected void testResolveOnDirectory() {
+    protected void testResolveOnDirectory() throws Throwable {
+        assertArtifact(AbstractArtifactResourceResolverTest.class);
+    }
 
+    void assertArtifact(Class<?> targetClass) throws Throwable {
+        URL resourceURL = resolveResourceURL(targetClass);
+        Artifact artifact = this.resolver.resolve(resourceURL);
+        assertArtifact(artifact);
+    }
+
+    URL resolveResourceURL(Class<?> targetClass) throws MalformedURLException {
+        URL classResource = getClassResource(this.resolver.classLoader, targetClass);
+        File archiveFile = resolveArchiveFile(classResource);
+        return archiveFile.toURI().toURL();
     }
 
     protected void testResolveOnNull() throws Throwable {
@@ -93,6 +102,6 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
 
-    protected abstract void assertArtifactFromFile(Artifact artifact) throws Throwable;
+    protected abstract void assertArtifact(Artifact artifact) throws Throwable;
 
 }
