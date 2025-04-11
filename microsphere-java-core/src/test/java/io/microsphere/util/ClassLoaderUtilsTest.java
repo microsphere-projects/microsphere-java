@@ -567,10 +567,13 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         URLClassLoader urlClassLoader = newURLClassLoader(urlsArray, classLoader);
         assertArrayEquals(urlsArray, urlClassLoader.getURLs());
 
-        urlClassLoader = newURLClassLoader(urlsArray, null);
+        urlClassLoader = newURLClassLoader(urlsArray, classLoader, true);
         assertArrayEquals(urlsArray, urlClassLoader.getURLs());
 
         urlClassLoader = newURLClassLoader(urlsArray);
+        assertArrayEquals(urlsArray, urlClassLoader.getURLs());
+
+        newURLClassLoader(urlsArray, true);
         assertArrayEquals(urlsArray, urlClassLoader.getURLs());
     }
 
@@ -579,10 +582,13 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         URLClassLoader urlClassLoader = newURLClassLoader(EMPTY_URL_ARRAY, classLoader);
         assertArrayEquals(EMPTY_URL_ARRAY, urlClassLoader.getURLs());
 
-        urlClassLoader = newURLClassLoader(EMPTY_URL_ARRAY, null);
+        urlClassLoader = newURLClassLoader(EMPTY_URL_ARRAY, classLoader, true);
         assertArrayEquals(EMPTY_URL_ARRAY, urlClassLoader.getURLs());
 
         urlClassLoader = newURLClassLoader(EMPTY_URL_ARRAY);
+        assertArrayEquals(EMPTY_URL_ARRAY, urlClassLoader.getURLs());
+
+        urlClassLoader = newURLClassLoader(EMPTY_URL_ARRAY, true);
         assertArrayEquals(EMPTY_URL_ARRAY, urlClassLoader.getURLs());
     }
 
