@@ -3,9 +3,8 @@ package io.microsphere.reflect;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Objects;
-
 import static io.microsphere.reflect.MultipleType.of;
+import static java.util.Objects.hash;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -26,7 +25,7 @@ public class MultipleTypeTest {
 
     @Test
     public void testHashCode() {
-        assertEquals(Objects.hash(String.class, Object.class), multipleType.hashCode());
+        assertEquals(hash(String.class, Object.class), multipleType.hashCode());
     }
 
     @Test

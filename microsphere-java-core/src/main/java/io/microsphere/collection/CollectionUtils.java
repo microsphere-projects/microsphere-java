@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static io.microsphere.collection.EmptyIterator.INSTANCE;
+import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.util.ArrayUtils.length;
 
 /**
@@ -210,9 +211,8 @@ public abstract class CollectionUtils {
         if (isEmpty(values)) {
             return null;
         }
-        if (values instanceof List) {
-            List<T> list = (List<T>) values;
-            return list.get(0);
+        if (isList(values)) {
+            return ListUtils.first((List<T>) values);
         } else {
             return first((Iterable<T>) values);
         }

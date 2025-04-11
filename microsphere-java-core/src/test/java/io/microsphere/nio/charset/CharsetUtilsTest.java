@@ -2,10 +2,9 @@ package io.microsphere.nio.charset;
 
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
-
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -31,7 +30,7 @@ public class CharsetUtilsTest {
 
     @Test
     public void testConstants() {
-        assertEquals(StandardCharsets.UTF_8, DEFAULT_CHARSET);
+        assertEquals(UTF_8, DEFAULT_CHARSET);
     }
 
 }

@@ -16,22 +16,25 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nullable;
+import io.microsphere.lang.Prioritized;
+
+import java.net.URL;
+
 /**
- * {@link ManifestArtifactResolver} Test
+ * The resolver interface for {@link Artifact} resource(the archive file or the directory).
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ManifestArtifactResolver
- * @since 1.0.0
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @since Artifact
  */
-public class ManifestArtifactResolverTest extends AbstractArtifactResolverTest<ManifestArtifactResolver> {
+public interface ArtifactResourceResolver extends Prioritized {
 
-    @Override
-    protected ManifestArtifactResolver createArtifactResolver() {
-        return new ManifestArtifactResolver();
-    }
-
-    @Override
-    protected int getPriority() {
-        return ManifestArtifactResolver.DEFAULT_PRIORITY;
-    }
+    /**
+     * Resolve an instance {@link Artifact} from {@link URL the resource} of artifact.
+     *
+     * @param resourceURL {@link URL the resource} of artifact, it may the archive file or the directory
+     * @return an instance {@link Artifact} if found, otherwise <code>null</code>
+     */
+    @Nullable
+    Artifact resolve(@Nullable URL resourceURL);
 }

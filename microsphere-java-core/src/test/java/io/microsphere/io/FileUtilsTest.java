@@ -17,7 +17,9 @@ import static io.microsphere.io.FileUtils.isSymlink;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -43,18 +45,30 @@ public class FileUtilsTest extends AbstractTestCase {
 
     @Test
     public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new FileUtils(){});
+        assertThrows(IllegalStateException.class, () -> new FileUtils() {
+        });
     }
 
     @Test
-    public void testResolveRelativePath() throws Exception {
-        assertEquals("/io/FileUtilsTest.class", resolveRelativePath(packageDirectory, classFile));
+    public void testResolveRelativePath() {
+        assertEquals("io/FileUtilsTest.class", resolveRelativePath(packageDirectory, classFile));
     }
 
     @Test
-    public void testResolveRelativePathOnNotRelativePath() throws Exception {
+    public void testResolveRelativePathOnSameDirectory() {
+        assertEquals(EMPTY_STRING, resolveRelativePath(packageDirectory, packageDirectory));
+    }
+
+    @Test
+    public void testResolveRelativePathOnFile() {
         assertNull(resolveRelativePath(classFile, packageDirectory));
     }
+
+    @Test
+    public void testResolveRelativePathOnNotRelativePath() {
+        assertNull(resolveRelativePath(packageDirectory, new File(JAVA_IO_TMPDIR)));
+    }
+
 
     @Test
     public void testGetFileExtension() {

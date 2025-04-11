@@ -31,6 +31,7 @@ import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -64,7 +65,7 @@ public abstract class FieldUtils extends BaseUtils {
      * @return null if not found
      */
     public static Field findField(Class<?> klass, String fieldName) {
-        if (klass == null || Object.class.equals(klass)) {
+        if (klass == null || isObjectClass(klass)) {
             return null;
         }
         Field field = null;

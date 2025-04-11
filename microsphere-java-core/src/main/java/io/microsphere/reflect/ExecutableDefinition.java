@@ -23,12 +23,13 @@ import io.microsphere.util.Version;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static java.util.Objects.hash;
 
 /**
  * The definition class of Java {@link Executable}
@@ -127,13 +128,13 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
         if (!super.equals(o)) return false;
 
         ExecutableDefinition that = (ExecutableDefinition) o;
-        return Arrays.equals(this.parameterClassNames, that.parameterClassNames);
+        return arrayEquals(this.parameterClassNames, that.parameterClassNames);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(this.parameterClassNames);
+        result = 31 * result + hash(this.parameterClassNames);
         return result;
     }
 
