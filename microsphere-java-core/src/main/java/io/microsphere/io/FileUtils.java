@@ -40,9 +40,8 @@ public abstract class FileUtils extends BaseUtils {
         String parentDirectoryPath = parentDirectory.getAbsolutePath();
         String targetFilePath = targetFile.getAbsolutePath();
         int index = targetFilePath.indexOf(parentDirectoryPath);
-        String relativePath = null;
         if (index == 0) {
-            relativePath = targetFilePath.substring(parentDirectoryPath.length());
+            String relativePath = targetFilePath.substring(parentDirectoryPath.length());
             if (isEmpty(relativePath)) {
                 return relativePath;
             }
