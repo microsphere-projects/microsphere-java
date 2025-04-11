@@ -22,7 +22,7 @@ import io.microsphere.lang.Prioritized;
 import java.net.URL;
 
 /**
- * The resolver interface for {@link Artifact} resource
+ * The resolver interface for {@link Artifact} resource(the archive file or the directory).
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since Artifact
@@ -32,7 +32,7 @@ public interface ArtifactResourceResolver extends Prioritized {
     /**
      * Resolve an instance {@link Artifact} from {@link URL the resource} of artifact.
      *
-     * @param resourceURL {@link URL the resource} of artifact
+     * @param resourceURL {@link URL the resource} of artifact, it may the archive file or the directory
      * @return an instance {@link Artifact} if found, otherwise <code>null</code>
      */
     @Nullable
