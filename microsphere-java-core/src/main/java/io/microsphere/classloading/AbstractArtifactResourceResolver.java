@@ -83,8 +83,9 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
             } else {
                 artifactMetadataData = readArtifactMetadataDataFromArchiveFile(archiveFile);
             }
-            artifact = resolve(resourceURL, artifactMetadataData, classLoader);
-
+            if (artifactMetadataData != null) {
+                artifact = resolve(resourceURL, artifactMetadataData, classLoader);
+            }
         } catch (IOException e) {
             if (logger.isErrorEnabled()) {
                 logger.error("The Artifact can't be resolved from the resource URL : {}", resourceURL, e);
@@ -115,7 +116,7 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
     @Nullable
     protected InputStream readArtifactMetadataDataFromFile(File archiveFile) throws IOException {
         JarFile jarFile = new JarFile(archiveFile);
-        JarEntry jarEntry = resolveArtifactMetadataEntry(jarFile);
+        JarEntry jarEntry = findArtifactMetadataEntry(jarFile);
         if (jarEntry == null) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
@@ -127,8 +128,7 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
 
     @Nullable
     protected InputStream readArtifactMetadataDataFromDirectory(File directory) throws IOException {
-        Set<File> files = INSTANCE.scan(directory, true, file -> isArtifactMetadataFile(directory, file));
-        File artifactMetadataFile = first(files);
+        File artifactMetadataFile = findArtifactMetadata(directory);
         if (artifactMetadataFile == null) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The artifact metadata file can't be found in the directory[path: '{}']", directory);
@@ -138,9 +138,14 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
         return new FileInputStream(artifactMetadataFile);
     }
 
-    protected JarEntry resolveArtifactMetadataEntry(JarFile jarFile) throws IOException {
+    protected JarEntry findArtifactMetadataEntry(JarFile jarFile) throws IOException {
         List<JarEntry> entries = filter(jarFile, this::isArtifactMetadataEntry);
         return first(entries);
+    }
+
+    protected File findArtifactMetadata(File directory) throws IOException {
+        Set<File> files = INSTANCE.scan(directory, true, file -> isArtifactMetadataFile(directory, file));
+        return first(files);
     }
 
     protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
@@ -156,7 +161,7 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
         return false;
     }
 
-    protected abstract Artifact resolve(URL resourceURL, @Nullable InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
+    protected abstract Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
 
     @Override
     public final int getPriority() {
