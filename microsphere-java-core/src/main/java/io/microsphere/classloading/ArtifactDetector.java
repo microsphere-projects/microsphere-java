@@ -9,7 +9,6 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -18,7 +17,6 @@ import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
-import static java.lang.System.lineSeparator;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -87,12 +85,8 @@ public class ArtifactDetector {
             removeJdkClassPathURLs(classPathURLs);
         }
         if (logger.isTraceEnabled()) {
-            StringJoiner stringJoiner = new StringJoiner(lineSeparator());
-            for (URL classPathURL : classPathURLs) {
-                stringJoiner.add(classPathURL.toString());
-            }
             logger.trace("ClassLoader[{}] covers the URLs[expected: {}, actual: {}], class-path : {}",
-                    classLoader, urls.size(), classPathURLs.size(), stringJoiner);
+                    classLoader, urls.size(), classPathURLs.size(), classPathURLs);
         }
         return classPathURLs;
     }
