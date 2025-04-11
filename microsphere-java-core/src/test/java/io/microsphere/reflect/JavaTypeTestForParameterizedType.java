@@ -27,7 +27,6 @@ import java.util.RandomAccess;
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
-import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
