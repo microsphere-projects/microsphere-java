@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Deque;
@@ -26,6 +27,7 @@ import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
@@ -93,6 +95,17 @@ public abstract class AbstractTestCase {
     public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
     public static final ClassLoader TEST_CLASS_LOADER = getClassLoader(AbstractTestCase.class);
+
+    public static final boolean JACOCO_AGENT_INSTRUCTED;
+
+    static {
+        RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
+        JACOCO_AGENT_INSTRUCTED = runtimeMXBean.getInputArguments()
+                .stream()
+                .filter(arg -> arg.contains("org.jacoco.agent"))
+                .findFirst()
+                .isPresent();
+    }
 
     protected final ClassLoader classLoader = getClassLoader(getClass());
 
