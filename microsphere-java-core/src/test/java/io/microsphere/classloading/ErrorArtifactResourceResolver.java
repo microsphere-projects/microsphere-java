@@ -17,7 +17,9 @@
 package io.microsphere.classloading;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
+import java.util.jar.JarEntry;
 
 /**
  * {@link AbstractArtifactResourceResolver} with error
@@ -33,7 +35,12 @@ public class ErrorArtifactResourceResolver extends AbstractArtifactResourceResol
     }
 
     @Override
-    protected Artifact doResolve(URL resourceURL, ClassLoader classLoader) throws IOException {
+    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
+        return false;
+    }
+
+    @Override
+    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
         throw new IOException("For testing");
     }
 }
