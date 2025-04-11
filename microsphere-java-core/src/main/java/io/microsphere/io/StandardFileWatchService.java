@@ -23,6 +23,7 @@ import io.microsphere.io.event.FileChangedListener;
 
 import java.io.File;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -117,7 +118,7 @@ public class StandardFileWatchService implements FileWatchService {
                             FileChangedMetadata metadata = fileChangedMetadataCache.get(dirPath);
                             if (metadata != null) {
                                 Path filePath = dirPath.resolve(fileRelativePath);
-                                if (metadata.filePaths.contains(filePath)) {
+                                if (isDirectory(dirPath) || metadata.filePaths.contains(filePath)) {
                                     EventDispatcher eventDispatcher = metadata.eventDispatcher;
                                     WatchEvent.Kind watchEventKind = event.kind();
                                     dispatchFileChangedEvent(filePath, watchEventKind, eventDispatcher);
