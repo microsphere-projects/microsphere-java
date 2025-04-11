@@ -17,7 +17,6 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.ConfigurationProperty;
-import io.microsphere.classloading.ManifestArtifactResolver;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.AnnotationMirror;
