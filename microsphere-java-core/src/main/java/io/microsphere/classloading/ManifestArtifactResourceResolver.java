@@ -94,8 +94,8 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
     }
 
     @Override
-    protected boolean isArtifactMetadata(String path) {
-        return MANIFEST_RESOURCE_PATH.equals(path);
+    protected boolean isArtifactMetadata(String relativePath) {
+        return MANIFEST_RESOURCE_PATH.equals(relativePath);
     }
 
     @Override
