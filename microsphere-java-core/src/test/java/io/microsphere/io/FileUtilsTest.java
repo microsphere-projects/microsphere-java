@@ -239,11 +239,12 @@ public class FileUtilsTest extends AbstractTestCase {
                 outputStream.write("Hello,World".getBytes(UTF_8));
                 // wait for notification
                 testFile.wait();
+                outputStream.close();
             }
             return null;
         });
 
-        assertThrows(IOException.class, () -> forceDelete(testDir));
+        assertThrows(IOException.class, () -> forceDelete(testFile));
 
         synchronized (testFile) {
             testFile.notify();
