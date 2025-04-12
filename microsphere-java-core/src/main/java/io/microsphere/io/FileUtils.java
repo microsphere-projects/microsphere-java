@@ -10,14 +10,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static io.microsphere.constants.FileConstants.FILE_EXTENSION;
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static java.io.File.separatorChar;
 
