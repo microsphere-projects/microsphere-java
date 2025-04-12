@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 import static io.microsphere.collection.QueueUtils.emptyDeque;
@@ -36,6 +37,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static java.util.concurrent.ThreadLocalRandom.current;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -95,6 +97,8 @@ public abstract class AbstractTestCase {
     public static final File TEST_TEMP_DIR = new File(JAVA_IO_TMPDIR);
 
     public static final ClassLoader TEST_CLASS_LOADER = getClassLoader(AbstractTestCase.class);
+
+    public static final ThreadLocalRandom random = current();
 
     public static final boolean JACOCO_AGENT_INSTRUCTED;
 
