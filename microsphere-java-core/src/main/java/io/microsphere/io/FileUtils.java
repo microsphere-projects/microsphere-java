@@ -3,16 +3,21 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.BaseUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import static io.microsphere.constants.FileConstants.FILE_EXTENSION;
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static java.io.File.separatorChar;
 
@@ -24,6 +29,11 @@ import static java.io.File.separatorChar;
  * @since 1.0.0
  */
 public abstract class FileUtils extends BaseUtils {
+
+    /**
+     * An empty immutable {@code File} array.
+     */
+    public static final File[] EMPTY_FILE_ARRAY = ArrayUtils.EMPTY_FILE_ARRAY;
 
     /**
      * Resolve Relative Path
@@ -68,21 +78,29 @@ public abstract class FileUtils extends BaseUtils {
      * Deletes a directory recursively.
      *
      * @param directory directory to delete
-     * @throws IOException in case deletion is unsuccessful
+     * @return the number of deleted files and directories
+     * @throws NullPointerException if the directory is {@code null}
+     * @throws IOException          in case deletion is unsuccessful
      */
-    public static void deleteDirectory(File directory) throws IOException {
+    public static int deleteDirectory(File directory) throws IOException {
         if (!directory.exists()) {
-            return;
+            return 0;
         }
+
+        int deletedFilesCount = 0;
 
         if (!isSymlink(directory)) {
-            cleanDirectory(directory);
+            deletedFilesCount += cleanDirectory(directory);
         }
 
-        if (!directory.delete()) {
+        if (directory.delete()) {
+            deletedFilesCount++;
+        } else {
             String message = "Unable to delete directory " + directory + ".";
             throw new IOException(message);
         }
+
+        return deletedFilesCount;
     }
 
 
@@ -90,13 +108,15 @@ public abstract class FileUtils extends BaseUtils {
      * Cleans a directory without deleting it.
      *
      * @param directory directory to clean
-     * @throws IOException in case cleaning is unsuccessful
+     * @throws NullPointerException if the directory is {@code null}
+     * @throws IOException          in case cleaning is unsuccessful
      */
-    public static void cleanDirectory(File directory) throws IOException {
+    public static int cleanDirectory(File directory) throws IOException {
+        int deletedFilesCount = 0;
         IOException exception = null;
         for (File file : listFiles(directory)) {
             try {
-                forceDelete(file);
+                deletedFilesCount += forceDelete(file);
             } catch (IOException ioe) {
                 exception = ioe;
             }
@@ -105,6 +125,7 @@ public abstract class FileUtils extends BaseUtils {
         if (null != exception) {
             throw exception;
         }
+        return deletedFilesCount;
     }
 
     /**
@@ -118,16 +139,20 @@ public abstract class FileUtils extends BaseUtils {
      * </ul>
      *
      * @param file file or directory to delete, must not be {@code null}
-     * @throws NullPointerException  if the directory is {@code null}
+     * @return the number of deleted files and directories
+     * @throws NullPointerException  if the file is {@code null}
      * @throws FileNotFoundException if the file was not found
      * @throws IOException           in case deletion is unsuccessful
      */
-    public static void forceDelete(File file) throws IOException {
+    public static int forceDelete(File file) throws IOException {
+        final int deletedFilesCount;
         if (file.isDirectory()) {
-            deleteDirectory(file);
+            deletedFilesCount = deleteDirectory(file);
         } else {
             boolean filePresent = file.exists();
-            if (!file.delete()) {
+            if (file.delete()) {
+                deletedFilesCount = 1;
+            } else {
                 if (!filePresent) {
                     throw new FileNotFoundException("File does not exist: " + file);
                 }
@@ -135,6 +160,7 @@ public abstract class FileUtils extends BaseUtils {
                 throw new IOException(message);
             }
         }
+        return deletedFilesCount;
     }
 
     /**
@@ -143,9 +169,8 @@ public abstract class FileUtils extends BaseUtils {
      *
      * @param file file or directory to delete, must not be {@code null}
      * @throws NullPointerException if the file is {@code null}
-     * @throws IOException          in case deletion is unsuccessful
      */
-    public static void forceDeleteOnExit(File file) throws IOException {
+    public static void forceDeleteOnExit(File file) {
         if (file.isDirectory()) {
             deleteDirectoryOnExit(file);
         } else {
@@ -160,7 +185,7 @@ public abstract class FileUtils extends BaseUtils {
      * @throws NullPointerException if the directory is {@code null}
      * @throws IOException          in case deletion is unsuccessful
      */
-    private static void deleteDirectoryOnExit(File directory) throws IOException {
+    private static void deleteDirectoryOnExit(File directory) {
         if (!directory.exists()) {
             return;
         }
@@ -176,41 +201,31 @@ public abstract class FileUtils extends BaseUtils {
      *
      * @param directory directory to clean, must not be {@code null}
      * @throws NullPointerException if the directory is {@code null}
-     * @throws IOException          in case cleaning is unsuccessful
      */
-    private static void cleanDirectoryOnExit(File directory) throws IOException {
-        IOException exception = null;
+    private static void cleanDirectoryOnExit(File directory) {
         for (File file : listFiles(directory)) {
-            try {
-                forceDeleteOnExit(file);
-            } catch (IOException ioe) {
-                exception = ioe;
-            }
-        }
-        if (null != exception) {
-            throw exception;
+            forceDeleteOnExit(file);
         }
     }
 
-    private static File[] listFiles(File directory) throws IOException {
-        if (!directory.exists()) {
-            String message = directory + " does not exist";
-            throw new IOException(message);
+    /**
+     * List Files from the specified directory
+     *
+     * @param directory the specified directory
+     * @return {@link #EMPTY_FILE_ARRAY the empty file array} if the specified directory is not exist or not a directory
+     */
+    public static File[] listFiles(File directory) {
+        if (directory == null || !directory.exists() || !directory.isDirectory()) {
+            return EMPTY_FILE_ARRAY;
         }
-
-        if (!directory.isDirectory()) {
-            String message = directory + " is not a directory";
-            throw new IOException(message);
-        }
-
         File[] files = directory.listFiles();
-        if (files == null) {  // null if security restricted
-            throw new IOException("Failed to list contents of " + directory);
+        if (isEmpty(files)) {  // empty
+            files = EMPTY_FILE_ARRAY;
         }
         return files;
     }
 
-    public static boolean isSymlink(File file) throws IOException {
+    public static boolean isSymlink(File file) {
         if (file == null) {
             throw new NullPointerException("File must not be null");
         }
@@ -221,10 +236,23 @@ public abstract class FileUtils extends BaseUtils {
         if (file.getParent() == null) {
             fileInCanonicalDir = file;
         } else {
-            File canonicalDir = file.getParentFile().getCanonicalFile();
+            File canonicalDir = getCanonicalFile(file.getParentFile());
             fileInCanonicalDir = new File(canonicalDir, file.getName());
         }
 
-        return !fileInCanonicalDir.getCanonicalFile().equals(fileInCanonicalDir.getAbsoluteFile());
+        return !getCanonicalFile(fileInCanonicalDir).equals(fileInCanonicalDir.getAbsoluteFile());
+    }
+
+    /**
+     * Invoke {@link File#getCanonicalFile()} without throwing {@link IOException}.
+     *
+     * @param file the {@link File} instance
+     * @return {@link File#getCanonicalFile()}
+     * @throws NullPointerException if <code>file</code> is <code>null</code>
+     * @throws RuntimeException     If an I/O error occurs, which is possible because the construction of the canonical
+     *                              pathname may require filesystem queries
+     */
+    public static final File getCanonicalFile(File file) {
+        return execute(file::getCanonicalFile);
     }
 }
