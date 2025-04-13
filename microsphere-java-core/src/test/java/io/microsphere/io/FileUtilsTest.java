@@ -238,7 +238,7 @@ public class FileUtilsTest extends AbstractTestCase {
         File testDir = createRandomTempDirectory();
         File testFile = createRandomFile(testDir);
 
-        int n = 2;
+        int n = 3;
 
         ExecutorService executor = newFixedThreadPool(n);
 
