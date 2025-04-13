@@ -236,9 +236,11 @@ public class FileUtilsTest extends AbstractTestCase {
         executor.submit(() -> {
             synchronized (testFile) {
                 FileOutputStream outputStream = new FileOutputStream(testFile);
-                outputStream.write("Hello,World".getBytes(UTF_8));
-                // wait for notification
-                testFile.wait();
+                for (int i = 0; i < 10000; i++) {
+                    outputStream.write(i);
+                    // wait for notification
+                    testFile.wait(10);
+                }
                 outputStream.close();
             }
             return null;
