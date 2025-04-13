@@ -10,8 +10,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletionService;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
@@ -27,7 +33,8 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
-import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.lang.Thread.sleep;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -154,7 +161,7 @@ public class FileUtilsTest extends AbstractTestCase {
             while (true) {
                 try {
                     deleteDirectory(testDir);
-                    Thread.sleep(500);
+                    sleep(500);
                 } catch (IOException e) {
                     exception = e;
                     running.set(false);
@@ -231,25 +238,50 @@ public class FileUtilsTest extends AbstractTestCase {
         File testDir = createRandomTempDirectory();
         File testFile = createRandomFile(testDir);
 
-        ExecutorService executor = newSingleThreadExecutor();
+        int n = 2;
 
-        executor.submit(() -> {
+        ExecutorService executor = newFixedThreadPool(n);
+
+        CompletionService completionService = new ExecutorCompletionService(executor);
+
+        // status : 0 -> init
+        // status : 1 -> writing
+        // status : 2 -> deleting
+        AtomicInteger status = new AtomicInteger(0);
+
+        completionService.submit(() -> {
             synchronized (testFile) {
-                FileOutputStream outputStream = new FileOutputStream(testFile);
-                for (int i = 0; i < 10000; i++) {
-                    outputStream.write(i);
-                    // wait for notification
-                    testFile.wait(10);
-                }
+                FileOutputStream outputStream = new FileOutputStream(testFile, true);
+                outputStream.write('a');
+                status.set(1);
+                // wait for notification
+                testFile.wait();
                 outputStream.close();
             }
             return null;
         });
 
-        assertThrows(IOException.class, () -> forceDelete(testFile));
+        completionService.submit(() -> {
+            while (status.get() != 1) {
+                sleep(10L);
+            }
+            assertThrows(IOException.class, () -> forceDelete(testFile));
+            status.set(2);
+            return null;
+        });
 
-        synchronized (testFile) {
-            testFile.notify();
+        completionService.submit(() -> {
+            while (status.get() != 2) {
+                sleep(10L);
+            }
+            synchronized (testFile) {
+                testFile.notify();
+            }
+            return null;
+        });
+
+        for (int i = 0; i < n; i++) {
+            completionService.take().get();
         }
 
         executor.shutdown();
