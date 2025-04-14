@@ -267,7 +267,7 @@ public class FileUtilsTest extends AbstractTestCase {
             while (status.get() != 2) {
             }
             synchronized (testFile) {
-                testFile.notify();
+                testFile.notifyAll();
             }
             return null;
         });
