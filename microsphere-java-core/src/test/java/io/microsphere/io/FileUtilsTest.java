@@ -31,7 +31,6 @@ import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -240,45 +239,46 @@ public class FileUtilsTest extends AbstractTestCase {
         // status : 2 -> deleting
         AtomicInteger status = new AtomicInteger(0);
 
-        long timeoutInMs = 500;
+        long timeoutInMs = 1000;
 
-        executor.submit(() -> {
-            synchronized (testFile) {
-                FileOutputStream outputStream = new FileOutputStream(testFile);
-                outputStream.write('a');
-                status.set(1);
-                // wait for notification
-                testFile.wait(timeoutInMs);
-                outputStream.close();
-            }
-            return null;
+        Thread thread = new Thread(() -> {
+            executor.submit(() -> {
+                synchronized (testFile) {
+                    try (FileOutputStream outputStream = new FileOutputStream(testFile)) {
+                        outputStream.write('a');
+                        status.set(1);
+                        // wait for notification
+                        testFile.wait();
+                    }
+                }
+                return null;
+            });
+
+            executor.submit(() -> {
+                while (status.get() != 1) {
+                }
+                try {
+                    assertThrows(IOException.class, () -> forceDelete(testFile));
+                } finally {
+                    status.set(2);
+                }
+                return null;
+            });
+
+            executor.submit(() -> {
+                while (status.get() != 2) {
+                }
+                synchronized (testFile) {
+                    testFile.notifyAll();
+                }
+                return null;
+            });
         });
 
-        executor.submit(() -> {
-            if (status.get() != 1) {
-                Thread.sleep(timeoutInMs);
-            }
-            try {
-                assertThrows(IOException.class, () -> forceDelete(testFile));
-            } finally {
-                status.set(2);
-            }
-            return null;
-        });
-
-//        executor.submit(() -> {
-//            while (status.get() != 2) {
-//            }
-//            synchronized (testFile) {
-//                testFile.notifyAll();
-//            }
-//            return null;
-//        });
-
-        executor.awaitTermination(timeoutInMs * 2, MILLISECONDS);
+        thread.start();
+        thread.join(timeoutInMs);
 
         executor.shutdown();
-
     }
 
     @Test
