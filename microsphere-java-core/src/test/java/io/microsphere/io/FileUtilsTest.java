@@ -10,6 +10,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.DosFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,8 +36,16 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static java.io.File.listRoots;
 import static java.lang.Thread.sleep;
+import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.TERMINATE;
+import static java.nio.file.Files.exists;
+import static java.nio.file.Files.walkFileTree;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
+import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -229,38 +245,81 @@ public class FileUtilsTest extends AbstractTestCase {
 
     @Test
     public void testForceDeleteOnIOException() throws Exception {
-        File testFile = createRandomTempFile();
 
-        // status : 0 -> init
-        // status : 1 -> writing
-        // status : 2 -> deleting
-        AtomicInteger status = new AtomicInteger(0);
+        if (IS_OS_WINDOWS) {
+            File testFile = createRandomTempFile();
 
-        long timeoutInMs = 1000;
+            ExecutorService executor = newFixedThreadPool(3);
 
-        Thread thread = new Thread(() -> {
-            synchronized (testFile) {
-                try (FileOutputStream outputStream = new FileOutputStream(testFile)) {
-                    outputStream.write('a');
-                    Thread t1 = new Thread(() -> {
-                        assertThrows(IOException.class, () -> forceDelete(testFile));
-                    });
-                    t1.start();
-                    // wait for notification
-                    testFile.wait(timeoutInMs);
-                } catch (Throwable e) {
+            // status : 0 -> init
+            // status : 1 -> writing
+            // status : 2 -> deleting
+            AtomicInteger status = new AtomicInteger(0);
+
+            executor.submit(() -> {
+                synchronized (testFile) {
+                    try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
+                        outputStream.write('a');
+                        status.set(1);
+                        // wait for notification
+                        testFile.wait();
+                    }
                 }
+                return null;
+            });
+
+            executor.submit(() -> {
+                while (status.get() != 1) {
+                }
+                assertThrows(IOException.class, () -> forceDelete(testFile));
+                status.set(2);
+                return null;
+            });
+
+            executor.submit(() -> {
+                while (status.get() != 2) {
+                }
+                synchronized (testFile) {
+                    testFile.notify();
+                }
+                return null;
+            });
+
+            executor.awaitTermination(100, MILLISECONDS);
+
+            executor.shutdown();
+            return;
+        }
+
+        File[] roots = listRoots();
+
+        File root = roots[roots.length - 1];
+        Path readOnlyFilePath = walkFileTree(root.toPath(), new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                if (!attrs.isRegularFile()) {
+                    return CONTINUE;
+                }
+                if (attrs instanceof DosFileAttributes) {
+                    DosFileAttributes dosFileAttributes = (DosFileAttributes) attrs;
+                    if (dosFileAttributes.isReadOnly()) {
+                        return TERMINATE;
+                    }
+                } else if (attrs instanceof PosixFileAttributes) {
+                    PosixFileAttributes posixFileAttributes = (PosixFileAttributes) attrs;
+                    Set<PosixFilePermission> permissions = posixFileAttributes.permissions();
+                    if (!permissions.contains(OWNER_WRITE)) {
+                        return TERMINATE;
+
+                    }
+                }
+                return super.visitFile(file, attrs);
             }
         });
 
-        thread.start();
-
-        synchronized (testFile) {
-            testFile.notifyAll();
+        if (exists(readOnlyFilePath)) {
+            assertThrows(IOException.class, () -> forceDelete(readOnlyFilePath.toFile()));
         }
-
-        thread.join(timeoutInMs);
-
     }
 
     @Test
