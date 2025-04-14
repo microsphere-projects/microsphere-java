@@ -257,7 +257,6 @@ public class FileUtilsTest extends AbstractTestCase {
 
         executor.submit(() -> {
             while (status.get() != 1) {
-                sleep(10L);
             }
             assertThrows(IOException.class, () -> forceDelete(testFile));
             status.set(2);
@@ -266,7 +265,6 @@ public class FileUtilsTest extends AbstractTestCase {
 
         executor.submit(() -> {
             while (status.get() != 2) {
-                sleep(10L);
             }
             synchronized (testFile) {
                 testFile.notify();
