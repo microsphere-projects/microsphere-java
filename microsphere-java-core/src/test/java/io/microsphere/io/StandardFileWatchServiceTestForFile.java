@@ -16,11 +16,11 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.io.event.LoggingFileChangedListener;
 import io.microsphere.lang.function.ThrowableAction;
-import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,10 +35,8 @@ import java.util.concurrent.Future;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.event.FileChangedEvent.Kind.values;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
-import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
@@ -53,9 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StandardFileWatchServiceTestForFile {
-
-    private final static Logger logger = getLogger(StandardFileWatchServiceTestForFile.class);
+public class StandardFileWatchServiceTestForFile extends AbstractTestCase {
 
     private static final String TEST_FILE_LOCATION = "test.txt";
 
@@ -75,9 +71,7 @@ public class StandardFileWatchServiceTestForFile {
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
         String resourceFilePath = resource.getFile();
         this.sourceFile = new File(resourceFilePath);
-        File targetDir = new File(JAVA_IO_TMPDIR, "test");
-        deleteDirectory(targetDir);
-        targetDir.mkdirs();
+        File targetDir = createRandomTempDirectory();
 
         this.fileWatchService = fileWatchService;
         this.targetFile = new File(targetDir, this.sourceFile.getName());
@@ -86,7 +80,8 @@ public class StandardFileWatchServiceTestForFile {
 
         fileWatchService.watch(targetFile, new MyFileChangedListener(this.countDownLatch), values());
         fileWatchService.watch(targetFile, new LoggingFileChangedListener());
-        fileWatchService.watch(targetFile, new FileChangedListener() {});
+        fileWatchService.watch(targetFile, new FileChangedListener() {
+        });
         fileWatchService.start();
 
         assertThrows(IllegalStateException.class, fileWatchService::start);
