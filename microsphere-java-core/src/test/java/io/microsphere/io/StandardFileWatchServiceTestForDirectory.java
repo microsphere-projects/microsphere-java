@@ -29,7 +29,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
-import static java.util.concurrent.ForkJoinPool.commonPool;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -48,7 +47,7 @@ public class StandardFileWatchServiceTestForDirectory extends AbstractTestCase {
 
     @BeforeEach
     public void init() throws Exception {
-        StandardFileWatchService fileWatchService = new StandardFileWatchService(commonPool());
+        StandardFileWatchService fileWatchService = new StandardFileWatchService();
         File testDir = createRandomTempDirectory();
 
         this.fileWatchService = fileWatchService;
