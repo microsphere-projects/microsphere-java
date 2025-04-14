@@ -5,9 +5,13 @@ import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
@@ -21,6 +25,8 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -147,7 +153,6 @@ public class FileUtilsTest extends AbstractTestCase {
 //            while (true) {
 //                try {
 //                    deleteDirectory(testDir);
-//                    sleep(500);
 //                } catch (IOException e) {
 //                    exception = e;
 //                    running.set(false);
@@ -222,79 +227,47 @@ public class FileUtilsTest extends AbstractTestCase {
 
     @Test
     public void testForceDeleteOnIOException() throws Exception {
+        File testFile = createRandomTempFile();
 
-//        if (IS_OS_WINDOWS) {
-//            File testFile = createRandomTempFile();
-//
-//            ExecutorService executor = newFixedThreadPool(3);
-//
-//            // status : 0 -> init
-//            // status : 1 -> writing
-//            // status : 2 -> deleting
-//            AtomicInteger status = new AtomicInteger(0);
-//
-//            executor.submit(() -> {
-//                synchronized (testFile) {
-//                    try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
-//                        outputStream.write('a');
-//                        status.set(1);
-//                        // wait for notification
-//                        testFile.wait();
-//                    }
-//                }
-//                return null;
-//            });
-//
-//            executor.submit(() -> {
-//                while (status.get() != 1) {
-//                }
-//                assertThrows(IOException.class, () -> forceDelete(testFile));
-//                status.set(2);
-//                return null;
-//            });
-//
-//            executor.submit(() -> {
-//                while (status.get() != 2) {
-//                }
-//                synchronized (testFile) {
-//                    testFile.notify();
-//                }
-//                return null;
-//            });
-//
-//            executor.awaitTermination(100, MILLISECONDS);
-//
-//            executor.shutdown();
-//            return;
-//        }
-//
-//        File root = new File(USER_HOME);
-//        Path readOnlyFilePath = walkFileTree(root.toPath(), new SimpleFileVisitor<Path>() {
-//            @Override
-//            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-//                if (!attrs.isRegularFile()) {
-//                    return CONTINUE;
-//                }
-//                if (attrs instanceof DosFileAttributes) {
-//                    DosFileAttributes dosFileAttributes = (DosFileAttributes) attrs;
-//                    if (dosFileAttributes.isReadOnly()) {
-//                        return TERMINATE;
-//                    }
-//                } else if (attrs instanceof PosixFileAttributes) {
-//                    PosixFileAttributes posixFileAttributes = (PosixFileAttributes) attrs;
-//                    Set<PosixFilePermission> permissions = posixFileAttributes.permissions();
-//                    if (!permissions.contains(OWNER_WRITE)) {
-//                        return TERMINATE;
-//
-//                    }
-//                }
-//                return super.visitFile(file, attrs);
-//            }
-//        });
-//
-//        if (exists(readOnlyFilePath)) {
-//            assertThrows(IOException.class, () -> forceDelete(readOnlyFilePath.toFile()));
-//        }
+        ExecutorService executor = newFixedThreadPool(3, newThreadFactory("testForceDelete-", true));
+
+        // status : 0 -> init
+        // status : 1 -> writing
+        // status : 2 -> deleting
+        AtomicInteger status = new AtomicInteger(0);
+
+        executor.submit(() -> {
+            synchronized (testFile) {
+                try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
+                    outputStream.write('a');
+                    status.set(1);
+                    // wait for notification
+                    testFile.wait();
+                }
+            }
+            return null;
+        });
+
+        executor.submit(() -> {
+            while (status.get() != 1) {
+            }
+            assertThrows(IOException.class, () -> forceDelete(testFile));
+            status.set(2);
+            return null;
+        });
+
+        executor.submit(() -> {
+            while (status.get() != 2) {
+            }
+            synchronized (testFile) {
+                testFile.notify();
+            }
+            return null;
+        });
+
+        executor.awaitTermination(100, MILLISECONDS);
+
+        executor.shutdown();
     }
 
     @Test
