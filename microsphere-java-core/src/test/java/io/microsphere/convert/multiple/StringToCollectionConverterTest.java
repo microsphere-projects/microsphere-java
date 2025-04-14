@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,7 @@ import java.util.concurrent.TransferQueue;
 
 import static io.microsphere.collection.Lists.ofList;
 import static java.lang.Integer.MAX_VALUE;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -99,8 +101,9 @@ public class StringToCollectionConverterTest {
 
         assertEquals(values, result);
 
+        assertEquals(emptyList(), converter.convert("", Collection.class, Integer.class));
+
         assertNull(converter.convert(null, Collection.class, Integer.class));
-        assertNull(converter.convert("", Collection.class, Integer.class));
 
     }
 
