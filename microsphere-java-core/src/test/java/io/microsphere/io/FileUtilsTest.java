@@ -7,20 +7,11 @@ import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.DosFileAttributes;
-import java.nio.file.attribute.PosixFileAttributes;
-import java.nio.file.attribute.PosixFilePermission;
-import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
@@ -36,16 +27,8 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
-import static io.microsphere.util.SystemUtils.USER_HOME;
 import static java.lang.Thread.sleep;
-import static java.nio.file.FileVisitResult.CONTINUE;
-import static java.nio.file.FileVisitResult.TERMINATE;
-import static java.nio.file.Files.exists;
-import static java.nio.file.Files.walkFileTree;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
-import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -138,7 +121,9 @@ public class FileUtilsTest extends AbstractTestCase {
 
         ExecutorService executor = newSingleThreadExecutor();
 
-        StandardFileWatchService fileWatchService = new StandardFileWatchService();
+        ExecutorService workerExecutor = newSingleThreadExecutor();
+
+        StandardFileWatchService fileWatchService = new StandardFileWatchService(workerExecutor);
 
         IOException exception = null;
 
@@ -181,6 +166,7 @@ public class FileUtilsTest extends AbstractTestCase {
 
         } finally {
             fileWatchService.stop();
+            workerExecutor.shutdown();
             executor.shutdown();
         }
 
