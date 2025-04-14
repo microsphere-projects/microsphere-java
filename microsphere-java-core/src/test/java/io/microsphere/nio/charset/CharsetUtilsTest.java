@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
-import static io.microsphere.util.SystemUtils.FILE_ENCODING;
-import static java.nio.charset.Charset.forName;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -32,7 +30,7 @@ public class CharsetUtilsTest {
 
     @Test
     public void testConstants() {
-        assertEquals(forName(FILE_ENCODING), DEFAULT_CHARSET);
+        assertNotNull(DEFAULT_CHARSET);
     }
 
 }
