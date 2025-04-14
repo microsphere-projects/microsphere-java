@@ -21,7 +21,7 @@ import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.FileUtils.forceDeleteOnExit;
 import static io.microsphere.io.FileUtils.getCanonicalFile;
 import static io.microsphere.io.FileUtils.getFileExtension;
-import static io.microsphere.io.FileUtils.isSymbolicLink;
+import static io.microsphere.io.FileUtils.isSymlink;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
@@ -286,18 +286,22 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsSymbolicLink() throws IOException {
-        assertThrows(NullPointerException.class, () -> isSymbolicLink(null));
+    public void testIsSymlink() throws IOException {
         if (IS_OS_WINDOWS) {
-            assertFalse(isSymbolicLink(new File("")));
+            assertFalse(isSymlink(new File("")));
         } else {
             File tempDir = createRandomTempDirectory();
             File targetFile = createRandomFile(tempDir);
             File linkFile = new File(tempDir, "link");
             ProcessExecutor processExecutor = new ProcessExecutor("ln", "-s", targetFile.getAbsolutePath(), linkFile.getAbsolutePath());
             processExecutor.execute(System.out);
-            assertTrue(isSymbolicLink(linkFile));
+            assertTrue(isSymlink(linkFile));
         }
+    }
+
+    @Test
+    public void testIsSymlinkOnNull() throws IOException {
+        assertThrows(NullPointerException.class, () -> isSymlink(null));
     }
 
     @Test
