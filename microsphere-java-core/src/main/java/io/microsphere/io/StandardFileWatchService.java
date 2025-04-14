@@ -37,11 +37,13 @@ import java.util.concurrent.ExecutorService;
 
 import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
+import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
 import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static io.microsphere.util.ArrayUtils.length;
+import static java.lang.System.getProperty;
 import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
@@ -60,6 +62,18 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
  * @since 1.0.0
  */
 public class StandardFileWatchService implements FileWatchService {
+
+    /**
+     * The default thread name prefix : "microsphere-file-watch-service-"
+     */
+    public static final String DEFAULT_THREAD_NAME_PREFIX = "microsphere-file-watch-service-";
+
+    /**
+     * The thread name prefix property name : "microsphere.file-watch-service.thread-name-prefix
+     */
+    public static final String THREAD_NAME_PREFIX_PROPERTY_NAME = "microsphere.file-watch-service.thread-name-prefix";
+
+    public static final String THREAD_NAME_PREFIX = getProperty(THREAD_NAME_PREFIX_PROPERTY_NAME, DEFAULT_THREAD_NAME_PREFIX);
 
     private static final WatchEvent.Kind<?>[] ALL_WATCH_EVENT_KINDS = {
             ENTRY_CREATE,
@@ -82,8 +96,14 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     public StandardFileWatchService(Executor workerExecutor) {
-        this.bossExecutor = newSingleThreadExecutor(newThreadFactory("FileWatchService", true));
+        this(newSingleThreadExecutor(newThreadFactory(THREAD_NAME_PREFIX, true)), workerExecutor);
+    }
+
+    public StandardFileWatchService(ExecutorService bossExecutor, Executor workerExecutor) {
+        this.bossExecutor = bossExecutor;
         this.workerExecutor = workerExecutor;
+        // shutdown the ExecutorService when JVM exits
+        shutdownOnExit(bossExecutor, workerExecutor);
     }
 
     public void start() throws Exception {
