@@ -10,10 +10,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.concurrent.CompletionService;
-import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -241,14 +238,12 @@ public class FileUtilsTest extends AbstractTestCase {
 
         ExecutorService executor = newFixedThreadPool(n);
 
-        CompletionService completionService = new ExecutorCompletionService(executor);
-
         // status : 0 -> init
         // status : 1 -> writing
         // status : 2 -> deleting
         AtomicInteger status = new AtomicInteger(0);
 
-        completionService.submit(() -> {
+        executor.submit(() -> {
             synchronized (testFile) {
                 FileOutputStream outputStream = new FileOutputStream(testFile, true);
                 outputStream.write('a');
@@ -260,7 +255,7 @@ public class FileUtilsTest extends AbstractTestCase {
             return null;
         });
 
-        completionService.submit(() -> {
+        executor.submit(() -> {
             while (status.get() != 1) {
                 sleep(10L);
             }
@@ -269,7 +264,7 @@ public class FileUtilsTest extends AbstractTestCase {
             return null;
         });
 
-        completionService.submit(() -> {
+        executor.submit(() -> {
             while (status.get() != 2) {
                 sleep(10L);
             }
@@ -279,9 +274,7 @@ public class FileUtilsTest extends AbstractTestCase {
             return null;
         });
 
-        for (int i = 0; i < n; i++) {
-            completionService.take().get(300, MILLISECONDS);
-        }
+        executor.awaitTermination(100, MILLISECONDS);
 
         executor.shutdown();
 
