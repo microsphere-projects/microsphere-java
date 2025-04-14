@@ -27,27 +27,27 @@ public class ProcessExecutor {
 
     private final Runtime runtime = getRuntime();
 
-    private final String command;
+    private final String commandLine;
 
-    private final String arguments;
+    private final String options;
 
     private boolean finished;
 
     /**
      * Constructor
      *
-     * @param processName command
-     * @param arguments   process arguments
+     * @param command command
+     * @param options command options
      */
-    public ProcessExecutor(String processName, String... arguments) {
-        StringBuilder argumentsBuilder = new StringBuilder();
-        if (arguments != null) {
-            for (String argument : arguments) {
-                argumentsBuilder.append(" ").append(argument);
+    public ProcessExecutor(String command, String... options) {
+        StringBuilder optionsBuilder = new StringBuilder();
+        if (options != null) {
+            for (String argument : options) {
+                optionsBuilder.append(" ").append(argument);
             }
         }
-        this.arguments = argumentsBuilder.toString();
-        this.command = processName + this.arguments;
+        this.options = optionsBuilder.toString();
+        this.commandLine = command + this.options;
     }
 
     /**
@@ -76,7 +76,7 @@ public class ProcessExecutor {
      * @throws TimeoutException if the execution is timeout over specified <code>timeoutInMilliseconds</code>
      */
     public void execute(OutputStream outputStream, long timeoutInMilliseconds) throws IOException, TimeoutException {
-        Process process = runtime.exec(command);
+        Process process = runtime.exec(commandLine);
         long startTime = currentTimeMillis();
         long endTime = -1L;
         InputStream processInputStream = process.getInputStream();
@@ -92,7 +92,7 @@ public class ProcessExecutor {
                 throw new TimeoutException(message);
             }
             try {
-                processManager.addUnfinishedProcess(process, arguments);
+                processManager.addUnfinishedProcess(process, options);
                 while (processInputStream.available() > 0) {
                     outputStream.write(processInputStream.read());
                 }
@@ -110,7 +110,7 @@ public class ProcessExecutor {
                 waitFor(waitForTimeInSecond);
                 endTime = currentTimeMillis();
             } finally {
-                processManager.removeUnfinishedProcess(process, arguments);
+                processManager.removeUnfinishedProcess(process, options);
             }
         }
     }

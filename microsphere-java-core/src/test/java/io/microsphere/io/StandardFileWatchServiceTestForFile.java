@@ -16,47 +16,42 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.io.event.LoggingFileChangedListener;
 import io.microsphere.lang.function.ThrowableAction;
-import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.event.FileChangedEvent.Kind.values;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
-import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * {@link StandardFileWatchService} Test
+ * {@link StandardFileWatchService} Test For File
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StandardFileWatchServiceTest {
-
-    private final static Logger logger = getLogger(StandardFileWatchServiceTest.class);
+public class StandardFileWatchServiceTestForFile extends AbstractTestCase {
 
     private static final String TEST_FILE_LOCATION = "test.txt";
 
@@ -72,13 +67,11 @@ public class StandardFileWatchServiceTest {
 
     @BeforeEach
     public void init() throws Exception {
-        StandardFileWatchService fileWatchService = new StandardFileWatchService(ForkJoinPool.commonPool());
+        StandardFileWatchService fileWatchService = new StandardFileWatchService();
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
         String resourceFilePath = resource.getFile();
         this.sourceFile = new File(resourceFilePath);
-        File targetDir = new File(JAVA_IO_TMPDIR, "test");
-        deleteDirectory(targetDir);
-        targetDir.mkdirs();
+        File targetDir = createRandomTempDirectory();
 
         this.fileWatchService = fileWatchService;
         this.targetFile = new File(targetDir, this.sourceFile.getName());
@@ -105,7 +98,7 @@ public class StandardFileWatchServiceTest {
         // create file
         Path sourcePath = this.sourceFile.toPath();
         Path targetFilePath = this.targetFile.toPath();
-        copy(sourcePath, targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+        copy(sourcePath, targetFilePath, REPLACE_EXISTING);
 
         countDownLatch.await();
     }
@@ -124,7 +117,7 @@ public class StandardFileWatchServiceTest {
             countDownLatch.countDown();
             // modified file
             async(() -> {
-                write(targetFile.toPath(), "Hello,World".getBytes(StandardCharsets.UTF_8));
+                write(targetFile.toPath(), "Hello,World".getBytes(UTF_8));
             });
         }
 

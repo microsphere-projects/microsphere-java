@@ -5,6 +5,7 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+import io.microsphere.classloading.ServiceLoadingURLClassPathHandle;
 import io.microsphere.classloading.URLClassPathHandle;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ReflectionUtils;
@@ -48,7 +49,7 @@ import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
-import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -85,17 +86,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
 
-    private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
-
-    private static URLClassPathHandle initURLClassPathHandle() {
-        List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
-        for (URLClassPathHandle urlClassPathHandle : urlClassPathHandles) {
-            if (urlClassPathHandle.supports()) {
-                return urlClassPathHandle;
-            }
-        }
-        throw new IllegalStateException("No URLClassPathHandle found, Please check the META-INF/services/io.microsphere.classloading.URLClassPathHandle");
-    }
+    private static final URLClassPathHandle urlClassPathHandle = new ServiceLoadingURLClassPathHandle();
 
     /**
      * Returns the number of classes that are currently loaded in the Java virtual machine.
@@ -163,14 +154,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         try {
             classLoader = currentThread().getContextClassLoader();
         } catch (Throwable ignored) {
-        }
-
-        if (classLoader == null) { // If the ClassLoader is also not found,
-            // try to get the ClassLoader from the Caller class
-            Class<?> callerClass = getCallerClass(3);
-            if (callerClass != null) {
-                classLoader = callerClass.getClassLoader();
-            }
         }
 
         if (classLoader == null) {
@@ -402,7 +385,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     public static URL getResource(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException {
         URL resourceURL = null;
-        for (ResourceType resourceType : ResourceType.values()) {
+        for (ResourceType resourceType : values()) {
             resourceURL = getResource(classLoader, resourceType, resourceName);
             if (resourceURL != null) {
                 break;
@@ -730,6 +713,19 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     /**
      * Create a new instance of {@link URLClassLoader}
      *
+     * @param urls               the urls
+     * @param initializedLoaders the loaders of URLClassPath will be initialized or not
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, boolean initializedLoaders) {
+        return newURLClassLoader(urls, null, initializedLoaders);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
      * @param urls   the urls
      * @param parent the {@link ClassLoader} as parent
      * @return non-null {@link URLClassLoader}
@@ -737,9 +733,27 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     @Nonnull
     public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, @Nullable ClassLoader parent) throws IllegalArgumentException {
+        return newURLClassLoader(urls, parent, false);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls               the urls
+     * @param parent             the {@link ClassLoader} as parent
+     * @param initializedLoaders the loaders of URLClassPath will be initialized or not
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, @Nullable ClassLoader parent, boolean initializedLoaders) throws IllegalArgumentException {
         assertNotNull(urls, () -> "The 'urls' must not be null");
         assertNoNullElements(urls, () -> "Any element of 'urls' must not be null");
-        return new URLClassLoader(urls, parent);
+        URLClassLoader urlClassLoader = new URLClassLoader(urls, parent);
+        if (initializedLoaders) {
+            urlClassPathHandle.initializeLoaders(urlClassLoader);
+        }
+        return urlClassLoader;
     }
 
     /**
@@ -906,8 +920,5 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          */
         abstract String normalize(String name);
 
-
     }
-
-
 }

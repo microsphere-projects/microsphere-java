@@ -20,6 +20,7 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Parameter;
 import java.net.URL;
@@ -39,6 +40,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CHAR_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_DOUBLE_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_DOUBLE_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_FILE_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_FLOAT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_FLOAT_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_INTEGER_OBJECT_ARRAY;
@@ -111,6 +113,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
         assertEmptyArray(EMPTY_DOUBLE_OBJECT_ARRAY, Double.class);
         assertEmptyArray(EMPTY_CLASS_ARRAY, Class.class);
         assertEmptyArray(EMPTY_STRING_ARRAY, String.class);
+        assertEmptyArray(EMPTY_FILE_ARRAY, File.class);
         assertEmptyArray(EMPTY_URL_ARRAY, URL.class);
         assertEmptyArray(EMPTY_PARAMETER_ARRAY, Parameter.class);
         assertEmptyArray(EMPTY_ANNOTATION_ARRAY, Annotation.class);
