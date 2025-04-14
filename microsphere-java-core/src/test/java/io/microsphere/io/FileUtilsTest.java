@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -240,39 +241,44 @@ public class FileUtilsTest extends AbstractTestCase {
         // status : 2 -> deleting
         AtomicInteger status = new AtomicInteger(0);
 
-        executor.submit(() -> {
+        long timeoutInMs = 1000;
+
+        Future future = executor.submit(() -> {
             synchronized (testFile) {
                 FileOutputStream outputStream = new FileOutputStream(testFile);
                 outputStream.write('a');
                 status.set(1);
+
+                executor.submit(() -> {
+                    while (status.get() != 1) {
+                    }
+                    try {
+                        assertThrows(IOException.class, () -> forceDelete(testFile));
+                    } finally {
+                        status.set(2);
+                    }
+                    return null;
+                });
+
                 // wait for notification
-                testFile.wait();
+                testFile.wait(timeoutInMs / 2);
                 outputStream.close();
             }
             return null;
         });
+        
+        future.get(timeoutInMs, MILLISECONDS);
 
-        executor.submit(() -> {
-            while (status.get() != 1) {
-            }
-            try {
-                forceDelete(testFile);
-            } finally {
-                status.set(2);
-            }
-            return null;
-        });
+//        executor.submit(() -> {
+//            while (status.get() != 2) {
+//            }
+//            synchronized (testFile) {
+//                testFile.notifyAll();
+//            }
+//            return null;
+//        });
 
-        executor.submit(() -> {
-            while (status.get() != 2) {
-            }
-            synchronized (testFile) {
-                testFile.notifyAll();
-            }
-            return null;
-        });
-
-        executor.awaitTermination(100, MILLISECONDS);
+        executor.awaitTermination(timeoutInMs, MILLISECONDS);
 
         executor.shutdown();
 
