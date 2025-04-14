@@ -36,7 +36,7 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
-import static java.io.File.listRoots;
+import static io.microsphere.util.SystemUtils.USER_HOME;
 import static java.lang.Thread.sleep;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.TERMINATE;
@@ -291,9 +291,7 @@ public class FileUtilsTest extends AbstractTestCase {
             return;
         }
 
-        File[] roots = listRoots();
-
-        File root = roots[roots.length - 1];
+        File root = new File(USER_HOME);
         Path readOnlyFilePath = walkFileTree(root.toPath(), new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
