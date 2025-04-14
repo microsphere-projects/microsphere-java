@@ -9,7 +9,6 @@ import io.microsphere.util.BaseUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.attribute.BasicFileAttributes;
 
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
@@ -18,7 +17,7 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
 import static java.io.File.separatorChar;
-import static java.nio.file.Files.readAttributes;
+import static java.nio.file.Files.isSymbolicLink;
 
 /**
  * {@link File} Utility
@@ -88,7 +87,7 @@ public abstract class FileUtils extends BaseUtils {
 
         int deletedFilesCount = 0;
 
-        if (!isSymbolicLink(directory)) {
+        if (!isSymlink(directory)) {
             deletedFilesCount += cleanDirectory(directory);
         }
 
@@ -190,7 +189,7 @@ public abstract class FileUtils extends BaseUtils {
         }
 
         directory.deleteOnExit();
-        if (!isSymbolicLink(directory)) {
+        if (!isSymlink(directory)) {
             cleanDirectoryOnExit(directory);
         }
     }
@@ -224,12 +223,8 @@ public abstract class FileUtils extends BaseUtils {
         return files;
     }
 
-    public static boolean isSymbolicLink(File file) {
-        if (file == null) {
-            throw new NullPointerException("File must not be null");
-        }
-        BasicFileAttributes attributes = execute(() -> readAttributes(file.toPath(), BasicFileAttributes.class));
-        return attributes.isSymbolicLink();
+    public static boolean isSymlink(File file) {
+        return isSymbolicLink(file.toPath());
     }
 
     /**
