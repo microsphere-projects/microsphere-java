@@ -44,6 +44,7 @@ import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.lang.System.getProperty;
+import static java.lang.Thread.currentThread;
 import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
@@ -73,6 +74,9 @@ public class StandardFileWatchService implements FileWatchService {
      */
     public static final String THREAD_NAME_PREFIX_PROPERTY_NAME = "microsphere.file-watch-service.thread-name-prefix";
 
+    /**
+     * The thread name prefix , default value : "microsphere-file-watch-service-"
+     */
     public static final String THREAD_NAME_PREFIX = getProperty(THREAD_NAME_PREFIX_PROPERTY_NAME, DEFAULT_THREAD_NAME_PREFIX);
 
     private static final WatchEvent.Kind<?>[] ALL_WATCH_EVENT_KINDS = {
@@ -83,9 +87,9 @@ public class StandardFileWatchService implements FileWatchService {
 
     private WatchService watchService;
 
-    private final ExecutorService bossExecutor;
+    private final ExecutorService eventLoopExecutor;
 
-    private final Executor workerExecutor;
+    private final Executor eventHandlerExecutor;
 
     private final Map<Path, FileChangedMetadata> fileChangedMetadataCache = newTreeMap();
 
@@ -95,21 +99,23 @@ public class StandardFileWatchService implements FileWatchService {
         this(Runnable::run);
     }
 
-    public StandardFileWatchService(Executor workerExecutor) {
-        this(newSingleThreadExecutor(newThreadFactory(THREAD_NAME_PREFIX, true)), workerExecutor);
+    public StandardFileWatchService(Executor eventHandlerExecutor) {
+        this(eventHandlerExecutor, newSingleThreadExecutor(newThreadFactory(THREAD_NAME_PREFIX, true)));
     }
 
-    public StandardFileWatchService(ExecutorService bossExecutor, Executor workerExecutor) {
-        this.bossExecutor = bossExecutor;
-        this.workerExecutor = workerExecutor;
+    public StandardFileWatchService(Executor eventHandlerExecutor, ExecutorService eventLoopExecutor) {
+        this.eventLoopExecutor = eventLoopExecutor;
+        this.eventHandlerExecutor = eventHandlerExecutor;
         // shutdown the ExecutorService when JVM exits
-        shutdownOnExit(bossExecutor, workerExecutor);
+        shutdownOnExit(eventLoopExecutor, eventHandlerExecutor);
     }
 
     public void start() throws Exception {
         if (started) {
             throw new IllegalStateException("StandardFileWatchService has started");
         }
+
+        started = true;
 
         FileSystem fileSystem = getDefault();
 
@@ -121,14 +127,14 @@ public class StandardFileWatchService implements FileWatchService {
 
         this.watchService = watchService;
 
-        started = true;
     }
 
     private void dispatchFileChangedEvents(WatchService watchService) {
-        bossExecutor.submit(() -> {
-            while (true) {
-                WatchKey watchKey = watchService.take();
+        eventLoopExecutor.submit(() -> {
+            while (started) {
+                WatchKey watchKey = null;
                 try {
+                    watchKey = watchService.take();
                     if (watchKey.isValid()) {
                         for (WatchEvent event : watchKey.pollEvents()) {
                             Watchable watchable = watchKey.watchable();
@@ -146,6 +152,9 @@ public class StandardFileWatchService implements FileWatchService {
                             }
                         }
                     }
+                } catch (InterruptedException e) {
+                    currentThread().interrupt();
+                    break;
                 } finally {
                     if (watchKey != null) {
                         watchKey.reset();
@@ -183,7 +192,7 @@ public class StandardFileWatchService implements FileWatchService {
         final Path dirPath = isDirectory(filePath, NOFOLLOW_LINKS) ? filePath : filePath.getParent();
         return fileChangedMetadataCache.computeIfAbsent(dirPath, k -> {
             FileChangedMetadata metadata = new FileChangedMetadata();
-            metadata.eventDispatcher = parallel(this.workerExecutor);
+            metadata.eventDispatcher = parallel(this.eventHandlerExecutor);
             metadata.watchEventKinds = toWatchEventKinds(kinds);
             return metadata;
         });
@@ -235,10 +244,12 @@ public class StandardFileWatchService implements FileWatchService {
 
     public void stop() throws Exception {
         if (started) {
+            started = false;
             if (watchService != null) {
                 watchService.close();
             }
             fileChangedMetadataCache.clear();
+            eventLoopExecutor.shutdown();
         }
     }
 
