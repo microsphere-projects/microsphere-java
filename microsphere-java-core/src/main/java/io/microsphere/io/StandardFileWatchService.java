@@ -65,7 +65,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
  * @see WatchService
  * @since 1.0.0
  */
-public class StandardFileWatchService implements FileWatchService {
+public class StandardFileWatchService implements FileWatchService, AutoCloseable {
 
     /**
      * The default thread name prefix : "microsphere-file-watch-service"
@@ -262,6 +262,11 @@ public class StandardFileWatchService implements FileWatchService {
             shutdown(eventLoopExecutor);
             shutdown(eventHandlerExecutor);
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.stop();
     }
 
     private static class FileChangedMetadata {
