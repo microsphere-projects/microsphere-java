@@ -30,10 +30,8 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
-import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.event.FileChangedEvent.Kind.values;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
