@@ -3,6 +3,7 @@ package io.microsphere.convert.multiple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
@@ -35,7 +36,7 @@ public class StringToMultiValueConverterTest {
     @Test
     public void testConvert() {
         String source = "";
-        assertArrayEquals(ofArray(source), (String[]) converter.convert(source, null, null));
+        assertArrayEquals(EMPTY_STRING_ARRAY, (String[]) converter.convert(source, null, null));
 
         source = "a,b,c";
         assertArrayEquals(ofArray("a", "b", "c"), (String[]) converter.convert(source, null, null));
@@ -43,6 +44,6 @@ public class StringToMultiValueConverterTest {
 
     @Test
     public void testConvertOnNull() {
-        assertArrayEquals(ofArray((String) null), (String[]) converter.convert(null, null, null));
+        assertArrayEquals(null, (String[]) converter.convert(null, null, null));
     }
 }
