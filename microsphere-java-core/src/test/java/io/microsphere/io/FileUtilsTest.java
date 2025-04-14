@@ -1,8 +1,6 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.io.event.FileChangedEvent;
-import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
@@ -13,8 +11,10 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
+import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
@@ -23,12 +23,12 @@ import static io.microsphere.io.FileUtils.getCanonicalFile;
 import static io.microsphere.io.FileUtils.getFileExtension;
 import static io.microsphere.io.FileUtils.isSymlink;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
-import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -118,59 +118,52 @@ public class FileUtilsTest extends AbstractTestCase {
     @Test
     public void testDeleteDirectoryOnIOException() throws Exception {
         File testDir = createRandomTempDirectory();
-        createRandomFile(testDir);
 
-        AtomicBoolean running = new AtomicBoolean(true);
+        ExecutorService fileCreationExecutor = newSingleThreadExecutor();
 
-        ExecutorService executor = newSingleThreadExecutor(newThreadFactory("testDeleteDirectory-"));
+        AtomicBoolean creatingFile = new AtomicBoolean(true);
 
-        StandardFileWatchService fileWatchService = new StandardFileWatchService();
+        long waitTime = 50L;
 
-        IOException exception = null;
+        fileCreationExecutor.submit(() -> {
+            while (creatingFile.get()) {
+                createRandomFile(testDir);
+            }
+            return null;
+        });
 
-        try {
-            fileWatchService.watch(testDir, new FileChangedListener() {
-                @Override
-                public void onFileDeleted(FileChangedEvent event) {
-                    File deletedFile = event.getFile();
-                    assertFalse(deletedFile.exists());
-                    assertEquals(testDir, deletedFile.getParentFile());
-                    try {
-                        createRandomFile(testDir);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
+        AtomicReference<IOException> ioExceptionReference = new AtomicReference<>();
 
-                }
-            }, DELETED);
+        AtomicBoolean deletingDirectory = new AtomicBoolean(true);
 
-            fileWatchService.start();
+        ExecutorService directoryDeletionExecutor = newSingleThreadExecutor();
 
-            executor.submit(() -> {
-                while (running.get()) {
-                    createRandomFile(testDir);
-                }
-                return null;
-            });
-
-
-            while (true) {
+        directoryDeletionExecutor.submit(() -> {
+            while (deletingDirectory.get()) {
                 try {
                     deleteDirectory(testDir);
-                    executor.awaitTermination(10, MILLISECONDS);
                 } catch (IOException e) {
-                    exception = e;
-                    running.set(false);
+                    ioExceptionReference.set(e);
+                    creatingFile.set(false);
+                    deletingDirectory.set(false);
                     break;
                 }
             }
+            return null;
+        });
 
-        } finally {
-            fileWatchService.stop();
-            executor.shutdown();
+        for (int i = 0; i < 100; i++) {
+            if (creatingFile.get()) {
+                sleep(waitTime);
+            }
         }
 
-        assertNotNull(exception);
+        shutdown(fileCreationExecutor);
+        shutdown(directoryDeletionExecutor);
+
+        assertNotNull(ioExceptionReference.get());
+        assertFalse(creatingFile.get());
+        assertFalse(deletingDirectory.get());
     }
 
     @Test
