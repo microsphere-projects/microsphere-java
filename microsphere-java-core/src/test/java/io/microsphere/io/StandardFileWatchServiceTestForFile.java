@@ -30,7 +30,6 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
 import static io.microsphere.io.FileUtils.deleteDirectory;
@@ -72,7 +71,7 @@ public class StandardFileWatchServiceTestForFile {
 
     @BeforeEach
     public void init() throws Exception {
-        StandardFileWatchService fileWatchService = new StandardFileWatchService(ForkJoinPool.commonPool());
+        StandardFileWatchService fileWatchService = new StandardFileWatchService();
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
         String resourceFilePath = resource.getFile();
         this.sourceFile = new File(resourceFilePath);
