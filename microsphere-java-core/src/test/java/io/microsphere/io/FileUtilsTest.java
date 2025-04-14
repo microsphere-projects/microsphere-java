@@ -31,7 +31,6 @@ import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -241,41 +240,50 @@ public class FileUtilsTest extends AbstractTestCase {
         // status : 0 -> init
         // status : 1 -> writing
         // status : 2 -> deleting
+        // status : 3 -> completed
         AtomicInteger status = new AtomicInteger(0);
 
-        executor.submit(() -> {
+        Runnable deletionTask = () -> {
+            while (status.get() != 1) {
+            }
+            assertThrows(IOException.class, () -> forceDelete(testFile));
+            status.set(2);
+        };
+
+        Runnable notificationTask = () -> {
             while (status.get() != 2) {
             }
             synchronized (testFile) {
                 testFile.notifyAll();
             }
-            return null;
-        });
+            status.set(3);
+        };
 
-        executor.submit(() -> {
-            while (status.get() != 1) {
-            }
-            assertThrows(IOException.class, () -> forceDelete(testFile));
-            status.set(2);
-            return null;
-        });
-
-        executor.submit(() -> {
+        Runnable writeTask = () -> {
             synchronized (testFile) {
                 try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
                     outputStream.write('a');
                     status.set(1);
                     // wait for notification
                     testFile.wait();
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
                 }
             }
-            return null;
-        });
+        };
 
-        executor.awaitTermination(100, MILLISECONDS);
+        Thread writeThread = new Thread(writeTask);
+        writeThread.start();
 
-        executor.shutdown();
+        Thread deletionThread = new Thread(deletionTask);
+        deletionThread.start();
 
+        Thread notificationThread = new Thread(notificationTask);
+        notificationThread.start();
+
+        while (status.get() != 3) {
+            sleep(100);
+        }
     }
 
     @Test
