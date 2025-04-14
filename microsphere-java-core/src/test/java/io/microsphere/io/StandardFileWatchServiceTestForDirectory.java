@@ -26,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -75,6 +76,7 @@ public class StandardFileWatchServiceTestForDirectory extends AbstractTestCase {
     @AfterEach
     public void destroy() throws Exception {
         this.fileWatchService.stop();
+        deleteDirectory(this.testDir);
     }
 
     @Test
