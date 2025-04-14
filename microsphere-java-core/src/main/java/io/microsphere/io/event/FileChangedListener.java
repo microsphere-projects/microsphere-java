@@ -31,7 +31,6 @@ import io.microsphere.event.EventListener;
 public interface FileChangedListener extends EventListener<FileChangedEvent> {
 
     default void onEvent(FileChangedEvent event) {
-        // DO NOTHING
         FileChangedEvent.Kind kind = event.getKind();
         switch (kind) {
             case CREATED:

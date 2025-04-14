@@ -41,6 +41,7 @@ import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
+import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
@@ -64,7 +65,7 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
  * @see WatchService
  * @since 1.0.0
  */
-public class StandardFileWatchService implements FileWatchService {
+public class StandardFileWatchService implements FileWatchService, AutoCloseable {
 
     /**
      * The default thread name prefix : "microsphere-file-watch-service"
@@ -100,7 +101,7 @@ public class StandardFileWatchService implements FileWatchService {
     private Future eventLoopFuture;
 
     public StandardFileWatchService() {
-        this(Runnable::run);
+        this(DIRECT_EXECUTOR);
     }
 
     public StandardFileWatchService(Executor eventHandlerExecutor) {
@@ -261,6 +262,11 @@ public class StandardFileWatchService implements FileWatchService {
             shutdown(eventLoopExecutor);
             shutdown(eventHandlerExecutor);
         }
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.stop();
     }
 
     private static class FileChangedMetadata {
