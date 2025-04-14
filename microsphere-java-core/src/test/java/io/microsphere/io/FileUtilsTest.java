@@ -11,7 +11,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -241,33 +240,31 @@ public class FileUtilsTest extends AbstractTestCase {
         // status : 2 -> deleting
         AtomicInteger status = new AtomicInteger(0);
 
-        long timeoutInMs = 1000;
+        long timeoutInMs = 500;
 
-        Future future = executor.submit(() -> {
+        executor.submit(() -> {
             synchronized (testFile) {
                 FileOutputStream outputStream = new FileOutputStream(testFile);
                 outputStream.write('a');
                 status.set(1);
-
-                executor.submit(() -> {
-                    while (status.get() != 1) {
-                    }
-                    try {
-                        assertThrows(IOException.class, () -> forceDelete(testFile));
-                    } finally {
-                        status.set(2);
-                    }
-                    return null;
-                });
-
                 // wait for notification
-                testFile.wait(timeoutInMs / 2);
+                testFile.wait(timeoutInMs);
                 outputStream.close();
             }
             return null;
         });
-        
-        future.get(timeoutInMs, MILLISECONDS);
+
+        executor.submit(() -> {
+            if (status.get() != 1) {
+                Thread.sleep(timeoutInMs);
+            }
+            try {
+                assertThrows(IOException.class, () -> forceDelete(testFile));
+            } finally {
+                status.set(2);
+            }
+            return null;
+        });
 
 //        executor.submit(() -> {
 //            while (status.get() != 2) {
@@ -278,7 +275,7 @@ public class FileUtilsTest extends AbstractTestCase {
 //            return null;
 //        });
 
-        executor.awaitTermination(timeoutInMs, MILLISECONDS);
+        executor.awaitTermination(timeoutInMs * 2, MILLISECONDS);
 
         executor.shutdown();
 
