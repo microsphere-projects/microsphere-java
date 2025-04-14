@@ -51,25 +51,29 @@ public abstract class ExecutorUtils {
      * Shutdown {@link Executor} if it's not shutdown
      *
      * @param executor {@link ExecutorService}
+     * @return <code>true</code> if shutdown successfully, otherwise <code>false</code>
      */
-    public static void shutdown(Executor executor) {
+    public static boolean shutdown(Executor executor) {
         if (executor instanceof ExecutorService) {
-            shutdown((ExecutorService) executor);
+            return shutdown((ExecutorService) executor);
         }
+        return false;
     }
 
     /**
      * Shutdown {@link ExecutorService} if it's not shutdown
      *
      * @param executorService {@link ExecutorService}
+     * @return <code>true</code> if shutdown successfully, otherwise <code>false</code>
      */
-    public static void shutdown(ExecutorService executorService) {
+    public static boolean shutdown(ExecutorService executorService) {
         if (executorService == null) {
-            return;
+            return false;
         }
         if (!executorService.isShutdown()) {
             executorService.shutdown();
         }
+        return true;
     }
 
 }
