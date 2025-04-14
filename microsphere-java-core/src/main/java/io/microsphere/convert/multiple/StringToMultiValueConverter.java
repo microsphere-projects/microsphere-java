@@ -18,8 +18,7 @@ package io.microsphere.convert.multiple;
 
 
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
-import static io.microsphere.util.ArrayUtils.isEmpty;
-import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.split;
 
 /**
@@ -33,14 +32,14 @@ public interface StringToMultiValueConverter extends MultiValueConverter<String>
     @Override
     default Object convert(String source, Class<?> multiValueType, Class<?> elementType) {
 
+        if (source == null) {
+            return null;
+        }
+
         // split by the comma
         String[] segments = split(source, COMMA_CHAR);
 
-        if (isEmpty(segments)) { // If empty array, create an array with only one element
-            segments = new String[]{source};
-        }
-
-        int size = segments.length;
+        int size = length(segments);
 
         return convert(segments, size, multiValueType, elementType);
     }
