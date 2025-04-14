@@ -100,6 +100,9 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         if (classLoader == null || url == null) {
             return false;
         }
+
+        initializeLoaders(classLoader);
+
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         Collection<URL> urls = getFieldValue(ucp, getUrlsField());
         Collection<URL> path = getFieldValue(ucp, getPathField());
@@ -110,8 +113,6 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         boolean removed = false;
 
         synchronized (urls) {
-            urls.remove(url);
-            path.remove(url);
 
             Iterator<Object> iterator = loaders.iterator();
             while (iterator.hasNext()) {
@@ -123,6 +124,8 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
                         logger.trace("Remove the Class-Path URL：{}", url);
                     }
                     iterator.remove();
+                    urls.remove(url);
+                    path.remove(url);
                     removed = true;
                     break;
                 }

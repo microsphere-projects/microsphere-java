@@ -59,6 +59,21 @@ public interface URLClassPathHandle extends Prioritized {
     }
 
     /**
+     * Initialize the loaders of URL Class-Path from {@link URLClassLoader}
+     *
+     * @param classLoader {@link ClassLoader}
+     * @return <code>true</code> if initialized, otherwise <code>false</code>
+     */
+    default boolean initializeLoaders(@Nullable ClassLoader classLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        if (urlClassLoader == null) {
+            return false;
+        }
+        urlClassLoader.findResource("just-for-initializing-loaders");
+        return true;
+    }
+
+    /**
      * Remove the Class-Path {@link URL} from the specified {@link ClassLoader}
      *
      * @param classLoader the specified {@link ClassLoader}

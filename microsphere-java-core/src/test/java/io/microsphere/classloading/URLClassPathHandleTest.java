@@ -49,6 +49,11 @@ public class URLClassPathHandleTest extends BaseURLClassPathHandleTest {
         assertArrayEquals(urls, handle.getURLs(new URLClassLoader(urls)));
     }
 
+    @Test
+    public void testInitializeLoaders() {
+        assertFalse(handle.initializeLoaders(null));
+    }
+
     @Override
     @Test
     public void testGetPriority() {
