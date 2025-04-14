@@ -67,9 +67,9 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
 public class StandardFileWatchService implements FileWatchService {
 
     /**
-     * The default thread name prefix : "microsphere-file-watch-service-"
+     * The default thread name prefix : "microsphere-file-watch-service"
      */
-    public static final String DEFAULT_THREAD_NAME_PREFIX = "microsphere-file-watch-service-";
+    public static final String DEFAULT_THREAD_NAME_PREFIX = "microsphere-file-watch-service";
 
     /**
      * The thread name prefix property name : "microsphere.file-watch-service.thread-name-prefix
