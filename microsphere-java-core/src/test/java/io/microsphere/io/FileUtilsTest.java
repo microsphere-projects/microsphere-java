@@ -244,29 +244,30 @@ public class FileUtilsTest extends AbstractTestCase {
         AtomicInteger status = new AtomicInteger(0);
 
         executor.submit(() -> {
+            while (status.get() != 2) {
+            }
             synchronized (testFile) {
-                try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
-                    outputStream.write('a');
-                    status.set(1);
-                    executor.submit(() -> {
-                        while (status.get() != 1) {
-                        }
-                        assertThrows(IOException.class, () -> forceDelete(testFile));
-                        status.set(2);
-                        return null;
-                    });
-                    // wait for notification
-                    testFile.wait();
-                }
+                testFile.notifyAll();
             }
             return null;
         });
 
         executor.submit(() -> {
-            while (status.get() != 2) {
+            while (status.get() != 1) {
             }
+            assertThrows(IOException.class, () -> forceDelete(testFile));
+            status.set(2);
+            return null;
+        });
+
+        executor.submit(() -> {
             synchronized (testFile) {
-                testFile.notifyAll();
+                try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
+                    outputStream.write('a');
+                    status.set(1);
+                    // wait for notification
+                    testFile.wait();
+                }
             }
             return null;
         });
