@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -232,8 +233,6 @@ public class FileUtilsTest extends AbstractTestCase {
     public void testForceDeleteOnIOException() throws Exception {
         File testFile = createRandomTempFile();
 
-        ExecutorService executor = newFixedThreadPool(3);
-
         // status : 0 -> init
         // status : 1 -> writing
         // status : 2 -> deleting
@@ -242,43 +241,26 @@ public class FileUtilsTest extends AbstractTestCase {
         long timeoutInMs = 1000;
 
         Thread thread = new Thread(() -> {
-            executor.submit(() -> {
-                synchronized (testFile) {
-                    try (FileOutputStream outputStream = new FileOutputStream(testFile)) {
-                        outputStream.write('a');
-                        status.set(1);
-                        // wait for notification
-                        testFile.wait();
-                    }
+            synchronized (testFile) {
+                try (FileOutputStream outputStream = new FileOutputStream(testFile)) {
+                    outputStream.write('a');
+                    // wait for notification
+                    testFile.wait(timeoutInMs);
+                } catch (Throwable e) {
                 }
-                return null;
-            });
-
-            executor.submit(() -> {
-                while (status.get() != 1) {
-                }
-                try {
-                    assertThrows(IOException.class, () -> forceDelete(testFile));
-                } finally {
-                    status.set(2);
-                }
-                return null;
-            });
-
-            executor.submit(() -> {
-                while (status.get() != 2) {
-                }
-                synchronized (testFile) {
-                    testFile.notifyAll();
-                }
-                return null;
-            });
+            }
         });
 
         thread.start();
+
+        assertThrows(IOException.class, () -> forceDelete(testFile));
+
+        synchronized (testFile) {
+            testFile.notifyAll();
+        }
+
         thread.join(timeoutInMs);
 
-        executor.shutdown();
     }
 
     @Test
