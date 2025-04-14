@@ -242,6 +242,10 @@ public class FileUtilsTest extends AbstractTestCase {
             synchronized (testFile) {
                 try (FileOutputStream outputStream = new FileOutputStream(testFile)) {
                     outputStream.write('a');
+                    Thread t1 = new Thread(() -> {
+                        assertThrows(IOException.class, () -> forceDelete(testFile));
+                    });
+                    t1.start();
                     // wait for notification
                     testFile.wait(timeoutInMs);
                 } catch (Throwable e) {
@@ -250,8 +254,6 @@ public class FileUtilsTest extends AbstractTestCase {
         });
 
         thread.start();
-
-        assertThrows(IOException.class, () -> forceDelete(testFile));
 
         synchronized (testFile) {
             testFile.notifyAll();
