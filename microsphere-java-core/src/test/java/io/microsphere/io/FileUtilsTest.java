@@ -281,9 +281,9 @@ public class FileUtilsTest extends AbstractTestCase {
         Thread notificationThread = new Thread(notificationTask);
         notificationThread.start();
 
-        while (status.get() != 3) {
-            sleep(100);
-        }
+        writeThread.join();
+        deletionThread.join();
+        notificationThread.join();
     }
 
     @Test
