@@ -41,6 +41,7 @@ import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
+import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
@@ -100,7 +101,7 @@ public class StandardFileWatchService implements FileWatchService {
     private Future eventLoopFuture;
 
     public StandardFileWatchService() {
-        this(Runnable::run);
+        this(DIRECT_EXECUTOR);
     }
 
     public StandardFileWatchService(Executor eventHandlerExecutor) {
