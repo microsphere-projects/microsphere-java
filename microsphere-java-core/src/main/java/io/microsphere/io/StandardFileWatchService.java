@@ -34,9 +34,12 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
+import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
 import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
@@ -44,7 +47,6 @@ import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.lang.System.getProperty;
-import static java.lang.Thread.currentThread;
 import static java.nio.file.FileSystems.getDefault;
 import static java.nio.file.Files.isDirectory;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
@@ -95,6 +97,8 @@ public class StandardFileWatchService implements FileWatchService {
 
     private volatile boolean started;
 
+    private Future eventLoopFuture;
+
     public StandardFileWatchService() {
         this(Runnable::run);
     }
@@ -130,7 +134,7 @@ public class StandardFileWatchService implements FileWatchService {
     }
 
     private void dispatchFileChangedEvents(WatchService watchService) {
-        eventLoopExecutor.submit(() -> {
+        eventLoopFuture = eventLoopExecutor.submit(() -> {
             while (started) {
                 WatchKey watchKey = null;
                 try {
@@ -152,15 +156,13 @@ public class StandardFileWatchService implements FileWatchService {
                             }
                         }
                     }
-                } catch (InterruptedException e) {
-                    currentThread().interrupt();
-                    break;
                 } finally {
                     if (watchKey != null) {
                         watchKey.reset();
                     }
                 }
             }
+            return null;
         });
     }
 
@@ -244,12 +246,20 @@ public class StandardFileWatchService implements FileWatchService {
 
     public void stop() throws Exception {
         if (started) {
+            // set the flag "started" to false
             started = false;
+            // wait for the event loop to complete
+            if (!eventLoopExecutor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
+                // if the event loop is not done, try to cancel the task
+                eventLoopFuture.cancel(true);
+            }
+
             if (watchService != null) {
                 watchService.close();
             }
             fileChangedMetadataCache.clear();
-            eventLoopExecutor.shutdown();
+            shutdown(eventLoopExecutor);
+            shutdown(eventHandlerExecutor);
         }
     }
 
