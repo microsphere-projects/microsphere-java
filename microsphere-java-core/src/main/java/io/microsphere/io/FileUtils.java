@@ -9,6 +9,7 @@ import io.microsphere.util.BaseUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.attribute.BasicFileAttributes;
 
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
@@ -16,8 +17,8 @@ import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static java.io.File.separatorChar;
+import static java.nio.file.Files.readAttributes;
 
 /**
  * {@link File} Utility
@@ -87,7 +88,7 @@ public abstract class FileUtils extends BaseUtils {
 
         int deletedFilesCount = 0;
 
-        if (!isSymlink(directory)) {
+        if (!isSymbolicLink(directory)) {
             deletedFilesCount += cleanDirectory(directory);
         }
 
@@ -189,7 +190,7 @@ public abstract class FileUtils extends BaseUtils {
         }
 
         directory.deleteOnExit();
-        if (!isSymlink(directory)) {
+        if (!isSymbolicLink(directory)) {
             cleanDirectoryOnExit(directory);
         }
     }
@@ -223,22 +224,12 @@ public abstract class FileUtils extends BaseUtils {
         return files;
     }
 
-    public static boolean isSymlink(File file) {
+    public static boolean isSymbolicLink(File file) {
         if (file == null) {
             throw new NullPointerException("File must not be null");
         }
-        if (IS_OS_WINDOWS) {
-            return false;
-        }
-        File fileInCanonicalDir = null;
-        if (file.getParent() == null) {
-            fileInCanonicalDir = file;
-        } else {
-            File canonicalDir = getCanonicalFile(file.getParentFile());
-            fileInCanonicalDir = new File(canonicalDir, file.getName());
-        }
-
-        return !getCanonicalFile(fileInCanonicalDir).equals(fileInCanonicalDir.getAbsoluteFile());
+        BasicFileAttributes attributes = execute(() -> readAttributes(file.toPath(), BasicFileAttributes.class));
+        return attributes.isSymbolicLink();
     }
 
     /**
