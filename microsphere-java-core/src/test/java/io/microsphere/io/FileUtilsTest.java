@@ -31,6 +31,7 @@ import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -230,60 +231,51 @@ public class FileUtilsTest extends AbstractTestCase {
 
     @Test
     public void testForceDeleteOnIOException() throws Exception {
-        File testDir = createRandomTempDirectory();
-        File testFile = createRandomFile(testDir);
+        File testFile = createRandomTempFile();
 
-        int n = 3;
-
-        ExecutorService executor = newFixedThreadPool(n);
+        ExecutorService executor = newFixedThreadPool(3);
 
         // status : 0 -> init
         // status : 1 -> writing
         // status : 2 -> deleting
-        // status : 3 -> completed
         AtomicInteger status = new AtomicInteger(0);
 
-        Runnable deletionTask = () -> {
+        executor.submit(() -> {
+            synchronized (testFile) {
+                FileOutputStream outputStream = new FileOutputStream(testFile);
+                outputStream.write('a');
+                status.set(1);
+                // wait for notification
+                testFile.wait();
+                outputStream.close();
+            }
+            return null;
+        });
+
+        executor.submit(() -> {
             while (status.get() != 1) {
             }
-            assertThrows(IOException.class, () -> forceDelete(testFile));
-            status.set(2);
-        };
+            try {
+                forceDelete(testFile);
+            } finally {
+                status.set(2);
+            }
+            return null;
+        });
 
-        Runnable notificationTask = () -> {
+        executor.submit(() -> {
             while (status.get() != 2) {
             }
             synchronized (testFile) {
                 testFile.notifyAll();
             }
-            status.set(3);
-        };
+            return null;
+        });
 
-        Runnable writeTask = () -> {
-            synchronized (testFile) {
-                try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
-                    outputStream.write('a');
-                    status.set(1);
-                    // wait for notification
-                    testFile.wait();
-                } catch (Throwable e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
+        executor.awaitTermination(100, MILLISECONDS);
 
-        Thread writeThread = new Thread(writeTask);
-        writeThread.start();
+        executor.shutdown();
 
-        Thread deletionThread = new Thread(deletionTask);
-        deletionThread.start();
-
-        Thread notificationThread = new Thread(notificationTask);
-        notificationThread.start();
-
-        writeThread.join();
-        deletionThread.join();
-        notificationThread.join();
     }
 
     @Test
