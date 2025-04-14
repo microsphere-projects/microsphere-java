@@ -41,7 +41,6 @@ import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
-import static java.util.concurrent.ForkJoinPool.commonPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -67,7 +66,7 @@ public class StandardFileWatchServiceTestForFile extends AbstractTestCase {
 
     @BeforeEach
     public void init() throws Exception {
-        StandardFileWatchService fileWatchService = new StandardFileWatchService(commonPool());
+        StandardFileWatchService fileWatchService = new StandardFileWatchService();
         URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
         String resourceFilePath = resource.getFile();
         this.sourceFile = new File(resourceFilePath);
