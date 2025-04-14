@@ -17,6 +17,7 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.io.event.DefaultFileChangedListener;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.io.event.LoggingFileChangedListener;
@@ -31,8 +32,13 @@ import java.nio.file.Path;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static io.microsphere.concurrent.ExecutorUtils.shutdown;
+import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
+import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
+import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.values;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
@@ -53,61 +59,104 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class StandardFileWatchServiceTest extends AbstractTestCase {
 
-    private static final String TEST_FILE_LOCATION = "test.txt";
-
-    private StandardFileWatchService fileWatchService;
-
-    private File sourceFile;
-
-    private File targetFile;
-
-    private CountDownLatch countDownLatch;
+    private File testDir;
 
     private ExecutorService executor;
 
     @BeforeEach
     public void init() throws Exception {
-        StandardFileWatchService fileWatchService = new StandardFileWatchService(commonPool());
-        URL resource = getResource(this.getClass().getClassLoader(), TEST_FILE_LOCATION);
-        String resourceFilePath = resource.getFile();
-        this.sourceFile = new File(resourceFilePath);
-        File targetDir = createRandomTempDirectory();
-
-        this.fileWatchService = fileWatchService;
-        this.targetFile = new File(targetDir, this.sourceFile.getName());
-        this.countDownLatch = new CountDownLatch(3);
+        this.testDir = createRandomTempDirectory();
         this.executor = newSingleThreadExecutor();
-
-        fileWatchService.watch(targetFile, new MyFileChangedListener(this.countDownLatch), values());
-        fileWatchService.watch(targetFile, new LoggingFileChangedListener());
-        fileWatchService.watch(targetFile, new FileChangedListener() {
-        });
-        fileWatchService.start();
-
-        assertThrows(IllegalStateException.class, fileWatchService::start);
     }
 
     @AfterEach
     public void destroy() throws Exception {
-        this.fileWatchService.stop();
-        this.executor.shutdown();
+        shutdown(this.executor);
+        deleteDirectory(this.testDir);
     }
 
     @Test
-    public void test() throws Exception {
-        // create file
-        Path sourcePath = this.sourceFile.toPath();
-        Path targetFilePath = this.targetFile.toPath();
-        copy(sourcePath, targetFilePath, REPLACE_EXISTING);
+    public void testFile() throws Exception {
+        URL resource = getResource(super.classLoader, "test.txt");
+        String resourceFilePath = resource.getFile();
+        File sourceFile = new File(resourceFilePath);
 
-        countDownLatch.await();
+        File targetFile = new File(this.testDir, sourceFile.getName());
+
+        CountDownLatch countDownLatch = new CountDownLatch(3);
+
+        try (StandardFileWatchService fileWatchService = new StandardFileWatchService(commonPool())) {
+            // watch file and attach listeners
+            fileWatchService.watch(targetFile, new MyFileChangedListener(targetFile, countDownLatch), values());
+            fileWatchService.watch(targetFile, new LoggingFileChangedListener());
+            fileWatchService.watch(targetFile, new DefaultFileChangedListener());
+
+            // start StandardFileWatchService
+            fileWatchService.start();
+            // start again
+            assertThrows(IllegalStateException.class, fileWatchService::start);
+
+            // copy file
+            Path sourcePath = sourceFile.toPath();
+            Path targetFilePath = targetFile.toPath();
+            copy(sourcePath, targetFilePath, REPLACE_EXISTING);
+
+            // await for completion
+            countDownLatch.await();
+        }
+    }
+
+    @Test
+    public void testDirectory() throws Exception {
+
+        AtomicReference<File> fileReference = new AtomicReference<>();
+
+        try (StandardFileWatchService fileWatchService = new StandardFileWatchService()) {
+
+            fileWatchService.watch(this.testDir, new FileChangedListener() {
+                @Override
+                public void onFileCreated(FileChangedEvent event) {
+                    File file = event.getFile();
+                    fileReference.set(file);
+                    log("The file[path: '{}'] is created", file);
+                }
+
+                @Override
+                public void onFileDeleted(FileChangedEvent event) {
+                    File file = event.getFile();
+                    fileReference.set(file);
+                    log("The file[path: '{}'] is deleted", file);
+                }
+            }, CREATED, DELETED);
+
+            fileWatchService.start();
+
+            assertThrows(IllegalStateException.class, fileWatchService::start);
+
+            // create a test file
+            File testFile = createRandomFile(testDir);
+
+            while (!testFile.equals(fileReference.get())) {
+                // spin
+            }
+
+            // delete the test file
+            testFile.delete();
+
+            while (fileReference.get() == null) {
+                // spin
+            }
+        }
     }
 
     private class MyFileChangedListener implements FileChangedListener {
 
-        private CountDownLatch countDownLatch;
+        private final File targetFile;
 
-        public MyFileChangedListener(CountDownLatch countDownLatch) {
+        private final CountDownLatch countDownLatch;
+
+        public MyFileChangedListener(File targetFile, CountDownLatch countDownLatch) {
+            this.targetFile = targetFile;
             this.countDownLatch = countDownLatch;
         }
 
