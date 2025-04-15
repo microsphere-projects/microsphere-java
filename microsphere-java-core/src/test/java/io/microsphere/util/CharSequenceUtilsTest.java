@@ -8,7 +8,6 @@ import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
