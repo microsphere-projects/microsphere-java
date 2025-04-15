@@ -16,17 +16,13 @@
  */
 package io.microsphere.classloading;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
-import java.util.jar.JarEntry;
 
 /**
- * {@link AbstractArtifactResourceResolver} with error
+ * {@link StreamArtifactResourceResolver} with error
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see AbstractArtifactResourceResolver
+ * @see StreamArtifactResourceResolver
  * @since 1.0.0
  */
 public class ErrorArtifactResourceResolver extends AbstractArtifactResourceResolver {
@@ -44,22 +40,7 @@ public class ErrorArtifactResourceResolver extends AbstractArtifactResourceResol
     }
 
     @Override
-    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
-        return false;
-    }
-
-    @Override
-    protected InputStream readArtifactMetadataDataFromResource(URL resourceURL, ClassLoader classLoader) throws IOException {
-        throw new IOException("For testing");
-    }
-
-    @Override
-    protected InputStream readArtifactMetadataDataFromArchiveFile(File archiveFile) throws IOException {
-        throw new IOException("For testing");
-    }
-
-    @Override
-    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
-        throw new IOException("For testing");
+    public Artifact resolve(URL resourceURL) {
+        throw new RuntimeException("For testing");
     }
 }
