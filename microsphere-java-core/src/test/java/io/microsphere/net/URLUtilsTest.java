@@ -116,7 +116,7 @@ public class URLUtilsTest extends AbstractTestCase {
     public void after() {
         clearURLStreamHandlerFactory();
     }
-    
+
     @Test
     public void testOfURL() throws MalformedURLException {
         assertEquals(new URL(userDirURLString), ofURL(userDirURLString));
