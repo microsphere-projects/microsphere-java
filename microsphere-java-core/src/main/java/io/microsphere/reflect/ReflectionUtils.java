@@ -375,4 +375,7 @@ public abstract class ReflectionUtils implements Utils {
         return failure != null && INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME.equals(failure.getClass().getName());
     }
 
+    private ReflectionUtils() {
+    }
+
 }
