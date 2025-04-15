@@ -6,7 +6,7 @@ package io.microsphere.net;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,7 +75,7 @@ import static java.util.Collections.unmodifiableMap;
  * @see URLDecoder
  * @since 1.0.0
  */
-public abstract class URLUtils extends BaseUtils {
+public abstract class URLUtils implements Utils {
 
     private static final Logger logger = getLogger(URLUtils.class);
 
