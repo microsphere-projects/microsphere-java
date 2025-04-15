@@ -130,4 +130,7 @@ public abstract class MemberUtils implements Utils {
     public static Member asMember(Object object) {
         return object instanceof Member ? (Member) object : null;
     }
+
+    private MemberUtils(){
+    }
 }
