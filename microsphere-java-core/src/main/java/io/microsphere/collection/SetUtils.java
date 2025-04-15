@@ -18,6 +18,7 @@ package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+import io.microsphere.util.Utils;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -40,7 +41,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see Set
  * @since 1.0.0
  */
-public abstract class SetUtils {
+public abstract class SetUtils implements Utils {
 
     public static boolean isSet(@Nullable Iterable<?> elements) {
         return elements instanceof Set;
