@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.text.FormatUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link FormatUtils} Test
