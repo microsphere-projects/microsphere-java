@@ -16,6 +16,7 @@
  */
 package io.microsphere.invoke;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
@@ -27,7 +28,6 @@ import static io.microsphere.invoke.MethodHandleUtils.lookup;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link MethodHandleUtils} Test
@@ -35,12 +35,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class MethodHandleUtilsTest {
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new MethodHandleUtils() {});
-    }
 
     @Test
     public void testLookup() {
