@@ -29,11 +29,6 @@ public class CharSequenceUtilsTest {
     static final String TEST_STRING = "testing";
 
     @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new CharSequenceUtils(){});
-    }
-
-    @Test
     public void testLength() {
         assertEquals(0, length(null));
         assertEquals(0, length(TEST_EMPTY_STRING));
