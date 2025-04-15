@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.Utils;
+
 import java.lang.invoke.MethodHandle;
 import java.util.Set;
 
@@ -31,7 +33,7 @@ import static java.util.Collections.singleton;
  * @see SetUtils
  * @since 1.0.0
  */
-public abstract class Sets extends SetUtils {
+public abstract class Sets extends SetUtils implements Utils {
 
     /**
      * The {@link MethodHandle} of {@link Set#of()} since JDK 9
