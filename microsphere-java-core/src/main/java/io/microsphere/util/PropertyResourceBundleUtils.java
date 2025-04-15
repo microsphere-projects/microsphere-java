@@ -21,7 +21,7 @@ import static java.util.Locale.getDefault;
  * @see PropertyResourceBundle
  * @since 1.0.0
  */
-public abstract class PropertyResourceBundleUtils extends BaseUtils {
+public abstract class PropertyResourceBundleUtils implements Utils {
 
     /**
      * The property name of encoding for {@link PropertyResourceBundle}
