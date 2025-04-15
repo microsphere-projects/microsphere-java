@@ -4,6 +4,7 @@
 package io.microsphere.filter;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see FilterUtilsTest
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class FilterUtilsTest extends AbstractTestCase {
 
     @Test
