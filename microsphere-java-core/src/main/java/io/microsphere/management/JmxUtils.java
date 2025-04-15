@@ -358,4 +358,7 @@ public abstract class JmxUtils extends BaseUtils {
             );
         }
     }
+
+    private JmxUtils() {
+    }
 }
