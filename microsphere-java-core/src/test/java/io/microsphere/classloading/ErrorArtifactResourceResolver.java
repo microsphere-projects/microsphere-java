@@ -16,6 +16,8 @@
  */
 package io.microsphere.classloading;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -25,7 +27,7 @@ import java.net.URL;
  * @see StreamArtifactResourceResolver
  * @since 1.0.0
  */
-public class ErrorArtifactResourceResolver extends AbstractArtifactResourceResolver {
+public class ErrorArtifactResourceResolver extends StreamArtifactResourceResolver {
 
     public ErrorArtifactResourceResolver() {
         this(0);
@@ -40,7 +42,12 @@ public class ErrorArtifactResourceResolver extends AbstractArtifactResourceResol
     }
 
     @Override
-    public Artifact resolve(URL resourceURL) {
-        throw new RuntimeException("For testing");
+    protected boolean isArtifactMetadata(String relativePath) {
+        return true;
+    }
+
+    @Override
+    protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
+        throw new IOException("For testing");
     }
 }
