@@ -951,4 +951,6 @@ public abstract class URLUtils implements Utils {
         return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
+    private URLUtils() {
+    }
 }
