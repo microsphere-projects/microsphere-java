@@ -2,6 +2,7 @@ package io.microsphere.nio.charset;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
