@@ -16,7 +16,7 @@
  */
 package io.microsphere.concurrent;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +34,7 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
  * @see Executors
  * @since 1.0.0
  */
-public abstract class ExecutorUtils extends BaseUtils {
+public abstract class ExecutorUtils implements Utils {
 
     /**
      * Shutdown one or more {@link Executor executors} on JVM exit
