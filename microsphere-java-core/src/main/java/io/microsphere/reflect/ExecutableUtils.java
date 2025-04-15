@@ -153,4 +153,7 @@ public abstract class ExecutableUtils implements Utils {
 
         return result;
     }
+
+    private ExecutableUtils() {
+    }
 }
