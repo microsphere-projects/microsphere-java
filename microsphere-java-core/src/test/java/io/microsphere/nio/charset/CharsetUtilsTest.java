@@ -1,11 +1,11 @@
 package io.microsphere.nio.charset;
 
+import io.microsphere.AbstractUtilsTest;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -15,18 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see CharsetUtils
  * @since 1.0.0
  */
-public class CharsetUtilsTest {
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new CharsetUtils() {
-        });
-    }
-
-    @Test
-    public void testClass() {
-        assertTrue(isAbstractClass(CharsetUtils.class));
-    }
+public class CharsetUtilsTest extends AbstractUtilsTest<CharsetUtils> {
 
     @Test
     public void testConstants() {
