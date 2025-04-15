@@ -16,32 +16,13 @@
  */
 package io.microsphere.classloading;
 
-import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
-import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
-import static io.microsphere.collection.CollectionUtils.first;
-import static io.microsphere.collection.ListUtils.first;
-import static io.microsphere.io.FileUtils.resolveRelativePath;
-import static io.microsphere.io.IOUtils.close;
-import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.net.URLUtils.resolveArchiveFile;
-import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
-import static io.microsphere.util.jar.JarUtils.filter;
 
 /**
- * Abstract {@link ArtifactResourceResolver} class
+ * Abstract {@link ArtifactResourceResolver}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ArtifactResourceResolver
@@ -55,113 +36,14 @@ public abstract class AbstractArtifactResourceResolver implements ArtifactResour
 
     protected final int priority;
 
-    protected AbstractArtifactResourceResolver(int priority) {
+    public AbstractArtifactResourceResolver(int priority) {
         this(getDefaultClassLoader(), priority);
     }
 
-    protected AbstractArtifactResourceResolver(ClassLoader classLoader, int priority) {
-        assertNotNull(classLoader, () -> "The 'classLoader' must not be null");
+    public AbstractArtifactResourceResolver(ClassLoader classLoader, int priority) {
         this.classLoader = classLoader;
         this.priority = priority;
     }
-
-    @Override
-    public final Artifact resolve(URL resourceURL) {
-        if (resourceURL == null) {
-            return null;
-        }
-
-        File archiveFile = resolveArchiveFile(resourceURL);
-        InputStream artifactMetadataData = null;
-        Artifact artifact = null;
-        try {
-            if (archiveFile == null) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("The resourceURL['{}'] can't be resolved to be an archive file", resourceURL);
-                }
-                artifactMetadataData = readArtifactMetadataDataFromResource(resourceURL, classLoader);
-            } else {
-                artifactMetadataData = readArtifactMetadataDataFromArchiveFile(archiveFile);
-            }
-            if (artifactMetadataData != null) {
-                artifact = resolve(resourceURL, artifactMetadataData, classLoader);
-            }
-        } catch (IOException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("The Artifact can't be resolved from the resource URL : {}", resourceURL, e);
-            }
-        } finally {
-            // close the InputStream
-            close(artifactMetadataData);
-        }
-        return artifact;
-    }
-
-    @Nullable
-    protected InputStream readArtifactMetadataDataFromResource(URL resourceURL, ClassLoader classLoader) throws IOException {
-        return null;
-    }
-
-    @Nullable
-    protected InputStream readArtifactMetadataDataFromArchiveFile(File archiveFile) throws IOException {
-        InputStream artifactMetadataData = null;
-        if (archiveFile.isFile()) {
-            artifactMetadataData = readArtifactMetadataDataFromFile(archiveFile);
-        } else if (archiveFile.isDirectory()) {
-            artifactMetadataData = readArtifactMetadataDataFromDirectory(archiveFile);
-        }
-        return artifactMetadataData;
-    }
-
-    @Nullable
-    protected InputStream readArtifactMetadataDataFromFile(File archiveFile) throws IOException {
-        JarFile jarFile = new JarFile(archiveFile);
-        JarEntry jarEntry = findArtifactMetadataEntry(jarFile);
-        if (jarEntry == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
-            }
-            return null;
-        }
-        return jarFile.getInputStream(jarEntry);
-    }
-
-    @Nullable
-    protected InputStream readArtifactMetadataDataFromDirectory(File directory) throws IOException {
-        File artifactMetadataFile = findArtifactMetadata(directory);
-        if (artifactMetadataFile == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The artifact metadata file can't be found in the directory[path: '{}']", directory);
-            }
-            return null;
-        }
-        return new FileInputStream(artifactMetadataFile);
-    }
-
-    protected JarEntry findArtifactMetadataEntry(JarFile jarFile) throws IOException {
-        List<JarEntry> entries = filter(jarFile, this::isArtifactMetadataEntry);
-        return first(entries);
-    }
-
-    protected File findArtifactMetadata(File directory) throws IOException {
-        Set<File> files = INSTANCE.scan(directory, true, file -> isArtifactMetadataFile(directory, file));
-        return first(files);
-    }
-
-    protected boolean isArtifactMetadataEntry(JarEntry jarEntry) {
-        return isArtifactMetadata(jarEntry.getName());
-    }
-
-    protected boolean isArtifactMetadataFile(File directory, File file) {
-        String path = resolveRelativePath(directory, file);
-        return isArtifactMetadata(path);
-    }
-
-    protected boolean isArtifactMetadata(String relativePath) {
-        return false;
-    }
-
-    protected abstract Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
 
     @Override
     public final int getPriority() {
