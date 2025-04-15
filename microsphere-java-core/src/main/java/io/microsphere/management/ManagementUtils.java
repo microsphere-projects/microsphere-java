@@ -3,7 +3,7 @@ package io.microsphere.management;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.process.ProcessIdResolver;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * @see ManagementUtils
  * @since 1.0.0
  */
-public abstract class ManagementUtils extends BaseUtils {
+public abstract class ManagementUtils implements Utils {
 
     private static final Logger logger = getLogger(ManagementUtils.class);
 
