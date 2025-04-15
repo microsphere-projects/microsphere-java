@@ -17,6 +17,7 @@
 package io.microsphere.collection;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
@@ -52,6 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class ListUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ListUtilsTest.class);
