@@ -247,5 +247,6 @@ public abstract class JarUtils implements Utils {
         }
     }
 
-
+    private JarUtils() {
+    }
 }
