@@ -170,6 +170,6 @@ public abstract class ListUtils extends BaseUtils {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
-    private ListUtils() {
+    ListUtils() {
     }
 }
