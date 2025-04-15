@@ -148,9 +148,7 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
         return isArtifactMetadata(path);
     }
 
-    protected boolean isArtifactMetadata(String relativePath) {
-        return false;
-    }
+    protected abstract boolean isArtifactMetadata(String relativePath);
 
     protected abstract Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException;
 }
