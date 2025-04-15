@@ -738,4 +738,7 @@ public abstract class MethodUtils implements Utils {
             return buildSignature(declaredClass, methodName, parameterTypes);
         }
     }
+
+    private MethodUtils() {
+    }
 }
