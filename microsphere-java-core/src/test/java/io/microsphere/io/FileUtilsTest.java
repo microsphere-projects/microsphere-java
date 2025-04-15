@@ -139,6 +139,7 @@ public class FileUtilsTest extends AbstractTestCase {
             while (deletingDirectory.get()) {
                 try {
                     deleteDirectory(testDir);
+                    sleep(waitTime / 10);
                 } catch (IOException e) {
                     ioExceptionReference.set(e);
                     creatingFile.set(false);
