@@ -79,7 +79,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ClassUtils
  * @since 1.0.0
  */
-public abstract class ClassUtils {
+public abstract class ClassUtils implements Utils {
 
     private final static Logger logger = getLogger(ClassUtils.class);
 
