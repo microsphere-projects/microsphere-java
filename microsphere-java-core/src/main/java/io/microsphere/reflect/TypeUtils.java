@@ -20,6 +20,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.ClassUtils;
+import io.microsphere.util.Utils;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -62,7 +63,7 @@ import static java.util.stream.StreamSupport.stream;
  *
  * @since 1.0.0
  */
-public abstract class TypeUtils {
+public abstract class TypeUtils implements Utils {
 
     public static final Predicate<? super Type> NON_OBJECT_TYPE_FILTER = t -> t != null && !isObjectType(t);
 
