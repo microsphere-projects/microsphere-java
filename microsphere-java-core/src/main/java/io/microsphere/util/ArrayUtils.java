@@ -42,7 +42,7 @@ import static java.util.Collections.list;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class ArrayUtils {
+public abstract class ArrayUtils implements Utils {
 
     /**
      * An empty immutable {@code boolean} array.
