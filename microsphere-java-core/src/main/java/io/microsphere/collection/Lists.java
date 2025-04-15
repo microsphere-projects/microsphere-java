@@ -16,9 +16,12 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.BaseUtils;
+
 import java.lang.invoke.MethodHandle;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyList;
@@ -31,7 +34,7 @@ import static java.util.Collections.singletonList;
  * @see ListUtils
  * @since 1.0.0
  */
-public abstract class Lists extends ListUtils {
+public abstract class Lists extends BaseUtils {
 
     /**
      * The {@link MethodHandle} of {@link List#of()} since JDK 9
@@ -365,5 +368,8 @@ public abstract class Lists extends ListUtils {
         } catch (Throwable e) {
             return of(elements);
         }
+    }
+
+    private Lists() {
     }
 }
