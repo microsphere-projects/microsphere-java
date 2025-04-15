@@ -1,6 +1,6 @@
 package io.microsphere.classloading;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link ErrorArtifactResourceResolver} Test
@@ -9,10 +9,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ErrorArtifactResourceResolver
  * @since 1.0.0
  */
-public class ErrorArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<ErrorArtifactResourceResolver> {
+public class ErrorArtifactResourceResolverTest extends StreamArtifactResourceResolverTest<ErrorArtifactResourceResolver> {
 
     @Override
-    protected void testResolve(ErrorArtifactResourceResolver resolver) throws Throwable {
-        assertThrows(RuntimeException.class, () -> resolver.resolve(null));
+    protected void assertArtifact(Artifact artifact) throws Throwable {
+        assertNull(artifact);
     }
 }
