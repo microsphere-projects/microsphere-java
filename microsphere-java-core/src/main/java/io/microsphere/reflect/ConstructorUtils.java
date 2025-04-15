@@ -107,4 +107,7 @@ public abstract class ConstructorUtils implements Utils {
         trySetAccessible(constructor);
         return ExecutableUtils.execute(constructor, () -> constructor.newInstance(args));
     }
+
+    private ConstructorUtils() {
+    }
 }
