@@ -17,6 +17,7 @@ import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
+import static io.microsphere.io.FileUtils.deleteDirectoryOnExit;
 import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.FileUtils.forceDeleteOnExit;
 import static io.microsphere.io.FileUtils.getCanonicalFile;
@@ -282,7 +283,12 @@ public class FileUtilsTest extends AbstractTestCase {
                 createRandomFile(tempDir);
             }
         }
-        forceDeleteOnExit(tempDir);
+        deleteDirectoryOnExit(tempDir);
+    }
+
+    @Test
+    public void testDeleteDirectoryOnExitOnNotExists() throws IOException {
+        deleteDirectoryOnExit(new File("not-exists"));
     }
 
     @Test
