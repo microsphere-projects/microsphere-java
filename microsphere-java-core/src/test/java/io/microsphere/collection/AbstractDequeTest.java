@@ -128,9 +128,21 @@ public class AbstractDequeTest {
     }
 
     @Test
+    public void testOfferFirst() {
+        assertTrue(deque.offerFirst(TEST_VALUE));
+        assertFalse(deque.offerFirst(TEST_VALUE));
+    }
+
+    @Test
     public void testAddLast() {
         deque.addLast(TEST_VALUE);
         assertThrows(IllegalStateException.class, () -> deque.addLast(TEST_VALUE));
+    }
+
+    @Test
+    public void testOfferLast() {
+        assertTrue(deque.offerLast(TEST_VALUE));
+        assertFalse(deque.offerLast(TEST_VALUE));
     }
 
     @Test
@@ -154,7 +166,6 @@ public class AbstractDequeTest {
         assertSame(TEST_VALUE, deque.peekFirst());
         assertSame(TEST_VALUE, deque.peekFirst());
         assertSame(TEST_VALUE, deque.peekFirst());
-
     }
 
     @Test
