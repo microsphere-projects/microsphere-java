@@ -40,4 +40,7 @@ public abstract class FormatUtils implements Utils {
         }
         return stringBuilder.toString();
     }
+
+    private FormatUtils() {
+    }
 }
