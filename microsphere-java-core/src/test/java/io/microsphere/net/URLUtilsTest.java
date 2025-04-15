@@ -4,6 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -76,6 +77,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see URLUtilsTest
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class URLUtilsTest extends AbstractTestCase {
 
     private static final String TEST_PATH = "/abc/def";
