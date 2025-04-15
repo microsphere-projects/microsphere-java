@@ -1,9 +1,6 @@
 package io.microsphere.classloading;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ErrorArtifactResourceResolver} Test
@@ -15,12 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class ErrorArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<ErrorArtifactResourceResolver> {
 
     @Override
-    protected void assertArtifact(Artifact artifact) throws Throwable {
-        assertNull(artifact);
-    }
-
-    @Test
-    public void testIsArtifactMetadata() {
-        assertFalse(this.resolver.isArtifactMetadata(null));
+    protected void testResolve(ErrorArtifactResourceResolver resolver) throws Throwable {
+        assertThrows(RuntimeException.class, () -> resolver.resolve(null));
     }
 }
