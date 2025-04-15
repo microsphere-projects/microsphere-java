@@ -1,6 +1,7 @@
 package io.microsphere.concurrent;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ExecutorUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class ExecutorUtilsTest extends AbstractTestCase {
 
     private ExecutorService executorService;
