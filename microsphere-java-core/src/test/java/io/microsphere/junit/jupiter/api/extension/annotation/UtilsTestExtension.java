@@ -17,6 +17,7 @@
 package io.microsphere.junit.jupiter.api.extension.annotation;
 
 import io.microsphere.junit.jupiter.api.extension.UtilsTestBeforeAllExtension;
+import io.microsphere.util.Utils;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import java.lang.annotation.Retention;
@@ -31,6 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see UtilsTestBeforeAllExtension
+ * @see Utils
  * @since 1.0.0
  */
 @Target({TYPE, METHOD})
