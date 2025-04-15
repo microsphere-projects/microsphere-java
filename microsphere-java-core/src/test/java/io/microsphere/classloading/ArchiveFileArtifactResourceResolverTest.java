@@ -61,7 +61,7 @@ public class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactRes
     }
 
     private void testResolveOnInvalidFormatArchiveFile(ArchiveFileArtifactResourceResolver resolver) throws MalformedURLException {
-        URL resourceURL = resolver.classLoader.getResource("META-INF/.jar");
+        URL resourceURL = resolver.classLoader.getResource("META-INF/.sar");
         File file = new File(resourceURL.getFile());
         assertTrue(file.exists());
         resourceURL = ofURL("jar:"+file.toURI().toURL() +"!/com/acme/Test.class");
