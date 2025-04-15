@@ -239,4 +239,7 @@ public abstract class FileUtils extends BaseUtils {
     public static final File getCanonicalFile(File file) {
         return execute(file::getCanonicalFile);
     }
+
+    private FileUtils() {
+    }
 }
