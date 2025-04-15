@@ -19,7 +19,7 @@ package io.microsphere.management;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
@@ -59,7 +59,7 @@ import static java.util.Optional.ofNullable;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class JmxUtils extends BaseUtils {
+public abstract class JmxUtils implements Utils {
 
     private static final Logger logger = getLogger(JmxUtils.class);
 
