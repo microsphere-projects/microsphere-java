@@ -17,6 +17,7 @@
 package io.microsphere.management;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +55,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -63,6 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class JmxUtilsTest extends AbstractTestCase {
 
     private static MBeanServer mBeanServer;
@@ -79,11 +80,6 @@ public class JmxUtilsTest extends AbstractTestCase {
         objectName = getInstance("java.lang:type=ClassLoading");
         notFoundObjectName = getInstance("java.lang:type=NotFound");
         notFoundAttributeName = "NotFound";
-    }
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new JmxUtils() {});
     }
 
     @Test
