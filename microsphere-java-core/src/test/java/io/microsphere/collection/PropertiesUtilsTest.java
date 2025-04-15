@@ -22,8 +22,10 @@ import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link PropertiesUtils} Test
@@ -34,11 +36,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class PropertiesUtilsTest {
 
     @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new PropertiesUtils() {});
-    }
-
-    @Test
     public void testFlatProperties() {
         Map<String, Object> level3Properties = ofMap("f", "F");
         Map<String, Object> level2Properties = ofMap("c", "C", "d", level3Properties);
@@ -47,5 +44,15 @@ public class PropertiesUtilsTest {
         assertEquals("A", flattenProperties.get("a"));
         assertEquals("C", flattenProperties.get("b.c"));
         assertEquals("F", flattenProperties.get("b.d.f"));
+    }
+
+    @Test
+    public void testFlatPropertiesOnEmptyMap() {
+        assertSame(emptyMap(), flatProperties(emptyMap()));
+    }
+
+    @Test
+    public void testFlatPropertiesOnNull() {
+        assertNull(flatProperties(null));
     }
 }
