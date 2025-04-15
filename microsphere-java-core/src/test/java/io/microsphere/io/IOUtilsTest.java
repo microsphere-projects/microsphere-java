@@ -1,6 +1,7 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see IOUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class IOUtilsTest extends AbstractTestCase {
 
     private static final String TEST_VALUE = "Hello";
