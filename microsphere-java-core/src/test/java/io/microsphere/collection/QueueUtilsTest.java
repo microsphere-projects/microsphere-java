@@ -1,6 +1,7 @@
 package io.microsphere.collection;
 
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Deque;
@@ -33,12 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see QueueUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class QueueUtilsTest {
-    
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new QueueUtils() {});
-    }
 
     @Test
     public void testIsQueue() {
