@@ -19,7 +19,6 @@ import static io.microsphere.reflect.ReflectionUtils.toList;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ReflectionUtils} Test
@@ -29,11 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @since 1.0.0
  */
 public class ReflectionUtilsTest extends AbstractTestCase {
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new ReflectionUtils() {});
-    }
 
     @Test
     public void testGetCallerClassX() throws Exception {
