@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Enumeration;
@@ -36,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see EnumerationUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class EnumerationUtilsTest {
 
     @Test
