@@ -183,7 +183,7 @@ public abstract class FileUtils extends BaseUtils {
      * @throws NullPointerException if the directory is {@code null}
      * @throws IOException          in case deletion is unsuccessful
      */
-    private static void deleteDirectoryOnExit(File directory) {
+    public static void deleteDirectoryOnExit(File directory) {
         if (!directory.exists()) {
             return;
         }
