@@ -18,8 +18,8 @@ package io.microsphere.io;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
-import io.microsphere.util.Utils;
 import io.microsphere.util.SystemUtils;
+import io.microsphere.util.Utils;
 
 import java.io.Closeable;
 import java.io.IOException;
