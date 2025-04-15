@@ -1,6 +1,7 @@
 package io.microsphere.management;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.process.ProcessIdResolver;
 import org.junit.jupiter.api.Test;
 
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ManagementUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class ManagementUtilsTest extends AbstractTestCase {
 
     @Test
