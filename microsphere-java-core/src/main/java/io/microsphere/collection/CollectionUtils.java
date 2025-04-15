@@ -18,7 +18,7 @@ package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.util.AbstractSet;
 import java.util.Collection;
@@ -37,7 +37,7 @@ import static io.microsphere.util.ArrayUtils.length;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Collections
  */
-public abstract class CollectionUtils extends BaseUtils {
+public abstract class CollectionUtils implements Utils {
 
     public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
