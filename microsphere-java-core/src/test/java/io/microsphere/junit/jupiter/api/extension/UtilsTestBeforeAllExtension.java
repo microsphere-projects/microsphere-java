@@ -17,6 +17,7 @@
 package io.microsphere.junit.jupiter.api.extension;
 
 import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
@@ -50,7 +51,7 @@ public class UtilsTestBeforeAllExtension implements BeforeAllCallback {
             String utilsClassName = substringBefore(testClassName, "Test");
             Class<?> utilsClass = resolveClass(utilsClassName, classLoader);
             if (utilsClass != null) { // the utilities class exists
-                if (isAssignableFrom(BaseUtils.class, utilsClass)) {
+                if (isAssignableFrom(Utils.class, utilsClass)) {
                     assertUtilitiesClass(utilsClass);
                 }
             }
