@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see CharsetUtils
  * @since 1.0.0
  */
-public class CharsetUtilsTest extends CharsetUtils {
+public class CharsetUtilsTest {
 
     @Test
     public void testConstructor() {
