@@ -58,7 +58,7 @@ public class FieldUtilsTest {
     public void destroy() {
         ReflectionTest.staticField = "staticField";
     }
-    `
+    
     @Test
     public void testFindFieldOnObject() {
         assertFindField(test, "privateField");
