@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -63,6 +64,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MapUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class MapUtilsTest {
 
     @Test
