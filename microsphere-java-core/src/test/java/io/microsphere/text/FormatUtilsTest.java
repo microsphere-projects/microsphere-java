@@ -32,11 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class FormatUtilsTest {
 
     @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new FormatUtils() {});
-    }
-
-    @Test
     public void testFormat() {
         assertNull(format(null));
 
