@@ -277,6 +277,6 @@ public abstract class MapUtils extends BaseUtils {
         }
     }
 
-    private MapUtils() {
+    MapUtils() {
     }
 }
