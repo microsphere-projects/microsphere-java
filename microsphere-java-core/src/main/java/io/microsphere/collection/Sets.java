@@ -366,4 +366,7 @@ public abstract class Sets extends SetUtils {
             return of(elements);
         }
     }
+
+    private Sets() {
+    }
 }
