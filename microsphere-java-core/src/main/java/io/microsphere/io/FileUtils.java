@@ -4,7 +4,7 @@
 package io.microsphere.io;
 
 import io.microsphere.util.ArrayUtils;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,7 +26,7 @@ import static java.nio.file.Files.isSymbolicLink;
  * @see FileUtils
  * @since 1.0.0
  */
-public abstract class FileUtils extends BaseUtils {
+public abstract class FileUtils implements Utils {
 
     /**
      * An empty immutable {@code File} array.
