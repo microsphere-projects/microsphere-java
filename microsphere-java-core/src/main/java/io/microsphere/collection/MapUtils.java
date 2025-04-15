@@ -17,7 +17,8 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
+import io.microsphere.util.Utils;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -47,7 +48,7 @@ import static java.util.Collections.unmodifiableMap;
  * @see Map
  * @since 1.0.0
  */
-public abstract class MapUtils extends BaseUtils {
+public abstract class MapUtils implements Utils {
 
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}
@@ -275,8 +276,5 @@ public abstract class MapUtils extends BaseUtils {
         public V setValue(V value) {
             throw new UnsupportedOperationException("ReadOnly Entry can't be modified");
         }
-    }
-
-    MapUtils() {
     }
 }
