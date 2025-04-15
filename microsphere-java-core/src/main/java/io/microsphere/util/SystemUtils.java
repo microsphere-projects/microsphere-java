@@ -33,6 +33,7 @@ public class SystemUtils {
 
     private static final Logger logger = getLogger(SystemUtils.class);
 
+
     public static final String OS_NAME_WINDOWS_PREFIX = "Windows";
 
     /**
@@ -485,6 +486,26 @@ public class SystemUtils {
     public static final boolean IS_JAVA_22 = matchesJavaVersion("22");
 
     /**
+     * <p>
+     * Is {@code true} if this is Java version 23.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_23 = matchesJavaVersion("23");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 24.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_24 = matchesJavaVersion("24");
+
+    /**
      * Is <code>true</code> if current Java version is Long Term Supported(LTS)
      */
     public static final boolean IS_LTS_JAVA_VERSION = IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21;
@@ -529,5 +550,8 @@ public class SystemUtils {
 
     private static boolean matchesJavaVersion(final String versionPrefix) {
         return startsWith(JAVA_SPECIFICATION_VERSION, versionPrefix);
+    }
+
+    private SystemUtils() {
     }
 }
