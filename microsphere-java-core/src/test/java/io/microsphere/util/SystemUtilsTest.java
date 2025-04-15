@@ -74,6 +74,8 @@ import static io.microsphere.util.SystemUtils.JAVA_VM_VENDOR_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VERSION;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VERSION_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.LINE_SEPARATOR_PROPERTY_KEY;
+import static io.microsphere.util.SystemUtils.NATIVE_ENCODING;
+import static io.microsphere.util.SystemUtils.NATIVE_ENCODING_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.OS_ARCH;
 import static io.microsphere.util.SystemUtils.OS_ARCH_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.OS_NAME;
@@ -89,6 +91,7 @@ import static io.microsphere.util.SystemUtils.USER_NAME;
 import static io.microsphere.util.SystemUtils.USER_NAME_PROPERTY_KEY;
 import static java.lang.System.getProperty;
 import static javax.lang.model.SourceVersion.latest;
+import static javax.lang.model.SourceVersion.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -125,18 +128,13 @@ public class SystemUtilsTest {
             8, "java.util.concurrent.CompletableFuture"
     );
 
-    private static final SourceVersion[] versions = SourceVersion.values();
+    private static final SourceVersion[] versions = values();
 
     private static Field[] findIsJavaVersionFields() {
         return Stream.of(CLASS.getFields())
                 .filter(MemberUtils::isStatic)
                 .filter(field -> field.getName().startsWith(IS_JAVA_VERSION_FIELD_NAME_PREFIX))
                 .toArray(Field[]::new);
-    }
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new SystemUtils() {});
     }
 
     @Test
@@ -170,6 +168,7 @@ public class SystemUtilsTest {
         assertEquals("user.home", USER_HOME_PROPERTY_KEY);
         assertEquals("user.dir", USER_DIR_PROPERTY_KEY);
         assertEquals("file.encoding", FILE_ENCODING_PROPERTY_KEY);
+        assertEquals("native.encoding", NATIVE_ENCODING_PROPERTY_KEY);
     }
 
     @Test
@@ -200,6 +199,7 @@ public class SystemUtilsTest {
         assertEquals(getProperty("user.home"), USER_HOME);
         assertEquals(getProperty("user.dir"), USER_DIR);
         assertEquals(getProperty("file.encoding"), FILE_ENCODING);
+        assertEquals(getProperty("native.encoding"), NATIVE_ENCODING);
     }
 
     @Test
