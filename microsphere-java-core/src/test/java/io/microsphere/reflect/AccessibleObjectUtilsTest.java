@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see AccessibleObjectUtils
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class AccessibleObjectUtilsTest {
 
     private static final String test = "test";
