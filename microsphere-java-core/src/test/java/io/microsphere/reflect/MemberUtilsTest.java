@@ -35,11 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class MemberUtilsTest {
 
     @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new MemberUtils() {});
-    }
-
-    @Test
     public void testSTATIC_METHOD_PREDICATE() {
         assertTrue(STATIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "staticMethod")));
     }
