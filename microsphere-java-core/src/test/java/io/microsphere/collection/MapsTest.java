@@ -1,5 +1,6 @@
 package io.microsphere.collection;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see Maps
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class MapsTest {
 
     @Test
