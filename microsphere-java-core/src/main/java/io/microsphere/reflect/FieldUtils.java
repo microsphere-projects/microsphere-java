@@ -340,4 +340,6 @@ public abstract class FieldUtils implements Utils {
         throw new IllegalArgumentException(errorMessage, e);
     }
 
+    private FieldUtils() {
+    }
 }
