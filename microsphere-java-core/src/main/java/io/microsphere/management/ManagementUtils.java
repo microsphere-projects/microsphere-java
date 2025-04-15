@@ -54,4 +54,6 @@ public abstract class ManagementUtils implements Utils {
         return currentProcessId;
     }
 
+    private ManagementUtils() {
+    }
 }
