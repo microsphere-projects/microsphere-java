@@ -29,7 +29,7 @@ import static java.lang.System.getProperty;
  * @see System
  * @since 1.0.0
  */
-public abstract class SystemUtils {
+public abstract class SystemUtils implements Utils {
 
     private static final Logger logger = getLogger(SystemUtils.class);
 
