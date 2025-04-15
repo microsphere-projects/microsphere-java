@@ -651,4 +651,6 @@ public abstract class TypeUtils implements Utils {
         return of(types).map(TypeUtils::getTypeName).toArray(String[]::new);
     }
 
+    private TypeUtils() {
+    }
 }
