@@ -315,4 +315,7 @@ public abstract class MethodHandleUtils extends BaseUtils {
     private static boolean isiCandidateMethod(Method method) {
         return isPublic(method) && !isCallerSensitiveMethod(method);
     }
+
+    private MethodHandleUtils() {
+    }
 }
