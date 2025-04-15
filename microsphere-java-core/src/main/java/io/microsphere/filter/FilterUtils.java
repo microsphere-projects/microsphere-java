@@ -4,7 +4,7 @@
 package io.microsphere.filter;
 
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,7 +19,7 @@ import static java.util.Collections.unmodifiableList;
  * @see FilterUtils
  * @since 1.0.0
  */
-public abstract class FilterUtils extends BaseUtils {
+public abstract class FilterUtils implements Utils {
 
     /**
      * Filter {@link Iterable} object to List
