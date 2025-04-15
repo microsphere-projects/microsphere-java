@@ -18,6 +18,7 @@ package io.microsphere.io;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
+import io.microsphere.util.BaseUtils;
 import io.microsphere.util.SystemUtils;
 
 import java.io.Closeable;
@@ -45,7 +46,7 @@ import static java.util.Objects.requireNonNull;
  * @see Paths
  * @since 1.0.0
  */
-public abstract class IOUtils {
+public abstract class IOUtils extends BaseUtils {
 
     private static final Logger logger = getLogger(IOUtils.class);
 
@@ -199,5 +200,8 @@ public abstract class IOUtils {
                 logger.trace("The Closeable[{}] can't be closed", closeable, e);
             }
         }
+    }
+
+    private IOUtils() {
     }
 }
