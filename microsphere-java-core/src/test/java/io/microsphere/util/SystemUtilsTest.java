@@ -93,7 +93,6 @@ import static java.lang.System.getProperty;
 import static javax.lang.model.SourceVersion.latest;
 import static javax.lang.model.SourceVersion.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link SystemUtils} Test
@@ -111,6 +110,8 @@ public class SystemUtilsTest {
     private static final Field[] IS_JAVA_VERSION_FIELDS = findIsJavaVersionFields();
 
     private static final Map<Integer, String> versionedClassNames = ofMap(
+            24, "java.lang.classfile.Annotation",
+            23, "java.lang.runtime.ExactConversionsSupport",
             22, "java.lang.foreign.Arena",
             21, "java.util.SequencedSet",
             20, "java.lang.reflect.ClassFileFormatVersion",
@@ -120,8 +121,8 @@ public class SystemUtilsTest {
             16, "java.lang.Record",
             15, "java.lang.invoke.MethodHandles.Lookup.ClassOption",
             14, "java.io.Serial",
-            13, "com.sun.source.tree.YieldTree",
-            12, "java.lang.invoke.TypeDescriptor",
+            13, "com.sun.source.util.ParameterNameProvider",
+            12, "java.lang.constant.Constable",
             11, "java.net.http.HttpClient",
             10, "",
             9, "java.lang.ProcessHandle",
