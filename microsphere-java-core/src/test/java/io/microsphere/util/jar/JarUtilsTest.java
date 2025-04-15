@@ -4,6 +4,7 @@
 package io.microsphere.util.jar;
 
 import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.util.ClassLoaderUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see JarUtilsTest
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class JarUtilsTest {
 
     private final static File tempDirectory = new File(JAVA_IO_TMPDIR);
