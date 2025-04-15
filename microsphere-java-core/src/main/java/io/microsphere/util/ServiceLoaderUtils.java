@@ -27,7 +27,7 @@ import static java.util.ServiceLoader.load;
  * @see ServiceLoader
  * @since 1.0.0
  */
-public abstract class ServiceLoaderUtils {
+public abstract class ServiceLoaderUtils implements Utils {
 
     private static final Logger logger = getLogger(ServiceLoaderUtils.class);
 
