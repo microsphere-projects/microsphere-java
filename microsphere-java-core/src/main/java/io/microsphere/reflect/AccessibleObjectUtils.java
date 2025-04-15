@@ -164,4 +164,7 @@ public abstract class AccessibleObjectUtils implements Utils {
             logger.error(errorMessageBuilder.toString(), e);
         }
     }
+
+    private AccessibleObjectUtils() {
+    }
 }
