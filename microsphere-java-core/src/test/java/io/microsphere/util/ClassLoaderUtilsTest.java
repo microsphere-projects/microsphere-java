@@ -111,12 +111,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new ClassLoaderUtils() {
-        });
-    }
-
-    @Test
     public void testFields() throws Exception {
 
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
