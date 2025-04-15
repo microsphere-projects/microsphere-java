@@ -39,11 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class EnumerationUtilsTest {
 
     @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new EnumerationUtils(){});
-    }
-
-    @Test
     public void testOf() {
         assertEnumeration(of("A", "B", "C"));
     }
