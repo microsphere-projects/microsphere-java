@@ -105,4 +105,7 @@ public abstract class MethodHandlesLookupUtils extends BaseUtils {
             return null;
         });
     }
+
+    private MethodHandlesLookupUtils() {
+    }
 }
