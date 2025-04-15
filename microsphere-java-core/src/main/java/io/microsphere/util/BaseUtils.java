@@ -22,7 +22,7 @@ package io.microsphere.util;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class BaseUtils {
+public abstract class BaseUtils implements Utils {
 
     protected BaseUtils() throws IllegalStateException {
         throw new IllegalStateException("Not Supported!");
