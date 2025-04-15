@@ -16,6 +16,7 @@
  */
 package io.microsphere.invoke;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
@@ -26,7 +27,6 @@ import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicVirtual;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link MethodHandlesLookupUtils} Test
@@ -34,12 +34,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class MethodHandlesLookupUtilsTest {
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new MethodHandlesLookupUtils() {});
-    }
 
     @Test
     public void testFindPublicVirtual() throws Throwable {
