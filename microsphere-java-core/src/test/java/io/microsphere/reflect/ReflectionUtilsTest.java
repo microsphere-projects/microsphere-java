@@ -1,6 +1,7 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @see ReflectionUtilsTest
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class ReflectionUtilsTest extends AbstractTestCase {
 
     @Test
