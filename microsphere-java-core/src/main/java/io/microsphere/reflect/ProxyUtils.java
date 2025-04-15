@@ -78,4 +78,7 @@ public abstract class ProxyUtils implements Utils {
 
         return methods.isEmpty();
     }
+
+    private ProxyUtils() {
+    }
 }
