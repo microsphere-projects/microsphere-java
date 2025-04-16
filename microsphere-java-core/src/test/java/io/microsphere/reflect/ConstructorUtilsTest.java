@@ -1,6 +1,5 @@
 package io.microsphere.reflect;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
@@ -24,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConstructorUtils
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class ConstructorUtilsTest {
 
     static class PublicConstructorClass {

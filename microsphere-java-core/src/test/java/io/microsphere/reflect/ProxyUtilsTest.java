@@ -16,7 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.ProxyUtils.isProxyable;
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class ProxyUtilsTest {
 
     @Test

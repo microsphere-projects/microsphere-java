@@ -3,7 +3,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -24,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see PropertyResourceBundleUtils
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class PropertyResourceBundleUtilsTest {
 
     private static final String BASE_NAME = "META-INF.test";

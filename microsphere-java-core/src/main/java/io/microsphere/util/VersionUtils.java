@@ -210,4 +210,7 @@ public abstract class VersionUtils implements Utils {
         }
         return javaVersion;
     }
+
+    private VersionUtils() {
+    }
 }

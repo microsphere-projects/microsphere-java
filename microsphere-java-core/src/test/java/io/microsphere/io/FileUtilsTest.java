@@ -1,7 +1,6 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +47,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see FileUtils
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class FileUtilsTest extends AbstractTestCase {
 
     private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);

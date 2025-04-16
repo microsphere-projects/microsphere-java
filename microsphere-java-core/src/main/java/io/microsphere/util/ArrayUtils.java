@@ -587,4 +587,7 @@ public abstract class ArrayUtils implements Utils {
     public static <T> String arrayToString(T[] array) {
         return Arrays.toString(array);
     }
+
+    private ArrayUtils() {
+    }
 }

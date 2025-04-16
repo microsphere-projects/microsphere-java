@@ -20,7 +20,6 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.test.A;
 import io.microsphere.test.B;
 import io.microsphere.test.C;
@@ -113,7 +112,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class TypeUtilsTest extends AbstractTestCase {
 
     @Test

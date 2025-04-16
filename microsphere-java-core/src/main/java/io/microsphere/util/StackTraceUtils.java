@@ -254,4 +254,7 @@ public abstract class StackTraceUtils implements Utils {
         }
         return null;
     }
+
+    private StackTraceUtils() {
+    }
 }

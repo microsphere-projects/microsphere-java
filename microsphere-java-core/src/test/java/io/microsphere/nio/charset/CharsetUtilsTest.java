@@ -1,6 +1,5 @@
 package io.microsphere.nio.charset;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
@@ -13,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see CharsetUtils
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class CharsetUtilsTest  {
 
     @Test

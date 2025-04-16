@@ -1,6 +1,5 @@
 package io.microsphere.reflect;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -32,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MemberUtils
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class MemberUtilsTest {
 
     @Test

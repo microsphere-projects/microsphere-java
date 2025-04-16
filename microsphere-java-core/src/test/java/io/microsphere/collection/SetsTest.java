@@ -1,7 +1,6 @@
 package io.microsphere.collection;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.SetUtils.of;
@@ -16,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Sets
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class SetsTest extends AbstractTestCase {
 
     @Test

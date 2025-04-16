@@ -16,7 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -35,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ReflectionTest
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class ExecutableUtilsTest {
 
     private static final Class<ReflectionTest> testClass = ReflectionTest.class;

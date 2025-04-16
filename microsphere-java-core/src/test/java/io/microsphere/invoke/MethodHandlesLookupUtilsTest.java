@@ -16,7 +16,6 @@
  */
 package io.microsphere.invoke;
 
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
@@ -34,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class MethodHandlesLookupUtilsTest {
 
     @Test

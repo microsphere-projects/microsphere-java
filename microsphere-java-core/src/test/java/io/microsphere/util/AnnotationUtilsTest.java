@@ -18,7 +18,6 @@ package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.annotation.Since;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.lang.annotation.Annotation;
@@ -93,7 +92,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class AnnotationUtilsTest extends AbstractTestCase {
 
     private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);

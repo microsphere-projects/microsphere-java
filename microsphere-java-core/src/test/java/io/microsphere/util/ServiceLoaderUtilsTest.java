@@ -4,7 +4,6 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.event.EchoEventListener;
 import io.microsphere.event.EchoEventListener2;
 import io.microsphere.event.EventListener;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -27,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ServiceLoaderUtilsTest
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     private static final Class<EventListener> TEST_CLASS = EventListener.class;

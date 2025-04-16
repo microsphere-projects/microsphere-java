@@ -17,7 +17,6 @@
 package io.microsphere.management;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +62,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class JmxUtilsTest extends AbstractTestCase {
 
     private static MBeanServer mBeanServer;

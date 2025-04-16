@@ -4,7 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import io.microsphere.lang.ClassDataRepository;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
-@UtilsTestExtension
 public class ClassPathUtilsTest extends AbstractTestCase {
 
     @Test
