@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.junit.jupiter.api.extension.annotation.UtilsTestExtension;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@UtilsTestExtension
 public class ExceptionUtilsTest {
 
     @Test
