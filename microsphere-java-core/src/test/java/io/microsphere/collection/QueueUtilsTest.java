@@ -34,11 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class QueueUtilsTest {
-    
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new QueueUtils() {});
-    }
 
     @Test
     public void testIsQueue() {

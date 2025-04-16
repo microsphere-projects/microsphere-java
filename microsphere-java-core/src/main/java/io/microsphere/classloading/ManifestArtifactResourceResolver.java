@@ -25,12 +25,8 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 import static io.microsphere.classloading.Artifact.create;
-import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
-import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
-import static io.microsphere.constants.SymbolConstants.HYPHEN_CHAR;
-import static io.microsphere.net.URLUtils.isArchiveURL;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.System.getProperty;
 
@@ -38,11 +34,11 @@ import static java.lang.System.getProperty;
  * {@link ArtifactResourceResolver} for Manifest
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see AbstractArtifactResourceResolver
+ * @see StreamArtifactResourceResolver
  * @see ArtifactResourceResolver
  * @since 1.0.0
  */
-public class ManifestArtifactResourceResolver extends AbstractArtifactResourceResolver {
+public class ManifestArtifactResourceResolver extends StreamArtifactResourceResolver {
 
     public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
 
@@ -81,7 +77,7 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
         return split(propertyValue, COMMA);
     }
 
-    public static final int DEFAULT_PRIORITY = 2;
+    public static final int DEFAULT_PRIORITY = 5;
 
     public ManifestArtifactResourceResolver() {
         this(DEFAULT_PRIORITY);
@@ -108,16 +104,15 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
 
     private Artifact resolveArtifactMetaInfoInManifest(Manifest manifest, URL resourceURL) throws IOException {
         Attributes mainAttributes = manifest.getMainAttributes();
-        boolean isArchiveURL = isArchiveURL(resourceURL);
-        String artifactId = resolveArtifactId(mainAttributes, resourceURL, isArchiveURL);
+        String artifactId = resolveArtifactId(mainAttributes, resourceURL);
         if (artifactId == null) {
             return null;
         }
-        String version = resolveVersion(mainAttributes, artifactId, resourceURL, isArchiveURL);
+        String version = resolveVersion(mainAttributes);
         return create(artifactId, version, resourceURL);
     }
 
-    private String resolveArtifactId(Attributes attributes, URL artifactResourceURL, boolean isArchiveURL) {
+    private String resolveArtifactId(Attributes attributes, URL artifactResourceURL) {
         String artifactId = null;
 
         for (String artifactIdAttributeName : ARTIFACT_ID_ATTRIBUTE_NAMES) {
@@ -125,10 +120,6 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
             if (artifactId != null) {
                 break;
             }
-        }
-
-        if (artifactId == null && isArchiveURL) {
-            artifactId = resolveArtifactId(artifactResourceURL);
         }
 
         if (logger.isTraceEnabled()) {
@@ -143,25 +134,7 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
         return artifactId;
     }
 
-    private String resolveArtifactId(URL artifactResourceURL) {
-        String path = artifactResourceURL.getPath();
-        int lastSlashIndex = path.lastIndexOf(SLASH_CHAR);
-        if (lastSlashIndex < 0) {
-            return null;
-        }
-        int fileExtensionIndex = path.indexOf(JAR_EXTENSION);
-        if (fileExtensionIndex < lastSlashIndex) {
-            return null;
-        }
-        String jarFileName = path.substring(lastSlashIndex + 1, fileExtensionIndex);
-        int lastHyphenIndex = jarFileName.lastIndexOf(HYPHEN_CHAR);
-        if (lastHyphenIndex < 0) {
-            return jarFileName;
-        }
-        return jarFileName.substring(0, lastHyphenIndex);
-    }
-
-    private String resolveVersion(Attributes attributes, String artifactId, URL artifactResourceURL, boolean isArchiveURL) {
+    private String resolveVersion(Attributes attributes) {
         String version = null;
 
         for (String versionAttributeName : VERSION_ATTRIBUTE_NAMES) {
@@ -171,39 +144,6 @@ public class ManifestArtifactResourceResolver extends AbstractArtifactResourceRe
             }
         }
 
-        if (version == null && isArchiveURL) {
-            version = resolveVersion(artifactId, artifactResourceURL);
-            if (version == null) {
-                version = resolveVersion(resolveArtifactId(artifactResourceURL), artifactResourceURL);
-            }
-        }
-
-        if (version == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The version can't be found in the {} of artifact[Path: {}]", MANIFEST_RESOURCE_PATH,
-                        artifactResourceURL.getPath()
-                );
-            }
-        }
-
         return version;
-    }
-
-    private String resolveVersion(String artifactId, URL artifactResourceURL) {
-        String path = artifactResourceURL.getPath();
-
-        int lastArtifactIdIndex = path.lastIndexOf(artifactId);
-        if (lastArtifactIdIndex < 0) {
-            return null;
-        }
-
-        int beginIndex = lastArtifactIdIndex + artifactId.length() + 1;
-
-        int fileExtensionIndex = path.indexOf(JAR_EXTENSION);
-        if (fileExtensionIndex <= beginIndex) {
-            return null;
-        }
-
-        return path.substring(beginIndex, fileExtensionIndex);
     }
 }

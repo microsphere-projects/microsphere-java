@@ -24,6 +24,7 @@ import io.microsphere.util.Version;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
@@ -175,7 +176,7 @@ public abstract class ReflectiveDefinition implements Serializable {
         return getClass().getSimpleName() + "{" +
                 "since=" + this.since +
                 ", deprecation=" + this.deprecation +
-                ", className='" + this.className + "'" +
+                ", className='" + this.className + QUOTE +
                 ", resolvedClass=" + this.getResolvedClass() +
                 '}';
     }

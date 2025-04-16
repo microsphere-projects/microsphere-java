@@ -23,6 +23,7 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
@@ -325,7 +326,7 @@ public class ClassUtilsTest extends AbstractTestCase {
     public void testResolvePrimitiveClassName() {
         assertNull(resolvePrimitiveClassName(null));
         assertNull(resolvePrimitiveClassName(""));
-        assertNull(resolvePrimitiveClassName(" "));
+        assertNull(resolvePrimitiveClassName(SPACE));
         assertNull(resolvePrimitiveClassName("java.lang.String"));
         assertEquals(boolean.class, resolvePrimitiveClassName("boolean"));
         assertEquals(byte.class, resolvePrimitiveClassName("byte"));

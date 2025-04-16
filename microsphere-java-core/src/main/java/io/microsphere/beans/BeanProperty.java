@@ -23,6 +23,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -102,7 +103,7 @@ public class BeanProperty {
 
     @Override
     public String toString() {
-        String sb = "BeanProperty{" + "name='" + name + '\'' +
+        String sb = "BeanProperty{" + "name='" + name + QUOTE_CHAR +
                 ", value=" + value +
                 ", declaringClass=" + beanClass +
                 ", descriptor=" + descriptor +

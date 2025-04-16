@@ -23,7 +23,9 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 
 import static io.microsphere.classloading.Artifact.UNKNOWN;
+import static io.microsphere.classloading.Artifact.WILDCARD;
 import static io.microsphere.classloading.Artifact.create;
+import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -84,9 +86,9 @@ public class ArtifactTest extends AbstractTestCase {
         assertFalse(artifact.equals(null));
         assertFalse(artifact.equals(create(ARTIFACT_ID)));
         assertFalse(artifact.equals(create(ARTIFACT_ID, VERSION)));
-        assertFalse(artifact.equals(create(ARTIFACT_ID, "-")));
-        assertFalse(artifact.equals(create("-")));
-        assertFalse(artifact.equals(create("-", "-")));
+        assertFalse(artifact.equals(create(ARTIFACT_ID, HYPHEN)));
+        assertFalse(artifact.equals(create(HYPHEN)));
+        assertFalse(artifact.equals(create(HYPHEN, HYPHEN)));
     }
 
     @Test
@@ -101,11 +103,11 @@ public class ArtifactTest extends AbstractTestCase {
 
     @Test
     public void testMatches() {
-        assertTrue(create("*", "*").matches(artifact));
-        assertTrue(create("*", "*").matches(artifact));
-        assertTrue(create(ARTIFACT_ID, "*").matches(artifact));
+        assertTrue(create(WILDCARD, WILDCARD).matches(artifact));
+        assertTrue(create(WILDCARD, WILDCARD).matches(artifact));
+        assertTrue(create(ARTIFACT_ID, WILDCARD).matches(artifact));
         assertTrue(create(ARTIFACT_ID, VERSION).matches(artifact));
         assertFalse(create(VERSION).matches(artifact));
-        assertFalse(create(ARTIFACT_ID, "-").matches(artifact));
+        assertFalse(create(ARTIFACT_ID, HYPHEN).matches(artifact));
     }
 }

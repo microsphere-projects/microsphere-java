@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.Utils;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -36,10 +38,11 @@ import static java.util.Collections.unmodifiableList;
  * The utilities class for Java {@link List}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Lists
  * @see List
  * @since 1.0.0
  */
-public abstract class ListUtils {
+public abstract class ListUtils implements Utils {
 
     public static boolean isList(Object values) {
         return values instanceof List;
@@ -166,5 +169,8 @@ public abstract class ListUtils {
 
     public static <T> void forEach(List<T> values, Consumer<T> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    private ListUtils() {
     }
 }

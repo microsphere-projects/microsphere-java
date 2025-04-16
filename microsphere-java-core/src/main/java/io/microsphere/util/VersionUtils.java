@@ -31,7 +31,7 @@ import static javax.lang.model.SourceVersion.latest;
  * @see Version
  * @since 1.0.0
  */
-public abstract class VersionUtils {
+public abstract class VersionUtils implements Utils {
 
     /**
      * The latest {@link SourceVersion Java Release Version}
@@ -209,5 +209,8 @@ public abstract class VersionUtils {
             return majorVersion;
         }
         return javaVersion;
+    }
+
+    private VersionUtils() {
     }
 }

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.CLASS;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
@@ -89,7 +90,7 @@ public class ResourceTypeTest {
             String[] resourceNames = entry.getValue();
             assertNull(resourceType.resolve(null));
             assertNull(resourceType.resolve(""));
-            assertNull(resourceType.resolve(" "));
+            assertNull(resourceType.resolve(SPACE));
             assertEquals(resourceNames[1], resourceType.resolve(resourceNames[0]));
         }
 

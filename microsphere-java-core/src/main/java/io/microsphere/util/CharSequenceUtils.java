@@ -7,7 +7,7 @@ package io.microsphere.util;
  * @see CharSequence
  * @since 1.0.0
  */
-public abstract class CharSequenceUtils extends BaseUtils {
+public abstract class CharSequenceUtils implements Utils {
 
     public static int length(CharSequence value) {
         return value == null ? 0 : value.length();
@@ -19,5 +19,8 @@ public abstract class CharSequenceUtils extends BaseUtils {
 
     public static boolean isNotEmpty(CharSequence value) {
         return length(value) > 0;
+    }
+
+    private CharSequenceUtils(){
     }
 }

@@ -20,6 +20,8 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.util.Version.Operator;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.Version.Operator.EQ;
 import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.Version.Operator.GT;
@@ -49,7 +51,7 @@ public class VersionTest extends AbstractTestCase {
 
     private static final int PATCH = 3;
 
-    private static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
+    private static final String VERSION = MAJOR + DOT + MINOR + DOT + PATCH;
 
     private static final Version TEST_VERSION = of(VERSION);
 
@@ -67,7 +69,7 @@ public class VersionTest extends AbstractTestCase {
     @Test
     public void testGetValueOnFailed() {
         assertThrows(IllegalArgumentException.class, () -> getValue(""));
-        assertThrows(IllegalArgumentException.class, () -> getValue(" "));
+        assertThrows(IllegalArgumentException.class, () -> getValue(SPACE));
         assertThrows(IllegalArgumentException.class, () -> getValue("a"));
     }
 
@@ -110,7 +112,7 @@ public class VersionTest extends AbstractTestCase {
 
     @Test
     public void testOfOnIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> of(" "));
+        assertThrows(IllegalArgumentException.class, () -> of(SPACE));
     }
 
     @Test

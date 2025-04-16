@@ -17,6 +17,7 @@
 package io.microsphere.annotation.processor.util;
 
 import io.microsphere.util.TypeFinder;
+import io.microsphere.util.Utils;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -60,7 +61,7 @@ import static javax.lang.model.type.TypeKind.ARRAY;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface TypeUtils {
+public interface TypeUtils extends Utils {
 
     List<String> SIMPLE_TYPE_NAMES = ofList(
             SIMPLE_TYPES

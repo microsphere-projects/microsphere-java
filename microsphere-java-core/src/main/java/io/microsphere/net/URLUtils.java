@@ -6,7 +6,7 @@ package io.microsphere.net;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,11 +50,11 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.CharSequenceUtils.length;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.length;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
@@ -75,7 +75,7 @@ import static java.util.Collections.unmodifiableMap;
  * @see URLDecoder
  * @since 1.0.0
  */
-public abstract class URLUtils extends BaseUtils {
+public abstract class URLUtils implements Utils {
 
     private static final Logger logger = getLogger(URLUtils.class);
 
@@ -951,4 +951,6 @@ public abstract class URLUtils extends BaseUtils {
         return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
+    private URLUtils() {
+    }
 }

@@ -41,7 +41,7 @@ import static java.lang.Thread.currentThread;
  * @see StackTraceElement
  * @since 1.0.0
  */
-public abstract class StackTraceUtils {
+public abstract class StackTraceUtils implements Utils {
 
     private static final Class<?> TYPE = StackTraceUtils.class;
 
@@ -253,5 +253,8 @@ public abstract class StackTraceUtils {
             return targetStackTraceElement.getClassName();
         }
         return null;
+    }
+
+    private StackTraceUtils() {
     }
 }

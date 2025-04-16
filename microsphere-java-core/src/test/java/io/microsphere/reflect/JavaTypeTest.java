@@ -104,6 +104,49 @@ public class JavaTypeTest {
         assertJavaType(javaType);
     }
 
+    @Test
+    public void testForClass() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForClass.class);
+    }
+
+    @Test
+    public void testForGenericArrayType() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForGenericArrayType.class);
+    }
+
+    @Test
+    public void testForObjectClass() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForObjectClass.class);
+    }
+
+    @Test
+    public void testForParameterizedType() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForParameterizedType.class);
+
+    }
+
+    @Test
+    public void testForTypeVariable() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForTypeVariable.class);
+    }
+
+    @Test
+    public void testForUnknown() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForUnknown.class);
+    }
+
+    @Test
+    public void testForWildcardType() throws Throwable {
+        testBaseJavaTypeTest(JavaTypeTestForWildcardType.class);
+    }
+
+    private void testBaseJavaTypeTest(Class<? extends BaseJavaTypeTest> testClass) throws Throwable {
+        BaseJavaTypeTest.beforeAll();
+        BaseJavaTypeTest test = testClass.getConstructor().newInstance();
+        test.init();
+        test.test();
+    }
+
     private static void assertGenericTypes(JavaType javaType, Class<?>... expectedClasses) {
         int length = expectedClasses.length;
         // Compare with Spring ResolvableType

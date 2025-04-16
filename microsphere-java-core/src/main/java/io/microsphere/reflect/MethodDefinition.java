@@ -23,6 +23,7 @@ import io.microsphere.util.Version;
 
 import java.lang.reflect.Method;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ArrayUtils.arrayToString;
@@ -141,9 +142,9 @@ public class MethodDefinition extends ExecutableDefinition<Method> {
         return "MethodDefinition{" +
                 "since=" + super.since +
                 ", deprecation=" + super.deprecation +
-                ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
+                ", declaredClassName='" + super.getDeclaredClassName() + QUOTE_CHAR +
                 ", declaredClass=" + super.getDeclaredClass() +
-                ", methodName='" + getMethodName() + '\'' +
+                ", methodName='" + getMethodName() + QUOTE_CHAR +
                 ", method=" + getMethod() +
                 ", parameterClassName=" + arrayToString(super.parameterClassNames) +
                 ", parameterTypes=" + arrayToString(super.getParameterTypes()) +

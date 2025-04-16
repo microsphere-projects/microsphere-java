@@ -18,6 +18,7 @@ package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+import io.microsphere.util.Utils;
 
 import java.util.Collection;
 import java.util.Enumeration;
@@ -37,10 +38,10 @@ import static java.util.Collections.unmodifiableSet;
  * The utilities class for Java {@link Set}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see Set
+ * @see Sets
  * @since 1.0.0
  */
-public abstract class SetUtils {
+public abstract class SetUtils implements Utils {
 
     public static boolean isSet(@Nullable Iterable<?> elements) {
         return elements instanceof Set;
@@ -214,5 +215,8 @@ public abstract class SetUtils {
 
     public static <E> Set<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
+    }
+
+    private SetUtils() {
     }
 }

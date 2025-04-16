@@ -18,6 +18,7 @@ package io.microsphere.annotation.processor.util;
 
 
 import io.microsphere.logging.Logger;
+import io.microsphere.util.Utils;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 
@@ -27,7 +28,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface LoggerUtils {
+public interface LoggerUtils extends Utils {
 
     Logger LOGGER = getLogger("microsphere-annotation-processor");
 

@@ -16,6 +16,8 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.util.Utils;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
@@ -45,7 +47,7 @@ import static javax.lang.model.util.ElementFilter.fieldsIn;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface FieldUtils {
+public interface FieldUtils extends Utils {
 
     static VariableElement getDeclaredField(Element element, String fieldName) {
         return element == null ? null : getDeclaredField(element.asType(), fieldName);

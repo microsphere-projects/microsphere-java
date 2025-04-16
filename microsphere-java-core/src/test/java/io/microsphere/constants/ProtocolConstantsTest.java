@@ -19,6 +19,7 @@ package io.microsphere.constants;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.ProtocolConstants.CLASSPATH_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FTP_PROTOCOL;
@@ -48,5 +49,6 @@ public class ProtocolConstantsTest {
         assertEquals("war", WAR_PROTOCOL);
         assertEquals("ear", EAR_PROTOCOL);
         assertEquals("classpath", CLASSPATH_PROTOCOL);
+        assertEquals("console", CONSOLE_PROTOCOL);
     }
 }

@@ -18,6 +18,7 @@ package io.microsphere.reflect;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.Utils;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -66,7 +67,7 @@ import static java.util.Objects.hash;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodUtils {
+public abstract class MethodUtils implements Utils {
 
     private static final Logger logger = getLogger(MethodUtils.class);
 
@@ -736,5 +737,8 @@ public abstract class MethodUtils {
         public String toString() {
             return buildSignature(declaredClass, methodName, parameterTypes);
         }
+    }
+
+    private MethodUtils() {
     }
 }

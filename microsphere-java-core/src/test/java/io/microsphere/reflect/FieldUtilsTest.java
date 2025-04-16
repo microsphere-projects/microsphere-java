@@ -58,11 +58,6 @@ public class FieldUtilsTest {
     public void destroy() {
         ReflectionTest.staticField = "staticField";
     }
-    
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new FieldUtils() {});
-    }
 
     @Test
     public void testFindFieldOnObject() {

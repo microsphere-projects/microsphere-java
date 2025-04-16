@@ -27,6 +27,8 @@ import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.IOUtils.toByteArray;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackages;
 import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue;
@@ -131,13 +133,13 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
 
     protected String resolveHandlePackage(ExtendableProtocolURLStreamHandler handler) {
         String packageName = handler.getClass().getPackage().getName();
-        int lastIndex = packageName.lastIndexOf(".");
+        int lastIndex = packageName.lastIndexOf(DOT_CHAR);
         return packageName.substring(0, lastIndex);
     }
 
     protected String resolveProtocol(ExtendableProtocolURLStreamHandler handler) {
         String packageName = handler.getClass().getPackage().getName();
-        String[] parts = split(packageName, ".");
+        String[] parts = split(packageName, DOT);
         return parts[parts.length - 1];
     }
 

@@ -27,6 +27,7 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
@@ -108,12 +109,6 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @AfterAll
     public static void afterAll() {
         setVerbose(verbose);
-    }
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new ClassLoaderUtils() {
-        });
     }
 
     @Test
@@ -314,10 +309,10 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     public void testLoadClassOnBlankClassName() {
         assertNull(loadClass(this.classLoader, ""));
-        assertNull(loadClass(this.classLoader, " "));
+        assertNull(loadClass(this.classLoader, SPACE));
 
         assertNull(loadClass(this.classLoader, "", true));
-        assertNull(loadClass(this.classLoader, " ", true));
+        assertNull(loadClass(this.classLoader, SPACE, true));
     }
 
     @Test
@@ -503,10 +498,10 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testIsPresent() {
         assertFalse(isPresent(null));
         assertFalse(isPresent(""));
-        assertFalse(isPresent(" "));
+        assertFalse(isPresent(SPACE));
         assertFalse(isPresent(null, null));
         assertFalse(isPresent("", null));
-        assertFalse(isPresent(" ", null));
+        assertFalse(isPresent(SPACE, null));
         assertFalse(isPresent("NotFound"));
         assertFalse(isPresent("NotFound", getDefaultClassLoader()));
         assertTrue(isPresent("java.lang.String"));

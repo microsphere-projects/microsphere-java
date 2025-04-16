@@ -16,6 +16,8 @@
  */
 package io.microsphere.lang;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE;
+
 /**
  * Delegating {@link Wrapper}
  *
@@ -40,7 +42,7 @@ public interface DelegatingWrapper extends Wrapper {
                 return (T) getDelegate();
             }
         }
-        throw new IllegalArgumentException(getClass().getName() + " can't unwrap the given type '" + type.getName() + "'");
+        throw new IllegalArgumentException(getClass().getName() + " can't unwrap the given type '" + type.getName() + QUOTE);
     }
 
     @Override

@@ -29,11 +29,11 @@ import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.isEmpty;
+import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.isEmpty;
 
 /**
  * The utility class for Assertion

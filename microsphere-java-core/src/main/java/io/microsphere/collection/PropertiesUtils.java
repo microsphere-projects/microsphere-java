@@ -16,7 +16,7 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ import static java.util.Collections.unmodifiableMap;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class PropertiesUtils extends BaseUtils {
+public abstract class PropertiesUtils implements Utils {
 
     /**
      * Get the flatten the specified {@link Map properties}
@@ -65,5 +65,8 @@ public abstract class PropertiesUtils extends BaseUtils {
 
     private static String normalizePropertyName(String propertyNamePrefix, String propertyName) {
         return propertyNamePrefix == null ? propertyName : propertyNamePrefix + DOT + propertyName;
+    }
+
+    private PropertiesUtils() {
     }
 }

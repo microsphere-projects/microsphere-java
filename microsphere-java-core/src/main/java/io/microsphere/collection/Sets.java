@@ -16,9 +16,12 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.Utils;
+
 import java.lang.invoke.MethodHandle;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptySet;
@@ -31,7 +34,7 @@ import static java.util.Collections.singleton;
  * @see SetUtils
  * @since 1.0.0
  */
-public abstract class Sets extends SetUtils {
+public abstract class Sets implements Utils {
 
     /**
      * The {@link MethodHandle} of {@link Set#of()} since JDK 9
@@ -365,5 +368,8 @@ public abstract class Sets extends SetUtils {
         } catch (Throwable e) {
             return of(elements);
         }
+    }
+
+    private Sets() {
     }
 }

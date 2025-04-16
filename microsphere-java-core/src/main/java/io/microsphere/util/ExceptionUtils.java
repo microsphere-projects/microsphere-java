@@ -29,7 +29,7 @@ import static io.microsphere.util.ClassUtils.newInstance;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class ExceptionUtils extends BaseUtils {
+public abstract class ExceptionUtils implements Utils {
 
     /**
      * <p>Gets the stack trace from a Throwable as a String.</p>
@@ -91,5 +91,8 @@ public abstract class ExceptionUtils extends BaseUtils {
         String message = source.getMessage();
         Throwable cause = source.getCause() == null ? source : source.getCause();
         return message == null ? new Object[]{cause} : new Object[]{message, cause};
+    }
+
+    private ExceptionUtils() {
     }
 }

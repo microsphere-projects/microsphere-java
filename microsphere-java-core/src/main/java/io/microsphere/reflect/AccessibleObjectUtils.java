@@ -17,7 +17,7 @@
 package io.microsphere.reflect;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.AccessibleObject;
@@ -25,6 +25,8 @@ import java.lang.reflect.Member;
 
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
+import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTE;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.asMember;
@@ -39,7 +41,7 @@ import static io.microsphere.util.StringUtils.substringBetween;
  * @see AccessibleObject
  * @since 1.0.0
  */
-public abstract class AccessibleObjectUtils extends BaseUtils {
+public abstract class AccessibleObjectUtils implements Utils {
 
     private static final Logger logger = getLogger(AccessibleObjectUtils.class);
 
@@ -151,8 +153,8 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
     private static void handleInaccessibleObjectExceptionIfFound(Throwable e) {
         if (isInaccessibleObjectException(e)) {
             String rawErrorMessage = e.getMessage();
-            String moduleName = substringBetween(rawErrorMessage, "module ", " ");
-            String packageName = substringBetween(rawErrorMessage, "opens ", "\"");
+            String moduleName = substringBetween(rawErrorMessage, "module ", SPACE);
+            String packageName = substringBetween(rawErrorMessage, "opens ", DOUBLE_QUOTE);
             // JDK 16+ : JEP 396: Strongly Encapsulate JDK Internals by Default - https://openjdk.org/jeps/396
             StringBuilder errorMessageBuilder = new StringBuilder("JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396.");
             errorMessageBuilder.append(LINE_SEPARATOR)
@@ -163,5 +165,8 @@ public abstract class AccessibleObjectUtils extends BaseUtils {
                     .append("=ALL-UNNAMED' for running");
             logger.error(errorMessageBuilder.toString(), e);
         }
+    }
+
+    private AccessibleObjectUtils() {
     }
 }

@@ -22,7 +22,9 @@ import org.junit.jupiter.api.Test;
 import java.net.URL;
 
 import static io.microsphere.classloading.Artifact.UNKNOWN;
+import static io.microsphere.classloading.Artifact.WILDCARD;
 import static io.microsphere.classloading.MavenArtifact.create;
+import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -90,9 +92,9 @@ public class MavenArtifactTest {
         assertFalse(artifact.equals(create(GROUP_ID)));
         assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID)));
         assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID, VERSION)));
-        assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID, "-")));
-        assertFalse(artifact.equals(create(GROUP_ID, "-", "-")));
-        assertFalse(artifact.equals(create("-", "-", "-")));
+        assertFalse(artifact.equals(create(GROUP_ID, ARTIFACT_ID, HYPHEN)));
+        assertFalse(artifact.equals(create(GROUP_ID, HYPHEN, HYPHEN)));
+        assertFalse(artifact.equals(create(HYPHEN, HYPHEN, HYPHEN)));
     }
 
     @Test
@@ -107,12 +109,12 @@ public class MavenArtifactTest {
 
     @Test
     public void testMatches() {
-        assertTrue(create("*", "*", "*").matches(artifact));
-        assertTrue(create(GROUP_ID, "*", "*").matches(artifact));
-        assertTrue(create(GROUP_ID, ARTIFACT_ID, "*").matches(artifact));
+        assertTrue(create(WILDCARD, WILDCARD, WILDCARD).matches(artifact));
+        assertTrue(create(GROUP_ID, WILDCARD, WILDCARD).matches(artifact));
+        assertTrue(create(GROUP_ID, ARTIFACT_ID, WILDCARD).matches(artifact));
         assertTrue(create(GROUP_ID, ARTIFACT_ID, VERSION).matches(artifact));
-        assertFalse(create("-", ARTIFACT_ID, VERSION).matches(artifact));
-        assertFalse(create(GROUP_ID, "-", VERSION).matches(artifact));
-        assertFalse(create(GROUP_ID, ARTIFACT_ID, "-").matches(artifact));
+        assertFalse(create(HYPHEN, ARTIFACT_ID, VERSION).matches(artifact));
+        assertFalse(create(GROUP_ID, HYPHEN, VERSION).matches(artifact));
+        assertFalse(create(GROUP_ID, ARTIFACT_ID, HYPHEN).matches(artifact));
     }
 }
