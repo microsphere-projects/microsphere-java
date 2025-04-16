@@ -256,7 +256,6 @@ public interface SymbolConstants {
      */
     String SHARP = "#";
 
-
     /**
      * The question mark symbol : "?"
      */
