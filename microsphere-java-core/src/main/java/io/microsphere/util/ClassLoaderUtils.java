@@ -897,7 +897,7 @@ public abstract class ClassLoaderUtils implements Utils {
             normalizedName = normalizePath(normalizedName);
 
             // Remove the character "/" in the start of String if found
-            while (normalizedName.startsWith("/")) {
+            while (normalizedName.startsWith(SLASH)) {
                 normalizedName = normalizedName.substring(1);
             }
 
