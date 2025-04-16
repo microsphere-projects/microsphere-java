@@ -6,6 +6,7 @@ import io.microsphere.annotation.Nullable;
 import java.net.URL;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.util.Objects.hash;
 
 /**
@@ -80,10 +81,10 @@ public class MavenArtifact extends Artifact {
 
     @Override
     public String toString() {
-        String sb = "MavenArtifact{" + "groupId='" + groupId + '\'' +
-                ", artifactId='" + getArtifactId() + '\'' +
-                ", version='" + getVersion() + '\'' +
-                ", location='" + getLocation() + '\'' +
+        String sb = "MavenArtifact{" + "groupId='" + groupId + QUOTE_CHAR +
+                ", artifactId='" + getArtifactId() + QUOTE_CHAR +
+                ", version='" + getVersion() + QUOTE_CHAR +
+                ", location='" + getLocation() + QUOTE_CHAR +
                 '}';
         return sb;
     }
