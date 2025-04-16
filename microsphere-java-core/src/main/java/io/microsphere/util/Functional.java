@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.lang.Boolean.FALSE;
 
 /**
@@ -78,7 +79,7 @@ public class Functional<V> {
     @Override
     public String toString() {
         return "Functional{" +
-                "name='" + name + '\'' +
+                "name='" + name + QUOTE_CHAR +
                 ", value=" + value +
                 ", matched=" + matched +
                 '}';
