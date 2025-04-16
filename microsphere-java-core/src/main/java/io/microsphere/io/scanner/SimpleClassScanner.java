@@ -8,7 +8,6 @@ import io.microsphere.lang.ClassDataRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -19,6 +18,7 @@ import java.util.function.Predicate;
 
 import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
@@ -155,18 +155,9 @@ public class SimpleClassScanner {
         return filterClassNames;
     }
 
-
     private URL resolveClassPathURL(URL resourceURL, String packageResourceName) {
         String resource = resourceURL.toExternalForm();
         String classPath = substringBefore(resource, packageResourceName);
-        URL classPathURL = null;
-        try {
-            classPathURL = new URL(classPath);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        return classPathURL;
+        return ofURL(classPath);
     }
-
-
 }
