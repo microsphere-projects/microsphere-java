@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
+import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectoryOnExit;
@@ -80,7 +81,7 @@ public class FileUtilsTest extends AbstractTestCase {
     @Test
     public void testGetFileExtension() {
         assertNull(getFileExtension(null));
-        assertEquals("class", getFileExtension(classFile.getName()));
+        assertEquals(CLASS, getFileExtension(classFile.getName()));
     }
 
     @Test
