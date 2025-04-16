@@ -921,4 +921,7 @@ public abstract class ClassLoaderUtils implements Utils {
         abstract String normalize(String name);
 
     }
+
+    private ClassLoaderUtils() {
+    }
 }
