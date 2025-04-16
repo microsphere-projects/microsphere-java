@@ -160,4 +160,7 @@ public abstract class ShutdownHookUtils implements Utils {
         return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);
     }
 
+    private ShutdownHookUtils(){
+    }
+
 }
