@@ -3,6 +3,7 @@ package io.microsphere.net;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,7 +34,7 @@ public class DelegatingURLStreamHandlerFactoryTest {
 
     @Test
     public void testCreateURLStreamHandler() {
-        assertNotNull(this.factory.createURLStreamHandler("file"));
+        assertNotNull(this.factory.createURLStreamHandler(FILE_PROTOCOL));
     }
 
     @Test
