@@ -21,6 +21,7 @@ import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.StopWatch.Task.start;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -98,7 +99,7 @@ public class StopWatchTest {
 
     @Test
     public void testStartOnBlankTaskName() {
-        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(" "));
+        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(SPACE));
     }
 
     @Test
