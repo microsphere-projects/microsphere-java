@@ -16,6 +16,8 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.util.Utils;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
@@ -48,7 +50,7 @@ import static javax.lang.model.element.Modifier.STATIC;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface MemberUtils {
+public interface MemberUtils extends Utils {
 
     static boolean matchesElementKind(Element member, ElementKind kind) {
         return member == null || kind == null ? false : kind.equals(member.getKind());
