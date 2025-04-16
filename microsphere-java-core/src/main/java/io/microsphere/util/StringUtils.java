@@ -19,6 +19,8 @@ package io.microsphere.util;
 import java.util.StringTokenizer;
 
 import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.CharSequenceUtils.isEmpty;
+import static io.microsphere.util.CharSequenceUtils.length;
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isWhitespace;
 import static java.lang.String.valueOf;
@@ -29,17 +31,13 @@ import static java.lang.String.valueOf;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class StringUtils extends CharSequenceUtils {
+public abstract class StringUtils implements Utils {
 
     public final static String EMPTY = "";
 
     public final static String EMPTY_STRING = EMPTY;
 
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
-
-    private StringUtils() {
-        super();
-    }
 
     public static boolean isBlank(String value) {
         int length = length(value);
@@ -435,5 +433,9 @@ public abstract class StringUtils extends CharSequenceUtils {
             }
         }
         return true;
+    }
+
+    private StringUtils() {
+        super();
     }
 }

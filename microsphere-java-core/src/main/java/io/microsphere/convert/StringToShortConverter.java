@@ -16,7 +16,7 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.StringUtils.isNotEmpty;
+import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Short.valueOf;
 
 /**

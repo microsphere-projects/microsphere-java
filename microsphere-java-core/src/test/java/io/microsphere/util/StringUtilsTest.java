@@ -19,11 +19,8 @@ import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.isEmpty;
 import static io.microsphere.util.StringUtils.isNotBlank;
-import static io.microsphere.util.StringUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.isNumeric;
-import static io.microsphere.util.StringUtils.length;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
@@ -48,7 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class StringUtilsTest {
 
-
     @Test
     public void testConstants() {
         assertSame(TEST_EMPTY_STRING, EMPTY);
@@ -56,33 +52,6 @@ public class StringUtilsTest {
         assertSame(ArrayUtils.EMPTY_STRING_ARRAY, EMPTY_STRING_ARRAY);
         assertEquals(0, EMPTY_STRING_ARRAY.length);
         assertArrayEquals(new String[0], EMPTY_STRING_ARRAY);
-    }
-
-    @Test
-    public void testLength() {
-        assertEquals(0, length(null));
-        assertEquals(0, length(TEST_EMPTY_STRING));
-        assertEquals(1, length(TEST_BLANK_STRING));
-        assertEquals(5, length(TEST_CSV_STRING));
-        assertEquals(7, length(TEST_STRING));
-    }
-
-    @Test
-    public void testIsEmpty() {
-        assertTrue(isEmpty(null));
-        assertTrue(isEmpty(TEST_EMPTY_STRING));
-        assertFalse(isEmpty(TEST_BLANK_STRING));
-        assertFalse(isEmpty(TEST_CSV_STRING));
-        assertFalse(isEmpty(TEST_STRING));
-    }
-
-    @Test
-    public void testIsNotEmpty() {
-        assertFalse(isNotEmpty(null));
-        assertFalse(isNotEmpty(TEST_EMPTY_STRING));
-        assertTrue(isNotEmpty(TEST_BLANK_STRING));
-        assertTrue(isNotEmpty(TEST_CSV_STRING));
-        assertTrue(isNotEmpty(TEST_STRING));
     }
 
     @Test

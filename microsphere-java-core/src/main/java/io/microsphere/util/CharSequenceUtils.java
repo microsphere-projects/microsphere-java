@@ -20,4 +20,7 @@ public abstract class CharSequenceUtils implements Utils {
     public static boolean isNotEmpty(CharSequence value) {
         return length(value) > 0;
     }
+
+    private CharSequenceUtils(){
+    }
 }
