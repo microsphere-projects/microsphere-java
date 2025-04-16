@@ -215,7 +215,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             else
                 sb.append(ownerType);
 
-            sb.append(DOLLAR_CHAR)
+            sb.append(DOLLAR_CHAR);
 
             if (ownerType instanceof ParameterizedTypeImpl) {
                 // Find simple name of nested type by removing the
