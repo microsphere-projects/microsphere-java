@@ -38,7 +38,7 @@ import static java.util.Collections.unmodifiableSet;
  * The utilities class for Java {@link Set}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see Set
+ * @see Sets
  * @since 1.0.0
  */
 public abstract class SetUtils implements Utils {
@@ -215,5 +215,8 @@ public abstract class SetUtils implements Utils {
 
     public static <E> Set<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
+    }
+
+    private SetUtils() {
     }
 }
