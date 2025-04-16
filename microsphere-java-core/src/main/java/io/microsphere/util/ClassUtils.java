@@ -41,6 +41,7 @@ import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATO
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -421,7 +422,7 @@ public abstract class ClassUtils implements Utils {
      */
     @Nullable
     public static String resolvePackageName(String className) {
-        return substringBeforeLast(className, ".");
+        return substringBeforeLast(className, DOT);
     }
 
     /**
@@ -761,7 +762,7 @@ public abstract class ClassUtils implements Utils {
         String simpleName = type.getName();
         Class<?> enclosingClass = type.getEnclosingClass();
         if (enclosingClass == null) { // top level class
-            simpleName = simpleName.substring(simpleName.lastIndexOf(".") + 1);
+            simpleName = simpleName.substring(simpleName.lastIndexOf(DOT_CHAR) + 1);
         } else {
             String ecName = enclosingClass.getName();
             simpleName = simpleName.substring(ecName.length());
