@@ -12,6 +12,7 @@ import java.io.IOException;
 
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
@@ -94,7 +95,7 @@ public abstract class FileUtils implements Utils {
         if (directory.delete()) {
             deletedFilesCount++;
         } else {
-            String message = "Unable to delete directory " + directory + ".";
+            String message = "Unable to delete directory " + directory + DOT_CHAR;
             throw new IOException(message);
         }
 
