@@ -23,6 +23,7 @@ import io.microsphere.util.Version;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;
 import static java.util.Objects.hash;
 
@@ -114,10 +115,10 @@ public final class Deprecation implements Serializable {
     @Override
     public String toString() {
         return "Deprecation{" +
-                "since='" + since + '\'' +
-                ", replacement='" + replacement + '\'' +
-                ", reason='" + reason + '\'' +
-                ", link='" + link + '\'' +
+                "since='" + since + QUOTE_CHAR +
+                ", replacement='" + replacement + QUOTE_CHAR +
+                ", reason='" + reason + QUOTE_CHAR +
+                ", link='" + link + QUOTE_CHAR +
                 ", level=" + level +
                 '}';
     }
