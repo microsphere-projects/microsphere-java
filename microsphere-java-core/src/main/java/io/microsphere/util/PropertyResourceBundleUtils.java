@@ -101,5 +101,6 @@ public abstract class PropertyResourceBundleUtils implements Utils {
         return ResourceBundle.getBundle(baseName, locale, classLoader, control);
     }
 
-
+    private PropertyResourceBundleUtils() {
+    }
 }
