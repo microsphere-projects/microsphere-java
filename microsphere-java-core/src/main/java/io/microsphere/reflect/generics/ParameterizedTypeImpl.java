@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.util.Objects.hash;
 
@@ -214,12 +215,12 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             else
                 sb.append(ownerType);
 
-            sb.append("$");
+            sb.append(DOLLAR_CHAR)
 
             if (ownerType instanceof ParameterizedTypeImpl) {
                 // Find simple name of nested type by removing the
                 // shared prefix with owner.
-                sb.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + "$", ""));
+                sb.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + DOLLAR_CHAR, ""));
             } else
                 sb.append(rawType.getSimpleName());
         } else
