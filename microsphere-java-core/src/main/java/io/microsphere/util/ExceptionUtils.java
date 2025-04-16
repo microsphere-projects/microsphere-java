@@ -92,4 +92,7 @@ public abstract class ExceptionUtils implements Utils {
         Throwable cause = source.getCause() == null ? source : source.getCause();
         return message == null ? new Object[]{cause} : new Object[]{message, cause};
     }
+
+    private ExceptionUtils() {
+    }
 }
