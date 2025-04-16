@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.constants.SymbolConstants.UNDER_SCORE_CHAR;
 import static io.microsphere.text.FormatUtils.format;
 import static java.nio.file.Files.newBufferedReader;
 import static java.nio.file.Paths.get;
@@ -62,7 +64,7 @@ public class SystemPropertySourceCodeGenerator {
             properties.load(reader);
             for (String key : properties.stringPropertyNames()) {
                 String comment = properties.getProperty(key);
-                String valueFieldName = key.toUpperCase().replace('.', '_');
+                String valueFieldName = key.toUpperCase().replace(DOT_CHAR, UNDER_SCORE_CHAR);
                 String keyFieldName = valueFieldName + "_PROPERTY_KEY";
                 String keyLine = format(KEY_TEMPLATE, comment, keyFieldName, key);
                 String valueLine = format(VALUE_TEMPLATE, comment, valueFieldName, keyFieldName);
