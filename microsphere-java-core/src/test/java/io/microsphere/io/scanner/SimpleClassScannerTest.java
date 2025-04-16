@@ -40,6 +40,9 @@ public class SimpleClassScannerTest extends AbstractTestCase {
 
         classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, "i", false, true);
         assertTrue(classesSet.isEmpty());
+
+        classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, "java.lang", false, true);
+        assertTrue(classesSet.isEmpty());
     }
 
     @Test
