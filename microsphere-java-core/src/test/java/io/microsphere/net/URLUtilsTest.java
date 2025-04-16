@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
@@ -279,7 +280,7 @@ public class URLUtilsTest extends AbstractTestCase {
         assertFalse(isDirectoryURL(classFileURL));
 
         String externalForm = null;
-        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + CLASS_EXTENSION);
         resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
 
@@ -289,7 +290,7 @@ public class URLUtilsTest extends AbstractTestCase {
         resourceURL = getClassResource(classLoader, getClass());
         assertFalse(isDirectoryURL(resourceURL));
 
-        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + CLASS_EXTENSION);
         resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
     }
