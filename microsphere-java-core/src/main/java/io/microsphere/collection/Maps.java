@@ -16,9 +16,12 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.Utils;
+
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
 
+import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyMap;
@@ -31,7 +34,7 @@ import static java.util.Collections.singletonMap;
  * @see MapUtils
  * @since 1.0.0
  */
-public abstract class Maps extends MapUtils {
+public abstract class Maps implements Utils {
 
     /**
      * The {@link MethodHandle} of {@link Map#of()} since JDK 9
@@ -333,7 +336,7 @@ public abstract class Maps extends MapUtils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
-                                  K k8, V v8) {
+                                         K k8, V v8) {
         if (of8MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
         }
@@ -372,7 +375,7 @@ public abstract class Maps extends MapUtils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
-                                  K k8, V v8, K k9, V v9) {
+                                         K k8, V v8, K k9, V v9) {
         if (of9MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
         }
@@ -413,7 +416,7 @@ public abstract class Maps extends MapUtils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
-                                  K k8, V v8, K k9, V v9, K k10, V v10) {
+                                         K k8, V v8, K k9, V v9, K k10, V v10) {
         if (of10MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
         }
@@ -464,5 +467,8 @@ public abstract class Maps extends MapUtils {
         } catch (Throwable e) {
             return of(entries);
         }
+    }
+
+    private Maps() {
     }
 }

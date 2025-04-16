@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeoutException;
 
+import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
 import static java.lang.Long.MAX_VALUE;
@@ -43,7 +44,7 @@ public class ProcessExecutor {
         StringBuilder optionsBuilder = new StringBuilder();
         if (options != null) {
             for (String argument : options) {
-                optionsBuilder.append(" ").append(argument);
+                optionsBuilder.append(SPACE_CHAR).append(argument);
             }
         }
         this.options = optionsBuilder.toString();

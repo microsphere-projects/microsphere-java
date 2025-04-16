@@ -9,11 +9,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ManifestArtifactResourceResolver
  * @since 1.0.0
  */
-public class ManifestArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<ManifestArtifactResourceResolver> {
+public class ManifestArtifactResourceResolverTest extends StreamArtifactResourceResolverTest<ManifestArtifactResourceResolver> {
 
     @Override
-    protected void assertArtifact(Artifact artifact) throws Throwable {
+    protected void assertArtifact(Artifact artifact) {
         assertEquals("FindBugs-jsr305", artifact.getArtifactId());
-        assertEquals("3.0.2", artifact.getVersion());
+        assertEquals(TEST_VERSION, artifact.getVersion());
     }
 }

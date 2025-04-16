@@ -31,7 +31,7 @@ import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
-import static io.microsphere.collection.Sets.ofSet;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
@@ -69,7 +69,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ClassLoader
  * @since 1.0.0
  */
-public abstract class ClassLoaderUtils extends BaseUtils {
+public abstract class ClassLoaderUtils implements Utils {
 
     private static final Logger logger = getLogger(ClassLoaderUtils.class);
 
@@ -897,7 +897,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
             normalizedName = normalizePath(normalizedName);
 
             // Remove the character "/" in the start of String if found
-            while (normalizedName.startsWith("/")) {
+            while (normalizedName.startsWith(SLASH)) {
                 normalizedName = normalizedName.substring(1);
             }
 
@@ -920,5 +920,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          */
         abstract String normalize(String name);
 
+    }
+
+    private ClassLoaderUtils() {
     }
 }

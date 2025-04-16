@@ -30,7 +30,7 @@ import static io.microsphere.classloading.MavenArtifact.create;
  * @see ArtifactResourceResolver
  * @since 1.0.0
  */
-public class MavenArtifactResourceResolver extends AbstractArtifactResourceResolver {
+public class MavenArtifactResourceResolver extends StreamArtifactResourceResolver {
 
     public static final String MAVEN_POM_PROPERTIES_RESOURCE_PREFIX = "META-INF/maven/";
 

@@ -23,7 +23,13 @@ import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.ProtocolConstants.FTP_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.HTTP_PROTOCOL;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.microsphere.constants.SymbolConstants.COLON;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
@@ -107,7 +113,7 @@ public class URLUtilsTest extends AbstractTestCase {
     @BeforeAll
     public static void beforeAll() throws Throwable {
         userDirURL = get(USER_DIR).toUri().toURL();
-        classPathURL = getResource(getClassLoader(URLUtilsTest.class), "/");
+        classPathURL = getResource(getClassLoader(URLUtilsTest.class), SLASH);
         classFileURL = getClassResource(StringUtils.class);
         classArchiveEntryURL = getClassResource(Nonnull.class);
     }
@@ -115,11 +121,6 @@ public class URLUtilsTest extends AbstractTestCase {
     @AfterEach
     public void after() {
         clearURLStreamHandlerFactory();
-    }
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new URLUtils() {});
     }
 
     @Test
@@ -284,7 +285,7 @@ public class URLUtilsTest extends AbstractTestCase {
         assertFalse(isDirectoryURL(classFileURL));
 
         String externalForm = null;
-        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + CLASS_EXTENSION);
         resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
 
@@ -294,7 +295,7 @@ public class URLUtilsTest extends AbstractTestCase {
         resourceURL = getClassResource(classLoader, getClass());
         assertFalse(isDirectoryURL(resourceURL));
 
-        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + ".class");
+        externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + CLASS_EXTENSION);
         resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
     }
@@ -348,10 +349,10 @@ public class URLUtilsTest extends AbstractTestCase {
     @Test
     public void testBuildURIOnEmpty() {
         String path = buildURI();
-        assertEquals("/", path);
+        assertEquals(SLASH, path);
 
         path = buildURI(null);
-        assertEquals("/", path);
+        assertEquals(SLASH, path);
     }
 
     @Test
@@ -449,13 +450,13 @@ public class URLUtilsTest extends AbstractTestCase {
     public void testResolveProtocol() {
         assertNull(resolveProtocol(null));
         assertNull(resolveProtocol(""));
-        assertNull(resolveProtocol(" "));
-        assertNull(resolveProtocol(":"));
+        assertNull(resolveProtocol(SPACE));
+        assertNull(resolveProtocol(COLON));
         assertNull(resolveProtocol(" :"));
         assertNull(resolveProtocol(" a:"));
         assertNull(resolveProtocol("a :"));
-        assertEquals("ftp", resolveProtocol("ftp://..."));
-        assertEquals("http", resolveProtocol("http://..."));
+        assertEquals(FTP_PROTOCOL, resolveProtocol("ftp://..."));
+        assertEquals(HTTP_PROTOCOL, resolveProtocol("http://..."));
     }
 
 

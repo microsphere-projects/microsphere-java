@@ -23,6 +23,7 @@ import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
@@ -54,7 +55,7 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
     public URLStreamHandler createURLStreamHandler(String protocol) {
         URLStreamHandler handler = createURLStreamHandlerFromDefaultFactory(protocol);
         if (handler == null) { // <= JDK 8 works
-            String name = DEFAULT_HANDLER_PACKAGE_PREFIX + "." + protocol + ".Handler";
+            String name = DEFAULT_HANDLER_PACKAGE_PREFIX + DOT + protocol + DOT + "Handler";
             try {
                 Object o = forName(name).newInstance();
                 return (URLStreamHandler) o;

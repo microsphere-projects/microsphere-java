@@ -16,6 +16,8 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.util.Utils;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
@@ -54,7 +56,7 @@ import static java.util.stream.Collectors.toList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface AnnotationUtils {
+public interface AnnotationUtils extends Utils {
 
     static AnnotationMirror getAnnotation(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
         if (annotatedConstruct == null || annotationClass == null) {

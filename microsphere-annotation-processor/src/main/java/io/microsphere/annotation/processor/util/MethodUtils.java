@@ -17,6 +17,8 @@
 package io.microsphere.annotation.processor.util;
 
 
+import io.microsphere.util.Utils;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -55,7 +57,7 @@ import static javax.lang.model.util.ElementFilter.methodsIn;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface MethodUtils {
+public interface MethodUtils extends Utils {
 
     static List<ExecutableElement> getDeclaredMethods(TypeElement type) {
         return findDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);

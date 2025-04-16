@@ -22,7 +22,7 @@
 // * @see UnsafeUtils
 // * @since 1.0.0
 // */
-//public abstract class UnsafeUtils extends BaseUtils{
+//public abstract class UnsafeUtils extends BaseUtils {
 //
 //    final static Unsafe unsafe;
 //

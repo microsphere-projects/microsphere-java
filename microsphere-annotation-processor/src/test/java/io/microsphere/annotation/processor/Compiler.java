@@ -35,6 +35,10 @@ import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
+import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -152,7 +156,7 @@ public class Compiler {
 
     static File detectClassPath(Class<?> sourceClass) {
         URL classFileURL = sourceClass.getProtectionDomain().getCodeSource().getLocation();
-        if ("file".equals(classFileURL.getProtocol())) {
+        if (FILE_PROTOCOL.equals(classFileURL.getProtocol())) {
             return new File(classFileURL.getPath());
         } else {
             throw new RuntimeException("No support");
@@ -188,7 +192,7 @@ public class Compiler {
     }
 
     static String resolveJavaSourceFileRelativePath(Class<?> sourceClass) {
-        return sourceClass.getName().replace('.', '/').concat(".java");
+        return sourceClass.getName().replace(DOT_CHAR, SLASH_CHAR).concat(JAVA_EXTENSION);
     }
 
     public boolean compile(Class<?>... sourceClasses) {

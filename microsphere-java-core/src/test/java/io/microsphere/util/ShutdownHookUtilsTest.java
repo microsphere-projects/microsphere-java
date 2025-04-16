@@ -36,7 +36,6 @@ import static io.microsphere.util.ShutdownHookUtils.removeShutdownHookCallback;
 import static io.microsphere.util.ShutdownHookUtils.shutdownHookCallbacks;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -57,11 +56,6 @@ public class ShutdownHookUtilsTest {
     @AfterEach
     public void destroy() {
         clearShutdownHookCallbacks();
-    }
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new ShutdownHookUtils() {});
     }
 
     @Test

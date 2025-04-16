@@ -37,6 +37,7 @@ import java.util.concurrent.TransferQueue;
 
 import static io.microsphere.collection.Lists.ofList;
 import static java.lang.Integer.MAX_VALUE;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -99,8 +100,9 @@ public class StringToCollectionConverterTest {
 
         assertEquals(values, result);
 
+        assertEquals(emptyList(), converter.convert("", Collection.class, Integer.class));
+
         assertNull(converter.convert(null, Collection.class, Integer.class));
-        assertNull(converter.convert("", Collection.class, Integer.class));
 
     }
 

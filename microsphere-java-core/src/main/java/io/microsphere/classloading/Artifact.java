@@ -8,6 +8,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.function.Function;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.util.Objects.hash;
 
 /**
@@ -118,9 +119,9 @@ public class Artifact {
 
     @Override
     public String toString() {
-        String sb = "Artifact{" + "artifactId='" + artifactId + '\'' +
-                ", version='" + version + '\'' +
-                ", location='" + location + '\'' +
+        String sb = "Artifact{" + "artifactId='" + artifactId + QUOTE_CHAR +
+                ", version='" + version + QUOTE_CHAR +
+                ", location='" + location + QUOTE_CHAR +
                 '}';
         return sb;
     }

@@ -8,6 +8,7 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.List;
 
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -35,7 +36,7 @@ public class CompositeURLStreamHandlerFactoryTest {
 
     @Test
     public void testCreateURLStreamHandler() {
-        URLStreamHandler handler = compositeFactory.createURLStreamHandler("file");
+        URLStreamHandler handler = compositeFactory.createURLStreamHandler(FILE_PROTOCOL);
         assertNotNull(handler);
     }
 

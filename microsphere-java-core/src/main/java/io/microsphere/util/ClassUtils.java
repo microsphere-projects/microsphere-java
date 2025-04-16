@@ -39,7 +39,9 @@ import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -79,7 +81,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ClassUtils
  * @since 1.0.0
  */
-public abstract class ClassUtils {
+public abstract class ClassUtils implements Utils {
 
     private final static Logger logger = getLogger(ClassUtils.class);
 
@@ -420,7 +422,7 @@ public abstract class ClassUtils {
      */
     @Nullable
     public static String resolvePackageName(String className) {
-        return substringBeforeLast(className, ".");
+        return substringBeforeLast(className, DOT);
     }
 
     /**
@@ -760,13 +762,13 @@ public abstract class ClassUtils {
         String simpleName = type.getName();
         Class<?> enclosingClass = type.getEnclosingClass();
         if (enclosingClass == null) { // top level class
-            simpleName = simpleName.substring(simpleName.lastIndexOf(".") + 1);
+            simpleName = simpleName.substring(simpleName.lastIndexOf(DOT_CHAR) + 1);
         } else {
             String ecName = enclosingClass.getName();
             simpleName = simpleName.substring(ecName.length());
             // Remove leading "\$[0-9]*" from the name
             int length = simpleName.length();
-            if (length < 1 || simpleName.charAt(0) != '$') throw new InternalError("Malformed class name");
+            if (length < 1 || simpleName.charAt(0) != DOLLAR_CHAR) throw new InternalError("Malformed class name");
             int index = 1;
             while (index < length && isAsciiDigit(simpleName.charAt(index))) index++;
             // Eventually, this is the empty string iff this is an anonymous class
@@ -895,5 +897,8 @@ public abstract class ClassUtils {
      */
     static boolean isSynthetic(int modifiers) {
         return SYNTHETIC.matches(modifiers);
+    }
+
+    private ClassUtils() {
     }
 }

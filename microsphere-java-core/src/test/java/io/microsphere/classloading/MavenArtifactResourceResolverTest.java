@@ -10,16 +10,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MavenArtifactResourceResolver
  * @since 1.0.0
  */
-public class MavenArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<MavenArtifactResourceResolver> {
+public class MavenArtifactResourceResolverTest extends StreamArtifactResourceResolverTest<MavenArtifactResourceResolver> {
 
     @Override
     protected void assertArtifact(Artifact artifact) throws Throwable {
         assertTrue(artifact instanceof MavenArtifact);
         MavenArtifact mavenArtifact = (MavenArtifact) artifact;
 
-        assertEquals("com.google.code.findbugs", mavenArtifact.getGroupId());
-        assertEquals("jsr305", mavenArtifact.getArtifactId());
-        assertEquals("3.0.2", mavenArtifact.getVersion());
+        assertEquals(TEST_GROUP_ID, mavenArtifact.getGroupId());
+        assertEquals(TEST_ARTIFACT_ID, mavenArtifact.getArtifactId());
+        assertEquals(TEST_VERSION, mavenArtifact.getVersion());
     }
 
 }

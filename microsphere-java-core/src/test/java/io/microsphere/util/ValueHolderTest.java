@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ValueHolder.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -56,14 +57,14 @@ public class ValueHolderTest {
 
     @Test
     public void testGetValue() {
-        ValueHolder valueHolder = ValueHolder.of("initial value");
+        ValueHolder valueHolder = of("initial value");
         // Assert that the value is equal to the initial value
         assertEquals("initial value", valueHolder.getValue());
     }
 
     @Test
     public void testReset() {
-        ValueHolder valueHolder = ValueHolder.of(1);
+        ValueHolder valueHolder = of(1);
         valueHolder.reset();
         assertNull(valueHolder.getValue());
     }
@@ -77,7 +78,10 @@ public class ValueHolderTest {
 
     @Test
     public void testEquals() {
-        assertEquals(of(1), of(1));
+        ValueHolder valueHolder = of(1);
+        assertEquals(valueHolder, valueHolder);
+        assertNotEquals(1, valueHolder);
+        assertEquals(of(1), valueHolder);
         assertEquals(of("A"), of("A"));
         assertEquals(of(null), of(null));
     }

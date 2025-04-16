@@ -27,7 +27,6 @@ import static io.microsphere.invoke.MethodHandleUtils.lookup;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link MethodHandleUtils} Test
@@ -36,11 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @since 1.0.0
  */
 public class MethodHandleUtilsTest {
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new MethodHandleUtils() {});
-    }
 
     @Test
     public void testLookup() {

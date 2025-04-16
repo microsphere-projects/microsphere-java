@@ -39,4 +39,9 @@ public class WrapperTest {
         assertNull(tryUnwrap(wrapper, DelegatingWrapperImpl.class));
     }
 
+    @Test
+    public void testOnNull(){
+        assertNull(tryUnwrap(null, String.class));
+    }
+
 }

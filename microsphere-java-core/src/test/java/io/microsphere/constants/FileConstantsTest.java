@@ -26,6 +26,7 @@ import static io.microsphere.constants.FileConstants.FILE_EXTENSION;
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
 import static io.microsphere.constants.FileConstants.JAR;
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
+import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
 import static io.microsphere.constants.FileConstants.WAR;
 import static io.microsphere.constants.FileConstants.WAR_EXTENSION;
 import static io.microsphere.constants.FileConstants.ZIP;
@@ -56,5 +57,6 @@ public class FileConstantsTest {
         assertEquals(".war", WAR_EXTENSION);
         assertEquals(".ear", EAR_EXTENSION);
         assertEquals(".class", CLASS_EXTENSION);
+        assertEquals(".java", JAVA_EXTENSION);
     }
 }

@@ -21,6 +21,7 @@ import io.microsphere.util.Version;
 
 import java.lang.reflect.Constructor;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 
@@ -101,7 +102,7 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
         return "ConstructorDefinition{" +
                 "since=" + super.since +
                 ", deprecation=" + super.deprecation +
-                ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
+                ", declaredClassName='" + super.getDeclaredClassName() + QUOTE_CHAR +
                 ", declaredClass=" + super.getDeclaredClass() +
                 ", parameterClassName=" + arrayToString(super.parameterClassNames) +
                 ", parameterTypes=" + arrayToString(super.getParameterTypes()) +

@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.logging.LoggerFactory.loadAvailableFactories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,7 +50,7 @@ public class NoOpLoggerFactoryTest {
         logger = factory.createLogger("");
         assertEquals("", logger.getName());
 
-        logger = factory.createLogger(" ");
+        logger = factory.createLogger(SPACE);
         assertEquals("", logger.getName());
 
         logger = factory.createLogger(null);

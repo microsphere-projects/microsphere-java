@@ -44,7 +44,7 @@ import static java.util.stream.Collectors.toSet;
  * @see java.lang.ApplicationShutdownHooks
  * @since 1.0.0
  */
-public abstract class ShutdownHookUtils extends BaseUtils {
+public abstract class ShutdownHookUtils implements Utils {
 
     private static final Logger logger = getLogger(ShutdownHookUtils.class);
 
@@ -158,6 +158,9 @@ public abstract class ShutdownHookUtils extends BaseUtils {
     private static Map<Thread, Thread> shutdownHookThreadsMap() {
         Class<?> applicationShutdownHooksClass = resolveClass(TARGET_CLASS_NAME, getSystemClassLoader());
         return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);
+    }
+
+    private ShutdownHookUtils(){
     }
 
 }

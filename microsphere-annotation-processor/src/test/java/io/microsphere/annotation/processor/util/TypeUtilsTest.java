@@ -92,7 +92,7 @@ import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeMirrors;
 import static io.microsphere.annotation.processor.util.TypeUtils.typeElementFinder;
-import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static io.microsphere.reflect.TypeUtils.getTypeNames;

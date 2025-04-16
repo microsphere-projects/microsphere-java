@@ -74,6 +74,8 @@ import static io.microsphere.util.SystemUtils.JAVA_VM_VENDOR_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VERSION;
 import static io.microsphere.util.SystemUtils.JAVA_VM_VERSION_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.LINE_SEPARATOR_PROPERTY_KEY;
+import static io.microsphere.util.SystemUtils.NATIVE_ENCODING;
+import static io.microsphere.util.SystemUtils.NATIVE_ENCODING_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.OS_ARCH;
 import static io.microsphere.util.SystemUtils.OS_ARCH_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.OS_NAME;
@@ -89,8 +91,8 @@ import static io.microsphere.util.SystemUtils.USER_NAME;
 import static io.microsphere.util.SystemUtils.USER_NAME_PROPERTY_KEY;
 import static java.lang.System.getProperty;
 import static javax.lang.model.SourceVersion.latest;
+import static javax.lang.model.SourceVersion.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link SystemUtils} Test
@@ -108,6 +110,8 @@ public class SystemUtilsTest {
     private static final Field[] IS_JAVA_VERSION_FIELDS = findIsJavaVersionFields();
 
     private static final Map<Integer, String> versionedClassNames = ofMap(
+            24, "java.lang.classfile.Annotation",
+            23, "java.lang.runtime.ExactConversionsSupport",
             22, "java.lang.foreign.Arena",
             21, "java.util.SequencedSet",
             20, "java.lang.reflect.ClassFileFormatVersion",
@@ -117,26 +121,21 @@ public class SystemUtilsTest {
             16, "java.lang.Record",
             15, "java.lang.invoke.MethodHandles.Lookup.ClassOption",
             14, "java.io.Serial",
-            13, "com.sun.source.tree.YieldTree",
-            12, "java.lang.invoke.TypeDescriptor",
+            13, "com.sun.source.util.ParameterNameProvider",
+            12, "java.lang.constant.Constable",
             11, "java.net.http.HttpClient",
             10, "",
             9, "java.lang.ProcessHandle",
             8, "java.util.concurrent.CompletableFuture"
     );
 
-    private static final SourceVersion[] versions = SourceVersion.values();
+    private static final SourceVersion[] versions = values();
 
     private static Field[] findIsJavaVersionFields() {
         return Stream.of(CLASS.getFields())
                 .filter(MemberUtils::isStatic)
                 .filter(field -> field.getName().startsWith(IS_JAVA_VERSION_FIELD_NAME_PREFIX))
                 .toArray(Field[]::new);
-    }
-
-    @Test
-    public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new SystemUtils() {});
     }
 
     @Test
@@ -170,6 +169,7 @@ public class SystemUtilsTest {
         assertEquals("user.home", USER_HOME_PROPERTY_KEY);
         assertEquals("user.dir", USER_DIR_PROPERTY_KEY);
         assertEquals("file.encoding", FILE_ENCODING_PROPERTY_KEY);
+        assertEquals("native.encoding", NATIVE_ENCODING_PROPERTY_KEY);
     }
 
     @Test
@@ -200,6 +200,7 @@ public class SystemUtilsTest {
         assertEquals(getProperty("user.home"), USER_HOME);
         assertEquals(getProperty("user.dir"), USER_DIR);
         assertEquals(getProperty("file.encoding"), FILE_ENCODING);
+        assertEquals(getProperty("native.encoding"), NATIVE_ENCODING);
     }
 
     @Test

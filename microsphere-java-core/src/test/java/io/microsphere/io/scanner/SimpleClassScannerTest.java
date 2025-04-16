@@ -12,6 +12,7 @@ import java.util.Set;
 
 import static io.microsphere.io.scanner.SimpleClassScanner.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -38,8 +39,12 @@ public class SimpleClassScannerTest extends AbstractTestCase {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "javax.annotation.concurrent", false, true);
         assertEquals(4, classesSet.size());
 
+        classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, "java.lang", false, true);
+        assertEquals(getBootstrapClassPaths().isEmpty(), classesSet.isEmpty());
+        
         classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, "i", false, true);
         assertTrue(classesSet.isEmpty());
+
     }
 
     @Test

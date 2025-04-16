@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static io.microsphere.collection.MapUtils.ofMap;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.Assert.assertArrayIndex;
 import static io.microsphere.util.Assert.assertArrayType;
 import static io.microsphere.util.Assert.assertFieldMatchType;
@@ -99,7 +100,7 @@ public class AssertTest extends AbstractTestCase {
 
         assertThrows(IllegalArgumentException.class, () -> assertNotBlank(TEST_NULL_STRING, "null"));
         assertThrows(IllegalArgumentException.class, () -> assertNotBlank("", () -> "empty"));
-        assertThrows(IllegalArgumentException.class, () -> assertNotBlank(" ", () -> "blank"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotBlank(SPACE, () -> "blank"));
     }
 
     @Test
