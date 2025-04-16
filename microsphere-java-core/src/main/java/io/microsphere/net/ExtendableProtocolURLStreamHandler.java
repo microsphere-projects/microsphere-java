@@ -354,7 +354,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     }
 
     static void appendHandlePackage(String packageName) {
-        String handlePackage = packageName.substring(0, packageName.lastIndexOf('.'));
+        String handlePackage = packageName.substring(0, packageName.lastIndexOf(DOT_CHAR));
         Set<String> packages = getHandlePackages();
 
         if (packages.contains(handlePackage)) {
