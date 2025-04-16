@@ -99,6 +99,7 @@ import static io.microsphere.constants.Constants.ZIP;
 import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
 import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
+import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
 import static java.io.File.pathSeparator;
 import static java.io.File.separator;
 import static java.lang.System.lineSeparator;
@@ -145,6 +146,7 @@ public class ConstantsTest {
         assertEquals("war", WAR_PROTOCOL);
         assertEquals("ear", EAR_PROTOCOL);
         assertEquals("classpath", CLASSPATH_PROTOCOL);
+        assertEquals("console", CONSOLE_PROTOCOL);
 
         assertEquals("!/", ARCHIVE_ENTRY_SEPARATOR);
         assertEquals(separator, FILE_SEPARATOR);
