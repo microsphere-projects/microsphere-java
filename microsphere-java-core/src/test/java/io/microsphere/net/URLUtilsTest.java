@@ -24,6 +24,7 @@ import java.util.Map;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
+import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
@@ -108,7 +109,7 @@ public class URLUtilsTest extends AbstractTestCase {
     @BeforeAll
     public static void beforeAll() throws Throwable {
         userDirURL = get(USER_DIR).toUri().toURL();
-        classPathURL = getResource(getClassLoader(URLUtilsTest.class), "/");
+        classPathURL = getResource(getClassLoader(URLUtilsTest.class), SLASH);
         classFileURL = getClassResource(StringUtils.class);
         classArchiveEntryURL = getClassResource(Nonnull.class);
     }
@@ -344,10 +345,10 @@ public class URLUtilsTest extends AbstractTestCase {
     @Test
     public void testBuildURIOnEmpty() {
         String path = buildURI();
-        assertEquals("/", path);
+        assertEquals(SLASH, path);
 
         path = buildURI(null);
-        assertEquals("/", path);
+        assertEquals(SLASH, path);
     }
 
     @Test
