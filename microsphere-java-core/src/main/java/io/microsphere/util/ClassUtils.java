@@ -896,4 +896,7 @@ public abstract class ClassUtils implements Utils {
     static boolean isSynthetic(int modifiers) {
         return SYNTHETIC.matches(modifiers);
     }
+
+    private ClassUtils() {
+    }
 }
