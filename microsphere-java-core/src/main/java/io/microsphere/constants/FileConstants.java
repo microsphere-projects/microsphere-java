@@ -73,4 +73,9 @@ public interface FileConstants {
      * Class File extension : ".class"
      */
     String CLASS_EXTENSION = FILE_EXTENSION + CLASS;
+
+    /**
+     * Java File extension : ".java"
+     */
+    String JAVA_EXTENSION = FILE_EXTENSION + "java";
 }
