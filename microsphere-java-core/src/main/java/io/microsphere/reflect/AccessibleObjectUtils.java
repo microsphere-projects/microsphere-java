@@ -25,6 +25,7 @@ import java.lang.reflect.Member;
 
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MemberUtils.asMember;
@@ -151,7 +152,7 @@ public abstract class AccessibleObjectUtils implements Utils {
     private static void handleInaccessibleObjectExceptionIfFound(Throwable e) {
         if (isInaccessibleObjectException(e)) {
             String rawErrorMessage = e.getMessage();
-            String moduleName = substringBetween(rawErrorMessage, "module ", " ");
+            String moduleName = substringBetween(rawErrorMessage, "module ", SPACE);
             String packageName = substringBetween(rawErrorMessage, "opens ", "\"");
             // JDK 16+ : JEP 396: Strongly Encapsulate JDK Internals by Default - https://openjdk.org/jeps/396
             StringBuilder errorMessageBuilder = new StringBuilder("JEP 396: Strongly Encapsulate JDK Internals by Default since JDK 16 - https://openjdk.org/jeps/396.");
