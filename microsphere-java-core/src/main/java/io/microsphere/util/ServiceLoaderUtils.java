@@ -369,4 +369,6 @@ public abstract class ServiceLoaderUtils implements Utils {
         return serviceList;
     }
 
+    private ServiceLoaderUtils() {
+    }
 }
