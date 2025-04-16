@@ -3,6 +3,8 @@
  */
 package io.microsphere.filter;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
+
 /**
  * {@link PackageNameClassFilter}
  *
@@ -25,7 +27,7 @@ public class PackageNameClassFilter implements ClassFilter {
     public PackageNameClassFilter(String packageName, boolean includedSubPackages) {
         this.packageName = packageName;
         this.includedSubPackages = includedSubPackages;
-        this.subPackageNamePrefix = includedSubPackages ? packageName + "." : null;
+        this.subPackageNamePrefix = includedSubPackages ? packageName + DOT : null;
     }
 
     @Override
