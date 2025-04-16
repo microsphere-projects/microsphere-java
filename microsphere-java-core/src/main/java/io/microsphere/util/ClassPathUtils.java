@@ -117,4 +117,7 @@ public abstract class ClassPathUtils implements Utils {
         }
         return location;
     }
+
+    private ClassPathUtils() {
+    }
 }
