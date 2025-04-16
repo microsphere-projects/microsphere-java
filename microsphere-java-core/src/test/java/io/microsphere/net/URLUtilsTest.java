@@ -28,6 +28,7 @@ import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.ProtocolConstants.FTP_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.HTTP_PROTOCOL;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
@@ -448,7 +449,7 @@ public class URLUtilsTest extends AbstractTestCase {
     public void testResolveProtocol() {
         assertNull(resolveProtocol(null));
         assertNull(resolveProtocol(""));
-        assertNull(resolveProtocol(" "));
+        assertNull(resolveProtocol(SPACE));
         assertNull(resolveProtocol(":"));
         assertNull(resolveProtocol(" :"));
         assertNull(resolveProtocol(" a:"));
