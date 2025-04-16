@@ -276,4 +276,7 @@ public abstract class MapUtils implements Utils {
             throw new UnsupportedOperationException("ReadOnly Entry can't be modified");
         }
     }
+
+    private MapUtils() {
+    }
 }

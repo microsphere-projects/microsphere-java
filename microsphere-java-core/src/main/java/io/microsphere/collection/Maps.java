@@ -16,9 +16,12 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.util.Utils;
+
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
 
+import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyMap;
@@ -31,7 +34,7 @@ import static java.util.Collections.singletonMap;
  * @see MapUtils
  * @since 1.0.0
  */
-public abstract class Maps extends MapUtils {
+public abstract class Maps implements Utils {
 
     /**
      * The {@link MethodHandle} of {@link Map#of()} since JDK 9
