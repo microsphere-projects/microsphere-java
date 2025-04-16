@@ -98,6 +98,7 @@ import static io.microsphere.constants.Constants.WILDCARD_CHAR;
 import static io.microsphere.constants.Constants.ZIP;
 import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
+import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
 import static java.io.File.pathSeparator;
 import static java.io.File.separator;
 import static java.lang.System.lineSeparator;
@@ -124,6 +125,7 @@ public class ConstantsTest {
         assertEquals(".war", WAR_EXTENSION);
         assertEquals(".ear", EAR_EXTENSION);
         assertEquals(".class", CLASS_EXTENSION);
+        assertEquals(".java", JAVA_EXTENSION);
 
         assertEquals('/', SLASH_CHAR);
         assertEquals('\\', BACK_SLASH_CHAR);
