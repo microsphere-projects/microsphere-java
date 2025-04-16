@@ -60,12 +60,12 @@ public interface FileConstants {
     String JAR_EXTENSION = FILE_EXTENSION + JAR;
 
     /**
-     * War File extension : ".jar"
+     * War File extension : ".war"
      */
     String WAR_EXTENSION = FILE_EXTENSION + WAR;
 
     /**
-     * Ear File extension : ".jar"
+     * Ear File extension : ".ear"
      */
     String EAR_EXTENSION = FILE_EXTENSION + EAR;
 
