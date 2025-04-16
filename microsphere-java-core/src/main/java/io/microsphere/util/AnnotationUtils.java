@@ -463,5 +463,7 @@ public abstract class AnnotationUtils implements Utils {
         return CALLER_SENSITIVE_ANNOTATION_CLASS != null;
     }
 
+    private AnnotationUtils() {
+    }
 
 }
