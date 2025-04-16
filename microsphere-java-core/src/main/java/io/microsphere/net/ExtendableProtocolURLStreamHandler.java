@@ -33,6 +33,7 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
+import static io.microsphere.constants.SymbolConstants.QUOTE;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 import static io.microsphere.net.URLUtils.HANDLER_CONVENTION_CLASS_NAME;
 import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
@@ -332,7 +333,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     static void assertClassName(Class<?> type) {
         String simpleClassName = type.getSimpleName();
         if (!HANDLER_CONVENTION_CLASS_NAME.equals(simpleClassName)) {
-            throw new IllegalArgumentException("The implementation class must name '" + HANDLER_CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + "'");
+            throw new IllegalArgumentException("The implementation class must name '" + HANDLER_CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + QUOTE);
         }
     }
 
@@ -343,7 +344,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         }
         String packagePrefix = DEFAULT_HANDLER_PACKAGE_PREFIX;
         if (className.startsWith(packagePrefix)) {
-            throw new IllegalArgumentException("The Handler class must not be present in the builtin package : '" + packagePrefix + "'");
+            throw new IllegalArgumentException("The Handler class must not be present in the builtin package : '" + packagePrefix + QUOTE);
         }
     }
 
