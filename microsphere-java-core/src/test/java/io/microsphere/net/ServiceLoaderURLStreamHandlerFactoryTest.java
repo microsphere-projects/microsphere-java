@@ -25,7 +25,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandler;
 
+import static io.microsphere.constants.ProtocolConstants.CLASSPATH_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.classpath.HandlerTest.TEST_PROPERTIES_CLASSPATH_URL;
@@ -55,13 +58,13 @@ public class ServiceLoaderURLStreamHandlerFactoryTest {
         URLStreamHandler handler = factory.createURLStreamHandler(FILE_PROTOCOL);
         assertEquals("sun.net.www.protocol.file.Handler", handler.getClass().getName());
 
-        handler = factory.createURLStreamHandler("jar");
+        handler = factory.createURLStreamHandler(JAR_PROTOCOL);
         assertEquals("sun.net.www.protocol.jar.Handler", handler.getClass().getName());
 
-        handler = factory.createURLStreamHandler("classpath");
+        handler = factory.createURLStreamHandler(CLASSPATH_PROTOCOL);
         assertEquals("io.microsphere.net.classpath.Handler", handler.getClass().getName());
 
-        handler = factory.createURLStreamHandler("console");
+        handler = factory.createURLStreamHandler(CONSOLE_PROTOCOL);
         assertEquals("io.microsphere.net.console.Handler", handler.getClass().getName());
     }
 
