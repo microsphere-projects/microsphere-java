@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandler;
 
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.classpath.HandlerTest.TEST_PROPERTIES_CLASSPATH_URL;
@@ -51,7 +52,7 @@ public class ServiceLoaderURLStreamHandlerFactoryTest {
     @Test
     public void test() {
         ServiceLoaderURLStreamHandlerFactory factory = new ServiceLoaderURLStreamHandlerFactory();
-        URLStreamHandler handler = factory.createURLStreamHandler("file");
+        URLStreamHandler handler = factory.createURLStreamHandler(FILE_PROTOCOL);
         assertEquals("sun.net.www.protocol.file.Handler", handler.getClass().getName());
 
         handler = factory.createURLStreamHandler("jar");
