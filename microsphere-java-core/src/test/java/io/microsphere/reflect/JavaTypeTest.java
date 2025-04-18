@@ -106,43 +106,81 @@ public class JavaTypeTest {
 
     @Test
     public void testForClass() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForClass.class);
+        testAbstractJavaTypeTest(JavaTypeTestForClass.class);
     }
 
     @Test
     public void testForGenericArrayType() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForGenericArrayType.class);
+        testAbstractJavaTypeTest(JavaTypeTestForGenericArrayType.class);
     }
 
     @Test
     public void testForObjectClass() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForObjectClass.class);
+        testAbstractJavaTypeTest(JavaTypeTestForObjectClass.class);
     }
 
     @Test
     public void testForParameterizedType() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForParameterizedType.class);
+        testAbstractJavaTypeTest(JavaTypeTestForParameterizedType.class);
 
     }
 
     @Test
     public void testForTypeVariable() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForTypeVariable.class);
+        testAbstractJavaTypeTest(JavaTypeTestForTypeVariable.class);
     }
 
     @Test
     public void testForUnknown() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForUnknown.class);
+        testAbstractJavaTypeTest(JavaTypeTestForUnknown.class);
     }
 
     @Test
     public void testForWildcardType() throws Throwable {
-        testBaseJavaTypeTest(JavaTypeTestForWildcardType.class);
+        testAbstractJavaTypeTest(JavaTypeTestForWildcardType.class);
     }
 
-    private void testBaseJavaTypeTest(Class<? extends BaseJavaTypeTest> testClass) throws Throwable {
-        BaseJavaTypeTest.beforeAll();
-        BaseJavaTypeTest test = testClass.getConstructor().newInstance();
+    @Test
+    public void testKindForClass() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForClass.class);
+    }
+
+    @Test
+    public void testKindForGenericArrayType() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForGenericArrayType.class);
+    }
+
+    @Test
+    public void testKindForParameterizedType() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForParameterizedType.class);
+    }
+
+    @Test
+    public void testKindForTypeVariable() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForTypeVariable.class);
+    }
+
+    @Test
+    public void testKindForUnknown() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForUnknown.class);
+    }
+
+    @Test
+    public void testKindForWildcardType() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForWildcardType.class);
+    }
+
+    private void testAbstractJavaTypeKindTest(Class<? extends AbstractJavaTypeKindTest> testClass) throws Throwable {
+        AbstractJavaTypeKindTest test = testClass.getConstructor().newInstance();
+        test.testGetSuperType();
+        test.testGetRawType();
+        test.testGetInterfaces();
+        test.testGetGenericTypes();
+    }
+
+    private void testAbstractJavaTypeTest(Class<? extends AbstractJavaTypeTest> testClass) throws Throwable {
+        AbstractJavaTypeTest.beforeAll();
+        AbstractJavaTypeTest test = testClass.getConstructor().newInstance();
         test.init();
         test.test();
     }
