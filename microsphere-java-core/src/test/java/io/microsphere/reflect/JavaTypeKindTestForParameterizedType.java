@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ParameterizedType
  * @since 1.0.0
  */
-public class JavaTypeKindTestForParameterizedType {
+public class JavaTypeKindTestForParameterizedType extends AbstractJavaTypeKindTest {
 
     @Test
     public void testGetSuperType() {
