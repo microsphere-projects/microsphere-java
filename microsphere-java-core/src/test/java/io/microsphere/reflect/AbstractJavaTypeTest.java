@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since JavaType
  */
-public abstract class BaseJavaTypeTest<T> {
+public abstract class AbstractJavaTypeTest<T> {
 
     protected JavaType javaType;
 
@@ -91,14 +91,14 @@ public abstract class BaseJavaTypeTest<T> {
         assertNull(searchInterfaceType(Serializable.class, AbstractList.class));
     }
 
-    public BaseJavaTypeTest() {
+    public AbstractJavaTypeTest() {
         this.type = resolveType();
     }
 
     protected Type resolveType() {
         ParameterizedType superType = (ParameterizedType) this.getClass().getGenericSuperclass();
         Type superRawType;
-        while ((superRawType = superType.getRawType()) != BaseJavaTypeTest.class) {
+        while ((superRawType = superType.getRawType()) != AbstractJavaTypeTest.class) {
             superType = (ParameterizedType) ((Class) superRawType).getGenericSuperclass();
         }
         return superType.getActualTypeArguments()[0];

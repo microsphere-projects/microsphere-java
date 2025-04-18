@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link BaseJavaTypeTest} for {@link GenericArrayType}
+ * {@link AbstractJavaTypeTest} for {@link GenericArrayType}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see JavaType
@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see GenericArrayType
  * @since 1.0.0
  */
-public class JavaTypeTestForGenericArrayType extends BaseJavaTypeTest<C<String>[]> {
+public class JavaTypeTestForGenericArrayType extends AbstractJavaTypeTest<C<String>[]> {
 
     @Override
     protected void testGetSuperType(JavaType superType) {

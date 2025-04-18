@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see GenericArrayType
  * @since 1.0.0
  */
-public class JavaTypeKindTestForGenericArrayType {
+public class JavaTypeKindTestForGenericArrayType extends AbstractJavaTypeKindTest {
 
     @Test
     public void testGetSuperType() {

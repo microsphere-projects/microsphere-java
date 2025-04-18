@@ -42,9 +42,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see Class
  * @since 1.0.0
  */
-public class JavaTypeKindTestForClass {
+public class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
 
     @Test
+    @Override
     public void testGetSuperType() {
         Type superType = CLASS.getSuperType(Object.class);
         assertNull(superType);
@@ -54,6 +55,7 @@ public class JavaTypeKindTestForClass {
     }
 
     @Test
+    @Override
     public void testGetRawType() {
         Type rawType = CLASS.getRawType(Object.class);
         assertSame(Object.class, rawType);
@@ -63,6 +65,7 @@ public class JavaTypeKindTestForClass {
     }
 
     @Test
+    @Override
     public void testGetInterfaces() {
         Type[] interfaces = CLASS.getInterfaces(Object.class);
         assertArrayEquals(EMPTY_TYPE_ARRAY, interfaces);
@@ -73,6 +76,7 @@ public class JavaTypeKindTestForClass {
     }
 
     @Test
+    @Override
     public void testGetGenericTypes() {
         Type[] genericTypes = CLASS.getGenericTypes(from(Object.class));
         assertArrayEquals(EMPTY_TYPE_ARRAY, genericTypes);

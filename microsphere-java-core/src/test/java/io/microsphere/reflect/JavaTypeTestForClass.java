@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link BaseJavaTypeTest} for {@link Class}
+ * {@link AbstractJavaTypeTest} for {@link Class}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see JavaType
@@ -44,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see Class
  * @since 1.0.0
  */
-public class JavaTypeTestForClass extends BaseJavaTypeTest<D> {
+public class JavaTypeTestForClass extends AbstractJavaTypeTest<D> {
 
     @Override
     protected void testGetSuperType(JavaType superType) {

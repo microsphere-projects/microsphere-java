@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see Kind#UNKNOWN
  * @since 1.0.0
  */
-public class JavaTypeKindTestForUnknown {
+public class JavaTypeKindTestForUnknown extends AbstractJavaTypeKindTest {
 
     @Test
     public void testGetSuperType() {

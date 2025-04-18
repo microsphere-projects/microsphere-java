@@ -28,14 +28,14 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link BaseJavaTypeTest} for Unknown
+ * {@link AbstractJavaTypeTest} for Unknown
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see JavaType
  * @see JavaType.Kind#UNKNOWN
  * @since 1.0.0
  */
-public class JavaTypeTestForUnknown extends BaseJavaTypeTest {
+public class JavaTypeTestForUnknown extends AbstractJavaTypeTest {
 
     @Override
     protected Type resolveType() {
