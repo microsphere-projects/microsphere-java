@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.lang.Long.MAX_VALUE;
 import static java.lang.Long.getLong;
 import static java.lang.Runtime.getRuntime;
@@ -42,7 +43,7 @@ public class ProcessExecutor {
      */
     public ProcessExecutor(String command, String... options) {
         StringBuilder optionsBuilder = new StringBuilder();
-        if (options != null) {
+        if (isNotEmpty(options)) {
             for (String argument : options) {
                 optionsBuilder.append(SPACE_CHAR).append(argument);
             }
