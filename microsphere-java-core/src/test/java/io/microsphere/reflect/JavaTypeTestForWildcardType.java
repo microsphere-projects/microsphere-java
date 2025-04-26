@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link BaseJavaTypeTest} for {@link WildcardType}
+ * {@link AbstractJavaTypeTest} for {@link WildcardType}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see JavaType
@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see WildcardType
  * @since 1.0.0
  */
-public class JavaTypeTestForWildcardType extends BaseJavaTypeTest {
+public class JavaTypeTestForWildcardType extends AbstractJavaTypeTest {
 
     @Override
     protected Type resolveType() {
