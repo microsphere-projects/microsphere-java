@@ -10,7 +10,6 @@ import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
  * File Constants
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @since 1.0.0
  */
 public interface FileConstants {
@@ -61,12 +60,12 @@ public interface FileConstants {
     String JAR_EXTENSION = FILE_EXTENSION + JAR;
 
     /**
-     * War File extension : ".jar"
+     * War File extension : ".war"
      */
     String WAR_EXTENSION = FILE_EXTENSION + WAR;
 
     /**
-     * Ear File extension : ".jar"
+     * Ear File extension : ".ear"
      */
     String EAR_EXTENSION = FILE_EXTENSION + EAR;
 
@@ -74,4 +73,9 @@ public interface FileConstants {
      * Class File extension : ".class"
      */
     String CLASS_EXTENSION = FILE_EXTENSION + CLASS;
+
+    /**
+     * Java File extension : ".java"
+     */
+    String JAVA_EXTENSION = FILE_EXTENSION + "java";
 }

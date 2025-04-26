@@ -1,38 +1,39 @@
 package io.microsphere.util;
 
-import io.microsphere.lang.Prioritized;
+import io.microsphere.logging.Logger;
 
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
-import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.lang.Prioritized.COMPARATOR;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static java.lang.Boolean.getBoolean;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
+import static java.util.ServiceLoader.load;
 
 /**
  * {@link ServiceLoader} Utility
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ServiceLoader
  * @since 1.0.0
  */
-public abstract class ServiceLoaderUtils extends BaseUtils {
+public abstract class ServiceLoaderUtils implements Utils {
 
-    private static final Map<ClassLoader, Map<Class<?>, ServiceLoader<?>>> serviceLoadersCache = new ConcurrentHashMap<>();
+    private static final Logger logger = getLogger(ServiceLoaderUtils.class);
 
-    private static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
+    static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
+
+    private static final ConcurrentMap<Class<?>, List<?>> servicesCache = newConcurrentHashMap();
 
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
@@ -49,7 +50,6 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
     public static <S> List<S> loadServicesList(Class<S> serviceType) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType));
     }
-
 
     /**
      * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
@@ -101,7 +101,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      *                                  in the configuration file /META-INF/services/<code>serviceType</code>
      */
     public static <S> List<S> loadServicesList(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
-        return unmodifiableList(loadServicesList0(serviceType, classLoader, cached));
+        return unmodifiableList(loadServicesAsList(serviceType, classLoader, cached));
     }
 
     /**
@@ -169,7 +169,7 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      *                                  in the configuration file /META-INF/services/<code>serviceType</code>
      */
     public static <S> S[] loadServices(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
-        return asArray(loadServicesList0(serviceType, classLoader, cached), serviceType);
+        return asArray(loadServicesAsList(serviceType, classLoader, cached), serviceType);
     }
 
     /**
@@ -316,19 +316,8 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
         return loadService(serviceType, classLoader, cached, false);
     }
 
-    public static <S> ServiceLoader<S> load(Class<S> serviceType, ClassLoader classLoader, boolean cached) {
-        if (cached) {
-            Map<Class<?>, ServiceLoader<?>> serviceLoadersMap =
-                    serviceLoadersCache.computeIfAbsent(classLoader, cl -> newConcurrentHashMap());
-            return (ServiceLoader<S>) serviceLoadersMap.computeIfAbsent(serviceType, type ->
-                    ServiceLoader.load(serviceType, classLoader));
-        }
-        return ServiceLoader.load(serviceType, classLoader);
-    }
-
-
     private static <S> S loadService(Class<S> serviceType, ClassLoader classLoader, boolean cached, boolean first) {
-        List<S> serviceList = loadServicesList0(serviceType, classLoader, cached);
+        List<S> serviceList = loadServicesAsList(serviceType, classLoader, cached);
         int index = first ? 0 : serviceList.size() - 1;
         return serviceList.get(index);
     }
@@ -343,23 +332,43 @@ public abstract class ServiceLoaderUtils extends BaseUtils {
      * @return Load all instances of service type
      * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
      */
-    private static <S> List<S> loadServicesList0(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
-        if (classLoader == null) {
-            classLoader = getDefaultClassLoader();
+    static <S> List<S> loadServicesAsList(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+        final List<S> serviceList;
+        if (cached) {
+            serviceList = (List<S>) servicesCache.computeIfAbsent(serviceType, type -> loadServicesAsList(type, classLoader));
+        } else {
+            serviceList = loadServicesAsList(serviceType, classLoader);
         }
-        ServiceLoader<S> serviceLoader = load(serviceType, classLoader, cached);
-        Iterator<S> iterator = serviceLoader.iterator();
-        List<S> serviceList = newLinkedList(toIterable(iterator));
 
-        if (serviceList.isEmpty()) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("Loaded the service[type : '{}' , cached : {}] list : {}", serviceType, cached, serviceList);
+        }
+
+        return serviceList;
+    }
+
+    static <S> List<S> loadServicesAsList(Class<S> serviceType, ClassLoader classLoader) {
+        if (classLoader == null) {
+            classLoader = getClassLoader(serviceType);
+        }
+
+        ServiceLoader<S> serviceLoader = load(serviceType, classLoader);
+
+        Iterator<S> iterator = serviceLoader.iterator();
+
+        if (!iterator.hasNext()) {
             String className = serviceType.getName();
             String message = format("No Service interface[type : %s] implementation was defined in service loader configuration file[/META-INF/services/%s] under ClassLoader[%s]", className, className, classLoader);
             throw new IllegalArgumentException(message);
         }
 
-        sort(serviceList, Prioritized.COMPARATOR);
+        List<S> serviceList = newLinkedList(iterator);
+
+        sort(serviceList, COMPARATOR);
 
         return serviceList;
     }
 
+    private ServiceLoaderUtils() {
+    }
 }

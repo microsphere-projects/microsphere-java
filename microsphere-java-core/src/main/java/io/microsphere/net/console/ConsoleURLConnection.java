@@ -23,6 +23,9 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import static java.lang.System.in;
+import static java.lang.System.out;
+
 /**
  * {@link Console} {@link URLConnection}
  *
@@ -47,11 +50,11 @@ public class ConsoleURLConnection extends URLConnection {
 
     @Override
     public InputStream getInputStream() throws IOException {
-        return System.in;
+        return in;
     }
 
     @Override
     public OutputStream getOutputStream() throws IOException {
-        return System.out;
+        return out;
     }
 }

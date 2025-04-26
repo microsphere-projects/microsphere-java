@@ -92,7 +92,7 @@ public class Configurer<T> {
     }
 
 
-    public Configurer<T> on(Predicate<T> predicate) {
+    public Configurer<T> on(Predicate<? super T> predicate) {
         if (value != null) {
             if (!predicate.test(value)) {
                 logBuilder.append(format(", the config value[current：'{}'] does not match", value));

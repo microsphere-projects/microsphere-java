@@ -16,14 +16,16 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Version;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;
+import static java.util.Objects.hash;
 
 /**
  * The info class for deprecation
@@ -57,11 +59,6 @@ public final class Deprecation implements Serializable {
         this.reason = source.reason;
         this.link = source.link;
         this.level = source.level;
-    }
-
-    Deprecation(@Nullable String since, @Nullable String replacement, @Nullable String reason,
-                @Nullable String link, @Nullable Level level) {
-        this(Version.of(since), replacement, reason, link, level);
     }
 
     Deprecation(@Nullable Version since, @Nullable String replacement, @Nullable String reason,
@@ -112,16 +109,16 @@ public final class Deprecation implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(since, replacement, reason, link, level);
+        return hash(since, replacement, reason, link, level);
     }
 
     @Override
     public String toString() {
         return "Deprecation{" +
-                "since='" + since + '\'' +
-                ", replacement='" + replacement + '\'' +
-                ", reason='" + reason + '\'' +
-                ", link='" + link + '\'' +
+                "since='" + since + QUOTE_CHAR +
+                ", replacement='" + replacement + QUOTE_CHAR +
+                ", reason='" + reason + QUOTE_CHAR +
+                ", link='" + link + QUOTE_CHAR +
                 ", level=" + level +
                 '}';
     }
@@ -129,7 +126,7 @@ public final class Deprecation implements Serializable {
     /**
      * Deprecation Level
      */
-    public static enum Level {
+    public enum Level {
 
         /**
          * Default

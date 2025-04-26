@@ -25,7 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * {@link ClassPathUtils} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
@@ -37,7 +36,7 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         assertNotNull(bootstrapClassPaths);
         RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
         assertEquals(runtimeMXBean.isBootClassPathSupported(), !bootstrapClassPaths.isEmpty());
-        info(bootstrapClassPaths);
+        log(bootstrapClassPaths);
     }
 
     @Test
@@ -45,19 +44,18 @@ public class ClassPathUtilsTest extends AbstractTestCase {
         Set<String> classPaths = getClassPaths();
         assertNotNull(classPaths);
         assertFalse(classPaths.isEmpty());
-        info(classPaths);
+        log(classPaths);
     }
 
     @Test
     public void testGetRuntimeClassLocation() {
-        URL location = null;
-        location = getRuntimeClassLocation(String.class);
+        URL location = getRuntimeClassLocation(String.class);
         assertNotNull(location);
-        info(location);
+        log(location);
 
         location = getRuntimeClassLocation(getClass());
         assertNotNull(location);
-        info(location);
+        log(location);
 
         //Primitive type
         location = getRuntimeClassLocation(int.class);
@@ -70,11 +68,18 @@ public class ClassPathUtilsTest extends AbstractTestCase {
 
         Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
-            if (!isLoadedClass(classLoader, className)) {
+            if (!isLoadedClass(TEST_CLASS_LOADER, className)) {
                 location = getRuntimeClassLocation(className);
                 assertNull(location);
             }
         }
 
+    }
+
+    @Test
+    public void testGetRuntimeClassLocationWithClassName() {
+        URL location = getRuntimeClassLocation(String.class.getName());
+        assertNotNull(location);
+        log(location);
     }
 }

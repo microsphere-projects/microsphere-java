@@ -16,23 +16,25 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.util.Utils;
+
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
+import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
-import static io.microsphere.annotation.processor.util.MemberUtils.matches;
-import static io.microsphere.annotation.processor.util.TypeUtils.getHierarchicalTypes;
+import static io.microsphere.annotation.processor.util.MemberUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.ElementKind.ENUM_CONSTANT;
 import static javax.lang.model.element.ElementKind.FIELD;
@@ -42,52 +44,33 @@ import static javax.lang.model.util.ElementFilter.fieldsIn;
 /**
  * The utilities class for the field in the package "javax.lang.model."
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public interface FieldUtils {
-
-    static List<VariableElement> getDeclaredFields(Element element, Predicate<VariableElement>... fieldFilters) {
-        return element == null ? emptyList() : getDeclaredFields(element.asType(), fieldFilters);
-    }
-
-    static List<VariableElement> getDeclaredFields(Element element) {
-        return getDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static List<VariableElement> getDeclaredFields(TypeMirror type, Predicate<VariableElement>... fieldFilters) {
-        return filterAll(fieldsIn(getDeclaredMembers(type)), fieldFilters);
-    }
-
-    static List<VariableElement> getDeclaredFields(TypeMirror type) {
-        return getDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static List<VariableElement> getAllDeclaredFields(Element element, Predicate<VariableElement>... fieldFilters) {
-        return element == null ? emptyList() : getAllDeclaredFields(element.asType(), fieldFilters);
-    }
-
-    static List<VariableElement> getAllDeclaredFields(Element element) {
-        return getAllDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
-    }
-
-    static List<VariableElement> getAllDeclaredFields(TypeMirror type, Predicate<VariableElement>... fieldFilters) {
-        return getHierarchicalTypes(type)
-                .stream()
-                .map(t -> getDeclaredFields(t, fieldFilters))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-    }
-
-    static List<VariableElement> getAllDeclaredFields(TypeMirror type) {
-        return getAllDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
-    }
+public interface FieldUtils extends Utils {
 
     static VariableElement getDeclaredField(Element element, String fieldName) {
         return element == null ? null : getDeclaredField(element.asType(), fieldName);
     }
 
     static VariableElement getDeclaredField(TypeMirror type, String fieldName) {
-        return filterFirst(getDeclaredFields(type, field -> fieldName.equals(field.getSimpleName().toString())));
+        return filterFirst(findDeclaredFields(type, field -> fieldName.equals(field.getSimpleName().toString())));
+    }
+
+    static List<VariableElement> getDeclaredFields(Element element) {
+        return findDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<VariableElement> getDeclaredFields(TypeMirror type) {
+        return findDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<VariableElement> getAllDeclaredFields(Element element) {
+        return findAllDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
+    }
+
+    static List<VariableElement> getAllDeclaredFields(TypeMirror type) {
+        return findAllDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
     }
 
     static VariableElement findField(Element element, String fieldName) {
@@ -95,7 +78,45 @@ public interface FieldUtils {
     }
 
     static VariableElement findField(TypeMirror type, String fieldName) {
-        return filterFirst(getAllDeclaredFields(type, field -> equals(field, fieldName)));
+        return filterFirst(findAllDeclaredFields(type, field -> equalsFieldName(field, fieldName)));
+    }
+
+    static List<VariableElement> findDeclaredFields(Element element, Predicate<? super VariableElement>... fieldFilters) {
+        return element == null ? emptyList() : findDeclaredFields(element.asType(), fieldFilters);
+    }
+
+    static List<VariableElement> findDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
+        return filterDeclaredFields(type, false, fieldFilters);
+    }
+
+    static List<VariableElement> findAllDeclaredFields(Element element, Predicate<? super VariableElement>... fieldFilters) {
+        return element == null ? emptyList() : findAllDeclaredFields(element.asType(), fieldFilters);
+    }
+
+    static List<VariableElement> findAllDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
+        return filterDeclaredFields(type, true, fieldFilters);
+    }
+
+    static List<VariableElement> filterDeclaredFields(TypeMirror type, boolean all, Predicate<? super VariableElement>... fieldFilters) {
+        if (type == null) {
+            return emptyList();
+        }
+
+        List<? extends Element> declaredMembers = all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+        if (isEmpty(declaredMembers)) {
+            return emptyList();
+        }
+
+        List<VariableElement> fields = fieldsIn(declaredMembers);
+        if (isEmpty(fields)) {
+            return emptyList();
+        }
+
+        if (isNotEmpty(fieldFilters)) {
+            fields = filterAll(fields, fieldFilters);
+        }
+
+        return isEmpty(fields) ? emptyList() : fields;
     }
 
     /**
@@ -116,7 +137,7 @@ public interface FieldUtils {
     }
 
     static boolean isField(VariableElement field) {
-        return matches(field, FIELD) || isEnumMemberField(field);
+        return matchesElementKind(field, FIELD) || isEnumMemberField(field);
     }
 
     static boolean isField(VariableElement field, Modifier... modifiers) {
@@ -124,7 +145,7 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> getNonStaticFields(TypeMirror type) {
-        return getDeclaredFields(type, FieldUtils::isNonStaticField);
+        return findDeclaredFields(type, FieldUtils::isNonStaticField);
     }
 
     static List<VariableElement> getNonStaticFields(Element element) {
@@ -132,15 +153,14 @@ public interface FieldUtils {
     }
 
     static List<VariableElement> getAllNonStaticFields(TypeMirror type) {
-        return getAllDeclaredFields(type, FieldUtils::isNonStaticField);
+        return findAllDeclaredFields(type, FieldUtils::isNonStaticField);
     }
 
     static List<VariableElement> getAllNonStaticFields(Element element) {
         return element == null ? emptyList() : getAllNonStaticFields(element.asType());
     }
 
-    static boolean equals(VariableElement field, CharSequence fieldName) {
+    static boolean equalsFieldName(VariableElement field, CharSequence fieldName) {
         return field != null && fieldName != null && field.getSimpleName().toString().equals(fieldName.toString());
     }
-
 }

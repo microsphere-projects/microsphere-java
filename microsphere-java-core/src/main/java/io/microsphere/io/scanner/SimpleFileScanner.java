@@ -1,10 +1,10 @@
 package io.microsphere.io.scanner;
 
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.filter.TrueFileFilter;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -36,7 +36,6 @@ public class SimpleFileScanner {
      * @param recursive     is recursive on sub directories
      * @return Read-only {@link Set} , and the order be dependent on {@link File#listFiles()} implementation
      * @see IOFileFilter
-     * @since 1.0.0
      */
     @Nonnull
     public Set<File> scan(File rootDirectory, boolean recursive) {
@@ -51,7 +50,6 @@ public class SimpleFileScanner {
      * @param ioFileFilter  {@link IOFileFilter}
      * @return Read-only {@link Set} , and the order be dependent on {@link File#listFiles()} implementation
      * @see IOFileFilter
-     * @since 1.0.0
      */
     @Nonnull
     public Set<File> scan(File rootDirectory, boolean recursive, IOFileFilter ioFileFilter) {

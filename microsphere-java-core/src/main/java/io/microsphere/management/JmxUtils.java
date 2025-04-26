@@ -16,11 +16,11 @@
  */
 package io.microsphere.management;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.management.AttributeNotFoundException;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
@@ -39,7 +39,6 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,6 +46,7 @@ import java.util.Optional;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
@@ -59,7 +59,7 @@ import static java.util.Optional.ofNullable;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class JmxUtils extends BaseUtils {
+public abstract class JmxUtils implements Utils {
 
     private static final Logger logger = getLogger(JmxUtils.class);
 
@@ -316,10 +316,8 @@ public abstract class JmxUtils extends BaseUtils {
         Object attributeValue = null;
         try {
             attributeValue = mBeanServer.getAttribute(objectName, attributeName);
-        } catch (InstanceNotFoundException e) {
-            handleInstanceNotFoundException(e, mBeanServer, objectName);
-        } catch (ReflectionException e) {
-            handleReflectionException(e, mBeanServer, objectName);
+        } catch (ReflectionException | InstanceNotFoundException e) {
+            handleException(e, mBeanServer, objectName);
         } catch (Throwable e) {
             throw new RuntimeException(e);
         }
@@ -330,44 +328,18 @@ public abstract class JmxUtils extends BaseUtils {
         MBeanInfo mBeanInfo = null;
         try {
             mBeanInfo = mBeanServer.getMBeanInfo(objectName);
-        } catch (InstanceNotFoundException e) {
-            handleInstanceNotFoundException(e, mBeanServer, objectName);
-        } catch (IntrospectionException e) {
-            handleIntrospectionException(e, mBeanServer, objectName);
-        } catch (ReflectionException e) {
-            handleReflectionException(e, mBeanServer, objectName);
+        } catch (InstanceNotFoundException | IntrospectionException | ReflectionException e) {
+            handleException(e, mBeanServer, objectName);
         }
         return mBeanInfo;
     }
 
-    private static void handleInstanceNotFoundException(InstanceNotFoundException e, MBeanServer mBeanServer, ObjectName objectName) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("the MBean[name : '{}'] can't be found in the MBeanServer[default domain : '{}' , domains : {}]",
-                    objectName.getCanonicalName(),
-                    mBeanServer.getDefaultDomain(),
-                    Arrays.toString(mBeanServer.getDomains()),
-                    e
-            );
-        }
-    }
-
-    private static void handleIntrospectionException(IntrospectionException e, MBeanServer mBeanServer, ObjectName objectName) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("the MBean[name : '{}'] can't be introspected in the MBeanServer[default domain : '{}' , domains : {}]",
-                    objectName.getCanonicalName(),
-                    mBeanServer.getDefaultDomain(),
-                    Arrays.toString(mBeanServer.getDomains()),
-                    e
-            );
-        }
-    }
-
-    private static void handleReflectionException(ReflectionException e, MBeanServer mBeanServer, ObjectName objectName) {
+    private static void handleException(Exception e, MBeanServer mBeanServer, ObjectName objectName) {
         if (logger.isWarnEnabled()) {
             logger.warn("the MBean[name : '{}'] can't be manipulated by the Reflection in the MBeanServer[default domain : '{}' , domains : {}]",
                     objectName.getCanonicalName(),
                     mBeanServer.getDefaultDomain(),
-                    Arrays.toString(mBeanServer.getDomains()),
+                    arrayToString(mBeanServer.getDomains()),
                     e
             );
         }
@@ -381,9 +353,12 @@ public abstract class JmxUtils extends BaseUtils {
                     attributeName,
                     objectName.getCanonicalName(),
                     mBeanServer.getDefaultDomain(),
-                    Arrays.toString(mBeanServer.getDomains()),
+                    arrayToString(mBeanServer.getDomains()),
                     e
             );
         }
+    }
+
+    private JmxUtils() {
     }
 }

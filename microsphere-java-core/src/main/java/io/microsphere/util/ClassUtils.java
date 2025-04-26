@@ -3,51 +3,58 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.constants.FileConstants;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.io.scanner.SimpleJarEntryScanner;
+import io.microsphere.logging.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Queue;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
-import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
-import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
+import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
-import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
+import static io.microsphere.reflect.Modifier.ANNOTATION;
+import static io.microsphere.reflect.Modifier.ENUM;
+import static io.microsphere.reflect.Modifier.SYNTHETIC;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.isEmpty;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static io.microsphere.util.StringUtils.replace;
@@ -55,11 +62,14 @@ import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
+import static io.microsphere.util.StringUtils.substringBetween;
+import static io.microsphere.util.TypeFinder.classFinder;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
-import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
-import static java.util.Collections.reverse;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -68,31 +78,17 @@ import static java.util.Collections.unmodifiableSet;
  * {@link Class} utility class
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassUtils
  * @since 1.0.0
  */
-public abstract class ClassUtils extends BaseUtils {
+public abstract class ClassUtils implements Utils {
+
+    private final static Logger logger = getLogger(ClassUtils.class);
 
     /**
      * Suffix for array class names: "[]"
      */
     public static final String ARRAY_SUFFIX = "[]";
-
-    /**
-     * @see {@link Class#ANNOTATION}
-     */
-    private static final int ANNOTATION = 0x00002000;
-
-    /**
-     * @see {@link Class#ENUM}
-     */
-    private static final int ENUM = 0x00004000;
-
-    /**
-     * @see {@link Class#SYNTHETIC}
-     */
-    private static final int SYNTHETIC = 0x00001000;
 
     /**
      * Simple Types including:
@@ -113,7 +109,7 @@ public abstract class ClassUtils extends BaseUtils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = of(
+    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(
             Void.class,
             Boolean.class,
             Character.class,
@@ -129,7 +125,7 @@ public abstract class ClassUtils extends BaseUtils {
             Date.class,
             Object.class);
 
-    public static final Set<Class<?>> PRIMITIVE_TYPES = of(
+    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(
             Void.TYPE,
             Boolean.TYPE,
             Character.TYPE,
@@ -141,10 +137,16 @@ public abstract class ClassUtils extends BaseUtils {
             Double.TYPE
     );
 
-    /**
-     * Prefix for internal array class names: "[L"
-     */
-    private static final String INTERNAL_ARRAY_PREFIX = "[L";
+    public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
+            boolean[].class,
+            char[].class,
+            byte[].class,
+            short[].class,
+            int[].class,
+            long[].class,
+            float[].class,
+            double[].class
+    );
 
     /**
      * A map with primitive type name as key and corresponding primitive type as
@@ -165,6 +167,8 @@ public abstract class ClassUtils extends BaseUtils {
     private static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_TYPE_MAP;
 
     static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
+
+    private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = FileExtensionFilter.of(JAR_EXTENSION);
 
     static {
         PRIMITIVE_WRAPPER_TYPE_MAP = ofMap(
@@ -196,22 +200,21 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     static {
-        Map<String, Class<?>> typeNamesMap = new HashMap<>(16);
-        List<Class<?>> primitiveTypeNames = new ArrayList<>(16);
-        primitiveTypeNames.addAll(asList(boolean.class, byte.class, char.class, double.class,
-                float.class, int.class, long.class, short.class));
-        primitiveTypeNames.addAll(asList(boolean[].class, byte[].class, char[].class, double[].class,
-                float[].class, int[].class, long[].class, short[].class));
-        for (Class<?> primitiveTypeName : primitiveTypeNames) {
-            typeNamesMap.put(primitiveTypeName.getName(), primitiveTypeName);
-        }
-        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(typeNamesMap);
+        Map<String, Class<?>> primitiveTypeNameMap = newFixedHashMap(17);
+
+        PRIMITIVE_TYPES.forEach(type -> {
+            primitiveTypeNameMap.put(type.getName(), type);
+        });
+
+        PRIMITIVE_ARRAY_TYPES.forEach(type -> {
+            primitiveTypeNameMap.put(type.getName(), type);
+        });
+
+        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(primitiveTypeNameMap);
     }
 
     /**
-     * The specified type is array or not?
-     * <p>
-     * It's an optimized alternative for {@link Class#isArray()}).
+     * The specified type is array or not?*
      *
      * @param type the type to test
      * @return <code>true</code> if the specified type is an array class,
@@ -219,7 +222,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @see Class#isArray()
      */
     public static boolean isArray(Class<?> type) {
-        return type != null && type.getName().startsWith("[");
+        return type != null && type.isArray();
     }
 
     /**
@@ -238,8 +241,8 @@ public abstract class ClassUtils extends BaseUtils {
             return true;
         }
 
-        if (isGeneralClass(type, Boolean.FALSE)) {
-            concreteClassCache.put(type, Boolean.TRUE);
+        if (isGeneralClass(type, FALSE)) {
+            concreteClassCache.put(type, TRUE);
             return true;
         }
 
@@ -254,7 +257,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @return true if type is a abstract class, false otherwise.
      */
     public static boolean isAbstractClass(Class<?> type) {
-        return isGeneralClass(type, Boolean.TRUE);
+        return isGeneralClass(type, TRUE);
     }
 
     /**
@@ -265,7 +268,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @return true if type is a general class, false otherwise.
      */
     public static boolean isGeneralClass(Class<?> type) {
-        return isGeneralClass(type, null);
+        return isGeneralClass(type, FALSE);
     }
 
     /**
@@ -285,12 +288,12 @@ public abstract class ClassUtils extends BaseUtils {
 
         int mod = type.getModifiers();
 
-        if (isInterface(mod)
-                || isAnnotation(mod)
+        if (isAnnotation(mod)
                 || isEnum(mod)
+                || isInterface(mod)
                 || isSynthetic(mod)
-                || type.isPrimitive()
-                || type.isArray()) {
+                || isPrimitive(type)
+                || isArray(type)) {
             return false;
         }
 
@@ -302,11 +305,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     public static boolean isTopLevelClass(Class<?> type) {
-        if (type == null) {
-            return false;
-        }
-
-        return !type.isLocalClass() && !type.isMemberClass();
+        return type != null && !type.isLocalClass() && !type.isMemberClass();
     }
 
 
@@ -338,34 +337,6 @@ public abstract class ClassUtils extends BaseUtils {
         return SIMPLE_TYPES.contains(type);
     }
 
-    public static Object convertPrimitive(Class<?> type, String value) {
-        if (value == null) {
-            return null;
-        } else if (type == char.class || type == Character.class) {
-            return value.length() > 0 ? value.charAt(0) : '\0';
-        } else if (type == boolean.class || type == Boolean.class) {
-            return Boolean.valueOf(value);
-        }
-        try {
-            if (type == byte.class || type == Byte.class) {
-                return Byte.valueOf(value);
-            } else if (type == short.class || type == Short.class) {
-                return Short.valueOf(value);
-            } else if (type == int.class || type == Integer.class) {
-                return Integer.valueOf(value);
-            } else if (type == long.class || type == Long.class) {
-                return Long.valueOf(value);
-            } else if (type == float.class || type == Float.class) {
-                return Float.valueOf(value);
-            } else if (type == double.class || type == Double.class) {
-                return Double.valueOf(value);
-            }
-        } catch (NumberFormatException e) {
-            return null;
-        }
-        return value;
-    }
-
     /**
      * Resolve the primitive class from the specified type
      *
@@ -393,7 +364,7 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     public static boolean isWrapperType(Class<?> type) {
-        return WRAPPER_PRIMITIVE_TYPE_MAP.containsKey(type);
+        return PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(type);
     }
 
     public static boolean arrayTypeEquals(Class<?> oneArrayType, Class<?> anotherArrayType) {
@@ -433,30 +404,14 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents an annotation type; false otherwise
-     * @see Class#isAnnotation()
+     * Resolve package name under specified class
+     *
+     * @param targetClass target class
+     * @return package name
      */
-    public static boolean isAnnotation(int modifiers) {
-        return (modifiers & ANNOTATION) != 0;
-    }
-
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents an enumeration type; false otherwise
-     * @see Class#isEnum()
-     */
-    public static boolean isEnum(int modifiers) {
-        return (modifiers & ENUM) != 0;
-    }
-
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents a synthetic type; false otherwise
-     * @see Class#isSynthetic()
-     */
-    public static boolean isSynthetic(int modifiers) {
-        return (modifiers & SYNTHETIC) != 0;
+    @Nullable
+    public static String resolvePackageName(Class<?> targetClass) {
+        return isPrimitive(targetClass) ? null : resolvePackageName(getTypeName(targetClass));
     }
 
     /**
@@ -467,7 +422,7 @@ public abstract class ClassUtils extends BaseUtils {
      */
     @Nullable
     public static String resolvePackageName(String className) {
-        return substringBeforeLast(className, ".");
+        return substringBeforeLast(className, DOT);
     }
 
     /**
@@ -479,98 +434,107 @@ public abstract class ClassUtils extends BaseUtils {
      */
     @Nonnull
     public static Set<String> findClassNamesInClassPath(String classPath, boolean recursive) {
-        File classesFileHolder = new File(classPath); // JarFile or Directory
-        if (classesFileHolder.isDirectory()) { //Directory
-            return findClassNamesInDirectory(classesFileHolder, recursive);
-        } else if (classesFileHolder.isFile() && classPath.endsWith(FileConstants.JAR_EXTENSION)) { //JarFile
-            return findClassNamesInJarFile(classesFileHolder, recursive);
+        String protocol = resolveProtocol(classPath);
+        final String resolvedClassPath;
+        if (FILE_PROTOCOL.equals(protocol)) {
+            resolvedClassPath = substringBetween(classPath, protocol + COLON_CHAR, ARCHIVE_ENTRY_SEPARATOR);
+        } else {
+            resolvedClassPath = classPath;
         }
-        return emptySet();
+        File classesFileHolder = new File(resolvedClassPath); // File or Directory
+        return findClassNamesInClassPath(classesFileHolder, recursive);
     }
 
     /**
      * Find all class names in class path
      *
-     * @param archiveFile JarFile or class patch directory
-     * @param recursive   is recursive on sub directories
+     * @param classPath JarFile or class patch directory
+     * @param recursive is recursive on sub directories
      * @return all class names in class path
      */
-    public static Set<String> findClassNamesInClassPath(File archiveFile, boolean recursive) {
-        if (archiveFile == null || !archiveFile.exists()) {
+    public static Set<String> findClassNamesInClassPath(File classPath, boolean recursive) {
+        if (classPath == null || !classPath.exists()) {
             return emptySet();
         }
-        if (archiveFile.isDirectory()) { // Directory
-            return findClassNamesInArchiveDirectory(archiveFile, recursive);
-        } else if (archiveFile.isFile() && archiveFile.getName().endsWith(JAR)) { //JarFile
-            return findClassNamesInArchiveFile(archiveFile, recursive);
+
+        Set<String> classNames = emptySet();
+        if (classPath.isDirectory()) { // Directory
+            classNames = findClassNamesInDirectory(classPath, recursive);
+        } else if (classPath.isFile()) { // File
+            if (JAR_FILE_EXTENSION_FILTER.accept(classPath)) { // JarFile
+                classNames = findClassNamesInJarFile(classPath, recursive);
+            }
         }
-        return emptySet();
+
+        if (isEmpty(classNames)) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("No Class was found in the classPath : '{}' , recursive : {}", classPath, recursive);
+            }
+        }
+        return classNames;
     }
 
-    protected static Set<String> findClassNamesInArchiveDirectory(File classesDirectory, boolean recursive) {
+    /**
+     * Find all class names in directory
+     *
+     * @param classesDirectory a directory to be found
+     * @param recursive        is recursive on sub directories
+     * @return all class names in directory
+     */
+    public static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
+        if (classesDirectory == null || !classesDirectory.exists()) {
+            return emptySet();
+        }
+
+        Set<File> classFiles = SimpleFileScanner.INSTANCE.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS));
+        if (isEmpty(classFiles)) {
+            return emptySet();
+        }
+
         Set<String> classNames = new LinkedHashSet<>();
-        SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS_EXTENSION));
+
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
             classNames.add(className);
         }
-        return classNames;
+
+        return unmodifiableSet(classNames);
     }
 
-    protected static Set<String> findClassNamesInArchiveFile(File jarFile, boolean recursive) {
-        Set<String> classNames = new LinkedHashSet<>();
-        SimpleJarEntryScanner simpleJarEntryScanner = SimpleJarEntryScanner.INSTANCE;
-        try {
-            JarFile jarFile_ = new JarFile(jarFile);
-            Set<JarEntry> jarEntries = simpleJarEntryScanner.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-            for (JarEntry jarEntry : jarEntries) {
-                String jarEntryName = jarEntry.getName();
-                String className = resolveClassName(jarEntryName);
-                if (isNotBlank(className)) {
-                    classNames.add(className);
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        return classNames;
-    }
-
-    protected static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
-        Set<String> classNames = new LinkedHashSet();
-        SimpleFileScanner simpleFileScanner = SimpleFileScanner.INSTANCE;
-        Set<File> classFiles = simpleFileScanner.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS));
-        for (File classFile : classFiles) {
-            String className = resolveClassName(classesDirectory, classFile);
-            classNames.add(className);
-        }
-        return classNames;
-    }
-
-    protected static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
-        if (!jarFile.exists()) {
+    /**
+     * Find all class names in jar file
+     *
+     * @param jarFile   jar file
+     * @param recursive is recursive on sub directories
+     * @return all class names in jar file
+     */
+    public static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
+        if (jarFile == null || !jarFile.exists()) {
             return emptySet();
         }
-
-        Set<String> classNames = new LinkedHashSet();
-
-        SimpleJarEntryScanner simpleJarEntryScanner = SimpleJarEntryScanner.INSTANCE;
+        Set<String> classNames;
         try {
             JarFile jarFile_ = new JarFile(jarFile);
-            Set<JarEntry> jarEntries = simpleJarEntryScanner.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-
-            for (JarEntry jarEntry : jarEntries) {
-                String jarEntryName = jarEntry.getName();
-                String className = resolveClassName(jarEntryName);
-                if (isNotBlank(className)) {
-                    classNames.add(className);
+            Set<JarEntry> jarEntries = SimpleJarEntryScanner.INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
+            if (isEmpty(jarEntries)) {
+                classNames = emptySet();
+            } else {
+                classNames = newLinkedHashSet();
+                for (JarEntry jarEntry : jarEntries) {
+                    String jarEntryName = jarEntry.getName();
+                    String className = resolveClassName(jarEntryName);
+                    if (isNotBlank(className)) {
+                        classNames.add(className);
+                    }
                 }
             }
-
         } catch (Exception e) {
-
+            classNames = emptySet();
+            if (logger.isTraceEnabled()) {
+                logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} ," +
+                        " recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", jarFile, recursive, e);
+            }
         }
-
         return classNames;
     }
 
@@ -597,78 +561,105 @@ public abstract class ClassUtils extends BaseUtils {
     /**
      * Get all super classes from the specified type
      *
-     * @param type         the specified type
-     * @param classFilters the filters for classes
-     * @return non-null read-only {@link Set}
+     * @param type the specified type
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllSuperClasses(Class<?> type, Predicate<Class<?>>... classFilters) {
-
-        Set<Class<?>> allSuperClasses = new LinkedHashSet<>();
-
-        Class<?> superClass = type.getSuperclass();
-        while (superClass != null) {
-            // add current super class
-            allSuperClasses.add(superClass);
-            superClass = superClass.getSuperclass();
-        }
-
-        return unmodifiableSet(filterAll(allSuperClasses, classFilters));
+    public static List<Class<?>> getAllSuperClasses(Class<?> type) {
+        return findAllSuperClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
      * Get all interfaces from the specified type
      *
-     * @param type             the specified type
-     * @param interfaceFilters the filters for interfaces
-     * @return non-null read-only {@link Set}
+     * @param type the specified type
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllInterfaces(Class<?> type, Predicate<Class<?>>... interfaceFilters) {
-        if (type == null || type.isPrimitive()) {
-            return emptySet();
-        }
-
-        Set<Class<?>> allInterfaces = new LinkedHashSet<>();
-        Set<Class<?>> resolved = new LinkedHashSet<>();
-        Queue<Class<?>> waitResolve = new LinkedList<>();
-
-        resolved.add(type);
-        Class<?> clazz = type;
-        while (clazz != null) {
-
-            Class<?>[] interfaces = clazz.getInterfaces();
-
-            if (isNotEmpty(interfaces)) {
-                // add current interfaces
-                Arrays.stream(interfaces).filter(resolved::add).forEach(cls -> {
-                    allInterfaces.add(cls);
-                    waitResolve.add(cls);
-                });
-            }
-
-            // add all super classes to waitResolve
-            getAllSuperClasses(clazz).stream().filter(resolved::add).forEach(waitResolve::add);
-
-            clazz = waitResolve.poll();
-        }
-
-        return filterAll(allInterfaces, interfaceFilters);
+    public static List<Class<?>> getAllInterfaces(Class<?> type) {
+        return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
      * Get all inherited types from the specified type
      *
-     * @param type        the specified type
-     * @param typeFilters the filters for types
-     * @return non-null read-only {@link Set}
+     * @param type the specified type
+     * @return non-null read-only {@link List}
      */
-    public static Set<Class<?>> getAllInheritedTypes(Class<?> type, Predicate<Class<?>>... typeFilters) {
-        // Add all super classes
-        Set<Class<?>> types = new LinkedHashSet<>(getAllSuperClasses(type, typeFilters));
-        // Add all interface classes
-        types.addAll(getAllInterfaces(type, typeFilters));
-        return unmodifiableSet(types);
+    public static List<Class<?>> getAllInheritedTypes(Class<?> type) {
+        return getAllInheritedClasses(type);
     }
 
+    /**
+     * Get all inherited classes from the specified type
+     *
+     * @param type the specified type
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> getAllInheritedClasses(Class<?> type) {
+        return findAllInheritedClasses(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all classes from the specified type
+     *
+     * @param type the specified type
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> getAllClasses(Class<?> type) {
+        return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Find all super classes from the specified type
+     *
+     * @param type         the specified type
+     * @param classFilters the filters for classes
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+        return findTypes(type, false, true, true, false, classFilters);
+    }
+
+    /**
+     * find all interfaces from the specified type
+     *
+     * @param type             the specified type
+     * @param interfaceFilters the filters for interfaces
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
+        return findTypes(type, false, true, false, true, interfaceFilters);
+    }
+
+    /**
+     * Find all inherited classes from the specified type
+     *
+     * @param type         the specified type
+     * @param classFilters the filters for types
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+        return findTypes(type, false, true, true, true, classFilters);
+    }
+
+    /**
+     * Find all classes from the specified type with filters
+     *
+     * @param type         the specified type
+     * @param classFilters class filters
+     * @return non-null read-only {@link List}
+     */
+    public static List<Class<?>> findAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+        return findTypes(type, true, true, true, true, classFilters);
+    }
+
+    protected static List<Class<?>> findTypes(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes,
+                                              boolean includeGenericSuperclass, boolean includeGenericInterfaces,
+                                              Predicate<? super Class<?>>... typeFilters) {
+        if (type == null || isPrimitive(type)) {
+            return emptyList();
+        }
+        return classFinder(type, includeSelf, includeHierarchicalTypes, includeGenericSuperclass, includeGenericInterfaces).findTypes(typeFilters);
+    }
 
     /**
      * the semantics is same as {@link Class#isAssignableFrom(Class)}
@@ -691,13 +682,13 @@ public abstract class ClassUtils extends BaseUtils {
     }
 
     /**
-     * Is generic class or not?
+     * Resolve the types of the specified values
      *
-     * @param type the target type
-     * @return if the target type is not null or <code>void</code> or Void.class, return <code>true</code>, or false
+     * @param values the values
+     * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
      */
-    public static boolean isGenericClass(Class<?> type) {
-        return type != null && !void.class.equals(type) && !Void.class.equals(type);
+    public static Class[] getTypes(Object... values) {
+        return resolveTypes(values);
     }
 
     /**
@@ -706,7 +697,7 @@ public abstract class ClassUtils extends BaseUtils {
      * @param values the values
      * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
      */
-    public static Class[] getTypes(Object... values) {
+    public static Class[] resolveTypes(Object... values) {
 
         if (isEmpty(values)) {
             return EMPTY_CLASS_ARRAY;
@@ -763,6 +754,7 @@ public abstract class ClassUtils extends BaseUtils {
         return getSimpleName(type, array);
     }
 
+
     private static String getSimpleName(Class<?> type, boolean array) {
         if (array) {
             return getSimpleName(type.getComponentType()) + "[]";
@@ -770,13 +762,13 @@ public abstract class ClassUtils extends BaseUtils {
         String simpleName = type.getName();
         Class<?> enclosingClass = type.getEnclosingClass();
         if (enclosingClass == null) { // top level class
-            simpleName = simpleName.substring(simpleName.lastIndexOf(".") + 1);
+            simpleName = simpleName.substring(simpleName.lastIndexOf(DOT_CHAR) + 1);
         } else {
             String ecName = enclosingClass.getName();
             simpleName = simpleName.substring(ecName.length());
             // Remove leading "\$[0-9]*" from the name
             int length = simpleName.length();
-            if (length < 1 || simpleName.charAt(0) != '$') throw new InternalError("Malformed class name");
+            if (length < 1 || simpleName.charAt(0) != DOLLAR_CHAR) throw new InternalError("Malformed class name");
             int index = 1;
             while (index < length && isAsciiDigit(simpleName.charAt(index))) index++;
             // Eventually, this is the empty string iff this is an anonymous class
@@ -789,58 +781,12 @@ public abstract class ClassUtils extends BaseUtils {
         return '0' <= c && c <= '9';
     }
 
-
-    /**
-     * Get all classes from the specified type with filters
-     *
-     * @param type         the specified type
-     * @param classFilters class filters
-     * @return non-null read-only {@link Set}
-     */
-    public static Set<Class<?>> getAllClasses(Class<?> type, Predicate<Class<?>>... classFilters) {
-        return getAllClasses(type, true, classFilters);
-    }
-
-    /**
-     * Get all classes(may include self type) from the specified type with filters
-     *
-     * @param type         the specified type
-     * @param includedSelf included self type or not
-     * @param classFilters class filters
-     * @return non-null read-only {@link Set}
-     */
-    public static Set<Class<?>> getAllClasses(Class<?> type, boolean includedSelf, Predicate<Class<?>>... classFilters) {
-        if (type == null || type.isPrimitive()) {
-            return emptySet();
-        }
-
-        List<Class<?>> allClasses = new LinkedList<>();
-
-        Class<?> superClass = type.getSuperclass();
-        while (superClass != null) {
-            // add current super class
-            allClasses.add(superClass);
-            superClass = superClass.getSuperclass();
-        }
-
-        // FIFO -> FILO
-        reverse(allClasses);
-
-        if (includedSelf) {
-            allClasses.add(type);
-        }
-
-        // Keep the same order from List
-        return ofSet(filterAll(allClasses, classFilters));
-    }
-
     /**
      * the semantics is same as {@link Class#isAssignableFrom(Class)}
      *
      * @param targetType the target type
      * @param superTypes the super types
      * @return see {@link Class#isAssignableFrom(Class)}
-     * @since 1.0.0
      */
     public static boolean isDerived(Class<?> targetType, Class<?>... superTypes) {
         // any argument is null
@@ -868,6 +814,9 @@ public abstract class ClassUtils extends BaseUtils {
             for (int i = 0; i < length; i++) {
                 Object arg = args[i];
                 Class<?> parameterType = parameterTypes[i];
+                if (isPrimitive(parameterType)) {
+                    parameterType = resolveWrapperType(parameterType);
+                }
                 if (!parameterType.isInstance(arg)) {
                     return false;
                 }
@@ -876,7 +825,7 @@ public abstract class ClassUtils extends BaseUtils {
         });
 
         if (constructors.isEmpty()) {
-            String message = format("No constructor[class : '{}'] matches the arguments : {}", getTypeName(type), Arrays.asList(args));
+            String message = format("No constructor[class : '{}'] matches the arguments : {}", getTypeName(type), arrayToString(args));
             throw new IllegalArgumentException(message);
         }
 
@@ -918,5 +867,38 @@ public abstract class ClassUtils extends BaseUtils {
             return null;
         }
         return castType.isInstance(object) ? castType.cast(object) : null;
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an annotation type; false otherwise
+     * @see Class#isAnnotation()
+     * @see io.microsphere.reflect.Modifier#ANNOTATION
+     */
+    static boolean isAnnotation(int modifiers) {
+        return ANNOTATION.matches(modifiers);
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an enumeration type; false otherwise
+     * @see Class#isEnum()
+     * @see io.microsphere.reflect.Modifier#ENUM
+     */
+    static boolean isEnum(int modifiers) {
+        return ENUM.matches(modifiers);
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents a synthetic type; false otherwise
+     * @see Class#isSynthetic()
+     * @see io.microsphere.reflect.Modifier#SYNTHETIC
+     */
+    static boolean isSynthetic(int modifiers) {
+        return SYNTHETIC.matches(modifiers);
+    }
+
+    private ClassUtils() {
     }
 }

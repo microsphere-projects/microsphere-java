@@ -4,8 +4,6 @@
 package io.microsphere.io.scanner;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.filter.JarEntryFilter;
-import io.microsphere.util.ClassLoaderUtils;
 import io.microsphere.util.jar.JarUtils;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +14,9 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
+import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,34 +24,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link SimpleJarEntryScanner} {@link Test}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see SimpleJarEntryScannerTest
  * @since 1.0.0
  */
 public class SimpleJarEntryScannerTest extends AbstractTestCase {
 
-    private SimpleJarEntryScanner simpleJarEntryScanner = SimpleJarEntryScanner.INSTANCE;
-
-    private ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    private static final SimpleJarEntryScanner simpleJarEntryScanner = INSTANCE;
 
     @Test
-    public void testScan() throws IOException {
-        URL resourceURL = ClassLoaderUtils.getClassResource(classLoader, Nonnull.class);
+    public void testScanInJarURL() throws IOException {
+        URL resourceURL = getClassResource(classLoader, Nonnull.class);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(resourceURL, true);
         assertEquals(1, jarEntrySet.size());
 
+        resourceURL = getResource(TEST_CLASS_LOADER, "javax.annotation.concurrent");
+        jarEntrySet = simpleJarEntryScanner.scan(resourceURL, false);
+        assertEquals(5, jarEntrySet.size());
+    }
+
+
+    @Test
+    public void testScanInJarFile() throws IOException {
+        URL resourceURL = getClassResource(classLoader, Nonnull.class);
         JarFile jarFile = JarUtils.toJarFile(resourceURL);
-        jarEntrySet = simpleJarEntryScanner.scan(jarFile, true);
+        Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(jarFile, true);
         assertTrue(jarEntrySet.size() > 1);
 
-        jarEntrySet = simpleJarEntryScanner.scan(jarFile, true, new JarEntryFilter() {
-            @Override
-            public boolean accept(JarEntry jarEntry) {
-                return jarEntry.getName().equals("javax/annotation/Nonnull.class");
-            }
-        });
-
+        jarEntrySet = simpleJarEntryScanner.scan(jarFile, true, jarEntry -> jarEntry.getName().equals("javax/annotation/Nonnull.class"));
         assertEquals(1, jarEntrySet.size());
-
     }
 }

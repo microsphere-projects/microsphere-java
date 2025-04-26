@@ -37,7 +37,8 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
+import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -89,13 +90,13 @@ public class StringToBlockingDequeConverterTest {
     @Test
     public void testConvert() throws NoSuchFieldException {
 
-        BlockingQueue<Integer> values = new LinkedBlockingDeque(asList(1, 2, 3));
+        BlockingQueue<Integer> values = new LinkedBlockingDeque(ofList(1, 2, 3));
 
         BlockingDeque<Integer> result = (BlockingDeque<Integer>) converter.convert("1,2,3", BlockingDeque.class, Integer.class);
 
         assertTrue(CollectionUtils.equals(values, result));
 
-        values = new LinkedBlockingDeque(asList(123));
+        values = new LinkedBlockingDeque(ofList(123));
 
         result = (BlockingDeque<Integer>) converter.convert("123", BlockingDeque.class, Integer.class);
 
@@ -113,6 +114,6 @@ public class StringToBlockingDequeConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertTrue(Integer.MAX_VALUE > converter.getPriority());
+        assertTrue(MAX_VALUE > converter.getPriority());
     }
 }

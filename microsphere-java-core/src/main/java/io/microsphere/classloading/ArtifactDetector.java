@@ -1,25 +1,22 @@
 package io.microsphere.classloading;
 
-import io.microsphere.collection.CollectionUtils;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ClassLoaderUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.StringJoiner;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.net.URLUtils.normalizePath;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static java.lang.System.getProperty;
+import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
@@ -33,20 +30,24 @@ public class ArtifactDetector {
 
     private static final Logger logger = getLogger(ArtifactDetector.class);
 
-    private static final String JAVA_HOME_PATH = normalizePath(getProperty("java.home"));
+    private static final String JAVA_HOME_PATH = JAVA_HOME;
 
-    private static final ClassLoader DEFAULT_CLASS_LOADER = ArtifactDetector.class.getClassLoader();
+    final ClassLoader classLoader;
 
-    private static final List<ArtifactResolver> ARTIFACT_INFO_RESOLVERS = loadServicesList(ArtifactResolver.class, DEFAULT_CLASS_LOADER);
-
-    private final @Nonnull ClassLoader classLoader;
+    private final List<ArtifactResourceResolver> artifactResourceResolvers;
 
     public ArtifactDetector() {
-        this(DEFAULT_CLASS_LOADER);
+        this(null);
     }
 
     public ArtifactDetector(@Nullable ClassLoader classLoader) {
-        this.classLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
+        ClassLoader actualClassLoader = classLoader == null ? getClassLoader(getClass()) : classLoader;
+        this.artifactResourceResolvers = loadServicesList(ArtifactResourceResolver.class, actualClassLoader, true);
+        this.classLoader = actualClassLoader;
+        if (logger.isTraceEnabled()) {
+            logger.trace("ClassLoader[argument : {} , actual : {}] , ArtifactResolver List : {}",
+                    classLoader, actualClassLoader, this.artifactResourceResolvers);
+        }
     }
 
     public List<Artifact> detect() {
@@ -59,33 +60,33 @@ public class ArtifactDetector {
     }
 
     protected List<Artifact> detect(Set<URL> classPathURLs) {
-        if (CollectionUtils.isEmpty(classPathURLs)) {
+        if (isEmpty(classPathURLs)) {
             return emptyList();
         }
+
         List<Artifact> artifactList = new LinkedList<>();
-        for (ArtifactResolver artifactResolver : ARTIFACT_INFO_RESOLVERS) {
-            Set<Artifact> artifactSet = artifactResolver.resolve(classPathURLs);
-            for (Artifact artifact : artifactSet) {
-                artifactList.add(artifact);
-                classPathURLs.remove(artifact.getLocation());
+        for (URL resourceURL : classPathURLs) {
+            for (ArtifactResourceResolver artifactResourceResolver : artifactResourceResolvers) {
+                Artifact artifact = artifactResourceResolver.resolve(resourceURL);
+                if (artifact != null) {
+                    artifactList.add(artifact);
+                    break;
+                }
             }
         }
+
         return unmodifiableList(artifactList);
     }
 
     protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
-        Set<URL> urls = ClassLoaderUtils.findAllClassPathURLs(classLoader);
+        Set<URL> urls = findAllClassPathURLs(classLoader);
         Set<URL> classPathURLs = new LinkedHashSet<>(urls);
         if (!includedJdkLibraries) {
             removeJdkClassPathURLs(classPathURLs);
         }
         if (logger.isTraceEnabled()) {
-            StringJoiner stringJoiner = new StringJoiner(System.lineSeparator());
-            for (URL classPathURL : classPathURLs) {
-                stringJoiner.add(classPathURL.toString());
-            }
             logger.trace("ClassLoader[{}] covers the URLs[expected: {}, actual: {}], class-path : {}",
-                    classLoader, urls.size(), classPathURLs.size(), stringJoiner);
+                    classLoader, urls.size(), classPathURLs.size(), classPathURLs);
         }
         return classPathURLs;
     }

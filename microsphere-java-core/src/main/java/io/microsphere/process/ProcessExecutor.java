@@ -5,40 +5,51 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeoutException;
 
+import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
+import static io.microsphere.process.ProcessManager.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static java.lang.Long.MAX_VALUE;
+import static java.lang.Long.getLong;
+import static java.lang.Runtime.getRuntime;
+import static java.lang.System.currentTimeMillis;
 
 /**
  * {@link Process} Executor
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ProcessExecutor
  * @since 1.0.0
  */
 public class ProcessExecutor {
 
-    private static final long waitForTimeInSecond = Long.getLong("process.executor.wait.for", 1);
-    private final String command;
-    private final String arguments;
-    private final Runtime runtime = Runtime.getRuntime();
-    private final ProcessManager processManager = ProcessManager.INSTANCE;
+    private static final long waitForTimeInSecond = getLong("process.executor.wait.for", 1);
+
+    private final ProcessManager processManager = INSTANCE;
+
+    private final Runtime runtime = getRuntime();
+
+    private final String commandLine;
+
+    private final String options;
+
     private boolean finished;
 
     /**
      * Constructor
      *
-     * @param processName command
-     * @param arguments   process arguments
+     * @param command command
+     * @param options command options
      */
-    public ProcessExecutor(String processName, String... arguments) {
-        StringBuilder argumentsBuilder = new StringBuilder();
-        if (arguments != null) {
-            for (String argument : arguments) {
-                argumentsBuilder.append(" ").append(argument);
+    public ProcessExecutor(String command, String... options) {
+        StringBuilder optionsBuilder = new StringBuilder();
+        if (isNotEmpty(options)) {
+            for (String argument : options) {
+                optionsBuilder.append(SPACE_CHAR).append(argument);
             }
         }
-        this.arguments = argumentsBuilder.toString();
-        this.command = processName + this.arguments;
+        this.options = optionsBuilder.toString();
+        this.commandLine = command + this.options;
     }
 
     /**
@@ -51,7 +62,7 @@ public class ProcessExecutor {
      */
     public void execute(OutputStream outputStream) throws IOException {
         try {
-            this.execute(outputStream, Long.MAX_VALUE);
+            this.execute(outputStream, MAX_VALUE);
         } catch (TimeoutException e) {
         }
     }
@@ -67,8 +78,8 @@ public class ProcessExecutor {
      * @throws TimeoutException if the execution is timeout over specified <code>timeoutInMilliseconds</code>
      */
     public void execute(OutputStream outputStream, long timeoutInMilliseconds) throws IOException, TimeoutException {
-        Process process = runtime.exec(command);
-        long startTime = System.currentTimeMillis();
+        Process process = runtime.exec(commandLine);
+        long startTime = currentTimeMillis();
         long endTime = -1L;
         InputStream processInputStream = process.getInputStream();
         InputStream processErrorInputStream = process.getErrorStream();
@@ -78,12 +89,12 @@ public class ProcessExecutor {
             long costTime = endTime - startTime;
             if (costTime > timeoutInMilliseconds) {
                 finished = true;
-                process.destroy();
+                processManager.destroy(process);
                 String message = format("Execution is timeout[{} ms]!", timeoutInMilliseconds);
                 throw new TimeoutException(message);
             }
             try {
-                processManager.addUnfinishedProcess(process, arguments);
+                processManager.addUnfinishedProcess(process, options);
                 while (processInputStream.available() > 0) {
                     outputStream.write(processInputStream.read());
                 }
@@ -99,9 +110,9 @@ public class ProcessExecutor {
                 // Process is not finished yet;
                 // Sleep a little to save on CPU cycles
                 waitFor(waitForTimeInSecond);
-                endTime = System.currentTimeMillis();
+                endTime = currentTimeMillis();
             } finally {
-                processManager.removeUnfinishedProcess(process, arguments);
+                processManager.removeUnfinishedProcess(process, options);
             }
         }
     }

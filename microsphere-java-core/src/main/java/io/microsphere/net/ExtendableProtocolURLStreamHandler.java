@@ -27,11 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Consumer;
 
-import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
+import static io.microsphere.constants.SymbolConstants.QUOTE;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 import static io.microsphere.net.URLUtils.HANDLER_CONVENTION_CLASS_NAME;
 import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
@@ -39,8 +41,11 @@ import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_SEPARATOR_CHAR;
 import static io.microsphere.net.URLUtils.SUB_PROTOCOL_MATRIX_NAME;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.registerURLStreamHandler;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
+import static java.lang.System.getProperty;
+import static java.lang.System.setProperty;
 import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.sort;
 
@@ -112,7 +117,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     public static Set<String> getHandlePackages() {
         String value = getHandlePackagesPropertyValue();
         String[] packages = split(value, HANDLER_PACKAGES_SEPARATOR_CHAR);
-        return of(packages);
+        return ofSet(packages);
     }
 
     /**
@@ -121,7 +126,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
      * @return <code>null</code> if absent
      */
     public static String getHandlePackagesPropertyValue() {
-        return System.getProperty(HANDLER_PACKAGES_PROPERTY_NAME);
+        return getProperty(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
     public void init() {
@@ -144,13 +149,22 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     protected void initSubProtocolURLConnectionFactories(List<SubProtocolURLConnectionFactory> factories) {
     }
 
+    /**
+     * Customize {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
+     *
+     * @param factoriesCustomizer the customizer for collection of {@link SubProtocolURLConnectionFactory SubProtocolURLConnectionFactories}
+     */
+    public void customizeSubProtocolURLConnectionFactories(Consumer<List<SubProtocolURLConnectionFactory>> factoriesCustomizer) {
+        factoriesCustomizer.accept(this.factories);
+    }
+
     @Override
     protected final URLConnection openConnection(URL u) throws IOException {
         return openConnection(u, NO_PROXY);
     }
 
     @Override
-    protected URLConnection openConnection(URL u, Proxy p) throws IOException {
+    public URLConnection openConnection(URL u, Proxy p) throws IOException {
         List<String> subProtocols = resolveSubProtocols(u);
         URLConnection urlConnection = null;
         int size = factories.size();
@@ -287,7 +301,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     }
 
     protected String resolvePath(URL url) {
-        return URLUtils.resolvePath(url.getPath());
+        return URLUtils.resolvePath(url);
     }
 
     public final String getProtocol() {
@@ -296,10 +310,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     @Override
     public String toString() {
-        String sb = getClass().getName() + "{defaultPort=" + getDefaultPort() +
-                ",protocol=" + getProtocol() +
-                '}';
-        return sb;
+        return format("{} {defaultPort = {} , protocol = '{}'}", getClass().getName(), getDefaultPort(), getProtocol());
     }
 
     private static String resolveConventionProtocol(String packageName) {
@@ -313,28 +324,27 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
         assertPackage(type);
     }
 
-    private static void assertClassTopLevel(Class<?> type) {
+    static void assertClassTopLevel(Class<?> type) {
         if (type.isLocalClass() || type.isAnonymousClass() || type.isMemberClass()) {
-            throw new IllegalStateException("The implementation " + type + " must be the top level");
+            throw new IllegalArgumentException("The implementation " + type + " must be the top level");
         }
     }
 
-    private static void assertClassName(Class<?> type) {
+    static void assertClassName(Class<?> type) {
         String simpleClassName = type.getSimpleName();
-        String className = HANDLER_CONVENTION_CLASS_NAME;
-        if (!Objects.equals(className, simpleClassName)) {
-            throw new IllegalStateException("The implementation class must name '" + className + "', actual : '" + simpleClassName + "'");
+        if (!HANDLER_CONVENTION_CLASS_NAME.equals(simpleClassName)) {
+            throw new IllegalArgumentException("The implementation class must name '" + HANDLER_CONVENTION_CLASS_NAME + "', actual : '" + simpleClassName + QUOTE);
         }
     }
 
-    private static void assertPackage(Class<?> type) {
+    static void assertPackage(Class<?> type) {
         String className = type.getName();
         if (className.indexOf(DOT_CHAR) < 0) {
-            throw new IllegalStateException("The Handler class must not be present at the top package!");
+            throw new IllegalArgumentException("The Handler class must not be present at the top package!");
         }
         String packagePrefix = DEFAULT_HANDLER_PACKAGE_PREFIX;
         if (className.startsWith(packagePrefix)) {
-            throw new IllegalStateException("The Handler class must not be present in the builtin package : '" + packagePrefix + "'");
+            throw new IllegalArgumentException("The Handler class must not be present in the builtin package : '" + packagePrefix + QUOTE);
         }
     }
 
@@ -345,7 +355,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     }
 
     static void appendHandlePackage(String packageName) {
-        String handlePackage = packageName.substring(0, packageName.lastIndexOf('.'));
+        String handlePackage = packageName.substring(0, packageName.lastIndexOf(DOT_CHAR));
         Set<String> packages = getHandlePackages();
 
         if (packages.contains(handlePackage)) {
@@ -360,6 +370,6 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
             handlePackages = currentHandlerPackages + HANDLER_PACKAGES_SEPARATOR_CHAR + handlePackage;
         }
 
-        System.setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
+        setProperty(HANDLER_PACKAGES_PROPERTY_NAME, handlePackages);
     }
 }

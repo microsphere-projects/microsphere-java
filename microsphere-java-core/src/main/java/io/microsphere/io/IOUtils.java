@@ -16,21 +16,21 @@
  */
 package io.microsphere.io;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.logging.Logger;
+import io.microsphere.nio.charset.CharsetUtils;
 import io.microsphere.util.SystemUtils;
+import io.microsphere.util.Utils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URLConnection;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
@@ -46,12 +46,19 @@ import static java.util.Objects.requireNonNull;
  * @see Paths
  * @since 1.0.0
  */
-public abstract class IOUtils extends BaseUtils {
+public abstract class IOUtils implements Utils {
+
+    private static final Logger logger = getLogger(IOUtils.class);
+
+    /**
+     * The default buffer size for I/O
+     */
+    public static final int DEFAULT_BUFFER_SIZE = 2048;
 
     /**
      * The buffer size for I/O
      */
-    public static final int BUFFER_SIZE = getInteger("microsphere.io.buffer.size", 4096);
+    public static final int BUFFER_SIZE = getInteger("microsphere.io.buffer.size", DEFAULT_BUFFER_SIZE);
 
     /**
      * Copy the contents of the given InputStream into a new byte array.
@@ -65,9 +72,36 @@ public abstract class IOUtils extends BaseUtils {
         if (in == null) {
             return EMPTY_BYTE_ARRAY;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream(BUFFER_SIZE);
+        FastByteArrayOutputStream out = new FastByteArrayOutputStream(BUFFER_SIZE);
         copy(in, out);
         return out.toByteArray();
+    }
+
+    /**
+     * {@link #copyToString(InputStream)} as recommended
+     *
+     * @see #copyToString(InputStream)
+     */
+    public static String toString(InputStream in) throws IOException {
+        return copyToString(in);
+    }
+
+    /**
+     * {@link #copyToString(InputStream, String)} as recommended
+     *
+     * @see #copyToString(InputStream, String)
+     */
+    public static String toString(InputStream in, String encoding) throws IOException {
+        return copyToString(in, encoding);
+    }
+
+    /**
+     * {@link #copyToString(InputStream, Charset)}  as recommended
+     *
+     * @see #copyToString(InputStream, Charset)
+     */
+    public static String toString(InputStream in, Charset charset) throws IOException {
+        return copyToString(in, charset);
     }
 
     /**
@@ -79,24 +113,32 @@ public abstract class IOUtils extends BaseUtils {
      * @return the new byte array that has been copied to (possibly empty)
      * @throws IOException in case of I/O errors
      */
-    public static String toString(InputStream in, String encoding) throws IOException {
+    public static String copyToString(InputStream in, String encoding) throws IOException {
         String charset = isBlank(encoding) ? FILE_ENCODING : encoding;
-        return toString(in, forName(charset));
+        return copyToString(in, forName(charset));
     }
 
     /**
-     * Copy the contents of the given InputStream into a new {@link String}.
+     * Copy the contents of the given InputStream into a new {@link String} using {@link CharsetUtils#DEFAULT_CHARSET}.
      * <p>Leaves the stream open when done.
      *
-     * @param in      the stream to copy from (may be {@code null} or empty)
-     * @param charset the charset to use, if it's <code>null</code>, take the {@link SystemUtils#FILE_ENCODING} as default
+     * @param in the stream to copy from (may be {@code null} or empty)
      * @return the new byte array that has been copied to (possibly empty)
      * @throws IOException in case of I/O errors
      */
-    public static String toString(InputStream in, Charset charset) throws IOException {
+    public static String copyToString(InputStream in) throws IOException {
+        return copyToString(in, DEFAULT_CHARSET);
+    }
+
+    /**
+     * See {@link #toString(InputStream, Charset)}
+     */
+    public static String copyToString(InputStream in, Charset charset) throws IOException {
         byte[] bytes = toByteArray(in);
-        Charset actualCharset = charset == null ? StandardCharsets.UTF_8 : charset;
-        return EMPTY_BYTE_ARRAY.equals(bytes) ? null : new String(bytes, actualCharset);
+        if (EMPTY_BYTE_ARRAY == bytes) {
+            return null;
+        }
+        return new String(bytes, charset == null ? DEFAULT_CHARSET : charset);
     }
 
     /**
@@ -120,18 +162,10 @@ public abstract class IOUtils extends BaseUtils {
             byteCount += bytesRead;
         }
         out.flush();
-        return byteCount;
-    }
-
-    /**
-     * Closes a URLConnection.
-     *
-     * @param conn the connection to close.
-     */
-    public static void close(URLConnection conn) {
-        if (conn instanceof HttpURLConnection) {
-            ((HttpURLConnection) conn).disconnect();
+        if (logger.isTraceEnabled()) {
+            logger.trace("Copied {} bytes[buffer size : {}] from InputStream[{}] to OutputStream[{}]", byteCount, BUFFER_SIZE, in, out);
         }
+        return byteCount;
     }
 
     /**
@@ -161,8 +195,13 @@ public abstract class IOUtils extends BaseUtils {
             if (closeable != null) {
                 closeable.close();
             }
-        } catch (IOException ignored) {
-            // ignore
+        } catch (IOException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The Closeable[{}] can't be closed", closeable, e);
+            }
         }
+    }
+
+    private IOUtils() {
     }
 }

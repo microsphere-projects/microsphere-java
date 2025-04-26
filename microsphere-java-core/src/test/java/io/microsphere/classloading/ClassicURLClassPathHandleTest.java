@@ -22,6 +22,9 @@ import java.net.URL;
 import java.util.Set;
 
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -31,12 +34,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class ClassicURLClassPathHandleTest {
+public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTest {
+
+    @Override
+    protected AbstractURLClassPathHandle createHandle() {
+        return new ClassicURLClassPathHandle();
+    }
+
+    @Test
+    public void testSupports() {
+        assertEquals(CURRENT_JAVA_VERSION.le(JAVA_VERSION_8), handle.supports());
+    }
+
+    @Test
+    public void testGetURLClassPathClassName() {
+        assertEquals("sun.misc.URLClassPath", handle.getURLClassPathClassName());
+    }
+
+    @Test
+    public void testGetUrlsFieldName() {
+        assertEquals("urls", handle.getUrlsFieldName());
+    }
 
     @Test
     public void test() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        ClassicURLClassPathHandle handle = new ClassicURLClassPathHandle();
         if (handle.supports()) {
             Set<URL> urls = findAllClassPathURLs(classLoader);
             for (URL url : urls) {

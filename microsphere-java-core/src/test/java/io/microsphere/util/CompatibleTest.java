@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.Compatible.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -28,15 +29,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class CompatibleTest {
 
-    @Test
-    public void test() {
-        String result = Compatible.of(Test.class)
-                .on("<", "4.13", version -> "<")
-                .on("=", "4.13", version -> "=")
-                .on(">", "4.2", version -> ">")
-                .on(">=", "4.13.2", version -> ">=")
-                .get();
+    private Compatible<Test, String> compatible = of(Test.class)
+            .on("<", "4.13", version -> "<")
+            .on("=", "4.13", version -> "=")
+            .on(">", "4.2", version -> ">")
+            .on(">=", "4.13.2", version -> ">=");
 
-        assertEquals(">=", result);
+    @Test
+    public void testGet() {
+        assertEquals(">=", compatible.get());
+    }
+
+    @Test
+    public void testAccept() {
+        compatible.accept(r -> assertEquals(">=", r));
     }
 }

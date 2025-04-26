@@ -3,27 +3,23 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+import io.microsphere.classloading.ServiceLoadingURLClassPathHandle;
 import io.microsphere.classloading.URLClassPathHandle;
-import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.logging.Logger;
-import io.microsphere.net.URLUtils;
 import io.microsphere.reflect.ReflectionUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,27 +27,36 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
+import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
-import static io.microsphere.constants.SymbolConstants.DOT;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
+import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static io.microsphere.util.StringUtils.EMPTY;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
+import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.Assert.assertNoNullElements;
+import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
+import static java.lang.ClassLoader.getSystemClassLoader;
+import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -61,16 +66,18 @@ import static java.util.Collections.unmodifiableSet;
  * {@link ClassLoader} Utility
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassLoader
  * @since 1.0.0
  */
-public abstract class ClassLoaderUtils extends BaseUtils {
+public abstract class ClassLoaderUtils implements Utils {
 
     private static final Logger logger = getLogger(ClassLoaderUtils.class);
 
     private static final Class<ClassLoader> classLoaderClass = ClassLoader.class;
 
+    /**
+     * The {@link Method} name of {@link ClassLoader#findLoadedClass(String)}
+     */
     private static final String findLoadedClassMethodName = "findLoadedClass";
 
     private static final String classesFieldName = "classes";
@@ -79,17 +86,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
     private static final ConcurrentMap<String, Class<?>> loadedClassesCache = new ConcurrentHashMap<>(256);
 
-    private static final URLClassPathHandle urlClassPathHandle = initURLClassPathHandle();
-
-    private static URLClassPathHandle initURLClassPathHandle() {
-        List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
-        for (URLClassPathHandle urlClassPathHandle : urlClassPathHandles) {
-            if (urlClassPathHandle.supports()) {
-                return urlClassPathHandle;
-            }
-        }
-        throw new IllegalStateException("No URLClassPathHandle found, Please check the META-INF/services/io.microsphere.classloading.URLClassPathHandle");
-    }
+    private static final URLClassPathHandle urlClassPathHandle = new ServiceLoadingURLClassPathHandle();
 
     /**
      * Returns the number of classes that are currently loaded in the Java virtual machine.
@@ -107,6 +104,15 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      */
     public static long getUnloadedClassCount() {
         return classLoadingMXBean.getUnloadedClassCount();
+    }
+
+    /**
+     * Returns the total number of classes that have been loaded since the Java virtual machine has started execution.
+     *
+     * @return the total number of classes loaded.
+     */
+    public static long getTotalLoadedClassCount() {
+        return classLoadingMXBean.getTotalLoadedClassCount();
     }
 
     /**
@@ -134,15 +140,6 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Returns the total number of classes that have been loaded since the Java virtual machine has started execution.
-     *
-     * @return the total number of classes loaded.
-     */
-    public static long getTotalLoadedClassCount() {
-        return classLoadingMXBean.getTotalLoadedClassCount();
-    }
-
-    /**
      * Get the default the ClassLoader to use.
      *
      * @return the ClassLoader (only {@code null} if even the system ClassLoader isn't accessible)
@@ -155,16 +152,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     public static ClassLoader getDefaultClassLoader() {
         ClassLoader classLoader = null;
         try {
-            classLoader = Thread.currentThread().getContextClassLoader();
+            classLoader = currentThread().getContextClassLoader();
         } catch (Throwable ignored) {
-        }
-
-        if (classLoader == null) { // If the ClassLoader is also not found,
-            // try to get the ClassLoader from the Caller class
-            Class<?> callerClass = ReflectionUtils.getCallerClass(3);
-            if (callerClass != null) {
-                classLoader = callerClass.getClassLoader();
-            }
         }
 
         if (classLoader == null) {
@@ -174,7 +163,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         if (classLoader == null) {
             // classLoader is null indicates the bootstrap ClassLoader
             try {
-                classLoader = ClassLoader.getSystemClassLoader();
+                classLoader = getSystemClassLoader();
             } catch (Throwable ignored) {
             }
         }
@@ -208,23 +197,20 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return the ClassLoader (only {@code null} if the caller class was absent
      * @see ReflectionUtils#getCallerClass()
      */
+    @Nullable
     public static ClassLoader getCallerClassLoader() {
         return getCallerClassLoader(4);
     }
 
     /**
-     * Return the ClassLoader from the caller class
+     * Find Loaded {@link Class} under specified inheritable {@link ClassLoader} and class names
      *
-     * @return the ClassLoader (only {@code null} if the caller class was absent
-     * @see ReflectionUtils#getCallerClass()
+     * @param classLoader {@link ClassLoader}
+     * @param classNames  class names
+     * @return {@link Class} if loaded, or <code>null</code>
      */
-    private static ClassLoader getCallerClassLoader(int invocationFrame) {
-        ClassLoader classLoader = null;
-        Class<?> callerClass = ReflectionUtils.getCallerClass(invocationFrame);
-        if (callerClass != null) {
-            classLoader = callerClass.getClassLoader();
-        }
-        return classLoader;
+    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, String... classNames) {
+        return findLoadedClasses(classLoader, ofSet(classNames));
     }
 
     /**
@@ -232,10 +218,14 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      *
      * @param classLoader {@link ClassLoader}
      * @param classNames  class names set
-     * @return {@link Class} if loaded , or <code>null</code>
+     * @return {@link Class} if loaded, or <code>null</code>
      */
-    public static Set<Class<?>> findLoadedClasses(ClassLoader classLoader, Set<String> classNames) {
-        Set<Class<?>> loadedClasses = new LinkedHashSet();
+    public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, Iterable<String> classNames) {
+        int size = size(classNames);
+        if (size < 1) {
+            return emptySet();
+        }
+        Set<Class<?>> loadedClasses = newLinkedHashSet(size);
         for (String className : classNames) {
             Class<?> class_ = findLoadedClass(classLoader, className);
             if (class_ != null) {
@@ -252,7 +242,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param type        {@link Class}
      * @return If Loaded , return <code>true</code> , or <code>false</code>
      */
-    public static boolean isLoadedClass(ClassLoader classLoader, Class<?> type) {
+    public static boolean isLoadedClass(@Nullable ClassLoader classLoader, Class<?> type) {
         return isLoadedClass(classLoader, type.getName());
     }
 
@@ -263,7 +253,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param className   {@link Class#getName() class name}
      * @return If Loaded , return <code>true</code> , or <code>false</code>
      */
-    public static boolean isLoadedClass(ClassLoader classLoader, String className) {
+    public static boolean isLoadedClass(@Nullable ClassLoader classLoader, String className) {
         return findLoadedClass(classLoader, className) != null;
     }
 
@@ -274,12 +264,13 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param className   class name
      * @return {@link Class} if loaded , or <code>null</code>
      */
-    public static Class<?> findLoadedClass(ClassLoader classLoader, String className) {
-        Class<?> loadedClass = invokeFindLoadedClassMethod(classLoader, className);
+    public static Class<?> findLoadedClass(@Nullable ClassLoader classLoader, String className) {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        Class<?> loadedClass = invokeFindLoadedClassMethod(actualClassLoader, className);
         if (loadedClass == null) {
-            Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
+            Set<ClassLoader> classLoaders = doGetInheritableClassLoaders(actualClassLoader);
             for (ClassLoader loader : classLoaders) {
-                loadedClass = (Class<?>) invokeFindLoadedClassMethod(loader, className);
+                loadedClass = invokeFindLoadedClassMethod(loader, className);
                 if (loadedClass != null) {
                     break;
                 }
@@ -289,61 +280,47 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     }
 
     /**
-     * Invoke the {@link Method} of {@link ClassLoader#findLoadedClass(String)}
-     *
-     * @param classLoader {@link ClassLoader}
-     * @param className   the class name
-     * @return <code>null</code> if not loaded or can't be loaded
-     */
-    private static Class<?> invokeFindLoadedClassMethod(ClassLoader classLoader, String className) {
-        Class<?> loadedClass = null;
-        try {
-            Method findLoadedClassMethod = findMethod(classLoaderClass, findLoadedClassMethodName, String.class);
-            loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
-        } catch (Throwable e) {
-            logger.error("The java.lang.ClassLoader#findLoadedClasss(String) method can't be invoked in the current JVM[vendor : {} , version : {}]",
-                    JAVA_VENDOR, JAVA_VERSION, e.getCause());
-        }
-        return loadedClass;
-    }
-
-    /**
      * Loaded specified class name under {@link ClassLoader}
      *
-     * @param className   the name of {@link Class}
      * @param classLoader {@link ClassLoader}
+     * @param className   the name of {@link Class}
      * @return {@link Class} if can be loaded
      */
     @Nullable
-    public static Class<?> loadClass(@Nonnull String className, @Nonnull ClassLoader classLoader) {
-        try {
-            return classLoader.loadClass(className);
-        } catch (ClassNotFoundException e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", className, classLoader);
-            }
-        } catch (Throwable ignored) {
-        }
-        return null;
+    public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nullable String className) {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        return doLoadClass(actualClassLoader, className);
     }
 
     /**
      * Loaded specified class name under {@link ClassLoader}
      *
-     * @param className   the name of {@link Class}
      * @param classLoader {@link ClassLoader}
+     * @param className   the name of {@link Class}
      * @param cached      the resolved class is required to be cached or not
      * @return {@link Class} if can be loaded
      */
-    public static Class<?> loadClass(String className, ClassLoader classLoader, boolean cached) {
-        Class loadedClass = null;
+    public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nullable String className, boolean cached) {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
         if (cached) {
-            String cacheKey = buildCacheKey(className, classLoader);
-            loadedClass = loadedClassesCache.computeIfAbsent(cacheKey, k -> execute(() -> loadClass(className, classLoader)));
-        } else {
-            loadedClass = loadClass(className, classLoader);
+            String cacheKey = buildCacheKey(actualClassLoader, className);
+            return loadedClassesCache.computeIfAbsent(cacheKey, k -> doLoadClass(actualClassLoader, className));
         }
-        return loadedClass;
+        return doLoadClass(actualClassLoader, className);
+    }
+
+    protected static Class<?> doLoadClass(ClassLoader classLoader, String className) {
+        if (isBlank(className)) {
+            return null;
+        }
+        try {
+            return classLoader.loadClass(className);
+        } catch (Throwable e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", className, classLoader, e);
+            }
+        }
+        return null;
     }
 
     /**
@@ -357,9 +334,10 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException If any argument is <code>null</code>
      * @throws IOException
      */
-    public static Set<URL> getResources(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
+    public static Set<URL> getResources(@Nullable ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
         String normalizedResourceName = resourceType.resolve(resourceName);
-        Enumeration<URL> resources = classLoader.getResources(normalizedResourceName);
+        Enumeration<URL> resources = actualClassLoader.getResources(normalizedResourceName);
         return resources != null && resources.hasMoreElements() ? ofSet(resources) : emptySet();
     }
 
@@ -373,7 +351,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException If any argument is <code>null</code>
      * @throws IOException
      */
-    public static Set<URL> getResources(ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
+    public static Set<URL> getResources(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
         Set<URL> resourceURLs = emptySet();
         for (ResourceType resourceType : ResourceType.values()) {
             resourceURLs = getResources(classLoader, resourceType, resourceName);
@@ -387,15 +365,27 @@ public abstract class ClassLoaderUtils extends BaseUtils {
     /**
      * Get the resource URL under specified resource name
      *
+     * @param resourceName resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
+     *                     <code>"java.lang.String"</code></li> </ul>
+     * @return the resource URL under specified resource name and type
+     * @throws NullPointerException If any argument is <code>null</code>
+     */
+    public static URL getResource(String resourceName) throws NullPointerException {
+        return getResource(null, resourceName);
+    }
+
+    /**
+     * Get the resource URL under specified resource name
+     *
      * @param classLoader  ClassLoader
      * @param resourceName resource name ，e.g : <br /> <ul> <li>Resource Name :<code>"/com/abc/def.log"</code></li> <li>Class Name :
      *                     <code>"java.lang.String"</code></li> </ul>
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
      */
-    public static URL getResource(ClassLoader classLoader, String resourceName) throws NullPointerException {
+    public static URL getResource(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException {
         URL resourceURL = null;
-        for (ResourceType resourceType : ResourceType.values()) {
+        for (ResourceType resourceType : values()) {
             resourceURL = getResource(classLoader, resourceType, resourceName);
             if (resourceURL != null) {
                 break;
@@ -414,11 +404,10 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
      */
-    public static URL getResource(ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
+    public static URL getResource(@Nullable ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
-        return classLoader.getResource(normalizedResourceName);
+        return normalizedResourceName == null ? null : findClassLoader(classLoader).getResource(normalizedResourceName);
     }
-
 
     /**
      * Get the {@link Class} resource URL under specified {@link Class#getName() Class name}
@@ -428,9 +417,20 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
      */
-    public static URL getClassResource(ClassLoader classLoader, String className) {
+    public static URL getClassResource(@Nullable ClassLoader classLoader, String className) {
         final String resourceName = className + CLASS_EXTENSION;
         return getResource(classLoader, ResourceType.CLASS, resourceName);
+    }
+
+    /**
+     * Get the {@link Class} resource URL under specified {@link Class}
+     *
+     * @param type {@link Class type}
+     * @return the resource URL under specified resource name and type
+     * @throws NullPointerException If any argument is <code>null</code>
+     */
+    public static URL getClassResource(Class<?> type) {
+        return getClassResource(getClassLoader(type), type);
     }
 
     /**
@@ -440,10 +440,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @param type        {@link Class type}
      * @return the resource URL under specified resource name and type
      * @throws NullPointerException If any argument is <code>null</code>
-     * @version 1.0.0
-     * @since 1.0.0
      */
-    public static URL getClassResource(ClassLoader classLoader, Class<?> type) {
+    public static URL getClassResource(@Nullable ClassLoader classLoader, Class<?> type) {
         String resourceName = type.getName();
         return getClassResource(classLoader, resourceName);
     }
@@ -456,15 +454,21 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException If <code>classLoader</code> argument is <code>null</code>
      */
     @Nonnull
-    public static Set<ClassLoader> getInheritableClassLoaders(ClassLoader classLoader) throws NullPointerException {
-        Set<ClassLoader> classLoadersSet = new LinkedHashSet();
+    public static Set<ClassLoader> getInheritableClassLoaders(@Nullable ClassLoader classLoader) throws NullPointerException {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        return unmodifiableSet(doGetInheritableClassLoaders(actualClassLoader));
+    }
+
+    @Nonnull
+    static Set<ClassLoader> doGetInheritableClassLoaders(ClassLoader classLoader) throws NullPointerException {
+        Set<ClassLoader> classLoadersSet = newLinkedHashSet();
         classLoadersSet.add(classLoader);
         ClassLoader parentClassLoader = classLoader.getParent();
         while (parentClassLoader != null) {
             classLoadersSet.add(parentClassLoader);
             parentClassLoader = parentClassLoader.getParent();
         }
-        return unmodifiableSet(classLoadersSet);
+        return classLoadersSet;
     }
 
     /**
@@ -477,11 +481,12 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException          If <code>classLoader</code> argument is <code>null</code>
      */
     @Nonnull
-    public static Map<ClassLoader, Set<Class<?>>> getAllLoadedClassesMap(ClassLoader classLoader) throws UnsupportedOperationException {
+    public static Map<ClassLoader, Set<Class<?>>> getAllLoadedClassesMap(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = new LinkedHashMap();
-        Set<ClassLoader> classLoadersSet = getInheritableClassLoaders(classLoader);
+        Set<ClassLoader> classLoadersSet = doGetInheritableClassLoaders(actualClassLoader);
         for (ClassLoader loader : classLoadersSet) {
-            allLoadedClassesMap.put(loader, getLoadedClasses(loader));
+            allLoadedClassesMap.put(loader, getLoadedClasses(actualClassLoader));
         }
         return unmodifiableMap(allLoadedClassesMap);
     }
@@ -495,8 +500,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws NullPointerException          If <code>classLoader</code> argument is <code>null</code>
      */
     @Nonnull
-    public static Set<Class<?>> getAllLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
-        Set<Class<?>> allLoadedClassesSet = new LinkedHashSet();
+    public static Set<Class<?>> getAllLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
+        Set<Class<?>> allLoadedClassesSet = newLinkedHashSet();
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
         for (Set<Class<?>> loadedClassesSet : allLoadedClassesMap.values()) {
             allLoadedClassesSet.addAll(loadedClassesSet);
@@ -515,9 +520,10 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @see #getAllLoadedClasses(ClassLoader)
      */
     @Nonnull
-    public static Set<Class<?>> getLoadedClasses(ClassLoader classLoader) throws UnsupportedOperationException {
+    public static Set<Class<?>> getLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
         Field field = findField(classLoaderClass, classesFieldName);
-        List<Class<?>> classes = getFieldValue(classLoader, field);
+        List<Class<?>> classes = getFieldValue(actualClassLoader, field);
         return classes == null ? emptySet() : ofSet(classes);
     }
 
@@ -528,8 +534,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @return Read-only {@link Set}
      * @throws UnsupportedOperationException If JVM does not support
      */
-    public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader) throws UnsupportedOperationException {
-        Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
+    public static Set<Class<?>> findLoadedClassesInClassPath(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
+        Set<String> classNames = INSTANCE.getAllClassNamesInClassPaths();
         return findLoadedClasses(classLoader, classNames);
     }
 
@@ -542,8 +548,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws UnsupportedOperationException If JVM does not support
      * @see #findLoadedClass(ClassLoader, String)
      */
-    public static Set<Class<?>> findLoadedClassesInClassPaths(ClassLoader classLoader, Set<String> classPaths) throws UnsupportedOperationException {
-        Set<Class<?>> loadedClasses = new LinkedHashSet();
+    public static Set<Class<?>> findLoadedClassesInClassPaths(@Nullable ClassLoader classLoader, Set<String> classPaths) throws UnsupportedOperationException {
+        Set<Class<?>> loadedClasses = newLinkedHashSet();
         for (String classPath : classPaths) {
             loadedClasses.addAll(findLoadedClassesInClassPath(classLoader, classPath));
         }
@@ -559,8 +565,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
      * @throws UnsupportedOperationException If JVM does not support
      * @see #findLoadedClass(ClassLoader, String)
      */
-    public static Set<Class<?>> findLoadedClassesInClassPath(ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
-        Set<String> classNames = ClassDataRepository.INSTANCE.getClassNamesInClassPath(classPath, true);
+    public static Set<Class<?>> findLoadedClassesInClassPath(@Nullable ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
+        Set<String> classNames = INSTANCE.getClassNamesInClassPath(classPath, true);
         return findLoadedClasses(classLoader, classNames);
     }
 
@@ -622,36 +628,38 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         Class<?> targetClass = null;
         try {
             ClassLoader targetClassLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
-            targetClass = loadClass(className, targetClassLoader, cached);
+            targetClass = loadClass(targetClassLoader, className, cached);
         } catch (Throwable ignored) { // Ignored
         }
         return targetClass;
     }
 
-    public static Set<URL> findAllClassPathURLs(ClassLoader classLoader) {
+    public static Set<URL> findAllClassPathURLs(@Nullable ClassLoader classLoader) {
 
-        Set<URL> allClassPathURLs = new LinkedHashSet<>();
+        ClassLoader actualClassLoader = findClassLoader(classLoader);
 
-        URL[] classPathURLs = urlClassPathHandle.getURLs(classLoader);
-        int length = classPathURLs.length;
+        Set<URL> allClassPathURLs = newLinkedHashSet();
 
-        allClassPathURLs.addAll(Arrays.asList(classPathURLs).subList(0, length));
+        URL[] classPathURLs = urlClassPathHandle.getURLs(actualClassLoader);
 
-        ClassLoader parentClassLoader = classLoader.getParent();
+        addAll(allClassPathURLs, classPathURLs);
+
+        ClassLoader parentClassLoader = actualClassLoader.getParent();
         if (parentClassLoader != null) {
             allClassPathURLs.addAll(findAllClassPathURLs(parentClassLoader));
         }
         return allClassPathURLs;
     }
 
-    public static boolean removeClassPathURL(ClassLoader classLoader, URL url) {
+    public static boolean removeClassPathURL(@Nullable ClassLoader classLoader, URL url) {
         if (!(classLoader instanceof SecureClassLoader)) {
             return false;
         }
         return urlClassPathHandle.removeURL(classLoader, url);
     }
 
-    public static URLClassLoader findURLClassLoader(ClassLoader classLoader) {
+    @Nullable
+    public static URLClassLoader findURLClassLoader(@Nullable ClassLoader classLoader) {
         if (classLoader == null) {
             return null;
         }
@@ -664,17 +672,152 @@ public abstract class ClassLoaderUtils extends BaseUtils {
         return urlClassLoader;
     }
 
-    private static URL toURL(String path) {
-        URL url = null;
-        try {
-            URI uri = new File(path).toURI();
-            url = uri.toURL();
-        } catch (Exception ignored) {
-        }
-        return url;
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls the urls
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls) {
+        return newURLClassLoader(urls, null);
     }
 
-    private static String buildCacheKey(String className, ClassLoader classLoader) {
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls the urls
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls, @Nullable ClassLoader classLoader) {
+        assertNotNull(urls, () -> "The 'urls' must not be null");
+        URL[] urlsArray = asArray(urls, URL.class);
+        return newURLClassLoader(urlsArray, classLoader);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls the urls
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls) {
+        return newURLClassLoader(urls, null);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls               the urls
+     * @param initializedLoaders the loaders of URLClassPath will be initialized or not
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, boolean initializedLoaders) {
+        return newURLClassLoader(urls, null, initializedLoaders);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls   the urls
+     * @param parent the {@link ClassLoader} as parent
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, @Nullable ClassLoader parent) throws IllegalArgumentException {
+        return newURLClassLoader(urls, parent, false);
+    }
+
+    /**
+     * Create a new instance of {@link URLClassLoader}
+     *
+     * @param urls               the urls
+     * @param parent             the {@link ClassLoader} as parent
+     * @param initializedLoaders the loaders of URLClassPath will be initialized or not
+     * @return non-null {@link URLClassLoader}
+     * @throws IllegalArgumentException if the <code>urls</code> is null or contains null element
+     */
+    @Nonnull
+    public static URLClassLoader newURLClassLoader(@Nonnull URL[] urls, @Nullable ClassLoader parent, boolean initializedLoaders) throws IllegalArgumentException {
+        assertNotNull(urls, () -> "The 'urls' must not be null");
+        assertNoNullElements(urls, () -> "Any element of 'urls' must not be null");
+        URLClassLoader urlClassLoader = new URLClassLoader(urls, parent);
+        if (initializedLoaders) {
+            urlClassPathHandle.initializeLoaders(urlClassLoader);
+        }
+        return urlClassLoader;
+    }
+
+    /**
+     * Try to find the instance of {@link URLClassLoader} from the specified {@link ClassLoader},
+     * if it can't be found, it will try to find all the {@link URL} of class-paths from the specified {@link ClassLoader},
+     * and then new a instance of {@link URLClassLoader} upon those urls.
+     *
+     * @param classLoader {@link ClassLoader}
+     * @return non-null {@link URLClassLoader}
+     */
+    @Nonnull
+    public static URLClassLoader resolveURLClassLoader(@Nullable ClassLoader classLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        if (urlClassLoader == null) {
+            Set<URL> urls = findAllClassPathURLs(classLoader);
+            urlClassLoader = newURLClassLoader(urls, classLoader);
+        }
+        return urlClassLoader;
+    }
+
+    /**
+     * Return the ClassLoader from the caller class
+     *
+     * @return the ClassLoader (only {@code null} if the caller class was absent
+     * @see ReflectionUtils#getCallerClass()
+     */
+    static ClassLoader getCallerClassLoader(int invocationFrame) {
+        ClassLoader classLoader = null;
+        Class<?> callerClass = getCallerClass(invocationFrame);
+        if (callerClass != null) {
+            classLoader = callerClass.getClassLoader();
+        }
+        return classLoader;
+    }
+
+    @Nullable
+    static ClassLoader findClassLoader(@Nullable ClassLoader classLoader) {
+        return classLoader == null ? getDefaultClassLoader() : classLoader;
+    }
+
+    /**
+     * Invoke the {@link MethodHandle} of {@link ClassLoader#findLoadedClass(String)}
+     *
+     * @param classLoader {@link ClassLoader}
+     * @param className   the class name
+     * @return <code>null</code> if not loaded or can't be loaded
+     */
+    static Class<?> invokeFindLoadedClassMethod(ClassLoader classLoader, String className) {
+        Class<?> loadedClass = null;
+        try {
+            Method findLoadedClassMethod = findMethod(ClassLoader.class, findLoadedClassMethodName, String.class);
+            loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
+        } catch (Throwable e) {
+            logOnFindLoadedClassInvocationFailed(classLoader, className, e);
+        }
+        return loadedClass;
+    }
+
+    static void logOnFindLoadedClassInvocationFailed(ClassLoader classLoader, String className, Throwable e) {
+        logger.error("The findLoadedClass(className : '{}' : String) method of java.lang.ClassLoader[{}] can't be invoked in the current JVM[vendor : {} , version : {}]",
+                className, classLoader, JAVA_VENDOR, JAVA_VERSION, e);
+    }
+
+    static String buildCacheKey(ClassLoader classLoader, String className) {
         String cacheKey = className + classLoader.hashCode();
         return cacheKey;
     }
@@ -686,7 +829,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         DEFAULT {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
                 return true;
             }
 
@@ -698,29 +841,43 @@ public abstract class ClassLoaderUtils extends BaseUtils {
 
         }, CLASS {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
                 return endsWith(name, CLASS_EXTENSION);
             }
 
             @Override
             public String normalize(String name) {
-                String className = replace(name, CLASS_EXTENSION, EMPTY);
-                return replace(className, DOT, SLASH) + CLASS_EXTENSION;
+                if (name == null) {
+                    return null;
+                }
+                int index = name.lastIndexOf(CLASS_EXTENSION);
+                String className = index > -1 ? name.substring(0, index) : name;
+                className = className.replace(DOT_CHAR, SLASH_CHAR);
+                return className + CLASS_EXTENSION;
             }
 
 
         }, PACKAGE {
             @Override
-            boolean supported(String name) {
+            boolean supports(String name) {
+                if (name == null) {
+                    return false;
+                }
                 //TODO: use regexp to match more precise
-                return !CLASS.supported(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
+                return !CLASS.supports(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
             }
 
             @Override
             String normalize(String name) {
-                return replace(name, DOT, SLASH) + SLASH;
+                if (name == null) {
+                    return null;
+                }
+                String packageName = name.replace(DOT_CHAR, SLASH_CHAR);
+                if (!packageName.endsWith(SLASH)) {
+                    return packageName + SLASH;
+                }
+                return packageName;
             }
-
 
         };
 
@@ -731,13 +888,16 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          * @return a newly resolved resource name
          */
         public String resolve(String name) {
-            String normalizedName = supported(name) ? normalize(name) : null;
-            if (normalizedName == null) return normalizedName;
+            if (isBlank(name) || !supports(name)) {
+                return null;
+            }
 
-            normalizedName = URLUtils.normalizePath(normalizedName);
+            String normalizedName = normalize(name);
 
-            // 除去开头的"/"
-            while (normalizedName.startsWith("/")) {
+            normalizedName = normalizePath(normalizedName);
+
+            // Remove the character "/" in the start of String if found
+            while (normalizedName.startsWith(SLASH)) {
                 normalizedName = normalizedName.substring(1);
             }
 
@@ -750,7 +910,7 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          * @param name resource name
          * @return If supported , return <code>true</code> , or return <code>false</code>
          */
-        abstract boolean supported(String name);
+        abstract boolean supports(String name);
 
         /**
          * Normalizes resource name
@@ -760,8 +920,8 @@ public abstract class ClassLoaderUtils extends BaseUtils {
          */
         abstract String normalize(String name);
 
-
     }
 
-
+    private ClassLoaderUtils() {
+    }
 }

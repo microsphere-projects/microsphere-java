@@ -19,6 +19,9 @@ package io.microsphere.reflect.generics;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.Assert.assertTrue;
+
 /**
  * {@link Type} Argument
  *
@@ -32,6 +35,8 @@ public class TypeArgument {
     private final int index;
 
     protected TypeArgument(Type type, int index) {
+        assertNotNull(type, () -> "The 'type' must not be null");
+        assertTrue(index > -1, () -> "The 'index' must not be positive");
         this.type = type;
         this.index = index;
     }

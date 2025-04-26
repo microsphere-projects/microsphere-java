@@ -19,7 +19,9 @@ package io.microsphere.convert.multiple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static java.util.Objects.deepEquals;
+import static io.microsphere.util.ArrayUtils.EMPTY_INTEGER_OBJECT_ARRAY;
+import static java.lang.Integer.MAX_VALUE;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -50,9 +52,9 @@ public class StringToArrayConverterTest {
 
     @Test
     public void testConvert() {
-        assertTrue(deepEquals(new Integer[]{123}, converter.convert("123", Integer[].class, Integer.class)));
-        assertTrue(deepEquals(new Integer[]{1, 2, 3}, converter.convert("1,2,3", Integer[].class, null)));
-        assertNull(converter.convert("", Integer[].class, null));
+        assertArrayEquals(new Integer[]{123}, (Integer[]) converter.convert("123", Integer[].class, Integer.class));
+        assertArrayEquals(new Integer[]{1, 2, 3}, (Integer[]) converter.convert("1,2,3", Integer[].class, null));
+        assertArrayEquals(EMPTY_INTEGER_OBJECT_ARRAY, (Integer[]) converter.convert("", Integer[].class, null));
         assertNull(converter.convert(null, Integer[].class, null));
     }
 
@@ -63,6 +65,6 @@ public class StringToArrayConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE, converter.getPriority());
+        assertEquals(MAX_VALUE, converter.getPriority());
     }
 }

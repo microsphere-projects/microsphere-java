@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.test.StringIntegerBooleanHashMap;
+import io.microsphere.test.StringIntegerHashMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ResolvableType;
 
@@ -28,9 +30,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaType.fromMethodParameter;
+import static io.microsphere.reflect.JavaType.fromMethodParameters;
+import static io.microsphere.reflect.JavaType.fromMethodReturnType;
+import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.core.ResolvableType.forType;
 
 /**
  * {@link JavaType} Test
@@ -54,19 +63,19 @@ public class JavaTypeTest {
 
     @Test
     public void testFromType() {
-        JavaType javaType = JavaType.from(StringIntegerBooleanHashMap.class);
+        JavaType javaType = from(StringIntegerBooleanHashMap.class);
         assertGenericTypes(javaType);
 
         javaType = javaType.getSuperType();
         assertGenericTypes(javaType, String.class, Integer.class, Boolean.class);
 
-        javaType = JavaType.from(StringIntegerHashMap.class);
+        javaType = from(StringIntegerHashMap.class);
         assertGenericTypes(javaType);
 
         javaType = javaType.getSuperType();
         assertGenericTypes(javaType, String.class, Integer.class);
 
-        javaType = JavaType.from(HashMap.class);
+        javaType = from(HashMap.class);
         assertGenericTypes(javaType, null, null);
 
         javaType = javaType.getSuperType();
@@ -76,25 +85,110 @@ public class JavaTypeTest {
 
     @Test
     public void testFromMethod() {
-        Method method = MethodUtils.findMethod(getClass(), "fromValue", HashMap.class);
-        JavaType methodReturnType = JavaType.fromMethodReturnType(method);
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
+        JavaType methodReturnType = fromMethodReturnType(method);
         assertJavaType(methodReturnType);
 
-        JavaType methodParameterType = JavaType.fromMethodParameter(method, 0);
+        JavaType methodParameterType = fromMethodParameter(method, 0);
         assertJavaType(methodParameterType);
+
+        JavaType[] methodParameters = fromMethodParameters(method);
+        assertEquals(1, methodParameters.length);
+        assertJavaType(methodParameters[0]);
     }
 
     @Test
     public void testFromField() {
-        Field field = FieldUtils.findField(getClass(), "mapField");
-        JavaType javaType = JavaType.from(field);
+        Field field = findField(getClass(), "mapField");
+        JavaType javaType = from(field);
         assertJavaType(javaType);
+    }
+
+    @Test
+    public void testForClass() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForClass.class);
+    }
+
+    @Test
+    public void testForGenericArrayType() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForGenericArrayType.class);
+    }
+
+    @Test
+    public void testForObjectClass() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForObjectClass.class);
+    }
+
+    @Test
+    public void testForParameterizedType() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForParameterizedType.class);
+
+    }
+
+    @Test
+    public void testForTypeVariable() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForTypeVariable.class);
+    }
+
+    @Test
+    public void testForUnknown() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForUnknown.class);
+    }
+
+    @Test
+    public void testForWildcardType() throws Throwable {
+        testAbstractJavaTypeTest(JavaTypeTestForWildcardType.class);
+    }
+
+    @Test
+    public void testKindForClass() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForClass.class);
+    }
+
+    @Test
+    public void testKindForGenericArrayType() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForGenericArrayType.class);
+    }
+
+    @Test
+    public void testKindForParameterizedType() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForParameterizedType.class);
+    }
+
+    @Test
+    public void testKindForTypeVariable() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForTypeVariable.class);
+    }
+
+    @Test
+    public void testKindForUnknown() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForUnknown.class);
+    }
+
+    @Test
+    public void testKindForWildcardType() throws Throwable {
+        testAbstractJavaTypeKindTest(JavaTypeKindTestForWildcardType.class);
+    }
+
+    private void testAbstractJavaTypeKindTest(Class<? extends AbstractJavaTypeKindTest> testClass) throws Throwable {
+        AbstractJavaTypeKindTest test = testClass.getConstructor().newInstance();
+        test.testGetSuperType();
+        test.testGetRawType();
+        test.testGetInterfaces();
+        test.testGetGenericTypes();
+    }
+
+    private void testAbstractJavaTypeTest(Class<? extends AbstractJavaTypeTest> testClass) throws Throwable {
+        AbstractJavaTypeTest.beforeAll();
+        AbstractJavaTypeTest test = testClass.getConstructor().newInstance();
+        test.init();
+        test.test();
     }
 
     private static void assertGenericTypes(JavaType javaType, Class<?>... expectedClasses) {
         int length = expectedClasses.length;
         // Compare with Spring ResolvableType
-        ResolvableType resolvableType = ResolvableType.forType(javaType.getType());
+        ResolvableType resolvableType = forType(javaType.getType());
         JavaType[] genericTypes = javaType.getGenericTypes();
         Class[] genericsClasses = resolvableType.resolveGenerics();
         assertEquals(length, genericTypes.length);

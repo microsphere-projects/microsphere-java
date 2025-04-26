@@ -16,16 +16,17 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 
 /**
  * The definition class of Java {@link Method}
@@ -141,12 +142,12 @@ public class MethodDefinition extends ExecutableDefinition<Method> {
         return "MethodDefinition{" +
                 "since=" + super.since +
                 ", deprecation=" + super.deprecation +
-                ", declaredClassName='" + super.getDeclaredClassName() + '\'' +
+                ", declaredClassName='" + super.getDeclaredClassName() + QUOTE_CHAR +
                 ", declaredClass=" + super.getDeclaredClass() +
-                ", methodName='" + getMethodName() + '\'' +
+                ", methodName='" + getMethodName() + QUOTE_CHAR +
                 ", method=" + getMethod() +
-                ", parameterClassName=" + Arrays.toString(super.parameterClassNames) +
-                ", parameterTypes=" + Arrays.toString(super.getParameterTypes()) +
+                ", parameterClassName=" + arrayToString(super.parameterClassNames) +
+                ", parameterTypes=" + arrayToString(super.getParameterTypes()) +
                 '}';
     }
 }

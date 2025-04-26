@@ -60,7 +60,7 @@ public abstract class ReadOnlyIteratorTest extends AbstractTestCase {
 
     @Test
     public void testForEachRemaining() {
-        instance.forEachRemaining(this::info);
+        instance.forEachRemaining(this::log);
     }
 
 }

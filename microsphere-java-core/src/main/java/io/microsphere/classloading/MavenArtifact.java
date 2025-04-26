@@ -1,9 +1,13 @@
 package io.microsphere.classloading;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.net.URL;
 import java.util.Objects;
+
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
+import static java.util.Objects.hash;
 
 /**
  * Maven {@link Artifact}
@@ -13,6 +17,7 @@ import java.util.Objects;
  */
 public class MavenArtifact extends Artifact {
 
+    @Nonnull
     private final String groupId;
 
     public MavenArtifact(@Nonnull String groupId, @Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
@@ -34,6 +39,11 @@ public class MavenArtifact extends Artifact {
         return create(groupId, artifactId, UNKNOWN);
     }
 
+    /**
+     * Get the group id of Maven Artifact
+     * @return non-null
+     */
+    @Nonnull
     public String getGroupId() {
         return groupId;
     }
@@ -66,15 +76,15 @@ public class MavenArtifact extends Artifact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), groupId);
+        return hash(super.hashCode(), groupId);
     }
 
     @Override
     public String toString() {
-        String sb = "MavenArtifact{" + "groupId='" + groupId + '\'' +
-                ", artifactId='" + getArtifactId() + '\'' +
-                ", version='" + getVersion() + '\'' +
-                ", location='" + getLocation() + '\'' +
+        String sb = "MavenArtifact{" + "groupId='" + groupId + QUOTE_CHAR +
+                ", artifactId='" + getArtifactId() + QUOTE_CHAR +
+                ", version='" + getVersion() + QUOTE_CHAR +
+                ", location='" + getLocation() + QUOTE_CHAR +
                 '}';
         return sb;
     }

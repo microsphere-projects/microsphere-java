@@ -35,14 +35,38 @@ public interface SymbolConstants {
     char SPACE_CHAR = ' ';
 
     /**
+     * The at char : '@'
+     */
+    char AT_CHAR = '@';
+
+    /**
      * The exclamation char : '!'
      */
     char EXCLAMATION_CHAR = '!';
 
     /**
-     * The exclamation char : '"'
+     * The single quote char : '\''
      */
-    char DOUBLE_QUOTATION_CHAR = '"';
+    char QUOTE_CHAR = '\'';
+
+    /**
+     * The double quote char : '"'
+     */
+    char DOUBLE_QUOTE_CHAR = '"';
+
+    /**
+     * The single quotes char : '\''
+     *
+     * @see #QUOTE_CHAR
+     */
+    char SINGLE_QUOTATION_CHAR = QUOTE_CHAR;
+
+    /**
+     * The double quotes char : '"'
+     *
+     * @see #DOUBLE_QUOTE_CHAR
+     */
+    char DOUBLE_QUOTATION_CHAR = DOUBLE_QUOTE_CHAR;
 
     /**
      * The dollar char : '$'
@@ -125,6 +149,16 @@ public interface SymbolConstants {
     char WILDCARD_CHAR = '*';
 
     /**
+     * The vertical bar char : '|'
+     */
+    char VERTICAL_BAR_CHAR = '|';
+
+    /**
+     * The pipe char : '|'
+     */
+    char PIPE_CHAR = VERTICAL_BAR_CHAR;
+
+    /**
      * The comma symbol : ","
      */
     String COMMA = ",";
@@ -135,14 +169,37 @@ public interface SymbolConstants {
     String SPACE = " ";
 
     /**
+     * The at symbol : "@"
+     */
+    String AT = "@";
+
+    /**
      * The exclamation symbol : "!"
      */
     String EXCLAMATION = "!";
 
     /**
-     * The double quotation symbol : """
+     * The single quote symbol : "'"
      */
-    String DOUBLE_QUOTATION = "\"";
+    String QUOTE = "'";
+
+    /**
+     * The double quote symbol : "\""
+     * @see #DOUBLE_QUOTATION
+     */
+    String DOUBLE_QUOTE = "\"";
+
+    /**
+     * The single quotes symbol : "'"
+     *
+     * @see #QUOTE
+     */
+    String SINGLE_QUOTATION = QUOTE;
+
+    /**
+     * The double quotation symbol : "\""
+     */
+    String DOUBLE_QUOTATION = DOUBLE_QUOTE;
 
     /**
      * The dollar symbol : '$'
@@ -199,7 +256,6 @@ public interface SymbolConstants {
      */
     String SHARP = "#";
 
-
     /**
      * The question mark symbol : "?"
      */
@@ -234,4 +290,14 @@ public interface SymbolConstants {
      * The wildcard symbol : "*"
      */
     String WILDCARD = "*";
+
+    /**
+     * The vertical bar symbol : "|"
+     */
+    String VERTICAL_BAR = "|";
+
+    /**
+     * The pipe symbol : "|"
+     */
+    String PIPE = VERTICAL_BAR;
 }

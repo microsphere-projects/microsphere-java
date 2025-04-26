@@ -1,12 +1,15 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Objects;
 import java.util.function.Function;
+
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
+import static java.util.Objects.hash;
 
 /**
  * Artifact entity
@@ -20,10 +23,13 @@ public class Artifact {
 
     public static final String UNKNOWN = SymbolConstants.QUESTION_MARK;
 
+    @Nonnull
     private final String artifactId;
 
+    @Nullable
     private final String version;
 
+    @Nullable
     private final URL location;
 
     public Artifact(@Nonnull String artifactId, @Nullable String version, @Nullable URL location) {
@@ -44,14 +50,32 @@ public class Artifact {
         return create(artifactId, UNKNOWN);
     }
 
+    /**
+     * Get the artifact Id
+     *
+     * @return non-null
+     */
+    @Nonnull
     public String getArtifactId() {
         return artifactId;
     }
 
+    /**
+     * Get the version
+     *
+     * @return nullable
+     */
+    @Nullable
     public String getVersion() {
         return version;
     }
 
+    /**
+     * Get the location of artifact resource
+     *
+     * @return nullable
+     */
+    @Nullable
     public URL getLocation() {
         return location;
     }
@@ -90,14 +114,14 @@ public class Artifact {
 
     @Override
     public int hashCode() {
-        return Objects.hash(artifactId, version, location);
+        return hash(artifactId, version, location);
     }
 
     @Override
     public String toString() {
-        String sb = "Artifact{" + "artifactId='" + artifactId + '\'' +
-                ", version='" + version + '\'' +
-                ", location='" + location + '\'' +
+        String sb = "Artifact{" + "artifactId='" + artifactId + QUOTE_CHAR +
+                ", version='" + version + QUOTE_CHAR +
+                ", location='" + location + QUOTE_CHAR +
                 '}';
         return sb;
     }

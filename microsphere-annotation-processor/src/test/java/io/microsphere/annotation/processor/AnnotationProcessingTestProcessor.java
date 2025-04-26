@@ -28,9 +28,16 @@ import javax.lang.model.element.TypeElement;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import static io.microsphere.constants.SymbolConstants.WILDCARD;
 import static javax.lang.model.SourceVersion.latestSupported;
 
-@SupportedAnnotationTypes("*")
+/**
+ * {@link AnnotationProcessingTestProcessor}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
+ */
+@SupportedAnnotationTypes(WILDCARD)
 public class AnnotationProcessingTestProcessor extends AbstractProcessor {
 
     private final AbstractAnnotationProcessingTest abstractAnnotationProcessingTest;
@@ -53,11 +60,13 @@ public class AnnotationProcessingTestProcessor extends AbstractProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (!roundEnv.processingOver()) {
             prepare();
-            abstractAnnotationProcessingTest.beforeEach();
+            abstractAnnotationProcessingTest.beforeTest();
             try {
                 invocation.proceed();
             } catch (Throwable throwable) {
                 throw new RuntimeException(throwable);
+            } finally {
+                abstractAnnotationProcessingTest.afterTest();
             }
         }
         return false;

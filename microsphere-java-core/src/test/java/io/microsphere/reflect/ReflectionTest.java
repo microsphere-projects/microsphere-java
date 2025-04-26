@@ -24,19 +24,21 @@ package io.microsphere.reflect;
  */
 public class ReflectionTest {
 
-    private String privateField = "privateField";
+    private final String privateField = "privateField";
 
-    String defaultField = "defaultField";
+    String packagePrivateField = "packagePrivateField";
 
     protected String protectedField = "protectedField";
 
     public String publicField = "publicField";
 
+    static String staticField = "staticField";
+
     private String privateMethod() {
         return "test";
     }
 
-    String defaultMethod(String arg) {
+    String packagePrivateMethod(String arg) {
         return arg;
     }
 
@@ -44,11 +46,24 @@ public class ReflectionTest {
         return args;
     }
 
-    public static String publicStaticMethod(int value) {
+    public String publicMethod(int value) {
         return String.valueOf(value);
     }
 
-    public void throwsException() {
-        throw new RuntimeException("Test...");
+    public final void errorMethod() {
+        throw new RuntimeException("For testing...");
     }
+
+    public static String staticMethod() {
+        return "staticMethod";
+    }
+
+    private int method(int value) {
+        return value;
+    }
+
+    public String method(String message) {
+        return message;
+    }
+
 }

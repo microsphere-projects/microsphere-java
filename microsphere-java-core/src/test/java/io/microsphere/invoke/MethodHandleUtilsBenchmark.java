@@ -20,7 +20,6 @@ import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
@@ -28,10 +27,12 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Method;
-import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.openjdk.jmh.annotations.Mode.AverageTime;
 
 /**
  * The benchmark of {@link MethodHandleUtils}
@@ -40,11 +41,11 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
  * @see MethodHandleUtils
  * @since 1.0.0
  */
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 20, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1, timeUnit = SECONDS)
+@Measurement(iterations = 20, time = 1, timeUnit = SECONDS)
 @Fork(3)
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@BenchmarkMode(AverageTime)
+@OutputTimeUnit(NANOSECONDS)
 @State(Scope.Thread)
 public class MethodHandleUtilsBenchmark {
 
@@ -74,7 +75,12 @@ public class MethodHandleUtilsBenchmark {
     }
 
     @Benchmark
-    public void invokeExactStaticMethodHandle() throws Throwable {
+    public void invokeMethodHandle() throws Throwable {
+        invokeExact(methodHandle);
+    }
+
+    @Benchmark
+    public void invokeStaticMethodHandle() throws Throwable {
         invokeExact(staticMethodHandle);
     }
 
@@ -82,6 +88,10 @@ public class MethodHandleUtilsBenchmark {
         methodHandle.invokeExact(this);
     }
 
-    private void echo() {
+    private void invoke(MethodHandle methodHandle) throws Throwable {
+        methodHandle.invoke(this);
+    }
+
+    public void echo() {
     }
 }

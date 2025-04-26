@@ -2,59 +2,47 @@ package io.microsphere.management;
 
 
 import io.microsphere.logging.Logger;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.process.ProcessIdResolver;
+import io.microsphere.util.Utils;
 
-import java.lang.management.RuntimeMXBean;
+import java.util.List;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
-import static io.microsphere.reflect.FieldUtils.getFieldValue;
-import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.util.StringUtils.substringBefore;
-import static java.lang.Integer.parseInt;
+import static io.microsphere.process.ProcessIdResolver.UNKNOWN_PROCESS_ID;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
  * Management Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ManagementUtils
  * @since 1.0.0
  */
-public abstract class ManagementUtils extends BaseUtils {
+public abstract class ManagementUtils implements Utils {
 
     private static final Logger logger = getLogger(ManagementUtils.class);
 
-    /**
-     * {@link RuntimeMXBean}
-     */
-    private final static RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
+    static final long currentProcessId = resolveCurrentProcessId();
 
-    /**
-     * "jvm" Field name
-     */
-    private final static String JVM_FIELD_NAME = "jvm";
-    /**
-     * sun.management.ManagementFactory.jvm
-     */
-    final static Object jvm = initJvm();
-    /**
-     * "getProcessId" Method name
-     *
-     * @see sun.management.VMManagementImpl#getProcessId()
-     */
-    private final static String GET_PROCESS_ID_METHOD_NAME = "getProcessId";
-
-    private static Object initJvm() {
-        Object jvm = null;
-        if (runtimeMXBean != null) {
-            try {
-                jvm = getFieldValue(runtimeMXBean, JVM_FIELD_NAME);
-            } catch (Throwable e) {
-                logger.error("The Field[name : '{}'] can't be found in RuntimeMXBean class : '{}'!", JVM_FIELD_NAME, runtimeMXBean.getClass(), e);
+    private static long resolveCurrentProcessId() {
+        List<ProcessIdResolver> resolvers = loadServicesList(ProcessIdResolver.class);
+        Long processId = null;
+        for (ProcessIdResolver resolver : resolvers) {
+            if (resolver.supports()) {
+                if ((processId = resolver.current()) != null) {
+                    log(resolver, processId);
+                    break;
+                }
             }
         }
-        return jvm;
+        return processId == null ? UNKNOWN_PROCESS_ID : processId;
+    }
+
+    static void log(ProcessIdResolver resolver, Long processId) {
+        if (logger.isTraceEnabled()) {
+            logger.trace("The process id was resolved by ProcessIdResolver[class : '{}' , priority : {}] successfully : {}",
+                    resolver.getClass().getName(), resolver.getPriority(), processId);
+        }
     }
 
     /**
@@ -62,25 +50,10 @@ public abstract class ManagementUtils extends BaseUtils {
      *
      * @return If can't get the process ID , return <code>-1</code>
      */
-    public static int getCurrentProcessId() {
-        int processId = -1;
-        Object result = null;
-
-        try {
-            result = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
-        } catch (Throwable e) {
-            logger.error("The method 'sun.management.VMManagementImpl#getProcessId()' can't be invoked!", e);
-        }
-
-        if (result instanceof Integer) {
-            processId = (Integer) result;
-        } else {
-            // no guarantee
-            String name = runtimeMXBean.getName();
-            String processIdValue = substringBefore(name, "@");
-            processId = parseInt(processIdValue);
-        }
-        return processId;
+    public static long getCurrentProcessId() {
+        return currentProcessId;
     }
 
+    private ManagementUtils() {
+    }
 }

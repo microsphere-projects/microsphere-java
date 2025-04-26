@@ -17,16 +17,17 @@
 package io.microsphere.io;
 
 
-import io.microsphere.util.PriorityComparator;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.reflect.TypeUtils.resolveTypeArguments;
+import static io.microsphere.collection.ListUtils.first;
+import static io.microsphere.collection.ListUtils.last;
+import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.emptyList;
-import static java.util.ServiceLoader.load;
 
 /**
  * {@link Serializer} Utilities class
@@ -45,16 +46,15 @@ public class Serializers {
     }
 
     public Serializers() {
-        this(Thread.currentThread().getContextClassLoader());
+        this(getDefaultClassLoader());
     }
 
     public void loadSPI() {
-        for (Serializer serializer : load(Serializer.class)) {
-            List<Class<?>> typeArguments = resolveTypeArguments(serializer.getClass());
-            Class<?> targetClass = typeArguments.isEmpty() ? Object.class : typeArguments.get(0);
+        for (Serializer serializer : loadServicesList(Serializer.class, classLoader)) {
+            List<Class<?>> typeArguments = resolveTypeArgumentClasses(serializer.getClass());
+            Class<?> targetClass = first(typeArguments);
             List<Serializer> serializers = typedSerializers.computeIfAbsent(targetClass, k -> new LinkedList());
             serializers.add(serializer);
-            serializers.sort(PriorityComparator.INSTANCE);
         }
     }
 
@@ -81,7 +81,7 @@ public class Serializers {
      */
     public <S> Serializer<S> getHighestPriority(Class<S> serializedType) {
         List<Serializer<S>> serializers = get(serializedType);
-        return serializers.isEmpty() ? null : serializers.get(0);
+        return first(serializers);
     }
 
 
@@ -94,7 +94,7 @@ public class Serializers {
      */
     public <S> Serializer<S> getLowestPriority(Class<S> serializedType) {
         List<Serializer<S>> serializers = get(serializedType);
-        return serializers.isEmpty() ? null : serializers.get(serializers.size() - 1);
+        return last(serializers);
     }
 
     /**

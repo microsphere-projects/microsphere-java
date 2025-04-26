@@ -16,7 +16,7 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -30,17 +30,32 @@ import java.util.function.Predicate;
  *
  * @since 1.0.0
  */
-public abstract class MemberUtils extends BaseUtils {
+public abstract class MemberUtils implements Utils {
 
-    public final static Predicate<Method> STATIC_METHOD_PREDICATE = MemberUtils::isStatic;
+    /**
+     * The {@link Predicate} reference to {@link #isStatic(Member)}
+     */
+    public final static Predicate<? super Member> STATIC_MEMBER_PREDICATE = MemberUtils::isStatic;
 
-    public final static Predicate<Member> NON_STATIC_METHOD_PREDICATE = MemberUtils::isNonStatic;
+    /**
+     * The {@link Predicate} reference to {@link #isNonStatic(Member)}
+     */
+    public final static Predicate<? super Member> NON_STATIC_MEMBER_PREDICATE = MemberUtils::isNonStatic;
 
-    public final static Predicate<Member> FINAL_METHOD_PREDICATE = MemberUtils::isFinal;
+    /**
+     * The {@link Predicate} reference to {@link #isFinal(Member)}
+     */
+    public final static Predicate<? super Member> FINAL_MEMBER_PREDICATE = MemberUtils::isFinal;
 
-    public final static Predicate<Member> PUBLIC_METHOD_PREDICATE = MemberUtils::isPublic;
+    /**
+     * The {@link Predicate} reference to {@link #isPublic(Member)}
+     */
+    public final static Predicate<? super Member> PUBLIC_MEMBER_PREDICATE = MemberUtils::isPublic;
 
-    public final static Predicate<Member> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
+    /**
+     * The {@link Predicate} reference to {@link #isNonPrivate(Member)}
+     */
+    public final static Predicate<? super Member> NON_PRIVATE_MEMBER_PREDICATE = MemberUtils::isNonPrivate;
 
     /**
      * check the specified {@link Member member} is static or not ?
@@ -114,5 +129,8 @@ public abstract class MemberUtils extends BaseUtils {
      */
     public static Member asMember(Object object) {
         return object instanceof Member ? (Member) object : null;
+    }
+
+    private MemberUtils(){
     }
 }

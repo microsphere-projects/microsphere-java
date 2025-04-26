@@ -16,7 +16,7 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -39,7 +39,7 @@ import static java.util.Collections.emptyIterator;
  * @see Queue
  * @since 1.0.0
  */
-public abstract class QueueUtils extends BaseUtils {
+public abstract class QueueUtils implements Utils {
 
     private static final Deque EMPTY_DEQUE = new EmptyDeque();
 
@@ -61,6 +61,10 @@ public abstract class QueueUtils extends BaseUtils {
 
     public static <E> Queue<E> unmodifiableQueue(Queue<E> queue) {
         return new UnmodifiableQueue(queue);
+    }
+
+    public static <E> Deque<E> unmodifiableDeque(Deque<E> deque) {
+        return new UnmodifiableDeque(deque);
     }
 
     public static <E> Queue<E> singletonQueue(E element) {
@@ -233,6 +237,9 @@ public abstract class QueueUtils extends BaseUtils {
 
         @Override
         public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
             return delegate.equals(o);
         }
 
@@ -363,31 +370,34 @@ public abstract class QueueUtils extends BaseUtils {
 
         private final E element;
 
-        private final Iterator<E> iterator;
 
         SingletonDeque(E element) {
             this.element = element;
-            this.iterator = singletonIterator(element);
         }
 
         @Override
         public Iterator<E> iterator() {
-            return iterator;
+            return singletonIterator(element);
         }
 
         @Override
         public Iterator<E> descendingIterator() {
-            return iterator;
+            return singletonIterator(element);
+        }
+
+        @Override
+        public boolean removeFirstOccurrence(Object o) {
+            return super.removeFirstOccurrence(o);
         }
 
         @Override
         public boolean offerFirst(E e) {
-            return false;
+            throw new UnsupportedOperationException();
         }
 
         @Override
         public boolean offerLast(E e) {
-            return false;
+            throw new UnsupportedOperationException();
         }
 
         @Override
@@ -419,5 +429,8 @@ public abstract class QueueUtils extends BaseUtils {
         public int size() {
             return 1;
         }
+    }
+
+    private QueueUtils() {
     }
 }

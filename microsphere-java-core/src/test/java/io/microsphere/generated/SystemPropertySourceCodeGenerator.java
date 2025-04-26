@@ -19,14 +19,16 @@ package io.microsphere.generated;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.net.URL;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.constants.SymbolConstants.UNDER_SCORE_CHAR;
 import static io.microsphere.text.FormatUtils.format;
+import static java.nio.file.Files.newBufferedReader;
+import static java.nio.file.Paths.get;
 
 /**
  * System
@@ -54,15 +56,15 @@ public class SystemPropertySourceCodeGenerator {
     public void generate(PrintStream out) throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         URL resource = classLoader.getResource(SYSTEM_PROPERTIES_LOCATION);
-        Path resourcePath = Paths.get(resource.toURI());
+        Path resourcePath = get(resource.toURI());
         List<String> keyLines = new LinkedList<>();
         List<String> valueLines = new LinkedList<>();
-        try (Reader reader = Files.newBufferedReader(resourcePath)) {
+        try (Reader reader = newBufferedReader(resourcePath)) {
             Properties properties = new Properties();
             properties.load(reader);
             for (String key : properties.stringPropertyNames()) {
                 String comment = properties.getProperty(key);
-                String valueFieldName = key.toUpperCase().replace('.', '_');
+                String valueFieldName = key.toUpperCase().replace(DOT_CHAR, UNDER_SCORE_CHAR);
                 String keyFieldName = valueFieldName + "_PROPERTY_KEY";
                 String keyLine = format(KEY_TEMPLATE, comment, keyFieldName, key);
                 String valueLine = format(VALUE_TEMPLATE, comment, valueFieldName, keyFieldName);

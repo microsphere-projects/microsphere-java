@@ -20,6 +20,8 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.AND;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
+import static io.microsphere.constants.SymbolConstants.AT;
+import static io.microsphere.constants.SymbolConstants.AT_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.COMMA;
@@ -30,6 +32,8 @@ import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTATION;
 import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTATION_CHAR;
+import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTE;
+import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTE_CHAR;
 import static io.microsphere.constants.SymbolConstants.EQUAL;
 import static io.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.microsphere.constants.SymbolConstants.EXCLAMATION;
@@ -44,20 +48,28 @@ import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN_CHAR;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN_OR_EQUAL_TO;
+import static io.microsphere.constants.SymbolConstants.PIPE;
+import static io.microsphere.constants.SymbolConstants.PIPE_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUESTION_MARK;
 import static io.microsphere.constants.SymbolConstants.QUESTION_MARK_CHAR;
+import static io.microsphere.constants.SymbolConstants.QUOTE;
+import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.SEMICOLON;
 import static io.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.microsphere.constants.SymbolConstants.SINGLE_QUOTATION;
+import static io.microsphere.constants.SymbolConstants.SINGLE_QUOTATION_CHAR;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.UNDER_SCORE;
 import static io.microsphere.constants.SymbolConstants.UNDER_SCORE_CHAR;
+import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR;
+import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.WILDCARD;
 import static io.microsphere.constants.SymbolConstants.WILDCARD_CHAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -74,7 +86,11 @@ public class SymbolConstantsTest {
     public void test() {
         assertEquals(',', COMMA_CHAR);
         assertEquals(' ', SPACE_CHAR);
+        assertEquals('@', AT_CHAR);
         assertEquals('!', EXCLAMATION_CHAR);
+        assertEquals('\'', QUOTE_CHAR);
+        assertEquals('"', DOUBLE_QUOTE_CHAR);
+        assertEquals('\'', SINGLE_QUOTATION_CHAR);
         assertEquals('"', DOUBLE_QUOTATION_CHAR);
         assertEquals('$', DOLLAR_CHAR);
         assertEquals('.', DOT_CHAR);
@@ -92,10 +108,16 @@ public class SymbolConstantsTest {
         assertEquals('_', UNDER_SCORE_CHAR);
         assertEquals('-', HYPHEN_CHAR);
         assertEquals('*', WILDCARD_CHAR);
+        assertEquals('|', VERTICAL_BAR_CHAR);
+        assertEquals('|', PIPE_CHAR);
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
+        assertEquals("@", AT);
         assertEquals("!", EXCLAMATION);
+        assertEquals("'", QUOTE);
+        assertEquals("\"", DOUBLE_QUOTE);
+        assertEquals("'", SINGLE_QUOTATION);
         assertEquals("\"", DOUBLE_QUOTATION);
         assertEquals("$", DOLLAR);
         assertEquals(".", DOT);
@@ -115,5 +137,7 @@ public class SymbolConstantsTest {
         assertEquals("_", UNDER_SCORE);
         assertEquals("-", HYPHEN);
         assertEquals("*", WILDCARD);
+        assertEquals("|", VERTICAL_BAR);
+        assertEquals("|", PIPE);
     }
 }

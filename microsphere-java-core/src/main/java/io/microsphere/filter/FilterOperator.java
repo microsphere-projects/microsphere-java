@@ -1,12 +1,11 @@
 package io.microsphere.filter;
 
-import java.lang.reflect.Array;
+import static io.microsphere.util.ArrayUtils.length;
 
 /**
  * {@link Filter} Operator enumeration , which contains {@link #AND}��{@link #OR}��{@link #XOR}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @version 1.0.0
  * @see Filter
  * @see #AND
  * @see #OR
@@ -21,7 +20,7 @@ public enum FilterOperator {
     AND {
         @Override
         public <T> boolean accept(T filteredObject, Filter<T>... filters) {
-            int length = Array.getLength(filters);
+            int length = length(filters);
             if (length == 0)
                 return true;
             boolean success = true;
@@ -38,7 +37,7 @@ public enum FilterOperator {
     OR {
         @Override
         public <T> boolean accept(T filteredObject, Filter<T>... filters) {
-            int length = Array.getLength(filters);
+            int length = length(filters);
             if (length == 0)
                 return true;
             boolean success = false;
@@ -54,7 +53,7 @@ public enum FilterOperator {
     XOR {
         @Override
         public <T> boolean accept(T filteredObject, Filter<T>... filters) {
-            int length = Array.getLength(filters);
+            int length = length(filters);
             if (length == 0)
                 return true;
             boolean success = true;
@@ -71,9 +70,7 @@ public enum FilterOperator {
      * @param <T>            Filtered object type
      * @param filteredObject Filtered object
      * @param filters        multiple {@link Filter}
-     * @return If accepted ��return <code>true</code>
-     * @version 1.0.0
-     * @since 1.0.0
+     * @return If accepted return <code>true</code>
      */
     public abstract <T> boolean accept(T filteredObject, Filter<T>... filters);
 

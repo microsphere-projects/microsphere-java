@@ -18,11 +18,19 @@ package io.microsphere.reflect;
 
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.processing.AbstractProcessor;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import static io.microsphere.reflect.AccessibleObjectUtils.canAccess;
+import static io.microsphere.reflect.AccessibleObjectUtils.setAccessible;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.MemberUtils.isStatic;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -36,15 +44,46 @@ public class AccessibleObjectUtilsTest {
 
     private static final String test = "test";
 
-    private static Method[] methods = test.getClass().getDeclaredMethods();
+    private static final Method[] methods = String.class.getMethods();
+
+    private static final Class<?> targetClass = AccessibleObjectUtils.class;
+
+    /**
+     * private method in the internal module
+     */
+    private static final Method tryCanAccessMethod = findMethod(targetClass, "tryCanAccess", Object.class, AccessibleObject.class);
+
+    /**
+     * protected constructor in the module "java.compiler" and package "javax.annotation.processing"
+     */
+    private static final Constructor abstractProcessorConstructor = findConstructor(AbstractProcessor.class);
+
+    @Test
+    public void testSetAccessible() {
+        for (Method method : methods) {
+            assertEquals(method.isAccessible(), setAccessible(method));
+        }
+    }
+
+    @Test
+    public void testSetAccessibleOnNonPublicMembers() {
+        assertEquals(setAccessible(tryCanAccessMethod), tryCanAccessMethod.isAccessible());
+
+        assertEquals(setAccessible(abstractProcessorConstructor), abstractProcessorConstructor.isAccessible());
+    }
 
     @Test
     public void testCanAccess() {
         for (Method method : methods) {
             if (!isStatic(method)) {
-                assertTrue(canAccess(test, method));
+                assertTrue(canAccess(null, method));
             }
         }
+    }
+
+    @Test
+    public void testCanAccessOnNonPublicMembers() {
+        assertFalse(canAccess(null, tryCanAccessMethod));
     }
 
     @Test
@@ -52,5 +91,11 @@ public class AccessibleObjectUtilsTest {
         for (Method method : methods) {
             assertTrue(trySetAccessible(method));
         }
+    }
+
+    @Test
+    public void testTrySetAccessibleOnNonPublicMembers() {
+        assertTrue(trySetAccessible(tryCanAccessMethod));
+        assertTrue(trySetAccessible(abstractProcessorConstructor));
     }
 }

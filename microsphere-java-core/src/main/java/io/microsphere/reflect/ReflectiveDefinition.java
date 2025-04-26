@@ -16,18 +16,21 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.Objects;
 
+import static io.microsphere.constants.SymbolConstants.QUOTE;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.Version.ofVersion;
+import static java.util.Objects.hash;
 
 /**
  * The abstract definition class for Java Reflection
@@ -50,9 +53,6 @@ public abstract class ReflectiveDefinition implements Serializable {
     @Nonnull
     protected final String className;
 
-    @Nullable
-    protected final transient ClassLoader classLoader;
-
     private transient boolean resolved;
 
     @Nullable
@@ -72,7 +72,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * @param className   the name of class
      */
     public ReflectiveDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String className) {
-        this(Version.of(since), deprecation, className);
+        this(ofVersion(since), deprecation, className);
     }
 
     /**
@@ -91,11 +91,9 @@ public abstract class ReflectiveDefinition implements Serializable {
     public ReflectiveDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String className) {
         assertNotNull(since, () -> "The 'since' version must not be null.");
         assertNotBlank(className, () -> "The class name must not be null.");
-        ClassLoader classLoader = getClassLoader(getClass());
         this.since = since;
         this.deprecation = deprecation;
         this.className = className;
-        this.classLoader = classLoader;
         this.resolved = false;
     }
 
@@ -137,6 +135,7 @@ public abstract class ReflectiveDefinition implements Serializable {
     @Nullable
     public final Class<?> getResolvedClass() {
         if (!resolved && resolvedClass == null) {
+            ClassLoader classLoader = getClassLoader(getClass());
             resolvedClass = resolveClass(className, classLoader, true);
             resolved = true;
         }
@@ -169,19 +168,16 @@ public abstract class ReflectiveDefinition implements Serializable {
 
     @Override
     public int hashCode() {
-        int result = this.since.hashCode();
-        result = 31 * result + Objects.hashCode(this.deprecation);
-        result = 31 * result + this.className.hashCode();
-        return result;
+        return hash(this.since, this.deprecation, this.className);
     }
 
     @Override
     public String toString() {
-        return "ReflectiveDefinition{" +
+        return getClass().getSimpleName() + "{" +
                 "since=" + this.since +
                 ", deprecation=" + this.deprecation +
-                ", className='" + this.className + "'" +
-                ", resolvedClass=" + this.resolvedClass +
+                ", className='" + this.className + QUOTE +
+                ", resolvedClass=" + this.getResolvedClass() +
                 '}';
     }
 }

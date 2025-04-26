@@ -14,16 +14,15 @@
 //import static io.microsphere.reflect.ReflectionUtils.assertArrayIndex;
 //import static io.microsphere.reflect.ReflectionUtils.assertFieldMatchType;
 //
-///**
+/// **
 // * {@link Unsafe} Utility class <p/> <b> Take case to  use those utility methods in order to the stability fo
 // * JVM </b>
 // *
 // * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
-// * @version 1.0.0
 // * @see UnsafeUtils
 // * @since 1.0.0
 // */
-//public abstract class UnsafeUtils extends BaseUtils{
+//public abstract class UnsafeUtils extends BaseUtils {
 //
 //    final static Unsafe unsafe;
 //

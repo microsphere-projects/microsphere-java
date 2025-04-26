@@ -36,7 +36,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
+import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -87,13 +88,13 @@ public class StringToNavigableSetConverterTest {
     @Test
     public void testConvert() {
 
-        Set values = new TreeSet(asList(1, 2, 3));
+        Set values = new TreeSet(ofList(1, 2, 3));
 
         NavigableSet result = (NavigableSet) converter.convert("1,2,3", List.class, Integer.class);
 
         assertTrue(CollectionUtils.equals(values, result));
 
-        values = new TreeSet(asList("123"));
+        values = new TreeSet(ofList("123"));
 
         result = (NavigableSet) converter.convert("123", NavigableSet.class, String.class);
 
@@ -110,6 +111,6 @@ public class StringToNavigableSetConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertTrue(Integer.MAX_VALUE > converter.getPriority());
+        assertTrue(MAX_VALUE > converter.getPriority());
     }
 }

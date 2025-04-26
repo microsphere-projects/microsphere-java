@@ -16,7 +16,10 @@
  */
 package io.microsphere.classloading;
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+import io.microsphere.lang.Prioritized;
+
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -31,7 +34,7 @@ import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
  * @see ModernURLClassPathHandle
  * @since 1.0.0
  */
-public interface URLClassPathHandle {
+public interface URLClassPathHandle extends Prioritized {
 
     /**
      * Supports or not
@@ -47,12 +50,27 @@ public interface URLClassPathHandle {
      * @return the non-null array of {@link URL URLs}
      */
     @Nonnull
-    default URL[] getURLs(ClassLoader classLoader) {
+    default URL[] getURLs(@Nullable ClassLoader classLoader) {
         URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
         if (urlClassLoader == null) {
             return EMPTY_URL_ARRAY;
         }
         return urlClassLoader.getURLs();
+    }
+
+    /**
+     * Initialize the loaders of URL Class-Path from {@link URLClassLoader}
+     *
+     * @param classLoader {@link ClassLoader}
+     * @return <code>true</code> if initialized, otherwise <code>false</code>
+     */
+    default boolean initializeLoaders(@Nullable ClassLoader classLoader) {
+        URLClassLoader urlClassLoader = findURLClassLoader(classLoader);
+        if (urlClassLoader == null) {
+            return false;
+        }
+        urlClassLoader.findResource("just-for-initializing-loaders");
+        return true;
     }
 
     /**
@@ -62,5 +80,14 @@ public interface URLClassPathHandle {
      * @param url         the Class-Path {@link URL}
      * @return if removed, return <code>true</code>, otherwise <code>false</code>
      */
-    boolean removeURL(ClassLoader classLoader, URL url);
+    boolean removeURL(@Nullable ClassLoader classLoader, @Nullable URL url);
+
+    /**
+     * Get the priority
+     *
+     * @return the default value is {@link Prioritized#MIN_PRIORITY}
+     */
+    default int getPriority() {
+        return MIN_PRIORITY;
+    }
 }

@@ -35,7 +35,9 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.TransferQueue;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
+import static java.lang.Integer.MAX_VALUE;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -86,20 +88,21 @@ public class StringToCollectionConverterTest {
     @Test
     public void testConvert() {
 
-        List values = asList(1L, 2L, 3L);
+        List values = ofList(1L, 2L, 3L);
 
         Collection result = (Collection<Long>) converter.convert("1,2,3", Collection.class, Long.class);
 
         assertEquals(values, result);
 
-        values = asList(123);
+        values = ofList(123);
 
         result = (Collection<Integer>) converter.convert("123", Collection.class, Integer.class);
 
         assertEquals(values, result);
 
+        assertEquals(emptyList(), converter.convert("", Collection.class, Integer.class));
+
         assertNull(converter.convert(null, Collection.class, Integer.class));
-        assertNull(converter.convert("", Collection.class, Integer.class));
 
     }
 
@@ -110,6 +113,6 @@ public class StringToCollectionConverterTest {
 
     @Test
     public void testGetPriority() {
-        assertEquals(Integer.MAX_VALUE - 1, converter.getPriority());
+        assertEquals(MAX_VALUE - 1, converter.getPriority());
     }
 }

@@ -16,20 +16,37 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.collection.SetUtils;
-import io.microsphere.net.console.Handler;
+import io.microsphere.net.test.Handler;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Proxy;
 import java.net.URL;
-import java.util.Properties;
+import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.net.ExtendableProtocolURLStreamHandler.appendHandlePackage;
+import static io.microsphere.net.ExtendableProtocolURLStreamHandler.assertClassName;
+import static io.microsphere.net.ExtendableProtocolURLStreamHandler.assertClassTopLevel;
+import static io.microsphere.net.ExtendableProtocolURLStreamHandler.assertPackage;
+import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackages;
+import static io.microsphere.net.ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue;
+import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
+import static io.microsphere.net.URLUtils.toExternalForm;
+import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL_WITH_SP;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static java.net.Proxy.NO_PROXY;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ExtendableProtocolURLStreamHandler} Test
@@ -39,6 +56,54 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class ExtendableProtocolURLStreamHandlerTest {
 
+    private static final String TEST_URL = "test://localhost:12345/abc";
+
+    private static final String TEST_URL_WITH_SP = "test:text://localhost:12345/abc";
+
+    private ExtendableProtocolURLStreamHandler handler;
+
+    @BeforeEach
+    public void init() {
+        // Handler for "test" protocol
+        handler = new Handler();
+    }
+
+    @AfterEach
+    public void destroy() {
+        System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
+    }
+
+    @Test
+    public void testAssertClassTopLevelOnLocalClass() {
+        class LocalClass extends ExtendableProtocolURLStreamHandler {
+        }
+        assertThrows(IllegalArgumentException.class, () -> assertClassTopLevel(LocalClass.class));
+    }
+
+    @Test
+    public void testAssertClassTopLevelOnMemberClass() {
+        assertThrows(IllegalArgumentException.class, () -> assertClassTopLevel(MemberClass.class));
+    }
+
+    @Test
+    public void testAssertClassTopLevelOnAnonymousClass() {
+        assertThrows(IllegalArgumentException.class, () -> assertClassTopLevel(new ExtendableProtocolURLStreamHandler() {
+        }.getClass()));
+    }
+
+    @Test
+    public void testAssertClassNameOnWrongClassName() {
+        assertThrows(IllegalArgumentException.class, () -> assertClassName(MemberClass.class));
+    }
+
+    @Test
+    public void testAssertPackageOnSunHandlerClass() {
+        Class<?> handler = resolveClass("sun.net.www.protocol.file.Handler");
+        if (handler != null) {
+            assertThrows(IllegalArgumentException.class, () -> assertPackage(handler));
+        }
+    }
+
     @Test
     public void testConstructorWithProtocolArg() {
         assertTestHandler("test-1");
@@ -47,78 +112,128 @@ public class ExtendableProtocolURLStreamHandlerTest {
     }
 
     private void assertTestHandler(String protocol) {
-        ExtendableProtocolURLStreamHandler handler = new TestHandler(protocol);
+        ExtendableProtocolURLStreamHandler handler = new Handler(protocol);
         assertEquals(protocol, handler.getProtocol());
     }
 
-
     @Test
-    public void testConsoleProtocol() throws Throwable {
-        Handler handler = new Handler();
-        assertEquals(SetUtils.of("io.microsphere.net"), ExtendableProtocolURLStreamHandler.getHandlePackages());
-        assertEquals("io.microsphere.net", ExtendableProtocolURLStreamHandler.getHandlePackagesPropertyValue());
-
-        String spec = "console:text://localhost:12345/abc;ref=top?n=1#hash";
-        URL url = new URL(spec);
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
-
-        spec = "console:text://localhost:12345/abc;ref=top?n=1";
-        url = new URL(spec);
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
-
-        spec = "console:text://localhost:12345/abc?n=1";
-        url = new URL(spec);
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
-
-        spec = "console:text://localhost:12345/abc";
-        url = new URL(spec);
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
-
-        spec = "console://localhost:12345/abc";
-        url = new URL(spec);
-        assertSame(url.openStream(), handler.openConnection(url).getInputStream());
-        assertEquals(spec, url.toString());
-
-        assertEquals("console", handler.getProtocol());
-
+    public void testGetHandlePackages() {
+        assertEquals(ofSet("io.microsphere.net"), getHandlePackages());
     }
 
     @Test
-    public void testClassPathProtocol() throws Throwable {
-        io.microsphere.net.classpath.Handler handler = new io.microsphere.net.classpath.Handler();
-        URL url = new URL("classpath://META-INF/test.properties");
-        Properties properties = new Properties();
-        properties.load(new InputStreamReader(url.openStream(), "UTF-8"));
-        assertEquals("测试名称", properties.get("name"));
-
-        url = new URL("classpath:////META-INF/services/io.microsphere.event.EventListener");
-        assertNotNull(url.openStream());
-
-        url = new URL("classpath:///META-INF/services/io.microsphere.event.EventListener");
-        assertNotNull(url.openStream());
-
-        url = new URL("classpath://META-INF/services/io.microsphere.event.EventListener");
-        assertNotNull(url.openStream());
-
-        url = new URL("classpath:/META-INF/services/io.microsphere.event.EventListener");
-        assertNotNull(url.openConnection());
-
-        url = new URL("classpath:META-INF/services/io.microsphere.event.EventListener");
-        assertNotNull(url.openConnection(Proxy.NO_PROXY));
-
-        assertEquals("classpath", handler.getProtocol());
+    public void testGetHandlePackagesPropertyValue() {
+        assertEquals("io.microsphere.net", getHandlePackagesPropertyValue());
     }
 
     @Test
-    public void testClassPathProtocolOnResourceNotFound() {
-        assertThrows(IOException.class, () -> {
-            new io.microsphere.net.classpath.Handler();
-            URL url = new URL("classpath://META-INF/not-found.res");
-            url.openStream();
+    public void testAppendHandlePackage() {
+        appendHandlePackage("io.microsphere.lang");
+        assertEquals(ofSet("io.microsphere.net", "io.microsphere"), getHandlePackages());
+        assertEquals("io.microsphere.net|io.microsphere", getHandlePackagesPropertyValue());
+    }
+
+    @Test
+    public void testInit() {
+        handler.init();
+    }
+
+    @Test
+    public void testInitSubProtocolURLConnectionFactories() {
+        List<SubProtocolURLConnectionFactory> factories = emptyList();
+        List<SubProtocolURLConnectionFactory> copy = newLinkedList(factories);
+        handler.initSubProtocolURLConnectionFactories(copy);
+        assertEquals(copy, factories);
+    }
+
+    @Test
+    public void testOpenConnection() throws IOException {
+        URL url = new URL(TEST_URL);
+        assertNull(url.openConnection());
+        assertEquals(TEST_URL, url.toString());
+    }
+
+    @Test
+    public void testCustomizeSubProtocolURLConnectionFactories() {
+        handler.customizeSubProtocolURLConnectionFactories(factories -> {
+            factories.add(new CompositeSubProtocolURLConnectionFactory());
         });
+    }
+
+    @Test
+    public void testOpenConnectionWithProxy() throws IOException {
+        handler.customizeSubProtocolURLConnectionFactories(factories -> {
+            factories.add(new ConsoleSubProtocolURLConnectionFactory());
+        });
+
+        URL url = new URL(TEST_URL_WITH_SP);
+        assertNull(url.openConnection(NO_PROXY));
+        assertEquals(TEST_URL_WITH_SP, url.toString());
+
+        url = new URL(TEST_CONSOLE_URL_WITH_SP);
+        assertSame(url.openConnection(NO_PROXY).getInputStream(), handler.openConnection(url, NO_PROXY).getInputStream());
+        assertEquals(TEST_CONSOLE_URL_WITH_SP, url.toString());
+    }
+
+    @Test
+    public void testOpenFallbackConnection() throws IOException {
+        assertNull(handler.openFallbackConnection(null, null));
+    }
+
+    @Test
+    public void testEquals() throws IOException {
+        assertTrue(handler.equals(new URL(TEST_URL), new URL(TEST_URL)));
+        assertTrue(handler.equals(new URL(TEST_URL_WITH_SP), new URL(TEST_URL_WITH_SP)));
+        assertFalse(handler.equals(new URL(TEST_URL), new URL(TEST_URL_WITH_SP)));
+    }
+
+    @Test
+    public void testHashCode() throws IOException {
+        assertEquals(handler.hashCode(new URL(TEST_URL)), new URL(TEST_URL).hashCode());
+        assertEquals(handler.hashCode(new URL(TEST_URL_WITH_SP)), new URL(TEST_URL_WITH_SP).hashCode());
+        assertNotEquals(handler.hashCode(new URL(TEST_URL)), new URL(TEST_URL_WITH_SP).hashCode());
+    }
+
+    @Test
+    public void testHostsEqual() throws IOException {
+        assertTrue(handler.hostsEqual(new URL(TEST_URL), new URL(TEST_URL)));
+        assertTrue(handler.hostsEqual(new URL(TEST_URL), new URL(TEST_URL_WITH_SP)));
+    }
+
+    @Test
+    public void testToExternalForm() throws IOException {
+        assertEquals(handler.toExternalForm(new URL(TEST_URL)), toExternalForm(new URL(TEST_URL)));
+        assertEquals(handler.toExternalForm(new URL(TEST_URL_WITH_SP)), toExternalForm(new URL(TEST_URL_WITH_SP)));
+    }
+
+    @Test
+    public void testResolveSubProtocols() throws IOException {
+        assertEquals(emptyList(), handler.resolveSubProtocols(new URL(TEST_URL)));
+        assertEquals(ofList("text"), handler.resolveSubProtocols(new URL(TEST_URL_WITH_SP)));
+    }
+
+    @Test
+    public void testResolveAuthority() throws IOException {
+        assertEquals("localhost:12345", handler.resolveAuthority(new URL(TEST_URL)));
+        assertEquals("localhost:12345", handler.resolveAuthority(new URL(TEST_URL_WITH_SP)));
+    }
+
+    @Test
+    public void testResolvePath() throws IOException {
+        assertEquals("/abc", handler.resolvePath(new URL(TEST_URL)));
+        assertEquals("/abc", handler.resolvePath(new URL(TEST_URL_WITH_SP)));
+    }
+
+    @Test
+    public void testGetProtocol() {
+        assertEquals("test", handler.getProtocol());
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("io.microsphere.net.test.Handler {defaultPort = -1 , protocol = 'test'}", handler.toString());
+    }
+
+    private static class MemberClass extends ExtendableProtocolURLStreamHandler {
     }
 }

@@ -16,13 +16,14 @@
  */
 package io.microsphere.util;
 
-import javax.annotation.Nullable;
+import io.microsphere.annotation.Nullable;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static java.lang.Boolean.TRUE;
+import static java.util.Optional.ofNullable;
 
 /**
  * Compatible
@@ -43,11 +44,6 @@ public class Compatible<T, R> {
 
     public static <T> Compatible<T, ?> of(Class<T> targetClass) {
         return new Compatible<>(Version.getVersion(targetClass), null);
-    }
-
-    public <R> Compatible<T, R> on(Version.Operator operator, Supplier<Version> comparedVersion,
-                                   Function<Version, R> conditionalFunction) {
-        return on(operator, comparedVersion.get(), conditionalFunction);
     }
 
     public <R> Compatible<T, R> on(String operator, String comparedVersion,
@@ -71,7 +67,7 @@ public class Compatible<T, R> {
         if (conditionalFunction != null) {
             result = conditionalFunction.apply(version);
         }
-        return Optional.ofNullable(result);
+        return ofNullable(result);
     }
 
     public void accept(Consumer<R> resultConsumer) {

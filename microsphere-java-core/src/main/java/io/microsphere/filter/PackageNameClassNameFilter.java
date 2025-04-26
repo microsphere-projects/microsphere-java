@@ -3,13 +3,14 @@
  */
 package io.microsphere.filter;
 
-import io.microsphere.util.ClassUtils;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.util.ClassUtils.resolvePackageName;
+import static io.microsphere.util.StringUtils.isBlank;
 
 /**
  * {@link PackageNameClassNameFilter}
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see PackageNameClassNameFilter
  * @since 1.0.0
  */
@@ -28,12 +29,15 @@ public class PackageNameClassNameFilter implements Filter<String> {
     public PackageNameClassNameFilter(String packageName, boolean includedSubPackages) {
         this.packageName = packageName;
         this.includedSubPackages = includedSubPackages;
-        this.subPackageNamePrefix = includedSubPackages ? packageName + "." : null;
+        this.subPackageNamePrefix = includedSubPackages ? packageName + DOT_CHAR : null;
     }
 
     @Override
     public boolean accept(String className) {
-        String packageName = ClassUtils.resolvePackageName(className);
+        if (isBlank(className)) {
+            return false;
+        }
+        String packageName = resolvePackageName(className);
         boolean accepted = packageName.equals(this.packageName);
         if (!accepted && includedSubPackages) {
             accepted = packageName.startsWith(subPackageNamePrefix);

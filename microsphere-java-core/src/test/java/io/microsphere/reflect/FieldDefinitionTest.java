@@ -16,15 +16,13 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.lang.Deprecation;
-import io.microsphere.util.Version;
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.lang.DeprecationTest.DEPRECATION;
-import static io.microsphere.lang.DeprecationTest.SINCE;
+import java.util.List;
+
+import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link FieldDefinition} Test
@@ -33,31 +31,43 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see FieldDefinition
  * @since 1.0.0
  */
-public class FieldDefinitionTest {
+public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> {
 
-    private String name;
+    private String name = "test-name";
+
+    @Override
+    protected List<Object> getTailConstructorArguments() {
+        return ofList("name");
+    }
 
     @Test
-    public void test() throws Throwable {
-        assertFieldDefinition(SINCE, getClass().getName(), "name", "test");
-        assertFieldDefinition(SINCE, DEPRECATION, getClass().getName(), "name", "test");
+    public void testFieldName() {
+        for (FieldDefinition definition : definitions) {
+            assertEquals("name", definition.getFieldName());
+            assertEquals(definition.getName(), definition.getFieldName());
+        }
     }
 
-    private void assertFieldDefinition(String since, String className, String fieldName, Object fieldValue) throws Throwable {
-        assertFieldDefinition(since, null, className, fieldName, fieldValue);
+    @Test
+    public void testGetResolvedField() {
+        for (FieldDefinition definition : definitions) {
+            assertSame(definition.getMember(), definition.getResolvedField());
+        }
     }
 
-    private void assertFieldDefinition(String since, Deprecation deprecation, String className, String fieldName, Object fieldValue) throws Throwable {
-        FieldDefinition fd = new FieldDefinition(since, deprecation, className, fieldName);
-        assertEquals(Version.of(since), fd.getSince());
-        assertEquals(deprecation, fd.getDeprecation());
-        assertEquals(className, fd.getClassName());
-        assertEquals(fieldName, fd.getFieldName());
-        assertEquals(this.getClass(), fd.getResolvedClass());
-        assertNotNull(fd.getResolvedField());
-        Object instance = fd.getDeclaredClass().newInstance();
-        assertNull(fd.get(instance));
-        assertNull(fd.set(instance, fieldValue));
-        assertEquals(fieldValue, fd.get(instance));
+    @Test
+    public void testGet() {
+        for (FieldDefinition definition : definitions) {
+            assertSame("test-name", definition.get(this));
+        }
     }
+
+    @Test
+    public void testSet() {
+        for (FieldDefinition definition : definitions) {
+            definition.set(this, definition.toString());
+            assertEquals(definition.toString(), this.name);
+        }
+    }
+
 }

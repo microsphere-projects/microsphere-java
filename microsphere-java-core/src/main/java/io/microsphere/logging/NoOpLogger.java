@@ -16,6 +16,8 @@
  */
 package io.microsphere.logging;
 
+import static io.microsphere.util.StringUtils.isBlank;
+
 /**
  * No-Operation {@link Logger}
  *
@@ -26,20 +28,16 @@ package io.microsphere.logging;
 final class NoOpLogger extends AbstractLogger {
 
     NoOpLogger(String name) {
-        super(name);
+        super(isBlank(name) ? "" : name);
     }
 
     @Override
     public boolean isTraceEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public void trace(String message) {
-    }
-
-    @Override
-    public void trace(String format, Object... arguments) {
     }
 
     @Override
@@ -48,15 +46,11 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public boolean isDebugEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public void debug(String message) {
-    }
-
-    @Override
-    public void debug(String format, Object... arguments) {
     }
 
     @Override
@@ -65,15 +59,11 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public boolean isInfoEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public void info(String message) {
-    }
-
-    @Override
-    public void info(String format, Object... arguments) {
     }
 
     @Override
@@ -82,15 +72,11 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public boolean isWarnEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public void warn(String message) {
-    }
-
-    @Override
-    public void warn(String format, Object... arguments) {
     }
 
     @Override
@@ -99,15 +85,11 @@ final class NoOpLogger extends AbstractLogger {
 
     @Override
     public boolean isErrorEnabled() {
-        return false;
+        return true;
     }
 
     @Override
     public void error(String message) {
-    }
-
-    @Override
-    public void error(String format, Object... arguments) {
     }
 
     @Override

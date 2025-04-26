@@ -3,9 +3,9 @@
  */
 package io.microsphere.filter;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.util.Utils;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,14 +16,10 @@ import static java.util.Collections.unmodifiableList;
  * {@link Filter} utility class
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see FilterUtils
  * @since 1.0.0
  */
-public abstract class FilterUtils extends BaseUtils {
-
-    private FilterUtils() {
-    }
+public abstract class FilterUtils implements Utils {
 
     /**
      * Filter {@link Iterable} object to List
@@ -32,7 +28,6 @@ public abstract class FilterUtils extends BaseUtils {
      * @param filter   {@link Filter} object
      * @param <E>      The filtered object type
      * @return
-     * @since 1.0.0
      */
     @Nonnull
     public static <E> List<E> filter(Iterable<E> iterable, Filter<E> filter) {
@@ -47,7 +42,6 @@ public abstract class FilterUtils extends BaseUtils {
      * @param filters        {@link Filter} array objects
      * @param <E>            The filtered object type
      * @return
-     * @since 1.0.0
      */
     @Nonnull
     public static <E> List<E> filter(Iterable<E> iterable, FilterOperator filterOperator, Filter<E>... filters) {
@@ -60,5 +54,8 @@ public abstract class FilterUtils extends BaseUtils {
             }
         }
         return unmodifiableList(list);
+    }
+
+    private FilterUtils() {
     }
 }

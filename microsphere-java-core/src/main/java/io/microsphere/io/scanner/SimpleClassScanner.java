@@ -3,13 +3,11 @@
  */
 package io.microsphere.io.scanner;
 
-import io.microsphere.filter.FilterUtils;
 import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.lang.ClassDataRepository;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +16,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
@@ -32,7 +32,6 @@ import static java.util.Collections.unmodifiableSet;
  * Simple {@link Class} Scanner
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see SimpleClassScanner
  * @since 1.0.0
  */
@@ -119,7 +118,7 @@ public class SimpleClassScanner {
             }
 
             for (String className : classNames) {
-                Class<?> class_ = requiredLoad ? loadClass(className, classLoader) : findLoadedClass(classLoader, className);
+                Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
                 if (class_ != null) {
                     classesSet.add(class_);
                 }
@@ -132,25 +131,17 @@ public class SimpleClassScanner {
     }
 
     public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,
-                              Predicate<Class<?>>... classFilters) {
+                              Predicate<? super Class<?>>... classFilters) {
         File archiveFile = resolveArchiveFile(resourceInArchive);
-        Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
-        Set<Class<?>> classesSet = new LinkedHashSet<>();
-        for (String className : classNames) {
-            Class<?> class_ = requiredLoad ? loadClass(className, classLoader) : findLoadedClass(classLoader, className);
-            if (class_ != null) {
-                classesSet.add(class_);
-            }
-        }
-        return filterAll(classesSet, classFilters);
+        return scan(classLoader, archiveFile, requiredLoad, classFilters);
     }
 
     public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
-                              Predicate<Class<?>>... classFilters) {
+                              Predicate<? super Class<?>>... classFilters) {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
         Set<Class<?>> classesSet = new LinkedHashSet<>();
         for (String className : classNames) {
-            Class<?> class_ = requiredLoad ? loadClass(className, classLoader) : findLoadedClass(classLoader, className);
+            Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
             if (class_ != null) {
                 classesSet.add(class_);
             }
@@ -160,22 +151,13 @@ public class SimpleClassScanner {
 
     private Set<String> filterClassNames(Set<String> classNames, String packageName, boolean recursive) {
         PackageNameClassNameFilter packageNameClassNameFilter = new PackageNameClassNameFilter(packageName, recursive);
-        Set<String> filterClassNames = new LinkedHashSet(FilterUtils.filter(classNames, packageNameClassNameFilter));
+        Set<String> filterClassNames = new LinkedHashSet(filter(classNames, packageNameClassNameFilter));
         return filterClassNames;
     }
-
 
     private URL resolveClassPathURL(URL resourceURL, String packageResourceName) {
         String resource = resourceURL.toExternalForm();
         String classPath = substringBefore(resource, packageResourceName);
-        URL classPathURL = null;
-        try {
-            classPathURL = new URL(classPath);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-        return classPathURL;
+        return ofURL(classPath);
     }
-
-
 }

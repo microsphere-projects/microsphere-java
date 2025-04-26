@@ -19,6 +19,9 @@ package io.microsphere.util;
 import java.util.StringTokenizer;
 
 import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.CharSequenceUtils.isEmpty;
+import static io.microsphere.util.CharSequenceUtils.length;
+import static java.lang.Character.isDigit;
 import static java.lang.Character.isWhitespace;
 import static java.lang.String.valueOf;
 
@@ -28,23 +31,13 @@ import static java.lang.String.valueOf;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class StringUtils extends BaseUtils {
+public abstract class StringUtils implements Utils {
 
     public final static String EMPTY = "";
 
+    public final static String EMPTY_STRING = EMPTY;
+
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
-
-    public static int length(String value) {
-        return value == null ? 0 : value.length();
-    }
-
-    public static boolean isEmpty(String value) {
-        return length(value) == 0;
-    }
-
-    public static boolean isNotEmpty(String value) {
-        return length(value) > 0;
-    }
 
     public static boolean isBlank(String value) {
         int length = length(value);
@@ -68,7 +61,7 @@ public abstract class StringUtils extends BaseUtils {
     }
 
     public static String[] split(String value, String delimiter) {
-        if (isEmpty(value)) {
+        if (isEmpty(value) || isEmpty(delimiter)) {
             return EMPTY_STRING_ARRAY;
         }
         StringTokenizer stringTokenizer = new StringTokenizer(value, delimiter);
@@ -77,21 +70,21 @@ public abstract class StringUtils extends BaseUtils {
 
     public static boolean contains(String value, CharSequence part) {
         if (value != null && part != null) {
-            return value.contains(part);
+            return value == part ? true : value.contains(part);
         }
         return false;
     }
 
     public static boolean startsWith(String value, String part) {
         if (value != null && part != null) {
-            return value.startsWith(part);
+            return value == part ? true : value.startsWith(part);
         }
         return false;
     }
 
     public static boolean endsWith(String value, String part) {
         if (value != null && part != null) {
-            return value.endsWith(part);
+            return value == part ? true : value.endsWith(part);
         }
         return false;
     }
@@ -406,5 +399,43 @@ public abstract class StringUtils extends BaseUtils {
             return EMPTY;
         }
         return str.substring(pos + separator.length());
+    }
+
+    /**
+     * <p>Checks if the String contains only unicode digits.
+     * A decimal point is not a unicode digit and returns false.</p>
+     *
+     * <p><code>null</code> will return <code>false</code>.
+     * An empty String (length()=0) will return <code>true</code>.</p>
+     *
+     * <pre>
+     * StringUtils.isNumeric(null)   = false
+     * StringUtils.isNumeric("")     = true
+     * StringUtils.isNumeric("  ")   = false
+     * StringUtils.isNumeric("123")  = true
+     * StringUtils.isNumeric("12 3") = false
+     * StringUtils.isNumeric("ab2c") = false
+     * StringUtils.isNumeric("12-3") = false
+     * StringUtils.isNumeric("12.3") = false
+     * </pre>
+     *
+     * @param str the String to check, may be null
+     * @return <code>true</code> if only contains digits, and is non-null
+     */
+    public static boolean isNumeric(String str) {
+        int sz = length(str);
+        if (sz == 0) {
+            return false;
+        }
+        for (int i = 0; i < sz; i++) {
+            if (isDigit(str.charAt(i)) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private StringUtils() {
+        super();
     }
 }

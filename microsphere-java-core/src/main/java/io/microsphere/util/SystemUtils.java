@@ -20,6 +20,7 @@ import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StringUtils.startsWith;
+import static java.lang.System.getProperty;
 
 /**
  * The utilities class for {@link System}
@@ -28,156 +29,166 @@ import static io.microsphere.util.StringUtils.startsWith;
  * @see System
  * @since 1.0.0
  */
-public abstract class SystemUtils extends BaseUtils {
+public abstract class SystemUtils implements Utils {
 
     private static final Logger logger = getLogger(SystemUtils.class);
+
 
     public static final String OS_NAME_WINDOWS_PREFIX = "Windows";
 
     /**
-     * The System property key for the Java class path.
+     * The System property key for the Java class path : "java.class.path"
      */
     public static final String JAVA_CLASS_PATH_PROPERTY_KEY = "java.class.path";
 
     /**
-     * The System property key for the User's account name.
+     * The System property key for the User's account name : "user.name"
      */
     public static final String USER_NAME_PROPERTY_KEY = "user.name";
 
     /**
-     * The System property key for the Path of extension directory or directories Deprecated. This property, and the mechanism which implements it, may be removed in a future release..
+     * The System property key for the Path of extension directory or directories Deprecated.
+     * This property, and the mechanism which implements it, may be removed in a future release : "java.ext.dirs"
+     *
+     * @deprecated
      */
+    @Deprecated
     public static final String JAVA_EXT_DIRS_PROPERTY_KEY = "java.ext.dirs";
 
     /**
-     * The System property key for the Java Runtime Environment vendor.
+     * The System property key for the Java Runtime Environment vendor : "java.vendor"
      */
     public static final String JAVA_VENDOR_PROPERTY_KEY = "java.vendor";
 
     /**
-     * The System property key for the Java Runtime Environment specification version.
+     * The System property key for the Java Runtime Environment specification version : "java.specification.version"
      */
     public static final String JAVA_SPECIFICATION_VERSION_PROPERTY_KEY = "java.specification.version";
 
     /**
-     * The System property key for the Line separator ("\n" on UNIX).
+     * The System property key for the Line separator ("\n" on UNIX) : "line.separator"
      */
     public static final String LINE_SEPARATOR_PROPERTY_KEY = "line.separator";
 
     /**
-     * The System property key for the Java class format version number.
+     * The System property key for the Java class format version number : "java.class.version"
      */
     public static final String JAVA_CLASS_VERSION_PROPERTY_KEY = "java.class.version";
 
     /**
-     * The System property key for the Java Runtime Environment specification name.
+     * The System property key for the Java Runtime Environment specification name : "java.specification.name"
      */
     public static final String JAVA_SPECIFICATION_NAME_PROPERTY_KEY = "java.specification.name";
 
     /**
-     * The System property key for the Java vendor URL.
+     * The System property key for the Java vendor URL : "java.vendor.url"
      */
     public static final String JAVA_VENDOR_URL_PROPERTY_KEY = "java.vendor.url";
 
     /**
-     * The System property key for the Java Virtual Machine implementation version.
+     * The System property key for the Java Virtual Machine implementation version : "java.vm.version"
      */
     public static final String JAVA_VM_VERSION_PROPERTY_KEY = "java.vm.version";
 
     /**
-     * The System property key for the Operating system name.
+     * The System property key for the Operating system name : "os.name"
      */
     public static final String OS_NAME_PROPERTY_KEY = "os.name";
 
     /**
-     * The System property key for the Operating system architecture.
+     * The System property key for the Operating system architecture : "os.arch"
      */
     public static final String OS_ARCH_PROPERTY_KEY = "os.arch";
 
     /**
-     * The System property key for the Java installation directory.
+     * The System property key for the Java installation directory : "java.home"
      */
     public static final String JAVA_HOME_PROPERTY_KEY = "java.home";
 
     /**
-     * The System property key for the Operating system version.
+     * The System property key for the Operating system version : "os.version"
      */
     public static final String OS_VERSION_PROPERTY_KEY = "os.version";
 
     /**
-     * The System property key for the Name of JIT compiler to use.
+     * The System property key for the Name of JIT compiler to use : "java.compiler"
      */
     public static final String JAVA_COMPILER_PROPERTY_KEY = "java.compiler";
 
     /**
-     * The System property key for the Java Runtime Environment version.
+     * The System property key for the Java Runtime Environment version : "java.version"
      */
     public static final String JAVA_VERSION_PROPERTY_KEY = "java.version";
 
     /**
-     * The System property key for the Java Virtual Machine specification version.
+     * The System property key for the Java Virtual Machine specification version : "java.vm.specification.version"
      */
     public static final String JAVA_VM_SPECIFICATION_VERSION_PROPERTY_KEY = "java.vm.specification.version";
 
     /**
-     * The System property key for the User's current working directory.
+     * The System property key for the User's current working directory : "user.dir"
      */
     public static final String USER_DIR_PROPERTY_KEY = "user.dir";
 
     /**
-     * The System property key for the Java Runtime Environment specification vendor.
+     * The System property key for the Java Runtime Environment specification vendor : "java.specification.vendor"
      */
     public static final String JAVA_SPECIFICATION_VENDOR_PROPERTY_KEY = "java.specification.vendor";
 
     /**
-     * The System property key for the Java Virtual Machine specification name.
+     * The System property key for the Java Virtual Machine specification name : "java.vm.specification.name"
      */
     public static final String JAVA_VM_SPECIFICATION_NAME_PROPERTY_KEY = "java.vm.specification.name";
 
     /**
-     * The System property key for the Java Virtual Machine implementation vendor.
+     * The System property key for the Java Virtual Machine implementation vendor : "java.vm.vendor"
      */
     public static final String JAVA_VM_VENDOR_PROPERTY_KEY = "java.vm.vendor";
 
     /**
-     * The System property key for the File separator ("/" on UNIX).
+     * The System property key for the File separator ("/" on UNIX) : "file.separator"
      */
     public static final String FILE_SEPARATOR_PROPERTY_KEY = "file.separator";
 
     /**
-     * The System property key for the Path separator (":" on UNIX).
+     * The System property key for the Path separator (":" on UNIX) : "path.separator"
      */
     public static final String PATH_SEPARATOR_PROPERTY_KEY = "path.separator";
 
     /**
-     * The System property key for the List of paths to search when loading libraries.
+     * The System property key for the List of paths to search when loading libraries : "java.library.path"
      */
     public static final String JAVA_LIBRARY_PATH_PROPERTY_KEY = "java.library.path";
 
     /**
-     * The System property key for the User's home directory.
+     * The System property key for the User's home directory : "user.home"
      */
     public static final String USER_HOME_PROPERTY_KEY = "user.home";
 
     /**
-     * The System property key for the Java Virtual Machine implementation name.
+     * The System property key for the Java Virtual Machine implementation name : "java.vm.name"
      */
     public static final String JAVA_VM_NAME_PROPERTY_KEY = "java.vm.name";
 
     /**
-     * The System property key for the Java Virtual Machine specification vendor.
+     * The System property key for the Java Virtual Machine specification vendor : "java.vm.specification.vendor"
      */
     public static final String JAVA_VM_SPECIFICATION_VENDOR_PROPERTY_KEY = "java.vm.specification.vendor";
 
     /**
-     * The System property key for the Default temp file path.
+     * The System property key for the Default temp file path : "java.io.tmpdir"
      */
     public static final String JAVA_IO_TMPDIR_PROPERTY_KEY = "java.io.tmpdir";
 
     /**
-     * The System property key for the file encoding
+     * The System property key for the file encoding : "file.encoding"
      */
     public static final String FILE_ENCODING_PROPERTY_KEY = "file.encoding";
+
+    /**
+     * The System property key for the native encoding : "native.encoding"
+     */
+    public static final String NATIVE_ENCODING_PROPERTY_KEY = "native.encoding";
 
     /**
      * The System property for the Java class path.
@@ -308,6 +319,11 @@ public abstract class SystemUtils extends BaseUtils {
      * The System property for the file encoding, the default is "UTF-8"
      */
     public static final String FILE_ENCODING = getSystemProperty(FILE_ENCODING_PROPERTY_KEY, "UTF-8");
+
+    /**
+     * The System property for the native encoding
+     */
+    public static final String NATIVE_ENCODING = getSystemProperty(NATIVE_ENCODING_PROPERTY_KEY);
 
     /**
      * <p>
@@ -470,6 +486,26 @@ public abstract class SystemUtils extends BaseUtils {
     public static final boolean IS_JAVA_22 = matchesJavaVersion("22");
 
     /**
+     * <p>
+     * Is {@code true} if this is Java version 23.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_23 = matchesJavaVersion("23");
+
+    /**
+     * <p>
+     * Is {@code true} if this is Java version 24.x
+     * </p>
+     * <p>
+     * The field will return {@code false} if {@link #JAVA_VERSION} is {@code null}.
+     * </p>
+     */
+    public static final boolean IS_JAVA_24 = matchesJavaVersion("24");
+
+    /**
      * Is <code>true</code> if current Java version is Long Term Supported(LTS)
      */
     public static final boolean IS_LTS_JAVA_VERSION = IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21;
@@ -505,7 +541,7 @@ public abstract class SystemUtils extends BaseUtils {
      */
     public static String getSystemProperty(String key, String defaultValue) {
         try {
-            return System.getProperty(key, defaultValue);
+            return getProperty(key, defaultValue);
         } catch (final SecurityException ex) {
             logger.warn("Caught a SecurityException reading the system property '{}'; " + "the SystemUtils property value will be : '{}'", key, defaultValue);
             return defaultValue;
@@ -514,5 +550,8 @@ public abstract class SystemUtils extends BaseUtils {
 
     private static boolean matchesJavaVersion(final String versionPrefix) {
         return startsWith(JAVA_SPECIFICATION_VERSION, versionPrefix);
+    }
+
+    private SystemUtils() {
     }
 }

@@ -18,11 +18,17 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.sql.SQLException;
+
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ExceptionUtils.create;
+import static io.microsphere.util.ExceptionUtils.getStackTrace;
+import static io.microsphere.util.ExceptionUtils.throwTarget;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -34,31 +40,66 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ExceptionUtilsTest {
 
     @Test
-    public void testCreate() {
-        assertCreate(RuntimeException.class);
-        assertCreate(RuntimeException.class, "Hello,World");
-        assertCreate(RuntimeException.class, "Hello,{}", "World");
-        assertCreate(RuntimeException.class, new NullPointerException());
-        assertCreate(RuntimeException.class, new NullPointerException(), "Hello,{}", "World");
-        assertCreate(RuntimeException.class, new NullPointerException(), "Hello,World");
+    public void testGetStackTrace() {
+        String stackTrace = getStackTrace(new RuntimeException("Hello,World"));
+        assertNotNull(stackTrace);
     }
 
     @Test
     public void testWrap() {
-        // Same Exception type
+        // Same type : NullPointerException -> NullPointerException
         assertWrap(create(NullPointerException.class), NullPointerException.class, NullPointerException.class);
 
-        // NullPointerException -> RuntimeException
+        // isAssignableFrom : NullPointerException -> RuntimeException
         assertWrap(create(NullPointerException.class), RuntimeException.class, NullPointerException.class);
 
-        // NullPointerException(String) -> RuntimeException
-        assertWrap(create(NullPointerException.class, "Hello,World"), RuntimeException.class, NullPointerException.class);
+        // Exception(String) -> RuntimeException
+        assertWrap(create(Exception.class, "Hello,World"), RuntimeException.class, Exception.class);
 
-        // IllegalArgumentException -> IllegalStateException(String,Throwable) -> RuntimeException
-        assertWrap(create(IllegalStateException.class, "Hello,World", new IllegalArgumentException()), RuntimeException.class, IllegalArgumentException.class);
+        // Exception(String,IllegalStateException) -> RuntimeException
+        assertWrap(create(Exception.class, "Hello,World", new IllegalArgumentException()), RuntimeException.class, IllegalArgumentException.class);
 
         // IllegalArgumentException -> IllegalStateException(String,Throwable) -> Exception
         assertWrap(create(IllegalStateException.class, "Hello,World", new IllegalArgumentException()), Exception.class, IllegalArgumentException.class);
+    }
+
+    @Test
+    public void testCreateWithType() {
+        assertCreate(RuntimeException.class);
+    }
+
+    @Test
+    public void testCreateWithTypeAndMessage() {
+        assertCreate(RuntimeException.class, "Hello,World");
+    }
+
+
+    @Test
+    public void testCreateWithTypeAndCause() {
+        assertCreate(RuntimeException.class, new NullPointerException());
+    }
+
+    @Test
+    public void testCreateWithTypeAndMessageAndCause() {
+        assertCreate(RuntimeException.class, "Hello,World", new NullPointerException());
+    }
+
+    @Test
+    public void testCreateWithTypeAndCauseAndMessagePatternAndArgs() {
+        assertCreate(RuntimeException.class, new NullPointerException(), "Hello,{}", "World");
+    }
+
+    @Test
+    public void testCreateWithArgs() {
+        SQLException e = create(SQLException.class, "Hello,World", "SQL", 101);
+        assertEquals("Hello,World", e.getMessage());
+        assertEquals("SQL", e.getSQLState());
+        assertEquals(101, e.getErrorCode());
+    }
+
+    @Test
+    public void testThrowTarget() {
+        assertThrows(RuntimeException.class, () -> throwTarget(new Exception("Hello,World"), RuntimeException.class));
     }
 
     private <T extends Throwable, TT extends Throwable> void assertWrap(T source, Class<TT> thrownType, Class<? extends Throwable> causeType) {
@@ -86,24 +127,22 @@ public class ExceptionUtilsTest {
         assertNull(t.getCause());
     }
 
-    private <T extends Throwable> void assertCreate(Class<T> throwableClass, String messagePattern, Object... args) {
-        String message = format(messagePattern, args);
-        assertCreate(throwableClass, message);
-    }
-
     private <T extends Throwable> void assertCreate(Class<T> throwableClass, Throwable cause) {
         T t = create(throwableClass, cause);
         assertEquals(cause.getClass().getName(), t.getMessage());
         assertEquals(cause, t.getCause());
     }
 
-    private <T extends Throwable> void assertCreate(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
-        String message = format(messagePattern, args);
-        assertCreate(throwableClass, cause, message);
+    private <T extends Throwable> void assertCreate(Class<T> throwableClass, String message, Throwable cause) {
+        T t = create(throwableClass, message, cause);
+        assertEquals(message, t.getMessage());
+        assertEquals(cause, t.getCause());
     }
 
-    private <T extends Throwable> void assertCreate(Class<T> throwableClass, Throwable cause, String message) {
-        T t = create(throwableClass, message, cause);
+
+    private <T extends Throwable> void assertCreate(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
+        String message = format(messagePattern, args);
+        T t = create(throwableClass, cause, messagePattern, args);
         assertEquals(message, t.getMessage());
         assertEquals(cause, t.getCause());
     }

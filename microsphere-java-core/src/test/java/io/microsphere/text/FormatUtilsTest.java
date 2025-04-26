@@ -18,7 +18,10 @@ package io.microsphere.text;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.text.FormatUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link FormatUtils} Test
@@ -30,16 +33,22 @@ public class FormatUtilsTest {
 
     @Test
     public void testFormat() {
-        String message = FormatUtils.format("A,{},C,{},E", "B", "D");
+        assertNull(format(null));
+
+        assertEquals("", format(""));
+
+        assertEquals(SPACE, format(SPACE));
+
+        String message = format("A,{},C,{},E", "B", "D");
         assertEquals("A,B,C,D,E", message);
 
-        message = FormatUtils.format("A,{},C,{},E", "B");
+        message = format("A,{},C,{},E", "B");
         assertEquals("A,B,C,{},E", message);
 
-        message = FormatUtils.format("A,{},C,{},E");
+        message = format("A,{},C,{},E");
         assertEquals("A,{},C,{},E", message);
 
-        message = FormatUtils.format("A,{},C,{},E",1,2,3);
+        message = format("A,{},C,{},E", 1, 2, 3);
         assertEquals("A,1,C,2,E", message);
     }
 }

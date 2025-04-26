@@ -1,18 +1,63 @@
 package io.microsphere.process;
 
+import io.microsphere.AbstractTestCase;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ProcessExecutor} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ProcessExecutorTest
  * @since 1.0.0
  */
-public class ProcessExecutorTest {
+public class ProcessExecutorTest extends AbstractTestCase {
 
-    public void testExecute2() throws Exception {
-        ProcessExecutor executor = new ProcessExecutor("java","-version");
-        executor.execute(System.out, 2000);
+    private ProcessExecutor executor;
+
+    @BeforeEach
+    public void init() {
+        this.executor = new ProcessExecutor("java", "-version");
+    }
+
+    @Test
+    public void testIsFinished() throws Exception {
+        assertFalse(this.executor.isFinished());
+    }
+
+    @Test
+    public void testExecute() throws Exception {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
+        this.executor.execute(outputStream);
+        assertTrue(outputStream.size() > 0);
+        assertTrue(this.executor.isFinished());
+        String response = new String(outputStream.toByteArray());
+        log(response);
+    }
+
+    @Test
+    public void testExecuteWithTimeout() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
+        assertThrows(TimeoutException.class, () -> this.executor.execute(outputStream, 1));
+        assertEquals(0, outputStream.size());
+        assertTrue(this.executor.isFinished());
+    }
+
+    @Test
+    public void testExecuteOnWrongCommand() {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
+        ProcessExecutor processExecutor = new ProcessExecutor("ttttt");
+        assertThrows(IOException.class, () -> processExecutor.execute(outputStream));
+        assertFalse(processExecutor.isFinished());
     }
 
 }

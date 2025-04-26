@@ -18,8 +18,6 @@ package io.microsphere.constants;
 
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
-
 import static io.microsphere.constants.Constants.AND;
 import static io.microsphere.constants.Constants.AND_CHAR;
 import static io.microsphere.constants.Constants.ARCHIVE_ENTRY_SEPARATOR;
@@ -38,6 +36,8 @@ import static io.microsphere.constants.Constants.DOT;
 import static io.microsphere.constants.Constants.DOT_CHAR;
 import static io.microsphere.constants.Constants.DOUBLE_QUOTATION;
 import static io.microsphere.constants.Constants.DOUBLE_QUOTATION_CHAR;
+import static io.microsphere.constants.Constants.DOUBLE_QUOTE;
+import static io.microsphere.constants.Constants.DOUBLE_QUOTE_CHAR;
 import static io.microsphere.constants.Constants.DOUBLE_SLASH;
 import static io.microsphere.constants.Constants.EAR;
 import static io.microsphere.constants.Constants.EAR_EXTENSION;
@@ -68,22 +68,28 @@ import static io.microsphere.constants.Constants.LESS_THAN_OR_EQUAL_TO;
 import static io.microsphere.constants.Constants.LINE_SEPARATOR;
 import static io.microsphere.constants.Constants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.Constants.PATH_SEPARATOR;
+import static io.microsphere.constants.Constants.PIPE;
 import static io.microsphere.constants.Constants.QUERY_STRING;
 import static io.microsphere.constants.Constants.QUERY_STRING_CHAR;
 import static io.microsphere.constants.Constants.QUESTION_MARK;
 import static io.microsphere.constants.Constants.QUESTION_MARK_CHAR;
+import static io.microsphere.constants.Constants.QUOTE;
+import static io.microsphere.constants.Constants.QUOTE_CHAR;
 import static io.microsphere.constants.Constants.RIGHT_PARENTHESIS;
 import static io.microsphere.constants.Constants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.Constants.SEMICOLON;
 import static io.microsphere.constants.Constants.SEMICOLON_CHAR;
 import static io.microsphere.constants.Constants.SHARP;
 import static io.microsphere.constants.Constants.SHARP_CHAR;
+import static io.microsphere.constants.Constants.SINGLE_QUOTATION;
+import static io.microsphere.constants.Constants.SINGLE_QUOTATION_CHAR;
 import static io.microsphere.constants.Constants.SLASH;
 import static io.microsphere.constants.Constants.SLASH_CHAR;
 import static io.microsphere.constants.Constants.SPACE;
 import static io.microsphere.constants.Constants.SPACE_CHAR;
 import static io.microsphere.constants.Constants.UNDER_SCORE;
 import static io.microsphere.constants.Constants.UNDER_SCORE_CHAR;
+import static io.microsphere.constants.Constants.VERTICAL_BAR;
 import static io.microsphere.constants.Constants.WAR;
 import static io.microsphere.constants.Constants.WAR_EXTENSION;
 import static io.microsphere.constants.Constants.WAR_PROTOCOL;
@@ -92,6 +98,11 @@ import static io.microsphere.constants.Constants.WILDCARD_CHAR;
 import static io.microsphere.constants.Constants.ZIP;
 import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
+import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
+import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.lang.System.lineSeparator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -115,6 +126,7 @@ public class ConstantsTest {
         assertEquals(".war", WAR_EXTENSION);
         assertEquals(".ear", EAR_EXTENSION);
         assertEquals(".class", CLASS_EXTENSION);
+        assertEquals(".java", JAVA_EXTENSION);
 
         assertEquals('/', SLASH_CHAR);
         assertEquals('\\', BACK_SLASH_CHAR);
@@ -134,15 +146,19 @@ public class ConstantsTest {
         assertEquals("war", WAR_PROTOCOL);
         assertEquals("ear", EAR_PROTOCOL);
         assertEquals("classpath", CLASSPATH_PROTOCOL);
+        assertEquals("console", CONSOLE_PROTOCOL);
 
         assertEquals("!/", ARCHIVE_ENTRY_SEPARATOR);
-        assertEquals(File.separator, FILE_SEPARATOR);
-        assertEquals(File.pathSeparator, PATH_SEPARATOR);
-        assertEquals(System.lineSeparator(), LINE_SEPARATOR);
+        assertEquals(separator, FILE_SEPARATOR);
+        assertEquals(pathSeparator, PATH_SEPARATOR);
+        assertEquals(lineSeparator(), LINE_SEPARATOR);
 
         assertEquals(',', COMMA_CHAR);
         assertEquals(' ', SPACE_CHAR);
         assertEquals('!', EXCLAMATION_CHAR);
+        assertEquals('\'', QUOTE_CHAR);
+        assertEquals('"', DOUBLE_QUOTE_CHAR);
+        assertEquals('\'', SINGLE_QUOTATION_CHAR);
         assertEquals('"', DOUBLE_QUOTATION_CHAR);
         assertEquals('$', DOLLAR_CHAR);
         assertEquals('.', DOT_CHAR);
@@ -160,10 +176,15 @@ public class ConstantsTest {
         assertEquals('_', UNDER_SCORE_CHAR);
         assertEquals('-', HYPHEN_CHAR);
         assertEquals('*', WILDCARD_CHAR);
+        assertEquals("|", VERTICAL_BAR);
+        assertEquals("|", PIPE);
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
         assertEquals("!", EXCLAMATION);
+        assertEquals("'", QUOTE);
+        assertEquals("\"", DOUBLE_QUOTE);
+        assertEquals("'", SINGLE_QUOTATION);
         assertEquals("\"", DOUBLE_QUOTATION);
         assertEquals("$", DOLLAR);
         assertEquals(".", DOT);
@@ -183,5 +204,7 @@ public class ConstantsTest {
         assertEquals("_", UNDER_SCORE);
         assertEquals("-", HYPHEN);
         assertEquals("*", WILDCARD);
+        assertEquals("|", VERTICAL_BAR);
+        assertEquals("|", PIPE);
     }
 }

@@ -3,20 +3,20 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.collection.MapUtils;
-import io.microsphere.util.BaseUtils;
-import io.microsphere.util.ClassPathUtils;
-import io.microsphere.util.jar.JarUtils;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.logging.Logger;
+import io.microsphere.util.ArrayUtils;
+import io.microsphere.util.Utils;
 
-import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -26,9 +26,13 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
-import static io.microsphere.constants.PathConstants.BACK_SLASH;
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
+import static io.microsphere.constants.PathConstants.BACK_SLASH_CHAR;
 import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
@@ -42,33 +46,38 @@ import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
 import static io.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.CharSequenceUtils.length;
+import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
-import static io.microsphere.util.StringUtils.length;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
-import static java.lang.reflect.Array.getLength;
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
+import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
+import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
  * {@link URL} Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see URL
  * @see URLEncoder
  * @see URLDecoder
  * @since 1.0.0
  */
-public abstract class URLUtils extends BaseUtils {
+public abstract class URLUtils implements Utils {
+
+    private static final Logger logger = getLogger(URLUtils.class);
 
     /**
      * The default encoding : "UTF-8"
@@ -78,12 +87,22 @@ public abstract class URLUtils extends BaseUtils {
     /**
      * The empty array of {@link URL}
      */
-    public static final URL[] EMPTY_URL_ARRAY = new URL[0];
+    public static final URL[] EMPTY_URL_ARRAY = ArrayUtils.EMPTY_URL_ARRAY;
 
     /**
      * The length of {@link #ARCHIVE_ENTRY_SEPARATOR_LENGTH}
      */
     private static final int ARCHIVE_ENTRY_SEPARATOR_LENGTH = ARCHIVE_ENTRY_SEPARATOR.length();
+
+    /**
+     * The prefix of {@link URL} for file protocol : "file:/"
+     */
+    public static final String FILE_URL_PREFIX = FILE_PROTOCOL + COLON_CHAR + SLASH_CHAR;
+
+    /**
+     * The length of {@link #FILE_URL_PREFIX}
+     */
+    private static final int FILE_URL_PREFIX_LENGTH = FILE_URL_PREFIX.length();
 
     /**
      * The property which specifies the package prefix list to be scanned
@@ -121,6 +140,22 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static final String SUB_PROTOCOL_MATRIX_NAME = "_sp";
 
+
+    /**
+     * Convert the <code>url</code> to {@link URL}
+     *
+     * @param url
+     * @return non-null
+     * @throws IllegalArgumentException if <code>url</code> is malformed
+     */
+    public static URL ofURL(String url) {
+        try {
+            return new URL(url);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     /**
      * Resolve the entry path from Archive File URL
      *
@@ -151,21 +186,86 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
-        return doResolveBasePath(url.getPath());
+        return resolvePath(url, false);
     }
 
-    protected static String doResolveBasePath(String path) {
-        int beginIndex = path.lastIndexOf(COLON_CHAR);
-        if (beginIndex == -1) {
-            return path;
+    static String resolvePath(URL url, boolean includeArchiveEntryPath) {
+        String protocol = url.getProtocol();
+
+        switch (protocol) {
+            case FILE_PROTOCOL:
+                return resolvePathFromFile(url);
+            case JAR_PROTOCOL:
+                return resolvePathFromJar(url, includeArchiveEntryPath);
         }
-        beginIndex += 1;
-        int endIndex = indexOfArchiveEntry(path);
-        if (endIndex == -1) {
-            return path.substring(beginIndex);
-        } else {
-            return path.substring(beginIndex, endIndex);
+
+        String path = url.getPath();
+
+        // path may contain the matrix parameters
+        int indexOfMatrixString = indexOfMatrixString(path);
+        // path removes the matrix parameters if present
+        path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
+
+        return path;
+    }
+
+    static String resolvePathFromFile(URL url) {
+        String path = buildPath(url);
+        if (IS_OS_WINDOWS) {
+            int index = path.indexOf(SLASH_CHAR);
+            if (index == 0) {
+                path = path.substring(1);
+            }
         }
+        return path;
+    }
+
+    static String buildPath(URL url) {
+        String authority = url.getAuthority();
+        String path = url.getPath();
+        int length = 0;
+        int authorityLength = length(authority);
+        if (authorityLength > 0) {
+            length += authority.length() + 1;
+        }
+        int pathLength = length(path);
+        if (pathLength > 0) {
+            length += pathLength;
+        }
+        StringBuilder pathBuilder = new StringBuilder(length);
+        if (authorityLength > 0) {
+            pathBuilder.append(SLASH_CHAR)
+                    .append(authority);
+        }
+        if (pathLength > 0) {
+            pathBuilder.append(path);
+        }
+        return pathBuilder.toString();
+    }
+
+    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
+        String path = buildPath(url);
+        int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
+        if (filePrefixIndex == 0) { //  path starts with "file:/"
+            path = path.substring(FILE_URL_PREFIX_LENGTH);
+        }
+
+        // path removes the archive entry path if present
+        if (!includeArchiveEntryPath) {
+            int indexOfArchiveEntry = indexOfArchiveEntry(path);
+            path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
+        }
+
+        int indexOfColon = path.indexOf(COLON_CHAR);
+        if (indexOfColon == -1) { // the path on the Unix/Linux
+            // path adds the leading slash if not present
+            int indexOfSlash = path.indexOf(SLASH_CHAR);
+            if (indexOfSlash != 0) {
+                path = SLASH_CHAR + path;
+            }
+        } // else the path on the Windows
+
+        return path;
     }
 
     /**
@@ -185,19 +285,14 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static File doResolveArchiveFile(URL url) throws NullPointerException {
-        if (isArchiveURL(url)) {
-            String basePath = resolveBasePath(url);
-            File archiveFile = new File(basePath);
-            if (archiveFile.exists()) {
-                return archiveFile;
-            }
-        }
-        return null;
+        String basePath = resolveBasePath(url);
+        File archiveFile = new File(basePath);
+        return archiveFile.exists() ? archiveFile : null;
     }
 
     protected static File resolveArchiveDirectory(URL resourceURL) {
         String resourcePath = new File(resourceURL.getFile()).toString();
-        Set<String> classPaths = ClassPathUtils.getClassPaths();
+        Set<String> classPaths = getClassPaths();
         File archiveDirectory = null;
         for (String classPath : classPaths) {
             if (resourcePath.contains(classPath)) {
@@ -263,13 +358,14 @@ public abstract class URLUtils extends BaseUtils {
 
         String resolvedPath = path.trim();
 
-        while (resolvedPath.contains(BACK_SLASH)) {
-            resolvedPath = replace(resolvedPath, BACK_SLASH, SLASH);
+        while (resolvedPath.indexOf(BACK_SLASH_CHAR) > -1) {
+            resolvedPath = resolvedPath.replace(BACK_SLASH_CHAR, SLASH_CHAR);
         }
 
         while (resolvedPath.contains(DOUBLE_SLASH)) {
             resolvedPath = replace(resolvedPath, DOUBLE_SLASH, SLASH);
         }
+
         return resolvedPath;
     }
 
@@ -353,8 +449,8 @@ public abstract class URLUtils extends BaseUtils {
             String protocol = url.getProtocol();
             try {
                 if (JAR_PROTOCOL.equals(protocol)) {
-                    JarFile jarFile = JarUtils.toJarFile(url); // Test whether valid jar or not
-                    final String relativePath = JarUtils.resolveRelativePath(url);
+                    JarFile jarFile = toJarFile(url); // Test whether valid jar or not
+                    final String relativePath = resolveRelativePath(url);
                     if (EMPTY.equals(relativePath)) { // root directory in jar
                         isDirectory = true;
                     } else {
@@ -382,12 +478,8 @@ public abstract class URLUtils extends BaseUtils {
         String protocol = url.getProtocol();
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
-            try {
-                File file = new File(url.toURI());
-                JarFile jarFile = new JarFile(file);
-                flag = jarFile != null;
-            } catch (Exception e) {
-            }
+            JarFile jarFile = toJarFile(url);
+            flag = jarFile != null;
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
@@ -410,14 +502,30 @@ public abstract class URLUtils extends BaseUtils {
                 flag = true;
                 break;
             case FILE_PROTOCOL:
-                try {
-                    File file = new File(url.toURI());
-                    JarFile jarFile = new JarFile(file);
-                    flag = jarFile != null;
-                } catch (Exception e) {
-                }
+                JarFile jarFile = toJarFile(url);
+                flag = jarFile != null;
         }
         return flag;
+    }
+
+    public static JarFile toJarFile(URL url) {
+        String path = buildPath(url);
+        File file = new File(path);
+        if (!file.exists()) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile is not existed from the url : {}", url);
+            }
+            return null;
+        }
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(file);
+        } catch (IOException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile can't be open from the url : {}", url);
+            }
+        }
+        return jarFile;
     }
 
     /**
@@ -427,18 +535,22 @@ public abstract class URLUtils extends BaseUtils {
      * @return URI
      */
     public static String buildURI(String... paths) {
-        int length = getLength(paths);
+        int length = length(paths);
         if (length < 1) {
             return SLASH;
         }
 
-        StringBuilder uriBuilder = new StringBuilder(SLASH);
+        int capacity = 0;
+
+        for (int i = 0; i < length; i++) {
+            capacity += length(paths[i]) + 1;
+        }
+
+        StringBuilder uriBuilder = new StringBuilder(capacity);
         for (int i = 0; i < length; i++) {
             String path = paths[i];
+            uriBuilder.append(SLASH_CHAR);
             uriBuilder.append(path);
-            if (i < length - 1) {
-                uriBuilder.append(SLASH);
-            }
         }
 
         return normalizePath(uriBuilder.toString());
@@ -451,7 +563,7 @@ public abstract class URLUtils extends BaseUtils {
      * @return the Matrix String
      */
     public static String buildMatrixString(Map<String, List<String>> matrixParameters) {
-        if (MapUtils.isEmpty(matrixParameters)) {
+        if (isEmpty(matrixParameters)) {
             return null;
         }
         StringBuilder matrixStringBuilder = new StringBuilder();
@@ -475,17 +587,6 @@ public abstract class URLUtils extends BaseUtils {
      */
     public static String buildMatrixString(String name, String... values) {
         return buildString(name, values, SEMICOLON_CHAR, EQUAL_CHAR);
-    }
-
-    /**
-     * Converts a URL of a specific protocol to a String.
-     *
-     * @param url {@link URL}
-     * @return non-null
-     * @throws NullPointerException If <code>url</code> is <code>null</code>
-     */
-    public static String toString(URL url) throws NullPointerException {
-        return toExternalForm(url);
     }
 
     /**
@@ -597,9 +698,34 @@ public abstract class URLUtils extends BaseUtils {
             subProtocols = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
         } else {
             String[] values = split(subProtocolsString, COLON_CHAR);
-            subProtocols = Arrays.asList(values);
+            subProtocols = ofList(values);
         }
-        return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
+        return subProtocols == null ? emptyList() : subProtocols;
+    }
+
+    /**
+     * Resolve the protocol from the specified {@link URL} string
+     *
+     * @param url the {@link URL} string
+     * @return <code>null</code> if can't be resolved
+     */
+    public static String resolveProtocol(String url) {
+        if (isBlank(url)) {
+            return null;
+        }
+        int indexOfColon = url.indexOf(COLON_CHAR);
+        if (indexOfColon < 1) { // NOT FOUND
+            return null;
+        }
+        for (int i = 0; i <= indexOfColon; i++) {
+            if (isWhitespace(url.charAt(i))) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
+                }
+                return null;
+            }
+        }
+        return url.substring(0, indexOfColon);
     }
 
     private static String findSubProtocolsString(String url) {
@@ -622,15 +748,10 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     public static String resolvePath(URL url) {
-        return resolvePath(url.getPath());
+        return resolvePath(url, true);
     }
 
-    public static String resolvePath(String value) {
-        int indexOfMatrixString = indexOfMatrixString(value);
-        return resolvePath(value, indexOfMatrixString);
-    }
-
-    public static String resolvePath(String value, int indexOfMatrixString) {
+    static String resolvePath(String value, int indexOfMatrixString) {
         return indexOfMatrixString > -1 ? value.substring(0, indexOfMatrixString) : value;
     }
 
@@ -700,6 +821,17 @@ public abstract class URLUtils extends BaseUtils {
         attachURLStreamHandlerFactory(factory);
     }
 
+    /**
+     * Closes a URLConnection.
+     *
+     * @param conn the connection to close.
+     */
+    public static void close(URLConnection conn) {
+        if (conn instanceof HttpURLConnection) {
+            ((HttpURLConnection) conn).disconnect();
+        }
+    }
+
     protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory() {
         return getMutableURLStreamHandlerFactory(false);
     }
@@ -760,12 +892,12 @@ public abstract class URLUtils extends BaseUtils {
 
     protected static Map<String, List<String>> resolveParameters(String paramsString, char separatorChar) {
         String[] params = split(paramsString, separatorChar);
-        int paramsLen = params == null ? 0 : params.length;
+        int paramsLen = length(params);
         if (paramsLen == 0) {
             return emptyMap();
         }
 
-        Map<String, List<String>> parametersMap = new LinkedHashMap(paramsLen, Float.MIN_NORMAL);
+        Map<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
 
         for (int i = 0; i < paramsLen; i++) {
             String param = params[i];
@@ -787,7 +919,7 @@ public abstract class URLUtils extends BaseUtils {
     }
 
     protected static String buildString(String name, String[] values, char separator, char joiner) {
-        int len = getLength(values);
+        int len = length(values);
 
         if (len == 0) {
             return null;
@@ -819,4 +951,6 @@ public abstract class URLUtils extends BaseUtils {
         return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
+    private URLUtils() {
+    }
 }

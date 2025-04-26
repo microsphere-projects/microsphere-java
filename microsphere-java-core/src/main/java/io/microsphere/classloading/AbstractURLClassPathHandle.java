@@ -16,10 +16,10 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collection;
@@ -46,6 +46,11 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  */
 public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, Prioritized {
 
+    /**
+     * The default priority is {@link Prioritized#MAX_PRIORITY} + 99999
+     */
+    public static final int DEFAULT_PRIORITY = MAX_PRIORITY + 99999;
+
     private final Logger logger = getLogger(getClass());
 
     private Class<?> urlClassPathClass;
@@ -71,6 +76,10 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
 
     private int priority;
 
+    public AbstractURLClassPathHandle() {
+        setPriority(DEFAULT_PRIORITY);
+    }
+
     @Override
     public boolean supports() {
         return getUrlClassPathClass() != null;
@@ -79,12 +88,21 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
     @Nonnull
     @Override
     public URL[] getURLs(ClassLoader classLoader) {
+        if (classLoader == null) {
+            return EMPTY_URL_ARRAY;
+        }
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(ucp, "getURLs");
     }
 
     @Override
     public final boolean removeURL(ClassLoader classLoader, URL url) {
+        if (classLoader == null || url == null) {
+            return false;
+        }
+
+        initializeLoaders(classLoader);
+
         Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
         Collection<URL> urls = getFieldValue(ucp, getUrlsField());
         Collection<URL> path = getFieldValue(ucp, getPathField());
@@ -95,8 +113,6 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         boolean removed = false;
 
         synchronized (urls) {
-            urls.remove(url);
-            path.remove(url);
 
             Iterator<Object> iterator = loaders.iterator();
             while (iterator.hasNext()) {
@@ -108,6 +124,8 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
                         logger.trace("Remove the Class-Path URL：{}", url);
                     }
                     iterator.remove();
+                    urls.remove(url);
+                    path.remove(url);
                     removed = true;
                     break;
                 }

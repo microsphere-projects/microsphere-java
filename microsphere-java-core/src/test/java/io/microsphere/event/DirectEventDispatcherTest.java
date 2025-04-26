@@ -19,7 +19,7 @@ package io.microsphere.event;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static java.util.Arrays.asList;
+import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -61,15 +61,15 @@ public class DirectEventDispatcherTest {
         // add two listeners
         dispatcher.addEventListener(echoEventListener);
         dispatcher.addEventListener(echoEventListener2);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
+        assertEquals(ofList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // add a duplicated listener
         dispatcher.addEventListener(echoEventListener);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
+        assertEquals(ofList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // remove
         dispatcher.removeEventListener(echoEventListener);
-        assertEquals(asList(echoEventListener2), dispatcher.getAllEventListeners());
+        assertEquals(ofList((EventListener) echoEventListener2), dispatcher.getAllEventListeners());
 
         dispatcher.removeEventListener(echoEventListener2);
         assertEquals(emptyList(), dispatcher.getAllEventListeners());
@@ -80,7 +80,7 @@ public class DirectEventDispatcherTest {
 
         // add two listeners
         dispatcher.addEventListeners(echoEventListener, echoEventListener2);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
+        assertEquals(ofList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // remove all listeners
         dispatcher.removeAllEventListeners();
@@ -88,16 +88,16 @@ public class DirectEventDispatcherTest {
 
         // add the duplicated listeners
         dispatcher.addEventListeners(echoEventListener, echoEventListener, echoEventListener2);
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
+        assertEquals(ofList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
         // remove all listeners
         dispatcher.removeAllEventListeners();
         assertEquals(emptyList(), dispatcher.getAllEventListeners());
 
-        dispatcher.addEventListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
-        assertEquals(asList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
+        dispatcher.addEventListeners(ofList(echoEventListener, echoEventListener, echoEventListener2));
+        assertEquals(ofList(echoEventListener2, echoEventListener), dispatcher.getAllEventListeners());
 
-        dispatcher.removeEventListeners(asList(echoEventListener, echoEventListener, echoEventListener2));
+        dispatcher.removeEventListeners(ofList(echoEventListener, echoEventListener, echoEventListener2));
         assertEquals(emptyList(), dispatcher.getAllEventListeners());
     }
 

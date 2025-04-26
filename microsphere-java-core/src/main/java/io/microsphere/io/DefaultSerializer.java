@@ -16,7 +16,6 @@
  */
 package io.microsphere.io;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -32,10 +31,12 @@ import java.io.Serializable;
  */
 public class DefaultSerializer implements Serializer<Object> {
 
+    public static final DefaultSerializer INSTANCE = new DefaultSerializer();
+
     @Override
     public byte[] serialize(Object source) throws IOException {
         byte[] bytes = null;
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream();
              ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream)
         ) {
             // Key -> byte[]

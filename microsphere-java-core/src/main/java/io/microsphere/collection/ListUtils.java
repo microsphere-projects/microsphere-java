@@ -16,7 +16,7 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -29,6 +29,7 @@ import java.util.function.Consumer;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.CollectionUtils.toIterator;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -37,24 +38,63 @@ import static java.util.Collections.unmodifiableList;
  * The utilities class for Java {@link List}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Lists
  * @see List
  * @since 1.0.0
  */
-public abstract class ListUtils extends BaseUtils {
+public abstract class ListUtils implements Utils {
 
     public static boolean isList(Object values) {
         return values instanceof List;
     }
 
+    /**
+     * Get the first element of the specified {@link List}
+     *
+     * @param list the specified {@link List}
+     * @param <E>  the type of element
+     * @return the first one if found, or <code>null</code>
+     */
+    public static <E> E first(List<E> list) {
+        return size(list) < 1 ? null : list.get(0);
+    }
+
+    /**
+     * Get the last element of the specified {@link List}
+     *
+     * @param list the specified {@link List}
+     * @param <E>  the type of element
+     * @return the last one if found, or <code>null</code>
+     */
+    public static <E> E last(List<E> list) {
+        int size = size(list);
+        return size < 1 ? null : list.get(size - 1);
+    }
+
+    public static <E> List<E> of(E... elements) {
+        return ofList(elements);
+    }
+
+    /**
+     * Create a {@link List} from the specified array
+     *
+     * @param elements
+     * @param <E>
+     * @return
+     * @see {@link Lists#ofList} as recommended
+     */
     public static <E> List<E> ofList(E... elements) {
-        return asList(elements);
+        if (isEmpty(elements)) {
+            return emptyList();
+        }
+        return unmodifiableList(asList(elements));
     }
 
     public static <E> List<E> ofList(Iterable<E> iterable) {
         if (iterable == null) {
             return emptyList();
         } else if (isList(iterable)) {
-            return (List) iterable;
+            return unmodifiableList((List) iterable);
         } else {
             return ofList(iterable.iterator());
         }
@@ -73,6 +113,10 @@ public abstract class ListUtils extends BaseUtils {
             list.add(iterator.next());
         }
         return unmodifiableList(list);
+    }
+
+    public static <E> ArrayList<E> newArrayList() {
+        return new ArrayList<>();
     }
 
     public static <E> ArrayList<E> newArrayList(int size) {
@@ -95,8 +139,8 @@ public abstract class ListUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> ArrayList<E> newArrayList() {
-        return new ArrayList<>();
+    public static <E> LinkedList<E> newLinkedList() {
+        return new LinkedList<>();
     }
 
     public static <E> LinkedList<E> newLinkedList(Enumeration<E> values) {
@@ -115,10 +159,6 @@ public abstract class ListUtils extends BaseUtils {
         return list;
     }
 
-    public static <E> LinkedList<E> newLinkedList() {
-        return new LinkedList<>();
-    }
-
     public static <T> void forEach(List<T> values, BiConsumer<Integer, T> indexedElementConsumer) {
         int length = size(values);
         for (int i = 0; i < length; i++) {
@@ -129,5 +169,8 @@ public abstract class ListUtils extends BaseUtils {
 
     public static <T> void forEach(List<T> values, Consumer<T> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
+    }
+
+    private ListUtils() {
     }
 }

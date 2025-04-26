@@ -4,9 +4,9 @@
 package io.microsphere.io.scanner;
 
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.filter.Filter;
 
-import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -15,7 +15,6 @@ import java.util.Set;
  * @param <S> the type of scanned source
  * @param <R> the type of scan result
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see Scanner
  * @since 1.0.0
  */

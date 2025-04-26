@@ -16,20 +16,18 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
-import java.util.function.Predicate;
 
-import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
-import static io.microsphere.reflect.MemberUtils.FINAL_METHOD_PREDICATE;
-import static io.microsphere.reflect.MemberUtils.NON_PRIVATE_METHOD_PREDICATE;
-import static io.microsphere.reflect.MemberUtils.NON_STATIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
-import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static java.lang.reflect.Modifier.isFinal;
@@ -41,7 +39,7 @@ import static java.lang.reflect.Modifier.isFinal;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class ProxyUtils extends BaseUtils {
+public abstract class ProxyUtils implements Utils {
 
     /**
      * <ul>
@@ -72,11 +70,15 @@ public abstract class ProxyUtils extends BaseUtils {
             return false;
         }
 
-        Predicate<? super Method> predicate = and(NON_STATIC_METHOD_PREDICATE, FINAL_METHOD_PREDICATE,
-                NON_PRIVATE_METHOD_PREDICATE, OBJECT_METHOD_PREDICATE.negate());
-
-        List<Method> methods = getAllDeclaredMethods(type, predicate);
+        List<Method> methods = findAllDeclaredMethods(type,
+                NON_STATIC_METHOD_PREDICATE,
+                FINAL_METHOD_PREDICATE,
+                NON_PRIVATE_METHOD_PREDICATE,
+                OBJECT_METHOD_PREDICATE.negate());
 
         return methods.isEmpty();
+    }
+
+    private ProxyUtils() {
     }
 }

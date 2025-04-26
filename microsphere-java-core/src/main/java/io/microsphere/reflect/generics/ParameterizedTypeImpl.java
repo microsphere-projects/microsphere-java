@@ -16,16 +16,15 @@
  */
 package io.microsphere.reflect.generics;
 
-import io.microsphere.logging.Logger;
-
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.util.Arrays;
 import java.util.Objects;
 
-import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static java.util.Objects.hash;
 
 /**
  * {@link ParameterizedType} Implementation forks {@link sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl}
@@ -36,8 +35,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
  * @since 1.0.0
  */
 public class ParameterizedTypeImpl implements ParameterizedType {
-
-    private static final Logger logger = getLogger(ParameterizedTypeImpl.class);
 
     private final Type[] actualTypeArguments;
 
@@ -63,6 +60,34 @@ public class ParameterizedTypeImpl implements ParameterizedType {
         for (int i = 0; i < actualTypeArguments.length; i++) {
             // check actuals against formals' bounds
         }
+    }
+
+    /**
+     * Static factory. Given a (generic) class, actual type arguments
+     * and an owner type, creates a parameterized type.
+     * This class can be instantiated with a a raw type that does not
+     * represent a generic type, provided the list of actual type
+     * arguments is empty.
+     * If the ownerType argument is null, the declaring class of the
+     * raw type is used as the owner type.
+     * <p> This method throws a MalformedParameterizedTypeException
+     * under the following circumstances:
+     * If the number of actual type arguments (i.e., the size of the
+     * array <tt>typeArgs</tt>) does not correspond to the number of
+     * formal type arguments.
+     * If any of the actual type arguments is not an instance of the
+     * bounds on the corresponding formal.
+     *
+     * @param rawType             the Class representing the generic type declaration being
+     *                            instantiated
+     * @param actualTypeArguments - a (possibly empty) array of types
+     *                            representing the actual type arguments to the parameterized type
+     * @return An instance of <tt>ParameterizedType</tt>
+     * @throws MalformedParameterizedTypeException - if the instantiation
+     *                                             is invalid
+     */
+    public static ParameterizedTypeImpl of(Class<?> rawType, Type... actualTypeArguments) {
+        return of(rawType, actualTypeArguments, null);
     }
 
     /**
@@ -126,7 +151,6 @@ public class ParameterizedTypeImpl implements ParameterizedType {
         return rawType;
     }
 
-
     /**
      * Returns a <tt>Type</tt> object representing the type that this type
      * is a member of.  For example, if this type is <tt>O<T>.I<S></tt>,
@@ -166,25 +190,10 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             Type thatOwner = that.getOwnerType();
             Type thatRawType = that.getRawType();
 
-            if (false) { // Debugging
-                boolean ownerEquality = (Objects.equals(ownerType, thatOwner));
-                boolean rawEquality = (Objects.equals(rawType, thatRawType));
-
-                boolean typeArgEquality = Arrays.equals(actualTypeArguments, // avoid clone
-                        that.getActualTypeArguments());
-                for (Type t : actualTypeArguments) {
-                    logger.info("\t\t{}{}", t, t.getClass());
-                }
-
-                logger.info("\towner {}\traw {}\ttypeArg {}",
-                        ownerEquality, rawEquality, typeArgEquality);
-                return ownerEquality && rawEquality && typeArgEquality;
-            }
-
             return
                     Objects.equals(ownerType, thatOwner) &&
                             Objects.equals(rawType, thatRawType) &&
-                            Arrays.equals(actualTypeArguments, // avoid clone
+                            arrayEquals(actualTypeArguments, // avoid clone
                                     that.getActualTypeArguments());
         } else
             return false;
@@ -192,7 +201,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(actualTypeArguments) ^
+        return hash(actualTypeArguments) ^
                 Objects.hashCode(ownerType) ^
                 Objects.hashCode(rawType);
     }
@@ -206,19 +215,18 @@ public class ParameterizedTypeImpl implements ParameterizedType {
             else
                 sb.append(ownerType);
 
-            sb.append("$");
+            sb.append(DOLLAR_CHAR);
 
             if (ownerType instanceof ParameterizedTypeImpl) {
                 // Find simple name of nested type by removing the
                 // shared prefix with owner.
-                sb.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + "$", ""));
+                sb.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + DOLLAR_CHAR, ""));
             } else
                 sb.append(rawType.getSimpleName());
         } else
             sb.append(rawType.getName());
 
-        if (actualTypeArguments != null &&
-                actualTypeArguments.length > 0) {
+        if (actualTypeArguments != null && actualTypeArguments.length > 0) {
             sb.append("<");
             boolean first = true;
             for (Type t : actualTypeArguments) {

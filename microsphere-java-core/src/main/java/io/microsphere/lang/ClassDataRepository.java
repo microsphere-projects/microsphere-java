@@ -16,11 +16,10 @@
  */
 package io.microsphere.lang;
 
-import io.microsphere.collection.CollectionUtils;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassPathUtils;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
@@ -106,7 +106,7 @@ public class ClassDataRepository {
     @Nonnull
     public Set<String> getClassNamesInClassPath(String classPath, boolean recursive) {
         Set<String> classNames = classPathToClassNamesMap.get(classPath);
-        if (CollectionUtils.isEmpty(classNames)) {
+        if (isEmpty(classNames)) {
             classNames = findClassNamesInClassPath(classPath, recursive);
         }
         return classNames;

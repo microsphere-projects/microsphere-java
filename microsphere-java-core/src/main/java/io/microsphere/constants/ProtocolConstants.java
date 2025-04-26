@@ -3,11 +3,15 @@
  */
 package io.microsphere.constants;
 
+import static io.microsphere.constants.FileConstants.EAR;
+import static io.microsphere.constants.FileConstants.JAR;
+import static io.microsphere.constants.FileConstants.WAR;
+import static io.microsphere.constants.FileConstants.ZIP;
+
 /**
  * Protocol Constants Definition
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ProtocolConstants
  * @since 1.0.0
  */
@@ -36,27 +40,30 @@ public interface ProtocolConstants {
     /**
      * Zip protocol
      */
-    String ZIP_PROTOCOL = FileConstants.ZIP;
+    String ZIP_PROTOCOL = ZIP;
 
     /**
      * Jar protocol
      */
-    String JAR_PROTOCOL = FileConstants.JAR;
+    String JAR_PROTOCOL = JAR;
 
     /**
      * War protocol
      */
-    String WAR_PROTOCOL = FileConstants.WAR;
+    String WAR_PROTOCOL = WAR;
 
     /**
      * Ear protocol
      */
-    String EAR_PROTOCOL = FileConstants.EAR;
-
+    String EAR_PROTOCOL = EAR;
 
     /**
      * Class-Path Protocol
      */
     String CLASSPATH_PROTOCOL = "classpath";
 
+    /**
+     * Console Protocol
+     */
+    String CONSOLE_PROTOCOL = "console";
 }

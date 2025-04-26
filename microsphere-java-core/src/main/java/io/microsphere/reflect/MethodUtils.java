@@ -16,50 +16,50 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.util.ArrayUtils;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
-import javax.annotation.Nullable;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
-import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
-import static io.microsphere.reflect.MethodUtils.MethodKey.buildKey;
+import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.AnnotationUtils.CALLER_SENSITIVE_ANNOTATION_CLASS;
 import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.hash;
 
 /**
  * The Java Reflection {@link Method} Utility class
@@ -67,19 +67,19 @@ import static java.util.Collections.unmodifiableList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public abstract class MethodUtils extends BaseUtils {
+public abstract class MethodUtils implements Utils {
 
     private static final Logger logger = getLogger(MethodUtils.class);
 
     /**
      * The public methods of {@link Object}
      */
-    public final static List<Method> OBJECT_PUBLIC_METHODS = ofList(Object.class.getMethods());
+    public final static List<Method> OBJECT_PUBLIC_METHODS = of(Object.class.getMethods());
 
     /**
      * The declared methods of {@link Object}
      */
-    public final static List<Method> OBJECT_DECLARED_METHODS = ofList(Object.class.getDeclaredMethods());
+    public final static List<Method> OBJECT_DECLARED_METHODS = of(Object.class.getDeclaredMethods());
 
     /**
      * The {@link Predicate} reference to {@link MethodUtils#isObjectMethod(Method)}
@@ -89,7 +89,27 @@ public abstract class MethodUtils extends BaseUtils {
     /**
      * The {@link Predicate} reference to {@link MemberUtils#isPublic(Member)}
      */
-    public final static Predicate<? super Method> PULIC_METHOD_PREDICATE = MemberUtils::isPublic;
+    public final static Predicate<? super Method> PUBLIC_METHOD_PREDICATE = MemberUtils::isPublic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isStatic(Member)}
+     */
+    public final static Predicate<? super Method> STATIC_METHOD_PREDICATE = MemberUtils::isStatic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isNonStatic(Member)}
+     */
+    public final static Predicate<? super Method> NON_STATIC_METHOD_PREDICATE = MemberUtils::isNonStatic;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isFinal(Member)}
+     */
+    public final static Predicate<? super Method> FINAL_METHOD_PREDICATE = MemberUtils::isFinal;
+
+    /**
+     * The {@link Predicate} reference to {@link MemberUtils#isNonPrivate(Member)}
+     */
+    public final static Predicate<? super Method> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
 
     private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>(256);
 
@@ -106,7 +126,99 @@ public abstract class MethodUtils extends BaseUtils {
     }
 
     /**
-     * Filter all {@link Method methods} of the target class by the specified {@link Predicate}
+     * Get all declared {@link Method methods} of the target class, excluding the inherited methods
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findDeclaredMethods(Class, Predicate...)
+     */
+    public static List<Method> getDeclaredMethods(Class<?> targetClass) {
+        return findDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all public {@link Method methods} of the target class, excluding the inherited methods.
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, Predicate...)
+     */
+    public static List<Method> getMethods(Class<?> targetClass) {
+        return findMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all declared {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findAllDeclaredMethods(Class, Predicate...)
+     */
+    public static List<Method> getAllDeclaredMethods(Class<?> targetClass) {
+        return findAllDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Get all public {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass the target class
+     * @return non-null read-only {@link List}
+     * @see #findAllMethods(Class, Predicate...)
+     */
+    public static List<Method> getAllMethods(Class<?> targetClass) {
+        return findAllMethods(targetClass, EMPTY_PREDICATE_ARRAY);
+    }
+
+    /**
+     * Find all declared {@link Method methods} of the target class, excluding the inherited methods
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, false, false, methodsToFilter);
+    }
+
+    /**
+     * Find all public {@link Method methods} of the target class, excluding the inherited methods.
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, false, true, methodsToFilter);
+    }
+
+    /**
+     * Get all declared {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, true, false, methodsToFilter);
+    }
+
+    /**
+     * Get all public {@link Method methods} of the target class, including the inherited methods.
+     *
+     * @param targetClass     the target class
+     * @param methodsToFilter (optional) the methods to be filtered
+     * @return non-null read-only {@link List}
+     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     */
+    public static List<Method> findAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+        return findMethods(targetClass, true, true, methodsToFilter);
+    }
+
+    /**
+     * Find all {@link Method methods} of the target class by the specified {@link Predicate}
      *
      * @param targetClass           the target class
      * @param includeInheritedTypes include the inherited types, e,g. super classes or interfaces
@@ -114,7 +226,8 @@ public abstract class MethodUtils extends BaseUtils {
      * @param methodsToFilter       (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      */
-    public static List<Method> filterMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly, Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
+                                           Predicate<? super Method>... methodsToFilter) {
 
         if (targetClass == null || isPrimitive(targetClass)) {
             return emptyList();
@@ -124,13 +237,13 @@ public abstract class MethodUtils extends BaseUtils {
             return doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter);
         }
 
-        if (Object.class.equals(targetClass)) {
+        if (isObjectClass(targetClass)) {
             return publicOnly ? doFilterMethods(OBJECT_PUBLIC_METHODS, methodsToFilter) : doFilterMethods(OBJECT_DECLARED_METHODS, methodsToFilter);
         }
 
-        Predicate<? super Method> predicate = and(methodsToFilter);
+        Predicate predicate = and(methodsToFilter);
         if (publicOnly) {
-            predicate = predicate.and((Predicate) PULIC_METHOD_PREDICATE);
+            predicate = PUBLIC_METHOD_PREDICATE.and(predicate);
         }
 
         // All methods
@@ -146,54 +259,6 @@ public abstract class MethodUtils extends BaseUtils {
         }
 
         return unmodifiableList(allMethods);
-    }
-
-    /**
-     * Get all declared {@link Method methods} of the target class, excluding the inherited methods
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, false, false, methodsToFilter);
-    }
-
-    /**
-     * Get all public {@link Method methods} of the target class, including the inherited methods.
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, false, true, methodsToFilter);
-    }
-
-    /**
-     * Get all declared {@link Method methods} of the target class, including the inherited methods.
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, true, false, methodsToFilter);
-    }
-
-    /**
-     * Get all public {@link Method methods} of the target class, including the inherited methods.
-     *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #filterMethods(Class, boolean, boolean, Predicate[])
-     */
-    public static List<Method> getAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
-        return filterMethods(targetClass, true, true, methodsToFilter);
     }
 
     /**
@@ -240,7 +305,7 @@ public abstract class MethodUtils extends BaseUtils {
         Method method = doFindDeclaredMethod(targetClass, methodName, parameterTypes);
 
         if (method == null) {  // Second, to find the declared method in the super class
-            Class<?> superClass = targetClass.getSuperclass();
+            Class<?> superClass = targetClass.isInterface() ? Object.class : targetClass.getSuperclass();
             method = findDeclaredMethod(superClass, methodName, parameterTypes);
         }
 
@@ -256,7 +321,7 @@ public abstract class MethodUtils extends BaseUtils {
         if (method == null) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The declared method was not found in the target class[name : '{}'] by name['{}'] and parameter types['{}']",
-                        targetClass, methodName, Arrays.toString(parameterTypes));
+                        targetClass, methodName, arrayToString(parameterTypes));
             }
         }
 
@@ -351,6 +416,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return the result of dispatching the method represented by
      * this object on {@code instance} with parameters
      * {@code arguments}
+     * @throws NullPointerException     if this {@link Method} object is <code>null</code>
      * @throws IllegalStateException    if this {@code Method} object
      *                                  is enforcing Java language access control and the underlying
      *                                  method is inaccessible.
@@ -368,20 +434,23 @@ public abstract class MethodUtils extends BaseUtils {
      *                                  throws an exception.
      */
     public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
+        if (method == null) {
+            throw new NullPointerException("The 'method' must not be null");
+        }
         R result = null;
         boolean accessible = false;
         RuntimeException failure = null;
         try {
-            trySetAccessible(method);
+            accessible = trySetAccessible(method);
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException e) {
             String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
             failure = new IllegalStateException(errorMessage, e);
         } catch (IllegalArgumentException e) {
-            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, asList(arguments));
+            String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, arrayToString(arguments));
             failure = new IllegalArgumentException(errorMessage, e);
         } catch (InvocationTargetException e) {
-            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, asList(arguments));
+            String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, arrayToString(arguments));
             failure = new RuntimeException(errorMessage, e.getTargetException());
         }
 
@@ -407,12 +476,12 @@ public abstract class MethodUtils extends BaseUtils {
      */
     public static boolean overrides(Method overrider, Method overridden) {
 
-        if (overrider == null || overridden == null) {
+        if (overrider == null || overridden == null || overrider == overridden) {
             return false;
         }
 
-        // equality comparison: If two methods are same
-        if (Objects.equals(overrider, overridden)) {
+        // Method comparison: The method name must be equal
+        if (!Objects.equals(overrider.getName(), overridden.getName())) {
             return false;
         }
 
@@ -426,34 +495,40 @@ public abstract class MethodUtils extends BaseUtils {
             return false;
         }
 
-        // Inheritance comparison: the target class of overrider must be inherit from the overridden's
-        if (!overridden.getDeclaringClass().isAssignableFrom(overrider.getDeclaringClass())) {
-            return false;
-        }
-
         // Method comparison: must not be "default" method
         if (overrider.isDefault()) {
             return false;
         }
 
-        // Method comparison: The method name must be equal
-        if (!Objects.equals(overrider.getName(), overridden.getName())) {
+        Class<?> overriderDeclaringClass = overrider.getDeclaringClass();
+        Class<?> overriddenDeclaringClass = overridden.getDeclaringClass();
+
+        // Method comparison: The declaring class of overrider must not equal the overridden's
+        if (overriderDeclaringClass == overriddenDeclaringClass) {
+            return false;
+        }
+
+        // Inheritance comparison: the target class of overrider must be inherit from the overridden's
+        if (!overriddenDeclaringClass.isAssignableFrom(overriderDeclaringClass)) {
             return false;
         }
 
         // Method comparison: The count of method parameters must be equal
-        if (!Objects.equals(overrider.getParameterCount(), overridden.getParameterCount())) {
+        int parameterCount = overrider.getParameterCount();
+        if (parameterCount != overridden.getParameterCount()) {
             return false;
         }
 
+        Class<?>[] overriderParameterTypes = overrider.getParameterTypes();
+        Class<?>[] overriddenParameterTypes = overridden.getParameterTypes();
+
         // Method comparison: Any parameter type of overrider must equal the overridden's
-        for (int i = 0; i < overrider.getParameterCount(); i++) {
-            if (!Objects.equals(overridden.getParameterTypes()[i], overrider.getParameterTypes()[i])) {
-                return false;
-            }
+        if (!matchesParameterTypes(overriderParameterTypes, overriddenParameterTypes, parameterCount)) {
+            return false;
         }
 
-        // Method comparison: The return type of overrider must be inherit from the overridden's
+        // Method comparison: The return type of overrider must be inherit from the overridden's.
+        // Actually, the different return types of overrider and overridden are not allowed by compiler after above tests.
         return overridden.getReturnType().isAssignableFrom(overrider.getReturnType());
 
         // Throwable comparison: "throws" Throwable list will be ignored, trust the compiler verify
@@ -485,7 +560,7 @@ public abstract class MethodUtils extends BaseUtils {
      * @return if found, the overrider <code>method</code>, or <code>null</code>
      */
     public static Method findOverriddenMethod(Method overrider, Class<?> targetClass) {
-        List<Method> matchedMethods = getAllMethods(targetClass, method -> overrides(overrider, method));
+        List<Method> matchedMethods = findDeclaredMethods(targetClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
     }
 
@@ -496,12 +571,13 @@ public abstract class MethodUtils extends BaseUtils {
      * @return non-null
      */
     public static String getSignature(Method method) {
-        Class<?> targetClass = method.getDeclaringClass();
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
+    }
+
+    static String buildSignature(Class<?> declaringClass, String methodName, Class<?>[] parameterTypes) {
         int parameterCount = parameterTypes.length;
         String[] parameterTypeNames = new String[parameterCount];
-        String methodName = method.getName();
-        String declaringClassName = getTypeName(targetClass);
+        String declaringClassName = getTypeName(declaringClass);
         int size = declaringClassName.length() + 1 // '#'
                 + methodName.length() + 1  // '('
                 + (parameterCount == 0 ? 0 : parameterCount - 1) // (parameterCount - 1) * ','
@@ -535,7 +611,7 @@ public abstract class MethodUtils extends BaseUtils {
 
     public static boolean isObjectMethod(Method method) {
         if (method != null) {
-            return Objects.equals(Object.class, method.getDeclaringClass());
+            return isObjectClass(method.getDeclaringClass());
         }
         return false;
     }
@@ -580,16 +656,27 @@ public abstract class MethodUtils extends BaseUtils {
             }
         }
         if (logger.isTraceEnabled()) {
-            logger.trace("The target method[name : '{}' , parameter types : '{}'] {} be found in the methods : {}",
-                    methodName, Arrays.toString(parameterTypes), targetMethod == null ? "can't " : "can",
-                    Arrays.toString(methods));
+            logger.trace("The target method[name : '{}' , parameter types : {}] {} found in the methods : {}",
+                    methodName, arrayToString(parameterTypes), targetMethod == null ? "can't be" : "is",
+                    arrayToString(methods));
         }
         return targetMethod;
     }
 
     static boolean matches(Method method, String methodName, Class<?>[] parameterTypes) {
-        return Objects.equals(method.getName(), methodName)
-                && Arrays.equals(method.getParameterTypes(), parameterTypes);
+        int parameterCount = parameterTypes.length;
+        return parameterCount == method.getParameterCount()
+                && Objects.equals(method.getName(), methodName)
+                && matchesParameterTypes(method.getParameterTypes(), parameterTypes, parameterCount);
+    }
+
+    static boolean matchesParameterTypes(Class<?>[] oneParameterTypes, Class<?>[] anotherParameterTypes, int parameterCount) {
+        for (int i = 0; i < parameterCount; i++) {
+            if (oneParameterTypes[i] != anotherParameterTypes[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     static Method[] doGetDeclaredMethods(Class<?> klass) {
@@ -598,6 +685,10 @@ public abstract class MethodUtils extends BaseUtils {
 
     static List<Method> doFilterMethods(List<Method> methods, Predicate<? super Method>... methodsToFilter) {
         return unmodifiableList(filterAll(methods, methodsToFilter));
+    }
+
+    static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        return new MethodKey(declaredClass, methodName, parameterTypes);
     }
 
     static Method doFindMethod(MethodKey key) {
@@ -609,11 +700,11 @@ public abstract class MethodUtils extends BaseUtils {
 
     static class MethodKey {
 
-        private final Class<?> declaredClass;
+        final Class<?> declaredClass;
 
-        private final String methodName;
+        final String methodName;
 
-        private final Class<?>[] parameterTypes;
+        final Class<?>[] parameterTypes;
 
         MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
             this.declaredClass = declaredClass;
@@ -631,26 +722,23 @@ public abstract class MethodUtils extends BaseUtils {
             if (!Objects.equals(declaredClass, methodKey.declaredClass)) return false;
             if (!Objects.equals(methodName, methodKey.methodName)) return false;
             // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            return Arrays.equals(parameterTypes, methodKey.parameterTypes);
+            return arrayEquals(parameterTypes, methodKey.parameterTypes);
         }
 
         @Override
         public int hashCode() {
             int result = declaredClass != null ? declaredClass.hashCode() : 0;
             result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
-            result = 31 * result + Arrays.hashCode(parameterTypes);
+            result = 31 * result + hash(parameterTypes);
             return result;
         }
 
         @Override
         public String toString() {
-            StringJoiner stringJoiner = new StringJoiner(",", "(", ") ");
-            ArrayUtils.forEach(parameterTypes, parameterType -> stringJoiner.add(getTypeName(parameterType)));
-            return getTypeName(declaredClass) + "#" + methodName + stringJoiner;
+            return buildSignature(declaredClass, methodName, parameterTypes);
         }
+    }
 
-        static MethodKey buildKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
-            return new MethodKey(declaredClass, methodName, parameterTypes);
-        }
+    private MethodUtils() {
     }
 }

@@ -4,31 +4,33 @@
 package io.microsphere.util;
 
 
-import javax.annotation.Nonnull;
+import io.microsphere.annotation.Nonnull;
+
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Set;
 
-import static io.microsphere.collection.SetUtils.of;
+import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.StringUtils.split;
-import static java.lang.Thread.currentThread;
+import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 
 /**
  * {@link ClassPathUtils}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see ClassPathUtils
  * @since 1.0.0
  */
-public abstract class ClassPathUtils extends BaseUtils {
+public abstract class ClassPathUtils implements Utils {
 
     protected static final RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
 
@@ -49,7 +51,7 @@ public abstract class ClassPathUtils extends BaseUtils {
 
     private static Set<String> resolveClassPaths(String classPath) {
         String[] classPathsArray = split(classPath, PATH_SEPARATOR);
-        return of(classPathsArray);
+        return ofSet(classPathsArray);
     }
 
 
@@ -57,9 +59,7 @@ public abstract class ClassPathUtils extends BaseUtils {
      * Get Bootstrap Class Paths {@link Set}
      *
      * @return If {@link RuntimeMXBean#isBootClassPathSupported()} == <code>false</code>, will return empty set.
-     * @version 1.0.0
-     * @since 1.0.0
-     **/
+     */
     @Nonnull
     public static Set<String> getBootstrapClassPaths() {
         return bootstrapClassPaths;
@@ -69,8 +69,6 @@ public abstract class ClassPathUtils extends BaseUtils {
      * Get {@link #classPaths}
      *
      * @return Class Paths {@link Set}
-     * @version 1.0.0
-     * @since 1.0.0
      **/
     @Nonnull
     public static Set<String> getClassPaths() {
@@ -86,17 +84,11 @@ public abstract class ClassPathUtils extends BaseUtils {
      * @see #getRuntimeClassLocation(Class)
      */
     public static URL getRuntimeClassLocation(String className) {
-        ClassLoader classLoader = currentThread().getContextClassLoader();
-        URL location = null;
-        if (classLoader != null) {
-            if (isLoadedClass(classLoader, className)) {
-                try {
-                    location = getRuntimeClassLocation(classLoader.loadClass(className));
-                } catch (ClassNotFoundException ignored) {
-                }
-            }
+        ClassLoader classLoader = getDefaultClassLoader();
+        if (isLoadedClass(classLoader, className)) {
+            return getRuntimeClassLocation(resolveClass(className, classLoader));
         }
-        return location;
+        return null;
     }
 
     /**
@@ -121,8 +113,11 @@ public abstract class ClassPathUtils extends BaseUtils {
             }
         } else if (!type.isPrimitive() && !type.isArray() && !type.isSynthetic()) { // Bootstrap ClassLoader
             // Class was loaded by Bootstrap ClassLoader
-            location = getClassResource(ClassLoader.getSystemClassLoader(), type.getName());
+            location = getClassResource(getSystemClassLoader(), type.getName());
         }
         return location;
+    }
+
+    private ClassPathUtils() {
     }
 }

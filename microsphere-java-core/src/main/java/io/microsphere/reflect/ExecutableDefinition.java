@@ -16,18 +16,20 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static java.util.Objects.hash;
 
 /**
  * The definition class of Java {@link Executable}
@@ -126,35 +128,22 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
         if (!super.equals(o)) return false;
 
         ExecutableDefinition that = (ExecutableDefinition) o;
-        return Arrays.equals(this.parameterClassNames, that.parameterClassNames);
+        return arrayEquals(this.parameterClassNames, that.parameterClassNames);
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Arrays.hashCode(this.parameterClassNames);
+        result = 31 * result + hash(this.parameterClassNames);
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "ExecutableDefinition{" +
-                "since=" + this.since +
-                ", deprecation=" + this.deprecation +
-                ", declaredClassName='" + this.getDeclaredClassName() + '\'' +
-                ", declaredClass=" + this.getDeclaredClass() +
-                ", name='" + this.name + '\'' +
-                ", executable=" + this.getMember() +
-                ", parameterClassNames='" + Arrays.toString(this.parameterClassNames) + '\'' +
-                ", parameterTypes=" + Arrays.toString(this.parameterTypes) +
-                '}';
-    }
-
     protected Class<?>[] resolveParameterTypes(String[] parameterClassNames) {
+        ClassLoader classLoader = getClassLoader(getClass());
         int length = parameterClassNames.length;
         Class<?>[] parameterTypes = new Class<?>[length];
         for (int i = 0; i < length; i++) {
-            parameterTypes[i] = resolveClass(parameterClassNames[i], this.classLoader);
+            parameterTypes[i] = resolveClass(parameterClassNames[i], classLoader);
         }
         return parameterTypes;
     }

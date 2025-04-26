@@ -3,11 +3,11 @@
  */
 package io.microsphere.util.jar;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
-import io.microsphere.util.BaseUtils;
+import io.microsphere.util.Utils;
 
-import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,12 +38,11 @@ import static java.util.Collections.unmodifiableList;
  * Jar Utility class
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @version 1.0.0
  * @see JarEntry
  * @see JarFile
  * @since 1.0.0
  */
-public class JarUtils extends BaseUtils {
+public abstract class JarUtils implements Utils {
 
     /**
      * Create a {@link JarFile} from specified {@link URL} of {@link JarFile}
@@ -51,8 +50,6 @@ public class JarUtils extends BaseUtils {
      * @param jarURL {@link URL} of {@link JarFile} or {@link JarEntry}
      * @return JarFile
      * @throws IOException If {@link JarFile jar file} is invalid, see {@link JarFile#JarFile(String)}
-     * @version 1.0.0
-     * @since 1.0.0
      */
     public static JarFile toJarFile(URL jarURL) throws IOException {
         JarFile jarFile = null;
@@ -75,7 +72,7 @@ public class JarUtils extends BaseUtils {
     protected static void assertJarURLProtocol(URL jarURL) throws NullPointerException, IllegalArgumentException {
         final String protocol = jarURL.getProtocol(); //NPE check
         if (!JAR_PROTOCOL.equals(protocol) && !FILE_PROTOCOL.equals(protocol)) {
-            String message = format("jarURL Protocol['{}'] is unsupported ,except '{}' and '{}' ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
+            String message = format("the protocol['{}'] of 'jarURL' is unsupported, except '{}' and '{}' ", protocol, JAR_PROTOCOL, FILE_PROTOCOL);
             throw new IllegalArgumentException(message);
         }
     }
@@ -105,8 +102,6 @@ public class JarUtils extends BaseUtils {
      * return <code>null</code>
      * @throws NullPointerException     see {@link #assertJarURLProtocol(URL)}
      * @throws IllegalArgumentException see {@link #assertJarURLProtocol(URL)}
-     * @version 1.0.0
-     * @since 1.0.0
      */
     @Nonnull
     public static String resolveJarAbsolutePath(URL jarURL) throws NullPointerException, IllegalArgumentException {
@@ -252,5 +247,6 @@ public class JarUtils extends BaseUtils {
         }
     }
 
-
+    private JarUtils() {
+    }
 }

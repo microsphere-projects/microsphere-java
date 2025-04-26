@@ -19,15 +19,22 @@ package io.microsphere.lang.function;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.SetUtils.ofSet;
+import static io.microsphere.lang.function.Streams.filter;
+import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterAny;
+import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.lang.function.Streams.filterSet;
 import static io.microsphere.lang.function.Streams.filterStream;
-import static java.util.Arrays.asList;
+import static io.microsphere.lang.function.Streams.stream;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,21 +45,121 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class StreamsTest {
 
+    static final Integer[] INTEGERS = ofArray(1, 2, 3, 4, 5);
+
+    static final List<Integer> INTEGERS_LIST = ofList(INTEGERS);
+
+    static final Set<Integer> INTEGERS_SET = ofSet(INTEGERS);
+
+    static final Predicate<Integer> EVEN_PREDICATE = i -> i % 2 == 0;
+
+    static final List<Integer> EVEN_LIST = ofList(2, 4);
+
+    static final Set<Integer> EVEN_SET = ofSet(2, 4);
+
     @Test
-    public void testFilterStream() {
-        Stream<Integer> stream = filterStream(asList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(asList(2, 4), stream.collect(toList()));
+    public void testStreamOnArray() {
+        Stream<Integer> stream = stream(INTEGERS);
+        assertEquals(INTEGERS.length, stream.count());
     }
 
     @Test
-    public void testFilterList() {
-        List<Integer> list = filterList(asList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(asList(2, 4), list);
+    public void testStreamOnIterable() {
+        Stream<Integer> stream = stream(INTEGERS_LIST);
+        assertEquals(5, stream.count());
     }
 
     @Test
-    public void testFilterSet() {
-        Set<Integer> set = filterSet(asList(1, 2, 3, 4, 5), i -> i % 2 == 0);
-        assertEquals(new LinkedHashSet<>(asList(2, 4)), set);
+    public void testFilterStreamOnArray() {
+        Stream<Integer> stream = filterStream(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, stream.collect(toList()));
     }
+
+    @Test
+    public void testFilterStreamOnIterable() {
+        Stream<Integer> stream = filterStream(INTEGERS_LIST, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, stream.collect(toList()));
+    }
+
+    @Test
+    public void testFilterListOnArray() {
+        List<Integer> list = filterList(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+    }
+
+    @Test
+    public void testFilterListOnIterable() {
+        List<Integer> list = filterList(INTEGERS_LIST, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+    }
+
+    @Test
+    public void testFilterSetOnArray() {
+        Set<Integer> set = filterSet(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilterSetOnIterable() {
+        Set<Integer> set = filterSet(INTEGERS_LIST, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilter() {
+        List<Integer> list = filter(INTEGERS_LIST, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+
+        Set<Integer> set = filter(INTEGERS_SET, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilterAll() {
+        List<Integer> list = filterAll(INTEGERS_LIST, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+
+        Set<Integer> set = filterAll(INTEGERS_SET, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilterAllList() {
+        List<Integer> list = Streams.filterAllList(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+    }
+
+    @Test
+    public void testFilterAllSet() {
+        Set<Integer> set = Streams.filterAllSet(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilterAny() {
+        List<Integer> list = filterAny(INTEGERS_LIST, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+
+        Set<Integer> set = filterAny(INTEGERS_SET, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilterAnyList() {
+        List<Integer> list = Streams.filterAnyList(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_LIST, list);
+    }
+
+    @Test
+    public void testFilterAnySet() {
+        Set<Integer> set = Streams.filterAnySet(INTEGERS, EVEN_PREDICATE);
+        assertEquals(EVEN_SET, set);
+    }
+
+    @Test
+    public void testFilterFirst() {
+        assertEquals(2, filterFirst(INTEGERS_LIST, EVEN_PREDICATE));
+        assertEquals(2, filterFirst(INTEGERS_SET, EVEN_PREDICATE));
+    }
+
 }

@@ -22,7 +22,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-import static io.microsphere.reflect.ReflectionUtils.findParameterizedTypes;
+import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
 
 /**
  * The {@link Event Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
@@ -59,7 +59,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
         Class<? extends Event> eventType = null;
 
         if (listenerClass != null && EventListener.class.isAssignableFrom(listenerClass)) {
-            eventType = findParameterizedTypes(listenerClass)
+            eventType = getAllParameterizedTypes(listenerClass)
                     .stream()
                     .map(EventListener::findEventType)
                     .filter(Objects::nonNull)

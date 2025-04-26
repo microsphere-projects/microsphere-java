@@ -16,12 +16,14 @@
  */
 package io.microsphere.management;
 
-import javax.annotation.Nonnull;
-import javax.annotation.meta.When;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
-import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * MBean {@link Attribute} with {@link MBeanAttributeInfo} and its' optional value
@@ -40,9 +42,9 @@ public class MBeanAttribute {
 
     public MBeanAttribute(@Nonnull MBeanInfo declaringMBeanInfo,
                           @Nonnull MBeanAttributeInfo attributeInfo,
-                          @Nonnull(when = When.MAYBE) Object value) {
-        Objects.requireNonNull(declaringMBeanInfo, "The declaring MBeanInfo argument must not be null!");
-        Objects.requireNonNull(attributeInfo, "The MBeanAttributeInfo argument must not be null!");
+                          @Nullable Object value) {
+        requireNonNull(declaringMBeanInfo, "The declaring MBeanInfo argument must not be null!");
+        requireNonNull(attributeInfo, "The MBeanAttributeInfo argument must not be null!");
         this.declaringMBeanInfo = declaringMBeanInfo;
         this.attributeInfo = attributeInfo;
         this.value = value;

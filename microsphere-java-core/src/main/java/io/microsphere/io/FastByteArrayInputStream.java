@@ -18,6 +18,8 @@ package io.microsphere.io;
 
 import java.io.ByteArrayInputStream;
 
+import static java.lang.System.arraycopy;
+
 /**
  * Fast(No ThreadSafe without synchronization) {@link ByteArrayInputStream}
  *
@@ -85,7 +87,7 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
         if (len <= 0) {
             return 0;
         }
-        System.arraycopy(buf, pos, b, off, len);
+        arraycopy(buf, pos, b, off, len);
         pos += len;
         return len;
     }
@@ -109,5 +111,9 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
     @Override
     public void reset() {
         pos = mark;
+    }
+
+    @Override
+    public void close() {
     }
 }

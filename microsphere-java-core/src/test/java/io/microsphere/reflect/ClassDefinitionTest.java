@@ -16,14 +16,9 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.lang.Deprecation;
-import io.microsphere.util.Version;
-import org.junit.jupiter.api.Test;
+import java.util.List;
 
-import static io.microsphere.lang.DeprecationTest.DEPRECATION;
-import static io.microsphere.lang.DeprecationTest.SINCE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.util.Collections.emptyList;
 
 /**
  * {@link ClassDefinition} Test
@@ -32,37 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassDefinition
  * @since 1.0.0
  */
-public class ClassDefinitionTest {
+public class ClassDefinitionTest extends AbstractReflectiveDefinitionTest<ClassDefinition> {
 
-    private static final String CLASS_NAME = "io.microsphere.reflect.ClassDefinitionTest";
-
-    @Test
-    public void test() {
-        assertClassDefinition(SINCE, DEPRECATION, CLASS_NAME);
-        assertClassDefinition(SINCE, CLASS_NAME);
-    }
-
-    private void assertClassDefinition(String since, String className) {
-        assertClassDefinition(since, null, className);
-    }
-
-    private void assertClassDefinition(String since, Deprecation deprecation, String className) {
-        ClassDefinition cd = new ClassDefinition(since, deprecation, className);
-        ClassDefinition cd2 = new ClassDefinition(since, deprecation, className);
-
-        assertEquals(cd, cd2);
-        assertEquals(cd.hashCode(), cd2.hashCode());
-        assertEquals(cd.toString(), cd2.toString());
-
-        assertEquals(Version.of(since), cd.getSince());
-        assertEquals(deprecation, cd.getDeprecation());
-        assertEquals(className, cd.getClassName());
-        assertEquals(getClass(), cd.getResolvedClass());
-        assertTrue(cd.isPresent());
-        assertEquals(deprecation != null, cd.isDeprecated());
-
-        assertEquals(Version.of(since), cd.getSince());
-        assertEquals(deprecation, cd.getDeprecation());
-        assertEquals(className, cd.getClassName());
+    @Override
+    protected List<Object> getTailConstructorArguments() {
+        return emptyList();
     }
 }

@@ -16,13 +16,13 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.util.ArrayUtils;
-
 import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Objects;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.combineArray;
+import static io.microsphere.util.ArrayUtils.ofArray;
+import static java.util.Objects.hash;
 
 /**
  * Multiple {@link Type}
@@ -40,7 +40,7 @@ public class MultipleType {
 
     @Override
     public int hashCode() {
-        return Objects.hash(types);
+        return hash(types);
     }
 
     @Override
@@ -48,12 +48,12 @@ public class MultipleType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MultipleType that = (MultipleType) o;
-        return Arrays.equals(types, that.types);
+        return arrayEquals(types, that.types);
     }
 
     @Override
     public String toString() {
-        return "MultipleType : " + Arrays.toString(types);
+        return "MultipleType : " + arrayToString(types);
     }
 
     public static MultipleType of(Type one, Type two) {
@@ -61,7 +61,7 @@ public class MultipleType {
     }
 
     public static MultipleType of(Type one, Type two, Type... others) {
-        Type[] oneAndTwo = ArrayUtils.of(one, two);
+        Type[] oneAndTwo = ofArray(one, two);
         Type[] types = combineArray(oneAndTwo, others);
         return new MultipleType(types);
     }

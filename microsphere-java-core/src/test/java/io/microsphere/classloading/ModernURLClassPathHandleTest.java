@@ -18,11 +18,9 @@ package io.microsphere.classloading;
 
 import org.junit.jupiter.api.Test;
 
-import java.net.URL;
-import java.util.Set;
-
-import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
+import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link ModernURLClassPathHandle} Test
@@ -31,20 +29,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class ModernURLClassPathHandleTest {
+public class ModernURLClassPathHandleTest extends AbstractURLClassPathHandleTest {
 
+    @Override
+    protected AbstractURLClassPathHandle createHandle() {
+        return new ModernURLClassPathHandle();
+    }
+
+    @Override
     @Test
-    public void test() {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        ModernURLClassPathHandle handle = new ModernURLClassPathHandle();
-        if (handle.supports()) {
-            Set<URL> urls = findAllClassPathURLs(classLoader);
-            for (URL url : urls) {
-                String path = url.getPath();
-                if (path.contains("jmh-generator-annprocess")) {
-                    assertTrue(handle.removeURL(classLoader, url));
-                }
-            }
-        }
+    public void testSupports() {
+        assertEquals(CURRENT_JAVA_VERSION.ge(JAVA_VERSION_9), handle.supports());
+    }
+
+    @Override
+    @Test
+    public void testGetURLClassPathClassName() {
+        assertEquals("jdk.internal.loader.URLClassPath", handle.getURLClassPathClassName());
+    }
+
+    @Override
+    @Test
+    public void testGetUrlsFieldName() {
+        assertEquals("unopenedUrls", handle.getUrlsFieldName());
     }
 }

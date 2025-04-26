@@ -16,10 +16,10 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -33,7 +33,7 @@ import static java.util.ServiceLoader.load;
  * @see Logger
  * @since 1.0.0
  */
-public abstract class LoggerFactory {
+public abstract class LoggerFactory implements Prioritized {
 
     private static final ClassLoader classLoader = LoggerFactory.class.getClassLoader();
 
@@ -43,7 +43,7 @@ public abstract class LoggerFactory {
     @Nullable
     private static LoggerFactory loadFactory() {
         List<LoggerFactory> availableFactories = loadAvailableFactories();
-        return availableFactories.isEmpty() ? null : availableFactories.get(0);
+        return availableFactories.get(0);
     }
 
     static List<LoggerFactory> loadAvailableFactories() {
@@ -77,9 +77,6 @@ public abstract class LoggerFactory {
      */
     @Nonnull
     public static Logger getLogger(String name) {
-        if (factory == null) {
-            return new NoOpLogger(name);
-        }
         return factory.createLogger(name);
     }
 

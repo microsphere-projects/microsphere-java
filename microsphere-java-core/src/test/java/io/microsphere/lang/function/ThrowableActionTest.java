@@ -16,22 +16,57 @@
  */
 package io.microsphere.lang.function;
 
-import org.junit.jupiter.api.Assertions;
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.ThrowableAction.execute;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link ThrowableAction} Test
  *
  * @since 1.0.0
  */
-public class ThrowableActionTest {
+public class ThrowableActionTest extends AbstractTestCase {
+
+    private final ThrowableAction action = () -> {
+        logger.trace("ThrowableAction#execute()");
+    };
+
+    private final ThrowableAction exceptionalAction = () -> {
+        throw new Exception("Test");
+    };
 
     @Test
-    public void testExecute() {
-        Assertions.assertThrows(RuntimeException.class, () -> execute(() -> {
-            throw new Exception("Test");
-        }), "Test");
+    public void testExecute() throws Throwable {
+        action.execute();
+        assertThrows(Exception.class, exceptionalAction::execute);
+    }
+
+    @Test
+    public void testExecuteWithThrowableAction() {
+        execute(action);
+        assertThrows(RuntimeException.class, () -> execute(exceptionalAction));
+    }
+
+    @Test
+    public void testExecuteWithThrowableActionOnNull() {
+        assertThrows(NullPointerException.class, () -> execute(null));
+    }
+
+    @Test
+    public void testExecuteWithThrowableActionAndConsumer() {
+        execute(action, e -> {
+        });
+
+        assertThrows(RuntimeException.class, () -> execute(exceptionalAction, e -> {
+            throw new RuntimeException(e);
+        }));
+    }
+
+    @Test
+    public void testExecuteWithThrowableActionAndConsumerOnNull() {
+        assertThrows(IllegalArgumentException.class, () -> execute(null, e -> {
+        }));
     }
 }

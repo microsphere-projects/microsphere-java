@@ -21,11 +21,13 @@ import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.concurrent.TimeUnit;
-
+import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.StopWatch.Task.start;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -66,9 +68,24 @@ public class StopWatchTest {
         assertTrue(task.getStartTimeNanos() > 0);
         assertTrue(task.getElapsedNanos() > 0);
         assertTrue(stopWatch.getTotalTimeNanos() > 0);
-        assertTrue(stopWatch.getTotalTime(TimeUnit.MILLISECONDS) > 0);
+        assertTrue(stopWatch.getTotalTime(MILLISECONDS) > 0);
         logger.info(stopWatch.toString());
     }
+
+    @Test
+    public void testTask() {
+        String testName = "test";
+        StopWatch.Task task = start(testName);
+        task.stop();
+        assertSame(testName, task.getTaskName());
+        assertFalse(task.isReentrant());
+        assertTrue(task.getStartTimeNanos() > 0);
+        assertTrue(task.getElapsedNanos() > 0);
+        assertEquals(task, start(testName));
+        assertEquals(task.hashCode(), start(testName).hashCode());
+
+    }
+
 
     @Test
     public void testStartOnNullTaskName() {
@@ -82,7 +99,7 @@ public class StopWatchTest {
 
     @Test
     public void testStartOnBlankTaskName() {
-        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(" "));
+        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(SPACE));
     }
 
     @Test

@@ -16,20 +16,38 @@
  */
 package io.microsphere.annotation.processor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.xml.ws.ServiceMode;
 import java.io.Serializable;
 
 /**
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
  */
 @Service("testService")
 @ServiceMode
 public class TestServiceImpl extends GenericTestService implements TestService, AutoCloseable, Serializable {
 
+    @Autowired
+    private ApplicationContext context;
+
+    private Environment environment;
+
+    public TestServiceImpl() {
+        this(null);
+    }
+
+    public TestServiceImpl(@Autowired Environment environment) {
+        this.environment = environment;
+    }
+
     @Override
+    @Cacheable(cacheNames = {"cache-1", "cache-2"})
     public String echo(String message) {
         return "[ECHO] " + message;
     }

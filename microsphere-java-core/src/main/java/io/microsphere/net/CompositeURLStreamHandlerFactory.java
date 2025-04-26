@@ -112,8 +112,6 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
 
     @Override
     public String toString() {
-        String sb = "CompositeURLStreamHandlerFactory{" + "factories=" + factories +
-                '}';
-        return sb;
+        return "CompositeURLStreamHandlerFactory{" + "factories=" + factories + '}';
     }
 }
