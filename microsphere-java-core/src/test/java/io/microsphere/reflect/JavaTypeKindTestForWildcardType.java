@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see WildcardType
  * @since 1.0.0
  */
-public class JavaTypeKindTestForWildcardType {
+public class JavaTypeKindTestForWildcardType extends AbstractJavaTypeKindTest {
 
     @Test
     public void testGetSuperType() {
