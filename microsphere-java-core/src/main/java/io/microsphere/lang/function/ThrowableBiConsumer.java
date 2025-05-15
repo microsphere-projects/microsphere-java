@@ -17,7 +17,6 @@
 
 package io.microsphere.lang.function;
 
-import java.util.Objects;
 import java.util.function.BiConsumer;
 
 import static java.util.Objects.requireNonNull;
