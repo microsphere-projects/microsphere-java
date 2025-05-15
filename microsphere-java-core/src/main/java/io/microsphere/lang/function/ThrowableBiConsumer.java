@@ -20,6 +20,8 @@ package io.microsphere.lang.function;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * {@link BiConsumer} with {@link Throwable}
  *
@@ -55,7 +57,7 @@ public interface ThrowableBiConsumer<T, U> {
      * @throws NullPointerException if {@code after} is null
      */
     default ThrowableBiConsumer<T, U> andThen(ThrowableBiConsumer<? super T, ? super U> after) throws Throwable {
-        Objects.requireNonNull(after);
+        requireNonNull(after);
         return (l, r) -> {
             accept(l, r);
             after.accept(l, r);
