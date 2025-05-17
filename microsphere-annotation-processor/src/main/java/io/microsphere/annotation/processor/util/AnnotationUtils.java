@@ -26,9 +26,9 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.ArrayType;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
@@ -36,17 +36,22 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.MethodUtils.getDeclaredMethods;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllTypeElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeElement;
 import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.Enum.valueOf;
+import static java.lang.reflect.Array.newInstance;
+import static java.lang.reflect.Array.set;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -307,22 +312,22 @@ public interface AnnotationUtils extends Utils {
             ExecutableElement attributeMethod = entry.getKey();
             if (Objects.equals(attributeName, attributeMethod.getSimpleName().toString())) {
                 TypeMirror attributeType = attributeMethod.getReturnType();
-                AnnotationValue value = entry.getValue();
+                AnnotationValue value = entry.getValue() == null ? attributeMethod.getDefaultValue() : entry.getValue();
                 if (attributeType instanceof ArrayType) { // array-typed attribute values
                     ArrayType arrayType = (ArrayType) attributeType;
                     String componentTypeName = arrayType.getComponentType().toString();
-                    ClassLoader classLoader = AnnotationUtils.class.getClassLoader();
+                    ClassLoader classLoader = getClassLoader(AnnotationUtils.class);
                     List<AnnotationValue> values = (List<AnnotationValue>) value.getValue();
                     int size = values.size();
                     Class componentClass = resolveClass(componentTypeName, classLoader);
                     boolean isEnum = componentClass.isEnum();
-                    Object array = Array.newInstance(componentClass, values.size());
+                    Object array = newInstance(componentClass, values.size());
                     for (int i = 0; i < size; i++) {
                         Object element = values.get(i).getValue();
                         if (isEnum) {
                             element = valueOf(componentClass, element.toString());
                         }
-                        Array.set(array, i, element);
+                        set(array, i, element);
                     }
                     annotationValue = (T) array;
                 } else {
@@ -336,5 +341,37 @@ public interface AnnotationUtils extends Utils {
 
     static <T> T getValue(AnnotationMirror annotation) {
         return getAttribute(annotation, "value");
+    }
+
+    /**
+     * Get the attributes map from the specified annotation
+     *
+     * @param annotatedConstruct the annotated construct
+     * @param annotationClass    the {@link Class class} of {@link Annotation annotation}
+     * @return non-null read-only {@link Map}
+     */
+    static Map<String, Object> getAttributesMap(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
+        return getAttributesMap(getAnnotation(annotatedConstruct, annotationClass));
+    }
+
+    /**
+     * Get the attributes map from the specified annotation
+     *
+     * @param annotation the specified annotation
+     * @return non-null read-only {@link Map}
+     */
+    static Map<String, Object> getAttributesMap(AnnotationMirror annotation) {
+        DeclaredType annotationType = annotation.getAnnotationType();
+        List<ExecutableElement> attributeMethods = getDeclaredMethods(annotationType);
+        int size = attributeMethods.size();
+        Map<String, Object> attributesMap = newFixedLinkedHashMap(size);
+        Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotation.getElementValues();
+        for (int i = 0; i < size; i++) {
+            ExecutableElement attributeMethod = attributeMethods.get(i);
+            String attributeName = attributeMethod.getSimpleName().toString();
+            Object attributeValue = getAttribute(elementValues, attributeName);
+            attributesMap.put(attributeName, attributeValue);
+        }
+        return attributesMap;
     }
 }
