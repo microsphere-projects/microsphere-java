@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -109,6 +110,8 @@ public abstract class AbstractAnnotationProcessingTest {
     protected static final AnnotationMirror NULL_ANNOTATION_MIRROR = null;
 
     static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
+
+    protected RoundEnvironment roundEnv;
 
     protected ProcessingEnvironment processingEnv;
 
