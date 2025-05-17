@@ -36,13 +36,13 @@ import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
-import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.StringUtils.substringBefore;
+import static java.io.File.separatorChar;
 import static java.util.Collections.singleton;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
@@ -192,7 +192,7 @@ public class Compiler {
     }
 
     static String resolveJavaSourceFileRelativePath(Class<?> sourceClass) {
-        return sourceClass.getName().replace(DOT_CHAR, SLASH_CHAR).concat(JAVA_EXTENSION);
+        return sourceClass.getName().replace(DOT_CHAR, separatorChar).concat(JAVA_EXTENSION);
     }
 
     public boolean compile(Class<?>... sourceClasses) {

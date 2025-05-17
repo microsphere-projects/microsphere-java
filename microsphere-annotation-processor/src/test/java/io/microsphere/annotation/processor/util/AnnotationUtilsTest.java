@@ -44,6 +44,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Map;
 
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
@@ -53,6 +54,7 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.getAllAnn
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributesMap;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getValue;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAnnotationClassName;
@@ -486,6 +488,21 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testFindAnnotationsOnNull() {
         assertEmptyList(findAnnotations(NULL_ELEMENT));
+    }
+
+    @Test
+    public void testGetAttributesMapOnAnnotatedClass() {
+        Map<String, Object> attributesMap = getAttributesMap(testTypeElement, Service.class);
+        assertEquals(1, attributesMap.size());
+        assertEquals("testService", attributesMap.get("value"));
+    }
+
+    @Test
+    public void testGetAttributesMapOnAnnotatedMethod() {
+        ExecutableElement method = findMethod(testTypeElement, "echo", String.class);
+        Map<String, Object> attributesMap = getAttributesMap(method, Cacheable.class);
+        assertEquals(9, attributesMap.size());
+        assertArrayEquals(ofArray("cache-1", "cache-2"), (String[]) attributesMap.get("cacheNames"));
     }
 
     private void assertFindMetaAnnotation(Element element, Class<? extends Annotation> annotationClass) {
