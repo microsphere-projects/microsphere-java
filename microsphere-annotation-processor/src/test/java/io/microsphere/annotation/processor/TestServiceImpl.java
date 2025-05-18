@@ -19,11 +19,16 @@ package io.microsphere.annotation.processor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.xml.ws.ServiceMode;
 import java.io.Serializable;
+
+import static org.springframework.context.annotation.FilterType.ASPECTJ;
+import static org.springframework.context.annotation.ScopedProxyMode.INTERFACES;
 
 /**
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
@@ -31,6 +36,20 @@ import java.io.Serializable;
  */
 @Service("testService")
 @ServiceMode
+@ComponentScans(value = {
+        @ComponentScan(
+                basePackages = "io.microsphere.annotation.processor.model",
+                scopedProxy = INTERFACES
+        ),
+        @ComponentScan(
+                basePackages = "io.microsphere.annotation.processor.util",
+                includeFilters = {
+                        @ComponentScan.Filter(
+                                type = ASPECTJ,
+                                classes = {Object.class, CharSequence.class}
+                        )
+                })
+})
 public class TestServiceImpl extends GenericTestService implements TestService, AutoCloseable, Serializable {
 
     @Autowired
