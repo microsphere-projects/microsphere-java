@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
@@ -46,6 +47,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
@@ -55,16 +57,21 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.getAllAnn
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributeName;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributes;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributesMap;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getValue;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAnnotationTypeName;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeMethod;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.util.Collections.emptyMap;
@@ -422,6 +429,9 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         String[] cacheNames = getAttribute(cacheableAnnotation, "cacheNames");
         assertArrayEquals(ofArray("cache-1", "cache-2"), cacheNames);
 
+        String key = getAttribute(cacheableAnnotation, "key");
+        assertEquals(EMPTY_STRING, key);
+
         DeclaredType cacheableAnnotationType = cacheableAnnotation.getAnnotationType();
         AnnotationMirror targetAnnotation = findAnnotation(cacheableAnnotationType, Target.class);
         ElementType[] elementTypes = getAttribute(targetAnnotation, "value");
@@ -527,6 +537,73 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
         attributesMap = getAttributesMap(null);
         assertSame(emptyMap(), attributesMap);
+    }
+
+    @Test
+    public void testGetAttributesOnAnnotatedClass() {
+        Map<ExecutableElement, AnnotationValue> attributes = getAttributes(testTypeElement, Service.class);
+        assertServiceAttributes(attributes);
+
+        attributes = getAttributes(testTypeElement, Service.class, false);
+        assertServiceAttributes(attributes);
+    }
+
+    @Test
+    public void testGetAttributesOnAnnotatedMethod() {
+        ExecutableElement method = findMethod(testTypeElement, "echo", String.class);
+        Map<ExecutableElement, AnnotationValue> attributes = getAttributes(method, Cacheable.class, false);
+        assertEquals(1, attributes.size());
+        assertAttributeEntry(attributes, "cacheNames", ofArray("cache-1", "cache-2"));
+
+
+        attributes = getAttributes(method, Cacheable.class, true);
+        assertEquals(9, attributes.size());
+        assertAttributeEntry(attributes, "value", EMPTY_STRING_ARRAY);
+        assertAttributeEntry(attributes, "cacheNames", ofArray("cache-1", "cache-2"));
+        assertAttributeEntry(attributes, "key", EMPTY_STRING);
+        assertAttributeEntry(attributes, "keyGenerator", EMPTY_STRING);
+        assertAttributeEntry(attributes, "cacheManager", EMPTY_STRING);
+        assertAttributeEntry(attributes, "cacheResolver", EMPTY_STRING);
+        assertAttributeEntry(attributes, "condition", EMPTY_STRING);
+        assertAttributeEntry(attributes, "unless", EMPTY_STRING);
+        assertAttributeEntry(attributes, "sync", false);
+    }
+
+    void assertServiceAttributes(Map<ExecutableElement, AnnotationValue> attributes) {
+        assertEquals(1, attributes.size());
+        assertAttributeEntry(attributes, "value", "testService");
+    }
+
+    void assertAttributeEntry(Map<ExecutableElement, AnnotationValue> attributes, String attributeName, Object attributeValue) {
+        for (Entry<ExecutableElement, AnnotationValue> entry : attributes.entrySet()) {
+            ExecutableElement attributeMethod = entry.getKey();
+            if (matchesAttributeMethod(attributeMethod, attributeName)) {
+                assertAttributeEntry(entry, attributeName, attributeValue);
+                break;
+            }
+        }
+    }
+
+    void assertAttributeEntry(Entry<ExecutableElement, AnnotationValue> attributeEntry, String attributeName, Object attributeValue) {
+        ExecutableElement attributeMethod = attributeEntry.getKey();
+        AnnotationValue annotationValue = attributeEntry.getValue();
+        assertEquals(attributeName, getAttributeName(attributeMethod));
+        Object value = getAttribute(attributeMethod.getReturnType(), annotationValue);
+        Class<?> attributeValueClass = value.getClass();
+        if (attributeValueClass.isArray()) {
+            Class<?> componentType = attributeValueClass.getComponentType();
+            if (String.class.equals(componentType)) {
+                assertArrayEquals((String[]) attributeValue, (String[]) value);
+            }
+        } else {
+            assertEquals(attributeValue, value);
+        }
+    }
+
+    @Test
+    public void testGetAttributesOnNull() {
+        Map<ExecutableElement, AnnotationValue> attributes = getAttributes(null);
+        assertSame(emptyMap(), attributes);
     }
 
     private void assertFindMetaAnnotation(Element element, Class<? extends Annotation> annotationClass) {
