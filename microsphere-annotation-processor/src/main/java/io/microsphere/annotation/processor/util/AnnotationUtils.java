@@ -22,13 +22,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.element.AnnotationValueVisitor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -39,7 +37,6 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static io.microsphere.annotation.processor.util.ClassUtils.loadClass;
 import static io.microsphere.annotation.processor.util.MethodUtils.findDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.getMethodName;
@@ -49,19 +46,16 @@ import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
-import static java.lang.Enum.valueOf;
-import static java.lang.reflect.Array.newInstance;
-import static java.lang.reflect.Array.set;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.stream.Collectors.toList;
-import static javax.lang.model.type.TypeKind.ARRAY;
 
 /**
  * The utilities class for annotation in the package "javax.lang.model.*"
@@ -70,6 +64,11 @@ import static javax.lang.model.type.TypeKind.ARRAY;
  * @since 1.0.0
  */
 public interface AnnotationUtils extends Utils {
+
+    /**
+     * The default {@link AnnotationValueVisitor}
+     */
+    AnnotationValueVisitor<Object, ExecutableElement> DEFAULT_ANNOTATION_VALUE_VISITOR = new ResolvableAnnotationValueVisitor();
 
     boolean WITH_DEFAULT = true;
 
@@ -354,7 +353,7 @@ public interface AnnotationUtils extends Utils {
      * @return non-null read-only {@link Map}
      */
     static Map<String, Object> getAttributesMap(AnnotationMirror annotation, boolean withDefault) {
-        Map<ExecutableElement, AnnotationValue> attributes = getAttributes(annotation, withDefault);
+        Map<ExecutableElement, AnnotationValue> attributes = getElementValues(annotation, withDefault);
         int size = attributes.size();
         if (size < 1) {
             return emptyMap();
@@ -362,27 +361,26 @@ public interface AnnotationUtils extends Utils {
         Map<String, Object> attributesMap = newFixedLinkedHashMap(size);
         for (Entry<ExecutableElement, AnnotationValue> entry : attributes.entrySet()) {
             ExecutableElement attributeMethod = entry.getKey();
-            AnnotationValue annotationValue = entry.getValue();
             String attributeName = getAttributeName(attributeMethod);
-            Object attributeValue = getAttribute(attributeMethod.getReturnType(), annotationValue);
+            Object attributeValue = getAttribute(entry);
             attributesMap.put(attributeName, attributeValue);
         }
         return attributesMap;
     }
 
-    static Map<ExecutableElement, AnnotationValue> getAttributes(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
-        return getAttributes(annotatedConstruct, annotationClass, WITH_DEFAULT);
+    static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
+        return getElementValues(annotatedConstruct, annotationClass, WITH_DEFAULT);
     }
 
-    static Map<ExecutableElement, AnnotationValue> getAttributes(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass, boolean withDefault) {
-        return getAttributes(getAnnotation(annotatedConstruct, annotationClass), withDefault);
+    static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass, boolean withDefault) {
+        return getElementValues(getAnnotation(annotatedConstruct, annotationClass), withDefault);
     }
 
-    static Map<ExecutableElement, AnnotationValue> getAttributes(AnnotationMirror annotation) {
-        return getAttributes(annotation, WITH_DEFAULT);
+    static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotationMirror annotation) {
+        return getElementValues(annotation, WITH_DEFAULT);
     }
 
-    static Map<ExecutableElement, AnnotationValue> getAttributes(AnnotationMirror annotation, boolean withDefault) {
+    static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotationMirror annotation, boolean withDefault) {
         if (annotation == null) {
             return emptyMap();
         }
@@ -404,7 +402,7 @@ public interface AnnotationUtils extends Utils {
         return attributes;
     }
 
-    static Entry<ExecutableElement, AnnotationValue> getAttributeEntry(AnnotationMirror annotation, String attributeName, boolean withDefault) {
+    static Entry<ExecutableElement, AnnotationValue> getElementValue(AnnotationMirror annotation, String attributeName, boolean withDefault) {
         if (annotation == null || isBlank(attributeName)) {
             return null;
         }
@@ -436,76 +434,36 @@ public interface AnnotationUtils extends Utils {
         return ofEntry(attributeMethod, annotationValue);
     }
 
+    static Entry<ExecutableElement, AnnotationValue> getElementValue(Map<ExecutableElement, AnnotationValue> elementValues, String attributeName) {
+        if (isEmpty(elementValues)) {
+            return null;
+        }
+        for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
+            if (matchesAttributeMethod(entry.getKey(), attributeName)) {
+                return entry;
+            }
+        }
+        return null;
+    }
+
     static <T> T getAttribute(AnnotationMirror annotation, String attributeName) {
         return getAttribute(annotation, attributeName, WITH_DEFAULT);
     }
 
     static <T> T getAttribute(AnnotationMirror annotation, String attributeName, boolean withDefault) {
-        Entry<ExecutableElement, AnnotationValue> attributeEntry = getAttributeEntry(annotation, attributeName, withDefault);
+        Entry<ExecutableElement, AnnotationValue> attributeEntry = getElementValue(annotation, attributeName, withDefault);
         return getAttribute(attributeEntry);
     }
 
-    static <T> T getAttribute(Entry<ExecutableElement, AnnotationValue> attributeEntry) {
-        if (attributeEntry == null) {
+    static <T> T getAttribute(Entry<ExecutableElement, AnnotationValue> elementValue) {
+        if (elementValue == null) {
             return null;
         }
 
-        ExecutableElement attributeMethod = attributeEntry.getKey();
-        AnnotationValue annotationValue = attributeEntry.getValue();
+        ExecutableElement attributeMethod = elementValue.getKey();
+        AnnotationValue annotationValue = elementValue.getValue();
 
-        TypeMirror attributeType = attributeMethod.getReturnType();
-
-        return getAttribute(attributeType, annotationValue);
-    }
-
-    static <T> T getAttribute(TypeMirror attributeType, AnnotationValue annotationValue) {
-        TypeKind typeKind = attributeType.getKind();
-
-        /**
-         * a wrapper class (such as Integer) for a primitive type
-         * String
-         * TypeMirror
-         * VariableElement (representing an enum constant)
-         * AnnotationMirror
-         * List<? extends AnnotationValue> (representing the elements, in declared order, if the value is an array)
-         */
-        Object value = annotationValue.getValue();
-
-        if (typeKind.isPrimitive()) { // a wrapper class (such as Integer) for a primitive type
-            return (T) value;
-        } else if (value instanceof String) { // String
-            return (T) value;
-        } else if (typeKind == ARRAY) { // List<? extends AnnotationValue> (representing the elements, in declared order, if the value is an array)
-            ArrayType arrayType = (ArrayType) attributeType;
-            TypeMirror componentType = arrayType.getComponentType();
-            Class<?> componentClass = loadClass(componentType);
-            List<? extends AnnotationValue> values = (List<? extends AnnotationValue>) value;
-            int size = values.size();
-            componentClass = componentClass.isAnnotation() ? Map.class : componentClass;
-            Object array = newInstance(componentClass, values.size());
-            for (int i = 0; i < size; i++) {
-                Object element = getAttribute(componentType, values.get(i));
-                set(array, i, element);
-            }
-            return (T) array;
-        }
-
-        T attributeValue = null;
-        Class<?> valueType = value.getClass();
-        if (VariableElement.class.isAssignableFrom(valueType)) { // enumeration
-            VariableElement element = (VariableElement) value;
-            String elementName = element.toString();
-            attributeValue = (T) valueOf(loadClass(attributeType), elementName);
-        } else if (AnnotationMirror.class.isAssignableFrom(valueType)) { // annotation
-            AnnotationMirror annotation = (AnnotationMirror) value;
-            attributeValue = (T) getAttributesMap(annotation);
-        } else if (TypeMirror.class.isAssignableFrom(valueType)) { // class or interface
-            Class<?> attributeClass = loadClass(attributeType);
-            if (Class.class.equals(attributeClass)) {
-                attributeValue = (T) attributeClass;
-            }
-        }
-        return attributeValue;
+        return (T) annotationValue.accept(DEFAULT_ANNOTATION_VALUE_VISITOR, attributeMethod);
     }
 
     static <T> T getValue(AnnotationMirror annotation) {
