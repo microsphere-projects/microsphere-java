@@ -159,6 +159,16 @@ public interface SymbolConstants {
     char PIPE_CHAR = VERTICAL_BAR_CHAR;
 
     /**
+     * The left square bracket char : '['
+     */
+    char LEFT_SQUARE_BRACKET_CHAR = '[';
+
+    /**
+     * The right square bracket char : ']'
+     */
+    char RIGHT_SQUARE_BRACKET_CHAR = ']';
+
+    /**
      * The comma symbol : ","
      */
     String COMMA = ",";
@@ -300,4 +310,14 @@ public interface SymbolConstants {
      * The pipe symbol : "|"
      */
     String PIPE = VERTICAL_BAR;
+
+    /**
+     * The left square bracket : "["
+     */
+    String LEFT_SQUARE_BRACKET = "[";
+
+    /**
+     * The right square bracket char : ']'
+     */
+    String RIGHT_SQUARE_BRACKET = "]";
 }
