@@ -100,6 +100,12 @@ import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
 import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
 import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
+import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET;
+import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
+import static io.microsphere.constants.SymbolConstants.PIPE_CHAR;
+import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET;
+import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
+import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR_CHAR;
 import static java.io.File.pathSeparator;
 import static java.io.File.separator;
 import static java.lang.System.lineSeparator;
@@ -176,8 +182,10 @@ public class ConstantsTest {
         assertEquals('_', UNDER_SCORE_CHAR);
         assertEquals('-', HYPHEN_CHAR);
         assertEquals('*', WILDCARD_CHAR);
-        assertEquals("|", VERTICAL_BAR);
-        assertEquals("|", PIPE);
+        assertEquals('|', VERTICAL_BAR_CHAR);
+        assertEquals('|', PIPE_CHAR);
+        assertEquals('[', LEFT_SQUARE_BRACKET_CHAR);
+        assertEquals(']', RIGHT_SQUARE_BRACKET_CHAR);
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
@@ -206,5 +214,7 @@ public class ConstantsTest {
         assertEquals("*", WILDCARD);
         assertEquals("|", VERTICAL_BAR);
         assertEquals("|", PIPE);
+        assertEquals("[", LEFT_SQUARE_BRACKET);
+        assertEquals("]", RIGHT_SQUARE_BRACKET);
     }
 }
