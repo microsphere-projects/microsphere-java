@@ -364,15 +364,7 @@ public abstract class JSONUtils implements Utils {
         jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
     }
 
-    static StringBuilder appendPrefix(StringBuilder jsonBuilder, String name) {
-        jsonBuilder.append(DOUBLE_QUOTE_CHAR)
-                .append(name)
-                .append(DOUBLE_QUOTE_CHAR)
-                .append(COLON_CHAR);
-        return jsonBuilder;
-    }
-
-    static void appendValue(StringBuilder jsonBuilder, Object value) {
+    public static void appendValue(StringBuilder jsonBuilder, Object value) {
         Class<?> valueClass = value.getClass();
         if (valueClass.isArray()) {
             appendArray(jsonBuilder, value);
@@ -399,6 +391,14 @@ public abstract class JSONUtils implements Utils {
             }
         }
         jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
+    }
+
+    static StringBuilder appendPrefix(StringBuilder jsonBuilder, String name) {
+        jsonBuilder.append(DOUBLE_QUOTE_CHAR)
+                .append(name)
+                .append(DOUBLE_QUOTE_CHAR)
+                .append(COLON_CHAR);
+        return jsonBuilder;
     }
 
     static void appendMap(StringBuilder jsonBuilder, Map<String, Object> map) {
