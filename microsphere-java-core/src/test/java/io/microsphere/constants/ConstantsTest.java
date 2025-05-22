@@ -100,9 +100,13 @@ import static io.microsphere.constants.Constants.ZIP_EXTENSION;
 import static io.microsphere.constants.Constants.ZIP_PROTOCOL;
 import static io.microsphere.constants.FileConstants.JAVA_EXTENSION;
 import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
+import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE;
+import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.PIPE_CHAR;
+import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE;
+import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR_CHAR;
@@ -186,6 +190,8 @@ public class ConstantsTest {
         assertEquals('|', PIPE_CHAR);
         assertEquals('[', LEFT_SQUARE_BRACKET_CHAR);
         assertEquals(']', RIGHT_SQUARE_BRACKET_CHAR);
+        assertEquals('{', LEFT_CURLY_BRACE_CHAR);
+        assertEquals('}', RIGHT_CURLY_BRACE_CHAR);
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
@@ -216,5 +222,7 @@ public class ConstantsTest {
         assertEquals("|", PIPE);
         assertEquals("[", LEFT_SQUARE_BRACKET);
         assertEquals("]", RIGHT_SQUARE_BRACKET);
+        assertEquals("{", LEFT_CURLY_BRACE);
+        assertEquals("}", RIGHT_CURLY_BRACE);
     }
 }
