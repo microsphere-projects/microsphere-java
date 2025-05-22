@@ -15,12 +15,11 @@
  * limitations under the License.
  */
 
-package io.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.annotation;
 
 import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
 import io.microsphere.annotation.processor.GenericTestService;
 import io.microsphere.annotation.processor.TestService;
-import io.microsphere.annotation.processor.annotation.TestAnnotation;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.AnnotationValue;
