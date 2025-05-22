@@ -43,6 +43,8 @@ import static io.microsphere.constants.SymbolConstants.GREATER_THAN_CHAR;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN_OR_EQUAL_TO;
 import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.constants.SymbolConstants.HYPHEN_CHAR;
+import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE;
+import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET;
@@ -58,6 +60,8 @@ import static io.microsphere.constants.SymbolConstants.QUESTION_MARK;
 import static io.microsphere.constants.SymbolConstants.QUESTION_MARK_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUOTE;
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
+import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE;
+import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET;
@@ -116,6 +120,8 @@ public class SymbolConstantsTest {
         assertEquals('|', PIPE_CHAR);
         assertEquals('[', LEFT_SQUARE_BRACKET_CHAR);
         assertEquals(']', RIGHT_SQUARE_BRACKET_CHAR);
+        assertEquals('{', LEFT_CURLY_BRACE_CHAR);
+        assertEquals('}', RIGHT_CURLY_BRACE_CHAR);
 
         assertEquals(",", COMMA);
         assertEquals(" ", SPACE);
@@ -147,5 +153,7 @@ public class SymbolConstantsTest {
         assertEquals("|", PIPE);
         assertEquals("[", LEFT_SQUARE_BRACKET);
         assertEquals("]", RIGHT_SQUARE_BRACKET);
+        assertEquals("{", LEFT_CURLY_BRACE);
+        assertEquals("}", RIGHT_CURLY_BRACE);
     }
 }
