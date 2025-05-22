@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.microsphere.annotation.processor.util;
+package io.microsphere.annotation.processor.annotation;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
