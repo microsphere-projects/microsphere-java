@@ -101,12 +101,6 @@ class JSONUtilsTest {
     }
 
     @Test
-    public void testAppendOnString() {
-        append(jsonBuilder, "name", "a");
-        assertEquals("\"name\":\"a\"", jsonBuilder.toString());
-    }
-
-    @Test
     public void testAppendOnBooleanObject() {
         append(jsonBuilder, "name", TRUE);
         assertEquals("\"name\":true", jsonBuilder.toString());
@@ -125,7 +119,7 @@ class JSONUtilsTest {
     }
 
     @Test
-    public void testAppendOnIntObject() {
+    public void testAppendOnIntegerObject() {
         append(jsonBuilder, "name", Integer.valueOf(1));
         assertEquals("\"name\":1", jsonBuilder.toString());
     }
@@ -152,6 +146,18 @@ class JSONUtilsTest {
     public void testAppendOnCharacterObject() {
         append(jsonBuilder, "name", valueOf('a'));
         assertEquals("\"name\":\"a\"", jsonBuilder.toString());
+    }
+
+    @Test
+    public void testAppendOnString() {
+        append(jsonBuilder, "name", "a");
+        assertEquals("\"name\":\"a\"", jsonBuilder.toString());
+    }
+
+    @Test
+    public void testAppendOnType() {
+        append(jsonBuilder, "name", String.class);
+        assertEquals("\"name\":[\"java.lang.String\"]", jsonBuilder.toString());
     }
 
     @Test
@@ -306,6 +312,13 @@ class JSONUtilsTest {
         TimeUnit[] values = ofArray(DAYS, HOURS, MINUTES);
         append(jsonBuilder, "name", values);
         assertEquals("\"name\":[\"DAYS\",\"HOURS\",\"MINUTES\"]", jsonBuilder.toString());
+    }
+
+    @Test
+    public void testAppendOnTypeArray() {
+        Class<?>[] classes = ofArray(String.class, Integer.class);
+        append(jsonBuilder, "name", classes);
+        assertEquals("\"name\":[\"java.lang.String\",\"java.lang.Integer\"]", jsonBuilder.toString());
     }
 
 }
