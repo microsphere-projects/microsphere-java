@@ -169,6 +169,16 @@ public interface SymbolConstants {
     char RIGHT_SQUARE_BRACKET_CHAR = ']';
 
     /**
+     * The left curly brace char : '{'
+     */
+    char LEFT_CURLY_BRACE_CHAR = '{';
+
+    /**
+     * The right curly brace char : '}'
+     */
+    char RIGHT_CURLY_BRACE_CHAR = '}';
+
+    /**
      * The comma symbol : ","
      */
     String COMMA = ",";
@@ -195,6 +205,7 @@ public interface SymbolConstants {
 
     /**
      * The double quote symbol : "\""
+     *
      * @see #DOUBLE_QUOTATION
      */
     String DOUBLE_QUOTE = "\"";
@@ -320,4 +331,14 @@ public interface SymbolConstants {
      * The right square bracket char : ']'
      */
     String RIGHT_SQUARE_BRACKET = "]";
+
+    /**
+     * The left curly brace : "{"
+     */
+    String LEFT_CURLY_BRACE = "{";
+
+    /**
+     * The right curly brace : "}"
+     */
+    String RIGHT_CURLY_BRACE = "}";
 }
