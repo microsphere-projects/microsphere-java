@@ -16,6 +16,7 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.annotation.processor.annotation.ResolvableAnnotationValueVisitor;
 import io.microsphere.util.Utils;
 
 import javax.annotation.processing.ProcessingEnvironment;
