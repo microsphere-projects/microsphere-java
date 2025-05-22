@@ -17,6 +17,7 @@
 
 package io.microsphere.util;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,105 +44,109 @@ import static java.lang.reflect.Array.getLength;
 public abstract class JSONUtils implements Utils {
 
     public static void append(StringBuilder jsonBuilder, String name, boolean value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, byte value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, short value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
 
     public static void append(StringBuilder jsonBuilder, String name, int value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
 
     public static void append(StringBuilder jsonBuilder, String name, long value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, float value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, double value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, char value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(DOUBLE_QUOTE_CHAR)
                 .append(value)
                 .append(DOUBLE_QUOTE_CHAR);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Boolean value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Byte value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Short value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Integer value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Long value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Float value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Double value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Character value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(DOUBLE_QUOTE_CHAR)
                 .append(value)
                 .append(DOUBLE_QUOTE_CHAR);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, String value) {
-        appendPrefix(jsonBuilder, name)
+        appendName(jsonBuilder, name)
                 .append(DOUBLE_QUOTE_CHAR)
                 .append(value)
                 .append(DOUBLE_QUOTE_CHAR);
     }
 
+    public static void append(StringBuilder jsonBuilder, String name, Type value) {
+        append(jsonBuilder, name, value.getTypeName());
+    }
+
     public static void append(StringBuilder jsonBuilder, String name, Object value) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         appendValue(jsonBuilder, value);
     }
 
     public static void append(StringBuilder jsonBuilder, String name, boolean[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -153,7 +158,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, byte[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -165,7 +170,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, short[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -177,7 +182,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, int[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -189,7 +194,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, long[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -201,7 +206,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, float[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -213,7 +218,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, double[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -226,7 +231,7 @@ public abstract class JSONUtils implements Utils {
 
 
     public static void append(StringBuilder jsonBuilder, String name, char[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(DOUBLE_QUOTE_CHAR)
@@ -240,7 +245,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, String[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(DOUBLE_QUOTE_CHAR)
@@ -254,7 +259,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Boolean[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -266,7 +271,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Byte[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -278,7 +283,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Short[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -290,7 +295,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Integer[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -302,7 +307,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Long[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -314,7 +319,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Float[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
 
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
@@ -327,7 +332,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Double[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(values[i]);
@@ -339,7 +344,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static void append(StringBuilder jsonBuilder, String name, Character[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             jsonBuilder.append(DOUBLE_QUOTE_CHAR)
@@ -353,7 +358,7 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static <T> void append(StringBuilder jsonBuilder, String name, T[] values) {
-        appendPrefix(jsonBuilder, name);
+        appendName(jsonBuilder, name);
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         for (int i = 0; i < values.length; i++) {
             appendValue(jsonBuilder, values[i]);
@@ -376,6 +381,8 @@ public abstract class JSONUtils implements Utils {
                 || CharSequence.class.isAssignableFrom(valueClass)
                 || Enum.class.isAssignableFrom(valueClass)) {
             appendString(jsonBuilder, value);
+        } else if (Type.class.isAssignableFrom(valueClass)) {
+            appendType(jsonBuilder, (Type) value);
         } else {
             jsonBuilder.append(value);
         }
@@ -393,7 +400,7 @@ public abstract class JSONUtils implements Utils {
         jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
     }
 
-    static StringBuilder appendPrefix(StringBuilder jsonBuilder, String name) {
+    public static StringBuilder appendName(StringBuilder jsonBuilder, String name) {
         jsonBuilder.append(DOUBLE_QUOTE_CHAR)
                 .append(name)
                 .append(DOUBLE_QUOTE_CHAR)
@@ -434,6 +441,10 @@ public abstract class JSONUtils implements Utils {
         jsonBuilder.append(DOUBLE_QUOTE_CHAR)
                 .append(value)
                 .append(DOUBLE_QUOTE_CHAR);
+    }
+
+    static void appendType(StringBuilder jsonBuilder, Type value) {
+        appendString(jsonBuilder, value.getTypeName());
     }
 
     private JSONUtils() {
