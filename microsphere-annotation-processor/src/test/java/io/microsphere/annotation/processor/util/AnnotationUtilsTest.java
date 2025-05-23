@@ -17,9 +17,9 @@
 package io.microsphere.annotation.processor.util;
 
 import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
+import io.microsphere.annotation.processor.TestAnnotation;
 import io.microsphere.annotation.processor.TestService;
 import io.microsphere.annotation.processor.TestServiceImpl;
-import io.microsphere.annotation.processor.annotation.TestAnnotation;
 import io.microsphere.annotation.processor.model.Model;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,13 +60,14 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnota
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributeName;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributesMap;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValue;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValues;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributesMap;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getValue;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAnnotationTypeName;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeMethod;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeValue;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
@@ -538,6 +539,26 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
             ExecutableElement attributeMethod = entry.getKey();
             assertFalse(matchesAttributeMethod(attributeMethod, null));
+        }
+    }
+
+    @Test
+    public void testMatchesAttributeValue() {
+        Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(testTypeElement, TestAnnotation.class);
+        for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
+            AnnotationValue annotationValue = entry.getValue();
+            assertTrue(matchesAttributeValue(annotationValue, annotationValue.getValue()));
+        }
+    }
+
+    @Test
+    public void testMatchesAttributeValueOnNull() {
+        assertFalse(matchesAttributeValue(null, null));
+
+        Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(testTypeElement, TestAnnotation.class);
+        for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
+            AnnotationValue annotationValue = entry.getValue();
+            assertFalse(matchesAttributeValue(annotationValue, null));
         }
     }
 
