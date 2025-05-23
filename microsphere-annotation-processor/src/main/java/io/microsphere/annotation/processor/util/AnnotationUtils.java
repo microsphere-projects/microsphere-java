@@ -16,7 +16,7 @@
  */
 package io.microsphere.annotation.processor.util;
 
-import io.microsphere.annotation.processor.annotation.ResolvableAnnotationValueVisitor;
+import io.microsphere.annotation.processor.model.util.ResolvableAnnotationValueVisitor;
 import io.microsphere.util.Utils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -317,7 +317,11 @@ public interface AnnotationUtils extends Utils {
     }
 
     static boolean matchesAttributeMethod(ExecutableElement attributeMethod, String attributeName) {
-        return attributeMethod != null && Objects.equals(attributeName, getAttributeName(attributeMethod));
+        return attributeMethod != null && Objects.equals(getAttributeName(attributeMethod), attributeName);
+    }
+
+    static boolean matchesAttributeValue(AnnotationValue annotationValue, Object attributeValue) {
+        return annotationValue != null && Objects.equals(annotationValue.getValue(), attributeValue);
     }
 
     static Map<String, Object> getAttributesMap(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
