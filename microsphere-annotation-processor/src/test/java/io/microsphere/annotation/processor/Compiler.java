@@ -140,7 +140,7 @@ public class Compiler {
                     sourceFile.getAbsolutePath(), getTypeName(sourceClass), sourcePath.getAbsolutePath());
         }
 
-        return sourcePath.exists() ? sourcePath : null;
+         return sourcePath.exists() ? sourcePath : null;
     }
 
     static File detectRootDirectory(Class<?> sourceClass) {
