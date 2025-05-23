@@ -31,6 +31,7 @@ import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
+import static io.microsphere.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 
@@ -401,10 +402,12 @@ public abstract class JSONUtils implements Utils {
     }
 
     public static StringBuilder appendName(StringBuilder jsonBuilder, String name) {
-        jsonBuilder.append(DOUBLE_QUOTE_CHAR)
-                .append(name)
-                .append(DOUBLE_QUOTE_CHAR)
-                .append(COLON_CHAR);
+        if (isNotBlank(name)) {
+            jsonBuilder.append(DOUBLE_QUOTE_CHAR)
+                    .append(name)
+                    .append(DOUBLE_QUOTE_CHAR)
+                    .append(COLON_CHAR);
+        }
         return jsonBuilder;
     }
 
