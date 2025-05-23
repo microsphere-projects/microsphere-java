@@ -73,6 +73,15 @@ public interface AnnotationUtils extends Utils {
 
     boolean WITH_DEFAULT = true;
 
+    /**
+     * Retrieves the first {@link AnnotationMirror} of the specified annotation class from the given
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class is {@code null}, 
+     * this method returns {@code null}.
+     *
+     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @param annotationClass    the annotation class to look for, may be {@code null}
+     * @return the first matching {@link AnnotationMirror}, or {@code null} if none found
+     */
     static AnnotationMirror getAnnotation(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
         if (annotatedConstruct == null || annotationClass == null) {
             return null;
@@ -80,6 +89,15 @@ public interface AnnotationUtils extends Utils {
         return getAnnotation(annotatedConstruct, annotationClass.getName());
     }
 
+    /**
+     * Retrieves the first {@link AnnotationMirror} of the specified annotation class name from the given
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class name is {@code null}, 
+     * this method returns {@code null}.
+     *
+     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
+     * @return the first matching {@link AnnotationMirror}, or {@code null} if none found
+     */
     static AnnotationMirror getAnnotation(AnnotatedConstruct annotatedConstruct, CharSequence annotationClassName) {
         if (annotatedConstruct == null || annotationClassName == null) {
             return null;
@@ -88,6 +106,13 @@ public interface AnnotationUtils extends Utils {
         return annotations.isEmpty() ? null : annotations.get(0);
     }
 
+    /**
+     * Retrieves all {@link AnnotationMirror} instances from the given {@link AnnotatedConstruct}.
+     * If the annotated construct is {@code null}, this method returns an empty list.
+     *
+     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
+     */
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct) {
         if (annotatedConstruct == null) {
             return emptyList();
@@ -95,6 +120,16 @@ public interface AnnotationUtils extends Utils {
         return findAnnotations(annotatedConstruct, EMPTY_PREDICATE_ARRAY);
     }
 
+
+    /**
+     * Retrieves all {@link AnnotationMirror} instances of the specified annotation class from the given
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class is {@code null}, 
+     * this method returns an empty list.
+     *
+     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @param annotationClass    the annotation class to look for, may be {@code null}
+     * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
+     */
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
         if (annotatedConstruct == null || annotationClass == null) {
             return emptyList();
@@ -102,6 +137,15 @@ public interface AnnotationUtils extends Utils {
         return getAnnotations(annotatedConstruct, annotationClass.getTypeName());
     }
 
+    /**
+     * Retrieves all {@link AnnotationMirror} instances of the specified annotation class name from the given
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class name is {@code null}, 
+     * this method returns an empty list.
+     *
+     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
+     * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
+     */
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, CharSequence annotationClassName) {
         if (annotatedConstruct == null || annotationClassName == null) {
             return emptyList();
@@ -109,6 +153,13 @@ public interface AnnotationUtils extends Utils {
         return findAnnotations(annotatedConstruct, annotation -> matchesAnnotationTypeName(annotation, annotationClassName));
     }
 
+    /**
+     * Retrieves all {@link AnnotationMirror} instances from the given {@link TypeMirror}.
+     * If the type mirror is {@code null}, this method returns an empty list.
+     *
+     * @param type the type mirror to search for annotations, may be {@code null}
+     * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
+     */
     static List<AnnotationMirror> getAllAnnotations(TypeMirror type) {
         if (type == null) {
             return emptyList();
