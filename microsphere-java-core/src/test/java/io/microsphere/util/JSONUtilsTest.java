@@ -157,7 +157,7 @@ class JSONUtilsTest {
     @Test
     public void testAppendOnType() {
         append(jsonBuilder, "name", String.class);
-        assertEquals("\"name\":[\"java.lang.String\"]", jsonBuilder.toString());
+        assertEquals("\"name\":\"java.lang.String\"", jsonBuilder.toString());
     }
 
     @Test
