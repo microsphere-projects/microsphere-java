@@ -18,7 +18,6 @@ package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Since;
-import io.microsphere.annotation.processor.annotation.TestAnnotation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -56,7 +55,7 @@ import static org.springframework.context.annotation.ScopedProxyMode.INTERFACES;
 })
 @TestAnnotation(
         z = true,
-        c = 1,
+        c = 'b',
         b = 1,
         s = 1,
         i = 1,
@@ -70,8 +69,8 @@ import static org.springframework.context.annotation.ScopedProxyMode.INTERFACES;
         since = @Since("1.0.0"),
         properties = {
                 @ConfigurationProperty(name = "key", type = String.class, defaultValue = "default-value", required = true, description = "description"),
-                @ConfigurationProperty(name = "key2", type = String.class, defaultValue = "default-value2", required = true, description = "description2"),
-                @ConfigurationProperty(name = "key3", type = String.class, defaultValue = "default-value3", required = true, description = "description3")
+                @ConfigurationProperty(name = "key2", type = Integer.class, defaultValue = "default-value2", required = true, description = "description2"),
+                @ConfigurationProperty(name = "key3", type = Class.class, defaultValue = "default-value3", required = true, description = "description3")
         }
 )
 public class TestServiceImpl extends GenericTestService implements TestService, AutoCloseable, Serializable {
