@@ -17,7 +17,6 @@
 
 package io.microsphere.annotation.processor.model.util;
 
-import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.processor.model.element.StringAnnotationValue;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -40,22 +39,37 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.util.JSONUtils.append;
 
 /**
- * The {@link ElementVisitor} for {@link ConfigurationProperty} JSON
+ * The {@link ElementVisitor} for {@link io.microsphere.annotation.ConfigurationProperty} JSON
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationProperty
+ * @see io.microsphere.annotation.ConfigurationProperty
  * @see ElementVisitor
  * @since 1.0.0
  */
 public class ConfigurationPropertyJSONElementVisitor extends ElementScanner8<Object, StringBuilder> {
 
+    public static final String ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
+
     private static final String SOURCE_TYPE_PROPERTY_NAME = "sourceType";
 
     private static final String SOURCE_FILED_PROPERTY_NAME = "sourceField";
 
+    /**
+     * Processes the {@link VariableElement} annotated with
+     * {@link io.microsphere.annotation.ConfigurationProperty}, converting its annotation values into
+     * a JSON structure within the provided {@link StringBuilder}.
+     *
+     * <p>This method extracts the annotation attributes and appends them as key-value pairs in JSON format.
+     * If the "name" attribute is empty, it uses the variable's constant value as the name. Additionally,
+     * it appends metadata such as the source type and field name.</p>
+     *
+     * @param field       the variable element being visited
+     * @param jsonBuilder the string builder used to accumulate JSON content
+     * @return always returns {@code null} as no result needs to be propagated up the visitor chain
+     */
     @Override
     public Object visitVariable(VariableElement field, StringBuilder jsonBuilder) {
-        AnnotationMirror annotation = getAnnotation(field, ConfigurationProperty.class);
+        AnnotationMirror annotation = getAnnotation(field, ANNOTATION_CLASS_NAME);
         if (annotation != null) {
             JSONAnnotationValueVisitor visitor = new JSONAnnotationValueVisitor(jsonBuilder);
             jsonBuilder.append(LEFT_CURLY_BRACE_CHAR);
