@@ -41,7 +41,7 @@ import static io.microsphere.util.JSONUtils.append;
 import static io.microsphere.util.JSONUtils.appendName;
 
 /**
- * {@link AnnotationValueVisitor} to Assemble JSON content
+ * {@link AnnotationValueVisitor} to assemble JSON content
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
@@ -54,6 +54,7 @@ public class JSONAnnotationValueVisitor extends SimpleAnnotationValueVisitor6<St
         super(jsonBuilder);
         this.jsonBuilder = jsonBuilder;
     }
+
 
     @Override
     public StringBuilder visitBoolean(boolean value, ExecutableElement attributeMethod) {
