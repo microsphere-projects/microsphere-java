@@ -23,9 +23,11 @@ import org.junit.jupiter.api.Test;
 import javax.lang.model.element.ElementKind;
 import java.lang.annotation.ElementType;
 
+import static io.microsphere.annotation.processor.util.EnumUtils.matches;
 import static io.microsphere.annotation.processor.util.EnumUtils.toElementKind;
 import static java.lang.annotation.ElementType.values;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link EnumUtils} Test
@@ -43,8 +45,19 @@ class EnumUtilsTest {
         }
     }
 
+    @Test
+    public void testMatches() {
+        for (ElementType elementType : values()) {
+            assertMatches(elementType);
+        }
+    }
+
     void assertElementKind(ElementType elementType) {
         ElementKind elementKind = toElementKind(elementType);
         assertNotNull(elementKind);
+    }
+
+    void assertMatches(ElementType elementType) {
+        assertTrue(matches(elementType, toElementKind(elementType)));
     }
 }
