@@ -49,4 +49,8 @@ public interface EnumUtils extends Utils {
                 return valueOf(elementType.name());
         }
     }
+
+    static boolean matches(ElementType elementType, ElementKind elementKind) {
+        return toElementKind(elementType) == elementKind;
+    }
 }
