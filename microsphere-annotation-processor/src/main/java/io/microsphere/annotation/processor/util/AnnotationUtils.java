@@ -30,6 +30,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
@@ -67,15 +69,25 @@ import static java.util.stream.Collectors.toList;
 public interface AnnotationUtils extends Utils {
 
     /**
+     * The name of the attribute method : value()
+     */
+    String VALUE_ATTRIBUTE_NAME = "value";
+
+    /**
      * The default {@link AnnotationValueVisitor}
      */
     AnnotationValueVisitor<Object, ExecutableElement> DEFAULT_ANNOTATION_VALUE_VISITOR = new ResolvableAnnotationValueVisitor();
+
+    /**
+     * The empty {@link ElementType} array
+     */
+    ElementType[] EMPTY_ELEMENT_TYPE_ARRAY = new ElementType[0];
 
     boolean WITH_DEFAULT = true;
 
     /**
      * Retrieves the first {@link AnnotationMirror} of the specified annotation class from the given
-     * {@link AnnotatedConstruct}. If either the construct or the annotation class is {@code null}, 
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class is {@code null},
      * this method returns {@code null}.
      *
      * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
@@ -91,10 +103,10 @@ public interface AnnotationUtils extends Utils {
 
     /**
      * Retrieves the first {@link AnnotationMirror} of the specified annotation class name from the given
-     * {@link AnnotatedConstruct}. If either the construct or the annotation class name is {@code null}, 
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class name is {@code null},
      * this method returns {@code null}.
      *
-     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @param annotatedConstruct  the annotated construct to search for annotations, may be {@code null}
      * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
      * @return the first matching {@link AnnotationMirror}, or {@code null} if none found
      */
@@ -123,7 +135,7 @@ public interface AnnotationUtils extends Utils {
 
     /**
      * Retrieves all {@link AnnotationMirror} instances of the specified annotation class from the given
-     * {@link AnnotatedConstruct}. If either the construct or the annotation class is {@code null}, 
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class is {@code null},
      * this method returns an empty list.
      *
      * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
@@ -139,10 +151,10 @@ public interface AnnotationUtils extends Utils {
 
     /**
      * Retrieves all {@link AnnotationMirror} instances of the specified annotation class name from the given
-     * {@link AnnotatedConstruct}. If either the construct or the annotation class name is {@code null}, 
+     * {@link AnnotatedConstruct}. If either the construct or the annotation class name is {@code null},
      * this method returns an empty list.
      *
-     * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
+     * @param annotatedConstruct  the annotated construct to search for annotations, may be {@code null}
      * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
@@ -523,6 +535,30 @@ public interface AnnotationUtils extends Utils {
     }
 
     static <T> T getValue(AnnotationMirror annotation) {
-        return getAttribute(annotation, "value");
+        return getAttribute(annotation, VALUE_ATTRIBUTE_NAME);
+    }
+
+    /**
+     * Retrieves the {@link ElementType} array from the specified annotation.
+     *
+     * @param annotation the specified annotation, may be {@code null}
+     * @return a non-null array of {@link ElementType}; never {@code null}, returns an empty array if the annotation is {@code null}
+     */
+    static ElementType[] getElementTypes(AnnotationMirror annotation) {
+        return annotation == null ? EMPTY_ELEMENT_TYPE_ARRAY : getElementTypes(annotation.getAnnotationType());
+    }
+
+    /**
+     * Retrieves the {@link ElementType} array from the specified annotation type by checking
+     * the {@link Target} annotation associated with it. If the annotation type does not have a
+     * {@link Target} annotation, an empty array is returned.
+     *
+     * @param annotationType the declared type of the annotation
+     * @return a non-null array of {@link ElementType}; never {@code null}, returns an empty array if no {@link Target} annotation is present
+     */
+    static ElementType[] getElementTypes(DeclaredType annotationType) {
+        AnnotationMirror targetAnnotation = findAnnotation(annotationType, Target.class);
+        ElementType[] elementTypes = getValue(targetAnnotation);
+        return elementTypes == null ? EMPTY_ELEMENT_TYPE_ARRAY : elementTypes;
     }
 }
