@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static io.microsphere.annotation.processor.util.AnnotationUtils.EMPTY_ELEMENT_TYPE_ARRAY;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAllAnnotations;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.findAnnotations;
@@ -61,6 +62,7 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnota
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttribute;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributeName;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributesMap;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementTypes;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValue;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValues;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getValue;
@@ -654,6 +656,31 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         assertAttributeEntry(elementValues, "sync", false);
     }
 
+    @Test
+    public void testGetElementValuesOnNull() {
+        Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(null);
+        assertSame(emptyMap(), elementValues);
+    }
+
+    @Test
+    public void testGetElementTypes() {
+        assertElementTypes(Service.class, TYPE);
+        assertElementTypes(ServiceMode.class, TYPE);
+        assertElementTypes(ComponentScans.class, TYPE);
+        assertElementTypes(TestAnnotation.class, TYPE);
+    }
+
+    void assertElementTypes(Class<? extends Annotation> annotationClass, ElementType... expectedElementTypes) {
+        AnnotationMirror annotationMirror = findAnnotation(this.testTypeElement, annotationClass);
+        assertArrayEquals(expectedElementTypes, getElementTypes(annotationMirror));
+    }
+
+    @Test
+    public void testGetElementTypesOnNull() {
+        assertSame(EMPTY_ELEMENT_TYPE_ARRAY, getElementTypes((AnnotationMirror) null));
+        assertSame(EMPTY_ELEMENT_TYPE_ARRAY, getElementTypes((DeclaredType) null));
+    }
+
     void assertServiceAttributes(Map<ExecutableElement, AnnotationValue> attributes) {
         assertEquals(1, attributes.size());
         assertAttributeEntry(attributes, "value", "testService");
@@ -683,12 +710,6 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         } else {
             assertEquals(attributeValue, value);
         }
-    }
-
-    @Test
-    public void testGetElementValuesOnNull() {
-        Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(null);
-        assertSame(emptyMap(), elementValues);
     }
 
     private void assertFindMetaAnnotation(Element element, Class<? extends Annotation> annotationClass) {
