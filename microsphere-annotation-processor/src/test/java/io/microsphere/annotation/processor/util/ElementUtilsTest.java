@@ -51,6 +51,7 @@ import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
 import static java.lang.annotation.ElementType.PACKAGE;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.ElementType.values;
 import static java.util.Collections.emptyList;
@@ -276,10 +277,21 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    public void testMatchesElementTypeWithElement() {
+        matchesElementType(this.testTypeElement, TYPE);
+    }
+
+    @Test
     public void testMatchesElementTypeWithArrayOnNull() {
-        assertFalse(matchesElementType(null));
-        assertFalse(matchesElementType(null, (ElementType[]) null));
-        assertFalse(matchesElementType(null, TYPE_USE, PACKAGE));
+        assertFalse(matchesElementType(NULL_ELEMENT_KIND));
+        assertFalse(matchesElementType(NULL_ELEMENT));
+
+        assertFalse(matchesElementType(NULL_ELEMENT_KIND, (ElementType[]) null));
+        assertFalse(matchesElementType(NULL_ELEMENT, (ElementType[]) null));
+
+        assertFalse(matchesElementType(NULL_ELEMENT_KIND, TYPE_USE, PACKAGE));
+        assertFalse(matchesElementType(NULL_ELEMENT, TYPE_USE, PACKAGE));
+
         assertFalse(matchesElementType(toElementKind(TYPE_USE), (ElementType[]) null));
     }
 
