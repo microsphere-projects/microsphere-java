@@ -121,6 +121,19 @@ public interface ElementUtils extends Utils {
     }
 
     /**
+     * {@return {@code true} if this is a kind of {@linkplain ElementKind#isField() field} or
+     * {@linkplain ElementKind#isExecutable() executable}, and {@code false} otherwise}
+     *
+     * @param kind {@link ElementKind}
+     * @param kind
+     * @return
+     * @see ElementKind#isDeclaredType()
+     */
+    static boolean isMember(ElementKind kind) {
+        return isField(kind) || isExecutable(kind);
+    }
+
+    /**
      * Returns {@code true} if this is a kind of initializer: either
      * {@code STATIC_INIT} or {@code INSTANCE_INIT}.
      *
