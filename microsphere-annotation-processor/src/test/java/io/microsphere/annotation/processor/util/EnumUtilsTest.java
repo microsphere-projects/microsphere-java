@@ -25,7 +25,10 @@ import java.lang.annotation.ElementType;
 
 import static io.microsphere.annotation.processor.util.EnumUtils.matches;
 import static io.microsphere.annotation.processor.util.EnumUtils.toElementKind;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.values;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -52,12 +55,34 @@ class EnumUtilsTest {
         }
     }
 
+    @Test
+    public void testMatchesOnNull() {
+        assertFalse(matches(null, (ElementType) null));
+        assertFalse(matches(null, TYPE));
+        assertFalse(matches(toElementKind(TYPE), (ElementType) null));
+    }
+
+    @Test
+    public void testMatchesWithArray() {
+        for (ElementType elementType : values()) {
+            assertTrue(matches(toElementKind(elementType), values()));
+        }
+    }
+
+    @Test
+    public void testMatchesWithArrayOnNull() {
+        assertFalse(matches(null));
+        assertFalse(matches(null, (ElementType[]) null));
+        assertFalse(matches(null, TYPE, FIELD));
+        assertFalse(matches(toElementKind(TYPE), (ElementType[]) null));
+    }
+
     void assertElementKind(ElementType elementType) {
         ElementKind elementKind = toElementKind(elementType);
         assertNotNull(elementKind);
     }
 
     void assertMatches(ElementType elementType) {
-        assertTrue(matches(elementType, toElementKind(elementType)));
+        assertTrue(matches(toElementKind(elementType), elementType));
     }
 }
