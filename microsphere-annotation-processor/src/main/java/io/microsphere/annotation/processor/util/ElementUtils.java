@@ -21,12 +21,27 @@ import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.lang.function.Predicates.and;
+import static io.microsphere.reflect.TypeUtils.getTypeNames;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.OTHER;
 import static javax.lang.model.element.ElementKind.valueOf;
+import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.STATIC;
 
 /**
  * The utility class for {@link Element}
@@ -202,5 +217,62 @@ public interface ElementUtils extends Utils {
             }
         }
         return false;
+    }
+
+    static boolean matchesElementKind(Element member, ElementKind kind) {
+        return member == null || kind == null ? false : kind.equals(member.getKind());
+    }
+
+    static boolean isPublicNonStatic(Element member) {
+        return hasModifiers(member, PUBLIC) && !hasModifiers(member, STATIC);
+    }
+
+    static boolean hasModifiers(Element member, Modifier... modifiers) {
+        if (member == null || modifiers == null) {
+            return false;
+        }
+        Set<Modifier> actualModifiers = member.getModifiers();
+        for (Modifier modifier : modifiers) {
+            if (!actualModifiers.contains(modifier)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static List<? extends Element> filterElements(List<? extends Element> elements, Predicate<? super Element>... elementPredicates) {
+        if (isEmpty(elements)) {
+            return emptyList();
+        }
+        if (isNotEmpty(elementPredicates)) {
+            Predicate predicate = and(elementPredicates);
+            elements = (List) elements.stream().filter(predicate).collect(toList());
+        }
+        return elements.isEmpty() ? emptyList() : elements;
+    }
+
+    static boolean matchParameterTypes(List<? extends VariableElement> parameters, Type... parameterTypes) {
+        return parameters == null || parameterTypes == null ? false : matchParameterTypeNames(parameters, getTypeNames(parameterTypes));
+    }
+
+    static boolean matchParameterTypeNames(List<? extends VariableElement> parameters, CharSequence... parameterTypeNames) {
+        if (parameters == null || parameterTypeNames == null) {
+            return false;
+        }
+
+        int length = length(parameterTypeNames);
+        int size = parameters.size();
+
+        if (size != length) {
+            return false;
+        }
+
+        for (int i = 0; i < size; i++) {
+            VariableElement parameter = parameters.get(i);
+            if (!isSameType(parameter, parameterTypeNames[i])) {
+                return false;
+            }
+        }
+        return true;
     }
 }
