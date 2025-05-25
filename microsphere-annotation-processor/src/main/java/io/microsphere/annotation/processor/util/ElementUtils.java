@@ -232,6 +232,18 @@ public interface ElementUtils extends Utils {
         return false;
     }
 
+    /**
+     * Checks whether the specified {@link Element} matches the specified {@link ElementType}.
+     *
+     * @param element      the {@link Element} to check
+     * @param elementTypes the ElementTypes to check
+     * @return {@code true} if the Element matches the ElementType, {@code false} otherwise
+     */
+    static boolean matchesElementType(Element element, ElementType... elementTypes) {
+        return element != null && matchesElementType(element.getKind(), elementTypes);
+    }
+
+
     static boolean matchesElementKind(Element member, ElementKind kind) {
         return member == null || kind == null ? false : kind.equals(member.getKind());
     }
