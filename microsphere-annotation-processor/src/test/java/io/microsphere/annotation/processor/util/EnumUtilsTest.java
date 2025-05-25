@@ -28,8 +28,10 @@ import static io.microsphere.annotation.processor.util.EnumUtils.toElementKind;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.values;
+import static javax.lang.model.element.ElementKind.OTHER;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -46,6 +48,11 @@ class EnumUtilsTest {
         for (ElementType elementType : values()) {
             assertElementKind(elementType);
         }
+    }
+
+    @Test
+    void testToElementKindOnNull() {
+        assertSame(OTHER, toElementKind(null));
     }
 
     @Test
