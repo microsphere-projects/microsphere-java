@@ -27,8 +27,8 @@ import java.util.function.Predicate;
 
 import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
-import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
-import static io.microsphere.annotation.processor.util.MemberUtils.matchesElementKind;
+import static io.microsphere.annotation.processor.util.ElementUtils.hasModifiers;
+import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
