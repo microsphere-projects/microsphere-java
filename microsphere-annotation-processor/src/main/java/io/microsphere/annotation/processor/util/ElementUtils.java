@@ -208,7 +208,7 @@ public interface ElementUtils extends Utils {
      * @param elementType the ElementType to check
      * @return {@code true} if the ElementKind matches the ElementType, {@code false} otherwise
      */
-    static boolean matches(ElementKind elementKind, ElementType elementType) {
+    static boolean matchesElementType(ElementKind elementKind, ElementType elementType) {
         return elementKind == toElementKind(elementType);
     }
 
@@ -219,13 +219,13 @@ public interface ElementUtils extends Utils {
      * @param elementTypes the ElementTypes to check
      * @return {@code true} if the ElementKind matches any of the ElementTypes, {@code false} otherwise
      */
-    static boolean matches(ElementKind elementKind, ElementType... elementTypes) {
+    static boolean matchesElementType(ElementKind elementKind, ElementType... elementTypes) {
         int length = length(elementTypes);
         if (length < 1) {
             return false;
         }
         for (int i = 0; i < length; i++) {
-            if (matches(elementKind, elementTypes[i])) {
+            if (matchesElementType(elementKind, elementTypes[i])) {
                 return true;
             }
         }
