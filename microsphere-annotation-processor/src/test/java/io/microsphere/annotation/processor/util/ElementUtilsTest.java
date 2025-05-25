@@ -36,6 +36,7 @@ import static io.microsphere.annotation.processor.util.ElementUtils.isExecutable
 import static io.microsphere.annotation.processor.util.ElementUtils.isField;
 import static io.microsphere.annotation.processor.util.ElementUtils.isInitializer;
 import static io.microsphere.annotation.processor.util.ElementUtils.isInterface;
+import static io.microsphere.annotation.processor.util.ElementUtils.isMember;
 import static io.microsphere.annotation.processor.util.ElementUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.ElementUtils.isVariable;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypeNames;
@@ -193,6 +194,22 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     @Test
     public void testIsExecutableOnNull() {
         assertFalse(isExecutable(null));
+    }
+
+    @Test
+    public void testIsMember() {
+        assertTrue(isMember(METHOD));
+        assertTrue(isMember(CONSTRUCTOR));
+        assertTrue(isMember(STATIC_INIT));
+        assertTrue(isMember(INSTANCE_INIT));
+        assertTrue(isMember(FIELD));
+        assertTrue(isMember(ENUM_CONSTANT));
+        assertFalse(isMember(CLASS));
+    }
+
+    @Test
+    public void testIsMemberOnNull() {
+        assertNotNull(isMember(null));
     }
 
     @Test
