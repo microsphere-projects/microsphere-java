@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
-import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
+import static io.microsphere.annotation.processor.util.ElementUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.MethodUtils.filterMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.annotation.processor.util.MethodUtils.findDeclaredMethods;
