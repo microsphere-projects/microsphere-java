@@ -22,7 +22,9 @@ import io.microsphere.util.Utils;
 import javax.lang.model.element.ElementKind;
 import java.lang.annotation.ElementType;
 
+import static io.microsphere.util.ArrayUtils.length;
 import static javax.lang.model.element.ElementKind.CLASS;
+import static javax.lang.model.element.ElementKind.OTHER;
 import static javax.lang.model.element.ElementKind.valueOf;
 
 /**
@@ -35,12 +37,18 @@ import static javax.lang.model.element.ElementKind.valueOf;
 public interface EnumUtils extends Utils {
 
     /**
-     * Convert {@link ElementType} to {@link ElementKind}
+     * Converts the specified {@link ElementType} to an equivalent {@link ElementKind}.
+     * <p>
+     * If the provided {@code elementType} is {@code null}, this method returns {@link ElementKind#OTHER}.
+     * </p>
      *
-     * @param elementType {@link ElementType}
-     * @return {@link ElementKind}
+     * @param elementType the ElementType to convert, may be {@code null}
+     * @return the corresponding ElementKind, never {@code null}
      */
     static ElementKind toElementKind(ElementType elementType) {
+        if (elementType == null) {
+            return OTHER;
+        }
         switch (elementType) {
             case TYPE:
             case TYPE_USE:
@@ -50,7 +58,34 @@ public interface EnumUtils extends Utils {
         }
     }
 
-    static boolean matches(ElementType elementType, ElementKind elementKind) {
-        return toElementKind(elementType) == elementKind;
+    /**
+     * Checks whether the specified {@link ElementKind} matches the specified {@link ElementType}.
+     *
+     * @param elementKind the ElementKind to check
+     * @param elementType the ElementType to check
+     * @return {@code true} if the ElementKind matches the ElementType, {@code false} otherwise
+     */
+    static boolean matches(ElementKind elementKind, ElementType elementType) {
+        return elementKind == toElementKind(elementType);
+    }
+
+    /**
+     * Checks whether the specified {@link ElementKind} matches any of the specified {@link ElementType}s.
+     *
+     * @param elementKind  the ElementKind to check
+     * @param elementTypes the ElementTypes to check
+     * @return {@code true} if the ElementKind matches any of the ElementTypes, {@code false} otherwise
+     */
+    static boolean matches(ElementKind elementKind, ElementType... elementTypes) {
+        int length = length(elementTypes);
+        if (length < 1) {
+            return false;
+        }
+        for (int i = 0; i < length; i++) {
+            if (matches(elementKind, elementTypes[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 }
