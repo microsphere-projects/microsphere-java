@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.ElementUtils.isPublicNonStatic;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypeNames;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypes;
+import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
