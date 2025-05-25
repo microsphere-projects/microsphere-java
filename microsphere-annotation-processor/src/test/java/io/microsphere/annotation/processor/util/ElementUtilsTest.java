@@ -41,7 +41,7 @@ import static io.microsphere.annotation.processor.util.ElementUtils.isPublicNonS
 import static io.microsphere.annotation.processor.util.ElementUtils.isVariable;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypeNames;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypes;
-import static io.microsphere.annotation.processor.util.ElementUtils.matches;
+import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementType;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.ElementUtils.toElementKind;
 import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
@@ -95,13 +95,13 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchesElementKind() {
+    public void testMatchesElementTypeElementKind() {
         assertTrue(matchesElementKind(echoMethod, METHOD));
         assertFalse(matchesElementKind(echoMethod, FIELD));
     }
 
     @Test
-    public void testMatchesElementKindOnNull() {
+    public void testMatchesElementTypeElementKindOnNull() {
         assertFalse(matchesElementKind(NULL_ELEMENT, FIELD));
         assertFalse(matchesElementKind(echoMethod, NULL_ELEMENT_KIND));
     }
@@ -255,32 +255,32 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatches() {
+    public void testMatchesElementType() {
         for (ElementType elementType : values()) {
-            assertMatches(elementType);
+            assertMatchesElementType(elementType);
         }
     }
 
     @Test
-    public void testMatchesOnNull() {
-        assertFalse(matches(null, (ElementType) null));
-        assertFalse(matches(null, TYPE_USE));
-        assertFalse(matches(toElementKind(TYPE_USE), (ElementType) null));
+    public void testMatchesElementTypeOnNull() {
+        assertFalse(ElementUtils.matchesElementType(null, (ElementType) null));
+        assertFalse(ElementUtils.matchesElementType(null, TYPE_USE));
+        assertFalse(ElementUtils.matchesElementType(toElementKind(TYPE_USE), (ElementType) null));
     }
 
     @Test
-    public void testMatchesWithArray() {
+    public void testMatchesElementTypeWithArray() {
         for (ElementType elementType : values()) {
-            assertTrue(matches(toElementKind(elementType), values()));
+            assertTrue(matchesElementType(toElementKind(elementType), values()));
         }
     }
 
     @Test
-    public void testMatchesWithArrayOnNull() {
-        assertFalse(matches(null));
-        assertFalse(matches(null, (ElementType[]) null));
-        assertFalse(matches(null, TYPE_USE, PACKAGE));
-        assertFalse(matches(toElementKind(TYPE_USE), (ElementType[]) null));
+    public void testMatchesElementTypeWithArrayOnNull() {
+        assertFalse(matchesElementType(null));
+        assertFalse(matchesElementType(null, (ElementType[]) null));
+        assertFalse(matchesElementType(null, TYPE_USE, PACKAGE));
+        assertFalse(matchesElementType(toElementKind(TYPE_USE), (ElementType[]) null));
     }
 
     @Test
@@ -331,7 +331,7 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
         assertNotNull(elementKind);
     }
 
-    void assertMatches(ElementType elementType) {
-        assertTrue(matches(toElementKind(elementType), elementType));
+    void assertMatchesElementType(ElementType elementType) {
+        assertTrue(ElementUtils.matchesElementType(toElementKind(elementType), elementType));
     }
 }
