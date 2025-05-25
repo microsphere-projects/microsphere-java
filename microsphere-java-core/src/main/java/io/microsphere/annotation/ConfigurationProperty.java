@@ -59,6 +59,13 @@ public @interface ConfigurationProperty {
     String defaultValue() default "";
 
     /**
+     * Whether the configuration property is required.
+     *
+     * @return true if required, otherwise false
+     */
+    boolean required() default false;
+
+    /**
      * The description of the configuration property.
      *
      * @return empty content as default

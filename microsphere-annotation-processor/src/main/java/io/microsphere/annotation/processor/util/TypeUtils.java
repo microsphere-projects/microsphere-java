@@ -35,7 +35,8 @@ import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
+import static io.microsphere.constants.SymbolConstants.GREATER_THAN_CHAR;
+import static io.microsphere.constants.SymbolConstants.LESS_THAN_CHAR;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterFirst;
@@ -612,18 +613,17 @@ public interface TypeUtils extends Utils {
         TypeElement element = ofTypeElement(type);
         if (element != null) {
             List<? extends TypeParameterElement> typeParameterElements = element.getTypeParameters();
-            if (!typeParameterElements.isEmpty()) {
+            int typeParameterElementsSize = typeParameterElements.size();
+            if (typeParameterElementsSize > 0) {
                 List<TypeMirror> typeMirrors = invokeMethod(type, "getTypeArguments");
-                StringBuilder typeBuilder = new StringBuilder(element.toString());
-                typeBuilder.append("<");
-                for (int i = 0; i < typeMirrors.size(); i++) {
-                    if (i > 0) {
-                        typeBuilder.append(COMMA_CHAR);
-                    }
-                    typeBuilder.append(toString(typeMirrors.get(i)));
+                int size = typeMirrors.size();
+                if (size > 0) {
+                    StringBuilder typeBuilder = new StringBuilder(element.toString());
+                    typeBuilder.append(LESS_THAN_CHAR)
+                            .append(typeMirrors)
+                            .append(GREATER_THAN_CHAR);
+                    return typeBuilder.toString();
                 }
-                typeBuilder.append(">");
-                return typeBuilder.toString();
             }
         }
         return type.toString();
