@@ -21,6 +21,7 @@ import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import java.lang.annotation.ElementType;
@@ -266,7 +267,7 @@ public interface ElementUtils extends Utils {
     }
 
     static <E extends Element> List<E> filterElements(List<E> elements, Predicate<? super E>... elementPredicates) {
-        if (isEmpty(elements)) {
+        if (isEmpty(elements) || elementPredicates == null) {
             return emptyList();
         }
         if (isNotEmpty(elementPredicates)) {
@@ -274,6 +275,11 @@ public interface ElementUtils extends Utils {
             elements = (List) elements.stream().filter(predicate).collect(toList());
         }
         return elements.isEmpty() ? emptyList() : elements;
+    }
+
+    static boolean matchParameterTypes(ExecutableElement executableElement, Type... parameterTypes) {
+        return executableElement == null || parameterTypes == null ? false :
+                matchParameterTypeNames(executableElement.getParameters(), getTypeNames(parameterTypes));
     }
 
     static boolean matchParameterTypes(List<? extends VariableElement> parameters, Type... parameterTypes) {
