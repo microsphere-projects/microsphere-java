@@ -95,12 +95,12 @@ public interface FieldUtils extends Utils {
         return filterDeclaredFields(type, true, fieldFilters);
     }
 
-    static List<VariableElement> filterDeclaredFields(TypeMirror type, boolean all, Predicate<? super VariableElement>... fieldFilters) {
+    static List<VariableElement> filterDeclaredFields(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super VariableElement>... fieldFilters) {
         if (type == null) {
             return emptyList();
         }
 
-        List<? extends Element> declaredMembers = getDeclaredMembers(type, all);
+        List<? extends Element> declaredMembers = getDeclaredMembers(type, includeHierarchicalTypes);
         if (isEmpty(declaredMembers)) {
             return emptyList();
         }
