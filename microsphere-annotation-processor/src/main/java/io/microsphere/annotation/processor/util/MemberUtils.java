@@ -56,12 +56,12 @@ public interface MemberUtils extends Utils {
         return type == null ? emptyList() : findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<? extends Element> getDeclaredMembers(TypeMirror type, boolean all) {
-        return all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+    static List<? extends Element> getDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes) {
+        return includeHierarchicalTypes ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
     }
 
-    static List<? extends Element> getDeclaredMembers(TypeElement type, boolean all) {
-        return all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+    static List<? extends Element> getDeclaredMembers(TypeElement type, boolean includeHierarchicalTypes) {
+        return includeHierarchicalTypes ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
     }
 
     static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
@@ -91,8 +91,8 @@ public interface MemberUtils extends Utils {
         return filterElements(declaredMembers, memberFilters);
     }
 
-    static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, boolean all, Predicate<? super T>... memberFilters) {
-        return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
+    static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super T>... memberFilters) {
+        return includeHierarchicalTypes ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
 
     static <T extends Element> List<T> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super T>... memberFilters) {
