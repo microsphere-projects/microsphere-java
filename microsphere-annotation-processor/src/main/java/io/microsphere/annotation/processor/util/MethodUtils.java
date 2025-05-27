@@ -125,9 +125,9 @@ public interface MethodUtils extends Utils {
             return emptyList();
         }
 
-        List<ExecutableElement> fields = methodsIn(declaredMembers);
+        List<ExecutableElement> methods = methodsIn(declaredMembers);
 
-        return filterElements(fields, methodFilters);
+        return filterElements(methods, methodFilters);
     }
 
     static boolean isMethod(ExecutableElement method) {
