@@ -64,26 +64,26 @@ public interface MemberUtils extends Utils {
         return all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
     }
 
-    static List<? extends Element> findDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
         return type == null ? emptyList() : findDeclaredMembers(ofTypeElement(type), memberFilters);
     }
 
-    static List<? extends Element> findDeclaredMembers(TypeElement type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findDeclaredMembers(TypeElement type, Predicate<? super T>... memberFilters) {
         if (type == null) {
             return emptyList();
         }
-        return filterElements(type.getEnclosedElements(), memberFilters);
+        return filterElements((List<T>) type.getEnclosedElements(), memberFilters);
     }
 
-    static List<? extends Element> findAllDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findAllDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
         return type == null ? emptyList() : findAllDeclaredMembers(ofTypeElement(type), memberFilters);
     }
 
-    static List<? extends Element> findAllDeclaredMembers(TypeElement type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findAllDeclaredMembers(TypeElement type, Predicate<? super T>... memberFilters) {
         if (type == null) {
             return emptyList();
         }
-        List<? extends Element> declaredMembers = getAllDeclaredTypes(type)
+        List<T> declaredMembers = (List<T>) getAllDeclaredTypes(type)
                 .stream()
                 .map(MemberUtils::getDeclaredMembers)
                 .flatMap(Collection::stream)
@@ -91,11 +91,11 @@ public interface MemberUtils extends Utils {
         return filterElements(declaredMembers, memberFilters);
     }
 
-    static List<? extends Element> findDeclaredMembers(TypeMirror type, boolean all, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, boolean all, Predicate<? super T>... memberFilters) {
         return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
 
-    static List<? extends Element> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super T>... memberFilters) {
         return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
 
