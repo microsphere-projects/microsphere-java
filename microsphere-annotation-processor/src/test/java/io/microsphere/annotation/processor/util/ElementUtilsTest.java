@@ -304,7 +304,7 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     public void testFilterElementsOnNull() {
         assertEmptyList(filterElements(NULL_LIST, alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
-        assertSame(methods, filterElements(methods, NULL_PREDICATE_ARRAY));
+        assertSame(emptyList(), filterElements(methods, NULL_PREDICATE_ARRAY));
     }
 
     @Test
