@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.ElementUtils.filterElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
@@ -63,7 +64,7 @@ public interface MemberUtils extends Utils {
         if (type == null) {
             return emptyList();
         }
-        return ElementUtils.filterElements(type.getEnclosedElements(), memberFilters);
+        return filterElements(type.getEnclosedElements(), memberFilters);
     }
 
     static List<? extends Element> findAllDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
@@ -79,7 +80,7 @@ public interface MemberUtils extends Utils {
                 .map(MemberUtils::getDeclaredMembers)
                 .flatMap(Collection::stream)
                 .collect(toList());
-        return ElementUtils.filterElements(declaredMembers, memberFilters);
+        return filterElements(declaredMembers, memberFilters);
     }
 
 }
