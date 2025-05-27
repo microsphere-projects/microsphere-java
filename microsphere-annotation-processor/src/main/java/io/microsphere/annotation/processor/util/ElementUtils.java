@@ -265,7 +265,7 @@ public interface ElementUtils extends Utils {
         return true;
     }
 
-    static List<? extends Element> filterElements(List<? extends Element> elements, Predicate<? super Element>... elementPredicates) {
+    static <E extends Element> List<E> filterElements(List<E> elements, Predicate<? super E>... elementPredicates) {
         if (isEmpty(elements)) {
             return emptyList();
         }
