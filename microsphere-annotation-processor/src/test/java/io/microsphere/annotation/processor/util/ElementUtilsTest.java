@@ -210,7 +210,7 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testIsMemberOnNull() {
-        assertNotNull(isMember(null));
+        assertFalse(isMember(null));
     }
 
     @Test
