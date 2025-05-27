@@ -264,9 +264,9 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     public void testMatchesElementTypeOnNull() {
-        assertFalse(ElementUtils.matchesElementType(null, (ElementType) null));
-        assertFalse(ElementUtils.matchesElementType(null, TYPE_USE));
-        assertFalse(ElementUtils.matchesElementType(toElementKind(TYPE_USE), (ElementType) null));
+        assertFalse(matchesElementType(null, (ElementType) null));
+        assertFalse(matchesElementType(null, TYPE_USE));
+        assertFalse(matchesElementType(toElementKind(TYPE_USE), (ElementType) null));
     }
 
     @Test
@@ -344,6 +344,6 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     void assertMatchesElementType(ElementType elementType) {
-        assertTrue(ElementUtils.matchesElementType(toElementKind(elementType), elementType));
+        assertTrue(matchesElementType(toElementKind(elementType), elementType));
     }
 }
