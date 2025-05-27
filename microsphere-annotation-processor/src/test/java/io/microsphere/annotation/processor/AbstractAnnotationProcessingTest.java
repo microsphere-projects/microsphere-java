@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.ConstructorUtils.findDeclaredConstructor;
+import static io.microsphere.annotation.processor.util.FieldUtils.findField;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -167,6 +170,21 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected TypeElement getTypeElement(Type type) {
         return TypeUtils.getTypeElement(processingEnv, type);
+    }
+
+    protected VariableElement getField(Type type, String fieldName) {
+        TypeElement typeElement = getTypeElement(type);
+        return findField(typeElement, fieldName);
+    }
+
+    protected ExecutableElement getMethod(Type type, String methodName, Type... parameterTypes) {
+        TypeElement typeElement = getTypeElement(type);
+        return findMethod(typeElement, methodName, parameterTypes);
+    }
+
+    protected ExecutableElement getConstructor(Type type, Type... parameterTypes) {
+        TypeElement typeElement = getTypeElement(type);
+        return findDeclaredConstructor(typeElement, parameterTypes);
     }
 
     protected Element[] getElements(Type... types) {
