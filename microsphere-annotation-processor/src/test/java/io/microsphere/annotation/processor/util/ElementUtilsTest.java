@@ -41,8 +41,8 @@ import static io.microsphere.annotation.processor.util.ElementUtils.isPublicNonS
 import static io.microsphere.annotation.processor.util.ElementUtils.isVariable;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypeNames;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypes;
-import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementType;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementKind;
+import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementType;
 import static io.microsphere.annotation.processor.util.ElementUtils.toElementKind;
 import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
