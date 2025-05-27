@@ -56,6 +56,14 @@ public interface MemberUtils extends Utils {
         return type == null ? emptyList() : findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
 
+    static List<? extends Element> getDeclaredMembers(TypeMirror type, boolean all) {
+        return all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+    }
+
+    static List<? extends Element> getDeclaredMembers(TypeElement type, boolean all) {
+        return all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+    }
+
     static List<? extends Element> findDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
         return type == null ? emptyList() : findDeclaredMembers(ofTypeElement(type), memberFilters);
     }
@@ -81,6 +89,14 @@ public interface MemberUtils extends Utils {
                 .flatMap(Collection::stream)
                 .collect(toList());
         return filterElements(declaredMembers, memberFilters);
+    }
+
+    static List<? extends Element> findDeclaredMembers(TypeMirror type, boolean all, Predicate<? super Element>... memberFilters) {
+        return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
+    }
+
+    static List<? extends Element> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super Element>... memberFilters) {
+        return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
 
 }
