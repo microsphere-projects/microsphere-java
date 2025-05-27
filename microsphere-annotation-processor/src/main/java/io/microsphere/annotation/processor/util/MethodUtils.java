@@ -227,17 +227,21 @@ public interface MethodUtils extends Utils {
         return matchesMethod(method, methodName, parameterTypeNames);
     }
 
+    static boolean matchesMethodName(ExecutableElement method, String methodName) {
+        return Objects.equals(getMethodName(method), methodName);
+    }
+
     static boolean matchesMethod(ExecutableElement method, String methodName, Type... parameterTypes) {
         if (method == null || methodName == null || parameterTypes == null) {
             return false;
         }
 
         // matches the name of method
-        if (!Objects.equals(getMethodName(method), methodName)) {
+        if (!matchesMethodName(method, methodName)) {
             return false;
         }
 
-        if (!matchParameterTypes(method.getParameters(), parameterTypes)) {
+        if (!matchParameterTypes(method, parameterTypes)) {
             return false;
         }
 
