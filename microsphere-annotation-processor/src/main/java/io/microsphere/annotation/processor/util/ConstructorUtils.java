@@ -90,8 +90,8 @@ public interface ConstructorUtils extends Utils {
      * @param parameterTypes the array of {@link Type} objects representing the parameter types to match
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
      */
-    static ExecutableElement findDeclaredConstructor(TypeElement type, Type... parameterTypes) {
-        return type == null ? null : findDeclaredConstructor(type.asType(), parameterTypes);
+    static ExecutableElement findConstructor(TypeElement type, Type... parameterTypes) {
+        return type == null ? null : findConstructor(type.asType(), parameterTypes);
     }
 
     /**
@@ -105,7 +105,7 @@ public interface ConstructorUtils extends Utils {
      * @param parameterTypes the array of {@link Type} objects representing the parameter types to match
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
      */
-    static ExecutableElement findDeclaredConstructor(TypeMirror type, Type... parameterTypes) {
+    static ExecutableElement findConstructor(TypeMirror type, Type... parameterTypes) {
         if (type == null) {
             return null;
         }
