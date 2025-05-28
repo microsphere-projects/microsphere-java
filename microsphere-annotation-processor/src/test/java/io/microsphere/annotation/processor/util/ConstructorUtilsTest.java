@@ -26,7 +26,7 @@ import javax.lang.model.element.ExecutableElement;
 import java.io.Serializable;
 import java.util.List;
 
-import static io.microsphere.annotation.processor.util.ConstructorUtils.findDeclaredConstructor;
+import static io.microsphere.annotation.processor.util.ConstructorUtils.findConstructor;
 import static io.microsphere.annotation.processor.util.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.annotation.processor.util.ConstructorUtils.getDeclaredConstructors;
 import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypes;
@@ -63,37 +63,37 @@ class ConstructorUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    void testFindDeclaredConstructor() {
-        assertTestServiceImpl1stConstructor(findDeclaredConstructor(this.testTypeElement));
-        assertTestServiceImpl1stConstructor(findDeclaredConstructor(this.testDeclaredType));
+    void testFindConstructor() {
+        assertTestServiceImpl1stConstructor(ConstructorUtils.findConstructor(this.testTypeElement));
+        assertTestServiceImpl1stConstructor(findConstructor(this.testDeclaredType));
 
-        assertTestServiceImpl2ndConstructor(findDeclaredConstructor(this.testTypeElement, Environment.class));
-        assertTestServiceImpl2ndConstructor(findDeclaredConstructor(this.testDeclaredType, Environment.class));
+        assertTestServiceImpl2ndConstructor(ConstructorUtils.findConstructor(this.testTypeElement, Environment.class));
+        assertTestServiceImpl2ndConstructor(findConstructor(this.testDeclaredType, Environment.class));
     }
 
     @Test
-    void testFindDeclaredConstructorOnNull() {
-        assertNull(findDeclaredConstructor(NULL_TYPE_ELEMENT));
-        assertNull(findDeclaredConstructor(NULL_TYPE_MIRROR));
+    void testFindConstructorOnNull() {
+        assertNull(ConstructorUtils.findConstructor(NULL_TYPE_ELEMENT));
+        assertNull(findConstructor(NULL_TYPE_MIRROR));
 
-        assertNull(findDeclaredConstructor(this.testTypeElement, null));
-        assertNull(findDeclaredConstructor(this.testDeclaredType, null));
+        assertNull(ConstructorUtils.findConstructor(this.testTypeElement, null));
+        assertNull(findConstructor(this.testDeclaredType, null));
     }
 
     @Test
-    void testFindDeclaredConstructorOnMismatch() {
-        assertNull(findDeclaredConstructor(NULL_TYPE_ELEMENT, Object.class));
-        assertNull(findDeclaredConstructor(NULL_TYPE_MIRROR, Object.class));
+    void testFindConstructorOnMismatch() {
+        assertNull(ConstructorUtils.findConstructor(NULL_TYPE_ELEMENT, Object.class));
+        assertNull(findConstructor(NULL_TYPE_MIRROR, Object.class));
 
-        assertNull(findDeclaredConstructor(NULL_TYPE_ELEMENT, Object.class, String.class));
-        assertNull(findDeclaredConstructor(NULL_TYPE_MIRROR, Object.class, String.class));
+        assertNull(ConstructorUtils.findConstructor(NULL_TYPE_ELEMENT, Object.class, String.class));
+        assertNull(findConstructor(NULL_TYPE_MIRROR, Object.class, String.class));
 
-        assertNull(findDeclaredConstructor(NULL_TYPE_ELEMENT, Object.class, String.class, Integer.class));
-        assertNull(findDeclaredConstructor(NULL_TYPE_MIRROR, Object.class, String.class, Integer.class));
+        assertNull(ConstructorUtils.findConstructor(NULL_TYPE_ELEMENT, Object.class, String.class, Integer.class));
+        assertNull(findConstructor(NULL_TYPE_MIRROR, Object.class, String.class, Integer.class));
     }
 
     @Test
-    void testFindDeclaredConstructors() {
+    void testFindConstructors() {
         List<ExecutableElement> constructors = findDeclaredConstructors(this.testTypeElement);
         assertTestServiceImplConstructors(constructors);
 
@@ -108,7 +108,7 @@ class ConstructorUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    void testFindDeclaredConstructorsOnNull() {
+    void testFindConstructorsOnNull() {
         assertSame(emptyList(), findDeclaredConstructors(NULL_TYPE_ELEMENT));
         assertSame(emptyList(), findDeclaredConstructors(NULL_TYPE_MIRROR));
 
@@ -117,13 +117,13 @@ class ConstructorUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    void testFindDeclaredConstructorsOnMismatch() {
+    void testFindConstructorsOnMismatch() {
         assertSame(emptyList(), findDeclaredConstructors(this.testTypeElement, alwaysFalse()));
         assertSame(emptyList(), findDeclaredConstructors(this.testDeclaredType, alwaysFalse()));
     }
 
     @Test
-    void testFindDeclaredConstructorsOnNotFound() {
+    void testFindConstructorsOnNotFound() {
         assertSame(emptyList(), findDeclaredConstructors(getTypeElement(Serializable.class)));
         assertSame(emptyList(), findDeclaredConstructors(getDeclaredType(Serializable.class)));
 
