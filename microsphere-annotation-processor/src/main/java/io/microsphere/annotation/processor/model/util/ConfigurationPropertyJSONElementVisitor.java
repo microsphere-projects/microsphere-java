@@ -19,12 +19,12 @@ package io.microsphere.annotation.processor.model.util;
 
 import io.microsphere.annotation.processor.model.element.StringAnnotationValue;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.util.ElementScanner8;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -46,13 +46,17 @@ import static io.microsphere.util.JSONUtils.append;
  * @see ElementVisitor
  * @since 1.0.0
  */
-public class ConfigurationPropertyJSONElementVisitor extends ElementScanner8<Object, StringBuilder> {
+public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
 
     public static final String ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
     private static final String SOURCE_TYPE_PROPERTY_NAME = "sourceType";
 
     private static final String SOURCE_FILED_PROPERTY_NAME = "sourceField";
+
+    public ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
+        super(processingEnv, ANNOTATION_CLASS_NAME);
+    }
 
     /**
      * Processes the {@link VariableElement} annotated with
@@ -68,8 +72,8 @@ public class ConfigurationPropertyJSONElementVisitor extends ElementScanner8<Obj
      * @return always returns {@code null} as no result needs to be propagated up the visitor chain
      */
     @Override
-    public Object visitVariable(VariableElement field, StringBuilder jsonBuilder) {
-        AnnotationMirror annotation = getAnnotation(field, ANNOTATION_CLASS_NAME);
+    public Boolean visitVariableAsField(VariableElement field, StringBuilder jsonBuilder) {
+        AnnotationMirror annotation = getAnnotation(field, getAnnotationClassName());
         if (annotation != null) {
             JSONAnnotationValueVisitor visitor = new JSONAnnotationValueVisitor(jsonBuilder);
             jsonBuilder.append(LEFT_CURLY_BRACE_CHAR);
@@ -87,7 +91,9 @@ public class ConfigurationPropertyJSONElementVisitor extends ElementScanner8<Obj
             jsonBuilder.append(COMMA_CHAR);
             append(jsonBuilder, SOURCE_FILED_PROPERTY_NAME, field.toString());
             jsonBuilder.append(RIGHT_CURLY_BRACE_CHAR);
+            jsonBuilder.append(COMMA_CHAR);
+            return true;
         }
-        return null;
+        return false;
     }
 }
