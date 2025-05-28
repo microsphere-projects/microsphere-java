@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static io.microsphere.annotation.processor.util.ConstructorUtils.findDeclaredConstructor;
+import static io.microsphere.annotation.processor.util.ConstructorUtils.findConstructor;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
@@ -184,7 +184,7 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected ExecutableElement getConstructor(Type type, Type... parameterTypes) {
         TypeElement typeElement = getTypeElement(type);
-        return findDeclaredConstructor(typeElement, parameterTypes);
+        return findConstructor(typeElement, parameterTypes);
     }
 
     protected Element[] getElements(Type... types) {
