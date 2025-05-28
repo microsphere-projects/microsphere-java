@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static io.microsphere.annotation.processor.util.LoggerUtils.trace;
+import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
 
@@ -47,14 +48,22 @@ public class ConfigurationPropertyJSONElementVisitorTest extends AbstractAnnotat
     public void test() {
         Set<? extends Element> elements = this.roundEnv.getRootElements();
         StringBuilder jsonBuilder = new StringBuilder();
-        ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor();
+        ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor(this.processingEnv);
         Iterator<? extends Element> iterator = elements.iterator();
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         while (iterator.hasNext()) {
             Element element = iterator.next();
-            element.accept(visitor, jsonBuilder);
+            if (element.accept(visitor, jsonBuilder)) {
+                jsonBuilder.append(COMMA_CHAR);
+            }
         }
-        jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
+
+        int lastIndex = jsonBuilder.length() - 1;
+        if (COMMA_CHAR == jsonBuilder.charAt(lastIndex)) {
+            jsonBuilder.setCharAt(lastIndex, RIGHT_SQUARE_BRACKET_CHAR);
+        } else {
+            jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
+        }
 
         trace(jsonBuilder.toString());
     }
