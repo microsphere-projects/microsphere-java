@@ -17,8 +17,10 @@
 package io.microsphere.io;
 
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 
 import static java.lang.System.arraycopy;
+import static java.util.Objects.hash;
 
 /**
  * Fast(No ThreadSafe without synchronization) {@link ByteArrayInputStream}
@@ -115,5 +117,18 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
 
     @Override
     public void close() {
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof FastByteArrayInputStream)) {
+            return false;
+        }
+        return Arrays.equals(this.buf, ((FastByteArrayInputStream) obj).buf);
+    }
+
+    @Override
+    public int hashCode() {
+        return hash(this.buf);
     }
 }
