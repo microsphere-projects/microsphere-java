@@ -17,13 +17,10 @@
 package io.microsphere.convert;
 
 import io.microsphere.io.FastByteArrayInputStream;
-import io.microsphere.io.IOUtils;
-import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.convert.StringToInputStreamConverter.INSTANCE;
 
 /**
  * {@link StringToInputStreamConverter} Test
@@ -31,27 +28,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToInputStreamConverterTest {
+public class StringToInputStreamConverterTest extends BaseConverterTest<String, InputStream> {
 
-    private static final String text = "test";
-
-    @Test
-    public void testOnServiceLoader() throws IOException {
-        Converter<String, InputStream> converter = Converter.getConverter(String.class, InputStream.class);
-        assertContent(converter, text);
+    @Override
+    protected AbstractConverter<String, InputStream> createConverter() {
+        return new StringToInputStreamConverter("UTF-8");
     }
 
-    @Test
-    public void test() throws IOException {
-        Converter<String, InputStream> converter = new StringToInputStreamConverter("UTF-8");
-        assertContent(converter, text);
+    @Override
+    protected String getSource() throws Throwable {
+        return "test";
     }
 
-    private void assertContent(Converter<String, InputStream> converter, String content) throws IOException {
-        InputStream inputStream = converter.convert(content);
-        assertEquals(FastByteArrayInputStream.class, inputStream.getClass());
-        String value = IOUtils.toString(inputStream);
-        assertEquals(content, value);
+    @Override
+    protected InputStream getTarget() throws Throwable {
+        return new FastByteArrayInputStream("test".getBytes(INSTANCE.getCharset()));
     }
-
 }

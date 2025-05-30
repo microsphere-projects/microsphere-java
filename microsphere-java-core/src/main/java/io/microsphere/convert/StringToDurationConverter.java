@@ -18,16 +18,23 @@ package io.microsphere.convert;
 
 import java.time.Duration;
 
+import static java.time.Duration.parse;
+
 /**
  * The class to convert {@link String} to {@link Duration}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToDurationConverter implements StringConverter<Duration> {
+public class StringToDurationConverter extends AbstractConverter<String, Duration> implements StringConverter<Duration> {
+
+    /**
+     * Singleton instance of {@link StringToDurationConverter}.
+     */
+    public static final StringToDurationConverter INSTANCE = new StringToDurationConverter();
 
     @Override
-    public Duration convert(String source) {
-        return Duration.parse(source);
+    protected Duration doConvert(String source) {
+        return parse(source);
     }
 }

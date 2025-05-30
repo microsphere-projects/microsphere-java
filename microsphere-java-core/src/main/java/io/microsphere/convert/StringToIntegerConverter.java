@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Integer.valueOf;
 
 /**
@@ -24,15 +23,15 @@ import static java.lang.Integer.valueOf;
  *
  * @since 1.0.0
  */
-public class StringToIntegerConverter implements StringConverter<Integer> {
+public class StringToIntegerConverter extends AbstractConverter<String, Integer> implements StringConverter<Integer> {
+
+    /**
+     * Singleton instance of {@link StringToIntegerConverter}.
+     */
+    public static final StringToIntegerConverter INSTANCE = new StringToIntegerConverter();
 
     @Override
-    public Integer convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY;
+    protected Integer doConvert(String source) {
+        return valueOf(source);
     }
 }

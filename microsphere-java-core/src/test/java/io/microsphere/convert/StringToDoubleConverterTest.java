@@ -16,39 +16,36 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static io.microsphere.convert.StringToDoubleConverter.INSTANCE;
+import static java.lang.Double.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link StringToDoubleConverter} Test
  *
  * @since 1.0.0
  */
-public class StringToDoubleConverterTest {
+public class StringToDoubleConverterTest extends BaseConverterTest<String, Double> {
 
-    private StringToDoubleConverter converter;
+    @Override
+    protected AbstractConverter<String, Double> createConverter() {
+        return INSTANCE;
+    }
 
-    @BeforeEach
-    public void init() {
-        converter = new StringToDoubleConverter();
+    @Override
+    protected String getSource() throws Throwable {
+        return "1.0";
+    }
+
+    @Override
+    protected Double getTarget() throws Throwable {
+        return valueOf(1.0);
     }
 
     @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, Double.class));
-    }
-
-    @Test
-    public void testConvert() {
-        assertEquals(Double.valueOf("1.0"), converter.convert("1.0"));
-        assertNull(converter.convert(null));
-        assertThrows(NumberFormatException.class, () -> {
-            converter.convert("ttt");
-        });
+    public void testConvertOnFailed() {
+        assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

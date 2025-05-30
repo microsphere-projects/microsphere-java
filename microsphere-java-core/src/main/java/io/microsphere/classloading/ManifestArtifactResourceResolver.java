@@ -28,6 +28,7 @@ import static io.microsphere.classloading.Artifact.create;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
 import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.jar.JarUtils.MANIFEST_RESOURCE_PATH;
 import static java.lang.System.getProperty;
 
 /**
@@ -40,10 +41,31 @@ import static java.lang.System.getProperty;
  */
 public class ManifestArtifactResourceResolver extends StreamArtifactResourceResolver {
 
-    public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
-
+    /**
+     * Default property value for attribute names used to extract the artifact ID from the MANIFEST file.
+     * The attributes are searched in order and the first non-null value is used as the artifact ID.
+     *
+     * <p>
+     * The default attribute names are:
+     * <ul>
+     *     <li>Bundle-Name - typically used in OSGi environments</li>
+     *     <li>Automatic-Module-Name - used for Java 9+ module systems</li>
+     *     <li>Implementation-Title - standard JAR manifest attribute</li>
+     * </ul>
+     */
     public static final String DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE = "Bundle-Name,Automatic-Module-Name,Implementation-Title";
 
+    /**
+     * Default property value for attribute names used to extract the artifact version from the MANIFEST file.
+     * The attributes are searched in order and the first non-null value is used as the artifact version.
+     *
+     * <p>
+     * The default attribute names are:
+     * <ul>
+     *     <li>Bundle-Version - typically used in OSGi environments</li>
+     *     <li>Implementation-Version - standard JAR manifest attribute</li>
+     * </ul>
+     */
     public static final String DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE = "Bundle-Version,Implementation-Version";
 
     @ConfigurationProperty(
@@ -51,6 +73,17 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
             defaultValue = DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE,
             description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id"
     )
+    /**
+     * The configuration property name for specifying attribute names in the MANIFEST file to extract the artifact ID.
+     *
+     * <p>This property allows users to customize which manifest attributes should be used to determine the artifact ID.
+     * By default, it uses the values defined in {@link #DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE}.
+     *
+     * <p>Example usage:
+     * <pre>
+     *   -Dmicrosphere.artifact-id.manifest-attribute-names=Custom-Name,Implementation-Title
+     * </pre>
+     */
     public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-id.manifest-attribute-names";
 
     @ConfigurationProperty(
@@ -58,7 +91,25 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
             defaultValue = DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE,
             description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version"
     )
+    /**
+     * The configuration property name for specifying attribute names in the MANIFEST file to extract the artifact version.
+     *
+     * <p>This property allows users to customize which manifest attributes should be used to determine the artifact version.
+     * By default, it uses the values defined in {@link #DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE}.
+     *
+     * <p>Example usage:
+     * <pre>
+     *   -Dmicrosphere.artifact-version.manifest-attribute-names=Custom-Version,Implementation-Version
+     * </pre>
+     */
     public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-version.manifest-attribute-names";
+
+    /**
+     * Default priority value for the ManifestArtifactResourceResolver.
+     * This priority determines the order in which this resolver is used compared to others.
+     * Lower values indicate higher priority.
+     */
+    public static final int DEFAULT_PRIORITY = 5;
 
     private static final String[] ARTIFACT_ID_ATTRIBUTE_NAMES = getArtifactIdAttributeNames();
 
@@ -77,7 +128,6 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
         return split(propertyValue, COMMA);
     }
 
-    public static final int DEFAULT_PRIORITY = 5;
 
     public ManifestArtifactResourceResolver() {
         this(DEFAULT_PRIORITY);

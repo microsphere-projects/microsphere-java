@@ -1,11 +1,9 @@
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.Test;
-
 import java.time.Duration;
 
+import static io.microsphere.convert.StringToDurationConverter.INSTANCE;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link StringToDurationConverter} Test
@@ -14,13 +12,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see StringToDurationConverter
  * @since 1.0.0
  */
-public class StringToDurationConverterTest {
+public class StringToDurationConverterTest extends BaseConverterTest<String, Duration> {
 
-    @Test
-    public void testConvert() {
-        StringToDurationConverter converter = new StringToDurationConverter();
-        Duration duration = converter.convert("PT12.345S");
-        assertEquals(12, duration.getSeconds());
-        assertEquals(MILLISECONDS.toNanos(345), duration.getNano());
+    @Override
+    protected AbstractConverter<String, Duration> createConverter() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected String getSource() throws Throwable {
+        return "PT12.345S";
+    }
+
+    @Override
+    protected Duration getTarget() throws Throwable {
+        return Duration.ofSeconds(12, MILLISECONDS.toNanos(345));
     }
 }

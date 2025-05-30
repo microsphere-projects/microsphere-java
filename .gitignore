@@ -25,6 +25,7 @@ hs_err_pid*
 # maven ignore
 target/
 !.mvn/wrapper/*
+dependency-reduced-pom.xml
 
 # eclipse ignore
 .settings/

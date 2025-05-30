@@ -17,23 +17,20 @@
 package io.microsphere.convert;
 
 
-import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
-
 /**
  * The class to convert {@link String} to <code>char[]</code>
  *
  * @since 1.0.0
  */
-public class StringToCharArrayConverter implements StringConverter<char[]> {
+public class StringToCharArrayConverter extends AbstractConverter<String, char[]> implements StringConverter<char[]> {
+
+    /**
+     * Singleton instance of {@link StringToCharArrayConverter}.
+     */
+    public static final StringToCharArrayConverter INSTANCE = new StringToCharArrayConverter();
 
     @Override
-    public char[] convert(String source) {
-        return isNotEmpty(source) ? source.toCharArray() : null;
-    }
-
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 7;
+    protected char[] doConvert(String source) {
+        return source.toCharArray();
     }
 }

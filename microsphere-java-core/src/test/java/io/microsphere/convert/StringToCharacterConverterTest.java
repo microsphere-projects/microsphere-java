@@ -16,39 +16,42 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.convert.StringToCharacterConverter.INSTANCE;
+import static java.lang.Character.valueOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link StringToCharacterConverter} Test
  *
  * @since 1.0.0
  */
-public class StringToCharacterConverterTest {
+public class StringToCharacterConverterTest extends BaseConverterTest<String, Character> {
 
-    private StringToCharacterConverter converter;
+    @Override
+    protected AbstractConverter<String, Character> createConverter() {
+        return INSTANCE;
+    }
 
-    @BeforeEach
-    public void init() {
-        converter = new StringToCharacterConverter();
+    @Override
+    protected String getSource() throws Throwable {
+        return "t";
+    }
+
+    @Override
+    protected Character getTarget() throws Throwable {
+        return valueOf('t');
     }
 
     @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, Character.class));
+    public void testConvertOnEmpty() {
+        assertNull(this.converter.convert(""));
     }
 
     @Test
-    public void testConvert() {
-        assertEquals('t', converter.convert("t"));
-        assertNull(converter.convert(null));
-        assertThrows(IllegalArgumentException.class, () -> {
-            converter.convert("ttt");
-        });
+    public void testConvertOnFailed() {
+        assertThrows(IllegalArgumentException.class, () -> this.converter.convert("123"));
     }
 }

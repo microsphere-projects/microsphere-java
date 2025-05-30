@@ -18,11 +18,12 @@ package io.microsphere.convert;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.convert.MapToPropertiesConverter.INSTANCE;
+import static java.util.Collections.singletonMap;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link MapToPropertiesConverter} Test
@@ -30,13 +31,28 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class MapToPropertiesConverterTest {
+public class MapToPropertiesConverterTest extends BaseConverterTest<Map, Properties> {
+
+    @Override
+    protected AbstractConverter<Map, Properties> createConverter() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected Map getSource() {
+        return singletonMap("A", "1");
+    }
+
+    @Override
+    protected Properties getTarget() {
+        Properties properties = new Properties();
+        properties.putAll(getSource());
+        return properties;
+    }
 
     @Test
-    public void test() {
-        MapToPropertiesConverter converter = MapToPropertiesConverter.INSTANCE;
-        Map<String, String> map = Collections.singletonMap("A", "1");
-        Properties properties = converter.convert(map);
-        assertEquals(map, properties);
+    public void testConvertOnFailed() throws Throwable {
+        Map<String, Object> map = singletonMap("key", null);
+        assertThrows(NullPointerException.class, () -> this.converter.convert(map));
     }
 }

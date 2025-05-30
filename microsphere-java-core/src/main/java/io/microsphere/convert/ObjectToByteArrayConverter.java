@@ -18,7 +18,6 @@ package io.microsphere.convert;
 
 import io.microsphere.io.DefaultSerializer;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 /**
@@ -28,7 +27,7 @@ import java.io.Serializable;
  * @see Serializable
  * @since 1.0.0
  */
-public class ObjectToByteArrayConverter implements Converter<Object, byte[]> {
+public class ObjectToByteArrayConverter extends AbstractConverter<Object, byte[]> {
 
     /**
      * Singleton instance of {@link ObjectToByteArrayConverter}
@@ -36,11 +35,7 @@ public class ObjectToByteArrayConverter implements Converter<Object, byte[]> {
     public static final ObjectToByteArrayConverter INSTANCE = new ObjectToByteArrayConverter();
 
     @Override
-    public byte[] convert(Object source) {
-        try {
-            return DefaultSerializer.INSTANCE.serialize(source);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    protected byte[] doConvert(Object source) throws Throwable {
+        return DefaultSerializer.INSTANCE.serialize(source);
     }
 }

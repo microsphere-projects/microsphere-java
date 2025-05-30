@@ -25,16 +25,14 @@ import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static io.microsphere.annotation.processor.util.MemberUtils.getAllDeclaredMembers;
+import static io.microsphere.annotation.processor.util.ElementUtils.filterElements;
+import static io.microsphere.annotation.processor.util.ElementUtils.hasModifiers;
+import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
-import static io.microsphere.annotation.processor.util.MemberUtils.hasModifiers;
-import static io.microsphere.annotation.processor.util.MemberUtils.matchesElementKind;
 import static io.microsphere.annotation.processor.util.TypeUtils.isEnumType;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.Streams.filterFirst;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.ElementKind.ENUM_CONSTANT;
 import static javax.lang.model.element.ElementKind.FIELD;
@@ -97,26 +95,19 @@ public interface FieldUtils extends Utils {
         return filterDeclaredFields(type, true, fieldFilters);
     }
 
-    static List<VariableElement> filterDeclaredFields(TypeMirror type, boolean all, Predicate<? super VariableElement>... fieldFilters) {
+    static List<VariableElement> filterDeclaredFields(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super VariableElement>... fieldFilters) {
         if (type == null) {
             return emptyList();
         }
 
-        List<? extends Element> declaredMembers = all ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+        List<? extends Element> declaredMembers = getDeclaredMembers(type, includeHierarchicalTypes);
         if (isEmpty(declaredMembers)) {
             return emptyList();
         }
 
         List<VariableElement> fields = fieldsIn(declaredMembers);
-        if (isEmpty(fields)) {
-            return emptyList();
-        }
 
-        if (isNotEmpty(fieldFilters)) {
-            fields = filterAll(fields, fieldFilters);
-        }
-
-        return isEmpty(fields) ? emptyList() : fields;
+        return filterElements(fields, fieldFilters);
     }
 
     /**

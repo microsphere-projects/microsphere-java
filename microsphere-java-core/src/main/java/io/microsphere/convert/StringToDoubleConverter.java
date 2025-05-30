@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Double.valueOf;
 
 /**
@@ -24,16 +23,15 @@ import static java.lang.Double.valueOf;
  *
  * @since 1.0.0
  */
-public class StringToDoubleConverter implements StringConverter<Double> {
+public class StringToDoubleConverter extends AbstractConverter<String, Double> implements StringConverter<Double> {
+
+    /**
+     * Singleton instance of {@link StringToDoubleConverter}.
+     */
+    public static final StringToDoubleConverter INSTANCE = new StringToDoubleConverter();
 
     @Override
-    public Double convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
-    }
-
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 3;
+    protected Double doConvert(String source) {
+        return valueOf(source);
     }
 }

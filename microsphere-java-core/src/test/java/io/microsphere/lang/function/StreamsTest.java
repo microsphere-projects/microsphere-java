@@ -28,7 +28,11 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.Streams.filterAllList;
+import static io.microsphere.lang.function.Streams.filterAllSet;
 import static io.microsphere.lang.function.Streams.filterAny;
+import static io.microsphere.lang.function.Streams.filterAnyList;
+import static io.microsphere.lang.function.Streams.filterAnySet;
 import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.function.Streams.filterList;
 import static io.microsphere.lang.function.Streams.filterSet;
@@ -125,13 +129,13 @@ public class StreamsTest {
 
     @Test
     public void testFilterAllList() {
-        List<Integer> list = Streams.filterAllList(INTEGERS, EVEN_PREDICATE);
+        List<Integer> list = filterAllList(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
     }
 
     @Test
     public void testFilterAllSet() {
-        Set<Integer> set = Streams.filterAllSet(INTEGERS, EVEN_PREDICATE);
+        Set<Integer> set = filterAllSet(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_SET, set);
     }
 
@@ -146,13 +150,13 @@ public class StreamsTest {
 
     @Test
     public void testFilterAnyList() {
-        List<Integer> list = Streams.filterAnyList(INTEGERS, EVEN_PREDICATE);
+        List<Integer> list = filterAnyList(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
     }
 
     @Test
     public void testFilterAnySet() {
-        Set<Integer> set = Streams.filterAnySet(INTEGERS, EVEN_PREDICATE);
+        Set<Integer> set = filterAnySet(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_SET, set);
     }
 
