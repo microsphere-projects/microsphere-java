@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @see Serializable
  * @since 1.0.0
  */
-public class ByteArrayToObjectConverter implements Converter<byte[], Object> {
+public class ByteArrayToObjectConverter extends AbstractConverter<byte[], Object> {
 
     /**
      * The Singleton instance of {@link ByteArrayToObjectConverter}
@@ -37,7 +37,7 @@ public class ByteArrayToObjectConverter implements Converter<byte[], Object> {
     public static final ByteArrayToObjectConverter INSTANCE = new ByteArrayToObjectConverter();
 
     @Override
-    public Serializable convert(byte[] source) {
+    public Serializable doConvert(byte[] source) {
         try {
             return (Serializable) DefaultDeserializer.INSTANCE.deserialize(source);
         } catch (IOException e) {
