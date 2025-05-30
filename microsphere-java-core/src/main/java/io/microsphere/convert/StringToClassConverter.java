@@ -25,14 +25,18 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToClassConverter implements StringConverter<Class> {
+public class StringToClassConverter extends AbstractConverter<String, Class> implements StringConverter<Class> {
 
+    /**
+     * Singleton instance of {@link StringToClassConverter}.
+     */
     public static final StringToClassConverter INSTANCE = new StringToClassConverter();
+
 
     private static final ClassLoader classLoader = getDefaultClassLoader();
 
     @Override
-    public Class convert(String className) {
+    protected Class doConvert(String className) {
         return resolveClass(className, classLoader);
     }
 }
