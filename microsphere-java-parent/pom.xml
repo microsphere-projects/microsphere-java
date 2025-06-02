@@ -26,7 +26,7 @@
         <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.13</logback.version>
         <!-- Testing -->
-        <junit-jupiter.version>5.12.2</junit-jupiter.version>
+        <junit-jupiter.version>5.13.0</junit-jupiter.version>
         <jmh.version>1.37</jmh.version>
     </properties>
 
