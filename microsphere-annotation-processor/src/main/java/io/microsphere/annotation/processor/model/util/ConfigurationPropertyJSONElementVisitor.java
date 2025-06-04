@@ -36,7 +36,7 @@ import static io.microsphere.annotation.processor.util.TypeUtils.getTypeName;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
-import static io.microsphere.util.JSONUtils.append;
+import static io.microsphere.json.JSONUtils.append;
 
 /**
  * The {@link ElementVisitor} for {@link io.microsphere.annotation.ConfigurationProperty} JSON
