@@ -37,8 +37,8 @@ import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
-import static io.microsphere.util.JSONUtils.append;
-import static io.microsphere.util.JSONUtils.appendName;
+import static io.microsphere.json.JSONUtils.append;
+import static io.microsphere.json.JSONUtils.appendName;
 
 /**
  * {@link AnnotationValueVisitor} to assemble JSON content
