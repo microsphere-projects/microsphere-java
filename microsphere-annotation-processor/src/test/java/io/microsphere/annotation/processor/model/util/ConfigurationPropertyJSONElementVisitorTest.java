@@ -53,9 +53,7 @@ public class ConfigurationPropertyJSONElementVisitorTest extends AbstractAnnotat
         jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
         while (iterator.hasNext()) {
             Element element = iterator.next();
-            if (element.accept(visitor, jsonBuilder)) {
-                jsonBuilder.append(COMMA_CHAR);
-            }
+            element.accept(visitor, jsonBuilder);
         }
 
         int lastIndex = jsonBuilder.length() - 1;
