@@ -123,7 +123,7 @@ public class JSONStringer {
     }
 
     JSONStringer(int indentSpaces) {
-        if (indentSpaces > 1) {
+        if (indentSpaces > 0) {
             char[] indentChars = new char[indentSpaces];
             fill(indentChars, ' ');
             this.indent = new String(indentChars);
