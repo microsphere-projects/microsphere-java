@@ -119,13 +119,17 @@ public class JSONStringer {
     private final String indent;
 
     public JSONStringer() {
-        this.indent = null;
+        this(0);
     }
 
     JSONStringer(int indentSpaces) {
-        char[] indentChars = new char[indentSpaces];
-        fill(indentChars, ' ');
-        this.indent = new String(indentChars);
+        if (indentSpaces > 1) {
+            char[] indentChars = new char[indentSpaces];
+            fill(indentChars, ' ');
+            this.indent = new String(indentChars);
+        } else {
+            this.indent = null;
+        }
     }
 
     /**
