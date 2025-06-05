@@ -30,6 +30,7 @@ import static io.microsphere.json.JSON.toDouble;
 import static io.microsphere.json.JSON.toInteger;
 import static io.microsphere.json.JSON.toLong;
 import static io.microsphere.json.JSON.typeMismatch;
+import static io.microsphere.lang.function.ThrowableAction.execute;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
@@ -215,8 +216,7 @@ public class JSONObject {
      * @throws JSONException if an error occurs
      */
     public JSONObject put(String name, boolean value) throws JSONException {
-        this.nameValuePairs.put(checkName(name), value);
-        return this;
+        return doPut(name, value);
     }
 
     /**
@@ -230,8 +230,7 @@ public class JSONObject {
      * @throws JSONException if an error occurs
      */
     public JSONObject put(String name, double value) throws JSONException {
-        this.nameValuePairs.put(checkName(name), checkDouble(value));
-        return this;
+        return doPut(name, checkDouble(value));
     }
 
     /**
@@ -244,8 +243,7 @@ public class JSONObject {
      * @throws JSONException if an error occurs
      */
     public JSONObject put(String name, int value) throws JSONException {
-        this.nameValuePairs.put(checkName(name), value);
-        return this;
+        return doPut(name, value);
     }
 
     /**
@@ -258,8 +256,7 @@ public class JSONObject {
      * @throws JSONException if an error occurs
      */
     public JSONObject put(String name, long value) throws JSONException {
-        this.nameValuePairs.put(checkName(name), value);
-        return this;
+        return doPut(name, value);
     }
 
     /**
@@ -284,8 +281,7 @@ public class JSONObject {
             // doubles
             checkDouble(((Number) value).doubleValue());
         }
-        this.nameValuePairs.put(checkName(name), value);
-        return this;
+        return doPut(name, value);
     }
 
     /**
@@ -338,6 +334,11 @@ public class JSONObject {
             array.put(value);
             this.nameValuePairs.put(name, array);
         }
+        return this;
+    }
+
+    JSONObject doPut(String name, Object value) throws JSONException {
+        this.nameValuePairs.put(checkName(name), value);
         return this;
     }
 
@@ -740,13 +741,7 @@ public class JSONObject {
      */
     @Override
     public String toString() {
-        try {
-            JSONStringer stringer = new JSONStringer();
-            writeTo(stringer);
-            return stringer.toString();
-        } catch (JSONException e) {
-            return null;
-        }
+        return toString(0);
     }
 
     /**
@@ -761,11 +756,11 @@ public class JSONObject {
      *
      * @param indentSpaces the number of spaces to indent for each level of nesting.
      * @return a string representation of the object.
-     * @throws JSONException if an error occurs
+     * @throws RuntimeException if an error occurs
      */
-    public String toString(int indentSpaces) throws JSONException {
+    public String toString(int indentSpaces) {
         JSONStringer stringer = new JSONStringer(indentSpaces);
-        writeTo(stringer);
+        execute(() -> writeTo(stringer));
         return stringer.toString();
     }
 
@@ -836,15 +831,13 @@ public class JSONObject {
         if (data == null) {
             return "\"\"";
         }
-        try {
-            JSONStringer stringer = new JSONStringer();
+        JSONStringer stringer = new JSONStringer();
+        execute(() -> {
             stringer.open(Scope.NULL, "");
             stringer.value(data);
             stringer.close(Scope.NULL, Scope.NULL, "");
-            return stringer.toString();
-        } catch (JSONException e) {
-            throw new AssertionError();
-        }
+        });
+        return stringer.toString();
     }
 
     /**
