@@ -16,10 +16,15 @@
 
 package io.microsphere.json;
 
+import static java.lang.Double.isInfinite;
+import static java.lang.Double.isNaN;
+import static java.lang.Double.parseDouble;
+import static java.lang.Double.valueOf;
+
 class JSON {
 
     static double checkDouble(double d) throws JSONException {
-        if (Double.isInfinite(d) || Double.isNaN(d)) {
+        if (isInfinite(d) || isNaN(d)) {
             throw new JSONException("Forbidden numeric value: " + d);
         }
         return d;
@@ -50,7 +55,7 @@ class JSON {
         }
         if (value instanceof String) {
             try {
-                return Double.valueOf((String) value);
+                return valueOf((String) value);
             } catch (NumberFormatException ignored) {
             }
         }
@@ -66,7 +71,7 @@ class JSON {
         }
         if (value instanceof String) {
             try {
-                return (int) Double.parseDouble((String) value);
+                return (int) parseDouble((String) value);
             } catch (NumberFormatException ignored) {
             }
         }
@@ -82,7 +87,7 @@ class JSON {
         }
         if (value instanceof String) {
             try {
-                return (long) Double.parseDouble((String) value);
+                return (long) parseDouble((String) value);
             } catch (NumberFormatException ignored) {
             }
         }
