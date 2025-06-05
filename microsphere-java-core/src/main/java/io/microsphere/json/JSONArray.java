@@ -21,7 +21,6 @@ import io.microsphere.json.JSONStringer.Scope;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import static io.microsphere.json.JSON.checkDouble;
@@ -32,7 +31,10 @@ import static io.microsphere.json.JSON.toLong;
 import static io.microsphere.json.JSON.typeMismatch;
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONObject.wrap;
+import static io.microsphere.lang.function.ThrowableAction.execute;
+import static java.lang.Double.NaN;
 import static java.lang.Math.min;
+import static java.lang.reflect.Array.getLength;
 
 /**
  * A dense indexed sequence of values. Values may be any mix of {@link JSONObject
@@ -76,8 +78,8 @@ public class JSONArray {
     public JSONArray(Collection copyFrom) {
         this();
         if (copyFrom != null) {
-            for (Iterator it = copyFrom.iterator(); it.hasNext(); ) {
-                put(wrap(it.next()));
+            for (Object value : copyFrom) {
+                put(wrap(value));
             }
         }
     }
@@ -123,7 +125,7 @@ public class JSONArray {
         if (!array.getClass().isArray()) {
             throw new JSONException("Not a primitive array: " + array.getClass());
         }
-        final int length = Array.getLength(array);
+        final int length = getLength(array);
         this.values = new ArrayList<>(length);
         for (int i = 0; i < length; ++i) {
             put(wrap(Array.get(array, i)));
@@ -411,7 +413,7 @@ public class JSONArray {
      * @return the {@code value} or {@code NaN}
      */
     public double optDouble(int index) {
-        return optDouble(index, Double.NaN);
+        return optDouble(index, NaN);
     }
 
     /**
@@ -668,13 +670,7 @@ public class JSONArray {
      */
     @Override
     public String toString() {
-        try {
-            JSONStringer stringer = new JSONStringer();
-            writeTo(stringer);
-            return stringer.toString();
-        } catch (JSONException e) {
-            return null;
-        }
+        return toString(0);
     }
 
     /**
@@ -686,11 +682,10 @@ public class JSONArray {
      *
      * @param indentSpaces the number of spaces to indent for each level of nesting.
      * @return a human-readable JSON string of this array
-     * @throws JSONException if processing of json failed
      */
-    public String toString(int indentSpaces) throws JSONException {
+    public String toString(int indentSpaces) {
         JSONStringer stringer = new JSONStringer(indentSpaces);
-        writeTo(stringer);
+        execute(() -> writeTo(stringer));
         return stringer.toString();
     }
 
