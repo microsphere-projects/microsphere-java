@@ -72,8 +72,6 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
      */
     public static final String CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "META-INF/microsphere/configuration-properties.json";
 
-    private ConfigurationPropertyJSONElementVisitor configurationPropertyJSONElementVisitor;
-
     private StringBuilder jsonBuilder;
 
     @Override
