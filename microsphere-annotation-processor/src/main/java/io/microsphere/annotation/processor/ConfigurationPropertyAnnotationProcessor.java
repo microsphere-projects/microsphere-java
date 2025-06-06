@@ -19,10 +19,10 @@ package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor;
 import io.microsphere.json.JSONArray;
-import io.microsphere.logging.Logger;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -37,12 +37,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 import static io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
+import static io.microsphere.annotation.processor.util.MessagerUtils.printError;
+import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
+import static io.microsphere.annotation.processor.util.MessagerUtils.printWarning;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.lang.function.ThrowableAction.execute;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static javax.lang.model.SourceVersion.latestSupported;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 
@@ -54,8 +56,6 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
  */
 @SupportedAnnotationTypes(value = CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME)
 public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor {
-
-    private static final Logger logger = getLogger(ConfigurationPropertyAnnotationProcessor.class);
 
     /**
      * The {@link Class class} name of io.microsphere.annotation.ConfigurationProperty
@@ -72,11 +72,14 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
      */
     public static final String CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "META-INF/microsphere/configuration-properties.json";
 
+    private Messager messager;
+
     private StringBuilder jsonBuilder;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        this.messager = processingEnv.getMessager();
         this.jsonBuilder = new StringBuilder();
     }
 
@@ -116,12 +119,10 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
                 JSONArray jsonArray = new JSONArray(jsonBuilder.toString());
                 String formatedJSON = jsonArray.toString(2);
                 writer.write(formatedJSON);
-                if (logger.isTraceEnabled()) {
-                    logger.trace("The generated metadata JSON of @{} : {}", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME, formatedJSON);
-                }
+                printNote(this.messager, "The generated metadata JSON of @{} : {}", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME, formatedJSON);
             }
         }, e -> {
-            logger.error("Failed to write the metadata resource[name : '{}']", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME, e);
+            printError(this.messager, "Failed to write the metadata resource[name : '{}']", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME, e);
         });
     }
 
@@ -132,9 +133,7 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
     FileObject getResource(String resourceName) {
         Filer filer = this.processingEnv.getFiler();
         FileObject resource = execute(() -> filer.createResource(CONFIGURATION_PROPERTY_METADATA_LOCATION, "", resourceName), e -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The resource can't be created by resource[name : '{}'] in the class output", e);
-            }
+            printWarning(this.messager, "The resource can't be created by resource[name : '{}'] in the class output", e);
             return execute(() -> filer.getResource(CONFIGURATION_PROPERTY_METADATA_LOCATION, "", resourceName));
         });
         return resource;
