@@ -159,6 +159,26 @@ public interface SymbolConstants {
     char PIPE_CHAR = VERTICAL_BAR_CHAR;
 
     /**
+     * The left square bracket char : '['
+     */
+    char LEFT_SQUARE_BRACKET_CHAR = '[';
+
+    /**
+     * The right square bracket char : ']'
+     */
+    char RIGHT_SQUARE_BRACKET_CHAR = ']';
+
+    /**
+     * The left curly brace char : '{'
+     */
+    char LEFT_CURLY_BRACE_CHAR = '{';
+
+    /**
+     * The right curly brace char : '}'
+     */
+    char RIGHT_CURLY_BRACE_CHAR = '}';
+
+    /**
      * The comma symbol : ","
      */
     String COMMA = ",";
@@ -185,6 +205,7 @@ public interface SymbolConstants {
 
     /**
      * The double quote symbol : "\""
+     *
      * @see #DOUBLE_QUOTATION
      */
     String DOUBLE_QUOTE = "\"";
@@ -300,4 +321,24 @@ public interface SymbolConstants {
      * The pipe symbol : "|"
      */
     String PIPE = VERTICAL_BAR;
+
+    /**
+     * The left square bracket : "["
+     */
+    String LEFT_SQUARE_BRACKET = "[";
+
+    /**
+     * The right square bracket char : ']'
+     */
+    String RIGHT_SQUARE_BRACKET = "]";
+
+    /**
+     * The left curly brace : "{"
+     */
+    String LEFT_CURLY_BRACE = "{";
+
+    /**
+     * The right curly brace : "}"
+     */
+    String RIGHT_CURLY_BRACE = "}";
 }

@@ -50,6 +50,7 @@ import static io.microsphere.util.ClassLoaderUtils.getInheritableClassLoaders;
 import static io.microsphere.util.ClassLoaderUtils.getLoadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.getLoadedClasses;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.ClassLoaderUtils.getResourceAsString;
 import static io.microsphere.util.ClassLoaderUtils.getResources;
 import static io.microsphere.util.ClassLoaderUtils.getTotalLoadedClassCount;
 import static io.microsphere.util.ClassLoaderUtils.getUnloadedClassCount;
@@ -375,6 +376,14 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
     public void testGetResourceOnNullClassLoader() {
         assertGetResource();
         assertGetResource(null);
+    }
+
+    @Test
+    public void testGetResourceAsString() throws IOException {
+        for (String testResource : testResources) {
+            String resource = getResourceAsString(testResource);
+            assertNotNull(resource);
+        }
     }
 
     private void assertGetResource() {

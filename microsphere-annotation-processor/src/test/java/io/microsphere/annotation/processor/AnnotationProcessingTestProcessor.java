@@ -59,7 +59,7 @@ public class AnnotationProcessingTestProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (!roundEnv.processingOver()) {
-            prepare();
+            prepare(roundEnv);
             abstractAnnotationProcessingTest.beforeTest();
             try {
                 invocation.proceed();
@@ -72,7 +72,8 @@ public class AnnotationProcessingTestProcessor extends AbstractProcessor {
         return false;
     }
 
-    private void prepare() {
+    protected void prepare(RoundEnvironment roundEnv) {
+        abstractAnnotationProcessingTest.roundEnv = roundEnv;
         abstractAnnotationProcessingTest.processingEnv = super.processingEnv;
         abstractAnnotationProcessingTest.elements = super.processingEnv.getElementUtils();
         abstractAnnotationProcessingTest.types = super.processingEnv.getTypeUtils();

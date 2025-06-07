@@ -24,15 +24,15 @@ import static java.lang.Boolean.valueOf;
  *
  * @since 1.0.0
  */
-public class StringToBooleanConverter implements StringConverter<Boolean> {
+public class StringToBooleanConverter extends AbstractConverter<String, Boolean> implements StringConverter<Boolean> {
+
+    /**
+     * Singleton instance of {@link StringToBooleanConverter}.
+     */
+    public static final StringToBooleanConverter INSTANCE = new StringToBooleanConverter();
 
     @Override
-    public Boolean convert(String source) {
+    protected Boolean doConvert(String source) {
         return isNotEmpty(source) ? valueOf(source) : null;
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 5;
     }
 }

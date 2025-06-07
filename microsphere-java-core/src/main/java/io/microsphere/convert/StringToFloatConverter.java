@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Float.valueOf;
 
 /**
@@ -24,15 +23,15 @@ import static java.lang.Float.valueOf;
  *
  * @since 1.0.0
  */
-public class StringToFloatConverter implements StringConverter<Float> {
+public class StringToFloatConverter extends AbstractConverter<String, Float> implements StringConverter<Float> {
+
+    /**
+     * Singleton instance of {@link StringToFloatConverter}.
+     */
+    public static final StringToFloatConverter INSTANCE = new StringToFloatConverter();
 
     @Override
-    public Float convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 4;
+    protected Float doConvert(String source) {
+        return valueOf(source);
     }
 }

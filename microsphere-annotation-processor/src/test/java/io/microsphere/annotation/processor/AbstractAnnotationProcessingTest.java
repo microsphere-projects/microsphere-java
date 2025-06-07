@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.AnnotatedConstruct;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
@@ -41,6 +42,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.ConstructorUtils.findConstructor;
+import static io.microsphere.annotation.processor.util.FieldUtils.findField;
+import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -110,6 +114,8 @@ public abstract class AbstractAnnotationProcessingTest {
 
     static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
 
+    protected RoundEnvironment roundEnv;
+
     protected ProcessingEnvironment processingEnv;
 
     protected Elements elements;
@@ -164,6 +170,21 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected TypeElement getTypeElement(Type type) {
         return TypeUtils.getTypeElement(processingEnv, type);
+    }
+
+    protected VariableElement getField(Type type, String fieldName) {
+        TypeElement typeElement = getTypeElement(type);
+        return findField(typeElement, fieldName);
+    }
+
+    protected ExecutableElement getMethod(Type type, String methodName, Type... parameterTypes) {
+        TypeElement typeElement = getTypeElement(type);
+        return findMethod(typeElement, methodName, parameterTypes);
+    }
+
+    protected ExecutableElement getConstructor(Type type, Type... parameterTypes) {
+        TypeElement typeElement = getTypeElement(type);
+        return findConstructor(typeElement, parameterTypes);
     }
 
     protected Element[] getElements(Type... types) {

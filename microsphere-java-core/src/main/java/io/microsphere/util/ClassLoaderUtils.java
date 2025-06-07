@@ -11,6 +11,7 @@ import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ReflectionUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
@@ -37,6 +38,7 @@ import static io.microsphere.constants.PathConstants.BACK_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.io.IOUtils.copyToString;
 import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
@@ -408,6 +410,37 @@ public abstract class ClassLoaderUtils implements Utils {
         String normalizedResourceName = resourceType.resolve(resourceName);
         return normalizedResourceName == null ? null : findClassLoader(classLoader).getResource(normalizedResourceName);
     }
+
+    /**
+     * Get the content of the specified resource as a String.
+     *
+     * @param resourceName the name of the resource to load
+     * @return the content of the resource as a String
+     * @throws NullPointerException if the resourceName is null
+     * @throws IOException          if an I/O error occurs while reading the resource
+     */
+    public static String getResourceAsString(String resourceName) throws NullPointerException, IOException {
+        return getResourceAsString(null, resourceName);
+    }
+
+    /**
+     * Get the content of the specified resource as a String.
+     *
+     * @param classLoader  the ClassLoader to use for loading the resource, may be {@code null}
+     * @param resourceName the name of the resource to load
+     * @return the content of the resource as a String
+     * @throws NullPointerException if the resourceName is null
+     * @throws IOException          if an I/O error occurs while reading the resource
+     */
+    public static String getResourceAsString(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
+        URL resource = getResource(classLoader, resourceName);
+        final String content;
+        try (InputStream inputStream = resource.openStream()) {
+            content = copyToString(inputStream);
+        }
+        return content;
+    }
+
 
     /**
      * Get the {@link Class} resource URL under specified {@link Class#getName() Class name}

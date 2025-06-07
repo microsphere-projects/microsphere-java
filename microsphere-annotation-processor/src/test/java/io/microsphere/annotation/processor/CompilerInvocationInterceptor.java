@@ -20,11 +20,15 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
+import javax.annotation.processing.Processor;
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import static io.microsphere.annotation.processor.AbstractAnnotationProcessingTest.testInstanceHolder;
+import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 
 /**
@@ -45,7 +49,9 @@ public class CompilerInvocationInterceptor implements InvocationInterceptor {
         abstractAnnotationProcessingTest.addCompiledClasses(compiledClasses);
         Compiler compiler = new Compiler();
         compiler.sourcePaths(compiledClasses);
-        compiler.processors(new AnnotationProcessingTestProcessor(abstractAnnotationProcessingTest, invocation, invocationContext, extensionContext));
+        List<Processor> processors = new LinkedList<>(loadServicesList(Processor.class, this.getClass().getClassLoader()));
+        processors.add(new AnnotationProcessingTestProcessor(abstractAnnotationProcessingTest, invocation, invocationContext, extensionContext));
+        compiler.processors(processors.toArray(new Processor[0]));
         compiler.compile(compiledClasses.toArray(new Class[0]));
     }
 }

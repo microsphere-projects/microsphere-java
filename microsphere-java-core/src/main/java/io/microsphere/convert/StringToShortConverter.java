@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Short.valueOf;
 
 /**
@@ -24,15 +23,15 @@ import static java.lang.Short.valueOf;
  *
  * @since 1.0.0
  */
-public class StringToShortConverter implements StringConverter<Short> {
+public class StringToShortConverter extends AbstractConverter<String, Short> implements StringConverter<Short> {
+
+    /**
+     * Singleton instance of {@link StringToShortConverter}.
+     */
+    public static final StringToShortConverter INSTANCE = new StringToShortConverter();
 
     @Override
-    public Short convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 2;
+    protected Short doConvert(String source) {
+        return valueOf(source);
     }
 }

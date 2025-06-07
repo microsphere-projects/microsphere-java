@@ -19,8 +19,8 @@ package io.microsphere.convert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static io.microsphere.convert.StringToFloatConverter.INSTANCE;
+import static java.lang.Float.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToFloatConverterTest {
+public class StringToFloatConverterTest extends BaseConverterTest<String, Float> {
 
     private StringToFloatConverter converter;
 
@@ -43,12 +43,23 @@ public class StringToFloatConverterTest {
         assertTrue(converter.accept(String.class, Float.class));
     }
 
+    @Override
+    protected AbstractConverter<String, Float> createConverter() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected String getSource() throws Throwable {
+        return "1.0f";
+    }
+
+    @Override
+    protected Float getTarget() throws Throwable {
+        return valueOf(1.0f);
+    }
+
     @Test
-    public void testConvert() {
-        assertEquals(Float.valueOf("1.0"), converter.convert("1.0"));
-        assertNull(converter.convert(null));
-        assertThrows(NumberFormatException.class, () -> {
-            converter.convert("ttt");
-        });
+    public void testConvertOnFailed() {
+        assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

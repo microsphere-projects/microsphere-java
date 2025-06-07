@@ -16,15 +16,22 @@
  */
 package io.microsphere.convert;
 
+import static java.lang.String.valueOf;
+
 /**
- * A class to covert {@link String} to {@link String} value, just no-op
+ * The class to convert {@link String} to {@link String}
  *
  * @since 1.0.0
  */
-public class StringToStringConverter implements StringConverter<String> {
+public class StringToStringConverter extends AbstractConverter<String, String> implements StringConverter<String> {
+
+    /**
+     * Singleton instance of {@link StringToStringConverter}.
+     */
+    public static final StringToStringConverter INSTANCE = new StringToStringConverter();
 
     @Override
-    public String convert(String source) {
-        return source;
+    protected String doConvert(String source) {
+        return valueOf(source);
     }
 }
