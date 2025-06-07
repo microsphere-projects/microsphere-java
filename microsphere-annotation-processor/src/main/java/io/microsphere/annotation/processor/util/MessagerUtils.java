@@ -20,6 +20,7 @@ package io.microsphere.annotation.processor.util;
 import io.microsphere.util.Utils;
 
 import javax.annotation.processing.Messager;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic.Kind;
 
 import static io.microsphere.annotation.processor.util.LoggerUtils.debug;
@@ -41,20 +42,40 @@ import static javax.tools.Diagnostic.Kind.WARNING;
  */
 public interface MessagerUtils extends Utils {
 
+    static void printNote(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+        printNote(processingEnv.getMessager(), pattern, args);
+    }
+
     static void printNote(Messager messager, String pattern, Object... args) {
         printMessage(messager, NOTE, pattern, args);
+    }
+
+    static void printWarning(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+        printWarning(processingEnv.getMessager(), pattern, args);
     }
 
     static void printWarning(Messager messager, String pattern, Object... args) {
         printMessage(messager, WARNING, pattern, args);
     }
 
+    static void printMandatoryWarning(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+        printMandatoryWarning(processingEnv.getMessager(), pattern, args);
+    }
+
     static void printMandatoryWarning(Messager messager, String pattern, Object... args) {
         printMessage(messager, MANDATORY_WARNING, pattern, args);
     }
 
+    static void printError(ProcessingEnvironment processingEnv, String pattern, Object... args) {
+        printError(processingEnv.getMessager(), pattern, args);
+    }
+
     static void printError(Messager messager, String pattern, Object... args) {
         printMessage(messager, ERROR, pattern, args);
+    }
+
+    static void printMessage(ProcessingEnvironment processingEnv, Kind kind, String pattern, Object... args) {
+        printMessage(processingEnv.getMessager(), kind, pattern, args);
     }
 
     static void printMessage(Messager messager, Kind kind, String pattern, Object... args) {
