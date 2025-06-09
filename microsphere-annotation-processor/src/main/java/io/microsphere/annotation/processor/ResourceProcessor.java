@@ -37,7 +37,6 @@ import java.util.function.Function;
 import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
 import static io.microsphere.annotation.processor.util.MessagerUtils.printWarning;
 import static io.microsphere.util.ExceptionUtils.wrap;
-import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
@@ -74,7 +73,6 @@ public class ResourceProcessor {
         this.filerProcessor = new FilerProcessor(processingEnv);
         this.moduleAndPackage = moduleAndPackage;
         this.fileObjectsCache = new HashMap<>();
-        addShutdownHookCallback(fileObjectsCache::clear);
     }
 
     public <T> T processInResource(String resourceName, boolean forWriting, ThrowableFunction<Optional<FileObject>, T> resourceCallback) {
