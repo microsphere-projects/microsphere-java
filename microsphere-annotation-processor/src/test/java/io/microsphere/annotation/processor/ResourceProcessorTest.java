@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.FOR_READING;
 import static io.microsphere.annotation.processor.ResourceProcessor.FOR_WRITING;
+import static io.microsphere.annotation.processor.ResourceProcessor.exists;
 import static io.microsphere.io.IOUtils.copyToString;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static java.lang.Boolean.FALSE;
@@ -32,6 +33,7 @@ import static java.lang.System.currentTimeMillis;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,7 +63,7 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
     }
 
     @Override
-    public void afterTest() {
+    protected void afterTest() {
         this.classOutputProcessor.getResource(this.randomResourceName, FOR_WRITING).ifPresent(FileObject::delete);
     }
 
@@ -78,7 +80,7 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetResource() {
+    void testGetResource() {
         Optional<FileObject> resource = this.sourcePathProcessor.getResource(JAVA_SOURCE_RESOURCE_NAME, FOR_READING);
         assertTrue(resource.isPresent());
     }
@@ -91,7 +93,7 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testProcessInResourceInputStreamOnFailed() {
+    void testProcessInResourceInputStreamOnFailed() {
         assertThrows(RuntimeException.class, () -> this.sourcePathProcessor.processInResourceInputStream(JAVA_SOURCE_RESOURCE_NAME, inputStream -> {
             throw new RuntimeException();
         }));
@@ -112,31 +114,48 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testProcessInResourceOutputStream() {
+    void testProcessInResourceContent() {
+        Optional<String> content = this.sourcePathProcessor.processInResourceContent(JAVA_SOURCE_RESOURCE_NAME, String::valueOf);
+        assertNotNull(content);
+    }
+
+    @Test
+    void testProcessInResourceContentOnFailed() {
+        assertThrows(RuntimeException.class, () -> this.sourcePathProcessor.processInResourceContent(JAVA_SOURCE_RESOURCE_NAME, content -> {
+            throw new RuntimeException();
+        }));
+    }
+
+    @Test
+    void testProcessInResourceOutputStream() {
         this.classOutputProcessor.processInResourceOutputStream(randomResourceName, outputStream -> {
             outputStream.write(randomResourceName.getBytes(DEFAULT_CHARSET));
         });
     }
 
     @Test
-    public void testProcessInResourceOutputStreamOnFailed() {
+    void testProcessInResourceOutputStreamOnFailed() {
         assertThrows(RuntimeException.class, () -> this.classOutputProcessor.processInResourceOutputStream(this.randomResourceName, outputStream -> {
             throw new RuntimeException();
         }));
     }
 
     @Test
-    public void testProcessInResourceOnWriter() {
+    void testProcessInResourceOnWriter() {
         this.classOutputProcessor.processInResourceWriter(randomResourceName, writer -> {
             writer.write(randomResourceName);
         });
     }
 
-
     @Test
-    public void testProcessInResourceOnWriterOnFailed() {
+    void testProcessInResourceOnWriterOnFailed() {
         assertThrows(RuntimeException.class, () -> this.classOutputProcessor.processInResourceWriter(randomResourceName, writer -> {
             throw new RuntimeException();
         }));
+    }
+
+    @Test
+    void testExistsOnNull() {
+        assertFalse(exists(null));
     }
 }
