@@ -46,6 +46,7 @@ import static java.io.File.separatorChar;
 import static java.util.Collections.singleton;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
+import static javax.tools.StandardLocation.SOURCE_PATH;
 import static javax.tools.ToolProvider.getSystemJavaCompiler;
 
 /**
@@ -78,6 +79,7 @@ public class Compiler {
         this.sourcePaths = newLinkedHashSet(defaultSourceDirectory);
         this.javaCompiler = getSystemJavaCompiler();
         this.javaFileManager = javaCompiler.getStandardFileManager(null, null, null);
+        this.javaFileManager.setLocation(SOURCE_PATH, sourcePaths);
         this.javaFileManager.setLocation(CLASS_OUTPUT, singleton(targetDirectory));
         this.javaFileManager.setLocation(SOURCE_OUTPUT, singleton(targetDirectory));
     }
@@ -140,7 +142,7 @@ public class Compiler {
                     sourceFile.getAbsolutePath(), getTypeName(sourceClass), sourcePath.getAbsolutePath());
         }
 
-         return sourcePath.exists() ? sourcePath : null;
+        return sourcePath.exists() ? sourcePath : null;
     }
 
     static File detectRootDirectory(Class<?> sourceClass) {
