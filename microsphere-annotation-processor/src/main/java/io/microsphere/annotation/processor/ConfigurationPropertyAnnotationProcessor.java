@@ -17,6 +17,7 @@
 
 package io.microsphere.annotation.processor;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor;
 import io.microsphere.json.JSONArray;
 
@@ -41,21 +42,22 @@ import static javax.lang.model.SourceVersion.latestSupported;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 
 /**
- * The {@link Processor} for the io.microsphere.annotation.ConfigurationProperty annotation
+ * The {@link Processor} for the {@link ConfigurationProperty} annotation
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ConfigurationProperty
  * @since 1.0.0
  */
 @SupportedAnnotationTypes(value = CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME)
 public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor {
 
     /**
-     * The {@link Class class} name of io.microsphere.annotation.ConfigurationProperty
+     * The {@link Class class} name of {@link ConfigurationProperty}
      */
     public static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
     /**
-     * The resource name of io.microsphere.annotation.ConfigurationProperty metadata
+     * The resource name of {@link ConfigurationProperty} metadata
      */
     public static final String CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "META-INF/microsphere/configuration-properties.json";
 
@@ -109,7 +111,7 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
             JSONArray jsonArray = new JSONArray(jsonBuilder.toString());
             String formatedJSON = jsonArray.toString(2);
             writer.write(formatedJSON);
-            printNote(this.messager, "The generated metadata JSON of @{} : {}", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME, formatedJSON);
+            printNote(this.messager, "The generated metadata JSON of @{} : \n{}", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME, formatedJSON);
         });
     }
 
