@@ -49,26 +49,31 @@ class MessagerUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     void testPrintNote() {
+        printNote(this.processingEnv, "Hello, {}!", "printNote");
         printNote(this.messager, "Hello, {}!", "printNote");
     }
 
     @Test
     void testPrintWarning() {
+        printWarning(this.processingEnv, "Hello, {}!", "printWarning");
         printWarning(this.messager, "Hello, {}!", "printWarning");
     }
 
     @Test
     void testPrintMandatoryWarning() {
+        printMandatoryWarning(this.processingEnv, "Hello, {}!", "printMandatoryWarning");
         printMandatoryWarning(this.messager, "Hello, {}!", "printMandatoryWarning");
     }
 
     @Test
     void testPrintError() {
+        printError(this.processingEnv, "Hello, {}!", "printError");
         printError(this.messager, "Hello, {}!", "printError");
     }
 
     @Test
     void testPrintMessage() {
+        printMessage(this.processingEnv, OTHER, "Hello, {}!", "printMessage");
         printMessage(this.messager, OTHER, "Hello, {}!", "printMessage");
     }
 }
