@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
-import static io.microsphere.annotation.processor.util.FilerUtils.exists;
+import static io.microsphere.annotation.processor.ResourceProcessor.exists;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
