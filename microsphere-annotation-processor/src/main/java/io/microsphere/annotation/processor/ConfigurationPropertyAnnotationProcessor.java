@@ -21,7 +21,6 @@ import io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONE
 import io.microsphere.json.JSONArray;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
@@ -30,21 +29,14 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.tools.FileObject;
-import javax.tools.JavaFileManager.Location;
-import java.io.Writer;
 import java.util.Iterator;
 import java.util.Set;
 
 import static io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
-import static io.microsphere.annotation.processor.util.MessagerUtils.printError;
 import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
-import static io.microsphere.annotation.processor.util.MessagerUtils.printWarning;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
-import static io.microsphere.lang.function.ThrowableAction.execute;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static javax.lang.model.SourceVersion.latestSupported;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 
@@ -63,11 +55,6 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
     public static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
     /**
-     * The {@link Location} of io.microsphere.annotation.ConfigurationProperty metadata
-     */
-    static final Location CONFIGURATION_PROPERTY_METADATA_LOCATION = CLASS_OUTPUT;
-
-    /**
      * The resource name of io.microsphere.annotation.ConfigurationProperty metadata
      */
     public static final String CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "META-INF/microsphere/configuration-properties.json";
@@ -76,11 +63,14 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
 
     private StringBuilder jsonBuilder;
 
+    private ResourceProcessor classPathResourceProcessor;
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         this.messager = processingEnv.getMessager();
         this.jsonBuilder = new StringBuilder();
+        this.classPathResourceProcessor = new ResourceProcessor(processingEnv, CLASS_OUTPUT);
     }
 
     @Override
@@ -95,48 +85,32 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
 
     private void resolveMetadata(RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getRootElements();
-        ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor(processingEnv);
+        if (!elements.isEmpty()) {
+            ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor(processingEnv);
 
-        Iterator<? extends Element> iterator = elements.iterator();
-        jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
-        while (iterator.hasNext()) {
-            Element element = iterator.next();
-            element.accept(visitor, jsonBuilder);
-        }
+            Iterator<? extends Element> iterator = elements.iterator();
+            jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
+            while (iterator.hasNext()) {
+                Element element = iterator.next();
+                element.accept(visitor, jsonBuilder);
+            }
 
-        int lastIndex = jsonBuilder.length() - 1;
-        if (COMMA_CHAR == jsonBuilder.charAt(lastIndex)) {
-            jsonBuilder.setCharAt(lastIndex, RIGHT_SQUARE_BRACKET_CHAR);
-        } else {
-            jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
+            int lastIndex = jsonBuilder.length() - 1;
+            if (COMMA_CHAR == jsonBuilder.charAt(lastIndex)) {
+                jsonBuilder.setCharAt(lastIndex, RIGHT_SQUARE_BRACKET_CHAR);
+            } else {
+                jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
+            }
         }
     }
 
     private void writeMetadata() {
-        execute(() -> {
-            FileObject metadataResource = getMetadataResource();
-            try (Writer writer = metadataResource.openWriter()) {
-                JSONArray jsonArray = new JSONArray(jsonBuilder.toString());
-                String formatedJSON = jsonArray.toString(2);
-                writer.write(formatedJSON);
-                printNote(this.messager, "The generated metadata JSON of @{} : {}", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME, formatedJSON);
-            }
-        }, e -> {
-            printError(this.messager, "Failed to write the metadata resource[name : '{}']", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME, e);
+        classPathResourceProcessor.processInResourceWriter(CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME, writer -> {
+            JSONArray jsonArray = new JSONArray(jsonBuilder.toString());
+            String formatedJSON = jsonArray.toString(2);
+            writer.write(formatedJSON);
+            printNote(this.messager, "The generated metadata JSON of @{} : {}", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME, formatedJSON);
         });
-    }
-
-    FileObject getMetadataResource() {
-        return getResource(CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME);
-    }
-
-    FileObject getResource(String resourceName) {
-        Filer filer = this.processingEnv.getFiler();
-        FileObject resource = execute(() -> filer.createResource(CONFIGURATION_PROPERTY_METADATA_LOCATION, "", resourceName), e -> {
-            printWarning(this.messager, "The resource can't be created by resource[name : '{}'] in the class output", e);
-            return execute(() -> filer.getResource(CONFIGURATION_PROPERTY_METADATA_LOCATION, "", resourceName));
-        });
-        return resource;
     }
 
     @Override
