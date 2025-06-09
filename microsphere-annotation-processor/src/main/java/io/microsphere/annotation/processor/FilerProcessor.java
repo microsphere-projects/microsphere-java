@@ -45,7 +45,7 @@ public class FilerProcessor {
 
     public <T> T processInFiler(ThrowableFunction<Filer, T> filerCallback) {
         return processInFiler(filerCallback, (filer, e) -> {
-            printMandatoryWarning(this.processingEnv, "[FilerProcessor] Failed to process in Filer : {}", e.getMessage());
+            printMandatoryWarning(this.processingEnv, "[FilerProcessor] Failed to process in Filer : {}", filer, e);
             return null;
         });
     }
