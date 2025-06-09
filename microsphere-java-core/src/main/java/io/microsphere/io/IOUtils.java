@@ -25,6 +25,8 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -105,6 +107,15 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
+     * {@link #copyToString(Reader)}  as recommended
+     *
+     * @see #copyToString(Reader)
+     */
+    public static String toString(Reader reader) throws IOException {
+        return copyToString(reader);
+    }
+
+    /**
      * Copy the contents of the given InputStream into a new {@link String}.
      * <p>Leaves the stream open when done.
      *
@@ -142,6 +153,23 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
+     * Copy the contents of the given Reader into a new {@link String}.
+     * <p>Leaves the Reader open when done.</p>
+     *
+     * @param reader the Reader to copy from (may be {@code null} or empty)
+     * @return the new String that has been copied to (possibly empty)
+     * @throws IOException in case of I/O errors
+     */
+    public static String copyToString(Reader reader) throws IOException {
+        if (reader == null) {
+            return null;
+        }
+        StringBuilderWriter stringWriter = new StringBuilderWriter();
+        copy(reader, stringWriter);
+        return stringWriter.toString();
+    }
+
+    /**
      * Copy the contents of the given InputStream to the given OutputStream.
      * <p>Leaves both streams open when done.
      *
@@ -166,6 +194,33 @@ public abstract class IOUtils implements Utils {
             logger.trace("Copied {} bytes[buffer size : {}] from InputStream[{}] to OutputStream[{}]", byteCount, BUFFER_SIZE, in, out);
         }
         return byteCount;
+    }
+
+    /**
+     * Copy the contents of the given Reader to the given Writer.
+     * <p>Leaves both streams open when done.
+     *
+     * @param reader the Reader to copy from
+     * @param writer the Writer to copy to
+     * @return the number of chars copied
+     * @throws IOException in case of I/O errors
+     */
+    public static int copy(Reader reader, Writer writer) throws IOException {
+        requireNonNull(reader, "No Reader specified");
+        requireNonNull(writer, "No Writer specified");
+
+        int charsCount = 0;
+        char[] buffer = new char[BUFFER_SIZE];
+        int charsRead;
+        while ((charsRead = reader.read(buffer)) != -1) {
+            writer.write(buffer, 0, charsRead);
+            charsCount += charsRead;
+        }
+        writer.flush();
+        if (logger.isTraceEnabled()) {
+            logger.trace("Copied {} bytes[buffer size : {}] from Reader[{}] to Writer[{}]", charsCount, BUFFER_SIZE, reader, writer);
+        }
+        return charsCount;
     }
 
     /**
