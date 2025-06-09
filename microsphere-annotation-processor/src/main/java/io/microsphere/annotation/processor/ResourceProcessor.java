@@ -34,7 +34,6 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static io.microsphere.annotation.processor.util.FilerUtils.exists;
 import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
 import static io.microsphere.annotation.processor.util.MessagerUtils.printWarning;
 import static io.microsphere.util.ExceptionUtils.wrap;
@@ -209,5 +208,9 @@ public class ResourceProcessor {
             }
             return null;
         }));
+    }
+
+    public static boolean exists(FileObject resource) {
+        return resource != null && resource.getLastModified() > 0;
     }
 }
