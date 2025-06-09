@@ -25,6 +25,7 @@ import io.microsphere.annotation.processor.model.StringArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
@@ -37,6 +38,7 @@ import java.util.List;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
 import static java.lang.Boolean.TRUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -48,23 +50,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class JSONElementVisitorTest extends AbstractAnnotationProcessingTest {
 
+    private boolean supported;
+
     private StringBuilder jsonBuilder;
 
     private JSONElementVisitor visitor;
 
+
     @BeforeEach
     void setUp() {
+        this.supported = true;
         this.jsonBuilder = new StringBuilder();
         this.visitor = new JSONElementVisitor() {
 
             @Override
+            protected boolean supports(Element e) {
+                super.supports(e);
+                return supported;
+            }
+
+            @Override
             protected boolean doVisitPackage(PackageElement e, StringBuilder jsonBuilder) {
+                super.doVisitPackage(e, jsonBuilder);
                 jsonBuilder.append("visitPackage");
                 return TRUE;
             }
 
             @Override
             protected boolean doVisitTypeParameter(TypeParameterElement e, StringBuilder jsonBuilder) {
+                super.doVisitTypeParameter(e, jsonBuilder);
                 jsonBuilder.append("visitTypeParameter");
                 return TRUE;
             }
@@ -132,10 +146,17 @@ class JSONElementVisitorTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    void testVisitVariableOnUnsupported() {
+        supported = false;
+        assertFalse(visitor.visitVariable(null, jsonBuilder));
+    }
+
+    @Test
     void testVisitVariableAsEnumConstant() {
         VariableElement element = getField(Color.class, "RED");
         assertTrue(visitor.visitVariable(element, jsonBuilder));
         assertJson("visitVariableAsEnumConstant");
+
     }
 
     @Test
@@ -155,6 +176,12 @@ class JSONElementVisitorTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    void testVisitExecutableOnUnsupported() {
+        supported = false;
+        assertFalse(visitor.visitExecutable(null, jsonBuilder));
+    }
+
+    @Test
     void testVisitExecutableAsConstructor() {
         ExecutableElement constructor = getConstructor(testClass);
         assertTrue(visitor.visitExecutable(constructor, jsonBuilder));
@@ -166,6 +193,13 @@ class JSONElementVisitorTest extends AbstractAnnotationProcessingTest {
         ExecutableElement method = getMethod(testClass, "echo", String.class);
         assertTrue(visitor.visitExecutable(method, jsonBuilder));
         assertJson("visitExecutableAsMethod");
+    }
+
+    @Test
+    void testVisitTypeOnUnsupported() {
+        supported = false;
+        TypeElement typeElement = getTypeElement(Serializable.class);
+        assertFalse(visitor.visitType(typeElement, jsonBuilder));
     }
 
     @Test
@@ -194,6 +228,12 @@ class JSONElementVisitorTest extends AbstractAnnotationProcessingTest {
         TypeElement typeElement = getTypeElement(TestAnnotation.class);
         assertTrue(visitor.visitType(typeElement, jsonBuilder));
         assertTrue(jsonBuilder.toString().startsWith("visitTypeAsAnnotationType"));
+    }
+
+    @Test
+    void testVisitTypeParameterOnUnsupported() {
+        supported = false;
+        assertFalse(visitor.visitTypeParameter(null, jsonBuilder));
     }
 
     @Test
