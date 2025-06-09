@@ -24,8 +24,9 @@ import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.exists;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link FilerProcessor} Test
@@ -47,7 +48,14 @@ class FilerProcessorTest extends AbstractAnnotationProcessingTest {
     void testProcessInFiler() {
         JavaFileObject sourceFile = processor.processInFiler(filer -> filer.createSourceFile("io.microsphere.annotation.processor.test.Test"));
         assertNotNull(sourceFile);
-        assertTrue(exists(sourceFile));
+        assertFalse(exists(sourceFile));
+    }
+
+    @Test
+    void testProcessInFilerOnFailed() {
+        assertNull(processor.processInFiler(filer -> {
+            throw new RuntimeException();
+        }));
     }
 
     @Test
