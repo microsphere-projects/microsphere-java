@@ -20,6 +20,7 @@ package io.microsphere.annotation.processor;
 
 import org.junit.jupiter.api.Test;
 
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 
 import static io.microsphere.annotation.processor.util.FilerUtils.exists;
@@ -47,5 +48,11 @@ class FilerProcessorTest extends AbstractAnnotationProcessingTest {
         JavaFileObject sourceFile = processor.processInFiler(filer -> filer.createSourceFile("io.microsphere.annotation.processor.test.Test"));
         assertNotNull(sourceFile);
         assertTrue(exists(sourceFile));
+    }
+
+    @Test
+    void testGetJavaFileManager() {
+        JavaFileManager javaFileManager = processor.getJavaFileManager();
+        assertNotNull(javaFileManager);
     }
 }
