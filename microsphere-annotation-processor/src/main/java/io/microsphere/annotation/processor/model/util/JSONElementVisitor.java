@@ -26,7 +26,6 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.AbstractElementVisitor6;
 import javax.lang.model.util.ElementKindVisitor6;
-import java.util.Iterator;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
@@ -67,14 +66,8 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
         }
 
         // The declared members of the type element
-        List<? extends Element> members = e.getEnclosedElements();
-        Iterator<? extends Element> iterator = members.iterator();
-
-        while (iterator.hasNext()) {
-            Element member = iterator.next();
-            if (member.accept(this, jsonBuilder)) {
-                appended = true;
-            }
+        if (visitMembers(e.getEnclosedElements(), jsonBuilder)) {
+            appended = true;
         }
 
         return appended;
@@ -92,7 +85,16 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
         }
 
         // The declared members of the type element
-        for (Element member : e.getEnclosedElements()) {
+        if (visitMembers(e.getEnclosedElements(), jsonBuilder)) {
+            appended = true;
+        }
+
+        return appended;
+    }
+
+    protected boolean visitMembers(List<? extends Element> members, StringBuilder jsonBuilder) {
+        boolean appended = false;
+        for (Element member : members) {
             if (member.accept(this, jsonBuilder)) {
                 appended = true;
             }
