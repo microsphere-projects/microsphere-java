@@ -16,10 +16,7 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static io.microsphere.convert.StringToClassConverter.INSTANCE;
 
 /**
  * {@link StringToClassConverter} Test
@@ -27,15 +24,20 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToClassConverterTest {
+public class StringToClassConverterTest extends BaseConverterTest<String, Class> {
 
-    @Test
-    public void test() {
-        StringToClassConverter converter = StringToClassConverter.INSTANCE;
-        // The class from the bootstrap ClassLoader
-        assertEquals(Class.class, converter.convert("java.lang.Class"));
-        // The class from the application ClassLoader
-        assertEquals(StringToClassConverter.class, converter.convert("io.microsphere.convert.StringToClassConverter"));
-        assertNull(converter.convert("not.found.class"));
+    @Override
+    protected AbstractConverter<String, Class> createConverter() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected String getSource() throws Throwable {
+        return "io.microsphere.convert.StringToClassConverter";
+    }
+
+    @Override
+    protected Class getTarget() throws Throwable {
+        return StringToClassConverter.class;
     }
 }

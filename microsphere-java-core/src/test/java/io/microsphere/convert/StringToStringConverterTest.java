@@ -16,35 +16,27 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.microsphere.convert.StringToStringConverter.INSTANCE;
 
 /**
  * {@link StringToStringConverter} Test
  *
  * @since 1.0.0
  */
-public class StringToStringConverterTest {
+public class StringToStringConverterTest extends BaseConverterTest<String, String> {
 
-    private StringToStringConverter converter;
-
-    @BeforeEach
-    public void init() {
-        converter = new StringToStringConverter();
+    @Override
+    protected AbstractConverter<String, String> createConverter() {
+        return INSTANCE;
     }
 
-    @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, String.class));
+    @Override
+    protected String getSource() throws Throwable {
+        return "1";
     }
 
-    @Test
-    public void testConvert() {
-        assertEquals("1", converter.convert("1"));
-        assertNull(converter.convert(null));
+    @Override
+    protected String getTarget() throws Throwable {
+        return "1";
     }
 }

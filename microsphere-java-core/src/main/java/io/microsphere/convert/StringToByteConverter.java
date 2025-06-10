@@ -16,25 +16,22 @@
  */
 package io.microsphere.convert;
 
-import java.util.Optional;
-
-import static java.util.Optional.ofNullable;
+import static java.lang.Byte.valueOf;
 
 /**
- * The class to convert {@link String} to {@link Optional}
+ * The class to convert {@link String} to {@link Byte}
  *
  * @since 1.0.0
  */
-public class StringToOptionalConverter implements StringConverter<Optional> {
+public class StringToByteConverter extends AbstractConverter<String, Byte> implements StringConverter<Byte> {
+
+    /**
+     * Singleton instance of {@link StringToByteConverter}.
+     */
+    public static final StringToByteConverter INSTANCE = new StringToByteConverter();
 
     @Override
-    public Optional convert(String source) {
-        return ofNullable(source);
-    }
-
-
-    @Override
-    public int getPriority() {
-        return MIN_PRIORITY;
+    protected Byte doConvert(String source) {
+        return valueOf(source);
     }
 }

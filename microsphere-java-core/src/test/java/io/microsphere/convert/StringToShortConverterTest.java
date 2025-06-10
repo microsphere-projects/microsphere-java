@@ -16,40 +16,36 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.convert.StringToShortConverter.INSTANCE;
 import static java.lang.Short.valueOf;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link StringToShortConverter} Test
  *
  * @since 1.0.0
  */
-public class StringToShortConverterTest {
+public class StringToShortConverterTest extends BaseConverterTest<String, Short> {
 
-    private StringToShortConverter converter;
+    @Override
+    protected AbstractConverter<String, Short> createConverter() {
+        return INSTANCE;
+    }
 
-    @BeforeEach
-    public void init() {
-        converter = new StringToShortConverter();
+    @Override
+    protected String getSource() throws Throwable {
+        return "1";
+    }
+
+    @Override
+    protected Short getTarget() throws Throwable {
+        return valueOf((short) 1);
     }
 
     @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, Short.class));
-    }
-
-    @Test
-    public void testConvert() {
-        assertEquals(valueOf("1"), converter.convert("1"));
-        assertNull(converter.convert(null));
-        assertThrows(NumberFormatException.class, () -> {
-            converter.convert("ttt");
-        });
+    public void testConvertOnFailed() {
+        assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

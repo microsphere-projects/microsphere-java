@@ -24,10 +24,15 @@ import static io.microsphere.util.CharSequenceUtils.length;
  *
  * @since 1.0.0
  */
-public class StringToCharacterConverter implements StringConverter<Character> {
+public class StringToCharacterConverter extends AbstractConverter<String, Character> implements StringConverter<Character> {
+
+    /**
+     * Singleton instance of {@link StringToCharacterConverter}.
+     */
+    public static final StringToCharacterConverter INSTANCE = new StringToCharacterConverter();
 
     @Override
-    public Character convert(String source) {
+    protected Character doConvert(String source) {
         int length = length(source);
         if (length == 0) {
             return null;
@@ -36,10 +41,5 @@ public class StringToCharacterConverter implements StringConverter<Character> {
             throw new IllegalArgumentException("The source String is more than one character!");
         }
         return source.charAt(0);
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 8;
     }
 }

@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.FastByteArrayInputStream;
 
 import java.io.InputStream;
@@ -30,7 +31,12 @@ import static java.nio.charset.Charset.forName;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToInputStreamConverter implements StringConverter<InputStream> {
+public class StringToInputStreamConverter extends AbstractConverter<String, InputStream> implements StringConverter<InputStream> {
+
+    /**
+     * Singleton instance of {@link StringToInputStreamConverter}.
+     */
+    public static final StringToInputStreamConverter INSTANCE = new StringToInputStreamConverter();
 
     private final Charset charset;
 
@@ -47,8 +53,18 @@ public class StringToInputStreamConverter implements StringConverter<InputStream
     }
 
     @Override
-    public InputStream convert(String source) {
+    protected InputStream doConvert(String source) {
         byte[] bytes = source.getBytes(charset);
         return new FastByteArrayInputStream(bytes);
+    }
+
+    /**
+     * Get the {@link Charset}
+     *
+     * @return the {@link Charset}
+     */
+    @Nonnull
+    public Charset getCharset() {
+        return charset;
     }
 }
