@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Long.valueOf;
 
 /**
@@ -24,15 +23,15 @@ import static java.lang.Long.valueOf;
  *
  * @since 1.0.0
  */
-public class StringToLongConverter implements StringConverter<Long> {
+public class StringToLongConverter extends AbstractConverter<String, Long> implements StringConverter<Long> {
+
+    /**
+     * Singleton instance of {@link StringToLongConverter}.
+     */
+    public static final StringToLongConverter INSTANCE = new StringToLongConverter();
 
     @Override
-    public Long convert(String source) {
-        return isNotEmpty(source) ? valueOf(source) : null;
-    }
-
-    @Override
-    public int getPriority() {
-        return NORMAL_PRIORITY + 1;
+    protected Long doConvert(String source) {
+        return valueOf(source);
     }
 }

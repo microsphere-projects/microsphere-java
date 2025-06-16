@@ -14,45 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.io;
+package io.microsphere.convert;
 
-import io.microsphere.convert.ByteArrayToObjectConverter;
-import io.microsphere.convert.ObjectToByteArrayConverter;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.convert.ByteArrayToObjectConverter.INSTANCE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * {@link ObjectToByteArrayConverter} Test
+ * {@link ByteArrayToObjectConverter} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ObjectToByteArrayConverter
  * @since 1.0.0
  */
-public class ObjectToByteArrayConverterTest {
+public class ByteArrayToObjectConverterTest extends BaseConverterTest<byte[], Object> {
 
-    private ByteArrayToObjectConverter instance = INSTANCE;
+    @Override
+    protected AbstractConverter<byte[], Object> createConverter() {
+        return INSTANCE;
+    }
 
-    @Test
-    public void testCovert() {
+    @Override
+    protected byte[] getSource() {
         ObjectToByteArrayConverter converter = ObjectToByteArrayConverter.INSTANCE;
-        String source = "Hello,World";
-        byte[] bytes = converter.convert(source);
-        Object target = instance.convert(bytes);
-        assertEquals(source, target);
+        return converter.convert(getTarget());
+    }
+
+    @Override
+    protected Object getTarget() {
+        return "Hello,World";
     }
 
     @Test
-    public void testCovertOnNull() {
-        assertNull(instance.convert(null));
-        assertNull(instance.convert(new byte[0]));
-    }
-
-    @Test
-    public void testCovertOnFailed() {
-        assertThrowsExactly(RuntimeException.class, () -> instance.convert(new byte[]{1}));
+    public void testConvertOnFailed() {
+        assertThrows(RuntimeException.class, () -> converter.convert(new byte[1]));
     }
 }

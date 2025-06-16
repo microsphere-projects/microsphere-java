@@ -20,6 +20,7 @@ import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
+import static io.microsphere.util.jar.JarUtils.MANIFEST_RESOURCE_PATH;
 import static io.microsphere.util.jar.JarUtils.assertJarURLProtocol;
 import static io.microsphere.util.jar.JarUtils.extract;
 import static io.microsphere.util.jar.JarUtils.findJarEntry;
@@ -28,6 +29,7 @@ import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -52,6 +54,11 @@ public class JarUtilsTest {
         deleteDirectory(targetDirectory);
         targetDirectory.mkdirs();
         this.resourceURL = getClassResource(classLoader, Nonnull.class);
+    }
+
+    @Test
+    public void testConstants() {
+        assertSame("META-INF/MANIFEST.MF", MANIFEST_RESOURCE_PATH);
     }
 
     @Test

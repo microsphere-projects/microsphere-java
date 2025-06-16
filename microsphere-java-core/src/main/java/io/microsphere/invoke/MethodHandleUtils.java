@@ -17,6 +17,7 @@
 package io.microsphere.invoke;
 
 import io.microsphere.lang.function.ThrowableBiFunction;
+import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
@@ -33,12 +34,14 @@ import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublic;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.ConstructorUtils.getDeclaredConstructor;
 import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.reflect.MemberUtils.isPublic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.isCallerSensitiveMethod;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static java.lang.invoke.MethodHandles.Lookup.PACKAGE;
 import static java.lang.invoke.MethodHandles.Lookup.PRIVATE;
 import static java.lang.invoke.MethodHandles.Lookup.PROTECTED;
@@ -53,6 +56,8 @@ import static java.util.Objects.hash;
  * @since 1.0.0
  */
 public abstract class MethodHandleUtils implements Utils {
+
+    private static final Logger logger = getLogger(MethodHandleUtils.class);
 
     /**
      * A single-bit mask representing {@code module} access,
@@ -290,6 +295,19 @@ public abstract class MethodHandleUtils implements Utils {
      */
     public static MethodHandle findStatic(Class<?> requestedClass, String methodName, Class... parameterTypes) {
         return find(requestedClass, methodName, parameterTypes, (lookup, methodType) -> lookup.findStatic(requestedClass, methodName, methodType));
+    }
+
+    /**
+     * handle the failure of {@link MethodHandle#invokeExact(Object...)}
+     *
+     * @param e            {@link Throwable}
+     * @param methodHandle {@link MethodHandle}
+     * @param args         the arguments of {@link MethodHandle#invokeExact(Object...)}
+     */
+    public static void handleInvokeExactFailure(Throwable e, MethodHandle methodHandle, Object... args) {
+        if (logger.isWarnEnabled()) {
+            logger.warn("Failed to invokeExact on the {} with arguments : {}", methodHandle, arrayToString(args), e);
+        }
     }
 
     protected static MethodHandle find(Class<?> requestedClass, String methodName, Class[] parameterTypes,

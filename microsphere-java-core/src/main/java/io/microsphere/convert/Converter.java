@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.util.ServiceLoader;
@@ -43,7 +44,7 @@ public interface Converter<S, T> extends Prioritized {
      * @return if accepted, return <code>true</code>, or <code>false</code>
      */
     default boolean accept(Class<?> sourceType, Class<?> targetType) {
-        return isAssignableFrom(sourceType, getSourceType()) && isAssignableFrom(targetType, getTargetType());
+        return isAssignableFrom(getSourceType(), sourceType) && isAssignableFrom(getTargetType(),targetType);
     }
 
     /**
@@ -52,7 +53,8 @@ public interface Converter<S, T> extends Prioritized {
      * @param source the source-typed value
      * @return the target-typed value
      */
-    T convert(S source);
+    @Nullable
+    T convert(@Nullable S source);
 
     /**
      * Get the source type

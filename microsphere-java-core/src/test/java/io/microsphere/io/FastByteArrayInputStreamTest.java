@@ -42,7 +42,6 @@ public class FastByteArrayInputStreamTest {
         inputStream2.close();
     }
 
-
     @Test
     public void testRead() {
         assertEquals('H', inputStream.read());
@@ -117,5 +116,15 @@ public class FastByteArrayInputStreamTest {
         inputStream2.reset();
         assertEquals(TEST_VALUE.length(), inputStream.available());
         assertEquals(TEST_VALUE.length() - TEST_OFFSET, inputStream2.available());
+    }
+
+    @Test
+    public void testEquals() {
+        assertEquals(inputStream, inputStream2);
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(inputStream.hashCode(), inputStream2.hashCode());
     }
 }
