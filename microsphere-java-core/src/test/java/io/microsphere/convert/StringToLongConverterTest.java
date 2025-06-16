@@ -16,39 +16,36 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static io.microsphere.convert.StringToLongConverter.INSTANCE;
+import static java.lang.Long.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link StringToLongConverter} Test
  *
  * @since 1.0.0
  */
-public class StringToLongConverterTest {
+public class StringToLongConverterTest extends BaseConverterTest<String, Long> {
 
-    private StringToLongConverter converter;
+    @Override
+    protected AbstractConverter<String, Long> createConverter() {
+        return INSTANCE;
+    }
 
-    @BeforeEach
-    public void init() {
-        converter = new StringToLongConverter();
+    @Override
+    protected String getSource() throws Throwable {
+        return "1";
+    }
+
+    @Override
+    protected Long getTarget() throws Throwable {
+        return valueOf(1);
     }
 
     @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, Long.class));
-    }
-
-    @Test
-    public void testConvert() {
-        assertEquals(Long.valueOf("1"), converter.convert("1"));
-        assertNull(converter.convert(null));
-        assertThrows(NumberFormatException.class, () -> {
-            converter.convert("ttt");
-        });
+    public void testConvertOnFailed() {
+        assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

@@ -26,12 +26,12 @@ import java.util.Properties;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class MapToPropertiesConverter implements Converter<Map, Properties> {
+public class MapToPropertiesConverter extends AbstractConverter<Map, Properties> {
 
     public static final MapToPropertiesConverter INSTANCE = new MapToPropertiesConverter();
 
     @Override
-    public Properties convert(Map source) {
+    public Properties doConvert(Map source) {
         Properties properties = new Properties();
         properties.putAll(source);
         return properties;

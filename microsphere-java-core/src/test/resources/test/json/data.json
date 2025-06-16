@@ -1,0 +1,16 @@
+{
+  "name": "Mercy",
+  "age": 18,
+  "male": true,
+  "height": 1.7,
+  "weight": 60.0,
+  "birthday": 1000000,
+  "object": {
+    "name": null,
+    "grade": false
+  },
+  "names": [
+    "\"",
+    "aa"
+  ]
+}

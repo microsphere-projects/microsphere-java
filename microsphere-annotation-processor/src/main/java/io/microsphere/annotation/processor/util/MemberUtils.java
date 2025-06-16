@@ -19,30 +19,18 @@ package io.microsphere.annotation.processor.util;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
-import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.ElementUtils.filterElements;
 import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
-import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofTypeElement;
-import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.Predicates.and;
-import static io.microsphere.reflect.TypeUtils.getTypeNames;
-import static io.microsphere.util.ArrayUtils.isNotEmpty;
-import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static javax.lang.model.element.Modifier.PUBLIC;
-import static javax.lang.model.element.Modifier.STATIC;
 
 /**
  * The utilities class for the members in the package "javax.lang.model.", such as "field", "method", "constructor"
@@ -51,27 +39,6 @@ import static javax.lang.model.element.Modifier.STATIC;
  * @since 1.0.0
  */
 public interface MemberUtils extends Utils {
-
-    static boolean matchesElementKind(Element member, ElementKind kind) {
-        return member == null || kind == null ? false : kind.equals(member.getKind());
-    }
-
-    static boolean isPublicNonStatic(Element member) {
-        return hasModifiers(member, PUBLIC) && !hasModifiers(member, STATIC);
-    }
-
-    static boolean hasModifiers(Element member, Modifier... modifiers) {
-        if (member == null || modifiers == null) {
-            return false;
-        }
-        Set<Modifier> actualModifiers = member.getModifiers();
-        for (Modifier modifier : modifiers) {
-            if (!actualModifiers.contains(modifier)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     static List<? extends Element> getDeclaredMembers(TypeMirror type) {
         return type == null ? emptyList() : getDeclaredMembers(ofTypeElement(type));
@@ -89,66 +56,47 @@ public interface MemberUtils extends Utils {
         return type == null ? emptyList() : findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
 
-    static List<? extends Element> findDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
+    static List<? extends Element> getDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes) {
+        return includeHierarchicalTypes ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+    }
+
+    static List<? extends Element> getDeclaredMembers(TypeElement type, boolean includeHierarchicalTypes) {
+        return includeHierarchicalTypes ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
+    }
+
+    static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
         return type == null ? emptyList() : findDeclaredMembers(ofTypeElement(type), memberFilters);
     }
 
-    static List<? extends Element> findDeclaredMembers(TypeElement type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findDeclaredMembers(TypeElement type, Predicate<? super T>... memberFilters) {
         if (type == null) {
             return emptyList();
         }
-        return filterMembers(type.getEnclosedElements(), memberFilters);
+        return filterElements((List<T>) type.getEnclosedElements(), memberFilters);
     }
 
-    static List<? extends Element> findAllDeclaredMembers(TypeMirror type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findAllDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
         return type == null ? emptyList() : findAllDeclaredMembers(ofTypeElement(type), memberFilters);
     }
 
-    static List<? extends Element> findAllDeclaredMembers(TypeElement type, Predicate<? super Element>... memberFilters) {
+    static <T extends Element> List<T> findAllDeclaredMembers(TypeElement type, Predicate<? super T>... memberFilters) {
         if (type == null) {
             return emptyList();
         }
-        List<? extends Element> declaredMembers = getAllDeclaredTypes(type)
+        List<T> declaredMembers = (List<T>) getAllDeclaredTypes(type)
                 .stream()
                 .map(MemberUtils::getDeclaredMembers)
                 .flatMap(Collection::stream)
                 .collect(toList());
-        return filterMembers(declaredMembers, memberFilters);
+        return filterElements(declaredMembers, memberFilters);
     }
 
-    static List<? extends Element> filterMembers(List<? extends Element> members, Predicate<? super Element>... memberFilters) {
-        if (isEmpty(members)) {
-            return emptyList();
-        }
-        if (isNotEmpty(memberFilters)) {
-            Predicate predicate = and(memberFilters);
-            members = (List) members.stream().filter(predicate).collect(toList());
-        }
-        return members.isEmpty() ? emptyList() : members;
+    static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super T>... memberFilters) {
+        return includeHierarchicalTypes ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
 
-    static boolean matchParameterTypes(List<? extends VariableElement> parameters, Type... parameterTypes) {
-        return parameters == null || parameterTypes == null ? false : matchParameterTypeNames(parameters, getTypeNames(parameterTypes));
+    static <T extends Element> List<T> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super T>... memberFilters) {
+        return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
 
-    static boolean matchParameterTypeNames(List<? extends VariableElement> parameters, CharSequence... parameterTypeNames) {
-        if (parameters == null || parameterTypeNames == null) {
-            return false;
-        }
-
-        int length = length(parameterTypeNames);
-        int size = parameters.size();
-
-        if (size != length) {
-            return false;
-        }
-
-        for (int i = 0; i < size; i++) {
-            VariableElement parameter = parameters.get(i);
-            if (!isSameType(parameter, parameterTypeNames[i])) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

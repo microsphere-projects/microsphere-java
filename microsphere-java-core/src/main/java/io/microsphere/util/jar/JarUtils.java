@@ -45,6 +45,12 @@ import static java.util.Collections.unmodifiableList;
 public abstract class JarUtils implements Utils {
 
     /**
+     * The resource path of Manifest file in JAR archive.
+     * Typically located under {@code META-INF/MANIFEST.MF} in standard Java archives.
+     */
+    public static final String MANIFEST_RESOURCE_PATH = "META-INF/MANIFEST.MF";
+
+    /**
      * Create a {@link JarFile} from specified {@link URL} of {@link JarFile}
      *
      * @param jarURL {@link URL} of {@link JarFile} or {@link JarEntry}

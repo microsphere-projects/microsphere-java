@@ -27,16 +27,15 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.processor.util.ElementUtils.filterElements;
+import static io.microsphere.annotation.processor.util.ElementUtils.isPublicNonStatic;
+import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypeNames;
+import static io.microsphere.annotation.processor.util.ElementUtils.matchParameterTypes;
 import static io.microsphere.annotation.processor.util.MemberUtils.getDeclaredMembers;
-import static io.microsphere.annotation.processor.util.MemberUtils.isPublicNonStatic;
-import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypeNames;
-import static io.microsphere.annotation.processor.util.MemberUtils.matchParameterTypes;
-import static io.microsphere.annotation.processor.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.annotation.processor.util.TypeUtils.isSameType;
 import static io.microsphere.annotation.processor.util.TypeUtils.ofDeclaredType;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
@@ -76,28 +75,11 @@ public interface MethodUtils extends Utils {
     }
 
     static List<ExecutableElement> findDeclaredMethods(TypeElement type, Predicate<? super ExecutableElement>... methodFilters) {
-        if (type == null) {
-            return emptyList();
-        }
-        return findDeclaredMethods(type.asType(), methodFilters);
+        return type == null ? emptyList() : findDeclaredMethods(type.asType(), methodFilters);
     }
 
     static List<ExecutableElement> findDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
-        if (type == null) {
-            return emptyList();
-        }
-
-        List<? extends Element> declaredMembers = getDeclaredMembers(type);
-        if (declaredMembers.isEmpty()) {
-            return emptyList();
-        }
-
-        List<ExecutableElement> declaredMethods = methodsIn(declaredMembers);
-        if (declaredMethods.isEmpty()) {
-            return emptyList();
-        }
-
-        return filterMethods(declaredMethods, methodFilters);
+        return filterDeclaredMethods(type, false, methodFilters);
     }
 
     static List<ExecutableElement> findAllDeclaredMethods(TypeElement type, Type... excludedTypes) {
@@ -130,20 +112,22 @@ public interface MethodUtils extends Utils {
     }
 
     static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
+        return filterDeclaredMethods(type, true, methodFilters);
+    }
+
+    static List<ExecutableElement> filterDeclaredMethods(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super ExecutableElement>... methodFilters) {
         if (type == null) {
             return emptyList();
         }
 
-        List<ExecutableElement> allDeclaredMethods = getAllDeclaredTypes(type).stream()
-                .map(MethodUtils::getDeclaredMethods)
-                .flatMap(Collection::stream)
-                .collect(toList());
-
-        if (allDeclaredMethods.isEmpty()) {
+        List<? extends Element> declaredMembers = getDeclaredMembers(type, includeHierarchicalTypes);
+        if (isEmpty(declaredMembers)) {
             return emptyList();
         }
 
-        return filterMethods(allDeclaredMethods, methodFilters);
+        List<ExecutableElement> methods = methodsIn(declaredMembers);
+
+        return filterElements(methods, methodFilters);
     }
 
     static boolean isMethod(ExecutableElement method) {
@@ -243,17 +227,21 @@ public interface MethodUtils extends Utils {
         return matchesMethod(method, methodName, parameterTypeNames);
     }
 
+    static boolean matchesMethodName(ExecutableElement method, String methodName) {
+        return Objects.equals(getMethodName(method), methodName);
+    }
+
     static boolean matchesMethod(ExecutableElement method, String methodName, Type... parameterTypes) {
         if (method == null || methodName == null || parameterTypes == null) {
             return false;
         }
 
         // matches the name of method
-        if (!Objects.equals(getMethodName(method), methodName)) {
+        if (!matchesMethodName(method, methodName)) {
             return false;
         }
 
-        if (!matchParameterTypes(method.getParameters(), parameterTypes)) {
+        if (!matchParameterTypes(method, parameterTypes)) {
             return false;
         }
 
