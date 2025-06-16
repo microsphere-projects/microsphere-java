@@ -16,35 +16,27 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static io.microsphere.convert.StringToCharArrayConverter.INSTANCE;
 
 /**
  * {@link StringToCharArrayConverter} Test
  *
  * @since 1.0.0
  */
-public class StringToCharArrayConverterTest {
+public class StringToCharArrayConverterTest extends BaseConverterTest<String, char[]> {
 
-    private StringToCharArrayConverter converter;
-
-    @BeforeEach
-    public void init() {
-        converter = new StringToCharArrayConverter();
+    @Override
+    protected AbstractConverter<String, char[]> createConverter() {
+        return INSTANCE;
     }
 
-    @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, char[].class));
+    @Override
+    protected String getSource() throws Throwable {
+        return "123";
     }
 
-    @Test
-    public void testConvert() {
-        assertArrayEquals(new char[]{'1', '2', '3'}, converter.convert("123"));
-        assertNull(converter.convert(null));
+    @Override
+    protected char[] getTarget() throws Throwable {
+        return new char[]{'1', '2', '3'};
     }
 }

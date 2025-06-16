@@ -14,38 +14,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Optional;
-
+import static io.microsphere.convert.ObjectToIntegerConverter.INSTANCE;
+import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link StringToOptionalConverter} Test
+ * {@link ObjectToIntegerConverter} Test
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ObjectToIntegerConverter
  * @since 1.0.0
  */
-public class StringToOptionalConverterTest {
+public class ObjectToIntegerConverterTest extends BaseConverterTest<Object, Integer> {
 
-    private StringToOptionalConverter converter;
+    @Override
+    protected AbstractConverter<Object, Integer> createConverter() {
+        return INSTANCE;
+    }
 
-    @BeforeEach
-    public void init() {
-        converter = new StringToOptionalConverter();
+    @Override
+    protected Object getSource() {
+        return valueOf(1);
+    }
+
+    @Override
+    protected Integer getTarget() {
+        return valueOf(1);
     }
 
     @Test
-    public void testAccept() {
-        assertTrue(converter.accept(String.class, Optional.class));
-    }
-
-    @Test
-    public void testConvert() {
-        assertEquals(Optional.of("1"), converter.convert("1"));
-        assertEquals(Optional.empty(), converter.convert(null));
+    public void testCovertMore() {
+        assertEquals(getTarget(), this.converter.convert("1"));
     }
 }
