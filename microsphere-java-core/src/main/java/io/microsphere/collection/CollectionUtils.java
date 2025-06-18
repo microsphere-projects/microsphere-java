@@ -39,49 +39,129 @@ import static io.microsphere.util.ArrayUtils.length;
  */
 public abstract class CollectionUtils implements Utils {
 
+    /**
+     * Checks if the provided collection is null or empty.
+     *
+     * @param collection the collection to check
+     * @return true if the collection is null or empty, false otherwise
+     */
     public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
 
+    /**
+     * Checks if the provided collection is not null and not empty.
+     *
+     * @param collection the collection to check
+     * @return true if the collection is not null and not empty, false otherwise
+     */
     public static boolean isNotEmpty(@Nullable Collection<?> collection) {
         return !isEmpty(collection);
     }
 
+    /**
+     * Converts a nullable {@link Collection} into an {@link Iterable}.
+     * If the provided collection is null, it returns an empty iterable.
+     *
+     * @param collection the collection to convert, may be null
+     * @param <E>        the type of elements in the collection
+     * @return an {@link Iterable} backed by the given collection; never null
+     * @see CollectionUtils#emptyIterable()
+     */
     @Nullable
     public static <E> Iterable<E> toIterable(@Nullable Collection<E> collection) {
         return collection;
     }
 
+    /**
+     * Converts an {@link Iterator} into an {@link Iterable} so that it can be used in enhanced for-loops.
+     * The returned iterable is backed by the given iterator, and its behavior depends on the state of the iterator.
+     *
+     * @param iterator the iterator to convert, must not be null
+     * @param <E>      the type of elements returned by the iterator
+     * @return a non-null {@link Iterable} that wraps the provided iterator
+     * @see IterableAdapter
+     */
     @Nonnull
     public static <E> Iterable<E> toIterable(Iterator<E> iterator) {
         return new IterableAdapter(iterator);
     }
 
+    /**
+     * Converts a nullable {@link Enumeration} into an {@link Iterator}.
+     * If the provided enumeration is null, it returns an empty iterator.
+     *
+     * @param enumeration the enumeration to convert, may be null
+     * @param <E>         the type of elements in the enumeration
+     * @return a non-null {@link Iterator} backed by the given enumeration
+     * @see EnumerationIteratorAdapter
+     */
     @Nonnull
     public static <E> Iterator<E> toIterator(@Nullable Enumeration<E> enumeration) {
         return new EnumerationIteratorAdapter(enumeration);
     }
 
+    /**
+     * Converts a nullable {@link Enumeration} into an {@link Iterable}.
+     * If the provided enumeration is null, it returns an empty iterable.
+     *
+     * @param enumeration the enumeration to convert, may be null
+     * @param <E>         the type of elements in the enumeration
+     * @return a non-null {@link Iterable} backed by the given enumeration
+     */
     @Nonnull
     public static <E> Iterable<E> toIterable(@Nullable Enumeration<E> enumeration) {
         return toIterable(toIterator(enumeration));
     }
 
+    /**
+     * Creates an immutable iterable that contains only the specified element.
+     * If the provided element is null, returns an empty iterable.
+     *
+     * @param element the single element to be contained in the iterable, may be null
+     * @param <E>     the type of the element
+     * @return a non-null {@link Iterable} containing the single element or an empty iterable if element is null
+     */
     @Nonnull
     public static <E> Iterable<E> singletonIterable(@Nullable E element) {
         return toIterable(singletonIterator(element));
     }
 
+    /**
+     * Creates an immutable {@link Iterator} that contains only the specified element.
+     * If the provided element is null, returns an empty iterator.
+     *
+     * @param element the single element to be contained in the iterator, may be null
+     * @param <E>     the type of the element
+     * @return a non-null {@link Iterator} containing the single element or an empty iterator if element is null
+     */
     @Nonnull
     public static <E> Iterator<E> singletonIterator(@Nullable E element) {
         return new SingletonIterator<>(element);
     }
 
+
+    /**
+     * Creates a singleton {@link Enumeration} that contains only the specified element.
+     * If the provided element is null, returns an empty enumeration.
+     *
+     * @param element the single element to be contained in the enumeration, may be null
+     * @param <E>     the type of the element
+     * @return a non-null {@link Enumeration} containing the single element or an empty enumeration if element is null
+     */
     @Nonnull
     public static <E> Enumeration<E> singletonEnumeration(@Nullable E element) {
         return new SingletonEnumeration<>(element);
     }
 
+    /**
+     * Creates an unmodifiable {@link Iterator} that wraps the provided iterator.
+     * The returned iterator is unmodifiable, and its behavior depends on the state of the wrapped iterator.
+     *
+     * @param iterator the iterator to wrap, may be null
+     * @param <E>      the type of elements returned by the iterator
+     * @return a non-null {@link Iterator} that wraps the provided iterator
+     */
     @Nonnull
     public static <E> Iterator<E> unmodifiableIterator(@Nullable Iterator<E> iterator) {
         return new UnmodifiableIterator(iterator);
