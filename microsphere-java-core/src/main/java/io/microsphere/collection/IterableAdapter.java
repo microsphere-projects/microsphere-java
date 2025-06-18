@@ -18,6 +18,8 @@ package io.microsphere.collection;
 
 import java.util.Iterator;
 
+import static io.microsphere.collection.EmptyIterator.INSTANCE;
+
 /**
  * {@link Iterable} Adapter via {@link Iterator}
  *
@@ -30,7 +32,7 @@ public class IterableAdapter<T> implements Iterable<T> {
     private final Iterator<T> iterator;
 
     public IterableAdapter(Iterator<T> iterator) {
-        this.iterator = iterator;
+        this.iterator = iterator == null ? INSTANCE : iterator;
     }
 
     @Override
