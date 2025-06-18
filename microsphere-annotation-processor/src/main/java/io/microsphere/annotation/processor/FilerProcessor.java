@@ -28,11 +28,17 @@ import static io.microsphere.annotation.processor.util.MessagerUtils.printMandat
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 
 /**
- * The {@link Filer} Processor
+ * A processor class that provides safe and exception-handled operations for interacting with the {@link Filer}
+ * in an annotation processing environment. This class wraps calls to the underlying {@link Filer} instance
+ * obtained from the provided {@link ProcessingEnvironment}, ensuring robust resource handling and simplifying
+ * error management through functional interfaces.
+ *
+ * <p>It supports executing operations on the {@link Filer} using a callback model, allowing custom logic to be
+ * applied while handling exceptions gracefully using provided handlers.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ProcessingEnvironment
- * @see Filer
+ * @see #processInFiler(ThrowableFunction)
+ * @see #processInFiler(ThrowableFunction, BiFunction)
  * @since 1.0.0
  */
 public class FilerProcessor {
