@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
@@ -76,7 +76,7 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         }
 
         Map<String, ExtendableProtocolURLStreamHandler> handlersMap = toFixedMap(
-                handlers, handler -> ofEntry(handler.getProtocol(), handler));
+                handlers, handler -> immutableEntry(handler.getProtocol(), handler));
 
         return handlersMap;
 
