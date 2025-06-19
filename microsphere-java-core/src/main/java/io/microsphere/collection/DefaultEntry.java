@@ -44,12 +44,12 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
     }
 
     @Override
-    public K getKey() {
+    public final K getKey() {
         return key;
     }
 
     @Override
-    public V getValue() {
+    public final V getValue() {
         return value;
     }
 
@@ -61,7 +61,7 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (!(o instanceof DefaultEntry)) return false;
 
         DefaultEntry<?, ?> that = (DefaultEntry<?, ?>) o;
