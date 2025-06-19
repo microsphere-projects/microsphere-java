@@ -35,7 +35,7 @@ import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
@@ -360,7 +360,7 @@ public abstract class AnnotationUtils implements Utils {
 
         List<Method> attributeMethods = findMethods(annotation.annotationType(), predicate);
 
-        return toFixedMap(attributeMethods, method -> ofEntry(method.getName(), invokeMethod(annotation, method)));
+        return toFixedMap(attributeMethods, method -> immutableEntry(method.getName(), invokeMethod(annotation, method)));
     }
 
     public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
