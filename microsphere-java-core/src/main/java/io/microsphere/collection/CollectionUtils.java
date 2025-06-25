@@ -27,6 +27,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
+import static io.microsphere.collection.EmptyIterable.INSTANCE;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.util.ArrayUtils.length;
 
@@ -43,6 +44,13 @@ public abstract class CollectionUtils implements Utils {
      *
      * @param collection the collection to check
      * @return true if the collection is null or empty, false otherwise
+     *
+     * <h3>Example</h3>
+     * <pre>{@code
+     * CollectionUtils.isEmpty(null)             // returns true
+     * CollectionUtils.isEmpty(Collections.emptyList())  // returns true
+     * CollectionUtils.isEmpty(Arrays.asList(1, 2, 3))     // returns false
+     * }</pre>
      */
     public static boolean isEmpty(@Nullable Collection<?> collection) {
         return collection == null || collection.isEmpty();
@@ -52,7 +60,14 @@ public abstract class CollectionUtils implements Utils {
      * Checks if the provided collection is not null and not empty.
      *
      * @param collection the collection to check
-     * @return true if the collection is not null and not empty, false otherwise
+     * @return true if the collection is neither null nor empty, false otherwise
+     *
+     * <h3>Example</h3>
+     * <pre>{@code
+     * CollectionUtils.isNotEmpty(null)             // returns false
+     * CollectionUtils.isNotEmpty(Collections.emptyList())  // returns false
+     * CollectionUtils.isNotEmpty(Arrays.asList(1, 2, 3))     // returns true
+     * }</pre>
      */
     public static boolean isNotEmpty(@Nullable Collection<?> collection) {
         return !isEmpty(collection);
@@ -65,24 +80,42 @@ public abstract class CollectionUtils implements Utils {
      * @param collection the collection to convert, may be null
      * @param <E>        the type of elements in the collection
      * @return an {@link Iterable} backed by the given collection; never null
-     * @see CollectionUtils#emptyIterable()
+     *
+     * <h3>Examples</h3>
+     * <pre>{@code
+     * // Convert a non-null collection to iterable
+     * Collection<String> list = Arrays.asList("a", "b", "c");
+     * Iterable<String> iterable = CollectionUtils.toIterable(list);
+     *
+     * // Convert a null collection to iterable
+     * Iterable<String> emptyIterable = CollectionUtils.toIterable(null); // returns empty iterable
+     * }</pre>
      */
-    @Nullable
+    @Nonnull
     public static <E> Iterable<E> toIterable(@Nullable Collection<E> collection) {
-        return collection;
+        return collection == null ? INSTANCE : collection;
     }
 
     /**
-     * Converts an {@link Iterator} into an {@link Iterable} so that it can be used in enhanced for-loops.
-     * The returned iterable is backed by the given iterator, and its behavior depends on the state of the iterator.
+     * Converts a nullable {@link Iterator} into an {@link Iterable}.
+     * If the provided iterator is null, it returns an empty iterable.
      *
-     * @param iterator the iterator to convert, must not be null
-     * @param <E>      the type of elements returned by the iterator
-     * @return a non-null {@link Iterable} that wraps the provided iterator
-     * @see IterableAdapter
+     * @param iterator the iterator to convert, may be null
+     * @param <E>      the type of elements in the iterator
+     * @return a non-null {@link Iterable} backed by the given iterator
+     *
+     * <h3>Examples</h3>
+     * <pre>{@code
+     * // Convert a non-null iterator to iterable
+     * Iterator<String> iterator = Arrays.asList("a", "b", "c").iterator();
+     * Iterable<String> iterable = CollectionUtils.toIterable(iterator);
+     *
+     * // Convert a null iterator to iterable
+     * Iterable<String> emptyIterable = CollectionUtils.toIterable(null); // returns empty iterable
+     * }</pre>
      */
     @Nonnull
-    public static <E> Iterable<E> toIterable(Iterator<E> iterator) {
+    public static <E> Iterable<E> toIterable(@Nullable Iterator<E> iterator) {
         return new IterableAdapter(iterator);
     }
 
@@ -184,7 +217,7 @@ public abstract class CollectionUtils implements Utils {
      */
     @Nonnull
     public static <E> Iterable<E> emptyIterable() {
-        return EmptyIterable.INSTANCE;
+        return INSTANCE;
     }
 
     /**
