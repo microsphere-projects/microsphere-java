@@ -145,19 +145,6 @@ public class UnmodifiableQueue<E> implements Queue<E>, Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        return delegate.equals(o);
-    }
-
-    @Override
-    public int hashCode() {
-        return delegate.hashCode();
-    }
-
-    @Override
     public Spliterator<E> spliterator() {
         return delegate.spliterator();
     }
@@ -175,5 +162,24 @@ public class UnmodifiableQueue<E> implements Queue<E>, Serializable {
     @Override
     public void forEach(Consumer<? super E> action) {
         delegate.forEach(action);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        return delegate.equals(o);
+    }
+
+    @Override
+    public int hashCode() {
+        return delegate.hashCode();
+    }
+
+
+    @Override
+    public String toString() {
+        return delegate.toString();
     }
 }
