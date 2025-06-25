@@ -15,7 +15,7 @@ import static java.util.Objects.hash;
  * Represents a software artifact with attributes such as artifact ID, version, and location.
  * This class is used to identify and match artifacts based on their properties.
  *
- * <p>Examples:</p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create an artifact with ID and default version (UNKNOWN)
  * Artifact artifact1 = Artifact.create("my-artifact");
