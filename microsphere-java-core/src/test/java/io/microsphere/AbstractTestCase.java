@@ -167,12 +167,6 @@ public abstract class AbstractTestCase {
         return new File(TEST_TEMP_DIR, path);
     }
 
-    protected <T extends Throwable> void assertThrowable(ThrowableAction action, Class<T> throwableType) {
-        assertThrowable(action, throwable -> {
-            assertEquals(throwableType, throwable.getClass());
-        });
-    }
-
     protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
         Throwable failure = null;
         try {
