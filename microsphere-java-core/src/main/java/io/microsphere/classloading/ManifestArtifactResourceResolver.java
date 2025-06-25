@@ -41,14 +41,14 @@ import static java.lang.System.getProperty;
  * <p>You can customize which manifest attributes are used to extract the artifact ID and version by setting system properties:</p>
  *
  * <ul>
- *   <li><strong>{@value #ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME}</strong>: A comma-separated list of attribute names to use for extracting the artifact ID. 
+ *   <li><strong>{@value #ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME}</strong>: A comma-separated list of attribute names to use for extracting the artifact ID.
  *       Default: {@value #DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE}</li>
  *   <li><strong>{@value #VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME}</strong>: A comma-separated list of attribute names to use for extracting the artifact version.
  *       Default: {@value #DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE}</li>
  * </ul>
  *
  * <h3>Example Usage</h3>
- * <pre>
+ * <pre>{@code
  * // Using default priority
  * ArtifactResourceResolver resolver = new ManifestArtifactResourceResolver();
  *
@@ -57,19 +57,19 @@ import static java.lang.System.getProperty;
  *
  * // With custom class loader and priority
  * ArtifactResourceResolver resolver = new ManifestArtifactResourceResolver(getClass().getClassLoader(), 10);
- * </pre>
+ *  }</pre>
  *
  * <h3>Manifest Attribute Examples</h3>
  * <p>The resolver will look at standard and custom manifest attributes. Here's an example MANIFEST.MF:</p>
  *
- * <pre>
+ * <pre>{@code
  * Manifest-Version: 1.0
  * Bundle-Name: my-artifact
  * Bundle-Version: 1.2.3
  * Implementation-Title: my-artifact
  * Implementation-Version: 1.2.3
  * Automatic-Module-Name: com.example.myartifact
- * </pre>
+ *  }</pre>
  *
  * <p>In this case, the resolver would extract:</p>
  * <ul>
@@ -111,11 +111,6 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
      */
     public static final String DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE = "Bundle-Version,Implementation-Version";
 
-    @ConfigurationProperty(
-            type = String[].class,
-            defaultValue = DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE,
-            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id"
-    )
     /**
      * The configuration property name for specifying attribute names in the MANIFEST file to extract the artifact ID.
      *
@@ -123,17 +118,17 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
      * By default, it uses the values defined in {@link #DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE}.
      *
      * <p>Example usage:
-     * <pre>
+     * <pre>{@code
      *   -Dmicrosphere.artifact-id.manifest-attribute-names=Custom-Name,Implementation-Title
-     * </pre>
+     * }</pre>
      */
-    public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-id.manifest-attribute-names";
-
     @ConfigurationProperty(
             type = String[].class,
-            defaultValue = DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE,
-            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version"
+            defaultValue = DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE,
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id"
     )
+    public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-id.manifest-attribute-names";
+
     /**
      * The configuration property name for specifying attribute names in the MANIFEST file to extract the artifact version.
      *
@@ -141,10 +136,15 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
      * By default, it uses the values defined in {@link #DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE}.
      *
      * <p>Example usage:
-     * <pre>
+     * <pre>{@code
      *   -Dmicrosphere.artifact-version.manifest-attribute-names=Custom-Version,Implementation-Version
-     * </pre>
+     * }</pre>
      */
+    @ConfigurationProperty(
+            type = String[].class,
+            defaultValue = DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE,
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version"
+    )
     public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-version.manifest-attribute-names";
 
     /**
