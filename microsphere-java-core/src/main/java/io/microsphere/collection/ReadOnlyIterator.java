@@ -29,7 +29,7 @@ public abstract class ReadOnlyIterator<E> implements Iterator<E> {
 
     @Override
     public final void remove() {
-        throw new UnsupportedOperationException("Read-Only");
+        throw new IllegalStateException("Read-Only");
     }
 
 }
