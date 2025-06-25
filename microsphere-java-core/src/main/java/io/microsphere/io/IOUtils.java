@@ -229,8 +229,9 @@ public abstract class IOUtils implements Utils {
      * Equivalent to {@link Closeable#close()}, except any exceptions will be ignored.
      * This is typically used in finally blocks.
      * <p>
-     * Example code:
-     * <pre>
+     *
+     * <h3>Example Usage:</h3>
+     * <pre>{@code
      *   Closeable closeable = null;
      *   try {
      *       closeable = new FileReader("foo.txt");
@@ -241,7 +242,7 @@ public abstract class IOUtils implements Utils {
      *   } finally {
      *       IOUtils.closeQuietly(closeable);
      *   }
-     * </pre>
+     * }</pre>
      *
      * @param closeable the object to close, may be null or already closed
      */
