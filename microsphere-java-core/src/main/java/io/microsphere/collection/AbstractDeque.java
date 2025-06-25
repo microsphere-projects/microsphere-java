@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
  * so subclasses should ensure consistent behavior when overriding any of these methods.</p>
  *
  * <p><b>Example Usage:</b></p>
- * <pre>
+ * <pre>{@code
  * public class SimpleDeque&lt;E&gt; extends AbstractDeque&lt;E&gt; {
  *     private final List&lt;E&gt; list = new ArrayList&lt;&gt;();
  *
@@ -73,8 +73,8 @@ import java.util.NoSuchElementException;
  *         return false;
  *     }
  * }
- * </pre>
- *
+ *  }</pre>
+
  * @param <E> The type of elements held in this deque
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
