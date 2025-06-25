@@ -87,7 +87,7 @@ public class QueueUtilsTest {
 
     @Test
     public void testSingletonDeque() {
-        QueueUtils.SingletonDeque<String> singletonDeque = (QueueUtils.SingletonDeque<String>) singletonDeque("a");
+        SingletonDeque<String> singletonDeque = (SingletonDeque<String>) singletonDeque("a");
         assertSingletonIterator(singletonDeque.iterator());
         assertSingletonIterator(singletonDeque.descendingIterator());
 
