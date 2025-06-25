@@ -27,7 +27,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
-import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.util.ArrayUtils.length;
 
@@ -140,7 +139,6 @@ public abstract class CollectionUtils implements Utils {
         return new SingletonIterator<>(element);
     }
 
-
     /**
      * Creates a singleton {@link Enumeration} that contains only the specified element.
      * If the provided element is null, returns an empty enumeration.
@@ -175,7 +173,7 @@ public abstract class CollectionUtils implements Utils {
      */
     @Nonnull
     public static <E> Iterator<E> emptyIterator() {
-        return INSTANCE;
+        return Collections.emptyIterator();
     }
 
     /**
