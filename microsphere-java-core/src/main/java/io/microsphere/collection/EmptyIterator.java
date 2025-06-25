@@ -16,8 +16,10 @@
  */
 package io.microsphere.collection;
 
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+
+import static java.util.Collections.emptyIterator;
 
 /**
  * Empty {@link Iterator} Class
@@ -25,6 +27,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Iterator
  * @see EmptyIterable
+ * @see Collections#emptyIterator()
  * @since 1.0.0
  */
 public class EmptyIterator<E> implements Iterator<E> {
@@ -34,18 +37,24 @@ public class EmptyIterator<E> implements Iterator<E> {
      */
     public static final EmptyIterator INSTANCE = new EmptyIterator();
 
+    private final Iterator<E> delegate;
+
+    public EmptyIterator() {
+        this.delegate = emptyIterator();
+    }
+
     @Override
     public boolean hasNext() {
-        return false;
+        return delegate.hasNext();
     }
 
     @Override
     public E next() {
-        throw new NoSuchElementException("EmptyIterator does not contain any element!");
+        return delegate.next();
     }
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("EmptyIterator can't remove any element!");
+        delegate.remove();
     }
 }
