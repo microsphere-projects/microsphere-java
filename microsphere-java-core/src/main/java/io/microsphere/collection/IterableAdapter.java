@@ -21,10 +21,26 @@ import java.util.Iterator;
 import static io.microsphere.collection.EmptyIterator.INSTANCE;
 
 /**
- * {@link Iterable} Adapter via {@link Iterator}
+ * An adapter that wraps an {@link Iterator} and provides an {@link Iterable} interface.
+ * <p>
+ * This allows the iteration over a sequence of elements using the enhanced for loop (for-each loop)
+ * or other constructs that expect an {@link Iterable}.
+ * </p>
+ * <p>
+ * Example usage:
+ * <pre>
+ *     Iterator<String> iterator = Arrays.asList("one", "two", "three").iterator();
+ *     Iterable<String> iterable = new IterableAdapter<>(iterator);
  *
- * @param <T> the type of elements returned by the iterator
+ *     for (String value : iterable) {
+ *         System.out.println(value);
+ *     }
+ * </pre>
+ * </p>
+ *
+ * @param <T> the type of elements returned by the iterator.
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see CollectionUtils#toIterable(Iterator)
  * @since 1.0.0
  */
 public class IterableAdapter<T> implements Iterable<T> {
