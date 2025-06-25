@@ -22,13 +22,35 @@ import java.util.Iterator;
 import static java.util.Collections.emptyIterator;
 
 /**
- * Empty {@link Iterator} Class
+ * An empty and immutable implementation of the {@link Iterator} interface.
+ * <p>
+ * This class provides a singleton instance through the public static field {@link #INSTANCE},
+ * which can be used directly without creating additional instances. It is safe for use in
+ * multi-threaded environments since it does not maintain any mutable state.
+ * </p>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example usage:</h3>
+ * <pre>{@code
+ * // Using the singleton instance
+ * Iterator<String> iterator = EmptyIterator.INSTANCE;
+ *
+ * // Iterating over the empty iterator
+ * while (iterator.hasNext()) {
+ *     String next = iterator.next(); // Will never enter the loop
+ * }
+ *
+ * // Attempting to remove from the iterator will throw an exception
+ * try {
+ *     iterator.remove();
+ * } catch (UnsupportedOperationException e) {
+ *     System.out.println("Cannot modify an empty, immutable iterator.");
+ * }
+ * }</pre>
+ *
+ * @param <E> the type of elements returned by this iterator
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Iterator
- * @see EmptyIterable
  * @see Collections#emptyIterator()
- * @since 1.0.0
  */
 public class EmptyIterator<E> implements Iterator<E> {
 
