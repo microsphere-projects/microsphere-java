@@ -220,21 +220,25 @@ public abstract class ReflectionUtils implements Utils {
     }
 
     /**
-     * Get caller class
-     * <p/>
-     * For instance,
-     * <pre>
-     *     package com.acme;
-     *     import ...;
-     *     class Foo {
-     *         public void bar(){
+     * Gets the {@link Class} of the method caller.
      *
-     *         }
+     * <p>This method attempts to retrieve the calling class using the
+     * {@code sun.reflect.Reflection} class if supported by the current JVM.
+     * If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
+     * the {@link StackTraceElement} approach.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Example {
+     *     public void testMethod() {
+     *         Class<?> callerClass = ReflectionUtils.getCallerClass();
+     *         System.out.println("Caller class: " + callerClass.getName());
      *     }
-     * </pre>
+     * }
+     * }</pre>
      *
-     * @return Get caller class
-     * @throws IllegalStateException If the caller class cannot be found
+     * @return The {@link Class} of the method caller.
+     * @throws IllegalStateException if an error occurs while trying to determine the caller class via reflection.
      */
     @Nonnull
     public static Class<?> getCallerClass() throws IllegalStateException {
