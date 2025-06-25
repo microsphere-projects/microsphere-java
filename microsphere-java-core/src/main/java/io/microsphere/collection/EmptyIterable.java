@@ -32,6 +32,6 @@ public class EmptyIterable<E> extends IterableAdapter<E> {
     public static final EmptyIterable INSTANCE = new EmptyIterable();
 
     public EmptyIterable() {
-        super(EmptyIterator.INSTANCE);
+        super(null);
     }
 }
