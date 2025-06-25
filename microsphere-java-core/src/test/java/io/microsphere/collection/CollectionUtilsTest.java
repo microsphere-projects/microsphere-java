@@ -35,10 +35,12 @@ import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.CollectionUtils.singletonIterable;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -177,6 +179,11 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_SET));
         assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_QUEUE));
         assertTrue(CollectionUtils.equals(TEST_SINGLETON_LIST, TEST_SINGLETON_DEQUE));
+
+        assertFalse(CollectionUtils.equals(TEST_SINGLETON_LIST, singletonList(1)));
+        List list = newLinkedList();
+        list.add(null);
+        assertFalse(CollectionUtils.equals(TEST_SINGLETON_LIST, list));
     }
 
     @Test
