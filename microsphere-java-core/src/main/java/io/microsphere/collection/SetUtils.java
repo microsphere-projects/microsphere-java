@@ -43,6 +43,12 @@ import static java.util.Collections.unmodifiableSet;
  */
 public abstract class SetUtils implements Utils {
 
+    /**
+     * Determine whether the specified {@link Iterable} is an instance of {@link Set}.
+     *
+     * @param elements the elements to check, may be null or empty
+     * @return true if the given elements are an instance of {@link Set}, false otherwise
+     */
     public static boolean isSet(@Nullable Iterable<?> elements) {
         return elements instanceof Set;
     }
@@ -119,10 +125,34 @@ public abstract class SetUtils implements Utils {
         return unmodifiableSet(newLinkedHashSet(elements));
     }
 
+    /**
+     * Convert the provided {@link Collection} to an unmodifiable {@link Set}.
+     * <p>
+     * This method essentially converts the given collection into a set and returns it as an unmodifiable view.
+     * If the input collection is null or empty, an empty set is returned.
+     * </p>
+     *
+     * @param elements the collection to convert
+     * @param <T>      the type of elements in the collection
+     * @return an unmodifiable {@link Set} containing all elements from the provided collection
+     */
     public static <T> Set<T> ofSet(Collection<T> elements) {
         return ofSet(elements, (T[]) null);
     }
 
+    /**
+     * Converts the provided {@link Collection} and additional elements into an unmodifiable {@link Set}.
+     * <p>
+     * This method combines the given collection and varargs elements into a single set,
+     * ensuring uniqueness, and returns it as an unmodifiable view. If both the collection and varargs are empty,
+     * an empty set is returned.
+     * </p>
+     *
+     * @param elements the primary collection to convert, may be null or empty
+     * @param others   additional elements to include in the set
+     * @param <T>      the type of elements in the collection and varargs
+     * @return an unmodifiable {@link Set} containing all unique elements from the collection and varargs
+     */
     public static <T> Set<T> ofSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
@@ -146,6 +176,17 @@ public abstract class SetUtils implements Utils {
         return unmodifiableSet(set);
     }
 
+    /**
+     * Creates a new {@link HashSet} containing all elements from the provided {@link Iterable}.
+     * <p>
+     * This method iterates through the given iterable and adds each element to the newly created set.
+     * If the input is null or empty, a new empty set will still be returned.
+     * </p>
+     *
+     * @param elements the iterable of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the iterable
+     * @return a new {@link HashSet} containing all unique elements from the provided iterable
+     */
     public static <E> Set<E> newHashSet(Iterable<E> elements) {
         Set<E> set = newHashSet();
         for (E value : elements) {
@@ -154,10 +195,32 @@ public abstract class SetUtils implements Utils {
         return set;
     }
 
+    /**
+     * Creates a new {@link HashSet} containing all elements from the provided {@link Collection}.
+     * <p>
+     * This method delegates to the {@link HashSet} constructor that accepts a collection,
+     * ensuring all elements from the input collection are included in the resulting set.
+     * </p>
+     *
+     * @param elements the collection of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link HashSet} containing all unique elements from the provided collection
+     */
     public static <E> Set<E> newHashSet(Collection<E> elements) {
         return new HashSet(elements);
     }
 
+    /**
+     * Creates a new {@link HashSet} containing all elements from the provided varargs array.
+     * <p>
+     * This method adds each element from the input array to the newly created set.
+     * If the input array is null or empty, a new empty set will still be returned.
+     * </p>
+     *
+     * @param elements the array of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the array
+     * @return a new {@link HashSet} containing all unique elements from the provided array
+     */
     public static <E> Set<E> newHashSet(E... elements) {
         int length = length(elements);
         Set<E> set = newHashSet(length);
@@ -167,22 +230,78 @@ public abstract class SetUtils implements Utils {
         return set;
     }
 
+    /**
+     * Creates a new, empty {@link HashSet} with the default initial capacity and load factor.
+     * <p>
+     * This method provides a convenient way to instantiate an empty HashSet instance.
+     * The returned set is not thread-safe and allows null elements.
+     * </p>
+     *
+     * @param <E> the type of elements in the set
+     * @return a new empty {@link HashSet}
+     */
     public static <E> Set<E> newHashSet() {
         return new HashSet<>();
     }
 
+    /**
+     * Creates a new, empty {@link HashSet} with the specified initial capacity and default load factor.
+     * <p>
+     * This method provides a convenient way to instantiate an empty HashSet instance with the given initial capacity.
+     * The returned set is not thread-safe and allows null elements.
+     * </p>
+     *
+     * @param initialCapacity the initial capacity of the returned set
+     * @param <E>             the type of elements in the set
+     * @return a new empty {@link HashSet} with the specified initial capacity
+     */
     public static <E> Set<E> newHashSet(int initialCapacity) {
         return new HashSet<>(initialCapacity);
     }
 
+    /**
+     * Creates a new, empty {@link HashSet} with the specified initial capacity and load factor.
+     * <p>
+     * This method provides a convenient way to instantiate an empty HashSet instance with the given initial capacity
+     * and load factor. The returned set is not thread-safe and allows null elements.
+     * </p>
+     *
+     * @param initialCapacity the initial capacity of the returned set
+     * @param loadFactor      the load factor of the returned set
+     * @param <E>             the type of elements in the set
+     * @return a new empty {@link HashSet} with the specified initial capacity and load factor
+     */
     public static <E> Set<E> newHashSet(int initialCapacity, float loadFactor) {
         return new HashSet<>(initialCapacity, loadFactor);
     }
 
+    /**
+     * Creates a new {@link LinkedHashSet} containing all elements from the provided {@link Iterable}.
+     * <p>
+     * This method iterates through the given iterable and adds each element to the newly created set,
+     * preserving the insertion order. If the input is null or empty, a new empty set will still be returned.
+     * </p>
+     *
+     * @param elements the iterable of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the iterable
+     * @return a new {@link LinkedHashSet} containing all unique elements from the provided iterable
+     */
     public static <E> Set<E> newLinkedHashSet(Iterable<E> elements) {
         return newLinkedHashSet(elements.iterator());
     }
 
+    /**
+     * Creates a new {@link LinkedHashSet} containing all elements from the provided {@link Iterator}.
+     * <p>
+     * This method iterates through the given iterator and adds each element to the newly created set,
+     * preserving the insertion order. If the input iterator is null or has no elements, an empty set
+     * will still be returned.
+     * </p>
+     *
+     * @param elements the iterator of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the iterator
+     * @return a new {@link LinkedHashSet} containing all unique elements from the provided iterator
+     */
     public static <E> Set<E> newLinkedHashSet(Iterator<E> elements) {
         Set<E> set = newLinkedHashSet();
         while (elements.hasNext()) {
@@ -192,10 +311,32 @@ public abstract class SetUtils implements Utils {
         return set;
     }
 
+    /**
+     * Creates a new {@link LinkedHashSet} containing all elements from the provided {@link Collection}.
+     * <p>
+     * This method delegates to the {@link LinkedHashSet} constructor that accepts a collection,
+     * ensuring all elements from the input collection are included in the resulting set.
+     * </p>
+     *
+     * @param elements the collection of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link LinkedHashSet} containing all unique elements from the provided collection
+     */
     public static <E> Set<E> newLinkedHashSet(Collection<E> elements) {
         return new LinkedHashSet(elements);
     }
 
+    /**
+     * Creates a new {@link LinkedHashSet} containing all elements from the provided varargs array.
+     * <p>
+     * This method adds each element from the input array to the newly created set, preserving insertion order.
+     * If the input array is null or empty, a new empty set will still be returned.
+     * </p>
+     *
+     * @param elements the array of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the array
+     * @return a new {@link LinkedHashSet} containing all unique elements from the provided array
+     */
     public static <E> Set<E> newLinkedHashSet(E... elements) {
         int length = length(elements);
         Set<E> set = newLinkedHashSet(length);
@@ -205,14 +346,47 @@ public abstract class SetUtils implements Utils {
         return set;
     }
 
+    /**
+     * Creates a new, empty {@link LinkedHashSet} with the default initial capacity and load factor.
+     * <p>
+     * This method provides a convenient way to instantiate an empty LinkedHashSet instance.
+     * The returned set is not thread-safe and allows null elements.
+     * </p>
+     *
+     * @param <E> the type of elements in the set
+     * @return a new empty {@link LinkedHashSet}
+     */
     public static <E> Set<E> newLinkedHashSet() {
         return new LinkedHashSet<>();
     }
 
+    /**
+     * Creates a new, empty {@link LinkedHashSet} with the specified initial capacity and default load factor.
+     * <p>
+     * This method provides a convenient way to instantiate an empty LinkedHashSet instance with the given initial capacity.
+     * The returned set is not thread-safe and allows null elements.
+     * </p>
+     *
+     * @param initialCapacity the initial capacity of the returned set
+     * @param <E>             the type of elements in the set
+     * @return a new empty {@link LinkedHashSet} with the specified initial capacity
+     */
     public static <E> Set<E> newLinkedHashSet(int initialCapacity) {
         return new LinkedHashSet<>(initialCapacity);
     }
 
+    /**
+     * Creates a new, empty {@link LinkedHashSet} with the specified initial capacity and load factor.
+     * <p>
+     * This method provides a convenient way to instantiate an empty LinkedHashSet instance with the given initial capacity
+     * and load factor. The returned set is not thread-safe and allows null elements.
+     * </p>
+     *
+     * @param initialCapacity the initial capacity of the returned set
+     * @param loadFactor      the load factor of the returned set
+     * @param <E>             the type of elements in the set
+     * @return a new empty {@link LinkedHashSet} with the specified initial capacity and load factor
+     */
     public static <E> Set<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
     }
