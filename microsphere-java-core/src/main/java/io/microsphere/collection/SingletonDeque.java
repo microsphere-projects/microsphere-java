@@ -25,19 +25,17 @@ import java.util.Objects;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 
 /**
- * A {@link Deque} implementation that holds a single immutable element.
+ * A {@link Deque} implementation that holds a single element. This deque is immutable in terms of size;
+ * operations that attempt to add or remove elements will throw {@link UnsupportedOperationException}.
  * <p>
- * This deque is serializable and provides singleton behavior, meaning it always contains exactly one element.
- * The element cannot be modified after construction, but the deque supports read-only operations.
+ * The singleton deque is useful when an unmodifiable deque with exactly one element is needed.
+ * It provides constant-time access to the element via methods such as {@link #getFirst()} and
+ * {@link #getLast()}, and supports iteration through the singleton iterator provided by
+ * {@link CollectionUtils#singletonIterator(Object)}.
  * </p>
  *
- * <p>
- * All mutation operations (e.g., {@code offerFirst}, {@code offerLast}, etc.) throw
- * {@link UnsupportedOperationException} since the structure is immutable.
- * </p>
- *
- * @param <E> The type of element held in this deque
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @param <E> The type of the single element held in this deque
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 public class SingletonDeque<E> extends AbstractDeque<E> implements Serializable {
