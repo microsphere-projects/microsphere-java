@@ -21,9 +21,17 @@ import java.util.Deque;
 import java.util.NoSuchElementException;
 
 /**
- * Abstract {@link Deque}
+ * Abstract {@link Deque} implementation that provides default implementations for some of the
+ * operations in the {@link Deque} interface.
  *
- * @param <E> The elements' type
+ * <p>This class extends {@link AbstractQueue}, which itself extends {@link java.util.AbstractCollection},
+ * and hence inherits behaviors such as size, isEmpty, etc. Subclasses need to implement the abstract
+ * methods defined by the deque contract, such as insertion, removal, and access methods.</p>
+ *
+ * <p>The default implementations in this class make assumptions about the behavior of other methods,
+ * so subclasses should ensure consistent behavior when overriding any of these methods.</p>
+ *
+ * @param <E> The type of elements held in this deque
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
