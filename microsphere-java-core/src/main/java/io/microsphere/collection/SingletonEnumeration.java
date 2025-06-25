@@ -20,10 +20,10 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * Singleton {@link Enumeration}
+ * A singleton implementation of the {@link Enumeration} interface, 
+ * designed to provide an enumeration with only a single element.
  *
- * @param <E> the type of elements
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class SingletonEnumeration<E> implements Enumeration<E> {
