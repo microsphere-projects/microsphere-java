@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.CollectionUtils.emptyIterable;
@@ -35,6 +36,7 @@ import static io.microsphere.collection.CollectionUtils.singletonIterable;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.SetUtils.newHashSet;
 import static java.util.Collections.emptyEnumeration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -167,11 +169,15 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertEquals(0, addAll(values));
         assertEquals(2, addAll(values, "A", "B"));
         assertEquals(ofList("A", "B"), values);
+
+        Set<String> set = newHashSet(TEST_ELEMENT);
+        assertEquals(0, addAll(set, TEST_ELEMENT));
     }
 
     @Test
     public void testFirst() {
         assertNull(first(TEST_NULL_ITERATOR));
+        assertNull(first(TEST_EMPTY_QUEUE.iterator()));
         assertNull(first(TEST_NULL_ITERABLE));
         assertNull(first(TEST_NULL_COLLECTION));
         assertNull(first(TEST_EMPTY_LIST));
