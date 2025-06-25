@@ -21,7 +21,7 @@ import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
 
-import static java.util.Collections.emptyIterator;
+import static io.microsphere.collection.CollectionUtils.emptyIterator;
 
 /**
  * An empty and immutable implementation of the Deque interface.
@@ -38,6 +38,8 @@ import static java.util.Collections.emptyIterator;
 public class EmptyDeque<E> extends AbstractDeque<E> implements Serializable {
 
     private static final long serialVersionUID = -1L;
+
+    public static final EmptyDeque INSTANCE = new EmptyDeque();
 
     @Override
     public Iterator<E> iterator() {
