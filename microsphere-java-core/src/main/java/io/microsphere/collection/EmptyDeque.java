@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import static java.util.Collections.emptyIterator;
 
-
 /**
  * An empty and immutable implementation of the Deque interface.
  * <p>
