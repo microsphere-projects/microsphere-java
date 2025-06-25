@@ -36,6 +36,7 @@ import java.util.function.Function;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.util.ArrayUtils.length;
+import static java.lang.Float.MIN_VALUE;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
@@ -52,28 +53,57 @@ public abstract class MapUtils implements Utils {
     /**
      * The min load factor for {@link HashMap} or {@link Hashtable}
      */
-    public static final float MIN_LOAD_FACTOR = Float.MIN_VALUE;
+    public static final float MIN_LOAD_FACTOR = MIN_VALUE;
 
     /**
      * The fixed load factor for {@link HashMap} or {@link Hashtable} = 1.00
      */
-    protected static final float FIXED_LOAD_FACTOR = 1.00f;
+    public static final float FIXED_LOAD_FACTOR = 1.00f;
 
     /**
-     * Checks if the provided map is either {@code null} or empty.
+     * Checks if the specified map is either {@code null} or empty.
      *
-     * @param map the map to check
-     * @return {@code true} if the map is null or has no entries, otherwise {@code false}
+     * <p>A map is considered empty if it contains no key-value mappings.
+     * This method provides a null-safe way to check for emptiness.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map1 = new HashMap<>();
+     * System.out.println(isEmpty(map1)); // true
+     *
+     * map1.put("one", 1);
+     * System.out.println(isEmpty(map1)); // false
+     *
+     * Map<String, Integer> map2 = null;
+     * System.out.println(isEmpty(map2)); // true
+     * }</pre>
+     *
+     * @param map the map to check, may be {@code null}
+     * @return {@code true} if the map is {@code null} or empty, otherwise {@code false}
      */
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
 
     /**
-     * Checks if the provided map is not null and contains at least one entry.
+     * Checks if the specified map is not empty and not null.
      *
-     * @param map the map to check
-     * @return {@code true} if the map is not null and has at least one entry, otherwise {@code false}
+     * <p>This method provides a null-safe way to determine if a map contains one or more key-value mappings.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map1 = new HashMap<>();
+     * System.out.println(isNotEmpty(map1)); // false
+     *
+     * map1.put("one", 1);
+     * System.out.println(isNotEmpty(map1)); // true
+     *
+     * Map<String, Integer> map2 = null;
+     * System.out.println(isNotEmpty(map2)); // false
+     * }</pre>
+     *
+     * @param map the map to check, may be {@code null}
+     * @return {@code true} if the map is neither null nor empty, otherwise {@code false}
      */
     public static boolean isNotEmpty(Map<?, ?> map) {
         return !isEmpty(map);
@@ -82,18 +112,39 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates an immutable map containing a single key-value pair.
      *
+     * <p>This method provides a convenient way to create a small, read-only map
+     * with one entry. The resulting map is thread-safe and cannot be modified
+     * after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.of("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
      * @param key   the key to be placed in the map
      * @param value the value to be associated with the key
      * @param <K>   the type of the key
      * @param <V>   the type of the value
      * @return a new immutable map containing the specified key-value pair
      */
+    @Nonnull
     public static <K, V> Map<K, V> of(K key, V value) {
         return ofMap(key, value);
     }
 
     /**
      * Creates an immutable map containing two key-value pairs.
+     *
+     * <p>This method provides a convenient way to create a small, read-only map with two entries.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.of("one", 1, "two", 2);
+     * System.out.println(map.get("one")); // Output: 1
+     * System.out.println(map.get("two")); // Output: 2
+     * }</pre>
      *
      * @param key1   the first key to be placed in the map
      * @param value1 the value to be associated with the first key
@@ -103,12 +154,24 @@ public abstract class MapUtils implements Utils {
      * @param <V>    the type of the values
      * @return a new immutable map containing the specified key-value pairs
      */
+    @Nonnull
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2) {
         return ofMap(key1, value1, key2, value2);
     }
 
     /**
      * Creates an immutable map containing three key-value pairs.
+     *
+     * <p>This method provides a convenient way to create a small, read-only map with three entries.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.of("one", 1, "two", 2, "three", 3);
+     * System.out.println(map.get("one"));   // Output: 1
+     * System.out.println(map.get("two"));   // Output: 2
+     * System.out.println(map.get("three")); // Output: 3
+     * }</pre>
      *
      * @param key1   the first key to be placed in the map
      * @param value1 the value to be associated with the first key
@@ -120,12 +183,25 @@ public abstract class MapUtils implements Utils {
      * @param <V>    the type of the values
      * @return a new immutable map containing the specified key-value pairs
      */
+    @Nonnull
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3) {
         return ofMap(key1, value1, key2, value2, key3, value3);
     }
 
     /**
      * Creates an immutable map containing four key-value pairs.
+     *
+     * <p>This method provides a convenient way to create a small, read-only map with four entries.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.of("one", 1, "two", 2, "three", 3, "four", 4);
+     * System.out.println(map.get("one"));   // Output: 1
+     * System.out.println(map.get("two"));   // Output: 2
+     * System.out.println(map.get("three")); // Output: 3
+     * System.out.println(map.get("four"));  // Output: 4
+     * }</pre>
      *
      * @param key1   the first key to be placed in the map
      * @param value1 the value to be associated with the first key
@@ -139,12 +215,26 @@ public abstract class MapUtils implements Utils {
      * @param <V>    the type of the values
      * @return a new immutable map containing the specified key-value pairs
      */
+    @Nonnull
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
         return ofMap(key1, value1, key2, value2, key3, value3, key4, value4);
     }
 
     /**
      * Creates an immutable map containing five key-value pairs.
+     *
+     * <p>This method provides a convenient way to create a small, read-only map with five entries.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.of("one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
+     * System.out.println(map.get("one"));   // Output: 1
+     * System.out.println(map.get("two"));   // Output: 2
+     * System.out.println(map.get("three")); // Output: 3
+     * System.out.println(map.get("four"));  // Output: 4
+     * System.out.println(map.get("five"));  // Output: 5
+     * }</pre>
      *
      * @param key1   the first key to be placed in the map
      * @param value1 the value to be associated with the first key
@@ -160,36 +250,60 @@ public abstract class MapUtils implements Utils {
      * @param <V>    the type of the values
      * @return a new immutable map containing the specified key-value pairs
      */
+    @Nonnull
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
         return ofMap(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5);
     }
 
     /**
-     * Creates an immutable map from a sequence of key-value pairs provided as varargs.
-     * <p>
-     * The arguments must be provided in consecutive key-value pairs. For example:
-     * {@code of("key1", "value1", "key2", "value2")}.
-     * </p>
+     * Creates an immutable map from a varargs array of key-value pairs.
      *
-     * @param values A varargs array of objects representing key-value pairs.
-     * @return A new immutable Map constructed from the provided key-value pairs.
+     * <p>This method provides a convenient way to create a small, read-only map with multiple entries.
+     * The arguments must be provided in consecutive key-value pairs. For example:
+     * {@code MapUtils.of("key1", "value1", "key2", "value2")}.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.of("one", 1, "two", 2);
+     * System.out.println(map.get("one")); // Output: 1
+     * System.out.println(map.get("two")); // Output: 2
+     *
+     * Map<String, String> emptyMap = MapUtils.of(); // returns an empty map
+     * }</pre>
+     *
+     * @param values a varargs array of objects representing key-value pairs
+     * @return a new immutable map containing the specified key-value pairs
      * @throws IllegalArgumentException if the number of arguments is not even (indicating incomplete key-value pairs)
-     * @see #ofMap(Object...)
      */
+    @Nonnull
     public static Map of(Object... values) {
         return ofMap(values);
     }
 
     /**
-     * Creates an immutable map from the provided {@link Map.Entry} elements.
+     * Creates an immutable map from the provided array of {@link Map.Entry} objects.
      *
-     * @param entries a varargs array of Map.Entry elements representing key-value pairs
+     * <p>This method offers a convenient way to construct a small, read-only map using pre-defined entries.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> entry1 = new AbstractMap.SimpleEntry<>("one", 1);
+     * Map<String, Integer> entry2 = new AbstractMap.SimpleEntry<>("two", 2);
+     * Map<String, Integer> map = MapUtils.of(entry1, entry2);
+     *
+     * System.out.println(map.get("one")); // Output: 1
+     * System.out.println(map.get("two")); // Output: 2
+     * }</pre>
+     *
+     * @param entries a varargs array of Map.Entry objects representing key-value pairs
      * @param <K>     the type of the keys
      * @param <V>     the type of the values
      * @return a new immutable map containing the specified entries
-     * @throws IllegalArgumentException if the entries array is null or has zero length
-     * @see #ofMap(Map.Entry...)
+     * @throws NullPointerException if the entries array is null
      */
+    @Nonnull
     public static <K, V> Map<K, V> of(Map.Entry<? extends K, ? extends V>... entries) {
         int length = length(entries);
         if (length < 1) {
@@ -206,27 +320,48 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates an immutable map containing a single key-value pair.
      *
+     * <p>This method provides a convenient way to create a small, read-only map with one entry.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.ofMap("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
      * @param key   the key to be placed in the map
      * @param value the value to be associated with the key
      * @param <K>   the type of the key
      * @param <V>   the type of the value
      * @return a new immutable map containing the specified key-value pair
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K key, V value) {
         return singletonMap(key, value);
     }
 
     /**
-     * Creates an immutable map from a sequence of key-value pairs provided as varargs.
-     * <p>
-     * The arguments must be provided in consecutive key-value pairs. For example:
-     * {@code ofMap("key1", "value1", "key2", "value2")}.
-     * </p>
+     * Creates an immutable map from a varargs array of key-value pairs.
      *
-     * @param keyValuePairs A varargs array of objects representing key-value pairs.
-     * @return A new immutable Map constructed from the provided key-value pairs.
+     * <p>This method provides a convenient way to create a small, read-only map with multiple entries.
+     * The arguments must be provided in consecutive key-value pairs. For example:
+     * {@code MapUtils.ofMap("key1", "value1", "key2", "value2")}.
+     * The resulting map is thread-safe and cannot be modified after creation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.ofMap("one", 1, "two", 2);
+     * System.out.println(map.get("one")); // Output: 1
+     * System.out.println(map.get("two")); // Output: 2
+     *
+     * Map<String, String> emptyMap = MapUtils.ofMap(); // returns an empty map
+     * }</pre>
+     *
+     * @param keyValuePairs a varargs array of objects representing key-value pairs
+     * @return a new immutable map containing the specified key-value pairs
      * @throws IllegalArgumentException if the number of arguments is not even (indicating incomplete key-value pairs)
      */
+    @Nonnull
     public static Map ofMap(Object... keyValuePairs) {
         int length = length(keyValuePairs);
         if (length < 1) {
@@ -244,11 +379,19 @@ public abstract class MapUtils implements Utils {
      * Creates a new empty {@link HashMap} with the default initial capacity (16) and
      * the default load factor (0.75).
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *  HashMap<String, Integer> map = MapUtils.newHashMap();
+     *  map.put("one", 1);
+     *  System.out.println(map.get("one")); // Output: 1
+     *  }</pre>
+     *
      * @param <K> the type of keys maintained by the returned map
      * @param <V> the type of mapped values
      * @return a new empty HashMap instance
      * @see HashMap#HashMap()
      */
+    @Nonnull
     public static <K, V> HashMap<K, V> newHashMap() {
         return new HashMap<>();
     }
@@ -257,18 +400,36 @@ public abstract class MapUtils implements Utils {
      * Creates a new {@link HashMap} with the specified initial capacity and
      * the default load factor (0.75).
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * HashMap<String, Integer> map = MapUtils.newHashMap(10);
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
      * @param initialCapacity The initial capacity of the returned HashMap.
      * @param <K>             The type of keys maintained by the returned map.
      * @param <V>             The type of mapped values.
      * @return A new HashMap instance with the specified initial capacity.
      * @see HashMap#HashMap(int)
      */
+    @Nonnull
     public static <K, V> HashMap<K, V> newHashMap(int initialCapacity) {
         return new HashMap<>(initialCapacity);
     }
 
     /**
      * Creates a new {@link HashMap} with the specified initial capacity and load factor.
+     *
+     * <p>The initial capacity refers to the number of buckets in the hash table, while the load factor
+     * determines how full the hash table can get before its capacity is automatically increased.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * HashMap<String, Integer> map = MapUtils.newHashMap(10, 0.75f);
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
      *
      * @param initialCapacity The initial capacity of the returned HashMap.
      * @param loadFactor      The load factor of the returned HashMap.
@@ -277,6 +438,7 @@ public abstract class MapUtils implements Utils {
      * @return A new HashMap instance with the specified initial capacity and load factor.
      * @see HashMap#HashMap(int, float)
      */
+    @Nonnull
     public static <K, V> HashMap<K, V> newHashMap(int initialCapacity, float loadFactor) {
         return new HashMap<>(initialCapacity, loadFactor);
     }
@@ -284,12 +446,28 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates a new {@link HashMap} with the same mappings as the specified map.
      *
+     * <p>This method provides a convenient way to create a new HashMap instance that contains all the key-value pairs
+     * from an existing map. The order of the entries in the resulting HashMap is not guaranteed, as HashMap does not
+     * maintain any specific order.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> originalMap = new HashMap<>();
+     * originalMap.put("one", 1);
+     * originalMap.put("two", 2);
+     *
+     * HashMap<String, Integer> copiedMap = MapUtils.newHashMap(originalMap);
+     * System.out.println(copiedMap.get("one")); // Output: 1
+     * System.out.println(copiedMap.get("two")); // Output: 2
+     * }</pre>
+     *
      * @param map The initial map whose entries are to be copied into the new HashMap.
      * @param <K> The type of keys maintained by the returned map.
      * @param <V> The type of mapped values.
      * @return A new HashMap instance initialized with the entries from the provided map.
      * @see HashMap#HashMap(Map)
      */
+    @Nonnull
     public static <K, V> HashMap<K, V> newHashMap(Map<? extends K, ? extends V> map) {
         return new HashMap<>(map);
     }
@@ -298,11 +476,19 @@ public abstract class MapUtils implements Utils {
      * Creates a new empty {@link LinkedHashMap} with the default initial capacity (16) and
      * the default load factor (0.75).
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * LinkedHashMap<String, Integer> map = MapUtils.newLinkedHashMap();
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
      * @param <K> the type of keys maintained by the returned map
      * @param <V> the type of mapped values
      * @return a new empty LinkedHashMap instance
      * @see LinkedHashMap#LinkedHashMap()
      */
+    @Nonnull
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap() {
         return new LinkedHashMap<>();
     }
@@ -311,18 +497,36 @@ public abstract class MapUtils implements Utils {
      * Creates a new {@link LinkedHashMap} with the specified initial capacity and
      * the default load factor (0.75).
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * LinkedHashMap<String, Integer> map = MapUtils.newLinkedHashMap(10);
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
      * @param initialCapacity The initial capacity of the returned LinkedHashMap.
      * @param <K>             The type of keys maintained by the returned map.
      * @param <V>             The type of mapped values.
      * @return A new LinkedHashMap instance with the specified initial capacity.
      * @see LinkedHashMap#LinkedHashMap(int)
      */
+    @Nonnull
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity) {
         return new LinkedHashMap<>(initialCapacity);
     }
 
     /**
      * Creates a new {@link LinkedHashMap} with the specified initial capacity and load factor.
+     *
+     * <p>The initial capacity refers to the number of buckets in the hash table, while the load factor
+     * determines how full the hash table can get before its capacity is automatically increased.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * LinkedHashMap<String, Integer> map = MapUtils.newLinkedHashMap(10, 0.75f);
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
      *
      * @param initialCapacity The initial capacity of the returned LinkedHashMap.
      * @param loadFactor      The load factor of the returned LinkedHashMap.
@@ -331,35 +535,61 @@ public abstract class MapUtils implements Utils {
      * @return A new LinkedHashMap instance with the specified initial capacity and load factor.
      * @see LinkedHashMap#LinkedHashMap(int, float)
      */
-    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity,
-                                                              float loadFactor) {
+    @Nonnull
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity, float loadFactor) {
         return new LinkedHashMap<>(initialCapacity, loadFactor);
     }
 
     /**
-     * Creates a new {@link LinkedHashMap} with the specified initial capacity, load factor,
-     * and access order mode.
+     * Creates a new {@link LinkedHashMap} with the specified initial capacity, load factor, and ordering mode.
      *
-     * <p>If accessOrder is true, the map will be sorted based on the access order (least recently
-     * accessed first). If false, it will be sorted based on insertion order.</p>
+     * <p>The initial capacity refers to the number of buckets in the hash table, while the load factor
+     * determines how full the hash table can get before its capacity is automatically increased.
+     * The {@code accessOrder} parameter determines the iteration ordering of the map:
+     * <ul>
+     *   <li>If set to {@code true}, the map will be ordered by the access order (least recently accessed
+     *       elements come first).</li>
+     *   <li>If set to {@code false}, the map will be ordered by insertion order.</li>
+     * </ul>
      *
-     * @param initialCapacity The initial capacity
-     *                        ``` of the returned LinkedHashMap.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * LinkedHashMap<String, Integer> map = MapUtils.newLinkedHashMap(10, 0.75f, true);
+     * map.put("one", 1);
+     * map.put("two", 2);
+     * map.get("one"); // Accessing "one" may reorder the map depending on accessOrder
+     * }</pre>
+     *
+     * @param initialCapacity The initial capacity of the returned LinkedHashMap.
      * @param loadFactor      The load factor of the returned LinkedHashMap.
-     * @param accessOrder     Specifies the ordering mode - true for access-order, false for insertion-order.
+     * @param accessOrder     If true, the map will use access order for iteration; if false, insertion order.
      * @param <K>             The type of keys maintained by the returned map.
      * @param <V>             The type of mapped values.
-     * @return A new LinkedHashMap instance with the specified initial capacity, load factor, and access order.
+     * @return A new LinkedHashMap instance with the specified initial capacity, load factor, and ordering mode.
      * @see LinkedHashMap#LinkedHashMap(int, float, boolean)
      */
-    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity,
-                                                              float loadFactor,
-                                                              boolean accessOrder) {
+    @Nonnull
+    public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder) {
         return new LinkedHashMap<>(initialCapacity, loadFactor, accessOrder);
     }
 
     /**
      * Creates a new {@link LinkedHashMap} with the same mappings as the specified map.
+     *
+     * <p>This method provides a convenient way to create a new LinkedHashMap instance that contains all the key-value pairs
+     * from an existing map. The iteration order of the resulting map is based on insertion order unless the original map
+     * was an instance of {@link LinkedHashMap} with access order enabled.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> originalMap = new HashMap<>();
+     * originalMap.put("one", 1);
+     * originalMap.put("two", 2);
+     *
+     * LinkedHashMap<String, Integer> linkedMap = MapUtils.newLinkedHashMap(originalMap);
+     * System.out.println(linkedMap.get("one")); // Output: 1
+     * System.out.println(linkedMap.get("two")); // Output: 2
+     * }</pre>
      *
      * @param map The initial map whose entries are to be copied into the new LinkedHashMap.
      * @param <K> The type of keys maintained by the returned map.
@@ -367,6 +597,7 @@ public abstract class MapUtils implements Utils {
      * @return A new LinkedHashMap instance initialized with the entries from the provided map.
      * @see LinkedHashMap#LinkedHashMap(Map)
      */
+    @Nonnull
     public static <K, V> LinkedHashMap<K, V> newLinkedHashMap(Map<? extends K, ? extends V> map) {
         return new LinkedHashMap(map);
     }
@@ -375,11 +606,19 @@ public abstract class MapUtils implements Utils {
      * Creates a new empty {@link ConcurrentHashMap} with the default initial capacity (16) and
      * the default load factor (0.75), using the default concurrency level.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *  ConcurrentHashMap<String, Integer> map = MapUtils.newConcurrentHashMap();
+     *  map.put("one", 1);
+     *  System.out.println(map.get("one")); // Output: 1
+     *  }</pre>
+     *
      * @param <K> the type of keys maintained by the returned map
      * @param <V> the type of mapped values
      * @return a new empty ConcurrentHashMap instance
      * @see ConcurrentHashMap#ConcurrentHashMap()
      */
+    @Nonnull
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap() {
         return new ConcurrentHashMap<>();
     }
@@ -388,19 +627,39 @@ public abstract class MapUtils implements Utils {
      * Creates a new {@link ConcurrentHashMap} with the specified initial capacity and
      * the default load factor (0.75), using the default concurrency level.
      *
+     * <p>This method provides a convenient way to initialize a ConcurrentHashMap with a known
+     * initial size, which can help reduce the frequency of rehash operations as elements are added.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *  ConcurrentHashMap<String, Integer> map = MapUtils.newConcurrentHashMap(10);
+     *  map.put("one", 1);
+     *  System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
      * @param initialCapacity The initial capacity of the returned ConcurrentHashMap.
      * @param <K>             The type of keys maintained by the returned map.
      * @param <V>             The type of mapped values.
      * @return A new ConcurrentHashMap instance with the specified initial capacity.
      * @see ConcurrentHashMap#ConcurrentHashMap(int)
      */
+    @Nonnull
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int initialCapacity) {
         return new ConcurrentHashMap<>(initialCapacity);
     }
 
     /**
-     * Creates a new {@link ConcurrentHashMap} with the specified initial capacity and load factor,
-     * using the default concurrency level.
+     * Creates a new {@link ConcurrentHashMap} with the specified initial capacity and load factor.
+     *
+     * <p>The initial capacity refers to the number of buckets in the hash table, while the load factor
+     * determines how full the hash table can get before its capacity is automatically increased.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *  ConcurrentHashMap<String, Integer> map = MapUtils.newConcurrentHashMap(10, 0.75f);
+     *  map.put("one", 1);
+     *  System.out.println(map.get("one")); // Output: 1
+     * }</pre>
      *
      * @param initialCapacity The initial capacity of the returned ConcurrentHashMap.
      * @param loadFactor      The load factor of the returned ConcurrentHashMap.
@@ -409,6 +668,7 @@ public abstract class MapUtils implements Utils {
      * @return A new ConcurrentHashMap instance with the specified initial capacity and load factor.
      * @see ConcurrentHashMap#ConcurrentHashMap(int, float)
      */
+    @Nonnull
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(int initialCapacity,
                                                                       float loadFactor) {
         return new ConcurrentHashMap<>(initialCapacity, loadFactor);
@@ -417,24 +677,55 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates a new {@link ConcurrentHashMap} with the same mappings as the specified map.
      *
+     * <p>This method provides a convenient way to create a new ConcurrentHashMap instance that contains all the key-value pairs
+     * from an existing map. The returned map is thread-safe and suitable for concurrent access scenarios.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> originalMap = new HashMap<>();
+     * originalMap.put("one", 1);
+     * originalMap.put("two", 2);
+     *
+     * ConcurrentHashMap<String, Integer> concurrentMap = MapUtils.newConcurrentHashMap(originalMap);
+     * System.out.println(concurrentMap.get("one")); // Output: 1
+     * System.out.println(concurrentMap.get("two")); // Output: 2
+     * }</pre>
+     *
      * @param map The initial map whose entries are to be copied into the new ConcurrentHashMap.
      * @param <K> The type of keys maintained by the returned map.
      * @param <V> The type of mapped values.
      * @return A new ConcurrentHashMap instance initialized with the entries from the provided map.
      * @see ConcurrentHashMap#ConcurrentHashMap(Map)
      */
+    @Nonnull
     public static <K, V> ConcurrentHashMap<K, V> newConcurrentHashMap(Map<? extends K, ? extends V> map) {
         return new ConcurrentHashMap<>(map);
     }
 
     /**
-     * Creates a new empty {@link TreeMap}
+     * Creates a new empty {@link TreeMap} using natural ordering for the keys.
+     *
+     * <p>This method provides a convenient way to create a TreeMap with default settings,
+     * ensuring that the keys will be sorted according to their natural ordering.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TreeMap<String, Integer> treeMap = MapUtils.newTreeMap();
+     * treeMap.put("banana", 2);
+     * treeMap.put("apple", 1);
+     *
+     * // Output will be ordered by keys: apple=1, banana=2
+     * for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+     *     System.out.println(entry.getKey() + "=" + entry.getValue());
+     * }
+     * }</pre>
      *
      * @param <K> the type of keys maintained by the returned map
      * @param <V> the type of mapped values
-     * @return a new empty TreeMap instance
+     * @return a new empty TreeMap instance with natural key ordering
      * @see TreeMap#TreeMap()
      */
+    @Nonnull
     public static <K, V> TreeMap<K, V> newTreeMap() {
         return new TreeMap<>();
     }
@@ -442,13 +733,29 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates a new empty {@link TreeMap} with the specified comparator to order the keys.
      *
-     * @param comparator The comparator that will be used to order the keys in the returned TreeMap.
-     *                   If null, the natural ordering of the keys will be used.
+     * <p>This method provides a convenient way to create a TreeMap with a custom ordering strategy,
+     * allowing for flexible sorting based on the provided comparator.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Comparator<String> descendingOrder = Collections.reverseOrder();
+     * TreeMap<String, Integer> treeMap = MapUtils.newTreeMap(descendingOrder);
+     * treeMap.put("banana", 2);
+     * treeMap.put("apple", 1);
+     *
+     * // Output will be ordered by keys in descending order: banana=2, apple=1
+     * for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+     *     System.out.println(entry.getKey() + "=" + entry.getValue());
+     * }
+     * }</pre>
+     *
+     * @param comparator The comparator to use for ordering the keys in this map.
      * @param <K>        The type of keys maintained by the returned map.
      * @param <V>        The type of mapped values.
      * @return A new empty TreeMap instance with the specified comparator.
      * @see TreeMap#TreeMap(Comparator)
      */
+    @Nonnull
     public static <K, V> TreeMap<K, V> newTreeMap(Comparator<? super K> comparator) {
         return new TreeMap<>(comparator);
     }
@@ -456,36 +763,100 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates a new {@link TreeMap} with the same mappings as the specified map.
      *
+     * <p>This method provides a convenient way to create a new TreeMap instance that contains all the key-value pairs
+     * from an existing map. The keys in the resulting TreeMap will be sorted according to their natural ordering,
+     * or by the comparator used by the provided map if it is a sorted map.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> originalMap = new HashMap<>();
+     * originalMap.put("banana", 2);
+     * originalMap.put("apple", 1);
+     *
+     * TreeMap<String, Integer> treeMap = MapUtils.newTreeMap(originalMap);
+     *
+     * // Output will be ordered by keys: apple=1, banana=2
+     * for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+     *     System.out.println(entry.getKey() + "=" + entry.getValue());
+     * }
+     * }</pre>
+     *
      * @param map The initial map whose entries are to be copied into the new TreeMap.
      * @param <K> The type of keys maintained by the returned map.
      * @param <V> The type of mapped values.
      * @return A new TreeMap instance initialized with the entries from the provided map.
      * @see TreeMap#TreeMap(Map)
      */
+    @Nonnull
     public static <K, V> TreeMap<K, V> newTreeMap(Map<? extends K, ? extends V> map) {
         return new TreeMap<>(map);
     }
 
     /**
-     * Creates a new {@link TreeMap} with the same mappings as the specified SortedMap.
+     * Creates a new {@link TreeMap} with the same mappings as the specified sorted map.
      *
-     * @param map The initial SortedMap whose entries are to be copied into the new TreeMap.
+     * <p>This method provides a convenient way to create a new TreeMap instance that contains all the key-value pairs
+     * from an existing SortedMap. The keys in the resulting TreeMap will be sorted according to the comparator used by
+     * the provided map, or by natural ordering if the map uses natural ordering.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * SortedMap<String, Integer> originalSortedMap = new TreeMap<>();
+     * originalSortedMap.put("banana", 2);
+     * originalSortedMap.put("apple", 1);
+     *
+     * TreeMap<String, Integer> treeMap = MapUtils.newTreeMap(originalSortedMap);
+     *
+     * // Output will be ordered by keys: apple=1, banana=2
+     * for (Map.Entry<String, Integer> entry : treeMap.entrySet()) {
+     *     System.out.println(entry.getKey() + "=" + entry.getValue());
+     * }
+     * }</pre>
+     *
+     * @param map The initial sorted map whose entries are to be copied into the new TreeMap.
      * @param <K> The type of keys maintained by the returned map.
      * @param <V> The type of mapped values.
-     * @return A new TreeMap instance initialized with the entries from the provided SortedMap.
+     * @return A new TreeMap instance initialized with the entries from the provided sorted map.
      * @see TreeMap#TreeMap(SortedMap)
      */
+    @Nonnull
     public static <K, V> TreeMap<K, V> newTreeMap(SortedMap<K, ? extends V> map) {
         return new TreeMap<>(map);
     }
 
     /**
-     * Shallow Clone {@link Map}
+     * Performs a shallow clone of the provided map, creating a new map instance with the same key-value mappings.
      *
-     * @param source the source of {@link Map}
-     * @param <K>    the {@link Class type} of key
-     * @param <V>    the {@link Class type} of value
-     * @return non-null
+     * <p>This method returns a new map of the most appropriate type based on the source map's implementation:
+     * <ul>
+     *   <li>{@link LinkedHashMap} for insertion-ordered maps</li>
+     *   <li>{@link ConcurrentSkipListMap} for concurrent navigable maps</li>
+     *   <li>{@link TreeMap} for sorted maps</li>
+     *   <li>{@link ConcurrentHashMap} for concurrent maps</li>
+     *   <li>{@link IdentityHashMap} for identity-based maps</li>
+     *   <li>{@link HashMap} as the default fallback</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> original = new HashMap<>();
+     * original.put("one", 1);
+     * original.put("two", 2);
+     *
+     * Map<String, Integer> cloned = MapUtils.shallowCloneMap(original);
+     * System.out.println(cloned.get("one")); // Output: 1
+     * System.out.println(cloned.get("two")); // Output: 2
+     *
+     * // The cloned map is independent from the original
+     * original.put("three", 3);
+     * System.out.println(cloned.containsKey("three")); // false
+     * }</pre>
+     *
+     * @param source the map to be shallow cloned, must not be {@code null}
+     * @param <K>    the type of keys maintained by the map
+     * @param <V>    the type of mapped values
+     * @return a new map containing the same key-value pairs as the source map
+     * @throws NullPointerException if the source map is null
      */
     @Nonnull
     public static <K, V> Map<K, V> shallowCloneMap(@Nonnull Map<K, V> source) {
@@ -505,9 +876,17 @@ public abstract class MapUtils implements Utils {
     }
 
     /**
-     * Creates a new {@link HashMap} with the specified initial capacity and fixed load factor.
+     * Creates a new empty {@link HashMap} with the specified initial capacity and a fixed load factor.
      *
-     * <p>The fixed load factor is defined by {@link #FIXED_LOAD_FACTOR} which ensures predictable resizing behavior.</p>
+     * <p>This method is useful when you want to create a HashMap with a known initial size
+     * and use the predefined fixed load factor ({@value #FIXED_LOAD_FACTOR}), which helps in minimizing resizing operations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.newFixedHashMap(10);
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
      *
      * @param size The initial capacity of the returned HashMap.
      * @param <K>  The type of keys maintained by the returned map.
@@ -515,30 +894,61 @@ public abstract class MapUtils implements Utils {
      * @return A new HashMap instance with the specified initial capacity and fixed load factor.
      * @see HashMap#HashMap(int, float)
      */
+    @Nonnull
     public static <K, V> Map<K, V> newFixedHashMap(int size) {
         return newHashMap(size, FIXED_LOAD_FACTOR);
     }
 
+    /**
+     * Creates a new empty {@link LinkedHashMap} with the specified initial capacity and a fixed load factor.
+     *
+     * <p>This method is useful when you want to create a LinkedHashMap with a known initial size
+     * and use the predefined fixed load factor ({@value #FIXED_LOAD_FACTOR}), which helps in minimizing resizing operations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map = MapUtils.newFixedLinkedHashMap(10);
+     * map.put("one", 1);
+     * System.out.println(map.get("one")); // Output: 1
+     * }</pre>
+     *
+     * @param size The initial capacity of the returned LinkedHashMap.
+     * @param <K>  The type of keys maintained by the returned map.
+     * @param <V>  The type of mapped values.
+     * @return A new LinkedHashMap instance with the specified initial capacity and fixed load factor.
+     * @see LinkedHashMap#LinkedHashMap(int, float)
+     */
+    @Nonnull
     public static <K, V> Map<K, V> newFixedLinkedHashMap(int size) {
         return newLinkedHashMap(size, FIXED_LOAD_FACTOR);
     }
 
     /**
-     * Converts a collection of elements into an immutable map using the provided mapper function to extract map entries.
-     * <p>
-     * The resulting map is fixed-size and read-only, created with a predictable capacity based on the input collection size.
-     * If the input collection is empty, an empty map is returned.
-     * </p>
+     * Converts a collection of elements into an immutable map using the provided function to extract key-value pairs.
      *
-     * @param values      the collection of elements to be converted into a map
-     * @param entryMapper the function that maps each element to a {@link Map.Entry}
-     * @param <K>         the type of the keys in the resulting map
-     * @param <V>         the type of the values in the resulting map
-     * @param <E>         the type of the elements in the input collection
-     * @return an immutable map containing the mapped key-value pairs
-     * @see #newFixedLinkedHashMap(int)
-     * @see java.util.Collections#unmodifiableMap(Map)
+     * <p>This method creates a fixed-size, immutable map from the given collection by applying the entryMapper
+     * function to each element to obtain key-value mappings. The resulting map is thread-safe and cannot be modified.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * List<User> users = Arrays.asList(new User("1", "Alice"), new User("2", "Bob"));
+     *
+     * Map<String, String> userMap = MapUtils.toFixedMap(users, user ->
+     *     MapUtils.ofEntry(user.getId(), user.getName()));
+     *
+     * System.out.println(userMap.get("1")); // Output: Alice
+     * System.out.println(userMap.get("2")); // Output: Bob
+     * }</pre>
+     *
+     * @param values      the collection of elements to convert into a map, must not be null
+     * @param entryMapper the function that maps each element to a key-value pair (Map.Entry), must not be null
+     * @param <K>         the type of keys maintained by the returned map
+     * @param <V>         the type of mapped values
+     * @param <E>         the type of elements in the input collection
+     * @return a new immutable map containing the key-value pairs derived from the input collection
+     * @throws NullPointerException if values or entryMapper is null
      */
+    @Nonnull
     public static <K, V, E> Map<K, V> toFixedMap(Collection<E> values,
                                                  Function<E, Map.Entry<K, V>> entryMapper) {
         int size = size(values);
@@ -556,20 +966,34 @@ public abstract class MapUtils implements Utils {
     }
 
     /**
-     * Creates a mutable {@link Map.Entry} with the specified key and value.
+     * Creates an immutable {@link Map.Entry} with the specified key and value.
      *
-     * <p>This method returns a modifiable entry implementation that allows updating the value
-     * while keeping the same key. It is suitable for use in custom map implementations or other
-     * scenarios where a modifiable entry needs to be maintained.</p>
+     * <p>This method returns a fixed entry implementation that does not allow modification of its contents.
+     * The returned entry is suitable for use in read-only contexts, such as populating immutable maps.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map.Entry<String, Integer> entry = MapUtils.ofEntry("one", 1);
+     * System.out.println(entry.getKey());   // Output: one
+     * System.out.println(entry.getValue()); // Output: 1
+     *
+     * // Using in combination with other utilities to build a map:
+     * Map<String, Integer> map = MapUtils.of(
+     *     MapUtils.ofEntry("apple", 3),
+     *     MapUtils.ofEntry("banana", 5)
+     * );
+     * System.out.println(map.get("apple"));  // Output: 3
+     * System.out.println(map.get("banana")); // Output: 5
+     * }</pre>
      *
      * @param key   the key to be stored in the entry
      * @param value the value to be associated with the key
      * @param <K>   the type of the key
      * @param <V>   the type of the value
-     * @return a new mutable map entry containing the specified key and value
+     * @return a new immutable map entry containing the specified key and value
      * @see DefaultEntry
-     * @see #immutableEntry(Object, Object)
      */
+    @Nonnull
     public static <K, V> Map.Entry<K, V> ofEntry(K key, V value) {
         return DefaultEntry.of(key, value);
     }
@@ -577,8 +1001,18 @@ public abstract class MapUtils implements Utils {
     /**
      * Creates an immutable {@link Map.Entry} with the specified key and value.
      *
-     * <p>This method returns a fixed entry implementation that does not allow modification of its contents.
-     * The returned entry is suitable for use in read-only contexts, such as populating immutable maps.</p>
+     * <p>This method returns a read-only entry implementation that does not allow modification of its contents.
+     * It is suitable for use in read-only contexts, such as populating immutable maps.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map.Entry<String, Integer> entry = MapUtils.immutableEntry("one", 1);
+     * System.out.println(entry.getKey());   // Output: one
+     * System.out.println(entry.getValue()); // Output: 1
+     *
+     * // Attempting to modify the entry will throw an exception:
+     * // entry.setValue(2); // throws UnsupportedOperationException
+     * }</pre>
      *
      * @param key   the key to be stored in the entry
      * @param value the value to be associated with the key
@@ -586,8 +1020,8 @@ public abstract class MapUtils implements Utils {
      * @param <V>   the type of the value
      * @return a new immutable map entry containing the specified key and value
      * @see ImmutableEntry
-     * @see #ofEntry(Object, Object)
      */
+    @Nonnull
     public static <K, V> Map.Entry<K, V> immutableEntry(K key, V value) {
         return ImmutableEntry.of(key, value);
     }
