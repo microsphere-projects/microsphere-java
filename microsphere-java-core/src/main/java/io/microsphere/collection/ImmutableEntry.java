@@ -26,6 +26,16 @@ import java.util.Map;
  * the key and value cannot be changed, and calling {@link #setValue(Object)} will throw an
  * {@link UnsupportedOperationException}.</p>
  *
+ * <p><strong>Example usage:</strong></p>
+ * <pre>{@code
+ * ImmutableEntry<String, Integer> entry = ImmutableEntry.of("age", 30);
+ * System.out.println(entry.getKey());   // Output: age
+ * System.out.println(entry.getValue()); // Output: 30
+ * 
+ * // The following line would throw an exception:
+ * // entry.setValue(25); // throws UnsupportedOperationException
+ * }</pre>
+ *
  * @param <K> the type of the key
  * @param <V> the type of the value
  * @see MapUtils#ofEntry(Object, Object)
