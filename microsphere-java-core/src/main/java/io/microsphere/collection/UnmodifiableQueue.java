@@ -177,7 +177,6 @@ public class UnmodifiableQueue<E> implements Queue<E>, Serializable {
         return delegate.hashCode();
     }
 
-
     @Override
     public String toString() {
         return delegate.toString();
