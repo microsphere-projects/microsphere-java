@@ -14,8 +14,8 @@ import static java.util.Objects.hash;
  * This class extends the basic {@link Artifact} by adding Maven-specific identification through group ID.
  * It supports matching artifacts based on group ID, in addition to the properties defined in the parent class.
  *
- * <p>Examples:</p>
- * <pre>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
  * // Create a Maven artifact with group ID, artifact ID, and default version (UNKNOWN)
  * MavenArtifact mavenArtifact1 = MavenArtifact.create("com.example", "my-artifact");
  *
@@ -28,8 +28,8 @@ import static java.util.Objects.hash;
  *
  * // Matching Maven artifacts based on group ID, artifact ID, and version
  * boolean isMatch = mavenArtifact1.matches(mavenArtifact2); // returns false
- * </pre>
- *
+ *  }</pre>
+
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Artifact
  * @see ArtifactResourceResolver
