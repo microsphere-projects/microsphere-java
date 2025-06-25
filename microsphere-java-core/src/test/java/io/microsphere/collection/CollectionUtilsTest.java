@@ -38,10 +38,12 @@ import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static java.util.Collections.emptyEnumeration;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -95,11 +97,27 @@ public class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
     public void testToIterable() {
-        Iterable iterable = toIterable(emptyEnumeration());
+        Iterable iterable = toIterable(emptyList());
+        assertEmptyIterable(iterable);
+
+        iterable = toIterable(emptyIterator());
+        assertEmptyIterable(iterable);
+
+        iterable = toIterable(emptyEnumeration());
+        assertEmptyIterable(iterable);
+
+        iterable = toIterable(emptyList());
+        assertEmptyIterable(iterable);
+
+        iterable = toIterable(TEST_NULL_ITERATOR);
+        assertEmptyIterable(iterable);
+
+        iterable = toIterable(TEST_NULL_COLLECTION);
         assertEmptyIterable(iterable);
 
         iterable = toIterable(TEST_NULL_ENUMERATION);
         assertEmptyIterable(iterable);
+
     }
 
     private void assertEmptyIterable(Iterable iterable) {
@@ -108,8 +126,8 @@ public class CollectionUtilsTest extends AbstractTestCase {
 
     private void assertEmptyIterator(Iterator iterator) {
         assertFalse(iterator.hasNext());
-        assertThrowable(iterator::next, NoSuchElementException.class);
-        assertThrowable(iterator::remove, UnsupportedOperationException.class);
+        assertThrows(NoSuchElementException.class, iterator::next);
+        assertThrows(IllegalStateException.class, iterator::remove);
     }
 
     @Test
