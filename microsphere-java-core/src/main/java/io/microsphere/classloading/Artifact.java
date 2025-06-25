@@ -16,7 +16,7 @@ import static java.util.Objects.hash;
  * This class is used to identify and match artifacts based on their properties.
  *
  * <p>Examples:</p>
- * <pre>
+ * <pre>{@code
  * // Create an artifact with ID and default version (UNKNOWN)
  * Artifact artifact1 = Artifact.create("my-artifact");
  *
@@ -29,7 +29,7 @@ import static java.util.Objects.hash;
  *
  * // Matching artifacts based on ID and version
  * boolean isMatch = artifact1.matches(artifact2); // returns false
- * </pre>
+ * }</pre>
  */
 public class Artifact {
 
