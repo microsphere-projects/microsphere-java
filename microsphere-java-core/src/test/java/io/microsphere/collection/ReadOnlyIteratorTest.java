@@ -54,7 +54,7 @@ public abstract class ReadOnlyIteratorTest extends AbstractTestCase {
     }
 
     @Test
-    public void remove() {
+    public void testRemove() {
         assertThrows(UnsupportedOperationException.class, instance::remove);
     }
 
