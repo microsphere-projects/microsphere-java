@@ -414,11 +414,7 @@ public abstract class CollectionUtils implements Utils {
             return false;
         }
 
-        try {
-            return one.containsAll(another);
-        } catch (ClassCastException | NullPointerException unused) {
-            return false;
-        }
+        return one.containsAll(another);
     }
 
     /**
