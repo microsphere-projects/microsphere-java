@@ -49,7 +49,14 @@ public abstract class PropertiesUtils implements Utils {
         return unmodifiableMap(flattenProperties);
     }
 
-    static void flatProperties(Map<String, Object> properties, String propertyNamePrefix,
+    /**
+     * Recursively flattens the given properties map into a single-level map.
+     *
+     * @param properties        The map containing properties to be flattened.
+     * @param propertyNamePrefix The prefix for property names used during flattening.
+     * @param flattenProperties The target map where flattened properties are stored.
+     */
+    protected static void flatProperties(Map<String, Object> properties, String propertyNamePrefix,
                                Map<String, Object> flattenProperties) {
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             String propertyName = normalizePropertyName(propertyNamePrefix, entry.getKey());
