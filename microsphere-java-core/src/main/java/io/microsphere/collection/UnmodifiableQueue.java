@@ -42,13 +42,13 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
  * Example usage:
  * </p>
  *
- * <pre>
+ * <pre>{@code
  * Queue<String> mutableQueue = new LinkedList<>();
  * mutableQueue.add("Hello");
  * Queue<String> unmodifiableQueue = new UnmodifiableQueue<>(mutableQueue);
  * unmodifiableQueue.add("World"); // throws UnsupportedOperationException
- * </pre>
- *
+ *  }</pre>
+
  * <p>
  * This class is serializable if the underlying queue is serializable.
  * </p>
