@@ -27,13 +27,13 @@ import java.util.NoSuchElementException;
  * where read-only sequential access to array elements is required.</p>
  *
  * <h3>Example</h3>
- * <pre>
+ * <pre>{@code
  * String[] data = {"one", "two", "three"};
  * ArrayEnumeration<String> enumeration = new ArrayEnumeration<>(data);
  * while (enumeration.hasMoreElements()) {
  *     System.out.println(enumeration.nextElement());
  * }
- * </pre>
+ * }</pre>
  *
  * @param <E> the type of elements in the array
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
