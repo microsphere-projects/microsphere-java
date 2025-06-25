@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 
-
 /**
  * A {@link Deque} implementation that holds a single immutable element.
  * <p>
