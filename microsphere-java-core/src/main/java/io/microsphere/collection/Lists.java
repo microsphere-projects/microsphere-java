@@ -16,10 +16,12 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
 import java.util.List;
+import java.util.RandomAccess;
 
 import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
@@ -98,12 +100,21 @@ public abstract class Lists implements Utils {
     private static final MethodHandle ofMethodHandle = findPublicStatic(List.class, "of", Object[].class);
 
     /**
-     * Returns an unmodifiable list containing zero elements.
+     * Returns an empty unmodifiable list.
      *
-     * @param <E> the {@code List}'s element type
-     * @return an empty {@code List}
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> emptyList = Lists.ofList();
+     * }</pre>
+     *
+     * @param <E> the element type of the list
+     * @return an empty unmodifiable list
      */
-    static <E> List<E> ofList() {
+    @Nonnull
+    public static <E> List<E> ofList() {
         if (of0MethodHandle == null) {
             return emptyList();
         }
@@ -117,12 +128,21 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing one element.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> singleElementList = Lists.ofList("Hello");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the single element
      * @return a {@code List} containing the specified element
      * @throws NullPointerException if the element is {@code null}
      */
-    static <E> List<E> ofList(E e1) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1) {
         if (of1MethodHandle == null) {
             return singletonList(e1);
         }
@@ -136,13 +156,22 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing two elements.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> twoElementList = Lists.ofList("Hello", "World");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
      * @param e2  the second element
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2) {
         if (of2MethodHandle == null) {
             return of(e1, e2);
         }
@@ -156,6 +185,14 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing three elements.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> threeElementList = Lists.ofList("Hello", "World", "Java");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
      * @param e2  the second element
@@ -163,7 +200,8 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2, E e3) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2, E e3) {
         if (of3MethodHandle == null) {
             return of(e1, e2, e3);
         }
@@ -177,6 +215,14 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing four elements.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> fourElementList = Lists.ofList("Hello", "World", "Java", "Lists");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
      * @param e2  the second element
@@ -185,7 +231,8 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2, E e3, E e4) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2, E e3, E e4) {
         if (of4MethodHandle == null) {
             return of(e1, e2, e3, e4);
         }
@@ -199,6 +246,14 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing five elements.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> fiveElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
      * @param e2  the second element
@@ -208,7 +263,8 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5) {
         if (of5MethodHandle == null) {
             return of(e1, e2, e3, e4, e5);
         }
@@ -232,6 +288,7 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
+    @Nonnull
     static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6) {
         if (of6MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6);
@@ -246,6 +303,14 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing seven elements.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> sevenElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example", "Seven", "Elements");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
      * @param e2  the second element
@@ -257,7 +322,8 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
         if (of7MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7);
         }
@@ -271,6 +337,14 @@ public abstract class Lists implements Utils {
     /**
      * Returns an unmodifiable list containing eight elements.
      *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> eightElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example", "Eight", "Elements", "Demo");
+     * }</pre>
+     *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
      * @param e2  the second element
@@ -283,7 +357,8 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
         if (of8MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
         }
@@ -296,6 +371,14 @@ public abstract class Lists implements Utils {
 
     /**
      * Returns an unmodifiable list containing nine elements.
+     *
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage example:
+     * <pre>{@code
+     *     List<String> nineElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example", "Nine", "Elements", "Demo", "Test");
+     * }</pre>
      *
      * @param <E> the {@code List}'s element type
      * @param e1  the first element
@@ -310,7 +393,8 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+    @Nonnull
+    public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
         if (of9MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         }
@@ -338,6 +422,7 @@ public abstract class Lists implements Utils {
      * @return a {@code List} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
+    @Nonnull
     static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
         if (of10MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
@@ -349,14 +434,26 @@ public abstract class Lists implements Utils {
         }
     }
 
+
     /**
-     * Returns an unmodifiable list containing an arbitrary number of elements.
+     * Returns an unmodifiable list containing the specified elements.
      *
-     * @param elements the elements array
-     * @param <E>      the element type
-     * @return non-null
-     * @see ListUtils#ofList(E...)
+     * <p>The returned list is serializable and implements the {@link RandomAccess}
+     * interface if the implementation class allows.
+     *
+     * <p>Usage examples:
+     * <pre>{@code
+     *     List<String> emptyList = Lists.ofList(); // returns an empty list
+     *     List<String> singleElementList = Lists.ofList("Hello"); // returns a list with one element
+     *     List<String> multiElementList = Lists.ofList("Hello", "World", "Java"); // returns a list with multiple elements
+     * }</pre>
+     *
+     * @param <E>      the {@code List}'s element type
+     * @param elements the elements to be included in the list
+     * @return a {@code List} containing the specified elements
+     * @throws NullPointerException if any element is {@code null}
      */
+    @Nonnull
     public static <E> List<E> ofList(E... elements) {
         if (length(elements) < 1) {
             return ofList();
