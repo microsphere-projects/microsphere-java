@@ -26,7 +26,7 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
 /**
  * An unmodifiable view of a {@link Deque} which wraps a given delegate and prevents any modifications to it.
  * <p>
- * All mutation operations like {@link #addFirst(Object)}, {@link #remove()}, or {@link #push(Object)} will throw an
+ * All mutation operations like {@link #addFirst(Object)}, {@link #addLast(Object)}, or {@link #clear()} will throw an
  * {@link UnsupportedOperationException}.
  * </p>
  *
