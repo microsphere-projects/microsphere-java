@@ -32,7 +32,50 @@ import static io.microsphere.util.jar.JarUtils.MANIFEST_RESOURCE_PATH;
 import static java.lang.System.getProperty;
 
 /**
- * {@link ArtifactResourceResolver} for Manifest
+ * {@link ArtifactResourceResolver} implementation that reads artifact metadata from JAR manifest files.
+ *
+ * <p>This resolver looks for artifact information in the {@code META-INF/MANIFEST.MF} file of a JAR or directory.
+ * It extracts the artifact ID and version using configurable manifest attributes.</p>
+ *
+ * <h3>Configuration Options</h3>
+ * <p>You can customize which manifest attributes are used to extract the artifact ID and version by setting system properties:</p>
+ *
+ * <ul>
+ *   <li><strong>{@value #ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME}</strong>: A comma-separated list of attribute names to use for extracting the artifact ID. 
+ *       Default: {@value #DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE}</li>
+ *   <li><strong>{@value #VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME}</strong>: A comma-separated list of attribute names to use for extracting the artifact version.
+ *       Default: {@value #DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE}</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * // Using default priority
+ * ArtifactResourceResolver resolver = new ManifestArtifactResourceResolver();
+ *
+ * // With custom priority
+ * ArtifactResourceResolver resolver = new ManifestArtifactResourceResolver(10);
+ *
+ * // With custom class loader and priority
+ * ArtifactResourceResolver resolver = new ManifestArtifactResourceResolver(getClass().getClassLoader(), 10);
+ * </pre>
+ *
+ * <h3>Manifest Attribute Examples</h3>
+ * <p>The resolver will look at standard and custom manifest attributes. Here's an example MANIFEST.MF:</p>
+ *
+ * <pre>
+ * Manifest-Version: 1.0
+ * Bundle-Name: my-artifact
+ * Bundle-Version: 1.2.3
+ * Implementation-Title: my-artifact
+ * Implementation-Version: 1.2.3
+ * Automatic-Module-Name: com.example.myartifact
+ * </pre>
+ *
+ * <p>In this case, the resolver would extract:</p>
+ * <ul>
+ *   <li><strong>Artifact ID:</strong> "my-artifact" (from Bundle-Name)</li>
+ *   <li><strong>Version:</strong> "1.2.3" (from Bundle-Version)</li>
+ * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see StreamArtifactResourceResolver
