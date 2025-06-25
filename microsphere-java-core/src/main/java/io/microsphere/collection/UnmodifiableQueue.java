@@ -29,14 +29,34 @@ import java.util.stream.Stream;
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
 
 /**
- * An unmodifiable view of a {@link Queue} which wraps a given delegate and prevents any modifications to it.
+ * An unmodifiable view of a {@link Queue}. This implementation decorates a given queue and prevents any
+ * modification operations from succeeding. All mutation methods, such as {@link #add}, {@link #remove},
+ * {@link #offer}, and others, throw an {@link UnsupportedOperationException}.
+ *
  * <p>
- * All mutation operations like {@link #add(Object)}, {@link #remove()}, or {@link #clear()} will throw an
- * {@link UnsupportedOperationException}.
+ * The behavior of this class is undefined if the underlying queue is modified directly while this view exists.
+ * It is intended to be used for creating immutable snapshots of queues where modification attempts are not allowed.
+ * </p>
+ *
+ * <p>
+ * Example usage:
+ * </p>
+ *
+ * <pre>
+ * Queue<String> mutableQueue = new LinkedList<>();
+ * mutableQueue.add("Hello");
+ * Queue<String> unmodifiableQueue = new UnmodifiableQueue<>(mutableQueue);
+ * unmodifiableQueue.add("World"); // throws UnsupportedOperationException
+ * </pre>
+ *
+ * <p>
+ * This class is serializable if the underlying queue is serializable.
  * </p>
  *
  * @param <E> the type of elements held in this queue
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see Queue
+ * @see CollectionUtils#unmodifiableIterator(Iterator)
  * @since 1.0.0
  */
 public class UnmodifiableQueue<E> implements Queue<E>, Serializable {
