@@ -31,6 +31,50 @@ import java.util.NoSuchElementException;
  * <p>The default implementations in this class make assumptions about the behavior of other methods,
  * so subclasses should ensure consistent behavior when overriding any of these methods.</p>
  *
+ * <p><b>Example Usage:</b></p>
+ * <pre>
+ * public class SimpleDeque&lt;E&gt; extends AbstractDeque&lt;E&gt; {
+ *     private final List&lt;E&gt; list = new ArrayList&lt;&gt;();
+ *
+ *     public void addFirst(E e) {
+ *         list.add(0, e);
+ *     }
+ *
+ *     public void addLast(E e) {
+ *         list.add(e);
+ *     }
+ *
+ *     public E peekFirst() {
+ *         return list.isEmpty() ? null : list.get(0);
+ *     }
+ *
+ *     public E peekLast() {
+ *         return list.isEmpty() ? null : list.get(list.size() - 1);
+ *     }
+ *
+ *     public E pollFirst() {
+ *         return list.isEmpty() ? null : list.remove(0);
+ *     }
+ *
+ *     public E pollLast() {
+ *         return list.isEmpty() ? null : list.remove(list.size() - 1);
+ *     }
+ *
+ *     public boolean removeFirstOccurrence(Object o) {
+ *         return list.remove(o);
+ *     }
+ *
+ *     public boolean removeLastOccurrence(Object o) {
+ *         int index = list.lastIndexOf(o);
+ *         if (index != -1) {
+ *             list.remove(index);
+ *             return true;
+ *         }
+ *         return false;
+ *     }
+ * }
+ * </pre>
+ *
  * @param <E> The type of elements held in this deque
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
