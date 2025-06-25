@@ -20,6 +20,7 @@ package io.microsphere.collection;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.Objects;
 
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 
@@ -103,5 +104,18 @@ public class SingletonDeque<E> extends AbstractDeque<E> implements Serializable 
     @Override
     public int size() {
         return 1;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof SingletonDeque)) return false;
+
+        SingletonDeque<?> that = (SingletonDeque<?>) o;
+        return Objects.equals(element, that.element);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(element);
     }
 }
