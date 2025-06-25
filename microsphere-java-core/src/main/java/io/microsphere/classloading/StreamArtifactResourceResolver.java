@@ -37,8 +37,54 @@ import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.jar.JarUtils.filter;
 
+
 /**
- * Abstract class of {@link ArtifactResourceResolver} based on Stream
+ * An abstract base class for implementing {@link ArtifactResourceResolver} that provides a 
+ * skeletal implementation to resolve artifact resources from either a streamable resource (like a URL)
+ * or an archive file (like a JAR). This class handles common concerns such as:
+ *
+ * <ul>
+ *     <li><b>Stream Handling:</b> Reads and processes artifact metadata from various sources including URLs, JAR files, and directories.</li>
+ *     <li><b>Error Handling:</b> Provides consistent error logging when reading or resolving artifacts fails.</li>
+ *     <li><b>Archive Support:</b> Offers utility methods to extract metadata from JARs or files within a directory structure.</li>
+ *     <li><b>Extensibility:</b> Declares abstract methods that subclasses must implement to define custom logic for identifying 
+ *         metadata locations and constructing artifact instances.</li>
+ * </ul>
+ *
+ * <h3>Key Abstract Methods</h3>
+ * <ul>
+ *     <li>{@link #isArtifactMetadata(String)}: Determines if the given relative path represents an artifact metadata file.</li>
+ *     <li>{@link #resolve(URL, InputStream, ClassLoader)}: Constructs an artifact from the provided metadata stream.</li>
+ * </ul>
+ *
+ * <h3>Usage Example</h3>
+ * <pre>{@code
+ * public class CustomStreamArtifactResourceResolver extends StreamArtifactResourceResolver {
+ *
+ *     public CustomStreamArtifactResourceResolver(ClassLoader classLoader, int priority) {
+ *         super(classLoader, priority);
+ *     }
+ *
+ *     @Override
+ *     protected boolean isArtifactMetadata(String relativePath) {
+ *         return relativePath.equals("META-INF/custom-artifact.properties");
+ *     }
+ *
+ *     @Override
+ *     protected Artifact resolve(URL resourceURL, InputStream artifactMetadataData, ClassLoader classLoader) throws IOException {
+ *         Properties properties = new Properties();
+ *         properties.load(artifactMetadataData);
+ *         return new DefaultArtifact(resourceURL, properties);
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>In the example above:
+ * <ul>
+ *     <li>The constructor forwards the class loader and priority to the superclass.</li>
+ *     <li>{@code isArtifactMetadata()} checks whether a given path matches the expected metadata location.</li>
+ *     <li>{@code resolve()} parses the metadata stream into a custom artifact instance.</li>
+ * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ArtifactResourceResolver
