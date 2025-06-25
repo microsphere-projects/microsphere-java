@@ -30,7 +30,7 @@ import static io.microsphere.classloading.MavenArtifact.create;
  * metadata from streams (either from archives or directly from resources). This resolver specifically targets Maven-style
  * artifacts where metadata is stored in "pom.properties" files under the "META-INF/maven/" directory.</p>
  *
- * <h2>How It Works</h2>
+ * <h3>How It Works</h3>
  * <ul>
  *     <li>The resolver checks if a given resource path matches the pattern of a Maven POM properties file using the
  *     {@link #isArtifactMetadata(String)} method. The pattern is typically:
@@ -40,7 +40,7 @@ import static io.microsphere.classloading.MavenArtifact.create;
  *     <li>It then constructs an {@link Artifact} object using these properties and associates it with the original URL.</li>
  * </ul>
  *
- * <h2>Example Usage</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create a resolver with default priority
  * MavenArtifactResourceResolver resolver = new MavenArtifactResourceResolver();
@@ -57,7 +57,7 @@ import static io.microsphere.classloading.MavenArtifact.create;
  * }
  * }</pre>
  *
- * <h2>Customization</h2>
+ * <h3>Customization</h3>
  * <p>You may extend this class to customize how artifact metadata is resolved or how the resulting artifact object is
  * constructed. For example, you could override the following methods:</p>
  *
