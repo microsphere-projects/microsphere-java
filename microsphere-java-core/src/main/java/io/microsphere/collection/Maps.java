@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
@@ -97,13 +98,19 @@ public abstract class Maps implements Utils {
     private static final MethodHandle ofEntriesMethodHandle = findPublicStatic(Map.class, "ofEntries", Map.Entry[].class);
 
     /**
-     * Returns an unmodifiable map containing zero mappings.
+     * Returns an unmodifiable empty map.  See {@link Map#of()} for details.
      *
-     * @param <K> the {@code Map}'s key type
-     * @param <V> the {@code Map}'s value type
-     * @return an empty {@code Map}
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> emptyMap = Maps.ofMap();
+     * }</pre>
+     *
+     * @param <K> the key type of the empty map
+     * @param <V> the value type of the empty map
+     * @return an empty map that throws {@code UnsupportedOperationException} on attempts to modify it
+     * @apiNote This method is designed as a convenient alternative to {@link java.util.Collections#emptyMap()} with support for JDK 9+ Map features.
      */
-    @SuppressWarnings("unchecked")
+    @Nonnull
     public static <K, V> Map<K, V> ofMap() {
         if (of0MethodHandle == null) {
             return emptyMap();
@@ -118,13 +125,21 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing a single mapping.
      *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1);
+     * }</pre>
+     *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
      * @param k1  the mapping's key
      * @param v1  the mapping's value
      * @return a {@code Map} containing the specified mapping
-     * @throws NullPointerException if the key or the value is {@code null}
+     * @throws NullPointerException if the key or value is {@code null}
+     * @apiNote This method provides a convenient way to create a single-entry map,
+     * especially useful for initializing maps in a concise manner.
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1) {
         if (of1MethodHandle == null) {
             return singletonMap(k1, v1);
@@ -139,6 +154,11 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing two mappings.
      *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2);
+     * }</pre>
+     *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
      * @param k1  the first mapping's key
@@ -149,6 +169,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if the keys are duplicates
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2) {
         if (of2MethodHandle == null) {
             return of(k1, v1, k2, v2);
@@ -163,6 +184,11 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing three mappings.
      *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3);
+     * }</pre>
+     *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
      * @param k1  the first mapping's key
@@ -175,6 +201,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3) {
         if (of3MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3);
@@ -188,6 +215,11 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing four mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -203,6 +235,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
         if (of4MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4);
@@ -216,6 +249,11 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing five mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -233,6 +271,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
         if (of5MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
@@ -246,6 +285,11 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing six mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4, "five", 5, "six", 6);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -265,6 +309,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
         if (of6MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
@@ -278,6 +323,12 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing seven mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
+     *                                        "five", 5, "six", 6, "seven", 7);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -299,6 +350,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
         if (of7MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
@@ -312,6 +364,12 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing eight mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
+     *                                        "five", 5, "six", 6, "seven", 7, "eight", 8);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -335,6 +393,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8) {
         if (of8MethodHandle == null) {
@@ -349,6 +408,12 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing nine mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
+     *                                        "five", 5, "six", 6, "seven", 7, "eight", 8, "nine", 9);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -374,6 +439,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8, K k9, V v9) {
         if (of9MethodHandle == null) {
@@ -388,6 +454,13 @@ public abstract class Maps implements Utils {
 
     /**
      * Returns an unmodifiable map containing ten mappings.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
+     *                                        "five", 5, "six", 6, "seven", 7, "eight", 8,
+     *                                        "nine", 9, "ten", 10);
+     * }</pre>
      *
      * @param <K> the {@code Map}'s key type
      * @param <V> the {@code Map}'s value type
@@ -415,6 +488,7 @@ public abstract class Maps implements Utils {
      * @throws IllegalArgumentException if there are any duplicate keys
      * @throws NullPointerException     if any key or value is {@code null}
      */
+    @Nonnull
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8, K k9, V v9, K k10, V v10) {
         if (of10MethodHandle == null) {
@@ -427,33 +501,26 @@ public abstract class Maps implements Utils {
         }
     }
 
+
     /**
-     * Returns an unmodifiable map containing keys and values extracted from the given entries.
-     * The entries themselves are not stored in the map.
+     * Returns an unmodifiable map containing the provided entries.
+     *
+     * <h3>Example usage:</h3>
+     * <pre>{@code
+     *     Map<String, Integer> map = Maps.ofMap(
+     *         new AbstractMap.SimpleEntry<>("one", 1),
+     *         new AbstractMap.SimpleEntry<>("two", 2)
+     *     );
+     * }</pre>
      *
      * @param <K>     the {@code Map}'s key type
      * @param <V>     the {@code Map}'s value type
-     * @param entries {@code Map.Entry}s containing the keys and values from which the map is populated
-     * @return a {@code Map} containing the specified mappings
-     * @throws IllegalArgumentException if there are any duplicate keys
-     * @throws NullPointerException     if any entry, key, or value is {@code null}, or if
-     *                                  the {@code entries} array is {@code null}
-     * @apiNote It is convenient to create the map entries using the {@link Map#entry Map.entry()} method.
-     * For example,
-     *
-     * <pre>{@code
-     *     import static java.util.Map.entry;
-     *
-     *     Map<Integer,String> map = Map.ofEntries(
-     *         entry(1, "a"),
-     *         entry(2, "b"),
-     *         entry(3, "c"),
-     *         ...
-     *         entry(26, "z"));
-     * }</pre>
-     * @see Map#entry Map.entry()
+     * @param entries the entries to be added to the map
+     * @return a {@code Map} containing the specified entries
+     * @throws NullPointerException if any entry or its key/value is {@code null}
+     * @apiNote This method provides a convenient way to create maps with multiple entries,
+     * especially useful for test data setup or static initialization.
      */
-    @SafeVarargs
     @SuppressWarnings("varargs")
     public static <K, V> Map<K, V> ofMap(Map.Entry<? extends K, ? extends V>... entries) {
         if (length(entries) < 1) {
