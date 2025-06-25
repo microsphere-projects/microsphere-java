@@ -674,11 +674,12 @@ public class JSONArray {
     }
 
     /**
-     * Encodes this array as a human-readable JSON string for debugging, such as: <pre>
+     * Encodes this array as a human-readable JSON string for debugging, such as: <pre>{@code
      * [
      *     94043,
      *     90210
-     * ]</pre>
+     * ]
+     * }</pre>
      *
      * @param indentSpaces the number of spaces to indent for each level of nesting.
      * @return a human-readable JSON string of this array
