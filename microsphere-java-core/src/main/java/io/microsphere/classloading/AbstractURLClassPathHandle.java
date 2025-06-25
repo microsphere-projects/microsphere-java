@@ -43,14 +43,14 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  * where fine-grained control over class loader URLs is required, such as dynamic removal or modification of URLs from
  * a class loader.
  *
- * <h2>Key Features:</h2>
+ * <h3>Key Features:</h3>
  * <ul>
  *   <li>Supports reflective manipulation of internal JVM class loading structures.</li>
  *   <li>Provides abstraction over different versions of JVM internals (e.g., classic vs modern JDK).</li>
  *   <li>Implements the {@link Prioritized} interface to allow prioritization among multiple handlers.</li>
  * </ul>
  *
- * <h2>Example Usage:</h2>
+ * <h3>Example Usage:</h3>
  * <pre>{@code
  * public class ClassicURLClassPathHandle extends AbstractURLClassPathHandle {
  *
