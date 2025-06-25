@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.util.ArrayList;
@@ -49,50 +51,96 @@ public abstract class ListUtils implements Utils {
     }
 
     /**
-     * Get the first element of the specified {@link List}
+     * Retrieves the first element from the specified list.
      *
-     * @param list the specified {@link List}
-     * @param <E>  the type of element
-     * @return the first one if found, or <code>null</code>
-     */
+     * @param list the list from which to retrieve the first element
+     * @param <E>  the type of element in the list
+     * @return the first element if the list is not empty, or {@code null} otherwise
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<Integer> numbers = Arrays.asList(1, 2, 3);
+     *     Integer firstNumber = first(numbers); // returns 1
+     *
+     *     List<String> emptyList = Collections.emptyList();
+     *     String firstString = first(emptyList); // returns null
+     * }</pre>     */
+    @Nullable
     public static <E> E first(List<E> list) {
         return size(list) < 1 ? null : list.get(0);
     }
 
     /**
-     * Get the last element of the specified {@link List}
+     * Retrieves the last element from the specified list.
      *
-     * @param list the specified {@link List}
-     * @param <E>  the type of element
-     * @return the last one if found, or <code>null</code>
-     */
+     * @param list the list from which to retrieve the last element
+     * @param <E>  the type of element in the list
+     * @return the last element if the list is not empty, or {@code null} otherwise
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<Integer> numbers = Arrays.asList(1, 2, 3);
+     *     Integer lastNumber = last(numbers); // returns 3
+     *
+     *     List<String> emptyList = Collections.emptyList();
+     *     String lastString = last(emptyList); // returns null
+     * }</pre>     */
+    @Nullable
     public static <E> E last(List<E> list) {
         int size = size(list);
         return size < 1 ? null : list.get(size - 1);
     }
 
     /**
-     * Create an immutable {@link List} from the specified elements.
+     * Creates an immutable list from the given elements.
      *
-     * <p>This method is equivalent to calling {@link #ofList(Object...)}.</p>
+     * <p>This method is a convenient way to create a list with a small number of elements.
+     * The returned list is unmodifiable, meaning that any attempt to change its contents
+     * will result in an {@link UnsupportedOperationException}.</p>
      *
-     * @param elements the elements to be added to the list
+     * @param elements the elements to include in the list
      * @param <E>      the type of elements in the list
      * @return an immutable list containing the specified elements
-     * @see #ofList(Object[])
-     */
+     * @see #ofList(Object[]) for more details on behavior and immutability
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = ListUtils.of("apple", "banana", "cherry");
+     *     System.out.println(fruits); // Output: [apple, banana, cherry]
+     *
+     *     List<Integer> numbers = ListUtils.of(1, 2, 3, 4, 5);
+     *     System.out.println(numbers); // Output: [1, 2, 3, 4, 5]
+     *
+     *     List<String> emptyList = ListUtils.of();
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> List<E> of(E... elements) {
         return ofList(elements);
     }
 
     /**
-     * Create a {@link List} from the specified array
+     * Creates an immutable list from the given array of elements.
      *
-     * @param elements
-     * @param <E>
-     * @return
-     * @see {@link Lists#ofList} as recommended
-     */
+     * <p>This method is typically used to create a list from an array or varargs input.
+     * If the provided array is empty, it returns an empty list. The returned list is
+     * unmodifiable, meaning any attempt to modify it will throw an
+     * {@link UnsupportedOperationException}.</p>
+     *
+     * @param elements the array of elements to include in the list
+     * @param <E>      the type of elements in the array
+     * @return an immutable list containing the specified elements
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = ListUtils.ofList("apple", "banana", "cherry");
+     *     System.out.println(fruits); // Output: [apple, banana, cherry]
+     *
+     *     String[] names = {};
+     *     List<String> emptyList = ListUtils.ofList(names);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> List<E> ofList(E... elements) {
         if (isEmpty(elements)) {
             return emptyList();
@@ -101,17 +149,30 @@ public abstract class ListUtils implements Utils {
     }
 
     /**
-     * Create an immutable {@link List} from the specified {@link Iterable}.
+     * Creates an immutable list from the specified {@link Iterable}.
      *
-     * <p>If the given {@link Iterable} is already a non-null {@link List},
-     * it will be returned as unmodifiable. Otherwise, the elements will be copied
-     * from the {@link Iterator} obtained via the iterable.</p>
+     * <p>If the given iterable is {@code null}, an empty list will be returned.
+     * If the iterable is already a list, it will be wrapped in an unmodifiable list.
+     * Otherwise, the elements will be copied into a new list.</p>
      *
-     * @param iterable The {@link Iterable} to convert.
+     * @param iterable The iterable to convert.
      * @param <E>      The type of elements in the iterable.
      * @return An immutable list containing all elements from the iterable.
-     * @see #ofList(Iterator)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     Set<String> fruits = new HashSet<>(Arrays.asList("apple", "banana", "cherry"));
+     *     List<String> fruitsList = ListUtils.ofList(fruits);
+     *     System.out.println(fruitsList); // Output: [apple, banana, cherry]
+     *
+     *     List<Integer> numbers = Arrays.asList(1, 2, 3);
+     *     List<Integer> unmodifiableNumbers = ListUtils.ofList(numbers);
+     *     System.out.println(unmodifiableNumbers); // Output: [1, 2, 3] - already a list, wrapped as unmodifiable
+     *
+     *     List<String> emptyList = ListUtils.ofList((Iterable<String>) null);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> List<E> ofList(Iterable<E> iterable) {
         if (iterable == null) {
             return emptyList();
@@ -123,32 +184,50 @@ public abstract class ListUtils implements Utils {
     }
 
     /**
-     * Create an immutable {@link List} from the specified {@link Enumeration}.
+     * Creates an immutable list from the specified {@link Enumeration}.
      *
-     * <p>If the given {@link Enumeration} is {@code null}, an empty list will be returned.
-     * Otherwise, the elements will be copied into a new list.</p>
+     * <p>If the given enumeration is {@code null}, an empty list will be returned.
+     * Otherwise, the elements will be copied into a new list using the underlying iterator,
+     * and the result will be wrapped in an unmodifiable list.</p>
      *
-     * @param enumeration The {@link Enumeration} to convert.
+     * @param enumeration The enumeration to convert.
      * @param <E>         The type of elements in the enumeration.
      * @return An immutable list containing all elements from the enumeration.
-     * @see #ofList(Iterator)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     Vector<String> vector = new Vector<>(Arrays.asList("one", "two", "three"));
+     *     List<String> list = ListUtils.ofList(vector.elements());
+     *     System.out.println(list); // Output: [one, two, three]
+     *
+     *     List<Integer> emptyList = ListUtils.ofList((Enumeration<Integer>) null);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> List<E> ofList(Enumeration<E> enumeration) {
         return ofList(toIterator(enumeration));
     }
 
     /**
-     * Create an immutable {@link List} from the specified {@link Iterator}.
+     * Creates an immutable list from the specified {@link Iterator}.
      *
-     * <p>If the given {@link Iterator} is {@code null}, an empty list will be returned.
-     * Otherwise, the elements will be copied into a new linked list.</p>
+     * <p>If the given iterator is {@code null}, an empty list will be returned.
+     * Otherwise, the elements will be copied into a new list using the underlying iteration,
+     * and the result will be wrapped in an unmodifiable list.</p>
      *
-     * @param iterator The {@link Iterator} to convert.
+     * @param iterator The iterator to convert.
      * @param <E>      The type of elements in the iterator.
      * @return An immutable list containing all elements from the iterator.
-     * @see #ofList(Iterable)
-     * @see #newLinkedList(Iterator)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = ListUtils.ofList(Arrays.asList("apple", "banana", "cherry").iterator());
+     *     System.out.println(fruits); // Output: [apple, banana, cherry]
+     *
+     *     List<Integer> numbers = ListUtils.ofList((Iterator<Integer>) null);
+     *     System.out.println(numbers); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> List<E> ofList(Iterator<E> iterator) {
         if (iterator == null) {
             return emptyList();
@@ -163,21 +242,45 @@ public abstract class ListUtils implements Utils {
     /**
      * Creates a new empty {@link ArrayList} instance.
      *
+     * <p>This method provides a convenient way to create an empty array list with default initial capacity.
+     * The returned list is modifiable and will grow dynamically as elements are added.</p>
+     *
      * @param <E> the type of elements in the list
-     * @return a new, empty {@link ArrayList}
-     */
+     * @return a new, empty {@link ArrayList} with default initial capacity
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> list = ListUtils.newArrayList();
+     *     System.out.println(list.isEmpty()); // Output: true
+     *
+     *     list.add("Hello");
+     *     System.out.println(list); // Output: [Hello]
+     * }</pre>     */
+    @Nonnull
     public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
     }
 
+
     /**
-     * Creates a new empty {@link ArrayList} instance with the specified initial capacity.
+     * Creates a new {@link ArrayList} instance with the specified initial capacity.
      *
-     * @param size the initial capacity of the returned array list
-     * @param <E>  the type of elements in the list
-     * @return a new, empty {@link ArrayList} with the specified initial capacity
-     * @throws IllegalArgumentException if the specified size is negative
-     */
+     * <p>This method provides a convenient way to create an array list with a predefined initial size,
+     * which can help optimize performance when the number of elements to be added is known in advance.</p>
+     *
+     * @param size The initial capacity of the array list.
+     * @param <E>  The type of elements in the list.
+     * @return A new, empty {@link ArrayList} with the specified initial capacity.
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> list = ListUtils.newArrayList(10);
+     *     System.out.println(list.isEmpty()); // Output: true
+     *
+     *     list.add("Hello");
+     *     System.out.println(list); // Output: [Hello]
+     * }</pre>     */
+    @Nonnull
     public static <E> ArrayList<E> newArrayList(int size) {
         return new ArrayList<>(size);
     }
@@ -194,7 +297,17 @@ public abstract class ListUtils implements Utils {
      * @return A new linked list containing all elements from the enumeration.
      * @see #newLinkedList(Iterable)
      * @see CollectionUtils#toIterable(Enumeration)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     Vector<String> vector = new Vector<>(Arrays.asList("apple", "banana", "cherry"));
+     *     List<String> list = ListUtils.newArrayList(vector.elements());
+     *     System.out.println(list); // Output: [apple, banana, cherry]
+     *
+     *     List<Integer> emptyList = ListUtils.newArrayList((Enumeration<Integer>) null);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> LinkedList<E> newArrayList(Enumeration<E> values) {
         return newLinkedList(toIterable(values));
     }
@@ -202,14 +315,28 @@ public abstract class ListUtils implements Utils {
     /**
      * Creates a new {@link ArrayList} instance containing all elements from the specified {@link Iterable}.
      *
-     * <p>If the given {@link Iterable} is {@code null}, an empty list will be returned.
+     * <p>If the given {@link Iterable} is {@code null}, an empty array list will be returned.
      * Otherwise, the elements will be iterated and added to a new array list.</p>
      *
      * @param values The iterable to convert.
      * @param <E>    The type of elements in the iterable.
      * @return A new array list containing all elements from the iterable.
      * @see #newArrayList(Iterator)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = Arrays.asList("apple", "banana", "cherry");
+     *     List<String> listCopy = ListUtils.newArrayList(fruits);
+     *     System.out.println(listCopy); // Output: [apple, banana, cherry]
+     *
+     *     Set<Integer> numbersSet = new HashSet<>(Arrays.asList(1, 2, 3));
+     *     List<Integer> numbersList = ListUtils.newArrayList(numbersSet);
+     *     System.out.println(numbersList); // Output: [1, 2, 3] - order may vary depending on Set implementation
+     *
+     *     List<String> emptyList = ListUtils.newArrayList((Iterable<String>) null);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> ArrayList<E> newArrayList(Iterable<E> values) {
         return newArrayList(values.iterator());
     }
@@ -217,14 +344,23 @@ public abstract class ListUtils implements Utils {
     /**
      * Creates a new {@link ArrayList} instance containing all elements from the specified {@link Iterator}.
      *
-     * <p>If the given {@link Iterator} is {@code null}, an empty list will be returned.
+     * <p>If the given {@link Iterator} is {@code null}, an empty array list will be returned.
      * Otherwise, the elements will be iterated and added to a new array list.</p>
      *
      * @param iterator The iterator to convert.
      * @param <E>      The type of elements in the iterator.
      * @return A new array list containing all elements from the iterator.
-     * @see #newArrayList(Iterable)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = Arrays.asList("apple", "banana", "cherry");
+     *     List<String> listCopy = ListUtils.newArrayList(fruits.iterator());
+     *     System.out.println(listCopy); // Output: [apple, banana, cherry]
+     *
+     *     List<Integer> numbers = ListUtils.newArrayList((Iterator<Integer>) null);
+     *     System.out.println(numbers); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> ArrayList<E> newArrayList(Iterator<E> iterator) {
         ArrayList<E> list = newArrayList();
         while (iterator.hasNext()) {
@@ -236,9 +372,21 @@ public abstract class ListUtils implements Utils {
     /**
      * Creates a new empty {@link LinkedList} instance.
      *
+     * <p>This method provides a convenient way to create an empty linked list.
+     * The returned list is modifiable and allows for efficient insertions and deletions.</p>
+     *
      * @param <E> the type of elements in the list
      * @return a new, empty {@link LinkedList}
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> list = ListUtils.newLinkedList();
+     *     System.out.println(list.isEmpty()); // Output: true
+     *
+     *     list.add("Hello");
+     *     System.out.println(list); // Output: [Hello]
+     * }</pre>     */
+    @Nonnull
     public static <E> LinkedList<E> newLinkedList() {
         return new LinkedList<>();
     }
@@ -255,7 +403,17 @@ public abstract class ListUtils implements Utils {
      * @return A new linked list containing all elements from the enumeration.
      * @see #newLinkedList(Iterable)
      * @see CollectionUtils#toIterable(Enumeration)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     Vector<String> vector = new Vector<>(Arrays.asList("apple", "banana", "cherry"));
+     *     List<String> list = ListUtils.newLinkedList(vector.elements());
+     *     System.out.println(list); // Output: [apple, banana, cherry]
+     *
+     *     List<Integer> emptyList = ListUtils.newLinkedList((Enumeration<Integer>) null);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
+    @Nonnull
     public static <E> LinkedList<E> newLinkedList(Enumeration<E> values) {
         return newLinkedList(toIterable(values));
     }
@@ -270,21 +428,24 @@ public abstract class ListUtils implements Utils {
      * @param <E>    The type of elements in the iterable.
      * @return A new linked list containing all elements from the iterable.
      * @see #newLinkedList(Iterator)
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = Arrays.asList("apple", "banana", "cherry");
+     *     List<String> listCopy = ListUtils.newLinkedList(fruits);
+     *     System.out.println(listCopy); // Output: [apple, banana, cherry]
+     *
+     *     Set<Integer> numbersSet = new HashSet<>(Arrays.asList(1, 2, 3));
+     *     List<Integer> numbersList = ListUtils.newLinkedList(numbersSet);
+     *     System.out.println(numbersList); // Output: [1, 2, 3] - order may vary depending on Set implementation
+     *
+     *     List<String> emptyList = ListUtils.newLinkedList((Iterable<String>) null);
+     *     System.out.println(emptyList); // Output: []
+     * }</pre>     */
     public static <E> LinkedList<E> newLinkedList(Iterable<E> values) {
         return newLinkedList(values.iterator());
     }
 
-    /**
-     * Creates a new {@link LinkedList} instance containing all elements from the specified {@link Iterator}.
-     *
-     * <p>If the given {@link Iterator} is {@code null}, an empty linked list will be returned.
-     * Otherwise, the elements will be iterated and added to a new linked list.</p>
-     *
-     * @param iterator The iterator to convert.
-     * @param <E>      The type of elements in the iterator.
-     * @return A new linked list containing all elements from the iterator.
-     */
     public static <E> LinkedList<E> newLinkedList(Iterator<E> iterator) {
         LinkedList<E> list = newLinkedList();
         while (iterator.hasNext()) {
@@ -294,14 +455,28 @@ public abstract class ListUtils implements Utils {
     }
 
     /**
-     * Performs the given action for each element of the specified list, 
-     * providing both the index and the element.
+     * Performs the given action for each element of the specified list, providing both the index and the element.
      *
-     * @param values the list to iterate over
-     * @param indexedElementConsumer the action to perform on each element, 
-     *                               taking the index and element as arguments
-     * @param <T> the type of elements in the list
-     */
+     * <p>This method is useful when the action to be performed depends on the position (index)
+     * of the element within the list. The action is applied in the order of the list's iteration.</p>
+     *
+     * @param values                 the list to iterate over
+     * @param indexedElementConsumer the action to perform on each element, taking the index and the element as parameters
+     * @param <T>                    the type of elements in the list
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = Arrays.asList("apple", "banana", "cherry");
+     *     ListUtils.forEach(fruits, (index, fruit) -> System.out.println("Index: " + index + ", Fruit: " + fruit));
+     *     // Output:
+     *     // Index: 0, Fruit: apple
+     *     // Index: 1, Fruit: banana
+     *     // Index: 2, Fruit: cherry
+     *
+     *     List<Integer> numbers = Collections.emptyList();
+     *     ListUtils.forEach(numbers, (index, number) -> System.out.println("Index: " + index + ", Number: " + number));
+     *     // No output, as the list is empty
+     * }</pre>     */
     public static <T> void forEach(List<T> values, BiConsumer<Integer, T> indexedElementConsumer) {
         int length = size(values);
         for (int i = 0; i < length; i++) {
@@ -313,13 +488,26 @@ public abstract class ListUtils implements Utils {
     /**
      * Performs the given action for each element of the specified list.
      *
-     * <p>This method wraps the provided {@link Consumer} and delegates to
-     * {@link #forEach(List, BiConsumer)} by ignoring the index parameter.</p>
+     * <p>This method ignores the index of elements and directly applies the provided consumer
+     * to each element in the list. It is useful when the operation does not require the element's index.</p>
      *
      * @param values   the list to iterate over
      * @param consumer the action to perform on each element
      * @param <T>      the type of elements in the list
-     */
+     *
+     * <p><b>Examples:</b>
+     * <pre>{@code
+     *     List<String> fruits = Arrays.asList("apple", "banana", "cherry");
+     *     ListUtils.forEach(fruits, fruit -> System.out.println("Fruit: " + fruit));
+     *     // Output:
+     *     // Fruit: apple
+     *     // Fruit: banana
+     *     // Fruit: cherry
+     *
+     *     List<Integer> numbers = Collections.emptyList();
+     *     ListUtils.forEach(numbers, number -> System.out.println("Number: " + number));
+     *     // No output, as the list is empty
+     * }</pre>     */
     public static <T> void forEach(List<T> values, Consumer<T> consumer) {
         forEach(values, (i, e) -> consumer.accept(e));
     }
