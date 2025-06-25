@@ -135,17 +135,6 @@ class UnmodifiableQueueTest {
     }
 
     @Test
-    void testEquals() {
-        assertEquals(queue, singletonQueue(TEST_ELEMENT));
-    }
-
-    @Test
-    void testHashCode() {
-        assertEquals(queue.hashCode(), singletonQueue(TEST_ELEMENT).hashCode());
-
-    }
-
-    @Test
     void testSpliterator() {
         assertNotNull(queue.spliterator());
     }
@@ -163,5 +152,20 @@ class UnmodifiableQueueTest {
     @Test
     void testForEach() {
         queue.forEach(element -> assertEquals(TEST_ELEMENT, element));
+    }
+
+    @Test
+    void testEquals() {
+        assertEquals(queue, singletonQueue(TEST_ELEMENT));
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(queue.hashCode(), singletonQueue(TEST_ELEMENT).hashCode());
+    }
+
+    @Test
+    void testToString() {
+        assertEquals(queue.toString(), singletonQueue(TEST_ELEMENT).toString());
     }
 }
