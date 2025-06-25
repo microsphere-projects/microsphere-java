@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
 
-
 /**
  * An unmodifiable view of a {@link Deque} which wraps a given delegate and prevents any modifications to it.
  * <p>
