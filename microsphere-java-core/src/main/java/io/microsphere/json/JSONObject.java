@@ -745,13 +745,14 @@ public class JSONObject {
     }
 
     /**
-     * Encodes this object as a human-readable JSON string for debugging, such as: <pre>
+     * Encodes this object as a human-readable JSON string for debugging, such as: <pre>{@code
      * {
      *     "query": "Pizza",
      *     "locations": [
      *         94043,
      *         90210
      *     ]
+     * }
      * }</pre>
      *
      * @param indentSpaces the number of spaces to indent for each level of nesting.
