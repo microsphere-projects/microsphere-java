@@ -54,7 +54,7 @@ public abstract class EnumerationUtils implements Utils {
     public static <E> Enumeration<E> of(E... elements) {
         return ofEnumeration(elements);
     }
-    
+
     /**
      * Creates an {@link Enumeration} from the provided elements array.
      *
