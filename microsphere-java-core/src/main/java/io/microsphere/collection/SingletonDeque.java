@@ -46,7 +46,6 @@ public class SingletonDeque<E> extends AbstractDeque<E> implements Serializable 
 
     private final E element;
 
-
     public SingletonDeque(E element) {
         this.element = element;
     }
