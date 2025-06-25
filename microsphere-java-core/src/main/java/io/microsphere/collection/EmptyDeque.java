@@ -24,13 +24,34 @@ import java.util.Iterator;
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
 
 /**
- * An empty and immutable implementation of the Deque interface.
- * <p>
- * This class implements a {@link Deque} that is always empty. All operations that attempt to modify the deque will result in an
- * {@link UnsupportedOperationException}. It is serializable and guarantees consistent behavior across different environments.
- * </p>
+ * An empty and immutable {@link Deque} implementation that throws {@link UnsupportedOperationException}
+ * for methods that attempt to modify the deque, and returns appropriate default values for read-only operations.
  *
- * @param <E> The type of elements held in this deque.
+ * <p>This class is a singleton implementation, and it's serializable. It's useful as a placeholder or
+ * default value where an empty deque is needed without creating a new instance every time.</p>
+ *
+ * <h3>Example Usage:</h3>
+ * <pre>{@code
+ * Deque<String> deque = EmptyDeque.INSTANCE;
+ *
+ * // Reading from the deque
+ * System.out.println(deque.isEmpty()); // true
+ * System.out.println(deque.size());    // 0
+ *
+ * // Iterating over elements (no output)
+ * for (String element : deque) {
+ *     System.out.println(element);
+ * }
+ *
+ * // Attempting to modify will throw an exception
+ * try {
+ *     deque.add("test");
+ * } catch (UnsupportedOperationException e) {
+ *     System.out.println("Modification not allowed: " + e.getMessage());
+ * }
+ * }</pre>
+ *
+ * @param <E> The type of elements held in this deque
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see AbstractDeque
  * @since 1.0.0
