@@ -167,7 +167,7 @@ public class QueueUtilsTest {
         Iterator<String> iterator = queue.iterator();
         assertFalse(iterator.hasNext());
         assertThrows(NoSuchElementException.class, () -> iterator.next());
-        assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
+        assertThrows(IllegalStateException.class, () -> iterator.remove());
 
         Object[] array = queue.toArray();
         assertEquals(0, array.length);
