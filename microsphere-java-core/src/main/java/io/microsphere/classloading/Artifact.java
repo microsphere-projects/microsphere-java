@@ -12,10 +12,24 @@ import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.util.Objects.hash;
 
 /**
- * Artifact entity
+ * Represents a software artifact with attributes such as artifact ID, version, and location.
+ * This class is used to identify and match artifacts based on their properties.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @since 1.0.0
+ * <p>Examples:</p>
+ * <pre>
+ * // Create an artifact with ID and default version (UNKNOWN)
+ * Artifact artifact1 = Artifact.create("my-artifact");
+ *
+ * // Create an artifact with ID and specific version
+ * Artifact artifact2 = Artifact.create("my-artifact", "1.0.0");
+ *
+ * // Create an artifact with ID, version, and location
+ * URL location = new URL("http://example.com/artifact.jar");
+ * Artifact artifact3 = Artifact.create("my-artifact", "1.0.0", location);
+ *
+ * // Matching artifacts based on ID and version
+ * boolean isMatch = artifact1.matches(artifact2); // returns false
+ * </pre>
  */
 public class Artifact {
 
