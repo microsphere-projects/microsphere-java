@@ -21,12 +21,11 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Deque;
 import java.util.Iterator;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
-import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -38,11 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class SingletonDequeTest {
 
-    private Deque singletonDeque;
+    private SingletonDeque singletonDeque;
 
     @BeforeEach
     public void before() {
-        singletonDeque = singletonDeque(TEST_ELEMENT);
+        singletonDeque = new SingletonDeque(TEST_ELEMENT);
     }
 
     @Test
@@ -113,5 +112,17 @@ class SingletonDequeTest {
     @Test
     void testSize() {
         assertEquals(1, singletonDeque.size());
+    }
+
+    @Test
+    public void testEquals() {
+        assertEquals(singletonDeque, singletonDeque);
+        assertNotEquals(singletonDeque, null);
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(singletonDeque.hashCode(), singletonDeque.hashCode());
+        assertEquals(TEST_ELEMENT.hashCode(), singletonDeque.hashCode());
     }
 }
