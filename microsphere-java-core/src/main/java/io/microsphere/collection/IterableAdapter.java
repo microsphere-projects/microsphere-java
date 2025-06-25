@@ -28,15 +28,15 @@ import static io.microsphere.collection.EmptyIterator.INSTANCE;
  * </p>
  * <p>
  * Example usage:
- * <pre>
+ * <pre>{@code
  *     Iterator<String> iterator = Arrays.asList("one", "two", "three").iterator();
  *     Iterable<String> iterable = new IterableAdapter<>(iterator);
  *
  *     for (String value : iterable) {
  *         System.out.println(value);
  *     }
- * </pre>
- * </p>
+ *  }</pre>
+ </p>
  *
  * @param <T> the type of elements returned by the iterator.
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
