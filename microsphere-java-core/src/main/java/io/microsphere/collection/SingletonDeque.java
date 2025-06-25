@@ -62,7 +62,7 @@ public class SingletonDeque<E> extends AbstractDeque<E> implements Serializable 
 
     @Override
     public boolean removeFirstOccurrence(Object o) {
-        return super.removeFirstOccurrence(o);
+        throw new UnsupportedOperationException();
     }
 
     @Override
