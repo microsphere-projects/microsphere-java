@@ -25,17 +25,36 @@ import java.util.Objects;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 
 /**
- * A {@link Deque} implementation that holds a single element. This deque is immutable in terms of size;
- * operations that attempt to add or remove elements will throw {@link UnsupportedOperationException}.
+ * A {@link Deque} implementation that holds a single, immutable element.
  * <p>
- * The singleton deque is useful when an unmodifiable deque with exactly one element is needed.
- * It provides constant-time access to the element via methods such as {@link #getFirst()} and
- * {@link #getLast()}, and supports iteration through the singleton iterator provided by
- * {@link CollectionUtils#singletonIterator(Object)}.
+ * This class provides a lightweight, read-only deque structure containing exactly one element.
+ * All operations that attempt to modify the deque (e.g., add, remove, poll) will throw an
+ * {@link UnsupportedOperationException} because the deque is designed to be immutable.
  * </p>
  *
- * @param <E> The type of the single element held in this deque
+ * <p><b>Example Usage:</b></p>
+ * <pre>{@code
+ * SingletonDeque<String> deque = new SingletonDeque<>("Hello");
+ *
+ * System.out.println(deque.getFirst()); // Output: Hello
+ * System.out.println(deque.getLast());  // Output: Hello
+ * System.out.println(deque.size());     // Output: 1
+ *
+ * try {
+ *     deque.addFirst("World");
+ * } catch (UnsupportedOperationException e) {
+ *     System.out.println("Modification not allowed");
+ * }
+ *
+ * Iterator<String> it = deque.iterator();
+ * while (it.hasNext()) {
+ *     System.out.println(it.next()); // Output: Hello
+ * }
+ * }</pre>
+ *
+ * @param <E> The type of the singleton element held in this deque
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see AbstractDeque
  * @since 1.0.0
  */
 public class SingletonDeque<E> extends AbstractDeque<E> implements Serializable {
