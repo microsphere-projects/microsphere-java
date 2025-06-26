@@ -21,8 +21,39 @@ import java.util.function.BiConsumer;
 
 import static java.util.Objects.requireNonNull;
 
+
 /**
- * {@link BiConsumer} with {@link Throwable}
+ * Represents an operation that accepts two input arguments and returns no result,
+ * potentially throwing a {@link Throwable}. This is the two-arity specialization of
+ * {@link ThrowableConsumer}.
+ *
+ * <p>Additionally, this interface provides a default method ({@link #andThen}) to support
+ * chaining operations, similar to functional constructs in the JDK.
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>{@code
+ * ThrowableBiConsumer<Integer, Integer> addAndPrint = (a, b) -> {
+ *     int sum = a + b;
+ *     System.out.println("Sum: " + sum);
+ * };
+ *
+ * addAndPrint.accept(3, 5); // Output: Sum: 8
+ * }</pre>
+ *
+ * <h2>Error Handling Example:</h2>
+ * <pre>{@code
+ * ThrowableBiConsumer<String, Integer> parseAndPrint = (str, radix) -> {
+ *     int value = Integer.parseInt(str, radix);
+ *     System.out.println("Parsed value: " + value);
+ * };
+ *
+ * try {
+ *     parseAndPrint.accept("123", 10); // Output: Parsed value: 123
+ *     parseAndPrint.accept("abc", 16); // May throw NumberFormatException
+ * } catch (Throwable t) {
+ *     System.err.println("Error occurred: " + t.getMessage());
+ * }
+ * }</pre>
  *
  * @param <T> the type of the first argument to the operation
  * @param <U> the type of the second argument to the operation
