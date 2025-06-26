@@ -30,7 +30,26 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.emptyList;
 
 /**
- * {@link Serializer} Utilities class
+ * A utility class for managing and retrieving {@link Serializer} instances.
+ * <p>
+ * This class provides methods to load serializers via SPI (Service Provider Interface),
+ * retrieve the most compatible serializer for a given type, and get serializers based on priority.
+ * </p>
+ *
+ * <p><b>Example usage:</b></p>
+ * <pre>{@code
+ * Serializers serializers = new Serializers();
+ * serializers.loadSPI(); // Load all available serializers from SPI
+ *
+ * // Get the highest priority serializer for String
+ * Serializer<String> highestPrioritySerializer = serializers.getHighestPriority(String.class);
+ *
+ * // Get the lowest priority serializer for String
+ * Serializer<String> lowestPrioritySerializer = serializers.getLowestPriority(String.class);
+ *
+ * // Get the most compatible serializer for String
+ * Serializer<?> compatibleSerializer = serializers.getMostCompatible(String.class);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
