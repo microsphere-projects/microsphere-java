@@ -24,7 +24,7 @@ import java.io.IOException;
  * Implementations of this interface must be thread-safe and should also ensure that the serialization process is consistent
  * and efficient.
  *
- * <p><b>Example usage:</b>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class StringSerializer implements Serializer&lt;String&gt; {
  *     public byte[] serialize(String source) throws IOException {
