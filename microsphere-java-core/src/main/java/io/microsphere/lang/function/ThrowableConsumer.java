@@ -23,12 +23,39 @@ import java.util.function.Function;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link Consumer} with {@link Throwable}
+ * Represents an operation that accepts a single input argument and returns no
+ * result, which may throw a {@link Throwable}.
  *
- * @param <T> the source type
- * @see Function
+ * <p>This is the two-arity specialization of {@link Function} and the
+ * throwable-aware functional interface whose functional method is
+ * {@link #accept(Object)}.
+ *
+ * <h2>Examples</h2>
+ *
+ * <pre>{@code
+ * // Basic usage:
+ * ThrowableConsumer<String> printer = System.out::println;
+ *
+ * printer.accept("Hello World"); // Outputs: Hello World
+ *
+ * // Throwing an exception:
+ * ThrowableConsumer<Integer> riskyConsumer = i -> {
+ *     if (i < 0) {
+ *         throw new IllegalArgumentException("Negative value not allowed");
+ *     }
+ * };
+ *
+ * try {
+ *     riskyConsumer.accept(-1);
+ * } catch (Throwable t) {
+ *     System.err.println("Caught exception: " + t.getMessage());
+ * }
+ * }</pre>
+ *
+ * @param <T> the type of the input to the operation
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Consumer
  * @see Throwable
- * @since 1.0.0
  */
 @FunctionalInterface
 public interface ThrowableConsumer<T> {
