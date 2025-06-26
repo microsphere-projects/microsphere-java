@@ -29,7 +29,26 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.emptyList;
 
 /**
- * {@link Deserializer} Utilities class
+ * A utility class for managing and retrieving {@link Deserializer} instances based on the deserialized type.
+ * <p>
+ * This class allows registration and lookup of deserializers via SPI (Service Provider Interface),
+ * supporting priority-based resolution to determine the most or least specific deserializer available.
+ * </p>
+ *
+ * <h3>Examples</h3>
+ * <pre>{@code
+ * // Create an instance with the default class loader
+ * Deserializers deserializers = new Deserializers();
+ *
+ * // Load deserializers via SPI
+ * deserializers.loadSPI();
+ *
+ * // Retrieve the highest priority deserializer for a specific type
+ * Deserializer<MyType> deserializer = deserializers.getHighestPriority(MyType.class);
+ *
+ * // Deserialize an object using the retrieved deserializer
+ * MyType obj = deserializer.deserialize(data);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
