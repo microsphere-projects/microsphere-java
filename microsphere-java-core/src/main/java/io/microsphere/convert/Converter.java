@@ -26,11 +26,50 @@ import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
+
 /**
- * A class to convert the source-typed value to the target-typed value
+ * A functional interface that defines a strategy for converting values from one type ({@code S}) to another type ({@code T}).
+ * <p>
+ * Implementations of this interface can be used to encapsulate conversion logic between types,
+ * and they may optionally implement the {@link Prioritized} interface to control ordering when multiple
+ * converters are available.
+ * </p>
+ *
+ * <h2>Example Implementation</h2>
+ * <pre>{@code
+ * public class StringToIntegerConverter implements Converter<String, Integer> {
+ *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
+ *         return sourceType.isAssignableFrom(String.class) &&
+ *                targetType.isAssignableFrom(Integer.class);
+ *     }
+ *
+ *     public Integer convert(String source) {
+ *         return Integer.parseInt(source);
+ *     }
+ * }
+ * }</pre>
+ *
+ * <h2>Prioritized Behavior Example</h2>
+ * <pre>{@code
+ * public class HighPriorityStringToIntegerConverter implements Converter<String, Integer>, Prioritized {
+ *     public int getPriority() {
+ *         return Prioritized.MAX_PRIORITY; // Highest priority
+ *     }
+ *
+ *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
+ *         return sourceType.isAssignableFrom(String.class) &&
+ *                targetType.isAssignableFrom(Integer.class);
+ *     }
+ *
+ *     public Integer convert(String source) {
+ *         return Integer.parseInt(source);
+ *     }
+ * }
+ * }</pre>
  *
  * @param <S> The source type
  * @param <T> The target type
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 @FunctionalInterface
@@ -44,7 +83,7 @@ public interface Converter<S, T> extends Prioritized {
      * @return if accepted, return <code>true</code>, or <code>false</code>
      */
     default boolean accept(Class<?> sourceType, Class<?> targetType) {
-        return isAssignableFrom(getSourceType(), sourceType) && isAssignableFrom(getTargetType(),targetType);
+        return isAssignableFrom(getSourceType(), sourceType) && isAssignableFrom(getTargetType(), targetType);
     }
 
     /**
