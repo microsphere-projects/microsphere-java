@@ -32,8 +32,54 @@ import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.util.Objects.hash;
 
 /**
- * Abstract class of {@link Converter} to provide the standard {@link #getPriority()} implementation.
+ * An abstract base class for implementing the {@link Converter} interface.
  *
+ * <p>This class provides a default implementation for priority resolution based on the inheritance hierarchy depth
+ * of source and target types, ensuring more specific converters (those handling more derived types) receive higher priority.
+ * It also includes common functionality such as logging support, null safety in conversion, and proper equals and hashcode behavior.</p>
+ *
+ * <h2>Usage Example</h2>
+ * <pre>{@code
+ * public class StringToIntegerConverter extends AbstractConverter<String, Integer> {
+ *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
+ *         return sourceType.isAssignableFrom(String.class) &&
+ *                targetType.isAssignableFrom(Integer.class);
+ *     }
+ *
+ *     public Integer doConvert(String source) {
+ *         return Integer.parseInt(source);
+ *     }
+ * }
+ * }</pre>
+ *
+ * <h2>Prioritized Behavior Example</h2>
+ * <pre>{@code
+ * public class HighPriorityStringToIntegerConverter extends AbstractConverter<String, Integer> {
+ *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
+ *         return sourceType.isAssignableFrom(String.class) &&
+ *                targetType.isAssignableFrom(Integer.class);
+ *     }
+ *
+ *     public Integer doConvert(String source) {
+ *         return Integer.parseInt(source);
+ *     }
+ *
+ *     @Override
+ *     public int getPriority() {
+ *         return Prioritized.MAX_PRIORITY; // Highest priority
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>The priority is calculated by combining the number of superclasses and interfaces from both the source and target types.
+ * Negative values indicate higher priority. Subclasses can override the priority using the constructor or by overriding the
+ * {@link #getPriority()} method.</p>
+ *
+ * <p>Subclasses must implement the {@link #doConvert(Object)} method to provide the actual conversion logic,
+ * while null handling and exception wrapping are already taken care of by this base class.</p>
+ *
+ * @param <S> The source type
+ * @param <T> The target type
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Converter
  * @see Prioritized
