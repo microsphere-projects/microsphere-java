@@ -10,7 +10,7 @@ package io.microsphere.filter;
  * This interface is typically used in scenarios where conditional processing or selection of objects is required.
  * </p>
  *
- * <h3>Example</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class EvenNumberFilter implements Filter<Integer> {
  *     public boolean accept(Integer number) {
@@ -26,6 +26,7 @@ package io.microsphere.filter;
  *
  * @param <T> the type of object that this filter can evaluate
  * @author <a href="mercyblitz@gmail.com">Mercy</a>
+ * @since 1.0.0
  */
 public interface Filter<T> {
 
