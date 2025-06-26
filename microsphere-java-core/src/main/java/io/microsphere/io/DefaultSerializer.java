@@ -21,12 +21,25 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * Default Serializer implementation based on Java Standard Serialization.
+ * A default implementation of the {@link Serializer} interface that uses Java's standard serialization mechanism.
+ * <p>
+ * This class leverages Java's built-in serialization through an {@link ObjectOutputStream} to serialize objects into a byte array.
+ * It is designed to work with any object that implements the {@link Serializable} interface, ensuring compatibility with Java's
+ * serialization framework.
+ * </p>
+ *
+ * <h3>Example usage</h3>
+ * <pre>{@code
+ * // Create an instance of DefaultSerializer
+ * Serializer<MySerializableObject> serializer = new DefaultSerializer();
+ *
+ * // Serialize an object
+ * MySerializableObject obj = new MySerializableObject("example");
+ * byte[] serializedData = serializer.serialize(obj);
+ * }</pre>
+ * </p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ObjectOutputStream
- * @see Serializable
- * Date : 2021-05-02
  * @since 1.0.0
  */
 public class DefaultSerializer implements Serializer<Object> {
