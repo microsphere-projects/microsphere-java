@@ -24,7 +24,7 @@ import java.util.Iterator;
  * {@link #remove()} method, which throws an {@link IllegalStateException}, 
  * indicating that removal is not supported.
  *
- * <p><b>Example Usage:</b>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class MyReadOnlyIterator extends ReadOnlyIterator<String> {
  *     private String[] data = {"apple", "banana", "cherry"};
