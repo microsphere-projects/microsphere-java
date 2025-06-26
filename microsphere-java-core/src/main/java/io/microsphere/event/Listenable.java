@@ -57,7 +57,7 @@ public interface Listenable<E extends EventListener<?>> {
      *   <li>The class of the listener is not a final class.</li>
      * </ul>
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * Here's how you might use this method in practice:
      * <pre>{@code
      * EventListener<MyEvent> listener = new MyEventListener();
