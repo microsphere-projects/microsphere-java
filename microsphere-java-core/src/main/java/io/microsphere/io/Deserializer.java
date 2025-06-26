@@ -19,13 +19,25 @@ package io.microsphere.io;
 import java.io.IOException;
 
 /**
- * Deserializer
+ * A functional interface for deserializing byte arrays into objects of type {@code T}.
+ * <p>
+ * Implementations of this interface must be thread-safe.
+ * </p>
  *
- * @param <T> the type to be deserialized
+ * <h3>Example usage</h3>
+ * <pre>{@code
+ * Deserializer<String> deserializer = bytes -> new String(bytes, StandardCharsets.UTF_8);
+ * String data = deserializer.deserialize("Hello, World!".getBytes(StandardCharsets.UTF_8));
+ * System.out.println(data); // Output: Hello, World!
+ * }</pre>
+ * </p>
+ *
+ * @param <T> the type to be deserialized from a byte array
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Serializer
  * @since 1.0.0
- * Date : 2021-05-01
  */
+@FunctionalInterface
 public interface Deserializer<T> {
 
     T deserialize(byte[] bytes) throws IOException;
