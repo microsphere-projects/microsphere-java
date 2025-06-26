@@ -22,7 +22,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static java.lang.System.getSecurityManager;
 
 /**
- * The Customized {@link ThreadFactory}
+ * A {@link ThreadFactory} implementation that creates threads with customized attributes,
+ * including name prefix, daemon status, priority, and stack size.
+ *
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * // Create a ThreadFactory with default settings
+ * ThreadFactory factory = CustomizedThreadFactory.newThreadFactory("worker");
+ *
+ * // Create a ThreadFactory with custom daemon, priority, and stack size
+ * ThreadFactory customFactory = CustomizedThreadFactory.newThreadFactory("task", false, Thread.MAX_PRIORITY, 1024);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
