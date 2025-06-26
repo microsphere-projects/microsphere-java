@@ -50,7 +50,7 @@ import static java.lang.ClassLoader.getSystemClassLoader;
  *   <li>Implements the {@link Prioritized} interface to allow prioritization among multiple handlers.</li>
  * </ul>
  *
- * <h3>Example Usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class ClassicURLClassPathHandle extends AbstractURLClassPathHandle {
  *
