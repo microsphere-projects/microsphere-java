@@ -45,7 +45,7 @@ public abstract class ExecutorUtils implements Utils {
      * ensuring that all provided executors are shut down properly upon application exit.
      * </p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * ExecutorService executor1 = Executors.newFixedThreadPool(2);
      * ExecutorService executor2 = Executors.newSingleThreadExecutor();
@@ -72,7 +72,7 @@ public abstract class ExecutorUtils implements Utils {
      * Otherwise, no action is taken and the method returns {@code false}.
      * </p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * ExecutorService executor = Executors.newFixedThreadPool(2);
      * boolean isShutdown = ExecutorUtils.shutdown(executor);
@@ -106,7 +106,7 @@ public abstract class ExecutorUtils implements Utils {
      * null, no action is taken and the method returns {@code false}.
      * </p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * ExecutorService executor = Executors.newFixedThreadPool(2);
      * boolean isShutdown = ExecutorUtils.shutdown(executor);
