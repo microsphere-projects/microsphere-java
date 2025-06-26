@@ -44,33 +44,84 @@ import static java.util.Collections.unmodifiableSet;
 public abstract class SetUtils implements Utils {
 
     /**
-     * Determine whether the specified {@link Iterable} is an instance of {@link Set}.
+     * Checks whether the specified {@link Iterable} is an instance of {@link Set}.
      *
-     * @param elements the elements to check, may be null or empty
-     * @return true if the given elements are an instance of {@link Set}, false otherwise
+     * <p>This method returns {@code true} if the provided iterable is a {@link Set}, ensuring that
+     * operations like duplicate elimination and order independence are already handled by the implementation.
+     *
+     * <p><b>Example usage:</b>
+     * <pre>{@code
+     * Set<String> set = new HashSet<>();
+     * set.add("apple");
+     * set.add("banana");
+     *
+     * boolean result1 = SetUtils.isSet(set); // returns true
+     *
+     * List<String> list = Arrays.asList("apple", "banana");
+     * boolean result2 = SetUtils.isSet(list); // returns false
+     * }</pre>
+     *
+     * @param elements the {@link Iterable} to check, may be null
+     * @return {@code true} if the given iterable is a {@link Set}; otherwise, {@code false}
      */
     public static boolean isSet(@Nullable Iterable<?> elements) {
         return elements instanceof Set;
     }
 
     /**
-     * Convert to multiple elements to be {@link LinkedHashSet}
+     * Creates an unmodifiable {@link Set} from the given varargs array of elements.
      *
-     * @param elements one or more elements
-     * @param <E>      the type of <code>elements</code>
-     * @return read-only {@link Set}
+     * <p>This method converts the provided array into a set to eliminate duplicates,
+     * and returns it as an unmodifiable view. If the input array is null or empty,
+     * an empty set is returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set1 = SetUtils.of("apple", "banana", "apple");
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * String[] fruits = {"apple", "banana"};
+     * Set<String> set2 = SetUtils.of(fruits);
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.of();
+     * // returns an empty unmodifiable set
+     * }</pre>
+     *
+     * @param elements the array of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the array
+     * @return an unmodifiable {@link Set} containing all unique elements from the provided array
      */
+    @Nonnull
     public static <E> Set<E> of(E... elements) {
         return ofSet(elements);
     }
 
     /**
-     * Convert to multiple elements to be {@link LinkedHashSet}
+     * Creates an unmodifiable {@link Set} from the given varargs array of elements.
      *
-     * @param elements one or more elements
-     * @param <E>      the type of <code>elements</code>
-     * @return read-only {@link Set}
+     * <p>This method converts the provided array into a set to eliminate duplicates,
+     * and returns it as an unmodifiable view. If the input array is null or empty,
+     * an empty set is returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set1 = SetUtils.ofSet("apple", "banana", "apple");
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * String[] fruits = {"apple", "banana"};
+     * Set<String> set2 = SetUtils.ofSet(fruits);
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.ofSet();
+     * // returns an empty unmodifiable set
+     * }</pre>
+     *
+     * @param elements the array of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the array
+     * @return an unmodifiable {@link Set} containing all unique elements from the provided array
      */
+    @Nonnull
     public static <E> Set<E> ofSet(E... elements) {
         int size = length(elements);
         if (size < 1) {
@@ -88,11 +139,29 @@ public abstract class SetUtils implements Utils {
     }
 
     /**
-     * Build a read-only {@link Set} from the given {@lin Enumeration} elements
+     * Creates an unmodifiable {@link Set} from the given {@link Enumeration}.
      *
-     * @param elements one or more elements
-     * @param <E>      the type of <code>elements</code>
-     * @return non-null read-only {@link Set}
+     * <p>This method iterates through the provided enumeration and adds each element to a new set,
+     * ensuring uniqueness, and returns it as an unmodifiable view. If the enumeration is null or has no elements,
+     * an empty set is returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Vector<String> vector = new Vector<>();
+     * vector.add("apple");
+     * vector.add("banana");
+     * Enumeration<String> enumeration = vector.elements();
+     *
+     * Set<String> set = SetUtils.ofSet(enumeration);
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.ofSet(null);
+     * // returns an empty unmodifiable set
+     * }</pre>
+     *
+     * @param elements the enumeration of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the enumeration
+     * @return an unmodifiable {@link Set} containing all unique elements from the provided enumeration
      */
     @Nonnull
     public static <E> Set<E> ofSet(Enumeration<E> elements) {
@@ -109,12 +178,27 @@ public abstract class SetUtils implements Utils {
     }
 
     /**
-     * Convert to multiple elements to be {@link LinkedHashSet}
+     * Creates an unmodifiable {@link Set} from the given {@link Iterable}.
      *
-     * @param elements one or more elements
-     * @param <E>      the type of <code>elements</code>
-     * @return read-only {@link Set}
+     * <p>This method iterates through the provided iterable and adds each element to a new set,
+     * ensuring uniqueness, and returns it as an unmodifiable view. If the iterable is null or empty,
+     * an empty set is returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana", "apple");
+     * Set<String> set1 = SetUtils.ofSet(list);
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.ofSet(null);
+     * // returns an empty unmodifiable set
+     * }</pre>
+     *
+     * @param elements the iterable of elements to add to the set, may be null or empty
+     * @param <E>      the type of elements in the iterable
+     * @return an unmodifiable {@link Set} containing all unique elements from the provided iterable
      */
+    @Nonnull
     public static <E> Set<E> ofSet(Iterable<E> elements) {
         if (elements == null) {
             return emptySet();
@@ -126,33 +210,56 @@ public abstract class SetUtils implements Utils {
     }
 
     /**
-     * Convert the provided {@link Collection} to an unmodifiable {@link Set}.
-     * <p>
-     * This method essentially converts the given collection into a set and returns it as an unmodifiable view.
-     * If the input collection is null or empty, an empty set is returned.
-     * </p>
+     * Creates an unmodifiable {@link Set} from the given {@link Collection}.
      *
-     * @param elements the collection to convert
+     * <p>This method adds all elements from the provided collection to a new set, ensuring uniqueness,
+     * and returns it as an unmodifiable view. If the collection is null or empty, an empty set is returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana", "apple");
+     * Set<String> set1 = SetUtils.ofSet(list);
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.ofSet(null);
+     * // returns an empty unmodifiable set
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the set, may be null or empty
      * @param <T>      the type of elements in the collection
-     * @return an unmodifiable {@link Set} containing all elements from the provided collection
+     * @return an unmodifiable {@link Set} containing all unique elements from the provided collection
      */
+    @Nonnull
     public static <T> Set<T> ofSet(Collection<T> elements) {
         return ofSet(elements, (T[]) null);
     }
 
     /**
-     * Converts the provided {@link Collection} and additional elements into an unmodifiable {@link Set}.
-     * <p>
-     * This method combines the given collection and varargs elements into a single set,
-     * ensuring uniqueness, and returns it as an unmodifiable view. If both the collection and varargs are empty,
-     * an empty set is returned.
-     * </p>
+     * Creates an unmodifiable {@link Set} from the given {@link Collection} and additional varargs elements.
      *
-     * @param elements the primary collection to convert, may be null or empty
-     * @param others   additional elements to include in the set
+     * <p>This method combines all elements from the provided collection and the varargs array into a new set,
+     * ensuring uniqueness, and returns it as an unmodifiable view. If both the collection and varargs array are null or empty,
+     * an empty set is returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana");
+     * Set<String> set1 = SetUtils.ofSet(list, "orange", "grape");
+     * // returns an unmodifiable set containing ["apple", "banana", "orange", "grape"]
+     *
+     * Set<String> set2 = SetUtils.ofSet(null, "apple", "banana");
+     * // returns an unmodifiable set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.ofSet(Collections.emptyList(), (String[]) null);
+     * // returns an empty unmodifiable set
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the set, may be null or empty
+     * @param others   the additional elements to include in the set, may be null or empty
      * @param <T>      the type of elements in the collection and varargs
-     * @return an unmodifiable {@link Set} containing all unique elements from the collection and varargs
+     * @return an unmodifiable {@link Set} containing all unique elements from the provided collection and varargs
      */
+    @Nonnull
     public static <T> Set<T> ofSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
@@ -178,15 +285,25 @@ public abstract class SetUtils implements Utils {
 
     /**
      * Creates a new {@link HashSet} containing all elements from the provided {@link Iterable}.
-     * <p>
-     * This method iterates through the given iterable and adds each element to the newly created set.
-     * If the input is null or empty, a new empty set will still be returned.
-     * </p>
+     *
+     * <p>This method iterates through the given iterable and adds each element to the newly created set,
+     * ensuring uniqueness. If the input iterable is null or empty, a new empty set will still be returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana", "apple");
+     * Set<String> set = SetUtils.newHashSet(list);
+     * // returns a hash set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.newHashSet(null);
+     * // returns a new empty hash set
+     * }</pre>
      *
      * @param elements the iterable of elements to add to the set, may be null or empty
      * @param <E>      the type of elements in the iterable
      * @return a new {@link HashSet} containing all unique elements from the provided iterable
      */
+    @Nonnull
     public static <E> Set<E> newHashSet(Iterable<E> elements) {
         Set<E> set = newHashSet();
         for (E value : elements) {
@@ -197,30 +314,55 @@ public abstract class SetUtils implements Utils {
 
     /**
      * Creates a new {@link HashSet} containing all elements from the provided {@link Collection}.
-     * <p>
-     * This method delegates to the {@link HashSet} constructor that accepts a collection,
+     *
+     * <p>This method delegates to the {@link HashSet} constructor that accepts a collection,
      * ensuring all elements from the input collection are included in the resulting set.
-     * </p>
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana", "apple");
+     * Set<String> set = SetUtils.newHashSet(list);
+     * // returns a hash set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.newHashSet(Collections.emptyList());
+     * // returns a new empty hash set
+     * }</pre>
      *
      * @param elements the collection of elements to add to the set, may be null or empty
      * @param <E>      the type of elements in the collection
-     * @return a new {@link HashSet} containing all unique elements from the provided collection
+     * @return a new {@link HashSet} containing all elements from the provided collection
      */
+    @Nonnull
     public static <E> Set<E> newHashSet(Collection<E> elements) {
         return new HashSet(elements);
     }
 
     /**
      * Creates a new {@link HashSet} containing all elements from the provided varargs array.
-     * <p>
-     * This method adds each element from the input array to the newly created set.
-     * If the input array is null or empty, a new empty set will still be returned.
-     * </p>
+     *
+     * <p>This method adds each element from the input array to the newly created set,
+     * ensuring uniqueness. The insertion order is not preserved as it uses {@link HashSet}.
+     * If the input array is null or empty, a new empty set will still be returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set1 = SetUtils.newHashSet("apple", "banana", "apple");
+     * // returns a hash set containing ["apple", "banana"]
+     *
+     * String[] fruits = {"apple", "banana"};
+     * Set<String> set2 = SetUtils.newHashSet(fruits);
+     * // returns a hash set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.newHashSet();
+     * // returns a new empty hash set
+     * }</pre>
      *
      * @param elements the array of elements to add to the set, may be null or empty
      * @param <E>      the type of elements in the array
      * @return a new {@link HashSet} containing all unique elements from the provided array
      */
+    @Nonnull
     public static <E> Set<E> newHashSet(E... elements) {
         int length = length(elements);
         Set<E> set = newHashSet(length);
@@ -232,39 +374,56 @@ public abstract class SetUtils implements Utils {
 
     /**
      * Creates a new, empty {@link HashSet} with the default initial capacity and load factor.
-     * <p>
-     * This method provides a convenient way to instantiate an empty HashSet instance.
-     * The returned set is not thread-safe and allows null elements.
-     * </p>
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newHashSet();
+     * // returns a new empty hash set with default initial capacity (16) and load factor (0.75)
+     * }</pre>
      *
      * @param <E> the type of elements in the set
      * @return a new empty {@link HashSet}
      */
+    @Nonnull
     public static <E> Set<E> newHashSet() {
         return new HashSet<>();
     }
 
     /**
      * Creates a new, empty {@link HashSet} with the specified initial capacity and default load factor.
-     * <p>
-     * This method provides a convenient way to instantiate an empty HashSet instance with the given initial capacity.
-     * The returned set is not thread-safe and allows null elements.
-     * </p>
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance
+     * with the given initial capacity. The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newHashSet(32);
+     * // returns a new empty hash set with initial capacity of 32 and default load factor (0.75)
+     * }</pre>
      *
      * @param initialCapacity the initial capacity of the returned set
      * @param <E>             the type of elements in the set
      * @return a new empty {@link HashSet} with the specified initial capacity
      */
+    @Nonnull
     public static <E> Set<E> newHashSet(int initialCapacity) {
         return new HashSet<>(initialCapacity);
     }
 
     /**
      * Creates a new, empty {@link HashSet} with the specified initial capacity and load factor.
-     * <p>
-     * This method provides a convenient way to instantiate an empty HashSet instance with the given initial capacity
-     * and load factor. The returned set is not thread-safe and allows null elements.
-     * </p>
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance
+     * with the given initial capacity and load factor. The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newHashSet(32, 0.5f);
+     * // returns a new empty hash set with initial capacity of 32 and load factor of 0.5
+     * }</pre>
      *
      * @param initialCapacity the initial capacity of the returned set
      * @param loadFactor      the load factor of the returned set
@@ -277,10 +436,19 @@ public abstract class SetUtils implements Utils {
 
     /**
      * Creates a new {@link LinkedHashSet} containing all elements from the provided {@link Iterable}.
-     * <p>
-     * This method iterates through the given iterable and adds each element to the newly created set,
-     * preserving the insertion order. If the input is null or empty, a new empty set will still be returned.
-     * </p>
+     *
+     * <p>This method iterates through the given iterable and adds each element to the newly created set,
+     * preserving insertion order. If the input iterable is null or empty, an empty set will still be returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana", "apple");
+     * Set<String> set = SetUtils.newLinkedHashSet(list);
+     * // returns a linked hash set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.newLinkedHashSet(null);
+     * // returns a new empty linked hash set
+     * }</pre>
      *
      * @param elements the iterable of elements to add to the set, may be null or empty
      * @param <E>      the type of elements in the iterable
@@ -302,6 +470,7 @@ public abstract class SetUtils implements Utils {
      * @param <E>      the type of elements in the iterator
      * @return a new {@link LinkedHashSet} containing all unique elements from the provided iterator
      */
+    @Nonnull
     public static <E> Set<E> newLinkedHashSet(Iterator<E> elements) {
         Set<E> set = newLinkedHashSet();
         while (elements.hasNext()) {
@@ -313,30 +482,55 @@ public abstract class SetUtils implements Utils {
 
     /**
      * Creates a new {@link LinkedHashSet} containing all elements from the provided {@link Collection}.
-     * <p>
-     * This method delegates to the {@link LinkedHashSet} constructor that accepts a collection,
-     * ensuring all elements from the input collection are included in the resulting set.
-     * </p>
+     *
+     * <p>This method delegates to the {@link LinkedHashSet} constructor that accepts a collection,
+     * ensuring all elements from the input collection are included in the resulting set while preserving insertion order.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("apple", "banana", "apple");
+     * Set<String> set = SetUtils.newLinkedHashSet(list);
+     * // returns a linked hash set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.newLinkedHashSet(Collections.emptyList());
+     * // returns a new empty linked hash set
+     * }</pre>
      *
      * @param elements the collection of elements to add to the set, may be null or empty
      * @param <E>      the type of elements in the collection
-     * @return a new {@link LinkedHashSet} containing all unique elements from the provided collection
+     * @return a new {@link LinkedHashSet} containing all elements from the provided collection
      */
+    @Nonnull
     public static <E> Set<E> newLinkedHashSet(Collection<E> elements) {
         return new LinkedHashSet(elements);
     }
 
     /**
      * Creates a new {@link LinkedHashSet} containing all elements from the provided varargs array.
-     * <p>
-     * This method adds each element from the input array to the newly created set, preserving insertion order.
-     * If the input array is null or empty, a new empty set will still be returned.
-     * </p>
+     *
+     * <p>This method adds each element from the input array to the newly created set,
+     * ensuring uniqueness while preserving the insertion order. If the input array is null or empty,
+     * a new empty set will still be returned.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set1 = SetUtils.newLinkedHashSet("apple", "banana", "apple");
+     * // returns a linked hash set containing ["apple", "banana"]
+     *
+     * String[] fruits = {"apple", "banana"};
+     * Set<String> set2 = SetUtils.newLinkedHashSet(fruits);
+     * // returns a linked hash set containing ["apple", "banana"]
+     *
+     * Set<String> emptySet = SetUtils.newLinkedHashSet();
+     * // returns a new empty linked hash set
+     * }</pre>
      *
      * @param elements the array of elements to add to the set, may be null or empty
      * @param <E>      the type of elements in the array
      * @return a new {@link LinkedHashSet} containing all unique elements from the provided array
      */
+    @Nonnull
     public static <E> Set<E> newLinkedHashSet(E... elements) {
         int length = length(elements);
         Set<E> set = newLinkedHashSet(length);
@@ -348,45 +542,63 @@ public abstract class SetUtils implements Utils {
 
     /**
      * Creates a new, empty {@link LinkedHashSet} with the default initial capacity and load factor.
-     * <p>
-     * This method provides a convenient way to instantiate an empty LinkedHashSet instance.
-     * The returned set is not thread-safe and allows null elements.
-     * </p>
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newLinkedHashSet();
+     * // returns a new empty linked hash set with default initial capacity (16) and load factor (0.75)
+     * }</pre>
      *
      * @param <E> the type of elements in the set
      * @return a new empty {@link LinkedHashSet}
      */
+    @Nonnull
     public static <E> Set<E> newLinkedHashSet() {
         return new LinkedHashSet<>();
     }
 
     /**
      * Creates a new, empty {@link LinkedHashSet} with the specified initial capacity and default load factor.
-     * <p>
-     * This method provides a convenient way to instantiate an empty LinkedHashSet instance with the given initial capacity.
-     * The returned set is not thread-safe and allows null elements.
-     * </p>
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance
+     * with the given initial capacity. The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newLinkedHashSet(32);
+     * // returns a new empty linked hash set with initial capacity of 32 and default load factor (0.75)
+     * }</pre>
      *
      * @param initialCapacity the initial capacity of the returned set
      * @param <E>             the type of elements in the set
      * @return a new empty {@link LinkedHashSet} with the specified initial capacity
      */
+    @Nonnull
     public static <E> Set<E> newLinkedHashSet(int initialCapacity) {
         return new LinkedHashSet<>(initialCapacity);
     }
 
     /**
      * Creates a new, empty {@link LinkedHashSet} with the specified initial capacity and load factor.
-     * <p>
-     * This method provides a convenient way to instantiate an empty LinkedHashSet instance with the given initial capacity
-     * and load factor. The returned set is not thread-safe and allows null elements.
-     * </p>
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance
+     * with the given initial capacity and load factor. The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <p><b>Example usage:</b></p>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newLinkedHashSet(32, 0.5f);
+     * // returns a new empty linked hash set with initial capacity of 32 and load factor of 0.5
+     * }</pre>
      *
      * @param initialCapacity the initial capacity of the returned set
      * @param loadFactor      the load factor of the returned set
      * @param <E>             the type of elements in the set
      * @return a new empty {@link LinkedHashSet} with the specified initial capacity and load factor
      */
+    @Nonnull
     public static <E> Set<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
     }
