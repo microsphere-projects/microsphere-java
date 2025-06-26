@@ -25,7 +25,7 @@ import static java.lang.System.getSecurityManager;
  * A {@link ThreadFactory} implementation that creates threads with customized attributes,
  * including name prefix, daemon status, priority, and stack size.
  *
- * <p>Example usage:</p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create a ThreadFactory with default settings
  * ThreadFactory factory = CustomizedThreadFactory.newThreadFactory("worker");
