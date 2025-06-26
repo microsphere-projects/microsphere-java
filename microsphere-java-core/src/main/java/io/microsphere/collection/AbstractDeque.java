@@ -31,7 +31,7 @@ import java.util.NoSuchElementException;
  * <p>The default implementations in this class make assumptions about the behavior of other methods,
  * so subclasses should ensure consistent behavior when overriding any of these methods.</p>
  *
- * <p><b>Example Usage:</b></p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class SimpleDeque&lt;E&gt; extends AbstractDeque&lt;E&gt; {
  *     private final List&lt;E&gt; list = new ArrayList&lt;&gt;();
