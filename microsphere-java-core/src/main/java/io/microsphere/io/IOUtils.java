@@ -230,7 +230,7 @@ public abstract class IOUtils implements Utils {
      * This is typically used in finally blocks.
      * <p>
      *
-     * <h3>Example Usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *   Closeable closeable = null;
      *   try {
