@@ -27,7 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * This class provides a thread-safe mechanism for serializing strings. By default, it uses UTF-8 encoding if no specific
  * charset is provided during construction.
  *
- * <p><b>Example usage:</b>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Using the default UTF-8 charset
  * Serializer<String> serializer = new StringSerializer();
