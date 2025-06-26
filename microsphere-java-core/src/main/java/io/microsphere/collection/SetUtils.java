@@ -49,7 +49,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method returns {@code true} if the provided iterable is a {@link Set}, ensuring that
      * operations like duplicate elimination and order independence are already handled by the implementation.
      *
-     * <p><b>Example usage:</b>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = new HashSet<>();
      * set.add("apple");
@@ -75,7 +75,7 @@ public abstract class SetUtils implements Utils {
      * and returns it as an unmodifiable view. If the input array is null or empty,
      * an empty set is returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set1 = SetUtils.of("apple", "banana", "apple");
      * // returns an unmodifiable set containing ["apple", "banana"]
@@ -104,7 +104,7 @@ public abstract class SetUtils implements Utils {
      * and returns it as an unmodifiable view. If the input array is null or empty,
      * an empty set is returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set1 = SetUtils.ofSet("apple", "banana", "apple");
      * // returns an unmodifiable set containing ["apple", "banana"]
@@ -145,7 +145,7 @@ public abstract class SetUtils implements Utils {
      * ensuring uniqueness, and returns it as an unmodifiable view. If the enumeration is null or has no elements,
      * an empty set is returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Vector<String> vector = new Vector<>();
      * vector.add("apple");
@@ -184,7 +184,7 @@ public abstract class SetUtils implements Utils {
      * ensuring uniqueness, and returns it as an unmodifiable view. If the iterable is null or empty,
      * an empty set is returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana", "apple");
      * Set<String> set1 = SetUtils.ofSet(list);
@@ -215,7 +215,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method adds all elements from the provided collection to a new set, ensuring uniqueness,
      * and returns it as an unmodifiable view. If the collection is null or empty, an empty set is returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana", "apple");
      * Set<String> set1 = SetUtils.ofSet(list);
@@ -241,7 +241,7 @@ public abstract class SetUtils implements Utils {
      * ensuring uniqueness, and returns it as an unmodifiable view. If both the collection and varargs array are null or empty,
      * an empty set is returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana");
      * Set<String> set1 = SetUtils.ofSet(list, "orange", "grape");
@@ -289,7 +289,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method iterates through the given iterable and adds each element to the newly created set,
      * ensuring uniqueness. If the input iterable is null or empty, a new empty set will still be returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana", "apple");
      * Set<String> set = SetUtils.newHashSet(list);
@@ -319,7 +319,7 @@ public abstract class SetUtils implements Utils {
      * ensuring all elements from the input collection are included in the resulting set.
      * The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana", "apple");
      * Set<String> set = SetUtils.newHashSet(list);
@@ -345,7 +345,7 @@ public abstract class SetUtils implements Utils {
      * ensuring uniqueness. The insertion order is not preserved as it uses {@link HashSet}.
      * If the input array is null or empty, a new empty set will still be returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set1 = SetUtils.newHashSet("apple", "banana", "apple");
      * // returns a hash set containing ["apple", "banana"]
@@ -378,7 +378,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance.
      * The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = SetUtils.newHashSet();
      * // returns a new empty hash set with default initial capacity (16) and load factor (0.75)
@@ -398,7 +398,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance
      * with the given initial capacity. The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = SetUtils.newHashSet(32);
      * // returns a new empty hash set with initial capacity of 32 and default load factor (0.75)
@@ -419,7 +419,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance
      * with the given initial capacity and load factor. The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = SetUtils.newHashSet(32, 0.5f);
      * // returns a new empty hash set with initial capacity of 32 and load factor of 0.5
@@ -440,7 +440,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method iterates through the given iterable and adds each element to the newly created set,
      * preserving insertion order. If the input iterable is null or empty, an empty set will still be returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana", "apple");
      * Set<String> set = SetUtils.newLinkedHashSet(list);
@@ -487,7 +487,7 @@ public abstract class SetUtils implements Utils {
      * ensuring all elements from the input collection are included in the resulting set while preserving insertion order.
      * The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * List<String> list = Arrays.asList("apple", "banana", "apple");
      * Set<String> set = SetUtils.newLinkedHashSet(list);
@@ -513,7 +513,7 @@ public abstract class SetUtils implements Utils {
      * ensuring uniqueness while preserving the insertion order. If the input array is null or empty,
      * a new empty set will still be returned.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set1 = SetUtils.newLinkedHashSet("apple", "banana", "apple");
      * // returns a linked hash set containing ["apple", "banana"]
@@ -546,7 +546,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance.
      * The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = SetUtils.newLinkedHashSet();
      * // returns a new empty linked hash set with default initial capacity (16) and load factor (0.75)
@@ -566,7 +566,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance
      * with the given initial capacity. The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = SetUtils.newLinkedHashSet(32);
      * // returns a new empty linked hash set with initial capacity of 32 and default load factor (0.75)
@@ -587,7 +587,7 @@ public abstract class SetUtils implements Utils {
      * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance
      * with the given initial capacity and load factor. The returned set is not thread-safe and allows null elements.</p>
      *
-     * <p><b>Example usage:</b></p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Set<String> set = SetUtils.newLinkedHashSet(32, 0.5f);
      * // returns a new empty linked hash set with initial capacity of 32 and load factor of 0.5
