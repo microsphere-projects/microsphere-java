@@ -36,7 +36,7 @@ import static java.util.Collections.emptyList;
  * retrieve the most compatible serializer for a given type, and get serializers based on priority.
  * </p>
  *
- * <p><b>Example usage:</b></p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * Serializers serializers = new Serializers();
  * serializers.loadSPI(); // Load all available serializers from SPI
