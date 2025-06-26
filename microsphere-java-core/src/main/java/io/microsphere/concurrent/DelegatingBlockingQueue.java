@@ -34,7 +34,7 @@ import java.util.stream.Stream;
  * or other cross-cutting concerns.
  * </p>
  *
- * <p><b>Example Usage:</b></p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * BlockingQueue<String> delegate = new LinkedBlockingQueue<>();
  * DelegatingBlockingQueue<String> queue = new DelegatingBlockingQueue<>(delegate);
