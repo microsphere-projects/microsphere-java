@@ -26,10 +26,10 @@ import java.nio.charset.StandardCharsets;
  * </p>
  *
  * <h3>Example Usage</h3>
- * <pre>
+ * <pre>{@code
  * Serializer<String> serializer = new StringSerializer();
  * byte[] bytes = serializer.serialize("Hello, World!"); // Serializes the string using UTF-8 encoding
- * </pre>
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
