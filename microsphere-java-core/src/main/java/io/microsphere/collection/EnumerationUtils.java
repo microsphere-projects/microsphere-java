@@ -38,7 +38,7 @@ public abstract class EnumerationUtils implements Utils {
      * <p>Internally, this method delegates to {@link #ofEnumeration(Object[])} to create a new
      * enumeration based on the given array of elements.</p>
      *
-     * <p>Example usage:</p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Enumeration<String> en = EnumerationUtils.of("one", "two", "three");
      * while (en.hasMoreElements()) {
