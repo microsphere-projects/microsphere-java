@@ -29,7 +29,7 @@ import static java.util.Collections.emptyIterator;
  * multi-threaded environments since it does not maintain any mutable state.
  * </p>
  *
- * <h3>Example usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Using the singleton instance
  * Iterator<String> iterator = EmptyIterator.INSTANCE;
