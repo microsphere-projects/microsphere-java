@@ -17,20 +17,39 @@
 package io.microsphere.lang.function;
 
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link BiFunction} with {@link Throwable}
+ * Represents a function that accepts two arguments and produces a result, which may throw a {@link Throwable}.
  *
- * @param <T> the type of the first argument to be applied for the function
- * @param <U> the type of the second argument to be applied for the function
+ * <p>This is a functional interface whose functional method is {@link #apply(Object, Object)}.
+ *
+ * <h2>Example Usage:</h2>
+ * <pre>{@code
+ * ThrowableBiFunction<Integer, Integer, Integer> divide = (a, b) -> {
+ *     if (b == 0) throw new ArithmeticException("Division by zero");
+ *     return a / b;
+ * };
+ *
+ * // Using execute with default exception handling
+ * Integer result = ThrowableBiFunction.execute(10, 0, divide);
+ * // This will internally handle the exception using DEFAULT_EXCEPTION_HANDLER and throw a RuntimeException
+ *
+ * // Custom Exception Handling Example:
+ * Integer resultWithCustomHandler = ThrowableBiFunction.execute(10, 0, divide, (first, second, error) -> {
+ *     System.out.println("Error occurred: " + error.getMessage());
+ *     return 0; // Default value on failure
+ * });
+ * }</pre>
+ *
+ * @param <T> the type of the first argument to the function
+ * @param <U> the type of the second argument to the function
  * @param <R> the type of the result of the function
- * @see Function
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see BiFunction
  * @see Throwable
- * @since 1.0.0
  */
 @FunctionalInterface
 public interface ThrowableBiFunction<T, U, R> {
