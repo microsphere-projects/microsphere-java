@@ -22,10 +22,30 @@ import java.util.function.Function;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link Function} with {@link Throwable}
+ * Represents a function that accepts one argument and produces a result, which may throw a checked exception.
+ * <p>
+ * This interface is similar to {@link Function}, but allows the functional method to throw any {@link Throwable}.
+ * It also provides default methods for composing functions and handling exceptions gracefully.
+ * </p>
  *
- * @param <T> the source type
- * @param <R> the return type
+ * <h2>Examples</h2>
+ * <pre>{@code
+ * // Example usage:
+ * ThrowableFunction<String, Integer> parser = Integer::valueOf;
+ *
+ * // Using execute() with default exception handling (throws RuntimeException)
+ * Integer result1 = parser.execute("123"); // returns 123
+ *
+ * // Using execute() with custom exception handling
+ * Integer result2 = parser.execute("invalid", (input, ex) -> {
+ *     System.out.println("Parsing failed for: " + input);
+ *     return -1; // fallback value
+ * });
+ * }</pre>
+ *
+ * @param <T> the type of the input to the function
+ * @param <R> the type of the result of the function
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Function
  * @see Throwable
  * @since 1.0.0
