@@ -28,6 +28,7 @@ package io.microsphere.filter;
  * @author <a href="mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface Filter<T> {
 
     /**
