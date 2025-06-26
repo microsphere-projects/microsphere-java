@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * <p>Additionally, this interface provides a default method ({@link #andThen}) to support
  * chaining operations, similar to functional constructs in the JDK.
  *
- * <h2>Example Usage:</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * ThrowableBiConsumer<Integer, Integer> addAndPrint = (a, b) -> {
  *     int sum = a + b;
