@@ -32,7 +32,7 @@ import static io.microsphere.collection.CollectionUtils.singletonIterator;
  * {@link UnsupportedOperationException} because the deque is designed to be immutable.
  * </p>
  *
- * <p><b>Example Usage:</b></p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * SingletonDeque<String> deque = new SingletonDeque<>("Hello");
  *
