@@ -17,14 +17,32 @@
 package io.microsphere.lang.function;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * A function interface for action with {@link Throwable}
+ * A functional interface for actions that may throw a {@link Throwable}.
+ * <p>
+ * This interface is similar to {@link Runnable}, but allows the action to throw any exception.
+ * It can be used as a base for more specific interfaces that require exception handling.
+ * </p>
  *
- * @see Function
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * // Simple usage with a lambda expression
+ * ThrowableAction action = () -> {
+ *     // some code that may throw an exception
+ * };
+ *
+ * // Execute the action with default exception handling
+ * action.execute();
+ *
+ * // Execute the action with custom exception handling
+ * action.execute(ex -> System.err.println("An error occurred: " + ex.getMessage()));
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Runnable
  * @see Throwable
  * @since 1.0.0
  */
