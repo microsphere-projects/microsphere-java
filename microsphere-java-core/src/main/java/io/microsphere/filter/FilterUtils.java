@@ -13,11 +13,35 @@ import java.util.List;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * {@link Filter} utility class
+ * Utility class for working with {@link Filter} instances.
+ * Provides static helper methods to apply filters to collections and iterate over filtered results.
  *
- * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @see FilterUtils
- * @since 1.0.0
+ * <p> This class also implements the marker interface {@link Utils}, indicating it is part of the utility framework.
+ *
+ * <h3>Example Usage:</h3>
+ * <pre>{@code
+ *     // Filtering a collection using a single filter
+ *     List<String> filteredList = FilterUtils.filter(stringList, new Filter<String>() {
+ *         public boolean accept(String s) {
+ *             return s.startsWith("A");
+ *         }
+ *     });
+ *
+ *     // Filtering using multiple filters with AND operator
+ *     List<String> filteredWithAnd = FilterUtils.filter(stringList, FilterOperator.AND,
+ *         new Filter<String>() { ... },
+ *         new Filter<String>() { ... }
+ *     );
+ *
+ *     // Filtering using multiple filters with OR operator
+ *     List<String> filteredWithOr = FilterUtils.filter(stringList, FilterOperator.OR,
+ *         new Filter<String>() { ... },
+ *         new Filter<String>() { ... }
+ *     );
+ * }</pre>
+ *
+ * @see Filter
+ * @see FilterOperator
  */
 public abstract class FilterUtils implements Utils {
 
