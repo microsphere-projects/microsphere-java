@@ -20,15 +20,29 @@ import java.util.Iterator;
 import java.util.function.Consumer;
 
 /**
- * An {@link Iterator} that cannot be modified. This class wraps a given iterator and ensures that any attempt to modify the
- * underlying data structure via the iterator is prevented by throwing an {@link UnsupportedOperationException}.
+ * An {@link Iterator} that is unmodifiable, meaning the elements cannot be removed.
+ * This class extends the {@link ReadOnlyIterator}, which throws an exception when the
+ * remove operation is attempted.
  *
- * <p>This implementation inherits the read-only behavior from its parent class, which disables the use of the 
- * {@link Iterator#remove()} method.
+ * <p>Example usage:</p>
+ * <pre>
+ *   List&lt;String&gt; list = Arrays.asList("one", "two", "three");
+ *   Iterator&lt;String&gt; unmodifiableIterator = new UnmodifiableIterator&lt;&gt;(list.iterator());
+ *
+ *   while (unmodifiableIterator.hasNext()) {
+ *       System.out.println(unmodifiableIterator.next());
+ *   }
+ *
+ *   // Attempting to remove will throw an IllegalStateException
+ *   try {
+ *       unmodifiableIterator.remove();
+ *   } catch (IllegalStateException e) {
+ *       System.out.println("Cannot remove elements from an unmodifiable iterator.");
+ *   }
+ * </pre>
  *
  * @param <E> the type of elements returned by this iterator
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ReadOnlyIterator
  * @since 1.0.0
  */
 public class UnmodifiableIterator<E> extends ReadOnlyIterator<E> {
