@@ -44,7 +44,7 @@ import static java.util.stream.Stream.of;
  *   <li>It must accept exactly one parameter, which must be a subclass of {@link Event} or an instance of it.</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <h3>Example Usage</h3>
  * Here's how you might extend this class to handle specific types of events:
  *
  * <pre>{@code
