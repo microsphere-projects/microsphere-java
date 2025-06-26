@@ -26,7 +26,7 @@ import static io.microsphere.util.Assert.assertNotNull;
  *
  * <p>This is a functional interface whose functional method is {@link #apply(Object, Object)}.
  *
- * <h2>Example Usage:</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * ThrowableBiFunction<Integer, Integer, Integer> divide = (a, b) -> {
  *     if (b == 0) throw new ArithmeticException("Division by zero");
@@ -70,34 +70,65 @@ public interface ThrowableBiFunction<T, U, R> {
     R apply(T first, U second) throws Throwable;
 
     /**
-     * Executes {@link ThrowableBiFunction} with {@link #DEFAULT_EXCEPTION_HANDLER the default exception handling}
+     * Executes the given {@link ThrowableBiFunction} with the provided arguments using the default exception handler.
      *
-     * @param first    the first argument to be applied for the function
-     * @param second   the second argument to be applied for the function
-     * @param function {@link ThrowableBiFunction}
-     * @param <T>      the first argument type
-     * @param <U>      the second argument type
-     * @param <R>      the return type
-     * @return the result after execution
-     * @throws NullPointerException if <code>function</code> is <code>null</code>
+     * <p>If an exception is thrown during the execution of the function, it will be handled by the
+     * {@link #DEFAULT_EXCEPTION_HANDLER}, which wraps the exception into a {@link RuntimeException} and throws it.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ThrowableBiFunction<Integer, Integer, Integer> divide = (a, b) -> {
+     *     if (b == 0) throw new ArithmeticException("Division by zero");
+     *     return a / b;
+     * };
+     *
+     * // Execution with default exception handling
+     * Integer result = ThrowableBiFunction.execute(10, 0, divide);
+     * // This will throw a RuntimeException due to division by zero
+     * }</pre>
+     *
+     * @param first    the first argument to apply to the function
+     * @param second   the second argument to apply to the function
+     * @param function the function to execute; must not be null
+     * @param <T>      the type of the first argument
+     * @param <U>      the type of the second argument
+     * @param <R>      the type of the result
+     * @return the result of the function after successful execution
+     * @throws NullPointerException if the given function is null
      */
     static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function) throws NullPointerException {
         return execute(first, second, function, (ExceptionHandler<T, U, R>) DEFAULT_EXCEPTION_HANDLER);
     }
-
+    
     /**
-     * Executes {@link ThrowableBiFunction} with the customized exception handling
+     * Executes the given {@link ThrowableBiFunction} with the provided arguments using a custom exception handler.
      *
-     * @param first            the first argument to be applied for the function
-     * @param second           the second argument to be applied for the function
-     * @param exceptionHandler the handler to handle the function argument and
-     *                         the exception that the {@link #apply(T, U)} method throws
-     * @param function         {@link ThrowableBiFunction}
-     * @param <T>              the first argument type
-     * @param <U>              the second argument type
-     * @param <R>              the return type
-     * @return the result after execution
-     * @throws NullPointerException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
+     * <p>If an exception is thrown during the execution of the function, it will be handled by the
+     * specified {@link ExceptionHandler}, which provides custom logic to recover or respond to the error.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ThrowableBiFunction<Integer, Integer, Integer> divide = (a, b) -> {
+     *     if (b == 0) throw new ArithmeticException("Division by zero");
+     *     return a / b;
+     * };
+     *
+     * // Custom Exception Handling Example:
+     * Integer resultWithCustomHandler = ThrowableBiFunction.execute(10, 0, divide, (first, second, error) -> {
+     *     System.out.println("Error occurred: " + error.getMessage());
+     *     return 0; // Default value on failure
+     * });
+     * }</pre>
+     *
+     * @param first            the first argument to apply to the function
+     * @param second           the second argument to apply to the function
+     * @param function         the function to execute; must not be null
+     * @param exceptionHandler the handler to manage exceptions thrown during execution; must not be null
+     * @param <T>              the type of the first argument
+     * @param <U>              the type of the second argument
+     * @param <R>              the type of the result
+     * @return the result of the function after execution (either successful or recovered via exception handling)
+     * @throws NullPointerException if either the function or exceptionHandler is null
      */
     static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function, ExceptionHandler<T, U, R> exceptionHandler) throws NullPointerException {
         assertNotNull(function, () -> "The 'function' must not be null");
