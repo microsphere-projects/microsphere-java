@@ -20,7 +20,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
- * String {@link Serializer}
+ * A {@link Serializer} implementation for converting {@link String} instances to their byte array representation.
+ * <p>
+ * This class uses the UTF-8 charset for serialization, ensuring consistent and portable behavior across platforms.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * Serializer<String> serializer = new StringSerializer();
+ * byte[] bytes = serializer.serialize("Hello, World!"); // Serializes the string using UTF-8 encoding
+ * </pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
