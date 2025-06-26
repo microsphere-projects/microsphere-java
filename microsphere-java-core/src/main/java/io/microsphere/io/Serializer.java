@@ -19,12 +19,23 @@ package io.microsphere.io;
 import java.io.IOException;
 
 /**
- * Serializer
+ * A strategy interface for serializing objects of type {@code S} into a byte array.
+ * <p>
+ * Implementations of this interface must be thread-safe and should also ensure that the serialization process is consistent
+ * and efficient.
  *
- * @param <S> the type to be serialized
+ * <p><b>Example usage:</b>
+ * <pre>{@code
+ * public class StringSerializer implements Serializer&lt;String&gt; {
+ *     public byte[] serialize(String source) throws IOException {
+ *         return source.getBytes(StandardCharsets.UTF_8);
+ *     }
+ * }
+ * }</pre>
+ *
+ * @param <S> the type of the object that will be serialized
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
- * Date : 2021-05-01
  */
 public interface Serializer<S> {
 
