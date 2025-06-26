@@ -23,12 +23,27 @@ import java.io.Serializable;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 
 /**
- * Default {@link Deserializer} based on Java Standard Serialization.
+ * Default implementation of the {@link Deserializer} interface using Java's built-in serialization mechanism.
+ *
+ * <p>This class provides a default way to deserialize objects from byte arrays, leveraging
+ * standard Java serialization via {@link ObjectInputStream}. The deserialization process
+ * ensures that the input byte array is not empty before attempting to reconstruct the object.
+ *
+ * <h3>Example usage</h3>
+ * <pre>{@code
+ * byte[] serializedData = ...; // previously serialized data
+ * DefaultDeserializer deserializer = DefaultDeserializer.INSTANCE;
+ * try {
+ *     Object deserialized = deserializer.deserialize(serializedData);
+ * } catch (IOException e) {
+ *     e.printStackTrace();
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Deserializer
  * @see ObjectInputStream
  * @see Serializable
- * Date : 2021-05-02
  * @since 1.0.0
  */
 public class DefaultDeserializer implements Deserializer<Object> {
