@@ -18,7 +18,7 @@ import static java.util.Collections.unmodifiableList;
  *
  * <p> This class also implements the marker interface {@link Utils}, indicating it is part of the utility framework.
  *
- * <h3>Example Usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  *     // Filtering a collection using a single filter
  *     List<String> filteredList = FilterUtils.filter(stringList, new Filter<String>() {
@@ -40,8 +40,10 @@ import static java.util.Collections.unmodifiableList;
  *     );
  * }</pre>
  *
+ * @author <a href="mercyblitz@gmail.com">Mercy</a>
  * @see Filter
  * @see FilterOperator
+ * @since 1.0.0
  */
 public abstract class FilterUtils implements Utils {
 
