@@ -60,6 +60,7 @@ import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
  * refer to the documentation or examples provided in the project.
  *
  * @param <E> the concrete class of {@link Event Event}
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Event
  * @see java.util.EventListener
  * @since 1.0.0
@@ -83,7 +84,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      *     }
      * }
      * }</pre>
-     *
+     * <p>
      * You can use this method to find out what type of event it listens to:
      * <pre>{@code
      * EventListener<MyEvent> listener = new MyEventListener();
@@ -114,7 +115,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      *     }
      * }
      * }</pre>
-     *
+     * <p>
      * You can use this method to find out what type of event it listens to:
      * <pre>{@code
      * Class<? extends Event> eventType = EventListener.findEventType(MyEventListener.class);
@@ -157,7 +158,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      *     }
      * }
      * }</pre>
-     *
+     * <p>
      * You can use this method to find out what type of event it listens to:
      * <pre>{@code
      * ParameterizedType parameterizedType = (ParameterizedType) MyEventListener.class.getGenericInterfaces()[0];
@@ -167,7 +168,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      *
      * @param parameterizedType the parameterized type to examine
      * @return the {@link Class} object representing the type of event this listener handles,
-     *         or {@code null} if no suitable event type is found
+     * or {@code null} if no suitable event type is found
      */
     static Class<? extends Event> findEventType(ParameterizedType parameterizedType) {
         Class<? extends Event> eventType = null;
