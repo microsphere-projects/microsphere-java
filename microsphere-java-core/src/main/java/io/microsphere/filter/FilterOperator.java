@@ -7,7 +7,7 @@ import static io.microsphere.util.ArrayUtils.length;
  *
  * <p>Each operator defines how the results of applying multiple filters are combined to produce a final result.</p>
  *
- * <h3>Examples:</h3>
+ * <h3>Example Usage</h3>
  * <ul>
  *   <li>{@code AND}: Returns true only if all filters accept the object.</li>
  *   <li>{@code OR}: Returns true if at least one filter accepts the object.</li>
