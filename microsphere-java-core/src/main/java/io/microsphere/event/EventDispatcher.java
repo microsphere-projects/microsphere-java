@@ -47,6 +47,7 @@ import java.util.concurrent.Executor;
  * dispatcher.addEventListeners(listener1, listener2, listener3);
  * }</pre>
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Event
  * @see EventListener
  * @see DirectEventDispatcher
