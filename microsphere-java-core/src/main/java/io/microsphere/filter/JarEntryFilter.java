@@ -25,5 +25,6 @@ import java.util.jar.JarEntry;
  * @see Filter
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface JarEntryFilter extends Filter<JarEntry> {
 }
