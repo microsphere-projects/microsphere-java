@@ -26,7 +26,7 @@ import java.util.NoSuchElementException;
  * <p>This class implements the {@link Enumeration} interface and is suitable for scenarios 
  * where read-only sequential access to array elements is required.</p>
  *
- * <h3>Example</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * String[] data = {"one", "two", "three"};
  * ArrayEnumeration<String> enumeration = new ArrayEnumeration<>(data);
