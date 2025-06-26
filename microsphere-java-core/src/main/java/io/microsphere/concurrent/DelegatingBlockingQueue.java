@@ -26,9 +26,24 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 /**
- * Delegating {@link BlockingQueue}
+ * A delegating implementation of {@link BlockingQueue} that wraps another
+ * {@link BlockingQueue} instance and forwards all method calls to it.
+ * <p>
+ * This class can be used as a base class for decorators that add functionality
+ * to a {@link BlockingQueue}, such as adding instrumentation, validation,
+ * or other cross-cutting concerns.
+ * </p>
  *
- * @param <E> – the type of elements held in this queue
+ * <p><b>Example Usage:</b></p>
+ * <pre>{@code
+ * BlockingQueue<String> delegate = new LinkedBlockingQueue<>();
+ * DelegatingBlockingQueue<String> queue = new DelegatingBlockingQueue<>(delegate);
+ * 
+ * queue.put("item");              // Adds an element to the queue
+ * String item = queue.take();     // Retrieves and removes an element
+ * }</pre>
+ *
+ * @param <E> The type of elements held in this queue.
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
