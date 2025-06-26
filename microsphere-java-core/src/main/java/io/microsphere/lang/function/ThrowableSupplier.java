@@ -1,9 +1,42 @@
 package io.microsphere.lang.function;
 
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static io.microsphere.util.Assert.assertNotNull;
 
+/**
+ * A functional interface similar to {@link Supplier}, but allows the {@code get()} method to throw a
+ * {@link Throwable}. This is useful for functional constructs where operations may throw checked exceptions that need
+ * to be handled or rethrown.
+ *
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * // Using ThrowableSupplier to read a file content
+ * ThrowableSupplier<String> fileReader = () -> {
+ *     Path path = Paths.get("example.txt");
+ *     return Files.readString(path);
+ * };
+ *
+ * // Execute with default exception handling (converts to RuntimeException)
+ * String content = fileReader.execute();
+ *
+ * // Execute with custom exception handling
+ * String contentWithHandler = fileReader.execute(ex -> {
+ *     System.err.println("Error reading file: " + ex.getMessage());
+ *     return "default content";
+ * });
+ * }</pre>
+ *
+ * <p>This interface provides convenience methods to execute the supplier and handle exceptions using a custom handler,
+ * making it easier to work with functional patterns in environments where exceptions must be managed.</p>
+ *
+ * @param <T> the type of result supplied by this supplier
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Supplier
+ * @see Throwable
+ * @since 1.0.0
+ */
 @FunctionalInterface
 public interface ThrowableSupplier<T> {
 
