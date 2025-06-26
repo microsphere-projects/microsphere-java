@@ -100,7 +100,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable empty map.  See {@link Map#of()} for details.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> emptyMap = Maps.ofMap();
      * }</pre>
@@ -125,7 +125,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing a single mapping.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1);
      * }</pre>
@@ -154,7 +154,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing two mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2);
      * }</pre>
@@ -184,7 +184,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing three mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3);
      * }</pre>
@@ -216,7 +216,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing four mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4);
      * }</pre>
@@ -250,7 +250,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing five mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4, "five", 5);
      * }</pre>
@@ -286,7 +286,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing six mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4, "five", 5, "six", 6);
      * }</pre>
@@ -324,7 +324,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing seven mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
      *                                        "five", 5, "six", 6, "seven", 7);
@@ -365,7 +365,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing eight mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
      *                                        "five", 5, "six", 6, "seven", 7, "eight", 8);
@@ -409,7 +409,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing nine mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
      *                                        "five", 5, "six", 6, "seven", 7, "eight", 8, "nine", 9);
@@ -455,7 +455,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing ten mappings.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap("one", 1, "two", 2, "three", 3, "four", 4,
      *                                        "five", 5, "six", 6, "seven", 7, "eight", 8,
@@ -505,7 +505,7 @@ public abstract class Maps implements Utils {
     /**
      * Returns an unmodifiable map containing the provided entries.
      *
-     * <h3>Example usage:</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     Map<String, Integer> map = Maps.ofMap(
      *         new AbstractMap.SimpleEntry<>("one", 1),
