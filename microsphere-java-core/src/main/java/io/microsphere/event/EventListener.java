@@ -32,7 +32,7 @@ import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
  * The {@link #onEvent(Event) handle method} will be notified when the matched-type {@link Event Event} is
  * published, whose priority could be changed by {@link #getPriority()} method.
  *
- * <h3>Example</h3>
+ * <h3>Example Usage</h3>
  * Here is a simple example of how to implement this interface:
  * <pre>{@code
  * public class MyEventListener implements EventListener<MyEvent> {
@@ -74,7 +74,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * <p>This method is useful when you need to determine the specific event type that a listener is registered for.
      * It examines the generic type information of the listener to find the event type it listens to.</p>
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * Suppose there's a custom event listener defined like this:
      * <pre>{@code
      * public class MyEventListener implements EventListener<MyEvent> {
@@ -105,7 +105,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * <p>This method is useful when you need to determine the specific event type that a listener is registered for.
      * It examines the generic type information of the listener to find the event type it listens to.</p>
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * Suppose there's a custom event listener defined like this:
      * <pre>{@code
      * public class MyEventListener implements EventListener<MyEvent> {
@@ -148,7 +148,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
      * parameterized type represents an implementation of {@link EventListener}, and if so, finds
      * the event type from its generic parameters.</p>
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * Suppose you have a parameterized type representing a class like this:
      * <pre>{@code
      * public class MyEventListener implements EventListener<MyEvent> {
