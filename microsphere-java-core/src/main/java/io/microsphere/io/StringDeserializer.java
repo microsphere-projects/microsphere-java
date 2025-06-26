@@ -17,36 +17,56 @@
 package io.microsphere.io;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A {@link Deserializer} implementation for converting byte arrays into {@link String} instances.
  * <p>
- * This class uses the UTF-8 character encoding to decode byte arrays into strings. It ensures that the deserialization
- * process is consistent and reliable across different platforms and environments.
+ * This class uses a specified {@link Charset} to decode the byte array into a string. If no charset is provided,
+ * it defaults to using UTF-8.
  * </p>
  *
  * <h3>Thread Safety</h3>
  * <p>
- * This implementation is thread-safe, as it does not maintain any internal state that could be affected by concurrent
- * access. Multiple threads can safely share and use a single instance of this class.
+ * This implementation is thread-safe as it does not maintain any internal state that may be modified after construction.
  * </p>
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
- * Deserializer<String> stringDeserializer = new StringDeserializer();
- * byte[] data = "Hello, World!".getBytes(StandardCharsets.UTF_8);
- * String result = stringDeserializer.deserialize(data);
+ * // Using default charset (UTF-8)
+ * Deserializer<String> deserializer = new StringDeserializer();
+ * String result = deserializer.deserialize("Hello, World!".getBytes(StandardCharsets.UTF_8));
  * System.out.println(result); // Output: Hello, World!
  * }</pre>
  *
+ * <pre>{@code
+ * // Using custom charset (e.g., ISO-8859-1)
+ * Deserializer<String> deserializer = new StringDeserializer(StandardCharsets.ISO_8859_1);
+ * String result = deserializer.deserialize("Sample".getBytes(StandardCharsets.ISO_8859_1));
+ * System.out.println(result); // Output: Sample
+ * }</pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Deserializer
+ * @see Serializer
  * @since 1.0.0
  */
 public class StringDeserializer implements Deserializer<String> {
 
+    private final Charset charset;
+
+    public StringDeserializer() {
+        this(UTF_8);
+    }
+
+    public StringDeserializer(Charset charset) {
+        this.charset = charset;
+    }
+
     @Override
     public String deserialize(byte[] bytes) throws IOException {
-        return new String(bytes, StandardCharsets.UTF_8);
+        return new String(bytes, this.charset);
     }
 }
