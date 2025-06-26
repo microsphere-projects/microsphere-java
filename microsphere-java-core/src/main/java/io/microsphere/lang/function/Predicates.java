@@ -25,6 +25,7 @@ import static io.microsphere.util.ArrayUtils.length;
 /**
  * The utilities class for Java {@link Predicate}
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 public interface Predicates {
