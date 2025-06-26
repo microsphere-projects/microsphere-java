@@ -33,9 +33,29 @@ import static java.lang.invoke.MethodHandles.publicLookup;
 import static java.lang.invoke.MethodType.methodType;
 
 /**
- * The utilities class for {@link MethodHandles.Lookup}
+ * Utilities class providing convenient methods for working with {@link MethodHandles.Lookup}.
+ *
+ * <p>This class offers various static methods to simplify the process of obtaining and using
+ * method handles, particularly for public virtual and static methods. It serves as a central
+ * utility to reduce boilerplate code when dealing with reflection and method handle lookup.
+ *
+ * <h3>Example Usage</h3>
+ * <ul>
+ *     <li>Finding a public virtual method:
+ *         <pre>{@code
+ * MethodHandle mh = MethodHandlesLookupUtils.findPublicVirtual(String.class, "toString");
+ * }</pre>
+ *     </li>
+ *     <li>Finding a public static method:
+ *         <pre>{@code
+ * MethodHandle mh = MethodHandlesLookupUtils.findPublicStatic(Math.class, "abs", int.class);
+ * }</pre>
+ *     </li>
+ * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see MethodHandles
+ * @see MethodHandle
  * @since 1.0.0
  */
 public abstract class MethodHandlesLookupUtils implements Utils {
