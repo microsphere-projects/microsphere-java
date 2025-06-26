@@ -25,7 +25,7 @@ import static java.lang.Boolean.TRUE;
  * string into the corresponding object. Most clients of this class will use only need the
  * {@link #JSONTokener(String) constructor} and {@link #nextValue} method.
  *
- * <h3>Example usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * String json = "{"
  *         + "  \"query\": \"Pizza\", "
