@@ -46,7 +46,7 @@ import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
  * </ul>
  * <p>
  *
- * <h3>Example Usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  *     StringBuilderWriter writer = new StringBuilderWriter();
  *     writer.write("Hello, World!");
