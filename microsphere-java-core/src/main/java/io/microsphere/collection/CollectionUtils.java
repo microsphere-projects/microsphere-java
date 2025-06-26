@@ -44,7 +44,7 @@ public abstract class CollectionUtils implements Utils {
      * @param collection the collection to check
      * @return true if the collection is null or empty, false otherwise
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * CollectionUtils.isEmpty(null)             // returns true
      * CollectionUtils.isEmpty(Collections.emptyList())  // returns true
@@ -61,7 +61,7 @@ public abstract class CollectionUtils implements Utils {
      * @param collection the collection to check
      * @return true if the collection is neither null nor empty, false otherwise
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * CollectionUtils.isNotEmpty(null)             // returns false
      * CollectionUtils.isNotEmpty(Collections.emptyList())  // returns false
@@ -285,7 +285,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E> the type of elements returned by this iterator (though none will be returned)
      * @return a non-null, read-only empty iterator
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Iterator<String> emptyIterator = CollectionUtils.emptyIterator();
      * System.out.println(emptyIterator.hasNext()); // prints: false
@@ -310,7 +310,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E> the type of elements (though none will be present)
      * @return a non-null, read-only empty iterable
      *
-     * <h3>Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Iterable<String> empty = CollectionUtils.emptyIterable();
      * System.out.println(empty.iterator().hasNext()); // prints: false
