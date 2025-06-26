@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  * This class extends the {@link ReadOnlyIterator}, which throws an exception when the
  * remove operation is attempted.
  *
- * <p>Example usage:</p>
+ * <h3>Example Usage</h3>
  * <pre>
  *   List&lt;String&gt; list = Arrays.asList("one", "two", "three");
  *   Iterator&lt;String&gt; unmodifiableIterator = new UnmodifiableIterator&lt;&gt;(list.iterator());
