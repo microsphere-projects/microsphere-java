@@ -23,8 +23,26 @@ import java.io.FileFilter;
 import java.io.FilenameFilter;
 
 /**
- * An interface which brings the {@link FileFilter} and {@link FilenameFilter}
- * interfaces together.
+ * A compound interface that combines the functionalities of {@link FileFilter} and
+ * {@link FilenameFilter}. Implementations of this interface can be used to filter both
+ * {@link File} objects directly and files based on their parent directory and name.
+ *
+ * <h2>Examples</h2>
+ * <p>
+ * Example 1: Filtering only directories:
+ * </p>
+ *
+ * <pre>
+ * IOFileFilter directoryFilter = file -> file.isDirectory();
+ * </pre>
+ *
+ * <p>
+ * Example 2: Filtering files ending with ".txt":
+ * </p>
+ *
+ * <pre>
+ * IOFileFilter textFileFilter = (dir, name) -> name.endsWith(".txt");
+ * </pre>
  *
  * @see FileFilter
  * @see FilenameFilter
