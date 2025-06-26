@@ -29,7 +29,31 @@ import static io.microsphere.util.StringUtils.substringBefore;
 import static java.util.Collections.unmodifiableSet;
 
 /**
- * Simple {@link Class} Scanner
+ * A simple scanner for scanning {@link Class} objects under a specified package or archive.
+ *
+ * <p>This class provides various methods to scan and retrieve classes either by package name,
+ * resource URL, or archive file. It supports filtering based on classloader, package recursion,
+ * and custom predicates.</p>
+ *
+ * <h3>Examples</h3>
+ *
+ * <p>Scan all classes in a package without loading them:</p>
+ * <pre>{@code
+ * SimpleClassScanner scanner = new SimpleClassScanner();
+ * Set<Class<?>> classes = scanner.scan(classLoader, "com.example.package");
+ * }</pre>
+ *
+ * <p>Scan and load all classes recursively in a package:</p>
+ * <pre>{@code
+ * Set<Class<?>> loadedClasses = scanner.scan(classLoader, "com.example.package", true, true);
+ * }</pre>
+ *
+ * <p>Scan classes from an archive file with filters:</p>
+ * <pre>{@code
+ * File archiveFile = new File("path/to/archive.jar");
+ * Predicate<Class<?>> myFilter = cls -> cls.isAnnotationPresent(MyAnnotation.class);
+ * Set<Class<?>> filteredClasses = scanner.scan(classLoader, archiveFile, false, myFilter);
+ * }</pre>
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
  * @see SimpleClassScanner
