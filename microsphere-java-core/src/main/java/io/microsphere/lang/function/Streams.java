@@ -35,6 +35,7 @@ import static java.util.stream.Collectors.toList;
 /**
  * The utilities class for {@link Stream}
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 public interface Streams {
@@ -286,9 +287,9 @@ public interface Streams {
      * System.out.println(filtered);  // Output: [Alice, Andrew]
      * }</pre>
      *
-     * @param <T>       the type of the stream elements
-     * @param <S>       the type of the iterable, either a list or set
-     * @param values    the iterable containing elements to be filtered
+     * @param <T>        the type of the stream elements
+     * @param <S>        the type of the iterable, either a list or set
+     * @param values     the iterable containing elements to be filtered
      * @param predicates the array of predicates to combine and apply to each element
      * @return a new collection of the same type as the input, containing only the elements that satisfy all predicates
      */
@@ -377,9 +378,9 @@ public interface Streams {
      * System.out.println(filtered);  // Output: [Anna, Bob]
      * }</pre>
      *
-     * @param <T>       the type of the stream elements
-     * @param <S>       the type of the iterable, either a list or set
-     * @param values    the iterable containing elements to be filtered
+     * @param <T>        the type of the stream elements
+     * @param <S>        the type of the iterable, either a list or set
+     * @param values     the iterable containing elements to be filtered
      * @param predicates the array of predicates to combine and apply to each element
      * @return a new collection of the same type as the input, containing only the elements that satisfy at least one predicate
      */
