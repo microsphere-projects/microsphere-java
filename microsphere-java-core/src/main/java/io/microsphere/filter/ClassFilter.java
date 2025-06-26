@@ -25,5 +25,6 @@ package io.microsphere.filter;
  * @see Filter
  * @since 1.0.0
  */
+@FunctionalInterface
 public interface ClassFilter extends Filter<Class<?>> {
 }
