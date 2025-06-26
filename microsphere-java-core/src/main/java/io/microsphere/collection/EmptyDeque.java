@@ -30,7 +30,7 @@ import static io.microsphere.collection.CollectionUtils.emptyIterator;
  * <p>This class is a singleton implementation, and it's serializable. It's useful as a placeholder or
  * default value where an empty deque is needed without creating a new instance every time.</p>
  *
- * <h3>Example Usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * Deque<String> deque = EmptyDeque.INSTANCE;
  *
