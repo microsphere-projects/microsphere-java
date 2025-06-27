@@ -104,25 +104,6 @@ public abstract class AccessibleObjectUtils implements Utils {
     }
 
     /**
-     * Set the {@link AccessibleObject} accessible.
-     *
-     * @param accessibleObject the {@link AccessibleObject} instance
-     * @return previous accessible status of the {@link AccessibleObject} instance
-     */
-    static boolean setAccessible(AccessibleObject accessibleObject) {
-        boolean accessible = accessibleObject.isAccessible();
-        if (!accessible) {
-            try {
-                accessibleObject.setAccessible(true);
-                accessible = true;
-            } catch (RuntimeException e) {
-                handleInaccessibleObjectExceptionIfFound(e);
-            }
-        }
-        return accessible;
-    }
-
-    /**
      * Tests whether the caller can access the specified {@link AccessibleObject} with the given instance.
      *
      * <p>
@@ -166,6 +147,25 @@ public abstract class AccessibleObjectUtils implements Utils {
         }
         Boolean access = tryCanAccess(object, accessibleObject);
         return access == null ? accessibleObject.isAccessible() : access;
+    }
+
+    /**
+     * Set the {@link AccessibleObject} accessible.
+     *
+     * @param accessibleObject the {@link AccessibleObject} instance
+     * @return previous accessible status of the {@link AccessibleObject} instance
+     */
+    static boolean setAccessible(AccessibleObject accessibleObject) {
+        boolean accessible = accessibleObject.isAccessible();
+        if (!accessible) {
+            try {
+                accessibleObject.setAccessible(true);
+                accessible = true;
+            } catch (RuntimeException e) {
+                handleInaccessibleObjectExceptionIfFound(e);
+            }
+        }
+        return accessible;
     }
 
     private static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {
