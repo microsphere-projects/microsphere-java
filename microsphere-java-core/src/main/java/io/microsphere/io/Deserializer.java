@@ -24,7 +24,7 @@ import java.io.IOException;
  * Implementations of this interface must be thread-safe.
  * </p>
  *
- * <h3>Example usage</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * Deserializer<String> deserializer = bytes -> new String(bytes, StandardCharsets.UTF_8);
  * String data = deserializer.deserialize("Hello, World!".getBytes(StandardCharsets.UTF_8));
