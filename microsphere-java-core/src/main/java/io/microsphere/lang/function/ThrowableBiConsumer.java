@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  * addAndPrint.accept(3, 5); // Output: Sum: 8
  * }</pre>
  *
- * <h2>Error Handling Example:</h2>
+ * <h3>Error Handling Example</h3>
  * <pre>{@code
  * ThrowableBiConsumer<String, Integer> parseAndPrint = (str, radix) -> {
  *     int value = Integer.parseInt(str, radix);
