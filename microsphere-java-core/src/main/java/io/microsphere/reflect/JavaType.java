@@ -52,16 +52,34 @@ import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Objects.hash;
 
 /**
- * Encapsulates a Java Type(Immutable), providing the features:
+ * Represents a Java type, encapsulating various operations and utilities for handling different kinds of types,
+ * including classes, parameterized types, type variables, wildcard types, and generic array types.
+ * <p>
+ * This class provides the ability to:
  * <ul>
- *     <li>{@link #getSuperType() supertype}</li>
- *     <li>{@link #getInterfaces() interfaces}</li>
- *     <li>{@link #getGenericTypes() generic parameters}</li>
- *     <li>{@link #getRawType() raw type}</li>
- *     <li>{@link #getSource() the tracing source}</li>
- *     <li>{@link #getRootSource() the root source}</li>
- *     <li>{@link #as(Class) cast to the super type or interface}</li>
+ *     <li>Retrieve the supertype of this type ({@link #getSuperType()})</li>
+ *     <li>Access implemented interfaces ({@link #getInterfaces()})</li>
+ *     <li>Obtain generic type arguments ({@link #getGenericTypes()})</li>
+ *     <li>Get the raw class representation ({@link #getRawType()})</li>
+ *     <li>Trace back to the original source type ({@link #getSource()})</li>
+ *     <li>Determine if this type is an instance of another type ({@link #as(Class)})</li>
  * </ul>
+ * <p>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create JavaType from a field
+ * Field field = MyClass.class.getField("myField");
+ * JavaType javaType = JavaType.from(field);
+ *
+ * // Get generic type information
+ * JavaType[] genericTypes = javaType.getGenericTypes();
+ *
+ * // Cast JavaType to a specific class type
+ * JavaType stringType = javaType.as(String.class);
+ *
+ * // Get the raw class
+ * Class<?> rawClass = javaType.getRawType();
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Type
