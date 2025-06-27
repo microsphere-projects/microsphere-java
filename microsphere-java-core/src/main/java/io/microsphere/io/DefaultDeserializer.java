@@ -29,7 +29,7 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
  * standard Java serialization via {@link ObjectInputStream}. The deserialization process
  * ensures that the input byte array is not empty before attempting to reconstruct the object.
  *
- * <h3>Example usage</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * byte[] serializedData = ...; // previously serialized data
  * DefaultDeserializer deserializer = DefaultDeserializer.INSTANCE;
