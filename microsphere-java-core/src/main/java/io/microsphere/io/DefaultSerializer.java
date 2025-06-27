@@ -28,7 +28,7 @@ import java.io.Serializable;
  * serialization framework.
  * </p>
  *
- * <h3>Example usage</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create an instance of DefaultSerializer
  * Serializer<MySerializableObject> serializer = new DefaultSerializer();
