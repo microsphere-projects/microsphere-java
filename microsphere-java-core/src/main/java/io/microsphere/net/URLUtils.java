@@ -460,7 +460,7 @@ public abstract class URLUtils implements Utils {
      * <p>This method ensures that the resulting path uses forward slashes ({@code /}) as separators,
      * regardless of the operating system, and removes any duplicate separator sequences.</p>
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * normalizePath("C:\\Windows\\\\temp")        // returns "C:/Windows/temp"
      * normalizePath("C:\\\\Windows\\/temp")      // returns "C:/Windows/temp"
