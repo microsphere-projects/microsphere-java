@@ -28,8 +28,21 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
 /**
  * The definition class for {@link Constructor}
  *
+ * <p>Example usage:
+ * <pre>
+ * // Create a ConstructorDefinition for String(int) constructor
+ * ConstructorDefinition def = new ConstructorDefinition("1.0.0", "java.lang.String", "java.lang.Integer");
+ *
+ * // Get the actual Constructor object
+ * Constructor<?> constructor = def.getConstructor();
+ *
+ * // Create a new instance using the constructor
+ * String instance = def.newInstance(123);
+ * </pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Constructor
+ * @see ExecutableDefinition
  * @since 1.0.0
  */
 public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
