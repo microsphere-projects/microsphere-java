@@ -16,11 +16,29 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.lang.Prioritized;
+
 /**
- * The {@link LoggerFactory} class for Slf4j
+ * The {@link LoggerFactory} implementation for creating and managing SLF4J-based {@link Logger} instances.
+ *
+ * <p>SLF4J (Simple Logging Facade for Java) is a popular logging abstraction that allows the end-user to plug in their desired logging framework at deployment time.
+ * This factory checks for the availability of the SLF4J logging infrastructure and creates corresponding logger instances.
+ *
+ * <h3>Configuration</h3>
+ * <p>This factory has a fixed priority level of {@link Prioritized#NORMAL_PRIORITY}, meaning it will be used if no higher-priority logger factory is available.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Get a logger instance by class
+ * Logger logger = LoggerFactory.getLogger(MyClass.class);
+ *
+ * // Log a message
+ * logger.info("This is an info message");
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see LoggerFactory
+ * @see org.slf4j.Logger
  * @since 1.0.0
  */
 public class Sfl4jLoggerFactory extends LoggerFactory {
