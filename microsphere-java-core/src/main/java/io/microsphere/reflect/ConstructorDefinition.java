@@ -28,7 +28,7 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
 /**
  * The definition class for {@link Constructor}
  *
- * <p>Example usage:
+ * <h3>Example Usage</h3>
  * <pre>
  * // Create a ConstructorDefinition for String(int) constructor
  * ConstructorDefinition def = new ConstructorDefinition("1.0.0", "java.lang.String", "java.lang.Integer");
