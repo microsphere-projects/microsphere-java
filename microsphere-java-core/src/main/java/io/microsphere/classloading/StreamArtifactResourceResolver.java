@@ -57,7 +57,7 @@ import static io.microsphere.util.jar.JarUtils.filter;
  *     <li>{@link #resolve(URL, InputStream, ClassLoader)}: Constructs an artifact from the provided metadata stream.</li>
  * </ul>
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class CustomStreamArtifactResourceResolver extends StreamArtifactResourceResolver {
  *
