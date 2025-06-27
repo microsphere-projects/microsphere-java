@@ -16,13 +16,33 @@
  */
 package io.microsphere.logging;
 
+import io.microsphere.lang.Prioritized;
+
 import java.util.logging.Level;
 
 /**
- * {@link LoggerFactory} for JDK Logging
+ * A {@link LoggerFactory} implementation that creates and manages instances of JDK logging ({@link java.util.logging.Logger}).
+ *
+ * <p>This factory provides a concrete implementation for creating JDK-based loggers with the required name.
+ * It defines priority-based ordering by implementing the {@link Prioritized} interface, ensuring proper loading order
+ * when multiple logger factories are present.
+ *
+ * <h3>Usage Example</h3>
+ * The typical usage involves relying on the static methods provided by the base class:
+ *
+ * <pre>{@code
+ * // Get a logger instance associated with a specific class
+ * Logger logger = getLogger(MyClass.class);
+ *
+ * // Get a named logger instance
+ * Logger namedLogger = getLogger("com.example.mylogger");
+ * }</pre>
+ *
+ * <p>The factory is automatically loaded via the ServiceLoader mechanism if registered properly in the configuration files.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see LoggerFactory
+ * @see java.util.logging.Logger
  * @since 1.0.0
  */
 public class JDKLoggerFactory extends LoggerFactory {
