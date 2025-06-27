@@ -27,7 +27,7 @@ package io.microsphere.lang;
  * may be layered with proxies or decorators.
  * </p>
  *
- * <h3>Example Usage:</h3>
+ * <h3>Example Usage</h3>
  *
  * <pre>{@code
  * public class MyWrapper implements Wrapper {
