@@ -117,7 +117,7 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
      * <p>This property allows users to customize which manifest attributes should be used to determine the artifact ID.
      * By default, it uses the values defined in {@link #DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE}.
      *
-     * <p>Example usage:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *   -Dmicrosphere.artifact-id.manifest-attribute-names=Custom-Name,Implementation-Title
      * }</pre>
@@ -135,7 +135,7 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
      * <p>This property allows users to customize which manifest attributes should be used to determine the artifact version.
      * By default, it uses the values defined in {@link #DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE}.
      *
-     * <p>Example usage:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *   -Dmicrosphere.artifact-version.manifest-attribute-names=Custom-Version,Implementation-Version
      * }</pre>
