@@ -80,7 +80,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>        the type of elements in the collection
      * @return an {@link Iterable} backed by the given collection; never null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Convert a non-null collection to iterable
      * Collection<String> list = Arrays.asList("a", "b", "c");
@@ -103,7 +103,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>      the type of elements in the iterator
      * @return a non-null {@link Iterable} backed by the given iterator
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Convert a non-null iterator to iterable
      * Iterator<String> iterator = Arrays.asList("a", "b", "c").iterator();
@@ -126,7 +126,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>         the type of elements in the enumeration
      * @return a non-null {@link Iterator} backed by the given enumeration
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Convert a non-null enumeration to iterator
      * Enumeration<String> enumeration = Collections.enumeration(Arrays.asList("a", "b", "c"));
@@ -150,7 +150,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>         the type of elements in the enumeration
      * @return a non-null {@link Iterable} backed by the given enumeration
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Convert a non-null enumeration to iterable
      * Enumeration<String> enumeration = Collections.enumeration(Arrays.asList("a", "b", "c"));
@@ -174,7 +174,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>     the type of the element
      * @return a non-null {@link Iterable} containing the single element or an empty iterable if element is null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Create an iterable with a non-null element
      * Iterable<String> iterable1 = CollectionUtils.singletonIterable("hello");
@@ -199,7 +199,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>     the type of the element
      * @return a non-null read-only {@link Iterator} containing the single element or an empty iterator if element is null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Create an iterator with a non-null element
      * Iterator<String> iterator1 = CollectionUtils.singletonIterator("hello");
@@ -225,7 +225,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>     the type of the element
      * @return a non-null read-only {@link Enumeration} containing the single element or an empty enumeration if element is null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Create an enumeration with a non-null element
      * Enumeration<String> enumeration1 = CollectionUtils.singletonEnumeration("hello");
@@ -252,7 +252,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <E>      the type of elements returned by the iterator
      * @return a non-null read-only {@link Iterator} backed by the given iterator
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Wrap a valid iterator into an unmodifiable one
      * Iterator<String> modifiable = Arrays.asList("a", "b", "c").iterator();
@@ -329,7 +329,7 @@ public abstract class CollectionUtils implements Utils {
      * @param collection the specified {@link Collection}, may be null
      * @return the size of the collection, or 0 if it is null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * CollectionUtils.size(null)             // returns 0
      * CollectionUtils.size(Collections.emptyList())  // returns 0
@@ -348,7 +348,7 @@ public abstract class CollectionUtils implements Utils {
      * @param iterable the specified {@link Iterable}, may be null
      * @return the number of elements in the iterable, or 0 if it is null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * CollectionUtils.size((Iterable<?>) null)        // returns 0
      *
@@ -388,7 +388,7 @@ public abstract class CollectionUtils implements Utils {
      * they are also considered equal.
      * </p>
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * CollectionUtils.equals(null, null)             // returns true
      * CollectionUtils.equals(Collections.emptyList(), null)  // returns true
@@ -430,7 +430,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <T>        the type of elements in the collection and array
      * @return the number of elements successfully added to the collection
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Collection<String> collection = new ArrayList<>();
      * int count1 = CollectionUtils.addAll(collection, "a", "b", "c"); // returns 3
@@ -474,7 +474,7 @@ public abstract class CollectionUtils implements Utils {
      * Otherwise, it retrieves the first element using the iterator obtained from the collection.
      * </p>
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Collection<String> list = Arrays.asList("a", "b", "c");
      * String result1 = CollectionUtils.first(list); // returns "a"
@@ -513,7 +513,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <T>    the type of elements in the iterable
      * @return the first element if available; otherwise, null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Get the first element from a non-empty iterable
      * Iterable<String> iterable1 = Arrays.asList("apple", "banana");
@@ -543,7 +543,7 @@ public abstract class CollectionUtils implements Utils {
      * @param <T>    the type of elements in the iterator
      * @return the first element if available; otherwise, null
      *
-     * <h3>Examples</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Get the first element from a non-empty iterator
      * Iterator<String> iterator1 = Arrays.asList("apple", "banana").iterator();
