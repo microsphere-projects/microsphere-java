@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
  * It provides methods for adding/removing listeners and dispatching events in a specific execution context.
  * </p>
  *
- * <h3>Usage Examples</h3>
+ * <h3>Example Usage</h3>
  *
  * <h4>Example 1: Using Default Dispatcher (Sequential Execution)</h4>
  * <pre>{@code
