@@ -52,7 +52,7 @@ import static java.util.Collections.unmodifiableList;
  *     <li><strong>Service Loading:</strong> Optionally loads listeners via Java's SPI mechanism ({@link ServiceLoader}).</li>
  * </ul>
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  *
  * <pre>{@code
  * public class MyEvent extends Event {}
