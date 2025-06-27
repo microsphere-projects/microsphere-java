@@ -17,8 +17,28 @@ import static java.lang.System.currentTimeMillis;
 /**
  * {@link Process} Executor
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ProcessExecutor
+ * <p>Executes operating system commands and manages the execution lifecycle, including handling input/output streams,
+ * monitoring process status, and enforcing timeouts. This class wraps command execution in a structured way to provide
+ * enhanced control and integration with the framework.
+ *
+ * <p>Example usage:
+ * <pre>
+ *     // Execute a simple command with options and capture output
+ *     ProcessExecutor executor = new ProcessExecutor("ls", "-l", "/home");
+ *     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+ *     executor.execute(outputStream);
+ *     System.out.println("Command Output: " + outputStream.toString());
+ *
+ *     // Execute a command with timeout protection
+ *     try {
+ *         executor.execute(outputStream, 5000); // 5 seconds timeout
+ *     } catch (TimeoutException e) {
+ *         System.err.println("Command timed out!");
+ *     }
+ * </pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ProcessManager
  * @since 1.0.0
  */
 public class ProcessExecutor {
