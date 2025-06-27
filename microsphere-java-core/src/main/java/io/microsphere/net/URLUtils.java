@@ -4,6 +4,7 @@
 package io.microsphere.net;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
@@ -140,14 +141,30 @@ public abstract class URLUtils implements Utils {
      */
     public static final String SUB_PROTOCOL_MATRIX_NAME = "_sp";
 
-
     /**
-     * Convert the <code>url</code> to {@link URL}
+     * Converts the provided URL string into a {@link URL} object.
      *
-     * @param url
-     * @return non-null
-     * @throws IllegalArgumentException if <code>url</code> is malformed
+     * <p>This method attempts to create a valid {@link URL} from the given string. If the string does not represent a valid URL,
+     * an {@link IllegalArgumentException} is thrown.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Valid URL
+     * URL validUrl = URLUtils.ofURL("https://www.example.com");
+     *
+     * // Invalid URL - will throw IllegalArgumentException
+     * try {
+     *     URL invalidUrl = URLUtils.ofURL("htp:/invalid-url");
+     * } catch (IllegalArgumentException e) {
+     *     System.out.println("Invalid URL: " + e.getMessage());
+     * }
+     * }</pre>
+     *
+     * @param url The string representation of the URL.
+     * @return A non-null {@link URL} object if the input string is a valid URL.
+     * @throws IllegalArgumentException if the provided string is not a valid URL.
      */
+    @Nonnull
     public static URL ofURL(String url) {
         try {
             return new URL(url);
@@ -157,12 +174,29 @@ public abstract class URLUtils implements Utils {
     }
 
     /**
-     * Resolve the entry path from Archive File URL
+     * Resolves the archive entry path from the given URL.
      *
-     * @param archiveFileURL Archive File URL
-     * @return Relative path in archive
-     * @throws NullPointerException <code>archiveFileURL</code> is <code>null</code>
+     * <p>This method extracts the part of the URL's path that comes after the archive entry separator.
+     * If the URL does not contain an archive entry separator, this method returns {@code null}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Example 1: URL with archive entry path
+     * URL jarURL = new URL("jar:file:/path/to/archive.jar!/entry/path");
+     * String entryPath = URLUtils.resolveArchiveEntryPath(jarURL);
+     * System.out.println(entryPath); // Output: entry/path
+     *
+     * // Example 2: URL without archive entry path
+     * URL fileURL = new URL("file:/path/to/archive.jar");
+     * entryPath = URLUtils.resolveArchiveEntryPath(fileURL);
+     * System.out.println(entryPath); // Output: null
+     * }</pre>
+     *
+     * @param archiveFileURL the URL to resolve the archive entry path from
+     * @return the resolved archive entry path if present, or {@code null} otherwise
+     * @throws NullPointerException if the provided URL is {@code null}
      */
+    @Nullable
     public static String resolveArchiveEntryPath(URL archiveFileURL) throws NullPointerException {
         // NPE check
         return doResolveArchiveEntryPath(archiveFileURL.getPath());
@@ -178,12 +212,29 @@ public abstract class URLUtils implements Utils {
     }
 
     /**
-     * Resolve base path from the specified URL
+     * Resolves the base path from the specified URL.
+     *
+     * <p>This method extracts the main path part of the URL, excluding any archive entry path if present.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Example 1: File URL without archive entry path
+     * URL fileURL = new URL("file:/path/to/resource.txt");
+     * String basePath = URLUtils.resolveBasePath(fileURL);
+     * System.out.println(basePath); // Output: /path/to/resource.txt
+     *
+     * // Example 2: JAR URL with archive entry path
+     * URL jarURL = new URL("jar:file:/path/to/archive.jar!/entry/path");
+     * basePath = URLUtils.resolveBasePath(jarURL);
+     * System.out.println(basePath); // Output: /path/to/archive.jar
+     * }</pre>
      *
      * @param url the specified URL
-     * @return base path
-     * @throws NullPointerException if <code>url</code> is <code>null</code>
+     * @return the resolved base path
+     * @throws NullPointerException if the provided URL is {@code null}
      */
+    @Nonnull
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
         return resolvePath(url, false);
@@ -269,12 +320,31 @@ public abstract class URLUtils implements Utils {
     }
 
     /**
-     * Resolve archive file
+     * Resolves the archive file from the specified URL.
      *
-     * @param resourceURL the URL of resource
-     * @return Resolve archive file If exists
-     * @throws NullPointerException
+     * <p>If the provided URL uses the "file" protocol, this method delegates to
+     * {@link #resolveArchiveDirectory(URL)} to resolve the archive directory. Otherwise,
+     * it calls {@link #doResolveArchiveFile(URL)} to handle other protocols like "jar".</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Example 1: File URL pointing directly to a JAR file
+     * URL fileURL = new URL("file:/path/to/archive.jar");
+     * File archiveFile = URLUtils.resolveArchiveFile(fileURL);
+     * System.out.println(archiveFile.exists()); // Output: true (if the file exists)
+     *
+     * // Example 2: JAR URL with an entry path
+     * URL jarURL = new URL("jar:file:/path/to/archive.jar!/entry/path");
+     * archiveFile = URLUtils.resolveArchiveFile(jarURL);
+     * System.out.println(archiveFile.exists()); // Output: true (if the archive exists)
+     * }</pre>
+     *
+     * @param resourceURL the URL to resolve the archive file from
+     * @return the resolved archive file if found and exists; otherwise, returns null
+     * @throws NullPointerException if the provided URL is {@code null}
      */
+    @Nullable
     public static File resolveArchiveFile(URL resourceURL) throws NullPointerException {
         String protocol = resourceURL.getProtocol();
         if (FILE_PROTOCOL.equals(protocol)) {
@@ -304,10 +374,24 @@ public abstract class URLUtils implements Utils {
     }
 
     /**
-     * Resolve the query parameters {@link Map} from specified URL，The parameter name as key ，parameter value list as key
+     * Resolve the query parameters {@link Map} from specified URL. The parameter name is used as the key, and the list of parameter values is used as the value.
      *
-     * @param url URL
-     * @return Non-null and Read-only {@link Map} , the order of parameters is determined by query string
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Example URL with query parameters
+     * String url = "https://www.example.com?param1=value1&param2=value2&param1=value3";
+     * Map<String, List<String>> params = resolveQueryParameters(url);
+     *
+     * // Resulting map structure:
+     * // {
+     * //   "param1" : ["value1", "value3"],
+     * //   "param2" : ["value2"]
+     * // }
+     * }</pre>
+     *
+     * @param url URL string containing optional query parameters
+     * @return Non-null and Read-only {@link Map} where each key is a unique parameter name and the value is a list of values associated with that key.
      */
     @Nonnull
     public static Map<String, List<String>> resolveQueryParameters(String url) {
