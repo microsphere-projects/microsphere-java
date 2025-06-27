@@ -28,7 +28,7 @@ import static io.microsphere.util.Assert.assertNotNull;
  * It also provides default methods for composing functions and handling exceptions gracefully.
  * </p>
  *
- * <h2>Examples</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Example usage:
  * ThrowableFunction<String, Integer> parser = Integer::valueOf;
