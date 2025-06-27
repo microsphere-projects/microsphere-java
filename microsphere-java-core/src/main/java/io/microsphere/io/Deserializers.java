@@ -35,7 +35,7 @@ import static java.util.Collections.emptyList;
  * supporting priority-based resolution to determine the most or least specific deserializer available.
  * </p>
  *
- * <h3>Examples</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create an instance with the default class loader
  * Deserializers deserializers = new Deserializers();
