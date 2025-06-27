@@ -25,7 +25,7 @@ import static io.microsphere.util.StringUtils.isBlank;
  * It is useful in scenarios where logging is required to be completely disabled without modifying the application's
  * logging configuration.</p>
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create a NoOpLogger instance
  * Logger logger = new NoOpLogger("exampleLogger");
