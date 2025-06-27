@@ -27,7 +27,7 @@ import java.io.FilenameFilter;
  * {@link FilenameFilter}. Implementations of this interface can be used to filter both
  * {@link File} objects directly and files based on their parent directory and name.
  *
- * <h2>Examples</h2>
+ * <h3>Example Usage</h3>
  * <p>
  * Example 1: Filtering only directories:
  * </p>
