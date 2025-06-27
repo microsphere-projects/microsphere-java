@@ -27,7 +27,7 @@ import java.util.NoSuchElementException;
  * {@link NoSuchElementException} on subsequent calls to {@link #nextElement()}.
  * </p>
  *
- * <p><strong>Example Usage:</strong></p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * String item = "Hello";
  * SingletonEnumeration<String> enumeration = new SingletonEnumeration<>(item);
