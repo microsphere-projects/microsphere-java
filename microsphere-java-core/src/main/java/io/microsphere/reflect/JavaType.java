@@ -818,7 +818,7 @@ public class JavaType implements Serializable {
     @Nullable
     public static JavaType fromField(Class<?> declaredClass, String fieldName) {
         Field field = findField(declaredClass, fieldName);
-        return field == null ? NULL_JAVA_TYPE : from(field);
+        return fromField(field);
     }
 
     /**
@@ -835,7 +835,7 @@ public class JavaType implements Serializable {
      *
      *     public static void main(String[] args) throws Throwable {
      *         Field field = Example.class.getDeclaredField("exampleField");
-     *         JavaType javaType = JavaType.from(field);
+     *         JavaType javaType = JavaType.fromField(field);
      *         // javaType now represents Map<String, Integer>
      *     }
      * }
@@ -845,8 +845,8 @@ public class JavaType implements Serializable {
      * @return a JavaType representing the field's type; never null
      */
     @Nonnull
-    public static JavaType from(Field field) {
-        return from(field.getGenericType());
+    public static JavaType fromField(Field field) {
+        return field == null ? NULL_JAVA_TYPE : from(field.getGenericType());
     }
 
     /**
@@ -878,7 +878,7 @@ public class JavaType implements Serializable {
     @Nonnull
     public static JavaType fromMethodReturnType(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
         Method method = findMethod(declaredClass, methodName, parameterTypes);
-        return method == null ? NULL_JAVA_TYPE : fromMethodReturnType(method);
+        return fromMethodReturnType(method);
     }
 
     /**
@@ -908,8 +908,7 @@ public class JavaType implements Serializable {
      */
     @Nonnull
     public static JavaType fromMethodReturnType(Method method) {
-        Type genericReturnType = method.getGenericReturnType();
-        return from(genericReturnType);
+        return method == null ? NULL_JAVA_TYPE : from(method.getGenericReturnType());
     }
 
     /**
