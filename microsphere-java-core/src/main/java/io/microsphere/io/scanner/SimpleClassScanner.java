@@ -35,7 +35,7 @@ import static java.util.Collections.unmodifiableSet;
  * resource URL, or archive file. It supports filtering based on classloader, package recursion,
  * and custom predicates.</p>
  *
- * <h3>Examples</h3>
+ * <h3>Example Usage</h3>
  *
  * <p>Scan all classes in a package without loading them:</p>
  * <pre>{@code
