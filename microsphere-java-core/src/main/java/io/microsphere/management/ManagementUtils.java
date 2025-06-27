@@ -50,7 +50,7 @@ public abstract class ManagementUtils implements Utils {
     /**
      * Get the process ID of current JVM
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * // Get the current process ID
      * long pid = ManagementUtils.getCurrentProcessId();
