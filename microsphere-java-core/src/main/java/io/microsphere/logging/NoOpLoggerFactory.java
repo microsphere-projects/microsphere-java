@@ -22,7 +22,7 @@ package io.microsphere.logging;
  * and has the lowest possible priority to ensure it is used only when no other
  * logger implementations are available.
  *
- * <p>Example usage:</p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Get a NoOpLogger instance by class
  * Logger logger = NoOpLoggerFactory.getLogger(MyClass.class);
