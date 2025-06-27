@@ -30,7 +30,7 @@ import static io.microsphere.util.Assert.assertNotNull;
  * throwable-aware functional interface whose functional method is
  * {@link #accept(Object)}.
  *
- * <h2>Examples</h2>
+ * <h3>Example Usage</h3>
  *
  * <pre>{@code
  * // Basic usage:
