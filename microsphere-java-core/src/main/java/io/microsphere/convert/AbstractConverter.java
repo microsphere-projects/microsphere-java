@@ -38,7 +38,7 @@ import static java.util.Objects.hash;
  * of source and target types, ensuring more specific converters (those handling more derived types) receive higher priority.
  * It also includes common functionality such as logging support, null safety in conversion, and proper equals and hashcode behavior.</p>
  *
- * <h2>Usage Example</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class StringToIntegerConverter extends AbstractConverter<String, Integer> {
  *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
@@ -52,7 +52,7 @@ import static java.util.Objects.hash;
  * }
  * }</pre>
  *
- * <h2>Prioritized Behavior Example</h2>
+ * <h3>Prioritized Behavior Example</h3>
  * <pre>{@code
  * public class HighPriorityStringToIntegerConverter extends AbstractConverter<String, Integer> {
  *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
