@@ -23,7 +23,7 @@ package io.microsphere.logging;
  * creating and managing instances of the {@link Logger} interface backed by ACL's
  * {@link org.apache.commons.logging.Log}.
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  * Normally, this factory is automatically discovered and used when Apache Commons Logging
  * is present on the classpath. However, it can also be explicitly set as the logging
  * provider:
