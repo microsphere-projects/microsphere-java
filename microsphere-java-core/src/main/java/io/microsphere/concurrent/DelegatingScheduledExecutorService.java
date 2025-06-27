@@ -31,7 +31,7 @@ import java.util.concurrent.TimeoutException;
  * delegate instance. This class can be extended or used directly to wrap an existing {@link ScheduledExecutorService},
  * allowing for additional behavior to be added (e.g., monitoring, logging) without modifying the underlying executor.
  *
- * <p><strong>Example Usage:</strong></p>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * ScheduledExecutorService realExecutor = Executors.newScheduledThreadPool(2);
  * DelegatingScheduledExecutorService delegatingExecutor = new DelegatingScheduledExecutorService(realExecutor);
