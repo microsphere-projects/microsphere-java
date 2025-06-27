@@ -30,7 +30,7 @@ import static java.lang.Integer.compare;
  * to define their priority value. The priority is used to determine ordering via the
  * {@link #compareTo(Prioritized)} method, which compares based on the returned priority values.
  *
- * <p>Example usage:
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class MyTask implements Prioritized {
  *     private final int priority;
