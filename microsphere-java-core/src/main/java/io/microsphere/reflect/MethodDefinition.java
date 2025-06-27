@@ -33,7 +33,7 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
  * by their name, parameter types, and declaring class. This class serves as a convenient wrapper for
  * method metadata and resolution logic.
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Define a method without deprecation information
  * MethodDefinition methodDef = new MethodDefinition("1.0.0", "com.example.MyClass", "myMethod", "java.lang.String", "int");
