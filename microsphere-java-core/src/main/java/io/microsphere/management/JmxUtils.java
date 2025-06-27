@@ -52,11 +52,52 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Optional.ofNullable;
 
-
 /**
- * The utilities class for JMX
+ * The utilities class for JMX operations, providing convenient methods to interact with MBeans and MXBeans.
+ * <p>
+ * This class offers static utility methods to retrieve and manipulate JMX MBeans and attributes,
+ * as well as access various platform MXBean components such as memory, thread, and garbage collection metrics.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <h4>Accessing Platform MXBeans</h4>
+ * <pre>{@code
+ * // Get the MemoryMXBean for monitoring heap and non-heap memory usage
+ * MemoryMXBean memoryMXBean = JmxUtils.getMemoryMXBean();
+ * System.out.println("Heap Memory Usage: " + memoryMXBean.getHeapMemoryUsage());
+ *
+ * // Get the ThreadMXBean for retrieving thread-related information
+ * ThreadMXBean threadMXBean = JmxUtils.getThreadMXBean();
+ * System.out.println("Current Thread Count: " + threadMXBean.getThreadCount());
+ * }</pre>
+ *
+ * <h4>Retrieving MBean Attributes</h4>
+ * <pre>{@code
+ * // Retrieve all readable attributes from a specific MBean
+ * MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+ * ObjectName objectName = new ObjectName("java.lang", "type", "Memory");
+ *
+ * Map<String, MBeanAttribute> attributes = JmxUtils.getMBeanAttributesMap(mBeanServer, objectName);
+ * attributes.forEach((name, attribute) -> {
+ *     System.out.println("Attribute Name: " + name + ", Value: " + attribute.getValue());
+ * });
+ * }</pre>
+ *
+ * <h4>Safe Attribute Access with Logging</h4>
+ * <pre>{@code
+ * // Safely get an MBean attribute value by name
+ * Object value = JmxUtils.getAttribute(mBeanServer, objectName, "HeapMemoryUsage");
+ * if (value != null) {
+ *     System.out.println("Heap Memory Usage: " + value);
+ * } else {
+ *     System.out.println("Attribute not found or unreadable.");
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see MBeanAttribute
+ * @see Utils
  * @since 1.0.0
  */
 public abstract class JmxUtils implements Utils {
