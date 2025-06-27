@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * manipulating MBean attributes dynamically.
  * </p>
  *
- * <h2>Example Usage</h2>
+ * <h3>Example Usage</h3>
  * <pre>
  * // Assume mBeanInfo and attributeInfo are obtained from an MBeanServer
  * MBeanAttribute mBeanAttribute = new MBeanAttribute(mBeanInfo, attributeInfo, value);
