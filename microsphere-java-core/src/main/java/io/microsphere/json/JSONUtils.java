@@ -45,7 +45,7 @@ import static java.lang.reflect.Array.getLength;
  * collections like {@link Map}, {@link Iterable}, and custom objects through recursive value appending.
  * </p>
  *
- * <h3>Examples:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * StringBuilder builder = new StringBuilder();
  *
