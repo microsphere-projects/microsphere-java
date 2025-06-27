@@ -26,9 +26,33 @@ import javax.management.MBeanInfo;
 import static java.util.Objects.requireNonNull;
 
 /**
- * MBean {@link Attribute} with {@link MBeanAttributeInfo} and its' optional value
+ * Represents an MBean attribute, encapsulating the {@link MBeanAttributeInfo} and its optional value.
+ * <p>
+ * This class provides a convenient way to work with MBean attributes by combining the metadata provided by
+ * {@link MBeanAttributeInfo} with the actual value of the attribute. It is particularly useful when retrieving or
+ * manipulating MBean attributes dynamically.
+ * </p>
+ *
+ * <h2>Example Usage</h2>
+ * <pre>
+ * // Assume mBeanInfo and attributeInfo are obtained from an MBeanServer
+ * MBeanAttribute mBeanAttribute = new MBeanAttribute(mBeanInfo, attributeInfo, value);
+ *
+ * // Get the name of the attribute
+ * String attributeName = mBeanAttribute.getName();
+ *
+ * // Get the type of the attribute
+ * String attributeType = mBeanAttribute.getType();
+ *
+ * // Check if the attribute is readable
+ * boolean readable = mBeanAttribute.isReadable();
+ *
+ * // Get the value of the attribute
+ * Object attributeValue = mBeanAttribute.getValue();
+ * </pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see MBeanAttributeInfo
  * @see Attribute
  * @since 1.0.0
  */
