@@ -105,7 +105,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> emptyList = Lists.ofList();
      * }</pre>
@@ -131,7 +131,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> singleElementList = Lists.ofList("Hello");
      * }</pre>
@@ -159,7 +159,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> twoElementList = Lists.ofList("Hello", "World");
      * }</pre>
@@ -188,7 +188,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> threeElementList = Lists.ofList("Hello", "World", "Java");
      * }</pre>
@@ -218,7 +218,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> fourElementList = Lists.ofList("Hello", "World", "Java", "Lists");
      * }</pre>
@@ -249,7 +249,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> fiveElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example");
      * }</pre>
@@ -306,7 +306,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> sevenElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example", "Seven", "Elements");
      * }</pre>
@@ -340,7 +340,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> eightElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example", "Eight", "Elements", "Demo");
      * }</pre>
@@ -375,7 +375,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage example:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> nineElementList = Lists.ofList("Hello", "World", "Java", "Lists", "Example", "Nine", "Elements", "Demo", "Test");
      * }</pre>
@@ -441,7 +441,7 @@ public abstract class Lists implements Utils {
      * <p>The returned list is serializable and implements the {@link RandomAccess}
      * interface if the implementation class allows.
      *
-     * <p>Usage examples:
+     * <h3>Example Usage</h3>
      * <pre>{@code
      *     List<String> emptyList = Lists.ofList(); // returns an empty list
      *     List<String> singleElementList = Lists.ofList("Hello"); // returns a list with one element
