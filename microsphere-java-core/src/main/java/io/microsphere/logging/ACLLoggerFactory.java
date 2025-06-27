@@ -17,10 +17,32 @@
 package io.microsphere.logging;
 
 /**
- * {@link LoggerFactory} for Apache Commons Logging
+ * {@link LoggerFactory} implementation for Apache Commons Logging (ACL).
+ *
+ * <p>{@code ACLLoggerFactory} provides a bridge to the Apache Commons Logging framework,
+ * creating and managing instances of the {@link Logger} interface backed by ACL's
+ * {@link org.apache.commons.logging.Log}.
+ *
+ * <h3>Usage Example</h3>
+ * Normally, this factory is automatically discovered and used when Apache Commons Logging
+ * is present on the classpath. However, it can also be explicitly set as the logging
+ * provider:
+ *
+ * <pre>{@code
+ * // Explicitly setting ACLLoggerFactory as the logging provider
+ * LoggerFactory factory = new ACLLoggerFactory();
+ * Logger logger = factory.createLogger("com.example.MyClass");
+ * logger.info("This is an info message.");
+ * }</pre>
+ *
+ * <h3>Integration with Prioritized Interface</h3>
+ * This factory has a defined priority level ({@link #getPriority()}) that determines its
+ * precedence among other available logging frameworks. The higher the number, the lower
+ * the priority.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see LoggerFactory
+ * @see org.apache.commons.logging.Log
  * @since 1.0.0
  */
 public class ACLLoggerFactory extends LoggerFactory {
