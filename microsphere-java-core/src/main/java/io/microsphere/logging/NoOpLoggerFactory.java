@@ -17,10 +17,23 @@
 package io.microsphere.logging;
 
 /**
- * {@link LoggerFactory} for {@link NoOpLogger}
+ * A {@link LoggerFactory} implementation that provides instances of {@link NoOpLogger},
+ * which perform no operations for logging calls. This factory is always available
+ * and has the lowest possible priority to ensure it is used only when no other
+ * logger implementations are available.
+ *
+ * <p>Example usage:</p>
+ * <pre>{@code
+ * // Get a NoOpLogger instance by class
+ * Logger logger = NoOpLoggerFactory.getLogger(MyClass.class);
+ *
+ * // Get a NoOpLogger instance by name
+ * Logger logger = NoOpLoggerFactory.getLogger("my.logger.name");
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see NoOpLogger
+ * @see LoggerFactory
  * @since 1.0.0
  */
 public class NoOpLoggerFactory extends LoggerFactory {
