@@ -61,7 +61,7 @@ public abstract class EnumerationUtils implements Utils {
      * <p>This method constructs a new {@link ArrayEnumeration} instance backed by the given array,
      * allowing sequential read-only access to the array elements.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Enumeration<String> en = EnumerationUtils.ofEnumeration("apple", "banana", "cherry");
      * while (en.hasMoreElements()) {
