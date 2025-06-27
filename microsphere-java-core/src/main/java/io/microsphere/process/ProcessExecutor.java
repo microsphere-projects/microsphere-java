@@ -21,7 +21,7 @@ import static java.lang.System.currentTimeMillis;
  * monitoring process status, and enforcing timeouts. This class wraps command execution in a structured way to provide
  * enhanced control and integration with the framework.
  *
- * <p>Example usage:
+ * <h3>Example Usage</h3>
  * <pre>
  *     // Execute a simple command with options and capture output
  *     ProcessExecutor executor = new ProcessExecutor("ls", "-l", "/home");
