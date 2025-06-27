@@ -30,7 +30,7 @@ import static io.microsphere.util.Assert.assertNotNull;
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * // Example usage:
+ * // <h3>Example Usage</h3>
  * ThrowableFunction<String, Integer> parser = Integer::valueOf;
  *
  * // Using execute() with default exception handling (throws RuntimeException)
