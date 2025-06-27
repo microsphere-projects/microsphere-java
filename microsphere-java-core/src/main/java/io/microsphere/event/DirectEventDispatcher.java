@@ -31,7 +31,7 @@ import io.microsphere.lang.Prioritized;
  *     <li><strong>Thread-Safe Registration:</strong> Listener registration and removal operations are thread-safe.</li>
  * </ul>
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  *
  * <pre>{@code
  * // Create an instance of DirectEventDispatcher
