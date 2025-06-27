@@ -27,7 +27,7 @@ import java.util.logging.Level;
  * It defines priority-based ordering by implementing the {@link Prioritized} interface, ensuring proper loading order
  * when multiple logger factories are present.
  *
- * <h3>Usage Example</h3>
+ * <h3>Example Usage</h3>
  * The typical usage involves relying on the static methods provided by the base class:
  *
  * <pre>{@code
