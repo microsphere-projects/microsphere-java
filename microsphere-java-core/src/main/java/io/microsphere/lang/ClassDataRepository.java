@@ -53,7 +53,7 @@ import static java.util.Collections.unmodifiableSet;
  *     <li><strong>Package name to class names:</strong> Maps package names to the set of fully qualified class names belonging to them.</li>
  * </ul>
  *
- * <h2>Usage Examples</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Get the singleton instance
  * ClassDataRepository repository = ClassDataRepository.INSTANCE;
