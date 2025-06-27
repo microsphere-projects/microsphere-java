@@ -534,7 +534,7 @@ public abstract class JmxUtils implements Utils {
         }
         return mBeanInfo;
     }
-    
+
     protected static Object doGetAttribute(MBeanServer mBeanServer, ObjectName objectName, @Nullable MBeanAttributeInfo attributeInfo,
                                            String attributeName) {
         MBeanAttributeInfo mBeanAttributeInfo = attributeInfo;
