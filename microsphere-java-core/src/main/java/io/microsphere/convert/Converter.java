@@ -33,7 +33,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * converters are available.
  * </p>
  *
- * <h2>Example Implementation</h2>
+ * <h3>Example Implementation</h3>
  * <pre>{@code
  * public class StringToIntegerConverter implements Converter<String, Integer> {
  *     public boolean accept(Class<?> sourceType, Class<?> targetType) {
@@ -47,7 +47,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * }
  * }</pre>
  *
- * <h2>Prioritized Behavior Example</h2>
+ * <h3>Prioritized Behavior Example</h3>
  * <pre>{@code
  * public class HighPriorityStringToIntegerConverter implements Converter<String, Integer>, Prioritized {
  *     public int getPriority() {
