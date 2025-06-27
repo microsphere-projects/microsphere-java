@@ -40,7 +40,7 @@ import static java.util.Objects.hash;
  * </ul>
  * </p>
  *
- * <h3>Usage Example:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Create a simple deprecation notice with the version string
  * Deprecation deprecation = Deprecation.of("1.2.0");
