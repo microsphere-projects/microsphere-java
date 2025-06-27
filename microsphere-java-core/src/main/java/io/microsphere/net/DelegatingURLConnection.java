@@ -26,7 +26,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Delegating {@link URLConnection}
+ * A delegating implementation of {@link URLConnection} that forwards all method calls to a provided delegate instance.
+ * This class can be used as a base class for creating specialized URLConnection wrappers that need to intercept or modify
+ * behavior of the underlying connection without changing its core functionality.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * URL url = new URL("http://example.com");
+ * URLConnection connection = url.openConnection();
+ * DelegatingURLConnection wrapper = new DelegatingURLConnection(connection) {};
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
