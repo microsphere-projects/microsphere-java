@@ -45,11 +45,38 @@ public abstract class ExecutableUtils implements Utils {
     private static final Logger logger = getLogger(ExecutableUtils.class);
 
     /**
-     * Execute an {@link Executable} instance
+     * Executes the given {@link Executable} object using the provided callback.
      *
-     * @param object   {@link Executable} instance, {@link Field}, {@link Method} or {@link Constructor}
-     * @param callback the call back to execute {@link Executable} object
-     * @param <E>      The type or subtype of {@link Executable}
+     * <p>This method is typically used when no return value is expected from the execution,
+     * and any exception thrown during execution will be wrapped and rethrown as a
+     * {@link RuntimeException}, {@link IllegalStateException}, or
+     * {@link IllegalArgumentException} depending on the cause.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * Method method = MyClass.class.getMethod("myMethod");
+     * ExecutableUtils.execute(method, executable -> {
+     *     // Perform some operation with the executable
+     *     executable.invoke(instance);
+     * });
+     * }</pre>
+     *
+     * <p>If an exception occurs during execution:</p>
+     *
+     * <pre>{@code
+     * try {
+     *     ExecutableUtils.execute(method, executable -> {
+     *         executable.invoke(instance);
+     *     });
+     * } catch (RuntimeException e) {
+     *     System.err.println("Execution failed: " + e.getMessage());
+     * }
+     * }</pre>
+     *
+     * @param object   The executable member to be executed, such as a {@link Method}, {@link Constructor}, or {@link Field}.
+     * @param callback The callback that defines the operation to perform on the executable.
+     * @param <E>      The type or subtype of {@link Executable}.
      * @throws NullPointerException     If <code>executableMember</code> is <code>null</code>
      * @throws IllegalStateException    if this {@code executableMember} object
      *                                  is enforcing Java language access control and the underlying
@@ -76,10 +103,38 @@ public abstract class ExecutableUtils implements Utils {
     }
 
     /**
-     * Executes the {@link Executable}
+     * Executes the given {@link Executable} object using a {@link ThrowableSupplier}.
      *
-     * @param executable {@link Executable}
-     * @param supplier   {@link ThrowableConsumer}
+     * <p>This method is useful when you want to execute an operation that may throw a checked exception,
+     * and you need to handle it in a clean and concise way. The supplier's execution result will be returned
+     * if successful, or an appropriate runtime exception will be thrown if an error occurs.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * Method method = MyClass.class.getMethod("myMethod");
+     * String result = ExecutableUtils.execute(method, () -> {
+     *     return (String) method.invoke(instance);
+     * });
+     * }</pre>
+     *
+     * <p>If an exception occurs during execution:</p>
+     *
+     * <pre>{@code
+     * try {
+     *     String result = ExecutableUtils.execute(method, () -> {
+     *         return (String) method.invoke(instance);
+     *     });
+     * } catch (RuntimeException e) {
+     *     System.err.println("Execution failed: " + e.getMessage());
+     * }
+     * }</pre>
+     *
+     * @param executable The executable member to be executed, such as a {@link Method}, {@link Constructor}, or {@link Field}.
+     * @param supplier   The supplier defining the operation to perform on the executable.
+     * @param <E>        The type or subtype of {@link Executable}.
+     * @param <R>        The type of the result expected from the supplier.
+     * @return The result of the supplier execution.
      * @throws NullPointerException     If <code>executableMember</code> is <code>null</code>
      * @throws IllegalStateException    if this {@code executableMember} object
      *                                  is enforcing Java language access control and the underlying
@@ -103,13 +158,42 @@ public abstract class ExecutableUtils implements Utils {
     }
 
     /**
-     * Execute an {@link Executable} instance
+     * Executes the provided {@link Executable} using the given callback function.
      *
-     * @param executableMember {@link Executable} {@link Member}, {@link Method} or {@link Constructor}
-     * @param callback         the call back to execute {@link Executable} {@link Member}
-     * @param <E>              The type or subtype of {@link Executable}
-     * @param <R>              The type of execution result
-     * @return The execution result
+     * <p>This method handles common reflection-related exceptions and wraps them into appropriate runtime exceptions.
+     * It is suitable for executing operations that return a result, allowing custom handling of the executable member.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * Method method = MyClass.class.getMethod("myMethod", String.class);
+     * String result = ExecutableUtils.execute(method, m -> {
+     *     return (String) m.invoke(instance, "Hello");
+     * });
+     * }</pre>
+     *
+     * <p>If an exception occurs during execution:</p>
+     *
+     * <pre>{@code
+     * try {
+     *     Method method = MyClass.class.getMethod("myMethod", String.class);
+     *     String result = ExecutableUtils.execute(method, m -> {
+     *         return (String) m.invoke(instance, "Hello");
+     *     });
+     * } catch (IllegalStateException e) {
+     *     System.err.println("Member is inaccessible: " + e.getMessage());
+     * } catch (IllegalArgumentException e) {
+     *     System.err.println("Argument mismatch: " + e.getMessage());
+     * } catch (RuntimeException e) {
+     *     System.err.println("Execution failed: " + e.getMessage());
+     * }
+     * }</pre>
+     *
+     * @param executableMember The executable member to be executed, such as a {@link Method}, {@link Constructor}, or {@link Field}.
+     * @param callback         The function defining the operation to perform on the executable member, returning a result.
+     * @param <E>              The type or subtype of {@link Executable}.
+     * @param <R>              The type of the result of the callback function.
+     * @return The result of the callback execution.
      * @throws NullPointerException     If <code>executableMember</code> is <code>null</code>
      * @throws IllegalStateException    if this {@code executableMember} object
      *                                  is enforcing Java language access control and the underlying
