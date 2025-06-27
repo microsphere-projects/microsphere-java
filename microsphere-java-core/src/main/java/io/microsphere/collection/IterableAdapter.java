@@ -27,7 +27,7 @@ import static io.microsphere.collection.EmptyIterator.INSTANCE;
  * or other constructs that expect an {@link Iterable}.
  * </p>
  * <p>
- * Example usage:
+ * <h3>Example Usage</h3>
  * <pre>{@code
  *     Iterator<String> iterator = Arrays.asList("one", "two", "three").iterator();
  *     Iterable<String> iterable = new IterableAdapter<>(iterator);
