@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -59,6 +60,16 @@ public abstract class AbstractTestCase {
     public static final Object[] TEST_NULL_OBJECT_ARRAY = null;
 
     public static final String[] TEST_NULL_STRING_ARRAY = null;
+
+    public static final Class<?> TEST_NULL_CLASS = null;
+
+    public static final Annotation TEST_NULL_ANNOTATION = null;
+
+    public static final Class<? extends Annotation> TEST_NULL_ANNOTATION_CLASS = null;
+
+    public static final Class<? extends Annotation>[] TEST_NULL_ANNOTATION_CLASSES = null;
+
+    public static final Class<? extends Annotation>[] TEST_EMPTY_ANNOTATION_CLASSES = new Class[0];
 
     public static final Enumeration TEST_NULL_ENUMERATION = null;
 
