@@ -164,14 +164,58 @@ public abstract class ArrayUtils implements Utils {
      */
     public static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
+    /**
+     * Creates an array from the provided elements.
+     *
+     * <p>This method returns an array containing the specified elements. The type of the returned array is inferred
+     * from the type of the first element passed, or from the context if the method is used in a typed assignment.</p>
+     *
+     * <p>Example usage:</p>
+     * <pre>{@code
+     * String[] strings = ArrayUtils.of("one", "two", "three");
+     * Integer[] integers = ArrayUtils.of(1, 2, 3);
+     * }</pre>
+     *
+     * @param values the elements to be included in the resulting array
+     * @param <T>    the class of the objects in the array
+     * @return an array containing the specified elements
+     */
     public static <T> T[] of(T... values) {
         return ofArray(values);
     }
 
+    /**
+     * Creates a new {@code boolean} array from the provided elements.
+     *
+     * <p>This method returns an array containing the specified elements. The type of the returned array is explicitly
+     * defined by the method's return type.</p>
+     *
+     * <p>Example usage:</p>
+     * <pre>{@code
+     * boolean[] booleans = ArrayUtils.ofBooleans(true, false, true);
+     * }</pre>
+     *
+     * @param values the elements to be included in the resulting array
+     * @return a newly created array containing the specified elements
+     */
     public static boolean[] ofBooleans(boolean... values) {
         return values;
     }
 
+    /**
+     * Creates a new {@code byte} array from the provided elements.
+     *
+     * <p>This method returns an array containing the specified elements. The type of the returned array is explicitly
+     * defined by the method's return type.</p>
+     *
+     * <p>Example usage:</p>
+     * <pre>{@code
+     * byte[] bytes = ArrayUtils.ofBytes((byte) 1, (byte) 2, (byte) 3);
+     * }</pre>
+     *
+     * @param values the elements to be included in the resulting array
+     * @return a newly created array containing the specified elements
+     */
     public static byte[] ofBytes(byte... values) {
         return values;
     }
