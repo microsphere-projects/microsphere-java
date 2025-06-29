@@ -27,9 +27,29 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Delegating {@link ScheduledExecutorService}
+ * A delegating implementation of {@link ScheduledExecutorService} that forwards all method calls to a provided
+ * delegate instance. This class can be extended or used directly to wrap an existing {@link ScheduledExecutorService},
+ * allowing for additional behavior to be added (e.g., monitoring, logging) without modifying the underlying executor.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * ScheduledExecutorService realExecutor = Executors.newScheduledThreadPool(2);
+ * DelegatingScheduledExecutorService delegatingExecutor = new DelegatingScheduledExecutorService(realExecutor);
+ *
+ * // Schedule a task to run after 1 second
+ * delegatingExecutor.schedule(() -> System.out.println("Task executed!"), 1, TimeUnit.SECONDS);
+ *
+ * // Schedule a fixed-rate task
+ * delegatingExecutor.scheduleAtFixedRate(() -> System.out.println("Fixed rate task"), 0, 1, TimeUnit.SECONDS);
+ *
+ * // Shutdown the executor gracefully
+ * delegatingExecutor.shutdown();
+ * }</pre>
+ *
+ * <p>This class is thread-safe and allows the delegate to be changed dynamically via
+ * {@link #setDelegate(ScheduledExecutorService)}.</p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ScheduledExecutorService
  * @since 1.0.0
  */

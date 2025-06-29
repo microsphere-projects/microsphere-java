@@ -16,13 +16,11 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.util.Elements;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -116,22 +114,43 @@ public abstract class MethodUtils implements Utils {
     private static final ConcurrentMap<Class<?>, Method[]> declaredMethodsCache = new ConcurrentHashMap<>(256);
 
     /**
-     * Create an instance of {@link Predicate} for {@link Method} to exclude the specified declared class
+     * Creates a {@link Predicate} that excludes methods declared by the specified class.
      *
-     * @param declaredClass the target class to exclude
-     * @return non-null
+     * <p>This method is useful when filtering methods to exclude those that are declared by a specific class,
+     * for example, when searching for overridden methods in subclasses.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all methods in MyClass excluding those declared by MySuperClass
+     * List<Method> filteredMethods = MethodUtils.findMethods(MyClass.class,
+     *     MethodUtils.excludedDeclaredClass(MySuperClass.class));
+     * }</pre>
+     *
+     * @param declaredClass the class whose declared methods should be excluded
+     * @return a non-null {@link Predicate} that evaluates to {@code true} for methods not declared by the given class
      */
+    @Nonnull
     public static Predicate<? super Method> excludedDeclaredClass(Class<?> declaredClass) {
         return method -> !Objects.equals(declaredClass, method.getDeclaringClass());
     }
 
     /**
-     * Get all declared {@link Method methods} of the target class, excluding the inherited methods
+     * Get all declared {@link Method methods} of the target class, excluding the inherited methods.
+     *
+     * <p>This method retrieves only the methods that are directly declared in the specified class,
+     * without including any methods from its superclasses or interfaces.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Get all declared methods in MyClass
+     * List<Method> declaredMethods = MethodUtils.getDeclaredMethods(MyClass.class);
+     * }</pre>
      *
      * @param targetClass the target class
-     * @return non-null read-only {@link List}
+     * @return non-null read-only {@link List} of declared methods
      * @see #findDeclaredMethods(Class, Predicate...)
      */
+    @Nonnull
     public static List<Method> getDeclaredMethods(Class<?> targetClass) {
         return findDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -139,10 +158,20 @@ public abstract class MethodUtils implements Utils {
     /**
      * Get all public {@link Method methods} of the target class, excluding the inherited methods.
      *
+     * <p>This method retrieves only the public methods that are directly declared in the specified class,
+     * without including any methods from its superclasses or interfaces.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Get all public methods declared in MyClass
+     * List<Method> publicMethods = MethodUtils.getMethods(MyClass.class);
+     * }</pre>
+     *
      * @param targetClass the target class
      * @return non-null read-only {@link List}
      * @see #findMethods(Class, Predicate...)
      */
+    @Nonnull
     public static List<Method> getMethods(Class<?> targetClass) {
         return findMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -150,10 +179,21 @@ public abstract class MethodUtils implements Utils {
     /**
      * Get all declared {@link Method methods} of the target class, including the inherited methods.
      *
+     * <p>This method retrieves all methods that are declared in the specified class and its superclasses,
+     * including those from interfaces implemented by the class and its ancestors.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Get all declared methods in MyClass, including inherited ones
+     * List<Method> allDeclaredMethods = MethodUtils.getAllDeclaredMethods(MyClass.class);
+     * }</pre>
+     *
      * @param targetClass the target class
      * @return non-null read-only {@link List}
      * @see #findAllDeclaredMethods(Class, Predicate...)
      */
+    @Nonnull
     public static List<Method> getAllDeclaredMethods(Class<?> targetClass) {
         return findAllDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -161,46 +201,113 @@ public abstract class MethodUtils implements Utils {
     /**
      * Get all public {@link Method methods} of the target class, including the inherited methods.
      *
+     * <p>This method retrieves all public methods that are declared in the specified class and its superclasses,
+     * including those from interfaces implemented by the class and its ancestors.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Get all public methods of MyClass, including inherited ones
+     * List<Method> allPublicMethods = MethodUtils.getAllMethods(MyClass.class);
+     * }</pre>
+     *
+     * <p><b>Note:</b> If you need only the methods declared directly in the class (excluding inherited ones),
+     * consider using {@link #getMethods(Class)} instead.</p>
+     *
      * @param targetClass the target class
      * @return non-null read-only {@link List}
      * @see #findAllMethods(Class, Predicate...)
      */
+    @Nonnull
     public static List<Method> getAllMethods(Class<?> targetClass) {
         return findAllMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Find all declared {@link Method methods} of the target class, excluding the inherited methods
+     * Find all declared {@link Method methods} of the target class, excluding the inherited methods.
+     *
+     * <p>This method retrieves only the methods that are directly declared in the specified class,
+     * without including any methods from its superclasses or interfaces.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Get all declared methods in MyClass
+     * List<Method> declaredMethods = MethodUtils.findDeclaredMethods(MyClass.class);
+     * }</pre>
+     *
+     * <h4>Filtering Example</h4>
+     * <pre>{@code
+     * // Get all non-private declared methods in MyClass
+     * List<Method> nonPrivateMethods = MethodUtils.findDeclaredMethods(MyClass.class,
+     *     MethodUtils::isNonPrivate);
+     * }</pre>
      *
      * @param targetClass     the target class
      * @param methodsToFilter (optional) the methods to be filtered
      * @return non-null read-only {@link List}
      * @see #findMethods(Class, boolean, boolean, Predicate[])
      */
+    @Nonnull
     public static List<Method> findDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, false, methodsToFilter);
     }
 
     /**
-     * Find all public {@link Method methods} of the target class, excluding the inherited methods.
+     * Find all public methods directly declared in the specified class, without including inherited methods.
      *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     * <p>This method retrieves only the public methods that are explicitly declared in the given class,
+     * excluding any methods from its superclasses or interfaces.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Get all public methods declared in MyClass
+     * List<Method> publicMethods = MethodUtils.findMethods(MyClass.class);
+     * }</pre>
+     *
+     * <h4>Filtering Example</h4>
+     *
+     * <pre>{@code
+     * // Get all non-static public methods declared in MyClass
+     * List<Method> nonStaticPublicMethods = MethodUtils.findMethods(MyClass.class,
+     *     method -> !MemberUtils.isStatic(method));
+     * }</pre>
+     *
+     * @param targetClass     the target class to inspect
+     * @param methodsToFilter optional predicates used to filter the methods further
+     * @return a non-null read-only list of public methods declared in the specified class
      */
+    @Nonnull
     public static List<Method> findMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, true, methodsToFilter);
     }
 
     /**
-     * Get all declared {@link Method methods} of the target class, including the inherited methods.
+     * Retrieves all declared methods directly defined in the specified class, excluding inherited methods.
      *
-     * @param targetClass     the target class
-     * @param methodsToFilter (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
-     * @see #findMethods(Class, boolean, boolean, Predicate[])
+     * <p>This method returns only the methods that are explicitly declared in the given class,
+     * and does not include any methods from superclasses or interfaces.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Get all declared methods in MyClass
+     * List<Method> declaredMethods = MethodUtils.findAllDeclaredMethods(MyClass.class);
+     * }</pre>
+     *
+     * <h4>Filtering Example</h4>
+     *
+     * <pre>{@code
+     * // Get all non-private declared methods in MyClass
+     * List<Method> nonPrivateMethods = MethodUtils.findAllDeclaredMethods(MyClass.class,
+     *     method -> !MemberUtils.isPrivate(method));
+     * }</pre>
+     *
+     * @param targetClass     the class to retrieve declared methods from
+     * @param methodsToFilter optional predicates to filter the methods
+     * @return a non-null read-only list of declared methods in the specified class
      */
+    @Nonnull
     public static List<Method> findAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, false, methodsToFilter);
     }
@@ -208,24 +315,69 @@ public abstract class MethodUtils implements Utils {
     /**
      * Get all public {@link Method methods} of the target class, including the inherited methods.
      *
+     * <p>This method retrieves all public methods that are declared in the specified class and its superclasses,
+     * including those from interfaces implemented by the class and its ancestors.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Get all public methods of MyClass, including inherited ones
+     * List<Method> allPublicMethods = MethodUtils.findAllMethods(MyClass.class);
+     * }</pre>
+     *
+     * <h4>Filtering Example</h4>
+     *
+     * <pre>{@code
+     * // Get all non-static public methods of MyClass, including inherited ones
+     * List<Method> nonStaticPublicMethods = MethodUtils.findAllMethods(MyClass.class,
+     *     method -> !MemberUtils.isStatic(method));
+     * }</pre>
+     *
      * @param targetClass     the target class
      * @param methodsToFilter (optional) the methods to be filtered
      * @return non-null read-only {@link List}
-     * @see #findMethods(Class, boolean, boolean, Predicate[])
      */
+    @Nonnull
     public static List<Method> findAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, true, methodsToFilter);
     }
 
     /**
-     * Find all {@link Method methods} of the target class by the specified {@link Predicate}
+     * Find all {@link Method methods} of the target class by the specified criteria.
+     *
+     * <p>This method provides a flexible way to retrieve methods from a class based on whether
+     * inherited methods should be included, whether only public methods should be considered,
+     * and optional filtering predicates.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Basic Usage</h4>
+     * <pre>{@code
+     * // Get all public methods of MyClass including inherited ones
+     * List<Method> methods = MethodUtils.findMethods(MyClass.class, true, true);
+     * }</pre>
+     *
+     * <h4>Filtering Example</h4>
+     * <pre>{@code
+     * // Get all non-static public methods of MyClass including inherited ones
+     * List<Method> nonStaticPublicMethods = MethodUtils.findMethods(MyClass.class, true, true,
+     *     method -> !MemberUtils.isStatic(method));
+     * }</pre>
+     *
+     * <h4>Advanced Filtering Example</h4>
+     * <pre>{@code
+     * // Get all non-private, non-static methods of MyClass including inherited ones
+     * List<Method> filteredMethods = MethodUtils.findMethods(MyClass.class, true, false,
+     *     MethodUtils::isNonPrivate, MemberUtils::isNonStatic);
+     * }</pre>
      *
      * @param targetClass           the target class
-     * @param includeInheritedTypes include the inherited types, e,g. super classes or interfaces
-     * @param publicOnly            only public method
-     * @param methodsToFilter       (optional) the methods to be filtered
-     * @return non-null read-only {@link List}
+     * @param includeInheritedTypes if set to true, includes methods from superclasses and interfaces
+     * @param publicOnly            if set to true, only public methods are returned
+     * @param methodsToFilter       (optional) one or more predicates to further filter the methods
+     * @return a non-null read-only list of methods matching the criteria
      */
+    @Nonnull
     public static List<Method> findMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
                                            Predicate<? super Method>... methodsToFilter) {
 
@@ -262,39 +414,96 @@ public abstract class MethodUtils implements Utils {
     }
 
     /**
-     * Find the {@link Method} by the specified type(including inherited types) and method name without the
+     * Find the {@link Method} by the specified type (including inherited types) and method name without the
      * parameter type.
      *
-     * @param targetClass the target type
-     * @param methodName  the specified method name
-     * @return if not found, return <code>null</code>
+     * <p>This method searches for a method with the given name in the specified class and its superclasses,
+     * returning the first match found. If no method is found, this method returns {@code null}.
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Find a method named "toString" in the MyClass class
+     * Method method = MethodUtils.findMethod(MyClass.class, "toString");
+     * if (method != null) {
+     *     System.out.println("Method found: " + method);
+     * } else {
+     *     System.out.println("Method not found.");
+     * }
+     * }</pre>
+     *
+     * @param targetClass the target type to search for the method
+     * @param methodName  the name of the method to find
+     * @return the found method, or {@code null} if no matching method is found
      */
+    @Nullable
     public static Method findMethod(Class targetClass, String methodName) {
         return findMethod(targetClass, methodName, EMPTY_CLASS_ARRAY);
     }
 
     /**
-     * Find the {@link Method} by the specified type (including inherited types) and method name and parameter types
-     * with cache
+     * Find the {@link Method} by the specified type (including inherited types), method name, and parameter types.
      *
-     * @param targetClass    the target type
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
-     * @return if not found, return <code>null</code>
+     * <p>This method searches for a method with the given name and parameter types in the specified class and its superclasses,
+     * returning the first match found. The search is cached to improve performance on repeated calls.
+     * If no matching method is found, this method returns {@code null}.
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Find a method named "toString" with no parameters in MyClass
+     * Method method = MethodUtils.findMethod(MyClass.class, "toString");
+     * if (method != null) {
+     *     System.out.println("Method found: " + method);
+     * } else {
+     *     System.out.println("Method not found.");
+     * }
+     * }</pre>
+     *
+     * <pre>{@code
+     * // Find a method named "setValue" that takes a String parameter
+     * Method method = MethodUtils.findMethod(MyClass.class, "setValue", String.class);
+     * if (method != null) {
+     *     System.out.println("Method found: " + method);
+     * }
+     * }</pre>
+     *
+     * @param targetClass    the target class to search for the method
+     * @param methodName     the name of the method to find
+     * @param parameterTypes the parameter types of the method (optional, defaults to empty array)
+     * @return the found method, or {@code null} if no matching method is found
      */
+    @Nullable
     public static Method findMethod(Class targetClass, String methodName, Class<?>... parameterTypes) {
         MethodKey key = buildKey(targetClass, methodName, parameterTypes);
         return methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
     }
 
     /**
-     * Find the declared {@link Method} by the specified type (including inherited types) and method name and parameter types
+     * Finds a declared method in the specified class, including its superclasses and interfaces.
      *
-     * @param targetClass    the target type
-     * @param methodName     the method name
-     * @param parameterTypes the parameter types
-     * @return
+     * <p>This method searches for a method with the given name and parameter types in the specified class,
+     * its superclasses (if the class is not an interface), and its implemented interfaces. It returns the
+     * first matching method found.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Find a method named "exampleMethod" with no parameters
+     * Method method1 = MethodUtils.findDeclaredMethod(MyClass.class, "exampleMethod");
+     * }</pre>
+     *
+     * <pre>{@code
+     * // Find a method named "exampleMethod" that takes a String and an int
+     * Method method2 = MethodUtils.findDeclaredMethod(MyClass.class, "exampleMethod", String.class, int.class);
+     * }</pre>
+     *
+     * @param targetClass    the class to search for the declared method
+     * @param methodName     the name of the method to find
+     * @param parameterTypes the parameter types of the method (optional, defaults to empty array)
+     * @return the found method, or {@code null} if no matching method is found
      */
+    @Nullable
     public static Method findDeclaredMethod(Class<?> targetClass, String methodName, Class<?>... parameterTypes) {
 
         if (targetClass == null) {
@@ -329,44 +538,158 @@ public abstract class MethodUtils implements Utils {
     }
 
     /**
-     * Invoke the target objects' method
+     * Invokes a method with the specified name on the given object, using the provided arguments.
      *
-     * @param object     the target object
-     * @param methodName the method name
-     * @param arguments  the method arguments
-     * @param <R>        the return type
-     * @return the target method's execution result
+     * <p>This method dynamically retrieves the class of the target object and searches for the appropriate method
+     * to invoke based on the method name and argument types. It supports both instance and static methods.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Example class with an instance method
+     * public class MyClass {
+     *     public String greet(String name) {
+     *         return "Hello, " + name;
+     *     }
+     * }
+     *
+     * // Create an instance of MyClass
+     * MyClass myInstance = new MyClass();
+     *
+     * // Call the 'greet' method using invokeMethod
+     * String result = MethodUtils.invokeMethod(myInstance, "greet", "World");
+     * System.out.println(result);  // Output: Hello, World
+     * }</pre>
+     *
+     * <p><b>Note:</b> This method internally uses reflection to find and invoke the matching method,
+     * which may throw exceptions if the method cannot be found or invoked properly.</p>
+     *
+     * @param object     The object on which the method will be invoked. Must not be null.
+     * @param methodName The name of the method to invoke. Must not be null or empty.
+     * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
+     * @param <R>        The expected return type of the method.
+     * @return The result of invoking the method, wrapped in the appropriate type.
+     * @throws NullPointerException     If the provided object is null.
+     * @throws IllegalStateException    If the method cannot be found or accessed.
+     * @throws IllegalArgumentException If the arguments do not match the method's parameter types.
+     * @throws RuntimeException         If the underlying method throws an exception during invocation.
      */
+    @Nullable
     public static <R> R invokeMethod(Object object, String methodName, Object... arguments) {
         Class type = object.getClass();
         return invokeMethod(object, type, methodName, arguments);
     }
 
     /**
-     * Invoke the target classes' static method
+     * Invokes a static method of the specified target class with the given method name and arguments.
      *
-     * @param targetClass the target class
-     * @param methodName  the method name
-     * @param arguments   the method arguments
-     * @param <R>         the return type
-     * @return the target method's execution result
+     * <p>This utility method simplifies the process of invoking a static method using reflection by internally
+     * calling {@link #invokeMethod(Object, Class, String, Object...)} with a null instance to indicate that
+     * the method is static.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * public class ExampleClass {
+     *     public static int add(int a, int b) {
+     *         return a + b;
+     *     }
+     * }
+     *
+     * // Invoke the static method "add"
+     * Integer result = MethodUtils.invokeStaticMethod(ExampleClass.class, "add", 2, 3);
+     * System.out.println(result);  // Output: 5
+     * }</pre>
+     *
+     * @param targetClass the class containing the static method
+     * @param methodName  the name of the static method to invoke
+     * @param arguments   the arguments to pass to the method (can be null or empty)
+     * @param <R>         the expected return type of the method
+     * @return the result of the method invocation, wrapped in the appropriate type
+     * @throws NullPointerException     if the provided target class or method name is null
+     * @throws IllegalStateException    if the method cannot be found or accessed
+     * @throws IllegalArgumentException if the arguments do not match the method's parameter types
+     * @throws RuntimeException         if the underlying method throws an exception during invocation
      */
+    @Nullable
     public static <R> R invokeStaticMethod(Class<?> targetClass, String methodName, Object... arguments) {
         return invokeMethod(null, targetClass, methodName, arguments);
     }
 
     /**
-     * Invoke the target classes' static method
+     * Invokes the specified static method represented by the given {@link Method} object.
      *
-     * @param method    the method
-     * @param arguments the method arguments
-     * @param <R>       the return type
-     * @return the target method's execution result
+     * <p>This method is specifically designed to invoke static methods. If the provided method is not static,
+     * it may result in an exception during invocation.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * public class ExampleClass {
+     *     public static int multiply(int a, int b) {
+     *         return a * b;
+     *     }
+     * }
+     *
+     * // Retrieve the method using reflection
+     * Method method = ExampleClass.class.getMethod("multiply", int.class, int.class);
+     *
+     * // Invoke the static method
+     * Integer result = MethodUtils.invokeStaticMethod(method, 5, 3);
+     * System.out.println(result);  // Output: 15
+     * }</pre>
+     *
+     * @param method    the {@link Method} object representing the static method to be invoked
+     * @param arguments the arguments to pass to the method (can be null or empty)
+     * @param <R>       the expected return type of the method
+     * @return the result of the method invocation, wrapped in the appropriate type
+     * @throws NullPointerException     if the provided method is null
+     * @throws IllegalStateException    if the method cannot be accessed or throws an exception during invocation
+     * @throws IllegalArgumentException if the arguments do not match the method's parameter types
      */
+    @Nullable
     public static <R> R invokeStaticMethod(Method method, Object... arguments) {
         return invokeMethod(null, method, arguments);
     }
 
+    /**
+     * Invokes a method with the specified name on the given class type, using the provided arguments.
+     *
+     * <p>This method dynamically searches for a method in the specified class that matches the method name
+     * and argument types, and then invokes it. It supports both instance and static methods.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * public class ExampleClass {
+     *     public String greet(String name) {
+     *         return "Hello, " + name;
+     *     }
+     * }
+     *
+     * // Create an instance of ExampleClass
+     * ExampleClass exampleInstance = new ExampleClass();
+     *
+     * // Call the 'greet' method using invokeMethod
+     * String result = MethodUtils.invokeMethod(exampleInstance, ExampleClass.class, "greet", "World");
+     * System.out.println(result);  // Output: Hello, World
+     * }</pre>
+     *
+     * <p><b>Note:</b> This method internally uses reflection to find and invoke the matching method,
+     * which may throw exceptions if the method cannot be found or invoked properly.</p>
+     *
+     * @param instance   The object on which the method will be invoked. Can be null for static methods.
+     * @param type       The class type to search for the method. Must not be null.
+     * @param methodName The name of the method to invoke. Must not be null or empty.
+     * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
+     * @param <R>        The expected return type of the method.
+     * @return The result of invoking the method, wrapped in the appropriate type.
+     * @throws NullPointerException     If the provided type or method name is null.
+     * @throws IllegalStateException    If the method cannot be found or accessed.
+     * @throws IllegalArgumentException If the arguments do not match the method's parameter types.
+     * @throws RuntimeException         If the underlying method throws an exception during invocation.
+     */
+    @Nullable
     public static <R> R invokeMethod(Object instance, Class<?> type, String methodName, Object... arguments) {
         Class[] parameterTypes = getTypes(arguments);
         Method method = findMethod(type, methodName, parameterTypes);
@@ -409,6 +732,29 @@ public abstract class MethodUtils implements Utils {
      * underlying method return type is void, the invocation returns
      * null.
      *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * public class ExampleClass {
+     *     public String greet(String name) {
+     *         return "Hello, " + name;
+     *     }
+     *
+     *     public static int add(int a, int b) {
+     *         return a + b;
+     *     }
+     * }
+     *
+     * // Instance method example
+     * ExampleClass instance = new ExampleClass();
+     * String result = MethodUtils.invokeMethod(instance, ExampleClass.class.getMethod("greet", String.class), "World");
+     * System.out.println(result); // Output: Hello, World
+     *
+     * // Static method example
+     * Integer sum = MethodUtils.invokeMethod(null, ExampleClass.class.getMethod("add", int.class, int.class), 2, 3);
+     * System.out.println(sum); // Output: 5
+     * }</pre>
+     *
      * @param instance  the object the underlying method is invoked from
      * @param method    the underlying method
      * @param arguments the arguments used for the method call
@@ -433,6 +779,7 @@ public abstract class MethodUtils implements Utils {
      * @throws RuntimeException         if the underlying method
      *                                  throws an exception.
      */
+    @Nullable
     public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
         if (method == null) {
             throw new NullPointerException("The 'method' must not be null");
@@ -466,13 +813,42 @@ public abstract class MethodUtils implements Utils {
      * Tests whether one method, as a member of a given type,
      * overrides another method.
      *
-     * @param overrider  the first method, possible overrider
-     * @param overridden the second method, possibly being overridden
-     * @return {@code true} if and only if the first method overrides
-     * the second
+     * <p>This method checks if the first method ({@code overrider}) overrides the second method ({@code overridden}).
+     * For a method to override another method, it must meet several conditions based on the Java Language Specification,
+     * such as being declared in a subclass of the declaring class of the overridden method, having the same name and signature,
+     * not being private or static, and having a return type that is a subtype of the overridden method's return type.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * class Parent {
+     *     public void sayHello() {
+     *         System.out.println("Hello from Parent");
+     *     }
+     * }
+     *
+     * class Child extends Parent {
+     *     @Override
+     *     public void sayHello() {
+     *         System.out.println("Hello from Child");
+     *     }
+     * }
+     *
+     * Method parentMethod = Parent.class.getMethod("sayHello");
+     * Method childMethod = Child.class.getMethod("sayHello");
+     *
+     * boolean result = MethodUtils.overrides(childMethod, parentMethod);
+     * System.out.println(result);  // Output: true
+     * }</pre>
+     *
+     * <p><b>Note:</b> This utility method is useful when implementing frameworks or tools that need to determine
+     * inheritance relationships between methods at runtime using reflection.</p>
+     *
+     * @param overrider  the method that may override the other method
+     * @param overridden the method that may be overridden
+     * @return {@code true} if and only if the first method overrides the second
      * @jls 8.4.8 Inheritance, Overriding, and Hiding
      * @jls 9.4.1 Inheritance and Overriding
-     * @see Elements#overrides(ExecutableElement, ExecutableElement, TypeElement)
      */
     public static boolean overrides(Method overrider, Method overridden) {
 
@@ -535,11 +911,38 @@ public abstract class MethodUtils implements Utils {
     }
 
     /**
-     * Find the nearest overridden {@link Method method} from the inherited class
+     * Finds the nearest overridden method in the class hierarchy for the given overriding method.
      *
-     * @param overrider the overrider {@link Method method}
-     * @return if found, the overrider <code>method</code>, or <code>null</code>
+     * <p>This method searches through the inheritance chain of the class that declares the
+     * provided overriding method to locate the first method it overrides. The search includes
+     * both superclasses and interfaces.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * public class Parent {
+     *     public void exampleMethod() {}
+     * }
+     *
+     * public class Child extends Parent {
+     *     @Override
+     *     public void exampleMethod() {}
+     * }
+     *
+     * Method overrider = Child.class.getMethod("exampleMethod");
+     * Method overridden = MethodUtils.findNearestOverriddenMethod(overrider);
+     *
+     * if (overridden != null) {
+     *     System.out.println("Found overridden method: " + overridden.getDeclaringClass().getName());
+     * } else {
+     *     System.out.println("No overridden method found.");
+     * }
+     * }</pre>
+     *
+     * @param overrider the method that potentially overrides another method
+     * @return the overridden method if found; otherwise, {@code null}
      */
+    @Nullable
     public static Method findNearestOverriddenMethod(Method overrider) {
         Class<?> targetClass = overrider.getDeclaringClass();
         Method overriddenMethod = null;
@@ -553,23 +956,69 @@ public abstract class MethodUtils implements Utils {
     }
 
     /**
-     * Find the overridden {@link Method method} from the target class
+     * Finds the method in the specified target class that is overridden by the given overriding method.
      *
-     * @param overrider   the overrider {@link Method method}
-     * @param targetClass the class that is declaring the overridden {@link Method method}
-     * @return if found, the overrider <code>method</code>, or <code>null</code>
+     * <p>This method searches for a method in the provided {@code targetClass} with the same name and signature
+     * as the {@code overrider} method, and checks whether it is actually overridden by the provided method.
+     * If a matching overridden method is found, it is returned; otherwise, this method returns {@code null}.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * public class Parent {
+     *     public void exampleMethod(String arg) {
+     *         System.out.println("Parent method");
+     *     }
+     * }
+     *
+     * public class Child extends Parent {
+     *     @Override
+     *     public void exampleMethod(String arg) {
+     *         System.out.println("Child method");
+     *     }
+     * }
+     *
+     * Method overrider = Child.class.getMethod("exampleMethod", String.class);
+     * Method overridden = MethodUtils.findOverriddenMethod(overrider, Parent.class);
+     *
+     * if (overridden != null) {
+     *     System.out.println("Found overridden method: " + overridden.getName());
+     * } else {
+     *     System.out.println("No overridden method found.");
+     * }
+     * }</pre>
+     *
+     * <p><b>Note:</b> This utility method is useful when working with reflection to identify the original method
+     * being overridden in a superclass or interface.</p>
+     *
+     * @param overrider   the method that potentially overrides another method
+     * @param targetClass the class where the overridden method might be declared
+     * @return the overridden method declared in the target class, or {@code null} if none is found
      */
+    @Nullable
     public static Method findOverriddenMethod(Method overrider, Class<?> targetClass) {
         List<Method> matchedMethods = findDeclaredMethods(targetClass, method -> overrides(overrider, method));
         return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
     }
 
     /**
-     * Get the signature of {@link Method the specified method}
+     * Generates a string representation of the method signature.
      *
-     * @param method {@link Method the specified method}
-     * @return non-null
+     * <p>The signature includes the fully qualified name of the declaring class,
+     * the method name, and the parameter types in parentheses.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * Method method = String.class.getMethod("substring", int.class, int.class);
+     * String signature = MethodUtils.getSignature(method);
+     * System.out.println(signature);  // Output: java.lang.String#substring(int,int)
+     * }</pre>
+     *
+     * @param method The method for which to generate the signature.
+     * @return A non-null string representing the method signature.
      */
+    @Nonnull
     public static String getSignature(Method method) {
         return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
     }
@@ -609,6 +1058,29 @@ public abstract class MethodUtils implements Utils {
         return signatureBuilder.toString();
     }
 
+    /**
+     * Checks whether the given method is declared by the {@link Object} class.
+     *
+     * <p>This utility method helps determine if a method belongs directly to the root class {@code Object},
+     * which is useful when filtering out methods that are common to all Java objects and not specific to a subclass.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * Method toStringMethod = String.class.getMethod("toString");
+     * boolean isObjectMethod = MethodUtils.isObjectMethod(toStringMethod);
+     * System.out.println(isObjectMethod); // Output: true
+     * }</pre>
+     *
+     * <pre>{@code
+     * Method customMethod = MyClass.class.getMethod("customMethod");
+     * boolean isObjectMethod = MethodUtils.isObjectMethod(customMethod);
+     * System.out.println(isObjectMethod); // Output: false (assuming customMethod is defined in MyClass)
+     * }</pre>
+     *
+     * @param method the method to check, may be null
+     * @return true if the method is declared by the {@link Object} class; false otherwise or if the method is null
+     */
     public static boolean isObjectMethod(Method method) {
         if (method != null) {
             return isObjectClass(method.getDeclaringClass());
@@ -617,10 +1089,21 @@ public abstract class MethodUtils implements Utils {
     }
 
     /**
-     * Test whether the specified {@link Method method} annotates {@linkplain jdk.internal.reflect.CallerSensitive} or not
+     * Checks if the specified method is annotated with {@link jdk.internal.reflect.CallerSensitive}.
      *
-     * @param method {@link Method}
-     * @return <code>true</code> if the specified {@link Method method} annotates {@linkplain jdk.internal.reflect.CallerSensitive}
+     * <p>The {@code CallerSensitive} annotation indicates that the method's behavior may be influenced by the caller's context.
+     * This is typically used in internal Java APIs to restrict or alter behavior based on the calling class.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * Method defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
+     * boolean isCallerSensitive = MethodUtils.isCallerSensitiveMethod(defineClassMethod);
+     * System.out.println("Is defineClass method caller-sensitive? " + isCallerSensitive);  // Likely output: true
+     * }</pre>
+     *
+     * @param method the method to check, may be null
+     * @return <code>true</code> if the method is non-null and annotated with {@link jdk.internal.reflect.CallerSensitive}; false otherwise
      * @see jdk.internal.reflect.CallerSensitive
      */
     public static boolean isCallerSensitiveMethod(Method method) {

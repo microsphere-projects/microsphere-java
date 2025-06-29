@@ -16,6 +16,7 @@
  */
 package io.microsphere.process;
 
+import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.constants.SymbolConstants.AT;
@@ -26,7 +27,40 @@ import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.Long.valueOf;
 
 /**
- * {@link ProcessIdResolver} class for classic JDK(5 - 8)
+ * A {@link ProcessIdResolver} implementation for classic JDK versions (5 - 8).
+ *
+ * <p>This class resolves the current process ID using the name obtained from
+ * {@link java.lang.management.RuntimeMXBean#getName()}.
+ * The format of the returned name is usually:
+ * <ul>
+ *     <li>{@code pid@hostname}</li>
+ * </ul>
+ * where {@code pid} represents the process ID. This resolver extracts and returns the numeric part before the '{@code @}' symbol.</p>
+ *
+ * <h3>Supported Environments</h3>
+ * <p>This resolver is designed to work on Java 5 through Java 8, where newer APIs like
+ * {@link java.lang.ProcessHandle#current()} are not available.</p>
+ *
+ * <h3>Example Output</h3>
+ * <pre>{@code
+ * // Assuming RuntimeMXBean.getName() returns "12345@localhost"
+ * ClassicProcessIdResolver resolver = new ClassicProcessIdResolver();
+ * if (resolver.supports()) {
+ *     Long pid = resolver.current();
+ *     System.out.println("Current PID: " + pid); // Outputs: Current PID: 12345
+ * }
+ * }</pre>
+ *
+ * <h3>Logging Behavior</h3>
+ * <p>If trace logging is enabled via the underlying logger ({@link io.microsphere.logging.Logger}), this resolver logs the resolved PID along with the raw value obtained from the runtime MXBean:</p>
+ *
+ * <pre>{@code
+ * [TRACE] The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = 12345@localhost : 12345
+ * }</pre>
+ *
+ * <h3>Priority</h3>
+ * <p>This resolver has a priority level set to {@link Prioritized#NORMAL_PRIORITY} plus 9,
+ * which means it will be considered after resolvers with higher priority but before those with lower.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ProcessIdResolver

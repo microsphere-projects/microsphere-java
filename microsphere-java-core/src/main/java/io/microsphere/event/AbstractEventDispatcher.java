@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.lang.Prioritized;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,13 +36,51 @@ import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * The abstract {@link EventDispatcher} providers the common implementation.
+ * Abstract implementation of {@link EventDispatcher} that provides common functionality for dispatching events to
+ * registered listeners.
  *
+ * <p>This class manages the registration and removal of event listeners, maintains a cache of listeners organized by event
+ * type, and supports dispatching events using a specified execution strategy (e.g., sequential or parallel). It also
+ * supports sorting of listeners based on their priority via the {@link Prioritized} interface.</p>
+ *
+ * <h3>Key Features</h3>
+ * <ul>
+ *     <li><strong>Listener Registration:</strong> Supports adding and removing event listeners with type safety.</li>
+ *     <li><strong>Event Dispatching:</strong> Dispatches events to all relevant listeners using an execution strategy defined by an {@link Executor}.</li>
+ *     <li><strong>Listener Priority:</strong> Listeners are sorted by priority before being notified of an event. Higher priority listeners (lower integer value) are executed first.</li>
+ *     <li><strong>Caching:</strong> Maintains a thread-safe mapping from event types to listeners for efficient dispatching.</li>
+ *     <li><strong>Service Loading:</strong> Optionally loads listeners via Java's SPI mechanism ({@link ServiceLoader}).</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * public class MyEvent extends Event {}
+ *
+ * public interface MyEventListener extends EventListener<MyEvent> {
+ *     void onEvent(MyEvent event);
+ * }
+ *
+ * // Create a dispatcher with direct (sequential) execution
+ * AbstractEventDispatcher dispatcher = new DirectEventDispatcher();
+ *
+ * // Register a listener
+ * dispatcher.addEventListener((MyEventListener) event -> System.out.println("Event received!"));
+ *
+ * // Dispatch an event
+ * dispatcher.dispatch(new MyEvent());
+ * }</pre>
+ *
+ * <h3>Extending This Class</h3>
+ * <p>Subclasses must provide a concrete implementation of the {@link #getExecutor()} method that defines how events should be dispatched.</p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see EventDispatcher
- * @see Listenable
- * @see ServiceLoader
  * @see EventListener
  * @see Event
+ * @see Listenable
+ * @see Prioritized
+ * @see ServiceLoader
  * @since 1.0.0
  */
 public abstract class AbstractEventDispatcher implements EventDispatcher {

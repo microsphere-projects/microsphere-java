@@ -17,9 +17,26 @@
 package io.microsphere.event;
 
 /**
- * Generic {@link Event event}
+ * A generic implementation of the {@link Event} class that allows for type-safe event handling.
+ * <p>
+ * This class extends the base {@link Event} class and provides a way to carry an arbitrary source object
+ * associated with the event. The source can be accessed in a type-safe manner using the {@link #getSource()} method.
+ * </p>
  *
- * @param <S> the type of event source
+ * <h3>Example Usage</h3>
+ * <pre>
+ * // Create a new GenericEvent with a String source
+ * GenericEvent<String> event = new GenericEvent<>("Hello, World!");
+ *
+ * // Access the source with its original type
+ * String source = event.getSource(); // No casting needed
+ *
+ * // Get the timestamp when the event was created
+ * long timestamp = event.getTimestamp();
+ * </pre>
+ *
+ * @param <S> the type of the event source
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class GenericEvent<S> extends Event {

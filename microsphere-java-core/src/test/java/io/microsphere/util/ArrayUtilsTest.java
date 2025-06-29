@@ -27,7 +27,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 
-import static io.microsphere.collection.EnumerationUtils.ofEnums;
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.EMPTY_ANNOTATION_ARRAY;
@@ -853,7 +853,7 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void testAsArrayOnEnumeration() {
-        Enumeration<String> enums = ofEnums("A", "B");
+        Enumeration<String> enums = ofEnumeration("A", "B");
         assertArrayEquals(ofArray("A", "B"), asArray(enums, String.class));
     }
 

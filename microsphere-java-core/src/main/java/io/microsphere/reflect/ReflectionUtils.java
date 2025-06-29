@@ -141,18 +141,53 @@ public abstract class ReflectionUtils implements Utils {
     }
 
     /**
-     * Is supported sun.reflect.Reflection or not
+     * Checks if the {@code sun.reflect.Reflection} class is available and supported in the current JVM.
      *
-     * @return <code>true</code> if supported
+     * <p>This method determines whether the internal Sun JDK class {@code sun.reflect.Reflection}
+     * can be used to retrieve caller class information. This class and its methods are specific
+     * to the Sun/HotSpot JVM and may not be present or functional on other JVM implementations.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * if (ReflectionUtils.isSupportedSunReflectReflection()) {
+     *     System.out.println("sun.reflect.Reflection is supported.");
+     * } else {
+     *     System.out.println("sun.reflect.Reflection is NOT supported.");
+     * }
+     * }</pre>
+     *
+     * @return <code>true</code> if the current JVM supports the {@code sun.reflect.Reflection} class;
+     * <code>false</code> otherwise.
      */
     public static boolean isSupportedSunReflectReflection() {
         return supportedSunReflectReflection;
     }
 
     /**
-     * Get Caller class
+     * Retrieves the fully qualified name of the class that called the method invoking this method.
      *
-     * @return Get the Class name that called the method
+     * <p>This method attempts to use the internal Sun JDK class
+     * {@code sun.reflect.Reflection} for high-performance caller class detection if
+     * available. If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
+     * the {@link StackTraceElement} approach.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * public class Example {
+     *     public void exampleMethod() {
+     *         String callerClassName = ReflectionUtils.getCallerClassName();
+     *         System.out.println("Caller class: " + callerClassName);
+     *     }
+     * }
+     * }</pre>
+     *
+     * <h3>Performance Consideration</h3>
+     * <p>On Sun/HotSpot JVMs, this method is highly efficient as it leverages
+     * internal JVM mechanisms. On other JVMs, a stack trace-based approach is used,
+     * which may be less performant but ensures compatibility.</p>
+     *
+     * @return The fully qualified name of the caller class.
+     * @throws IllegalStateException if an error occurs while determining the caller class.
      */
     @Nonnull
     public static String getCallerClassName() {
@@ -220,21 +255,25 @@ public abstract class ReflectionUtils implements Utils {
     }
 
     /**
-     * Get caller class
-     * <p/>
-     * For instance,
-     * <pre>
-     *     package com.acme;
-     *     import ...;
-     *     class Foo {
-     *         public void bar(){
+     * Gets the {@link Class} of the method caller.
      *
-     *         }
+     * <p>This method attempts to retrieve the calling class using the
+     * {@code sun.reflect.Reflection} class if supported by the current JVM.
+     * If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
+     * the {@link StackTraceElement} approach.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Example {
+     *     public void testMethod() {
+     *         Class<?> callerClass = ReflectionUtils.getCallerClass();
+     *         System.out.println("Caller class: " + callerClass.getName());
      *     }
-     * </pre>
+     * }
+     * }</pre>
      *
-     * @return Get caller class
-     * @throws IllegalStateException If the caller class cannot be found
+     * @return The {@link Class} of the method caller.
+     * @throws IllegalStateException if an error occurs while trying to determine the caller class via reflection.
      */
     @Nonnull
     public static Class<?> getCallerClass() throws IllegalStateException {
@@ -271,10 +310,28 @@ public abstract class ReflectionUtils implements Utils {
     }
 
     /**
-     * Get the caller class
+     * Retrieves the class of the caller at the specified invocation frame.
      *
-     * @param invocationFrame The frame of method invocation
-     * @return <code>null</code> if not found
+     * <p>This method attempts to use the internal Sun JDK class
+     * {@code sun.reflect.Reflection} for high-performance caller class detection if
+     * available and supported. If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
+     * the {@link StackTraceElement} approach.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * public class Example {
+     *     public void exampleMethod() {
+     *         Class<?> callerClass = ReflectionUtils.getCallerClass(2);
+     *         System.out.println("Caller class: " + callerClass.getName());
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param invocationFrame The depth in the call stack to retrieve the caller class from.
+     *                        A value of 0 typically represents the immediate caller, but this may vary
+     *                        depending on the JVM implementation and call context.
+     * @return The class of the caller at the specified invocation frame.
+     * @throws IllegalStateException if an error occurs while determining the caller class.
      */
     public static Class<?> getCallerClass(int invocationFrame) {
         if (supportedSunReflectReflection) {
@@ -297,11 +354,25 @@ public abstract class ReflectionUtils implements Utils {
     }
 
     /**
-     * Convert {@link Array} object to {@link List}
+     * Converts an array object into a {@link List}.
      *
-     * @param array array object
-     * @return {@link List}
-     * @throws IllegalArgumentException if the object argument is not an array
+     * <p>This method is useful for converting any array type (including nested arrays) into a list structure.
+     * If the array contains nested arrays, they will be recursively converted into lists as well.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * String[] stringArray = {"apple", "banana", "cherry"};
+     * List<String> stringList = ReflectionUtils.toList(stringArray);
+     * System.out.println(stringList);  // Output: [apple, banana, cherry]
+     *
+     * Integer[][] nestedArray = {{1, 2}, {3, 4}};
+     * List<List<Integer>> nestedList = ReflectionUtils.toList(nestedArray);
+     * System.out.println(nestedList);  // Output: [[1, 2], [3, 4]]
+     * }</pre>
+     *
+     * @param array The array object to convert. Must be a valid Java array.
+     * @return A list representation of the provided array.
+     * @throws IllegalArgumentException if the input is not a valid array object.
      */
     @Nonnull
     public static <T> List<T> toList(Object array) throws IllegalArgumentException {
@@ -326,11 +397,48 @@ public abstract class ReflectionUtils implements Utils {
         }
     }
 
+
     /**
-     * Read fields value as {@link Map}
+     * Reads all non-static fields of the given object and returns them as a map.
+     * <p>
+     * This method recursively processes nested objects, converting them into maps as well,
+     * provided they are not primitive or simple types (e.g., String, Number).
+     * </p>
      *
-     * @param object object to be read
-     * @return fields value as {@link Map}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Person {
+     *     private String name;
+     *     private int age;
+     *     private Address address; // Assume Address is another POJO class
+     *
+     *     // constructor, getters, setters...
+     * }
+     *
+     * class Address {
+     *     private String city;
+     *     private String street;
+     *
+     *     // constructor, getters, setters...
+     * }
+     *
+     * Person person = new Person("John", 30, new Address("New York", "5th Avenue"));
+     * Map<String, Object> result = ReflectionUtils.readFieldsAsMap(person);
+     *
+     * // Sample output:
+     * // {
+     * //   "name": "John",
+     * //   "age": 30,
+     * //   "address": {
+     * //     "city": "New York",
+     * //     "street": "5th Avenue"
+     * //   }
+     * // }
+     * }</pre>
+     *
+     * @param object The object whose fields are to be read.
+     * @return A map containing field names as keys and their corresponding values. Nested objects are also converted to maps.
+     * @throws IllegalStateException if any field cannot be accessed due to security restrictions.
      */
     @Nonnull
     public static Map<String, Object> readFieldsAsMap(Object object) {
@@ -363,13 +471,32 @@ public abstract class ReflectionUtils implements Utils {
         }
         return fieldsAsMap;
     }
-
-
+    
     /**
-     * Determine whether the specified {@link Throwable} is {@link java.lang.reflect.InaccessibleObjectException}
+     * Checks whether the specified {@link Throwable} is an instance of
+     * {@link java.lang.reflect.InaccessibleObjectException}.
      *
-     * @param failure {@link Throwable} instance
-     * @return <code>true</code> if the specified {@link Throwable} is {@link java.lang.reflect.InaccessibleObjectException}
+     * <p>This method is useful when dealing with reflection operations that may fail due to module system
+     * restrictions introduced in JDK 9+. It avoids direct dependency on the presence of the class, which
+     * may not be available in earlier JDK versions.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try {
+     *     Field field = MyClass.class.getDeclaredField("myField");
+     *     field.setAccessible(true); // This might throw InaccessibleObjectException
+     * } catch (Throwable t) {
+     *     if (ReflectionUtils.isInaccessibleObjectException(t)) {
+     *         System.err.println("Caught InaccessibleObjectException: " + t.getMessage());
+     *     } else {
+     *         throw new RuntimeException("Unexpected error", t);
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param failure The {@link Throwable} to check.
+     * @return <code>true</code> if the specified {@link Throwable} is an instance of
+     * {@link java.lang.reflect.InaccessibleObjectException}, <code>false</code> otherwise.
      */
     public static boolean isInaccessibleObjectException(Throwable failure) {
         return failure != null && INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME.equals(failure.getClass().getName());

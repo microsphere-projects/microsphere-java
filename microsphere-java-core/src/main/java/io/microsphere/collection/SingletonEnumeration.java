@@ -20,10 +20,30 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * Singleton {@link Enumeration}
+ * A simple implementation of the {@link Enumeration} interface that contains a single element.
+ * <p>
+ * This enumeration can only return the singleton element once, after which it will
+ * return false for subsequent calls to {@link #hasMoreElements()} and throw a
+ * {@link NoSuchElementException} on subsequent calls to {@link #nextElement()}.
+ * </p>
  *
- * @param <E> the type of elements
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * String item = "Hello";
+ * SingletonEnumeration<String> enumeration = new SingletonEnumeration<>(item);
+ *
+ * while (enumeration.hasMoreElements()) {
+ *     System.out.println(enumeration.nextElement());
+ * }
+ * }</pre>
+ *
+ * <p>The output of the example would be:</p>
+ * <pre>
+ * Hello
+ * </pre>
+ *
+ * @param <E> The type of the element in this enumeration.
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class SingletonEnumeration<E> implements Enumeration<E> {

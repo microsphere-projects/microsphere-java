@@ -16,21 +16,11 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.Deque;
-import java.util.Iterator;
 import java.util.Queue;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
-
-import static io.microsphere.collection.CollectionUtils.singletonIterator;
-import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
-import static java.util.Collections.emptyIterator;
 
 /**
  * The utilities class for Java {@link Queue}
@@ -43,392 +33,180 @@ public abstract class QueueUtils implements Utils {
 
     private static final Deque EMPTY_DEQUE = new EmptyDeque();
 
+    /**
+     * Checks whether the specified {@link Iterable} is an instance of {@link Queue}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Queue<String> queue = new LinkedList<>();
+     * boolean result = isQueue(queue); // returns true
+     *
+     * List<String> list = new ArrayList<>();
+     * result = isQueue(list); // returns false
+     * }</pre>
+     *
+     * @param values the {@link Iterable} to check
+     * @return {@code true} if the given {@link Iterable} is a {@link Queue},
+     * {@code false} otherwise
+     */
     public static boolean isQueue(Iterable<?> values) {
         return values instanceof Queue;
     }
 
+    /**
+     * Checks whether the specified {@link Iterable} is an instance of {@link Deque}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Deque<String> deque = new LinkedList<>();
+     * boolean result = isDeque(deque); // returns true
+     *
+     * List<String> list = new ArrayList<>();
+     * result = isDeque(list); // returns false
+     * }</pre>
+     *
+     * @param values the {@link Iterable} to check
+     * @return {@code true} if the given {@link Iterable} is a {@link Deque},
+     * {@code false} otherwise
+     */
     public static boolean isDeque(Iterable<?> values) {
         return values instanceof Deque;
     }
 
+    /**
+     * Returns an empty immutable queue instance.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Queue<String> empty = emptyQueue();
+     * boolean isEmpty = empty.isEmpty(); // returns true
+     * int size = empty.size(); // returns 0
+     * }</pre>
+     *
+     * @param <E> the type of elements held in the queue
+     * @return an empty immutable queue instance
+     */
+    @Nonnull
     public static <E> Queue<E> emptyQueue() {
         return (Queue<E>) EMPTY_DEQUE;
     }
 
+    /**
+     * Returns an empty immutable deque instance.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Deque<String> empty = emptyDeque();
+     * boolean isEmpty = empty.isEmpty(); // returns true
+     * int size = empty.size(); // returns 0
+     * }</pre>
+     *
+     * @param <E> the type of elements held in the deque
+     * @return an empty immutable deque instance
+     */
     public static <E> Deque<E> emptyDeque() {
         return (Deque<E>) EMPTY_DEQUE;
     }
 
+    /**
+     * Returns an unmodifiable view of the given queue.
+     *
+     * <p>
+     * This method wraps the provided queue in an {@link UnmodifiableQueue}, which prevents any modifications to the queue.
+     * Any attempt to modify the returned queue will result in an {@link UnsupportedOperationException}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Queue<String> mutableQueue = new LinkedList<>();
+     * mutableQueue.add("Hello");
+     * Queue<String> unmodifiable = unmodifiableQueue(mutableQueue);
+     * 
+     * unmodifiable.add("World"); // throws UnsupportedOperationException
+     * }</pre>
+     *
+     * @param <E>   the type of elements held in the queue
+     * @param queue the queue to be made unmodifiable, must not be null
+     * @return an unmodifiable view of the specified queue
+     * @throws NullPointerException if the provided queue is null
+     */
+    @Nonnull
     public static <E> Queue<E> unmodifiableQueue(Queue<E> queue) {
         return new UnmodifiableQueue(queue);
     }
 
+    /**
+     * Returns an unmodifiable view of the given deque.
+     *
+     * <p>
+     * This method wraps the provided deque in an {@link UnmodifiableDeque}, which prevents any modifications to the deque.
+     * Any attempt to modify the returned deque will result in an {@link UnsupportedOperationException}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Deque<String> mutableDeque = new LinkedList<>();
+     * mutableDeque.add("Hello");
+     * Deque<String> unmodifiable = unmodifiableDeque(mutableDeque);
+     * 
+     * unmodifiable.addFirst("World"); // throws UnsupportedOperationException
+     * }</pre>
+     *
+     * @param <E>   the type of elements held in the deque
+     * @param deque the deque to be made unmodifiable, must not be null
+     * @return an unmodifiable view of the specified deque
+     * @throws NullPointerException if the provided deque is null
+     */
     public static <E> Deque<E> unmodifiableDeque(Deque<E> deque) {
         return new UnmodifiableDeque(deque);
     }
 
+    /**
+     * Returns an immutable queue containing only the specified element.
+     *
+     * <p>
+     * The returned queue is a singleton instance that holds exactly one element. It is immutable,
+     * so any attempt to modify the queue will result in an {@link UnsupportedOperationException}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Queue<String> singleton = singletonQueue("Hello");
+     * boolean isEmpty = singleton.isEmpty(); // returns false
+     * int size = singleton.size(); // returns 1
+     * String value = singleton.poll(); // returns "Hello"
+     * }</pre>
+     *
+     * @param <E>     the type of the queue's element
+     * @param element the sole element to be stored in the returned queue
+     * @return a singleton immutable queue containing the specified element
+     */
     public static <E> Queue<E> singletonQueue(E element) {
         return new SingletonDeque<>(element);
     }
 
+    /**
+     * Returns an immutable deque containing only the specified element.
+     *
+     * <p>
+     * The returned deque is a singleton instance that holds exactly one element. It is immutable,
+     * so any attempt to modify the deque will result in an {@link UnsupportedOperationException}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Deque<String> singleton = singletonDeque("Hello");
+     * boolean isEmpty = singleton.isEmpty(); // returns false
+     * int size = singleton.size(); // returns 1
+     * String value = singleton.pollFirst(); // returns "Hello"
+     * }</pre>
+     *
+     * @param <E>     the type of the deque's element
+     * @param element the sole element to be stored in the returned deque
+     * @return a singleton immutable deque containing the specified element
+     */
     public static <E> Deque<E> singletonDeque(E element) {
         return new SingletonDeque<>(element);
-    }
-
-    static class EmptyDeque<E> extends AbstractDeque<E> implements Serializable {
-
-        private static final long serialVersionUID = -1L;
-
-        @Override
-        public Iterator<E> iterator() {
-            return emptyIterator();
-        }
-
-        @Override
-        public Iterator<E> descendingIterator() {
-            return emptyIterator();
-        }
-
-        @Override
-        public boolean offerFirst(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean offerLast(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pollFirst() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pollLast() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E getFirst() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E getLast() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean removeLastOccurrence(Object o) {
-            return false;
-        }
-
-        @Override
-        public int size() {
-            return 0;
-        }
-    }
-
-    static class UnmodifiableQueue<E> implements Queue<E>, Serializable {
-
-        private static final long serialVersionUID = -1L;
-
-        private final Queue<E> delegate;
-
-        UnmodifiableQueue(Queue<E> queue) {
-            this.delegate = queue;
-        }
-
-        @Override
-        public int size() {
-            return delegate.size();
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return delegate.isEmpty();
-        }
-
-        @Override
-        public boolean contains(Object o) {
-            return delegate.contains(o);
-        }
-
-        @Override
-        public Iterator<E> iterator() {
-            return unmodifiableIterator(delegate.iterator());
-        }
-
-        @Override
-        public Object[] toArray() {
-            return delegate.toArray();
-        }
-
-        @Override
-        public <T> T[] toArray(T[] a) {
-            return delegate.toArray(a);
-        }
-
-        @Override
-        public boolean add(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean remove(Object o) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean offer(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E remove() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E poll() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E element() {
-            return delegate.element();
-        }
-
-        @Override
-        public E peek() {
-            return delegate.peek();
-        }
-
-        @Override
-        public boolean containsAll(Collection<?> c) {
-            return delegate.containsAll(c);
-        }
-
-        @Override
-        public boolean addAll(Collection<? extends E> c) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean removeAll(Collection<?> c) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean removeIf(Predicate<? super E> filter) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean retainAll(Collection<?> c) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void clear() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            return delegate.equals(o);
-        }
-
-        @Override
-        public int hashCode() {
-            return delegate.hashCode();
-        }
-
-        @Override
-        public Spliterator<E> spliterator() {
-            return delegate.spliterator();
-        }
-
-        @Override
-        public Stream<E> stream() {
-            return delegate.stream();
-        }
-
-        @Override
-        public Stream<E> parallelStream() {
-            return delegate.parallelStream();
-        }
-
-        @Override
-        public void forEach(Consumer<? super E> action) {
-            delegate.forEach(action);
-        }
-    }
-
-    static class UnmodifiableDeque<E> extends UnmodifiableQueue<E> implements Deque<E>, Serializable {
-
-        private final Deque<E> delegate;
-
-        UnmodifiableDeque(Deque<E> deque) {
-            super(deque);
-            this.delegate = deque;
-        }
-
-        @Override
-        public void addFirst(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void addLast(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean offerFirst(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean offerLast(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E removeFirst() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E removeLast() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pollFirst() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pollLast() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E getFirst() {
-            return delegate.getFirst();
-        }
-
-        @Override
-        public E getLast() {
-            return delegate.getLast();
-        }
-
-        @Override
-        public E peekFirst() {
-            return getFirst();
-        }
-
-        @Override
-        public E peekLast() {
-            return getLast();
-        }
-
-        @Override
-        public boolean removeFirstOccurrence(Object o) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean removeLastOccurrence(Object o) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public void push(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pop() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public Iterator<E> descendingIterator() {
-            return unmodifiableIterator(delegate.descendingIterator());
-        }
-    }
-
-    static class SingletonDeque<E> extends AbstractDeque<E> implements Serializable {
-
-        private static final long serialVersionUID = -1L;
-
-        private final E element;
-
-
-        SingletonDeque(E element) {
-            this.element = element;
-        }
-
-        @Override
-        public Iterator<E> iterator() {
-            return singletonIterator(element);
-        }
-
-        @Override
-        public Iterator<E> descendingIterator() {
-            return singletonIterator(element);
-        }
-
-        @Override
-        public boolean removeFirstOccurrence(Object o) {
-            return super.removeFirstOccurrence(o);
-        }
-
-        @Override
-        public boolean offerFirst(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public boolean offerLast(E e) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pollFirst() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E pollLast() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public E getFirst() {
-            return element;
-        }
-
-        @Override
-        public E getLast() {
-            return element;
-        }
-
-        @Override
-        public boolean removeLastOccurrence(Object o) {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public int size() {
-            return 1;
-        }
     }
 
     private QueueUtils() {

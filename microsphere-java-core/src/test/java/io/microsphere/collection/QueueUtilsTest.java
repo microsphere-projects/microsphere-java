@@ -87,7 +87,7 @@ public class QueueUtilsTest {
 
     @Test
     public void testSingletonDeque() {
-        QueueUtils.SingletonDeque<String> singletonDeque = (QueueUtils.SingletonDeque<String>) singletonDeque("a");
+        SingletonDeque<String> singletonDeque = (SingletonDeque<String>) singletonDeque("a");
         assertSingletonIterator(singletonDeque.iterator());
         assertSingletonIterator(singletonDeque.descendingIterator());
 
@@ -167,7 +167,7 @@ public class QueueUtilsTest {
         Iterator<String> iterator = queue.iterator();
         assertFalse(iterator.hasNext());
         assertThrows(NoSuchElementException.class, () -> iterator.next());
-        assertThrows(UnsupportedOperationException.class, () -> iterator.remove());
+        assertThrows(IllegalStateException.class, () -> iterator.remove());
 
         Object[] array = queue.toArray();
         assertEquals(0, array.length);

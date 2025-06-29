@@ -23,6 +23,7 @@ import java.util.Iterator;
 
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /*
@@ -38,5 +39,7 @@ public class IterableAdapterTest extends AbstractTestCase {
         Iterator<String> iterator = singletonIterator(TEST_ELEMENT);
         Iterable<String> iterable = toIterable(iterator);
         assertSame(iterator, iterable.iterator());
+
+        assertSame(INSTANCE, new IterableAdapter(null).iterator());
     }
 }

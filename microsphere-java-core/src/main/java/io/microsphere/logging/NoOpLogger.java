@@ -19,11 +19,23 @@ package io.microsphere.logging;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
- * No-Operation {@link Logger}
+ * A no-operation implementation of the {@link Logger} interface.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Logger
- * @since 1.0.0
+ * <p>This logger performs no actions when logging methods are called, effectively silencing all log output.
+ * It is useful in scenarios where logging is required to be completely disabled without modifying the application's
+ * logging configuration.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a NoOpLogger instance
+ * Logger logger = new NoOpLogger("exampleLogger");
+ *
+ * // Logging messages will have no effect
+ * logger.info("This message will not be logged.");
+ * logger.error("An error occurred", new Exception("Sample exception"));
+ * }</pre>
+ *
+ * <p><b>Note:</b> This class is thread-safe and can be used concurrently from multiple threads.</p>
  */
 final class NoOpLogger extends AbstractLogger {
 

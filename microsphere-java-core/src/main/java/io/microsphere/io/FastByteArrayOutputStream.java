@@ -26,9 +26,29 @@ import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOf;
 
 /**
- * Fast(No ThreadSafe without synchronization) {@link ByteArrayOutputStream}
+ * A fast, non-thread-safe implementation of {@link ByteArrayOutputStream}.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <p>
+ * This class is designed for scenarios requiring high-performance byte output operations.
+ * It extends the standard {@link ByteArrayOutputStream} and optimizes buffer growth and writing operations.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * FastByteArrayOutputStream output = new FastByteArrayOutputStream();
+ * try {
+ *     output.write("Hello, World!".getBytes(StandardCharsets.UTF_8));
+ *     System.out.println(output.toString()); // Output: Hello, World!
+ * } finally {
+ *     output.close();
+ * }
+ * }</pre>
+ *
+ * <p>
+ * Note: Since this implementation is not thread-safe, external synchronization is required in multi-threaded environments.
+ * </p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ByteArrayOutputStream
  * @since 1.0.0
  */

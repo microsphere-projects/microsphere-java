@@ -1,6 +1,7 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nullable;
+import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
 import java.net.URL;
@@ -21,9 +22,49 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * {@link Artifact} Detector
+ * The {@code ArtifactDetector} class is responsible for detecting and resolving artifacts from the classpath.
+ * It uses a list of registered {@link ArtifactResourceResolver} implementations to resolve each URL in the classpath
+ * into an appropriate {@link Artifact} instance.
+ *
+ * <p>{@code ArtifactDetector} supports filtering out JDK internal libraries based on the configuration flag
+ * provided during detection. It also allows customization through different {@link ArtifactResourceResolver}
+ * implementations that can be loaded via service loading mechanism.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create an instance using the default ClassLoader
+ * ArtifactDetector detector = new ArtifactDetector();
+ *
+ * // Detect all artifacts including JDK libraries
+ * List<Artifact> artifactsIncludingJDK = detector.detect(true);
+ *
+ * // Detect artifacts excluding JDK libraries
+ * List<Artifact> artifactsExcludingJDK = detector.detect(false);
+ * }</pre>
+ *
+ * <p>You can also provide a custom {@link ArtifactResourceResolver} implementation like below:</p>
+ *
+ * <pre>{@code
+ * public class CustomArtifactResolver implements ArtifactResourceResolver {
+ *     public Artifact resolve(URL resourceURL) {
+ *         if (resourceURL.getProtocol().equals("file")) {
+ *             return new FileArtifact(resourceURL); // hypothetical custom artifact
+ *         }
+ *         return null;
+ *     }
+ *
+ *     public int getPriority() {
+ *         return Prioritized.MAX_PRIORITY; // highest priority
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>Once registered via service loader or manually added, it will be used by the detector accordingly.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see Artifact
+ * @see ArtifactResourceResolver
+ * @see Prioritized
  * @since 1.0.0
  */
 public class ArtifactDetector {

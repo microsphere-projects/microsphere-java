@@ -23,6 +23,7 @@ import static java.lang.System.currentTimeMillis;
 /**
  * An event object is based on the Java standard {@link EventObject event}
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public abstract class Event extends EventObject {

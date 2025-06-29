@@ -29,9 +29,25 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 
 /**
- * The definition class of Java {@link Method}
+ * The definition class of Java {@link Method}, providing a structured way to define and resolve methods
+ * by their name, parameter types, and declaring class. This class serves as a convenient wrapper for
+ * method metadata and resolution logic.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Define a method without deprecation information
+ * MethodDefinition methodDef = new MethodDefinition("1.0.0", "com.example.MyClass", "myMethod", "java.lang.String", "int");
+ *
+ * // Define a deprecated method
+ * Deprecation deprecation = new Deprecation("2.0.0", "Use newMethod instead.");
+ * MethodDefinition deprecatedMethodDef = new MethodDefinition("1.0.0", deprecation, "com.example.MyClass", "oldMethod", "java.util.List");
+ *
+ * // Resolve and invoke the method
+ * Method method = methodDef.getMethod(); // May return null if not found
+ * String result = methodDef.invoke(instance, "example", 42); // Invokes myMethod with String and int parameters
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Method
  * @see Version
  * @since 1.0.0

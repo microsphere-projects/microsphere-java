@@ -29,8 +29,24 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 
 /**
- * The composite {@link URLStreamHandlerFactory} delegates to one or more {@link URLStreamHandlerFactory URLStreamHandlerFactories}
- * {@link #getComparator() in order}.
+ * A composite {@link URLStreamHandlerFactory} that delegates the creation of {@link URLStreamHandler} instances
+ * to one or more underlying factories in a prioritized order.
+ *
+ * <p>This class allows combining multiple {@link URLStreamHandlerFactory} implementations into a single factory,
+ * where each factory is given a chance to create a handler for a specific protocol. The delegation order can be
+ * controlled by providing factories that implement the {@link Prioritized} interface.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * CompositeURLStreamHandlerFactory compositeFactory = new CompositeURLStreamHandlerFactory();
+ *
+ * // Add custom factories
+ * compositeFactory.addURLStreamHandlerFactory(new MyURLStreamHandlerFactory());
+ * compositeFactory.addURLStreamHandlerFactory(new AnotherURLStreamHandlerFactory());
+ *
+ * // Set as the default URL stream handler factory
+ * URL.setURLStreamHandlerFactory(compositeFactory);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

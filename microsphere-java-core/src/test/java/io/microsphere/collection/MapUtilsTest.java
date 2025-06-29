@@ -227,20 +227,20 @@ public class MapUtilsTest {
         assertSame(emptyMap(), map);
     }
 
-
     @Test
     public void testOfEntry() {
         Map.Entry<String, Integer> entry = ofEntry("A", 1);
-        assertEquals(MapUtils.ImmutableEntry.class, entry.getClass());
+        assertEquals(DefaultEntry.class, entry.getClass());
         assertEquals("A", entry.getKey());
         assertEquals(1, entry.getValue());
-        assertThrows(UnsupportedOperationException.class, () -> entry.setValue(2));
+        assertEquals(1, entry.setValue(2));
+        assertEquals(2, entry.getValue());
     }
 
     @Test
     public void testImmutableEntry() {
         Map.Entry<String, Integer> entry = immutableEntry("A", 1);
-        assertEquals(MapUtils.ImmutableEntry.class, entry.getClass());
+        assertEquals(ImmutableEntry.class, entry.getClass());
         assertEquals("A", entry.getKey());
         assertEquals(1, entry.getValue());
         assertThrows(UnsupportedOperationException.class, () -> entry.setValue(2));

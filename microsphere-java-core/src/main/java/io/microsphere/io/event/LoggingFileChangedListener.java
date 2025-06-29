@@ -21,10 +21,30 @@ import io.microsphere.logging.Logger;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
- * {@link FileChangedListener} class for Logging with debug level
+ * A {@link FileChangedListener} implementation that logs file change events at the debug level.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <p>This class provides a simple way to monitor and log file system changes using the logging framework.
+ * It implements all the abstract methods of the {@link FileChangedListener} interface, delegating each
+ * event to a common logging method. The logging is performed only if the underlying logger is enabled for
+ * the debug level, which helps reduce unnecessary overhead in production environments.</p>
+ *
+ * <h3>Example Usage</h3>
+ * Here's how you can create and register a {@code LoggingFileChangedListener} instance:
+ *
+ * <pre>{@code
+ * FileChangedListener listener = new LoggingFileChangedListener();
+ * fileMonitor.addListener(listener);
+ * }</pre>
+ *
+ * <p>In this example, any file creation, modification, or deletion events monitored by the
+ * {@code fileMonitor} will be logged at the debug level by the {@code LoggingFileChangedListener}.</p>
+ *
+ * <p><strong>Note:</strong> This class assumes that the underlying logging framework (e.g., SLF4J, Log4j)
+ * is configured properly. If no logging framework is available or configured, logging behavior is undefined.</p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see FileChangedListener
+ * @see Logger
  * @since 1.0.0
  */
 public class LoggingFileChangedListener implements FileChangedListener {

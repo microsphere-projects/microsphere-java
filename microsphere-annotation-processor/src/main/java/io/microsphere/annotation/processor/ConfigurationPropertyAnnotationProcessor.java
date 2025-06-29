@@ -44,6 +44,23 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
 /**
  * The {@link Processor} for the {@link ConfigurationProperty} annotation
  *
+ * <p>This class processes the {@link ConfigurationProperty} annotations during the compilation phase,
+ * collects metadata about annotated elements, and generates a JSON metadata file that contains
+ * configuration property information.
+ *
+ * <ul>
+ *     <li>{@link #init(ProcessingEnvironment)} initializes required utilities such as the Messager and ResourceProcessor.</li>
+ *     <li>{@link #process(Set, RoundEnvironment)} handles each processing round:
+ *         <ul>
+ *             <li>During normal rounds, it resolves metadata from annotated elements.</li>
+ *             <li>On the final round, it writes collected metadata into a resource file.</li>
+ *         </ul>
+ *     </li>
+ *     <li>{@link #resolveMetadata(RoundEnvironment)} traverses all root elements to extract configuration property metadata.</li>
+ *     <li>{@link #writeMetadata()} writes the generated metadata into a JSON file under
+ *         {@value #CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME} using a writer.</li>
+ * </ul>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperty
  * @since 1.0.0

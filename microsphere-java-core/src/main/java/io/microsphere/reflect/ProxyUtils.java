@@ -40,18 +40,38 @@ import static java.lang.reflect.Modifier.isFinal;
  * @since 1.0.0
  */
 public abstract class ProxyUtils implements Utils {
-
+    
     /**
+     * Determines whether the specified class is proxyable.
+     *
+     * <p>A class is considered proxyable if:
      * <ul>
-     *     <li>class has a non-private constructor with no parameters</li>
-     *     <li>class is not declared final</li>
-     *     <li>class does not have non-static, final methods with public, protected or default visibility</li>
-     *     <li>class is not primitive type</li>
-     *     <li>class is not array type</li>
+     *     <li>It has a non-private constructor with no parameters</li>
+     *     <li>It is not declared final</li>
+     *     <li>It does not have non-static, final methods with public, protected, or default visibility</li>
+     *     <li>It is not a primitive type</li>
+     *     <li>It is not an array type</li>
      * </ul>
      *
-     * @param type
-     * @return
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class ExampleClass {
+     *     public void exampleMethod() {}
+     * }
+     *
+     * boolean result = ProxyUtils.isProxyable(ExampleClass.class);
+     * // result will be true as ExampleClass meets all proxyable conditions.
+     *
+     * public final class FinalClass {
+     *     public void method() {}
+     * }
+     *
+     * result = ProxyUtils.isProxyable(FinalClass.class);
+     * // result will be false as FinalClass is declared final.
+     * }</pre>
+     *
+     * @param type the class to check for proxyability
+     * @return {@code true} if the class is proxyable, otherwise {@code false}
      */
     public static boolean isProxyable(Class<?> type) {
         if (isArray(type)) {

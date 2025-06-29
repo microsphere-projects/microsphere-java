@@ -101,7 +101,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>A <code>null</code> reference passed to this method is a no-op.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.replace(null, *, *)        = null
      * StringUtils.replace("", *, *)          = ""
      * StringUtils.replace("any", null, *)    = "any"
@@ -110,7 +110,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.replace("aba", "a", null)  = "aba"
      * StringUtils.replace("aba", "a", "")    = "b"
      * StringUtils.replace("aba", "a", "z")   = "zbz"
-     * </pre>
+     * }</pre>
      *
      * @param text         text to search and replace in, may be null
      * @param searchString the String to search for, may be null
@@ -129,7 +129,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>A <code>null</code> reference passed to this method is a no-op.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.replace(null, *, *, *)         = null
      * StringUtils.replace("", *, *, *)           = ""
      * StringUtils.replace("any", null, *, *)     = "any"
@@ -142,7 +142,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.replace("abaa", "a", "z", 1)   = "zbaa"
      * StringUtils.replace("abaa", "a", "z", 2)   = "zbza"
      * StringUtils.replace("abaa", "a", "z", -1)  = "zbzz"
-     * </pre>
+     * }</pre>
      *
      * @param text         text to search and replace in, may be null
      * @param searchString the String to search for, may be null
@@ -184,14 +184,14 @@ public abstract class StringUtils implements Utils {
      * <p>A <code>null</code> input String returns <code>null</code>.
      * A <code>null</code> tag returns <code>null</code>.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.substringBetween(null, *)            = null
      * StringUtils.substringBetween("", "")             = ""
      * StringUtils.substringBetween("", "tag")          = null
      * StringUtils.substringBetween("tagabctag", null)  = null
      * StringUtils.substringBetween("tagabctag", "")    = ""
      * StringUtils.substringBetween("tagabctag", "tag") = "abc"
-     * </pre>
+     * }</pre>
      *
      * @param str the String containing the substring, may be null
      * @param tag the String before and after the substring, may be null
@@ -209,7 +209,7 @@ public abstract class StringUtils implements Utils {
      * A <code>null</code> open/close returns <code>null</code> (no match).
      * An empty ("") open and close returns an empty string.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.substringBetween("wx[b]yz", "[", "]") = "b"
      * StringUtils.substringBetween(null, *, *)          = null
      * StringUtils.substringBetween(*, null, *)          = null
@@ -220,7 +220,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.substringBetween("yabcz", "", "")     = ""
      * StringUtils.substringBetween("yabcz", "y", "z")   = "abc"
      * StringUtils.substringBetween("yabczyabcz", "y", "z")   = "abc"
-     * </pre>
+     * }</pre>
      *
      * @param str   the String containing the substring, may be null
      * @param open  the String before the substring, may be null
@@ -251,7 +251,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the string input is returned.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.substringBefore(null, *)      = null
      * StringUtils.substringBefore("", *)        = ""
      * StringUtils.substringBefore("abc", "a")   = ""
@@ -260,7 +260,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.substringBefore("abc", "d")   = "abc"
      * StringUtils.substringBefore("abc", "")    = ""
      * StringUtils.substringBefore("abc", null)  = "abc"
-     * </pre>
+     * }</pre>
      *
      * @param str       the String to get a substring from, may be null
      * @param separator the String to search for, may be null
@@ -292,7 +292,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the empty string is returned.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.substringAfter(null, *)      = null
      * StringUtils.substringAfter("", *)        = ""
      * StringUtils.substringAfter(*, null)      = ""
@@ -301,7 +301,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.substringAfter("abc", "c")   = ""
      * StringUtils.substringAfter("abc", "d")   = ""
      * StringUtils.substringAfter("abc", "")    = "abc"
-     * </pre>
+     * }</pre>
      *
      * @param str       the String to get a substring from, may be null
      * @param separator the String to search for, may be null
@@ -332,7 +332,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the string input is returned.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.substringBeforeLast(null, *)      = null
      * StringUtils.substringBeforeLast("", *)        = ""
      * StringUtils.substringBeforeLast("abcba", "b") = "abc"
@@ -341,7 +341,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.substringBeforeLast("a", "z")     = "a"
      * StringUtils.substringBeforeLast("a", null)    = "a"
      * StringUtils.substringBeforeLast("a", "")      = "a"
-     * </pre>
+     * }</pre>
      *
      * @param str       the String to get a substring from, may be null
      * @param separator the String to search for, may be null
@@ -370,7 +370,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the empty string is returned.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.substringAfterLast(null, *)      = null
      * StringUtils.substringAfterLast("", *)        = ""
      * StringUtils.substringAfterLast(*, "")        = ""
@@ -380,7 +380,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.substringAfterLast("abc", "c")   = ""
      * StringUtils.substringAfterLast("a", "a")     = ""
      * StringUtils.substringAfterLast("a", "z")     = ""
-     * </pre>
+     * }</pre>
      *
      * @param str       the String to get a substring from, may be null
      * @param separator the String to search for, may be null
@@ -408,7 +408,7 @@ public abstract class StringUtils implements Utils {
      * <p><code>null</code> will return <code>false</code>.
      * An empty String (length()=0) will return <code>true</code>.</p>
      *
-     * <pre>
+     * <pre>{@code
      * StringUtils.isNumeric(null)   = false
      * StringUtils.isNumeric("")     = true
      * StringUtils.isNumeric("  ")   = false
@@ -417,7 +417,7 @@ public abstract class StringUtils implements Utils {
      * StringUtils.isNumeric("ab2c") = false
      * StringUtils.isNumeric("12-3") = false
      * StringUtils.isNumeric("12.3") = false
-     * </pre>
+     * }</pre>
      *
      * @param str the String to check, may be null
      * @return <code>true</code> if only contains digits, and is non-null

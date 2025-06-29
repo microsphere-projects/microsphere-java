@@ -17,9 +17,23 @@
 package io.microsphere.collection;
 
 /**
- * Empty {@link Iterable}
+ * An empty {@link Iterable} implementation that always returns an empty iterator.
+ * <p>
+ * This class is a singleton-friendly extension of {@link IterableAdapter}, primarily useful for representing
+ * an empty collection view. It guarantees that the method {@link #iterator()} will return an instance of
+ * {@link EmptyIterator#INSTANCE}, ensuring consistent behavior across uses.
+ * </p>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * Iterable<String> emptyIterable = EmptyIterable.INSTANCE;
+ * for (String item : emptyIterable) {
+ *     // This loop will not execute as the iterable is empty.
+ * }
+ * }</pre>
+ *
+ * @param <E> the type of elements returned by the iterator
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Iterable
  * @see EmptyIterator
  * @since 1.0.0
@@ -32,6 +46,6 @@ public class EmptyIterable<E> extends IterableAdapter<E> {
     public static final EmptyIterable INSTANCE = new EmptyIterable();
 
     public EmptyIterable() {
-        super(EmptyIterator.INSTANCE);
+        super(null);
     }
 }

@@ -35,10 +35,33 @@ import static java.util.Collections.unmodifiableMap;
 public abstract class PropertiesUtils implements Utils {
 
     /**
-     * Get the flatten the specified {@link Map properties}
+     * Flattens a nested map of properties into a single-level map.
      *
-     * @param properties the specified {@link Map properties}
-     * @return the read-only flatten {@link Map properties} if present
+     * <p>If the input map is empty or null, the same map instance is returned.</p>
+     *
+     * <p>For example, given the following input:
+     * <pre>{@code
+     * {
+     *   "a": "1",
+     *   "b": {
+     *     "c": "2",
+     *     "d": {
+     *       "e": "3"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     * The resulting flattened map would be:
+     * <pre>{@code
+     * {
+     *   "a": "1",
+     *   "b.c": "2",
+     *   "b.d.e": "3"
+     * }
+     * }</pre>
+     *
+     * @param properties The map containing potentially nested properties to be flattened.
+     * @return A new unmodifiable map with all properties flattened to a single level.
      */
     public static Map<String, Object> flatProperties(Map<String, Object> properties) {
         if (isEmpty(properties)) {
@@ -49,8 +72,15 @@ public abstract class PropertiesUtils implements Utils {
         return unmodifiableMap(flattenProperties);
     }
 
-    static void flatProperties(Map<String, Object> properties, String propertyNamePrefix,
-                               Map<String, Object> flattenProperties) {
+    /**
+     * Recursively flattens the given properties map into a single-level map.
+     *
+     * @param properties         The map containing properties to be flattened.
+     * @param propertyNamePrefix The prefix for property names used during flattening.
+     * @param flattenProperties  The target map where flattened properties are stored.
+     */
+    protected static void flatProperties(Map<String, Object> properties, String propertyNamePrefix,
+                                         Map<String, Object> flattenProperties) {
         for (Map.Entry<String, Object> entry : properties.entrySet()) {
             String propertyName = normalizePropertyName(propertyNamePrefix, entry.getKey());
             Object propertyValue = entry.getValue();

@@ -23,10 +23,36 @@ import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static java.util.Collections.unmodifiableSet;
 
 /**
- * Simple {@link JarEntry} Scanner
+ * A simple scanner for {@link JarEntry} that provides methods to scan and filter entries within a JAR file.
+ * <p>
+ * This class allows recursive or non-recursive scanning of JAR entries, optionally applying a filter to match specific
+ * entries. It returns an immutable set of matching jar entries.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example 1: Scan all entries recursively from a JAR URL
+ * SimpleJarEntryScanner scanner = new SimpleJarEntryScanner();
+ * URL jarUrl = new URL("jar:file:/path/to/your.jar!/");
+ * Set<JarEntry> entries = scanner.scan(jarUrl, true);
+ * }</pre>
+ *
+ * <pre>{@code
+ * // Example 2: Scan with a filter to find only .class files
+ * JarEntryFilter filter = entry -> entry.getName().endsWith(".class");
+ * Set<JarEntry> classEntries = scanner.scan(jarUrl, true, filter);
+ * }</pre>
+ *
+ * <pre>{@code
+ * // Example 3: Scan a specific directory inside a JarFile non-recursively
+ * JarFile jarFile = new JarFile("/path/to/your.jar");
+ * Set<JarEntry> entries = scanner.scan(jarFile, false);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see SimpleJarEntryScanner
+ * @see JarEntry
+ * @see JarFile
+ * @see JarEntryFilter
  * @since 1.0.0
  */
 public class SimpleJarEntryScanner {

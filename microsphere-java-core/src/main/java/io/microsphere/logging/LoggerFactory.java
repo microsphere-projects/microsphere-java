@@ -27,10 +27,36 @@ import static java.util.Collections.sort;
 import static java.util.ServiceLoader.load;
 
 /**
- * The factory class for {@link Logger}
+ * The {@code LoggerFactory} serves as an abstract base class for creating and managing
+ * instances of the {@link Logger} type. It also implements the {@link Prioritized}
+ * interface, allowing subclasses to define priority-based ordering.
+ *
+ * <p>Implementations should provide the delegate logger class name and create a new logger
+ * instance using the provided name. Subclasses can override the methods to customize the
+ * behavior of logger creation and availability checks.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MyLoggerFactory extends LoggerFactory {
+ *     private final String delegateLoggerClassName = "com.example.Logger";
+ *
+ *     public MyLoggerFactory() {
+ *         // Set appropriate priority if needed
+ *     }
+ *
+ *     protected String getDelegateLoggerClassName() {
+ *         return delegateLoggerClassName;
+ *     }
+ *
+ *     public Logger createLogger(String name) {
+ *         return new MyLogger(name);
+ *     }
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Logger
+ * @see Prioritized
  * @since 1.0.0
  */
 public abstract class LoggerFactory implements Prioritized {

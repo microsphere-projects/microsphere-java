@@ -9,10 +9,31 @@ import java.util.concurrent.ConcurrentMap;
 import static java.util.Collections.unmodifiableMap;
 
 /**
- * {@link Process} Manager
+ * Manages and tracks processes, providing methods to handle running processes and clean up resources.
+ * <p>
+ * This class provides functionality to:
+ * <ul>
+ *     <li>Add and remove unfinished processes with their respective arguments</li>
+ *     <li>Retrieve an unmodifiable map of all unfinished processes</li>
+ *     <li>Safely destroy a process</li>
+ * </ul>
+ * </p>
+ *
+ * <h3>Usage Example:</h3>
+ * <pre>
+ * // Adding a process
+ * Process process = Runtime.getRuntime().exec("some-command");
+ * ProcessManager.INSTANCE.addUnfinishedProcess(process, "some-command");
+ *
+ * // Destroying a process
+ * ProcessManager.INSTANCE.destroy(process);
+ *
+ * // Retrieving all unfinished processes
+ * Map<Process, String> processes = ProcessManager.INSTANCE.unfinishedProcessesMap();
+ * </pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see ProcessManager
+ * @see Process
  * @since 1.0.0
  */
 public class ProcessManager {

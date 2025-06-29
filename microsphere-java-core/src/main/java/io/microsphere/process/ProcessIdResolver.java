@@ -19,10 +19,36 @@ package io.microsphere.process;
 import io.microsphere.lang.Prioritized;
 
 /**
- * The resolver for Process ID
+ * A strategy interface for resolving the current process ID.
+ *
+ * <p>Implementations of this interface are responsible for determining the identifier
+ * of the currently running process. Different implementations may be used depending on
+ * the runtime environment or operating system.
+ *
+ * <p>{@link ProcessIdResolver} extends {@link Prioritized}, allowing implementations to define
+ * a priority value to influence the order in which they are considered when multiple resolvers
+ * are available.
+ *
+ * <h3>Example Implementation</h3>
+ * <pre>{@code
+ * public class MyProcessIdResolver implements ProcessIdResolver {
+ *     public int getPriority() {
+ *         return ProcessIdResolver.NORMAL_PRIORITY;
+ *     }
+ *
+ *     public boolean supports() {
+ *         return true; // or conditionally based on environment
+ *     }
+ *
+ *     public Long current() {
+ *         return 12345L; // simulate process ID
+ *     }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ModernProcessIdResolver
+ * @see ClassicProcessIdResolver
+ * @see VirtualMachineProcessIdResolver
  * @since 1.0.0
  */
 public interface ProcessIdResolver extends Prioritized {

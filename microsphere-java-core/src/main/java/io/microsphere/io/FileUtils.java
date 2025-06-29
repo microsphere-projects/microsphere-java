@@ -3,6 +3,7 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
 
@@ -35,13 +36,29 @@ public abstract class FileUtils implements Utils {
     public static final File[] EMPTY_FILE_ARRAY = ArrayUtils.EMPTY_FILE_ARRAY;
 
     /**
-     * Resolve Relative Path
+     * Resolves the relative path from a parent directory to a target file.
      *
-     * @param parentDirectory Parent Directory
-     * @param targetFile      Target File
-     * @return If <code>targetFile</code> is a sub-file of <code>parentDirectory</code> , resolve relative path, or
-     * <code>null</code>
+     * <p>If the {@code targetFile} is not under the specified {@code parentDirectory}, this method returns
+     * {@code null}. If the paths are equal, an empty string is returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code resolveRelativePath(new File("/home/user"), new File("/home/user/docs/file.txt"))} returns
+     *       {@code "docs/file.txt"}</li>
+     *   <li>{@code resolveRelativePath(new File("/home/user"), new File("/home/user/file.txt"))} returns
+     *       {@code "file.txt"}</li>
+     *   <li>{@code resolveRelativePath(new File("/home/user"), new File("/tmp/file.txt"))} returns
+     *       {@code null}</li>
+     *   <li>{@code resolveRelativePath(new File("/home/user"), new File("/home/user"))} returns
+     *       an empty string</li>
+     * </ul>
+     *
+     * @param parentDirectory the base directory to calculate the relative path from
+     * @param targetFile      the target file or directory whose relative path is to be determined
+     * @return the relative path from the parent directory to the target file, using forward slashes ({@code /}),
+     * or {@code null} if the target file is not under the parent directory
      */
+    @Nullable
     public static String resolveRelativePath(File parentDirectory, File targetFile) {
         if (!parentDirectory.isDirectory()) {
             return null;
@@ -60,11 +77,22 @@ public abstract class FileUtils implements Utils {
     }
 
     /**
-     * Get File Extension
+     * Gets the extension of a file name, if any.
      *
-     * @param fileName the name of {@link File}
-     * @return the file extension if found
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code getFileExtension("file.txt")} returns {@code "txt"}</li>
+     *   <li>{@code getFileExtension("file.tar.gz")} returns {@code "gz"}</li>
+     *   <li>{@code getFileExtension(".hiddenfile")} returns {@code null} (no extension)</li>
+     *   <li>{@code getFileExtension("file")} returns {@code null} (no extension)</li>
+     *   <li>{@code getFileExtension("")} returns {@code null} (blank string)</li>
+     *   <li>{@code getFileExtension(null)} returns {@code null}</li>
+     * </ul>
+     *
+     * @param fileName the name of the file, may be {@code null} or blank
+     * @return the file's extension without the dot (.), or {@code null} if there's no extension or input is blank
      */
+    @Nullable
     public static String getFileExtension(String fileName) {
         if (isBlank(fileName)) {
             return null;
@@ -74,9 +102,18 @@ public abstract class FileUtils implements Utils {
     }
 
     /**
-     * Deletes a directory recursively.
+     * Deletes a directory and returns the number of deleted files and directories.
      *
-     * @param directory directory to delete
+     * <p>If the directory does not exist, it is considered already deleted, and this method returns 0.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code deleteDirectory(new File("/tmp/testDir"))} deletes the directory and all its contents,
+     *       returning the total count of deleted files and directories.</li>
+     *   <li>{@code deleteDirectory(new File("/nonexistent/dir"))} returns {@code 0} since the directory does not exist.</li>
+     * </ul>
+     *
+     * @param directory the directory to delete, must not be {@code null}
      * @return the number of deleted files and directories
      * @throws NullPointerException if the directory is {@code null}
      * @throws IOException          in case deletion is unsuccessful
@@ -102,13 +139,25 @@ public abstract class FileUtils implements Utils {
         return deletedFilesCount;
     }
 
-
     /**
-     * Cleans a directory without deleting it.
+     * Cleans a directory by deleting all files and sub-directories without deleting the directory itself.
      *
-     * @param directory directory to clean
+     * <p>
+     * This method recursively deletes all files and directories within the provided directory.
+     * If any file or sub-directory cannot be deleted, an IOException is thrown after attempting to delete as many as possible.
+     * </p>1
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * File dir = new File("/path/to/directory");
+     * int deletedCount = cleanDirectory(dir);
+     * System.out.println("Deleted " + deletedCount + " files/directories.");
+     * }</pre>
+     *
+     * @param directory the directory to clean, must not be {@code null}
+     * @return the number of deleted files and directories
      * @throws NullPointerException if the directory is {@code null}
-     * @throws IOException          in case cleaning is unsuccessful
+     * @throws IOException          if deletion fails for any file or sub-directory
      */
     public static int cleanDirectory(File directory) throws IOException {
         int deletedFilesCount = 0;
@@ -128,20 +177,24 @@ public abstract class FileUtils implements Utils {
     }
 
     /**
-     * Deletes a file. If file is a directory, delete it and all sub-directories.
-     * <p>
-     * The difference between File.delete() and this method are:
+     * Deletes a file or directory and all its contents recursively.
+     *
+     * <p>If the provided {@code file} is a directory, this method deletes all sub-directories and files,
+     * then deletes the directory itself. If it's a regular file, it deletes that single file.</p>
+     *
+     * <h3>Example Usage</h3>
      * <ul>
-     * <li>A directory to be deleted does not have to be empty.</li>
-     * <li>You get exceptions when a file or directory cannot be deleted.
-     *      (java.io.File methods returns a boolean)</li>
+     *   <li>{@code forceDelete(new File("/tmp/file.txt"))} deletes the file and returns {@code 1}</li>
+     *   <li>{@code forceDelete(new File("/tmp/testDir"))} deletes the directory and all its contents,
+     *       returning the total count of deleted files and directories.</li>
+     *   <li>{@code forceDelete(new File("/nonexistent/file"))} throws a {@link FileNotFoundException}</li>
      * </ul>
      *
-     * @param file file or directory to delete, must not be {@code null}
+     * @param file the file or directory to delete, must not be {@code null}
      * @return the number of deleted files and directories
      * @throws NullPointerException  if the file is {@code null}
-     * @throws FileNotFoundException if the file was not found
-     * @throws IOException           in case deletion is unsuccessful
+     * @throws FileNotFoundException if the file does not exist
+     * @throws IOException           if deletion fails for any reason
      */
     public static int forceDelete(File file) throws IOException {
         final int deletedFilesCount;
@@ -163,10 +216,18 @@ public abstract class FileUtils implements Utils {
     }
 
     /**
-     * Schedules a file to be deleted when JVM exits.
-     * If file is directory delete it and all sub-directories.
+     * Schedules a file or directory for deletion on JVM exit.
      *
-     * @param file file or directory to delete, must not be {@code null}
+     * <p>If the provided {@code file} is a directory, this method schedules all sub-directories and files,
+     * then schedules the directory itself. If it's a regular file, it schedules that single file.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code forceDeleteOnExit(new File("/tmp/file.txt"))} schedules the file for deletion on exit.</li>
+     *   <li>{@code forceDeleteOnExit(new File("/tmp/testDir"))} schedules the directory and all its contents for deletion on exit.</li>
+     * </ul>
+     *
+     * @param file the file or directory to schedule for deletion, must not be {@code null}
      * @throws NullPointerException if the file is {@code null}
      */
     public static void forceDeleteOnExit(File file) {
@@ -178,11 +239,20 @@ public abstract class FileUtils implements Utils {
     }
 
     /**
-     * Schedules a directory recursively for deletion on JVM exit.
+     * Schedules a directory for deletion on JVM exit, including all its contents.
      *
-     * @param directory directory to delete, must not be {@code null}
+     * <p>If the directory does not exist, this method does nothing. If it does exist,
+     * it schedules the directory for deletion and recursively schedules all files
+     * and subdirectories for deletion.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code deleteDirectoryOnExit(new File("/tmp/testDir"))} ensures that the directory and all its contents are deleted when the JVM exits.</li>
+     *   <li>{@code deleteDirectoryOnExit(new File("/nonexistent/dir"))} does nothing since the directory does not exist.</li>
+     * </ul>
+     *
+     * @param directory the directory to schedule for deletion on exit, must not be {@code null}
      * @throws NullPointerException if the directory is {@code null}
-     * @throws IOException          in case deletion is unsuccessful
      */
     public static void deleteDirectoryOnExit(File directory) {
         if (!directory.exists()) {
@@ -195,10 +265,22 @@ public abstract class FileUtils implements Utils {
         }
     }
 
+
     /**
-     * Cleans a directory without deleting it.
+     * Schedules all files and subdirectories within the given directory for deletion on JVM exit.
      *
-     * @param directory directory to clean, must not be {@code null}
+     * <p>This method does not delete the directory itself, only its contents. If the directory is
+     * a symbolic link, its contents will not be processed.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code cleanDirectoryOnExit(new File("/tmp/testDir"))} ensures that all contents of the directory
+     *       are deleted when the JVM exits, but the directory itself remains.</li>
+     *   <li>{@code cleanDirectoryOnExit(new File("/nonexistent/dir"))} does nothing since the directory
+     *       does not exist.</li>
+     * </ul>
+     *
+     * @param directory the directory whose contents should be deleted on exit, must not be {@code null}
      * @throws NullPointerException if the directory is {@code null}
      */
     private static void cleanDirectoryOnExit(File directory) {
@@ -208,10 +290,21 @@ public abstract class FileUtils implements Utils {
     }
 
     /**
-     * List Files from the specified directory
+     * Lists the files in the specified directory.
      *
-     * @param directory the specified directory
-     * @return {@link #EMPTY_FILE_ARRAY the empty file array} if the specified directory is not exist or not a directory
+     * <p>If the provided {@code directory} is not valid (i.e., it does not exist, or it is not a directory),
+     * this method returns an empty file array.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code listFiles(new File("/tmp"))} returns an array of files in the "/tmp" directory.</li>
+     *   <li>{@code listFiles(new File("/nonexistent/dir"))} returns an empty file array since the directory does not exist.</li>
+     *   <li>{@code listFiles(null)} returns an empty file array as the input is null.</li>
+     * </ul>
+     *
+     * @param directory the directory to list files from
+     * @return an array of {@link File} objects representing the files in the specified directory,
+     * or {@link #EMPTY_FILE_ARRAY} if the directory is not valid
      */
     public static File[] listFiles(File directory) {
         if (directory == null || !directory.exists() || !directory.isDirectory()) {
@@ -224,18 +317,40 @@ public abstract class FileUtils implements Utils {
         return files;
     }
 
+    /**
+     * Determines if the provided {@link File} is a symbolic link.
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code isSymlink(new File("/path/to/symlink"))} returns {@code true} if it's a symbolic link.</li>
+     *   <li>{@code isSymlink(new File("/path/to/regularfile"))} returns {@code false} as it's not a symbolic link.</li>
+     *   <li>{@code isSymlink(null)} throws a {@link NullPointerException}.</li>
+     * </ul>
+     *
+     * @param file the file to check, must not be {@code null}
+     * @return {@code true} if the file is a symbolic link, otherwise {@code false}
+     * @throws NullPointerException if the file is {@code null}
+     */
     public static boolean isSymlink(File file) {
         return isSymbolicLink(file.toPath());
     }
 
     /**
-     * Invoke {@link File#getCanonicalFile()} without throwing {@link IOException}.
+     * Returns the canonical form of the specified {@link File}.
      *
-     * @param file the {@link File} instance
-     * @return {@link File#getCanonicalFile()}
-     * @throws NullPointerException if <code>file</code> is <code>null</code>
-     * @throws RuntimeException     If an I/O error occurs, which is possible because the construction of the canonical
-     *                              pathname may require filesystem queries
+     * <p>This method wraps the call to {@link File#getCanonicalFile()} in a try-catch block to handle any
+     * checked exceptions via the {@link io.microsphere.lang.function.ThrowableSupplier} utility.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *   <li>{@code getCanonicalFile(new File("relative/path"))} returns the canonical file object.</li>
+     *   <li>If the file does not exist or I/O error occurs, it will propagate as an unchecked exception.</li>
+     * </ul>
+     *
+     * @param file the file for which the canonical representation is required, must not be {@code null}
+     * @return the canonical representation of the given file
+     * @throws NullPointerException if the provided file is {@code null}
+     * @throws RuntimeException     if an I/O error occurs while retrieving the canonical file
      */
     public static final File getCanonicalFile(File file) {
         return execute(file::getCanonicalFile);

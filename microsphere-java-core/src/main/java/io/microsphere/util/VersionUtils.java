@@ -155,13 +155,13 @@ public abstract class VersionUtils implements Utils {
     /**
      * Determine whether the base version matches the compared version
      *
-     * <pre>
+     * <pre>{@code
      * VersionUtils.testVersion("1.8", "=", "1.8.0") == true
      * VersionUtils.testVersion("1.8", ">=", "1.7") == true
      * VersionUtils.testVersion("1.8", "<=", "1.7") == false
      * VersionUtils.testVersion("1.8", "<", "1.7") == false
      * VersionUtils.testVersion("1.8", ">", "1.7") == true
-     * </pre>
+     * }</pre>
      *
      * @param baseVersion     the {@link Version} to be tested
      * @param operatorSymbol  the  symbol of {@link Version.Operator}

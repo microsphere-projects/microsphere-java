@@ -17,8 +17,22 @@
 package io.microsphere.lang;
 
 /**
- * The Processor for {@link Wrapper}
+ * A processor interface for handling {@link Wrapper} instances.
  *
+ * <p>Implementations of this interface can perform operations on a {@link Wrapper}
+ * object, potentially modifying or enhancing the wrapper instance during processing.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class LoggingWrapperProcessor implements WrapperProcessor<MyWrapper> {
+ *     public MyWrapper process(MyWrapper wrapper) {
+ *         System.out.println("Processing wrapper: " + wrapper);
+ *         return wrapper; // Return the same or modified instance
+ *     }
+ * }
+ * }</pre>
+ *
+ * @param <W> the type of the wrapper that extends {@link Wrapper}
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */

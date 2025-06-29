@@ -19,8 +19,35 @@ package io.microsphere.event;
 import java.util.concurrent.Executor;
 
 /**
- * {@link Event Event} Dispatcher
+ * An interface that defines the contract for dispatching events to registered listeners.
+ * <p>
+ * The EventDispatcher is responsible for managing and notifying event listeners when an event occurs.
+ * It provides methods for adding/removing listeners and dispatching events in a specific execution context.
+ * </p>
  *
+ * <h3>Example Usage</h3>
+ *
+ * <h4>Example 1: Using Default Dispatcher (Sequential Execution)</h4>
+ * <pre>{@code
+ * EventDispatcher dispatcher = EventDispatcher.newDefault();
+ * dispatcher.addEventListener(myListener);
+ * dispatcher.dispatch(new MyEvent());
+ * }</pre>
+ *
+ * <h4>Example 2: Using Parallel Dispatcher with Custom Executor</h4>
+ * <pre>{@code
+ * Executor executor = Executors.newFixedThreadPool(4);
+ * EventDispatcher dispatcher = EventDispatcher.parallel(executor);
+ * dispatcher.addEventListener(myListener);
+ * dispatcher.dispatch(new MyEvent());
+ * }</pre>
+ *
+ * <h4>Example 3: Adding Multiple Listeners</h4>
+ * <pre>{@code
+ * dispatcher.addEventListeners(listener1, listener2, listener3);
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Event
  * @see EventListener
  * @see DirectEventDispatcher

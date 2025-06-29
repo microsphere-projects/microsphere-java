@@ -31,7 +31,23 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static java.lang.Class.forName;
 
 /**
- * Standard {@link URLStreamHandlerFactory}
+ * Standard implementation of {@link URLStreamHandlerFactory} that creates a new instance of
+ * URLStreamHandler for a given protocol.
+ *
+ * <p>This class uses reflection to access the internal JDK mechanism for retrieving the default
+ * factory since JDK 9+, and falls back to loading the handler class via its fully qualified name
+ * for JDK 8 and below.</p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
+ * URL.setURLStreamHandlerFactory(factory);
+ * }</pre>
+ *
+ * <p>This will allow the application to handle custom protocols by locating the appropriate
+ * URLStreamHandler implementation, typically in the package defined by
+ * {@link io.microsphere.net.URLUtils#DEFAULT_HANDLER_PACKAGE_PREFIX}.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see java.net.URL#getURLStreamHandler(String)

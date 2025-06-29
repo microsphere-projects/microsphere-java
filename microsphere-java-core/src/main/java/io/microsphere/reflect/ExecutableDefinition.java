@@ -32,15 +32,31 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.util.Objects.hash;
 
 /**
- * The definition class of Java {@link Executable}
+ * The definition class for Java Reflection {@link Executable}, which serves as a base class for executable members
+ * like methods and constructors. It provides common functionality to store and resolve parameter types based on their class names.
  *
- * @param <E> the subtype of {@link Executable}
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MethodDefinition extends ExecutableDefinition&lt;Method&gt; {
+ *     public MethodDefinition(Version since, String declaredClassName, String name, String... parameterClassNames) {
+ *         super(since, null, declaredClassName, name, parameterClassNames);
+ *     }
+ *
+ *     @Override
+ *     protected Method resolveMember() {
+ *         // Implementation here
+ *         return null;
+ *     }
+ * }
+ * }</pre>
+ *
+ * @param <E> the subtype of {@link Executable}, typically either {@link Method} or {@link Constructor}
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConstructorDefinition
  * @see MethodDefinition
  * @see Executable
- * @see Constructor
  * @see Method
+ * @see Constructor
  * @since 1.0.0
  */
 public abstract class ExecutableDefinition<E extends Executable> extends MemberDefinition<E> {

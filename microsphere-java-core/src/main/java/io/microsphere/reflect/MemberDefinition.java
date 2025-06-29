@@ -26,9 +26,45 @@ import java.lang.reflect.Member;
 import static io.microsphere.util.Version.ofVersion;
 
 /**
- * The definition class for Java Refection {@link Member}
+ * The definition class for Java Reflection {@link Member}.
  *
- * @param <M> the subtype of {@link Member}
+ * <p>This abstract class provides a base implementation to define and resolve members (such as fields,
+ * methods, or constructors) from a class. It extends the capabilities of the
+ * {@link ReflectiveDefinition} class by adding support for member names and lazy resolution of the
+ * actual reflection object.
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * public class FieldDefinition extends MemberDefinition<Field> {
+ *
+ *     public FieldDefinition(Version since, String declaredClassName, String name) {
+ *         super(since, null, declaredClassName, name);
+ *     }
+ *
+ *     @Override
+ *     protected Field resolveMember() {
+ *         Class<?> clazz = getDeclaredClass();
+ *         if (clazz == null) {
+ *             return null;
+ *         }
+ *         try {
+ *             return clazz.getDeclaredField(name);
+ *         } catch (NoSuchFieldException e) {
+ *             return null;
+ *         }
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>In this example, a custom subclass of {@link MemberDefinition}, called
+ * {@code FieldDefinition}, is created to represent a field. The method {@link #resolveMember()}
+ * attempts to resolve the field using reflection.
+ *
+ * <p>Subclasses should implement the logic to resolve specific types of members such as
+ * methods, fields, or constructors by overriding the {@link #resolveMember()} method.
+ *
+ * @param <M> the type of the member, which must be a subclass of {@link Member}
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Member
  * @see ConstructorDefinition

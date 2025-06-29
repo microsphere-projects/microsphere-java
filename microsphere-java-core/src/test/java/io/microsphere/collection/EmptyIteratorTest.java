@@ -29,6 +29,6 @@ public class EmptyIteratorTest {
 
     @Test
     public void testRemove() {
-        assertThrows(UnsupportedOperationException.class, INSTANCE::remove);
+        assertThrows(IllegalStateException.class, INSTANCE::remove);
     }
 }

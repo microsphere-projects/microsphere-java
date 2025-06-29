@@ -50,9 +50,36 @@ import static java.lang.invoke.MethodHandles.publicLookup;
 import static java.util.Objects.hash;
 
 /**
- * The utilities class for {@link MethodHandle}
+ * Utility class for working with {@link MethodHandle}.
+ * <p>
+ * This class provides helper methods to simplify the usage of the {@link MethodHandles} API,
+ * including creating lookups, finding methods, and handling invocation failures.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example 1: Find a virtual method handle
+ * MethodHandle mh = MethodHandleUtils.findVirtual(String.class, "length", int.class);
+ * int length = (int) mh.invokeExact("Hello");
+ * System.out.println(length); // Output: 5
+ *
+ * // Example 2: Find a static method handle
+ * MethodHandle mh = MethodHandleUtils.findStatic(Math.class, "abs", double.class);
+ * double abs = (double) mh.invokeExact(-42.0);
+ * System.out.println(abs); // Output: 42.0
+ *
+ * // Example 3: Handle invokeExact failure
+ * try {
+ *     MethodHandle mh = MethodHandleUtils.findVirtual(Object.class, "nonExistentMethod", void.class);
+ *     mh.invokeExact();
+ * } catch (Throwable e) {
+ *     MethodHandleUtils.handleInvokeExactFailure(e, mh);
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see MethodHandles
+ * @see MethodHandle
  * @since 1.0.0
  */
 public abstract class MethodHandleUtils implements Utils {

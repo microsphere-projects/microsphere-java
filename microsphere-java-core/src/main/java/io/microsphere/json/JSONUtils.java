@@ -38,7 +38,33 @@ import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 
 /**
- * The utility class for JSON
+ * Utility class for generating and manipulating JSON strings.
+ * <p>
+ * This abstract class provides a set of static methods to append different types of data into a JSON-formatted string
+ * using a {@link StringBuilder}. It supports primitive types, their wrapper classes, arrays (both primitive and object),
+ * collections like {@link Map}, {@link Iterable}, and custom objects through recursive value appending.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * StringBuilder builder = new StringBuilder();
+ *
+ * // Appending simple key-value pairs:
+ * JSONUtils.append(builder, "name", "John Doe");
+ * // Result: {"name":"John Doe"}
+ *
+ * // Appending nested objects:
+ * JSONUtils.append(builder, "user", Map.of("id", 1, "active", true));
+ * // Result: {"user":{"id":1,"active":true}}
+ *
+ * // Appending arrays:
+ * JSONUtils.append(builder, "numbers", new int[]{1, 2, 3});
+ * // Result: {"numbers":[1,2,3]}
+ *
+ * // Appending collections:
+ * JSONUtils.append(builder, "tags", List.of("java", "json", "utils"));
+ * // Result: {"tags":["java","json","utils"]}
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see StringBuilder

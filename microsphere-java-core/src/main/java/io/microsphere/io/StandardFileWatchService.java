@@ -58,8 +58,41 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 
 /**
- * Standard {@link FileWatchService} implementation based on JDK 7
- * {@link WatchService}
+ * /**
+ * Standard implementation of the {@link FileWatchService} interface using JDK 7's
+ * {@link WatchService} API. This class monitors files or directories for creation,
+ * modification, and deletion events.
+ *
+ * <h3>Key Features</h3>
+ * <ul>
+ *     <li>Supports watching individual files or entire directories.</li>
+ *     <li>Allows filtering based on event types: CREATED, MODIFIED, DELETED.</li>
+ *     <li>Uses a thread-safe design to handle concurrent listeners and events.</li>
+ *     <li>Provides auto-closeable behavior via the {@link #close()} method.</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example 1: Watching a single file for modification events
+ * FileWatchService watchService = new StandardFileWatchService();
+ * File fileToWatch = new File("/path/to/file.txt");
+ * FileChangedListener listener = event -> System.out.println("File changed: " + event.getFile());
+ *
+ * watchService.watch(fileToWatch, listener, FileChangedEvent.Kind.MODIFIED);
+ *
+ * // Example 2: Watching a directory for all types of events with multiple listeners
+ * File dirToWatch = new File("/path/to/directory");
+ * List<FileChangedListener> listeners = Arrays.asList(
+ *     event -> System.out.println("Listener 1 triggered: " + event),
+ *     event -> System.out.println("Listener 2 triggered: " + event)
+ * );
+ *
+ * watchService.watch(dirToWatch, listeners); // All kinds by default
+ * }</pre>
+ *
+ * <p>
+ * Make sure to call {@link #close()} when you're done using the service to release resources.
+ * </p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see WatchService

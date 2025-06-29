@@ -22,6 +22,7 @@ package io.microsphere.util;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@Deprecated
 public abstract class BaseUtils {
 
     protected BaseUtils() throws IllegalStateException {

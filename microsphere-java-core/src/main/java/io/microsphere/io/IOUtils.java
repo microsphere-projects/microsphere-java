@@ -18,7 +18,6 @@ package io.microsphere.io;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
-import io.microsphere.util.SystemUtils;
 import io.microsphere.util.Utils;
 
 import java.io.Closeable;
@@ -63,12 +62,24 @@ public abstract class IOUtils implements Utils {
     public static final int BUFFER_SIZE = getInteger("microsphere.io.buffer.size", DEFAULT_BUFFER_SIZE);
 
     /**
-     * Copy the contents of the given InputStream into a new byte array.
-     * <p>Leaves the stream open when done.
+     * Copies the content of the given {@link InputStream} into a new byte array.
+     * <p>
+     * This method leaves the input stream open after copying is done.
+     * </p>
      *
-     * @param in the stream to copy from (may be {@code null} or empty)
-     * @return the new byte array that has been copied to (possibly empty)
-     * @throws IOException in case of I/O errors
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = new FileInputStream("example.txt");
+     * try {
+     *     byte[] byteArray = IOUtils.toByteArray(inputStream);
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in the InputStream to copy from (may be {@code null} or empty)
+     * @return a newly created byte array containing the copied data (possibly empty)
+     * @throws IOException if an I/O error occurs during copying
      */
     public static byte[] toByteArray(InputStream in) throws IOException {
         if (in == null) {
@@ -79,9 +90,28 @@ public abstract class IOUtils implements Utils {
         return out.toByteArray();
     }
 
+
     /**
-     * {@link #copyToString(InputStream)} as recommended
+     * Converts the content of the provided {@link InputStream} into a new {@link String}
+     * using the default charset.
      *
+     * <p>This method internally uses {@link #copyToString(InputStream)} to perform the conversion.
+     * It leaves the input stream open after the operation is complete.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = getClass().getResourceAsStream("/example.txt");
+     * try {
+     *     String result = IOUtils.toString(inputStream);
+     *     System.out.println(result);
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in the InputStream to convert (may be {@code null} or empty)
+     * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
+     * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream)
      */
     public static String toString(InputStream in) throws IOException {
@@ -89,8 +119,27 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * {@link #copyToString(InputStream, String)} as recommended
+     * Converts the content of the provided {@link InputStream} into a new {@link String}
+     * using the specified character encoding.
      *
+     * <p>This method internally uses {@link #copyToString(InputStream, String)} to perform the conversion.
+     * It leaves the input stream open after the operation is complete.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = getClass().getResourceAsStream("/example.txt");
+     * try {
+     *     String result = IOUtils.toString(inputStream, "UTF-8");
+     *     System.out.println(result);
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in       the InputStream to convert (may be {@code null} or empty)
+     * @param encoding the character encoding to use; defaults to system file encoding if null or blank
+     * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
+     * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream, String)
      */
     public static String toString(InputStream in, String encoding) throws IOException {
@@ -98,8 +147,28 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * {@link #copyToString(InputStream, Charset)}  as recommended
+     * Converts the content of the provided {@link InputStream} into a new {@link String}
+     * using the specified character set.
      *
+     * <p>This method internally uses {@link #copyToString(InputStream, Charset)} to perform the conversion.
+     * It leaves the input stream open after the operation is complete.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = getClass().getResourceAsStream("/example.txt");
+     * try {
+     *     Charset charset = StandardCharsets.UTF_8;
+     *     String result = IOUtils.toString(inputStream, charset);
+     *     System.out.println(result);
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in      the InputStream to convert (may be {@code null} or empty)
+     * @param charset the character set to use; defaults to {@link CharsetUtils#DEFAULT_CHARSET} if null
+     * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
+     * @throws IOException if an I/O error occurs during reading from the stream
      * @see #copyToString(InputStream, Charset)
      */
     public static String toString(InputStream in, Charset charset) throws IOException {
@@ -107,8 +176,25 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * {@link #copyToString(Reader)}  as recommended
+     * Converts the content of the provided {@link Reader} into a new {@link String}.
      *
+     * <p>This method internally uses {@link #copyToString(Reader)} to perform the conversion.
+     * It leaves the reader open after the operation is complete.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Reader reader = new FileReader("example.txt");
+     * try {
+     *     String result = IOUtils.toString(reader);
+     *     System.out.println(result);
+     * } finally {
+     *     IOUtils.closeQuietly(reader);
+     * }
+     * }</pre>
+     *
+     * @param reader the Reader to convert (may be {@code null} or empty)
+     * @return the resulting String from the reader, or {@code null} if the reader is empty or null
+     * @throws IOException if an I/O error occurs during reading from the reader
      * @see #copyToString(Reader)
      */
     public static String toString(Reader reader) throws IOException {
@@ -116,13 +202,23 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * Copy the contents of the given InputStream into a new {@link String}.
-     * <p>Leaves the stream open when done.
+     * Copies the contents of the given {@link InputStream} into a new {@link String} using the specified character encoding.
      *
-     * @param in       the stream to copy from (may be {@code null} or empty)
-     * @param encoding the encoding to use, if it's <code>null</code>, take the {@link SystemUtils#FILE_ENCODING} as default
-     * @return the new byte array that has been copied to (possibly empty)
-     * @throws IOException in case of I/O errors
+     * <p>If the provided encoding is blank (null, empty, or whitespace-only), the system's default file encoding
+     * ({@link io.microsphere.util.SystemUtils#FILE_ENCODING}) is used.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try (InputStream inputStream = getClass().getResourceAsStream("/example.txt")) {
+     *     String content = IOUtils.copyToString(inputStream, "UTF-8");
+     *     System.out.println(content);
+     * }
+     * }</pre>
+     *
+     * @param in      the InputStream to copy from (may be {@code null} or empty)
+     * @param encoding the name of the character encoding to use; defaults to system file encoding if blank
+     * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
+     * @throws IOException if an I/O error occurs during reading from the stream
      */
     public static String copyToString(InputStream in, String encoding) throws IOException {
         String charset = isBlank(encoding) ? FILE_ENCODING : encoding;
@@ -130,19 +226,49 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * Copy the contents of the given InputStream into a new {@link String} using {@link CharsetUtils#DEFAULT_CHARSET}.
-     * <p>Leaves the stream open when done.
+     * Converts the content of the provided {@link InputStream} into a new {@link String}
+     * using the default charset ({@link CharsetUtils#DEFAULT_CHARSET}).
      *
-     * @param in the stream to copy from (may be {@code null} or empty)
-     * @return the new byte array that has been copied to (possibly empty)
-     * @throws IOException in case of I/O errors
+     * <p>This method internally uses {@link #copyToString(InputStream, Charset)} to perform the conversion.
+     * It leaves the input stream open after the operation is complete.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try (InputStream inputStream = getClass().getResourceAsStream("/example.txt")) {
+     *     String result = IOUtils.copyToString(inputStream);
+     *     System.out.println(result);
+     * }
+     * }</pre>
+     *
+     * @param in the InputStream to convert (may be {@code null} or empty)
+     * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
+     * @throws IOException if an I/O error occurs during reading from the stream
+     * @see #copyToString(InputStream, Charset)
      */
     public static String copyToString(InputStream in) throws IOException {
         return copyToString(in, DEFAULT_CHARSET);
     }
 
     /**
-     * See {@link #toString(InputStream, Charset)}
+     * Converts the content of the provided {@link InputStream} into a new {@link String}
+     * using the specified character set.
+     *
+     * <p>This method reads all available bytes from the input stream and decodes them into a string
+     * using the given charset. If the input stream is empty or null, this method returns null.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try (InputStream inputStream = getClass().getResourceAsStream("/example.txt")) {
+     *     Charset charset = StandardCharsets.UTF_8;
+     *     String result = IOUtils.copyToString(inputStream, charset);
+     *     System.out.println(result);
+     * }
+     * }</pre>
+     *
+     * @param in      the InputStream to convert (may be {@code null} or empty)
+     * @param charset the character set to use; defaults to {@link CharsetUtils#DEFAULT_CHARSET} if null
+     * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
+     * @throws IOException if an I/O error occurs during reading from the stream
      */
     public static String copyToString(InputStream in, Charset charset) throws IOException {
         byte[] bytes = toByteArray(in);
@@ -153,12 +279,23 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * Copy the contents of the given Reader into a new {@link String}.
-     * <p>Leaves the Reader open when done.</p>
+     * Converts the content of the provided {@link Reader} into a new {@link String}.
      *
-     * @param reader the Reader to copy from (may be {@code null} or empty)
-     * @return the new String that has been copied to (possibly empty)
-     * @throws IOException in case of I/O errors
+     * <p>This method reads all available characters from the reader and appends them to a
+     * {@link StringBuilderWriter}, which is then converted to a String. If the reader is empty or null,
+     * this method returns {@code null}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try (Reader reader = new FileReader("example.txt")) {
+     *     String result = IOUtils.copyToString(reader);
+     *     System.out.println(result);
+     * }
+     * }</pre>
+     *
+     * @param reader the Reader to convert (may be {@code null} or empty)
+     * @return the resulting String from the reader, or {@code null} if the reader is empty or null
+     * @throws IOException if an I/O error occurs during reading from the reader
      */
     public static String copyToString(Reader reader) throws IOException {
         if (reader == null) {
@@ -170,13 +307,27 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * Copy the contents of the given InputStream to the given OutputStream.
-     * <p>Leaves both streams open when done.
+     * Copies all data from the given {@link InputStream} to the specified {@link OutputStream}.
+     * <p>
+     * This method uses a buffer of size {@link #BUFFER_SIZE} for efficient copying.
+     * Both streams remain open after this operation. The total number of bytes copied is returned.
+     * </p>
      *
-     * @param in  the InputStream to copy from
-     * @param out the OutputStream to copy to
-     * @return the number of bytes copied
-     * @throws IOException in case of I/O errors
+     * <p>If either stream is {@code null}, an {@link IllegalArgumentException} will be thrown.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try (InputStream inputStream = new FileInputStream("source.txt");
+     *      OutputStream outputStream = new FileOutputStream("destination.txt")) {
+     *     int byteCount = IOUtils.copy(inputStream, outputStream);
+     *     System.out.println("Copied " + byteCount + " bytes.");
+     * }
+     * }</pre>
+     *
+     * @param in  the source InputStream to read from; must not be {@code null}
+     * @param out the target OutputStream to write to; must not be {@code null}
+     * @return the number of bytes copied from the input stream to the output stream
+     * @throws IOException if an I/O error occurs while reading or writing
      */
     public static int copy(InputStream in, OutputStream out) throws IOException {
         requireNonNull(in, "No InputStream specified");
@@ -197,13 +348,27 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * Copy the contents of the given Reader to the given Writer.
-     * <p>Leaves both streams open when done.
+     * Copies all characters from the given {@link Reader} to the specified {@link Writer}.
+     * <p>
+     * This method uses a buffer of size {@link #BUFFER_SIZE} for efficient copying.
+     * Both the reader and writer remain open after this operation. The total number of characters copied is returned.
+     * </p>
      *
-     * @param reader the Reader to copy from
-     * @param writer the Writer to copy to
-     * @return the number of chars copied
-     * @throws IOException in case of I/O errors
+     * <p>If either the reader or writer is {@code null}, an {@link IllegalArgumentException} will be thrown.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * try (Reader reader = new FileReader("input.txt");
+     *      Writer writer = new FileWriter("output.txt")) {
+     *     int charCount = IOUtils.copy(reader, writer);
+     *     System.out.println("Copied " + charCount + " characters.");
+     * }
+     * }</pre>
+     *
+     * @param reader the source Reader to read from; must not be {@code null}
+     * @param writer the target Writer to write to; must not be {@code null}
+     * @return the number of characters copied from the reader to the writer
+     * @throws IOException if an I/O error occurs while reading or writing
      */
     public static int copy(Reader reader, Writer writer) throws IOException {
         requireNonNull(reader, "No Reader specified");
@@ -224,26 +389,25 @@ public abstract class IOUtils implements Utils {
     }
 
     /**
-     * Unconditionally close a <code>Closeable</code>.
-     * <p>
-     * Equivalent to {@link Closeable#close()}, except any exceptions will be ignored.
-     * This is typically used in finally blocks.
-     * <p>
-     * Example code:
-     * <pre>
-     *   Closeable closeable = null;
-     *   try {
-     *       closeable = new FileReader("foo.txt");
-     *       // process closeable
-     *       closeable.close();
-     *   } catch (Exception e) {
-     *       // error handling
-     *   } finally {
-     *       IOUtils.closeQuietly(closeable);
-     *   }
-     * </pre>
+     * Closes the specified {@link Closeable} object quietly, suppressing any {@link IOException}.
      *
-     * @param closeable the object to close, may be null or already closed
+     * <p>If the provided {@code closeable} is {@code null}, this method does nothing.
+     * Any I/O errors that occur during closing are logged at the TRACE level.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = null;
+     * try {
+     *     inputStream = new FileInputStream("example.txt");
+     *     // perform operations with inputStream
+     * } catch (IOException e) {
+     *     // handle exception
+     * } finally {
+     *     IOUtils.close(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param closeable the Closeable object to be closed, may be {@code null}
      */
     public static void close(Closeable closeable) {
         try {

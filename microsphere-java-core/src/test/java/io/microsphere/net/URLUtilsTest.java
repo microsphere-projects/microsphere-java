@@ -260,6 +260,11 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    public void testEncodeOnNull() {
+        assertThrows(IllegalArgumentException.class, () -> encode(TEST_NULL_STRING, "UTF-8"));
+    }
+
+    @Test
     public void testEncodeOnInvalidEncoding() {
         assertThrows(IllegalArgumentException.class, () -> encode(TEST_PATH, "unknown-encoding"));
     }

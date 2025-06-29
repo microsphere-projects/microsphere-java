@@ -245,14 +245,34 @@ public interface ElementUtils extends Utils {
     }
 
 
+    /**
+     * Checks whether the specified {@link Element} has the specified {@link ElementKind}.
+     *
+     * @param member the {@link Element} to check, may be {@code null}
+     * @param kind   the {@link ElementKind} to match, may be {@code null}
+     * @return {@code true} if the element is not null and its kind matches the specified kind; otherwise, {@code false}
+     */
     static boolean matchesElementKind(Element member, ElementKind kind) {
         return member == null || kind == null ? false : kind.equals(member.getKind());
     }
 
+    /**
+     * Checks whether the specified {@link Element} is public and non-static.
+     *
+     * @param member the {@link Element} to check, may be {@code null}
+     * @return {@code true} if the element is public and not static; otherwise, {@code false}
+     */
     static boolean isPublicNonStatic(Element member) {
         return hasModifiers(member, PUBLIC) && !hasModifiers(member, STATIC);
     }
 
+    /**
+     * Checks whether the specified {@link Element} has all of the specified {@link Modifier}s.
+     *
+     * @param member   the {@link Element} to check, may be {@code null}
+     * @param modifiers the array of {@link Modifier}s to match, may be {@code null}
+     * @return {@code true} if the element is not null and contains all specified modifiers; otherwise, {@code false}
+     */
     static boolean hasModifiers(Element member, Modifier... modifiers) {
         if (member == null || modifiers == null) {
             return false;
@@ -266,6 +286,17 @@ public interface ElementUtils extends Utils {
         return true;
     }
 
+    /**
+     * Filters the provided list of {@link Element} objects based on the given array of {@link Predicate} conditions.
+     *
+     * <p>If the input list of elements is empty or the array of predicates is null, an empty list is returned.</p>
+     *
+     * @param elements          The list of elements to be filtered, may be {@code null}
+     * @param elementPredicates An array of predicates used to filter the elements, may be {@code null}
+     * @param <E>               The type of the elements, which must be a subclass of {@link Element}
+     * @return A filtered list of elements that match all the provided predicates. Returns an empty list if no elements match,
+     *         or if the input list or predicate array is invalid.
+     */
     static <E extends Element> List<E> filterElements(List<E> elements, Predicate<? super E>... elementPredicates) {
         if (isEmpty(elements) || elementPredicates == null) {
             return emptyList();
@@ -277,15 +308,52 @@ public interface ElementUtils extends Utils {
         return elements.isEmpty() ? emptyList() : elements;
     }
 
+    /**
+     * Checks whether the parameter types of the given {@link ExecutableElement} match the specified {@link Type types}.
+     *
+     * <p>
+     * If either the executable element or the parameter types array is {@code null}, this method returns {@code false}.
+     * Otherwise, it compares the fully qualified type names of the parameters.
+     * </p>
+     *
+     * @param executableElement the executable element whose parameters are to be checked, may be {@code null}
+     * @param parameterTypes    the expected parameter types, may be {@code null}
+     * @return {@code true} if the parameter types match; {@code false} otherwise
+     */
     static boolean matchParameterTypes(ExecutableElement executableElement, Type... parameterTypes) {
         return executableElement == null || parameterTypes == null ? false :
                 matchParameterTypeNames(executableElement.getParameters(), getTypeNames(parameterTypes));
     }
 
+    /**
+     * Checks whether the parameter types of the given list of {@link VariableElement} parameters match the specified {@link Type types}.
+     *
+     * <p>
+     * If either the parameters list or the parameter types array is {@code null}, this method returns {@code false}.
+     * Otherwise, it compares the fully qualified type names of the parameters.
+     * </p>
+     *
+     * @param parameters       the list of variable elements representing the parameters, may be {@code null}
+     * @param parameterTypes   the expected parameter types, may be {@code null}
+     * @return {@code true} if the parameter types match; {@code false} otherwise
+     */
     static boolean matchParameterTypes(List<? extends VariableElement> parameters, Type... parameterTypes) {
         return parameters == null || parameterTypes == null ? false : matchParameterTypeNames(parameters, getTypeNames(parameterTypes));
     }
 
+    /**
+     * Checks whether the parameter types of the given list of {@link VariableElement} parameters match the specified type names.
+     *
+     * <p>
+     * If either the parameters list or the parameter type names array is {@code null}, this method returns {@code false}.
+     * It also returns {@code false} if the sizes of the two arrays do not match.
+     * Otherwise, it compares each parameter's type with the corresponding type name using {@link TypeUtils#isSameType(Element, CharSequence)}.
+     * </p>
+     *
+     * @param parameters         the list of variable elements representing the parameters, may be {@code null}
+     * @param parameterTypeNames the expected fully qualified type names of the parameters, may be {@code null}
+     * @return {@code true} if all parameter types match their corresponding type names; {@code false} otherwise
+     */
     static boolean matchParameterTypeNames(List<? extends VariableElement> parameters, CharSequence... parameterTypeNames) {
         if (parameters == null || parameterTypeNames == null) {
             return false;

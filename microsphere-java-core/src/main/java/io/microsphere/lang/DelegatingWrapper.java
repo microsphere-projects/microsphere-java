@@ -19,7 +19,57 @@ package io.microsphere.lang;
 import static io.microsphere.constants.SymbolConstants.QUOTE;
 
 /**
- * Delegating {@link Wrapper}
+ * A delegating {@link Wrapper} interface that provides default implementations for unwrapping and checking
+ * wrapped object types. This interface is designed to be extended by classes that want to provide a delegated
+ * implementation of the wrapper pattern.
+ *
+ * <p>
+ * The main purpose of this interface is to simplify the implementation of the {@link Wrapper} interface by
+ * delegating the actual wrapping and unwrapping logic to the {@link #getDelegate()} method, which must be
+ * implemented by subclasses.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MyWrapper implements DelegatingWrapper {
+ *     private final Object delegate;
+ *
+ *     public MyWrapper(Object delegate) {
+ *         this.delegate = delegate;
+ *     }
+ *
+ *     @Override
+ *     public Object getDelegate() {
+ *         return delegate;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>
+ * In this example, the {@code MyWrapper} class implements the {@code DelegatingWrapper} interface and provides
+ * a concrete implementation of the {@link #getDelegate()} method. This allows it to inherit the default
+ * implementations of the {@link #unwrap(Class)} and {@link #isWrapperFor(Class)} methods from the
+ * {@code DelegatingWrapper} interface.
+ * </p>
+ *
+ * <p>
+ * If you have an instance of a class that implements this interface, you can use it to unwrap to a specific type:
+ * </p>
+ *
+ * <pre>{@code
+ * MyWrapper wrapper = new MyWrapper(new SomeImplementation());
+ * SomeImplementation impl = wrapper.unwrap(SomeImplementation.class);
+ * }</pre>
+ *
+ * <p>
+ * You can also check if the wrapped object is or can be unwrapped to a specific type:
+ * </p>
+ *
+ * <pre>{@code
+ * if (wrapper.isWrapperFor(SomeImplementation.class)) {
+ *     SomeImplementation impl = wrapper.unwrap(SomeImplementation.class);
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

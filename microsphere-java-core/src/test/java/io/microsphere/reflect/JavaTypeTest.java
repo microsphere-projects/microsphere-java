@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.ResolvableType;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -30,14 +29,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
+import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaType.fromField;
 import static io.microsphere.reflect.JavaType.fromMethodParameter;
 import static io.microsphere.reflect.JavaType.fromMethodParameters;
 import static io.microsphere.reflect.JavaType.fromMethodReturnType;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.core.ResolvableType.forType;
 
@@ -82,13 +84,47 @@ public class JavaTypeTest {
         assertGenericTypes(javaType, null, null);
     }
 
-
     @Test
-    public void testFromMethod() {
-        Method method = findMethod(getClass(), "fromValue", HashMap.class);
-        JavaType methodReturnType = fromMethodReturnType(method);
+    public void testFromMethodReturnType() {
+        JavaType methodReturnType = fromMethodReturnType(getClass(), "fromValue", HashMap.class);
         assertJavaType(methodReturnType);
 
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
+        methodReturnType = fromMethodReturnType(method);
+        assertJavaType(methodReturnType);
+    }
+
+    @Test
+    public void testFromMethodReturnTypeOnMethodNotFound() {
+        JavaType methodReturnType = fromMethodReturnType(getClass(), "fromValue", String.class);
+        assertSame(NULL_JAVA_TYPE, methodReturnType);
+
+        methodReturnType = fromMethodReturnType(null);
+        assertSame(NULL_JAVA_TYPE, methodReturnType);
+    }
+
+    @Test
+    public void testFromMethodParameters() {
+        JavaType[] javaTypes = fromMethodParameters(getClass(), "fromValue", HashMap.class);
+        assertEquals(1, javaTypes.length);
+        assertJavaType(javaTypes[0]);
+
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
+        javaTypes = fromMethodParameters(method);
+        assertEquals(1, javaTypes.length);
+        assertJavaType(javaTypes[0]);
+    }
+
+    @Test
+    public void testFromMethodParametersOnMethodNotFound() {
+        JavaType[] javaTypes = fromMethodParameters(getClass(), "fromValue", String.class);
+        assertEquals(0, javaTypes.length);
+        assertSame(EMPTY_JAVA_TYPE_ARRAY, javaTypes);
+    }
+
+    @Test
+    public void testFromMethodParameter() {
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
         JavaType methodParameterType = fromMethodParameter(method, 0);
         assertJavaType(methodParameterType);
 
@@ -99,9 +135,17 @@ public class JavaTypeTest {
 
     @Test
     public void testFromField() {
-        Field field = findField(getClass(), "mapField");
-        JavaType javaType = from(field);
+        JavaType javaType = fromField(getClass(), "mapField");
         assertJavaType(javaType);
+    }
+
+    @Test
+    public void testFromFieldOnNull() {
+        JavaType javaType = fromField(getClass(), "notFoundField");
+        assertEquals(NULL_JAVA_TYPE, javaType);
+
+        javaType = fromField(null);
+        assertEquals(NULL_JAVA_TYPE, javaType);
     }
 
     @Test
