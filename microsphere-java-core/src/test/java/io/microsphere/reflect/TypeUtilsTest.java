@@ -688,7 +688,7 @@ public class TypeUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetClassNameOnNull() {
-        assertThrows(NullPointerException.class, () -> getClassName(null));
+        assertNull(getClassName(null));
     }
 
     @Test
