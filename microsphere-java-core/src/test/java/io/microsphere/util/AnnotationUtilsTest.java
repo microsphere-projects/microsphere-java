@@ -62,7 +62,6 @@ import static io.microsphere.util.AnnotationUtils.isCallerSensitivePresent;
 import static io.microsphere.util.AnnotationUtils.isMetaAnnotation;
 import static io.microsphere.util.AnnotationUtils.isSameType;
 import static io.microsphere.util.AnnotationUtils.isType;
-import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
@@ -177,43 +176,99 @@ public class AnnotationUtilsTest extends AbstractTestCase {
 
     @Test
     public void testFindAnnotation() {
-        DataAccess dataAccess = findAnnotation(A.class, DataAccess.class);
-        assertSame(dataAccessOfA, dataAccess);
-
-        assertSame(dataAccess, findAnnotation(B.class, DataAccess.class));
-        assertSame(dataAccessOfB, dataAccess);
+        assertSame(dataAccessOfA, findAnnotation(A.class, DataAccess.class));
+        assertSame(dataAccessOfB, findAnnotation(B.class, DataAccess.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObject() {
-        DataAccess dataAccess = findAnnotation(A.class, DataAccess.class);
-        assertTrue(isMetaAnnotation(dataAccess, Monitored.class));
-        assertTrue(isMetaAnnotation(dataAccess, ServiceMode.class));
+    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationType() {
+        assertTrue(isMetaAnnotation(dataAccessOfA, Monitored.class));
+        assertTrue(isMetaAnnotation(dataAccessOfA, ServiceMode.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectOnNull() {
-        assertFalse(isMetaAnnotation((Annotation) null, ServiceMode.class));
-        assertFalse(isMetaAnnotation((Annotation) null, ofList(ServiceMode.class)));
-        assertFalse(isMetaAnnotation(dataAccessOfA, (Class[]) null));
-        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_ITERABLE));
+    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypeOnNull() {
+        assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION, ServiceMode.class));
+        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectOnEmpty() {
-        assertFalse(isMetaAnnotation(dataAccessOfA, (Class[]) EMPTY_CLASS_ARRAY));
-        assertFalse(isMetaAnnotation(dataAccessOfA, emptyList()));
+    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypes() {
+        assertTrue(isMetaAnnotation(dataAccessOfA, Monitored.class, ServiceMode.class));
+        assertTrue(isMetaAnnotation(dataAccessOfA, ServiceMode.class, Target.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationType() {
+    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypesOnNull() {
+        assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION, Monitored.class, ServiceMode.class));
+        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_ANNOTATION_CLASSES));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypesOnEmpty() {
+        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_EMPTY_ANNOTATION_CLASSES));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypes() {
+        assertTrue(isMetaAnnotation(dataAccessOfA, ofList(Monitored.class, ServiceMode.class)));
+        assertTrue(isMetaAnnotation(dataAccessOfA, ofList(ServiceMode.class, Target.class)));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypesOnNull() {
+        assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION, ofList(Monitored.class, ServiceMode.class)));
+        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_LIST));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypesOnEmpty() {
+        assertFalse(isMetaAnnotation(dataAccessOfA, TEST_EMPTY_LIST));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationType() {
         assertTrue(isMetaAnnotation(Monitored.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class));
+        assertTrue(isMetaAnnotation(DataAccess.class, Monitored.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeOnNull() {
-        assertFalse(isMetaAnnotation((Class<? extends Annotation>) null, ServiceMode.class));
+    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypeOnNull() {
+        assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION_CLASS, ServiceMode.class));
+        assertFalse(isMetaAnnotation(DataAccess.class, TEST_NULL_ANNOTATION_CLASS));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypes() {
+        assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class, Monitored.class));
+        assertTrue(isMetaAnnotation(DataAccess.class, Monitored.class, ServiceMode.class));
+        assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class, Target.class));
+        assertTrue(isMetaAnnotation(DataAccess.class, Target.class, ServiceMode.class));
+        assertTrue(isMetaAnnotation(DataAccess.class, ofArray(ServiceMode.class)));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypesOnNull() {
+        assertFalse(isMetaAnnotation(DataAccess.class, TEST_NULL_ANNOTATION_CLASSES));
+        assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION_CLASS, ServiceMode.class, Target.class));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypes() {
+        assertTrue(isMetaAnnotation(DataAccess.class, ofList(Monitored.class, ServiceMode.class)));
+        assertTrue(isMetaAnnotation(DataAccess.class, ofList(ServiceMode.class, Target.class)));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnNull() {
+        assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION_CLASS, ofList(Monitored.class, ServiceMode.class)));
+        assertFalse(isMetaAnnotation(DataAccess.class, TEST_NULL_LIST));
+    }
+
+    @Test
+    public void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnEmpty() {
+        assertFalse(isMetaAnnotation(DataAccess.class, TEST_EMPTY_LIST));
     }
 
     @Test
@@ -371,9 +426,8 @@ public class AnnotationUtilsTest extends AbstractTestCase {
     @Test
     public void testGetAttributeValue() {
         ElementType[] elementTypes = getAttributeValue(DataAccess.class.getAnnotation(Target.class), "value");
-        assertEquals(2, elementTypes.length);
+        assertEquals(1, elementTypes.length);
         assertEquals(TYPE, elementTypes[0]);
-        assertEquals(METHOD, elementTypes[1]);
 
         RetentionPolicy retentionPolicy = getAttributeValue(DataAccess.class.getAnnotation(Retention.class), "value");
         assertEquals(RUNTIME, retentionPolicy);
@@ -474,7 +528,7 @@ public class AnnotationUtilsTest extends AbstractTestCase {
     @Test
     public void testIsAnnotatedPresentWithAnnotatedElementOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement) null, DataAccess.class));
-        assertFalse(isAnnotationPresent(A.class, (Class) null));
+        assertFalse(isAnnotationPresent(A.class, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
@@ -486,8 +540,8 @@ public class AnnotationUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsAnnotatedPresentWithAnnotationElementOnNull() {
-        assertFalse(isAnnotationPresent((Annotation) null, DataAccess.class));
-        assertFalse(isAnnotationPresent(dataAccessOfA, (Class) null));
+        assertFalse(isAnnotationPresent(TEST_NULL_ANNOTATION, DataAccess.class));
+        assertFalse(isAnnotationPresent(dataAccessOfA, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
@@ -497,7 +551,7 @@ public class AnnotationUtilsTest extends AbstractTestCase {
 
     @Test
     public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypesOnNull() {
-        assertFalse(isAnnotationPresent((Annotation) null, ofList(DataAccess.class, Monitored.class)));
+        assertFalse(isAnnotationPresent(TEST_NULL_ANNOTATION, ofList(DataAccess.class, Monitored.class)));
         assertFalse(isAnnotationPresent(dataAccessOfB, TEST_NULL_ITERABLE));
     }
 
@@ -535,6 +589,26 @@ public class AnnotationUtilsTest extends AbstractTestCase {
         assertSame(emptyList(), filterAnnotations(ofList(annotations), annotation -> false));
     }
 
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    @Inherited
+    @Documented
+    public @interface ServiceMode {
+    }
+
+    @Inherited
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    @ServiceMode
+    @interface Monitored {
+    }
+
+    @Inherited
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    @Monitored
+    @interface DataAccess {
+    }
 
     @DataAccess
     class A {
@@ -542,30 +616,6 @@ public class AnnotationUtilsTest extends AbstractTestCase {
 
     @Since(module = "microsphere-java-core", value = "1.0.0")
     class B extends A {
-
-    }
-
-    @Target({ElementType.TYPE})
-    @Retention(RetentionPolicy.RUNTIME)
-    @Inherited
-    @Documented
-    public @interface ServiceMode {
-    }
-
-
-    @Inherited
-    @Target({TYPE, METHOD})
-    @Retention(RUNTIME)
-    @ServiceMode
-    @interface Monitored {
-
-    }
-
-    @Inherited
-    @Target({TYPE, METHOD})
-    @Retention(RUNTIME)
-    @Monitored
-    @interface DataAccess {
     }
 
 }
