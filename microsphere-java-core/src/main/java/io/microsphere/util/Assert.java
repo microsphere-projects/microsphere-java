@@ -46,7 +46,11 @@ public abstract class Assert {
     /**
      * Assert a boolean expression, throwing an {@code IllegalArgumentException}
      * if the expression evaluates to {@code false}.
-     * <pre>assertTrue(i > 0, "The value must be greater than zero");</pre>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertTrue(i > 0, "The value must be greater than zero");
+     * }</pre>
      *
      * @param expression a boolean expression
      * @param message    the exception message to use if the assertion fails
@@ -61,6 +65,7 @@ public abstract class Assert {
     /**
      * Assert a boolean expression, throwing an {@code IllegalArgumentException}
      * if the expression evaluates to {@code false}.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertTrue(i > 0, () -> "The value '" + i + "' must be greater than zero");
      * }</pre>
@@ -78,7 +83,10 @@ public abstract class Assert {
 
     /**
      * Assert that an object is {@code null}.
-     * <pre>assertNull(value, "The value must be null");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNull(value, "The value must be null");
+     * }</pre>
      *
      * @param object  the object to check
      * @param message the exception message to use if the assertion fails
@@ -92,6 +100,7 @@ public abstract class Assert {
 
     /**
      * Assert that an object is {@code null}.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNull(value, () -> "The value '" + value + "' must be null");
      * }</pre>
@@ -109,7 +118,10 @@ public abstract class Assert {
 
     /**
      * Assert that an object is not {@code null}.
-     * <pre>assertNotNull(clazz, "The class must not be null");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotNull(clazz, "The class must not be null");
+     * }</pre>
      *
      * @param object  the object to check
      * @param message the exception message to use if the assertion fails
@@ -123,6 +135,7 @@ public abstract class Assert {
 
     /**
      * Assert that an object is not {@code null}.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotNull(entity.getId(), () -> "ID for entity " + entity.getName() + " must not be null");
      * }</pre>
@@ -140,6 +153,7 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not empty ("").
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotEmpty(entity.getName(), "Name for entity " + entity.getName() + " must not be empty");
      * }</pre>
@@ -156,6 +170,7 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not empty ("").
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotEmpty(entity.getName(), () -> "Name for entity " + entity.getName() + " must not be empty");
      * }</pre>
@@ -172,6 +187,7 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not blank.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotBlank(entity.getName(), "Name for entity " + entity.getName() + " must not be blank");
      * }</pre>
@@ -188,6 +204,7 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not blank.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotBlank(entity.getName(), () -> "Name for entity " + entity.getName() + " must not be blank");
      * }</pre>
@@ -205,7 +222,10 @@ public abstract class Assert {
     /**
      * Assert that an array contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
-     * <pre>assertNotEmpty(array, "The array must contain elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotEmpty(array, "The array must contain elements");
+     * }</pre>
      *
      * @param array   the array to check
      * @param message the exception message to use if the assertion fails
@@ -220,6 +240,7 @@ public abstract class Assert {
     /**
      * Assert that an array contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotEmpty(array, () -> "The " + arrayType + " array must contain elements");
      * }</pre>
@@ -238,7 +259,10 @@ public abstract class Assert {
     /**
      * Assert that a collection contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
-     * <pre>assertNotEmpty(collection, "Collection must contain elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotEmpty(collection, "Collection must contain elements");
+     * }</pre>
      *
      * @param collection the collection to check
      * @param message    the exception message to use if the assertion fails
@@ -254,6 +278,7 @@ public abstract class Assert {
     /**
      * Assert that a collection contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotEmpty(collection, () -> "The " + collectionType + " collection must contain elements");
      * }</pre>
@@ -273,7 +298,10 @@ public abstract class Assert {
     /**
      * Assert that a Map contains entries; that is, it must not be {@code null}
      * and must contain at least one entry.
-     * <pre>assertNotEmpty(map, "Map must contain entries");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotEmpty(map, "Map must contain entries");
+     * }</pre>
      *
      * @param map     the map to check
      * @param message the exception message to use if the assertion fails
@@ -288,6 +316,7 @@ public abstract class Assert {
     /**
      * Assert that a Map contains entries; that is, it must not be {@code null}
      * and must contain at least one entry.
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNotEmpty(map, () -> "The " + mapType + " map must contain entries");
      * }</pre>
@@ -306,7 +335,10 @@ public abstract class Assert {
     /**
      * Assert that an array contains no {@code null} elements.
      * <p>Note: Does not complain if the array is empty!
-     * <pre>assertNoNullElements(array, "The array must contain non-null elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNoNullElements(array, "The array must contain non-null elements");
+     * }</pre>
      *
      * @param array   the array to check
      * @param message the exception message to use if the assertion fails
@@ -325,6 +357,7 @@ public abstract class Assert {
     /**
      * Assert that an array contains no {@code null} elements.
      * <p>Note: Does not complain if the array is empty!
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNoNullElements(array, () -> "The " + arrayType + " array must contain non-null elements");
      * }</pre>
@@ -347,7 +380,10 @@ public abstract class Assert {
     /**
      * Assert that a elements contains no {@code null} elements.
      * <p>Note: Does not complain if the elements is empty!
-     * <pre>assertNoNullElements(elements, "Elements must contain non-null elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNoNullElements(elements, "Elements must contain non-null elements");
+     * }</pre>
      *
      * @param elements the elements to check
      * @param message  the exception message to use if the assertion fails
@@ -366,6 +402,7 @@ public abstract class Assert {
     /**
      * Assert that a elements contains no {@code null} elements.
      * <p>Note: Does not complain if the elements is empty!
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * assertNoNullElements(elements, () -> "Collection " + collectionName + " must contain non-null elements");
      * }</pre>
