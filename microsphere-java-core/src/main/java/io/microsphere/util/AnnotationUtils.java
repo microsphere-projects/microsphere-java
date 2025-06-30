@@ -639,23 +639,95 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Get all directly declared annotations of the annotated element, not including
-     * meta annotations.
+     * Retrieves all declared annotations from the specified {@link AnnotatedElement}, including those from its hierarchy,
+     * but excluding meta-annotations (annotations on annotations).
      *
-     * @param annotatedElement the annotated element
-     * @return non-null read-only {@link List}
+     * <p>This method is particularly useful when you need to inspect all annotations directly applied
+     * to a class, method, or field, including those inherited from superclasses.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Monitored
+     * @interface DataAccess {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * System.out.println(getAllDeclaredAnnotations(A.class)); // Outputs: [ @DataAccess ]
+     * System.out.println(getAllDeclaredAnnotations(DataAccess.class)); // Outputs: [ @Inherited , @Target , @Retention , @Monitored ]
+     * }</pre>
+     *
+     * @param annotatedElement the element to retrieve annotations from
+     * @return a read-only list of all declared annotations, not including meta-annotations
      */
+    @Nonnull
     public static List<Annotation> getAllDeclaredAnnotations(AnnotatedElement annotatedElement) {
         return findAllDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Get the declared annotations that are <em>directly present</em> on this element.
-     * This method ignores inherited annotations.
+     * Retrieves the annotations that are <em>directly declared</em> on the specified {@link AnnotatedElement}.
      *
-     * @param annotatedElement the annotated element
-     * @return non-null read-only {@link List}
+     * <p>This method returns only the annotations directly present on the element itself, excluding any inherited annotations or meta-annotations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Monitored
+     * @interface DataAccess {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * @Since(module = "microsphere-java-core", value = "1.0.0")
+     * class B extends A {
+     * }
+     *
+     * System.out.println(getDeclaredAnnotations(A.class)); // Outputs: [ @DataAccess ]
+     * System.out.println(getDeclaredAnnotations(B.class)); // Outputs: [ @DataAccess , @Since ]
+     * }</pre>
+     *
+     * @param annotatedElement the element to retrieve annotations from
+     * @return a read-only list of annotations directly declared on the element
      */
+    @Nonnull
     public static List<Annotation> getDeclaredAnnotations(AnnotatedElement annotatedElement) {
         return findDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
@@ -668,6 +740,57 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotationsToFilter the annotations to filter
      * @return non-null read-only {@link List}
      */
+    /**
+     * Retrieves all declared annotations from the specified {@link AnnotatedElement}, including those from its hierarchy,
+     * but excluding meta-annotations (annotations on annotations).
+     *
+     * <p>This method is particularly useful when you need to inspect all annotations directly applied
+     * to a class, method, or field, including those inherited from superclasses.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Monitored
+     * @interface DataAccess {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * @Since(module = "microsphere-java-core", value = "1.0.0")
+     * class B extends A {
+     * }
+     *
+     * System.out.println(findAllDeclaredAnnotations(A.class, annotation -> true)); // Outputs: [ @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(A.class)); // Outputs: [ @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(B.class, annotation -> true)); // Outputs: [ @DataAccess , @Since , @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(B.class)); // Outputs: [ @DataAccess , @Since , @DataAccess ]
+     *
+     * }</pre>
+     *
+     * @param annotatedElement    the element to search for annotations on
+     * @param annotationsToFilter one or more predicates used to filter the annotations;
+     *                            if no filters are provided, all annotations will be returned
+     * @return a read-only list of annotations matching the criteria
+     */
+    @Nonnull
     public static List<Annotation> findAllDeclaredAnnotations(AnnotatedElement annotatedElement,
                                                               Predicate<? super Annotation>... annotationsToFilter) {
         if (isType(annotatedElement)) {
@@ -678,13 +801,51 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Get all directly declared annotations of the specified type and those all hierarchical types, not including
-     * meta annotations.
+     * Retrieves all declared annotations from the specified {@link Class}, including those from its hierarchy,
+     * but excluding meta-annotations (annotations on annotations).
      *
-     * @param type                the specified type
-     * @param annotationsToFilter the annotations to filter
-     * @return non-null read-only {@link List}
+     * <p>This method is particularly useful when you need to inspect all annotations directly applied
+     * to a class, including those inherited from superclasses. It ensures that each annotation is only included once,
+     * even if it appears in multiple levels of the class hierarchy.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * @Monitored
+     * class B extends A {
+     * }
+     *
+     * System.out.println(findAllDeclaredAnnotations(A.class, annotation -> true)); // Outputs: [ @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(A.class)); // Outputs: [ @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(B.class, annotation -> true)); // Outputs: [ @DataAccess , @Since , @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(B.class)); // Outputs: [ @DataAccess , @Since , @DataAccess ]
+     * System.out.println(findAllDeclaredAnnotations(null)); // Outputs: [ ]
+     * System.out.println(findAllDeclaredAnnotations(A.class, annotation -> false)); // Outputs: [ ]
+     * }</pre>
+     *
+     * @param type                the class to retrieve annotations from
+     * @param annotationsToFilter one or more predicates used to filter the annotations;
+     *                            if no filters are provided, all annotations will be returned
+     * @return a read-only list of annotations matching the criteria
      */
+    @Nonnull
     public static List<Annotation> findAllDeclaredAnnotations(Class<?> type, Predicate<? super Annotation>... annotationsToFilter) {
 
         if (type == null) {
@@ -705,13 +866,56 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Find the declared annotations that are <em>directly present</em> on this element with filters.
-     * This method ignores inherited annotations.
+     * Retrieves the annotations that are <em>directly declared</em> on the specified {@link AnnotatedElement}.
      *
-     * @param annotatedElement    the annotated element
-     * @param annotationsToFilter the annotations to filter
-     * @return non-null read-only {@link List}
+     * <p>This method returns only the annotations directly present on the element itself, excluding any inherited annotations or meta-annotations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Monitored
+     * @interface DataAccess {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * @Since(module = "microsphere-java-core", value = "1.0.0")
+     * class B extends A {
+     * }
+     *
+     * System.out.println(findDeclaredAnnotations(A.class, annotation -> true)); // Outputs: [ @DataAccess ]
+     * System.out.println(findDeclaredAnnotations(A.class)); // Outputs: [ @DataAccess ]
+     * System.out.println(findDeclaredAnnotations(B.class, annotation -> true)); // Outputs: [ @DataAccess , @Since ]
+     * System.out.println(findDeclaredAnnotations(B.class)); // Outputs: [ @DataAccess , @Since ]
+     * System.out.println(findDeclaredAnnotations(null, annotation -> true))); // Outputs: [ ]
+     * System.out.println(findDeclaredAnnotations(A.class, annotation -> false))); // Outputs: [ ]
+     *
+     * }</pre>
+     *
+     * @param annotatedElement    the element to retrieve annotations from
+     * @param annotationsToFilter one or more predicates used to filter the annotations;
+     *                            if no filters are provided, all directly declared annotations will be returned
+     * @return a read-only list of annotations directly declared on the element
      */
+    @Nonnull
     public static List<Annotation> findDeclaredAnnotations(AnnotatedElement annotatedElement,
                                                            Predicate<? super Annotation>... annotationsToFilter) {
         if (annotatedElement == null) {
@@ -721,11 +925,122 @@ public abstract class AnnotationUtils implements Utils {
         return filterAnnotations(annotatedElement.getAnnotations(), annotationsToFilter);
     }
 
+    /**
+     * Filters the given array of annotations based on the provided predicates.
+     *
+     * <p>This method converts the input array into a list and applies the filter using the
+     * {@link #filterAnnotations(List, Predicate[])} method. If the input array is empty or null,
+     * it returns an empty list.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Monitored
+     * @interface DataAccess {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * @Since(module = "microsphere-java-core", value = "1.0.0")
+     * class B extends A {
+     * }
+     *
+     * Annotation[] annotationsOfA = A.class.getAnnotations();
+     * System.out.println(filterAnnotations(annotationsOfA, annotation -> true)); // Outputs: [ @DataAccess ]
+     * System.out.println(filterAnnotations(annotationsOfA, annotation -> false)); // Outputs: [  ]
+     * System.out.println(filterAnnotations((Annotation[]) null, annotation -> false)); // Outputs: [  ]
+     * System.out.println(filterAnnotations(new Annotation[0], annotation -> false)); // Outputs: [  ]
+     *
+     * Annotation[] annotationsOfB = B.class.getAnnotations();
+     * System.out.println(filterAnnotations(annotationsOfB, annotation -> true)); // Outputs: [ @Since, @DataAccess ]
+     * System.out.println(filterAnnotations(annotationsOfB, annotation -> false)); // Outputs: [  ]
+     *
+     * }</pre>
+     *
+     * @param annotations         the array of annotations to be filtered
+     * @param annotationsToFilter one or more predicates used to filter the annotations;
+     *                            if no filters are provided, all annotations will be returned
+     * @return a read-only list of annotations matching the criteria
+     */
+    @Nonnull
     public static List<Annotation> filterAnnotations(Annotation[] annotations,
                                                      Predicate<? super Annotation>... annotationsToFilter) {
         return isEmpty(annotations) ? emptyList() : filterAnnotations(ofList(annotations), annotationsToFilter);
     }
 
+    /**
+     * Filters the given list of annotations based on the provided predicates.
+     *
+     * <p>This method applies each predicate in the array to filter the input list of annotations.
+     * If no filters are provided, it returns an unmodifiable view of the original list.
+     * If any of the filters reject an annotation, it is excluded from the result.</p>
+     *
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @ServiceMode
+     * @interface Monitored {
+     * }
+     *
+     * @Inherited
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Monitored
+     * @interface DataAccess {
+     * }
+     *
+     * @DataAccess
+     * class A {
+     * }
+     *
+     * @Since(module = "microsphere-java-core", value = "1.0.0")
+     * class B extends A {
+     * }
+     *
+     * Annotation[] annotationsOfA = A.class.getAnnotations();
+     * System.out.println(filterAnnotations(ofList(annotationsOfA), annotation -> true)); // Outputs: [ @DataAccess ]
+     * System.out.println(filterAnnotations(ofList(annotationsOfA), annotation -> false)); // Outputs: [  ]
+     * System.out.println(filterAnnotations((List) null, annotation -> false)); // Outputs: [  ]
+     * System.out.println(filterAnnotations(emptyList(), annotation -> false)); // Outputs: [  ]
+     *
+     * Annotation[] annotationsOfB = B.class.getAnnotations();
+     * System.out.println(filterAnnotations(ofList(annotationsOfB), annotation -> true)); // Outputs: [ @Since, @DataAccess ]
+     * System.out.println(filterAnnotations(ofList(annotationsOfB), annotation -> false)); // Outputs: [  ]
+     *
+     * }</pre>
+     *
+     * @param annotations         the list of annotations to be filtered
+     * @param annotationsToFilter one or more predicates used to filter the annotations;
+     *                            if no filters are provided, all annotations will be returned as an unmodifiable list
+     * @return a read-only list of annotations matching the criteria
+     */
+    @Nonnull
     public static List<Annotation> filterAnnotations(List<Annotation> annotations,
                                                      Predicate<? super Annotation>... annotationsToFilter) {
         if (isEmpty(annotations)) {
@@ -739,13 +1054,36 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Find the attribute value from the specified annotations
+     * Finds the value of the specified attribute from the given array of annotations.
      *
-     * @param annotations   the annotations to be found
-     * @param attributeName attribute name
-     * @param <T>           attribute value type
-     * @return attribute value if found, otherwise <code>null</code>
+     * <p>This method iterates through the provided annotations, attempting to retrieve the value of the
+     * named attribute from each. It returns the first non-null value found.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Target(TYPE)
+     * @Retention(RUNTIME)
+     * @Inherited
+     * @Documented
+     * public @interface ServiceMode {
+     *     String name() default "default";
+     * }
+     *
+     * @ServiceMode(name = "custom")
+     * class A {
+     * }
+     *
+     * Annotation[] annotations = A.class.getAnnotations();
+     * String name = AnnotationUtils.findAttributeValue(annotations, "name");
+     * System.out.println(name); // Outputs: custom
+     * }</pre>
+     *
+     * @param annotations   the array of annotations to search within
+     * @param attributeName the name of the attribute to find
+     * @param <T>           the type of the attribute value
+     * @return the value of the attribute if found; otherwise, {@code null}
      */
+    @Nullable
     public static <T> T findAttributeValue(Annotation[] annotations, String attributeName) {
         T attributeValue = null;
         for (Annotation annotation : annotations) {
@@ -760,13 +1098,34 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Get the attribute value of the annotation
+     * Retrieves the value of the specified attribute from the given annotation.
      *
-     * @param annotation    annotation
-     * @param attributeName attribute name
-     * @param <T>           attribute value type
-     * @return attribute value if found, otherwise <code>null</code>
+     * <p>This method uses reflection to find the method with the matching name in the annotation's type,
+     * and then invokes it on the provided annotation instance to get the attribute value.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     *     String value();
+     *     int count() default 1;
+     * }
+     *
+     * @CustomAnnotation(value = "example", count = 5)
+     * class ExampleClass {}
+     *
+     * Annotation annotation = ExampleClass.class.getAnnotation(CustomAnnotation.class);
+     * String value = AnnotationUtils.getAttributeValue(annotation, "value"); // returns "example"
+     * Integer count = AnnotationUtils.getAttributeValue(annotation, "count"); // returns 5
+     * }</pre>
+     *
+     * @param annotation    the annotation instance to retrieve the attribute value from
+     * @param attributeName the name of the attribute whose value is to be retrieved
+     * @param <T>           the expected type of the attribute value
+     * @return the value of the attribute if found; otherwise, {@code null}
      */
+    @Nullable
     public static <T> T getAttributeValue(Annotation annotation, String attributeName) {
         Class<?> annotationType = annotation.annotationType();
         Method attributeMethod = findMethod(annotationType, attributeName);
@@ -774,22 +1133,74 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Get the attributes map from the specified annotation
+     * Retrieves a map of attribute names to their corresponding values from the specified annotation.
      *
-     * @param annotation the specified annotation
-     * @return non-null read-only {@link Map}
+     * <p>This method uses reflection to extract all declared methods in the annotation's type that are not defined
+     * in the {@link Object} or {@link Annotation} interfaces. These methods represent the attributes of the annotation,
+     * and their return values are obtained by invoking them on the provided annotation instance.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     *     String value() default "default";
+     *     int count() default 1;
+     * }
+     *
+     * @CustomAnnotation(value = "example", count = 5)
+     * class ExampleClass {}
+     *
+     * Annotation annotation = ExampleClass.class.getAnnotation(CustomAnnotation.class);
+     * Map<String, Object> attributesMap = AnnotationUtils.getAttributesMap(annotation);
+     *
+     * System.out.println(attributesMap.get("value"));  // Outputs: example
+     * System.out.println(attributesMap.get("count"));   // Outputs: 5
+     * }</pre>
+     *
+     * @param annotation the annotation instance to retrieve the attribute map from
+     * @return a non-null read-only map containing attribute names as keys and their corresponding values
      */
+    @Nonnull
     public static Map<String, Object> getAttributesMap(Annotation annotation) {
         return findAttributesMap(annotation, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Find the attributes map from the specified annotation by the attribute names
+     * Retrieves a map of attributes from the specified annotation, filtering by attribute names.
      *
-     * @param annotation             the specified annotation
-     * @param attributeNamesToFilter the attribute names to filter
-     * @return non-null read-only {@link Map}
+     * <p>This method extracts only the attributes whose names match those provided in the
+     * {@code attributeNamesToFilter} array. If no attribute names are provided, it returns an empty map.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     *     String value() default "default";
+     *     int count() default 1;
+     * }
+     *
+     * @CustomAnnotation(value = "example", count = 5)
+     * class ExampleClass {}
+     *
+     * Annotation annotation = ExampleClass.class.getAnnotation(CustomAnnotation.class);
+     * Map<String, Object> filteredAttributes = AnnotationUtils.findAttributesMap(annotation, name -> "value".equals(name));
+     *
+     * System.out.println(filteredAttributes.get("value"));  // Outputs: example
+     * System.out.println(filteredAttributes.containsKey("count"));  // Outputs: false
+     *
+     * System.out.println(AnnotationUtils.findAttributesMap(annotation, name -> false)); // Outputs : {}
+     * System.out.println(AnnotationUtils.findAttributesMap(null, name -> true)); // Outputs : {}
+     *
+     * }</pre>
+     *
+     * @param annotation             the annotation instance to retrieve the attribute map from
+     * @param attributeNamesToFilter the names of the attributes to include in the result map;
+     *                               if none are provided, all attributes will be included
+     * @return a non-null read-only map containing filtered attribute names and their corresponding values
      */
+    @Nonnull
     public static Map<String, Object> findAttributesMap(Annotation annotation, String... attributeNamesToFilter) {
         return findAttributesMap(annotation, method -> contains(attributeNamesToFilter, method.getName()));
     }
@@ -801,6 +1212,7 @@ public abstract class AnnotationUtils implements Utils {
      * @param attributesToFilter the attribute methods to filter
      * @return non-null read-only {@link Map}
      */
+    @Nonnull
     public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
         if (annotation == null) {
             return emptyMap();
@@ -813,10 +1225,74 @@ public abstract class AnnotationUtils implements Utils {
         return toFixedMap(attributeMethods, method -> immutableEntry(method.getName(), invokeMethod(annotation, method)));
     }
 
+    /**
+     * Checks whether any annotation in the provided array matches the specified annotation type.
+     *
+     * <p>This method is useful when verifying the presence of a specific annotation among an array,
+     * especially for processing annotations on classes, methods, or fields.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     * }
+     *
+     * @CustomAnnotation
+     * class ExampleClass {}
+     *
+     * Annotation[] annotations = ExampleClass.class.getAnnotations();
+     * boolean result = AnnotationUtils.exists(annotations, CustomAnnotation.class);
+     * System.out.println(result); // true
+     *
+     * // When annotations are null or empty
+     * System.out.println(AnnotationUtils.exists((Annotation[]) null, CustomAnnotation.class)); // false
+     * System.out.println(AnnotationUtils.exists(new Annotation[0], CustomAnnotation.class)); // false
+     *
+     * // When annotation type is null
+     * System.out.println(AnnotationUtils.exists(annotations, null)); // false
+     * }</pre>
+     *
+     * @param annotations    the array of annotations to check
+     * @param annotationType the type of annotation to look for
+     * @return {@code true} if at least one annotation matches the specified type; otherwise, {@code false}
+     */
     public static boolean exists(Annotation[] annotations, Class<? extends Annotation> annotationType) {
         return exists(ofList(annotations), annotationType);
     }
 
+    /**
+     * Checks whether any annotation in the provided collection matches the specified annotation type.
+     *
+     * <p>This method is useful when verifying the presence of a specific annotation among a collection,
+     * especially for processing annotations on classes, methods, or fields.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     * }
+     *
+     * @CustomAnnotation
+     * class ExampleClass {}
+     *
+     * Collection<Annotation> annotations = Arrays.asList(ExampleClass.class.getAnnotations());
+     * boolean result = AnnotationUtils.exists(annotations, CustomAnnotation.class);
+     * System.out.println(result); // true
+     *
+     * // When annotations are null or empty
+     * System.out.println(AnnotationUtils.exists((Collection<Annotation>) null, CustomAnnotation.class)); // false
+     * System.out.println(AnnotationUtils.exists(Collections.emptyList(), CustomAnnotation.class)); // false
+     *
+     * // When annotation type is null
+     * System.out.println(AnnotationUtils.exists(annotations, null)); // false
+     * }</pre>
+     *
+     * @param annotations    the collection of annotations to check
+     * @param annotationType the type of annotation to look for
+     * @return {@code true} if at least one annotation matches the specified type; otherwise, {@code false}
+     */
     public static boolean exists(Collection<Annotation> annotations, Class<? extends Annotation> annotationType) {
         if (isEmpty(annotations)) {
             return false;
@@ -824,6 +1300,38 @@ public abstract class AnnotationUtils implements Utils {
         return exists((Iterable) annotations, annotationType);
     }
 
+    /**
+     * Checks whether any annotation in the provided {@link Iterable} matches the specified annotation type.
+     *
+     * <p>This method is useful when verifying the presence of a specific annotation among an iterable collection,
+     * especially for processing annotations on classes, methods, or fields.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     * }
+     *
+     * @CustomAnnotation
+     * class ExampleClass {}
+     *
+     * Collection<Annotation> annotations = Arrays.asList(ExampleClass.class.getAnnotations());
+     * boolean result = AnnotationUtils.exists(annotations, CustomAnnotation.class);
+     * System.out.println(result); // true
+     *
+     * // When annotations are null or empty
+     * System.out.println(AnnotationUtils.exists((Iterable<Annotation>) null, CustomAnnotation.class)); // false
+     * System.out.println(AnnotationUtils.exists(Collections.emptyList(), CustomAnnotation.class)); // false
+     *
+     * // When annotation type is null
+     * System.out.println(AnnotationUtils.exists(annotations, null)); // false
+     * }</pre>
+     *
+     * @param annotations    the iterable collection of annotations to check
+     * @param annotationType the type of annotation to look for
+     * @return {@code true} if at least one annotation matches the specified type; otherwise, {@code false}
+     */
     public static boolean exists(Iterable<Annotation> annotations, Class<? extends Annotation> annotationType) {
         if (annotations == null || annotationType == null) {
             return false;
@@ -838,6 +1346,44 @@ public abstract class AnnotationUtils implements Utils {
         return found;
     }
 
+    /**
+     * Checks whether any of the specified {@link AnnotatedElement} instances contains the given annotation type.
+     *
+     * <p>This method is particularly useful when dealing with multiple elements (e.g., classes, methods)
+     * and you want to determine if at least one of them has a specific annotation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     * }
+     *
+     * @CustomAnnotation
+     * class A {}
+     *
+     * class B {}
+     *
+     * AnnotatedElement[] elements = new AnnotatedElement[]{A.class, B.class};
+     * boolean result = AnnotationUtils.isAnnotationPresent(elements, CustomAnnotation.class);
+     * System.out.println(result); // true
+     *
+     * // When no element has the annotation
+     * result = AnnotationUtils.isAnnotationPresent(elements, Deprecated.class);
+     * System.out.println(result); // false
+     *
+     * // Handling null or empty input
+     * result = AnnotationUtils.isAnnotationPresent(null, CustomAnnotation.class);
+     * System.out.println(result); // false
+     *
+     * result = AnnotationUtils.isAnnotationPresent(new AnnotatedElement[0], CustomAnnotation.class);
+     * System.out.println(result); // false
+     * }</pre>
+     *
+     * @param annotatedElements an array of elements to check for annotations
+     * @param annotationType    the type of annotation to look for
+     * @return {@code true} if at least one element contains the specified annotation; otherwise, {@code false}
+     */
     public static boolean isAnnotationPresent(AnnotatedElement[] annotatedElements, Class<? extends Annotation> annotationType) {
         int length = length(annotatedElements);
         if (length < 1 || annotationType == null) {
@@ -855,6 +1401,37 @@ public abstract class AnnotationUtils implements Utils {
         return annotated;
     }
 
+    /**
+     * Checks whether the specified {@link AnnotatedElement} has an annotation of the given type directly present on it.
+     *
+     * <p>This method only checks for annotations that are explicitly declared on the element and does not search meta-annotations
+     * or inherited annotations. It is useful when you need to verify if a specific annotation exists directly on a class,
+     * method, or field.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     * }
+     *
+     * @CustomAnnotation
+     * class ExampleClass {}
+     *
+     * boolean result = AnnotationUtils.isAnnotationPresent(ExampleClass.class, CustomAnnotation.class);
+     * System.out.println(result); // true
+     *
+     * // When the annotated element is null
+     * System.out.println(AnnotationUtils.isAnnotationPresent(null, CustomAnnotation.class)); // false
+     *
+     * // When the annotation type is null
+     * System.out.println(AnnotationUtils.isAnnotationPresent(ExampleClass.class, null)); // false
+     * }</pre>
+     *
+     * @param annotatedElement the element to check for the presence of an annotation
+     * @param annotationType   the type of annotation to look for
+     * @return {@code true} if the annotation is directly present on the element; otherwise, {@code false}
+     */
     public static boolean isAnnotationPresent(AnnotatedElement annotatedElement, Class<? extends Annotation> annotationType) {
         if (annotatedElement == null || annotationType == null) {
             return false;
@@ -863,13 +1440,91 @@ public abstract class AnnotationUtils implements Utils {
         return annotatedElement.isAnnotationPresent(annotationType);
     }
 
+    /**
+     * Checks whether the specified annotation is directly present on the given annotation type.
+     *
+     * <p>This method is useful when determining if one annotation is used as a meta-annotation
+     * on another annotation. It only checks for direct presence and does not search through
+     * inherited or nested annotations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation {
+     * }
+     *
+     * @CustomAnnotation
+     * @interface MetaAnnotated {
+     * }
+     *
+     * Annotation annotation = MetaAnnotated.class.getAnnotation(CustomAnnotation.class);
+     * boolean result = AnnotationUtils.isAnnotationPresent(annotation, CustomAnnotation.class);
+     * System.out.println(result); // true
+     *
+     * // When the annotation is null
+     * System.out.println(AnnotationUtils.isAnnotationPresent(null, CustomAnnotation.class)); // false
+     *
+     * // When the annotation type is null
+     * System.out.println(AnnotationUtils.isAnnotationPresent(annotation, null)); // false
+     * }</pre>
+     *
+     * @param annotation     the annotation to check
+     * @param annotationType the type of annotation to look for
+     * @return {@code true} if the annotation is directly present on the annotation type;
+     * otherwise, {@code false}
+     */
     public static boolean isAnnotationPresent(Annotation annotation, Class<? extends Annotation> annotationType) {
-        if (annotation == null) {
+        if (annotation == null || annotationType == null) {
             return false;
         }
         return isAnnotationPresent(annotation.annotationType(), annotationType);
     }
 
+    /**
+     * Checks whether all specified annotation types are directly present on the given {@link AnnotatedElement}.
+     *
+     * <p>This method iterates through the provided collection of annotation types and verifies that each one
+     * is directly present on the element. It does not consider meta-annotations or inherited annotations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation1 {
+     * }
+     *
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation2 {
+     * }
+     *
+     * @CustomAnnotation1
+     * @CustomAnnotation2
+     * class ExampleClass {}
+     *
+     * List<Class<? extends Annotation>> annotationTypes = Arrays.asList(CustomAnnotation1.class, CustomAnnotation2.class);
+     * boolean result = AnnotationUtils.isAnnotationPresent(ExampleClass.class, annotationTypes);
+     * System.out.println(result); // true
+     *
+     * // When one of the annotations is missing
+     * annotationTypes = Arrays.asList(CustomAnnotation1.class, Deprecated.class);
+     * result = AnnotationUtils.isAnnotationPresent(ExampleClass.class, annotationTypes);
+     * System.out.println(result); // false
+     *
+     * // Handling null inputs
+     * result = AnnotationUtils.isAnnotationPresent(null, annotationTypes);
+     * System.out.println(result); // false
+     *
+     * result = AnnotationUtils.isAnnotationPresent(ExampleClass.class, null);
+     * System.out.println(result); // false
+     * }</pre>
+     *
+     * @param annotatedElement the element to check for the presence of annotations
+     * @param annotationTypes  the iterable collection of annotation types to verify
+     * @return {@code true} if all specified annotation types are directly present on the element;
+     * otherwise, {@code false}
+     */
     public static boolean isAnnotationPresent(AnnotatedElement annotatedElement, Iterable<Class<? extends Annotation>> annotationTypes) {
         if (annotatedElement == null || annotationTypes == null) {
             return false;
@@ -886,6 +1541,52 @@ public abstract class AnnotationUtils implements Utils {
         return hasNext & annotated;
     }
 
+    /**
+     * Checks whether all specified annotation types are directly present on the given {@link Annotation}.
+     *
+     * <p>This method iterates through the provided collection of annotation types and verifies that each one
+     * is directly present on the annotation's type. It does not consider meta-annotations or inherited annotations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation1 {
+     * }
+     *
+     * @Retention(RetentionPolicy.RUNTIME)
+     * @Target(ElementType.TYPE)
+     * public @interface CustomAnnotation2 {
+     * }
+     *
+     * @CustomAnnotation1
+     * @CustomAnnotation2
+     * @interface ComposedAnnotation {
+     * }
+     *
+     * Annotation annotation = ComposedAnnotation.class.getAnnotation(ComposedAnnotation.class);
+     * List<Class<? extends Annotation>> annotationTypes = Arrays.asList(CustomAnnotation1.class, CustomAnnotation2.class);
+     * boolean result = AnnotationUtils.isAnnotationPresent(annotation, annotationTypes);
+     * System.out.println(result); // true
+     *
+     * // When one of the annotations is missing
+     * annotationTypes = Arrays.asList(CustomAnnotation1.class, Deprecated.class);
+     * result = AnnotationUtils.isAnnotationPresent(annotation, annotationTypes);
+     * System.out.println(result); // false
+     *
+     * // Handling null input
+     * result = AnnotationUtils.isAnnotationPresent(null, annotationTypes);
+     * System.out.println(result); // false
+     *
+     * result = AnnotationUtils.isAnnotationPresent(annotation, null);
+     * System.out.println(result); // false
+     * }</pre>
+     *
+     * @param annotation      the annotation to check for the presence of other annotations
+     * @param annotationTypes the iterable collection of annotation types to verify
+     * @return {@code true} if all specified annotation types are directly present on the annotation;
+     * otherwise, {@code false}
+     */
     public static boolean isAnnotationPresent(Annotation annotation, Iterable<Class<? extends Annotation>> annotationTypes) {
         if (annotation == null) {
             return false;
@@ -894,20 +1595,48 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Is the specified method declared by the {@link Annotation} interface or not
+     * Checks whether the specified method is declared by the {@link Annotation} interface.
      *
-     * @param attributeMethod the attribute method
-     * @return <code>true</code> if the specified method declared by the {@link Annotation} interface
+     * <p>This method is useful when determining if a given method represents an attribute of an annotation,
+     * as methods defined in the {@link Annotation} interface are common to all annotation types.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Method[] methods = Override.class.getMethods();
+     * for (Method method : methods) {
+     *     if (AnnotationUtils.isAnnotationInterfaceMethod(method)) {
+     *         System.out.println(method.getName() + " is part of the Annotation interface.");
+     *     } else {
+     *         System.out.println(method.getName() + " is defined by the annotation type itself.");
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param attributeMethod the method to check
+     * @return {@code true} if the method is declared by the {@link Annotation} interface;
+     * otherwise, {@code false}
      */
     public static boolean isAnnotationInterfaceMethod(Method attributeMethod) {
         return attributeMethod != null && Annotation.class == attributeMethod.getDeclaringClass();
     }
 
     /**
-     * Is {@linkplain jdk.internal.reflect.CallerSensitive} class present or not
+     * Checks whether the {@link jdk.internal.reflect.CallerSensitive} annotation is present in the current runtime environment.
      *
-     * @return <code>true</code> if {@linkplain jdk.internal.reflect.CallerSensitive} presents
-     * @see #CALLER_SENSITIVE_ANNOTATION_CLASS
+     * <p>This method returns {@code true} if the annotation class can be resolved, indicating that the JVM supports it;
+     * otherwise, it returns {@code false}, which may suggest that the annotation is not available or not accessible.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean isPresent = AnnotationUtils.isCallerSensitivePresent();
+     * if (isPresent) {
+     *     System.out.println("CallerSensitive annotation is available.");
+     * } else {
+     *     System.out.println("CallerSensitive annotation is not available.");
+     * }
+     * }</pre>
+     *
+     * @return {@code true} if the {@link jdk.internal.reflect.CallerSensitive} annotation is present; {@code false} otherwise
      */
     public static boolean isCallerSensitivePresent() {
         return CALLER_SENSITIVE_ANNOTATION_CLASS != null;
