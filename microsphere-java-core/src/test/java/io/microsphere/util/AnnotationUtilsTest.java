@@ -305,14 +305,14 @@ public class AnnotationUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetDeclaredAnnotations() {
-        List<Annotation> annotations = getAllDeclaredAnnotations(A.class);
+        List<Annotation> annotations = getDeclaredAnnotations(A.class);
         assertEquals(1, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
     }
 
     @Test
     public void testGetDeclaredAnnotationsOnInheritedClass() {
-        List<Annotation> annotations = findDeclaredAnnotations(B.class);
+        List<Annotation> annotations = getDeclaredAnnotations(B.class);
         assertEquals(2, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
         assertEquals(Since.class, annotations.get(1).annotationType());
@@ -320,7 +320,7 @@ public class AnnotationUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetDeclaredAnnotationsOnAnnotation() {
-        List<Annotation> annotations = getAllDeclaredAnnotations(DataAccess.class);
+        List<Annotation> annotations = getDeclaredAnnotations(DataAccess.class);
         assertEquals(4, annotations.size());
         assertEquals(Inherited.class, annotations.get(0).annotationType());
         assertEquals(Target.class, annotations.get(1).annotationType());
