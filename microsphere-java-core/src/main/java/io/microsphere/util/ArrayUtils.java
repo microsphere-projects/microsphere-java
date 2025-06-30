@@ -170,7 +170,7 @@ public abstract class ArrayUtils implements Utils {
      * <p>This method returns an array containing the specified elements. The type of the returned array is inferred
      * from the type of the first element passed, or from the context if the method is used in a typed assignment.</p>
      *
-     * <p>Example usage:</p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * String[] strings = ArrayUtils.of("one", "two", "three");
      * Integer[] integers = ArrayUtils.of(1, 2, 3);
@@ -190,7 +190,7 @@ public abstract class ArrayUtils implements Utils {
      * <p>This method returns an array containing the specified elements. The type of the returned array is explicitly
      * defined by the method's return type.</p>
      *
-     * <p>Example usage:</p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * boolean[] booleans = ArrayUtils.ofBooleans(true, false, true);
      * }</pre>
@@ -208,7 +208,7 @@ public abstract class ArrayUtils implements Utils {
      * <p>This method returns an array containing the specified elements. The type of the returned array is explicitly
      * defined by the method's return type.</p>
      *
-     * <p>Example usage:</p>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * byte[] bytes = ArrayUtils.ofBytes((byte) 1, (byte) 2, (byte) 3);
      * }</pre>
