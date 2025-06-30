@@ -231,6 +231,7 @@ public class AnnotationUtilsTest extends AbstractTestCase {
         assertTrue(isMetaAnnotation(Monitored.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, Monitored.class));
+        assertFalse(isMetaAnnotation(DataAccess.class, Repeatable.class));
     }
 
     @Test
