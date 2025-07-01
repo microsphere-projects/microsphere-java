@@ -423,12 +423,17 @@ public abstract class Assert {
     }
 
     /**
-     * Assert array index
+     * Assert the index is valid for the given array.
      *
-     * @param array Array object
-     * @param index index
-     * @throws IllegalArgumentException       see {@link #assertArrayType(Object)}
-     * @throws ArrayIndexOutOfBoundsException If <code>index</code> is less than 0 or equals or greater than length of array
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertArrayIndex(array, index); // throws IllegalArgumentException if index is invalid
+     * }</pre>
+     *
+     * @param array Object array to check
+     * @param index Index value to validate
+     * @throws IllegalArgumentException       if the object is not an array
+     * @throws ArrayIndexOutOfBoundsException if the index is negative or exceeds the array length
      */
     public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
         if (index < 0) {
@@ -444,10 +449,16 @@ public abstract class Assert {
     }
 
     /**
-     * Assert the object is array or not
+     * Assert the provided object is an array.
      *
-     * @param array asserted object
-     * @throws IllegalArgumentException if the object is not a array
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertArrayType(new String[]{"one", "two"}); // passes
+     * assertArrayType("notAnArray");              // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param array the object to check
+     * @throws IllegalArgumentException if the object is not an array
      */
     public static void assertArrayType(Object array) throws IllegalArgumentException {
         Class<?> type = array.getClass();
@@ -458,13 +469,24 @@ public abstract class Assert {
     }
 
     /**
-     * Assert Field type match
+     * Assert that the field with the specified name in the given object's class matches the expected type.
      *
-     * @param object       Object
-     * @param fieldName    field name
-     * @param expectedType expected type
-     * @throws NullPointerException     if field can't be found in the specified object by name
-     * @throws IllegalArgumentException if type is not matched
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Example {
+     *     private String name;
+     * }
+     *
+     * Example example = new Example();
+     * assertFieldMatchType(example, "name", String.class);  // passes
+     * assertFieldMatchType(example, "name", Integer.class); // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param object       the object whose class is to be checked
+     * @param fieldName    the name of the field
+     * @param expectedType the expected type of the field
+     * @throws NullPointerException     if the field cannot be found in the object's class
+     * @throws IllegalArgumentException if the field's type does not match the expected type
      */
     public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws NullPointerException, IllegalArgumentException {
         Class<?> type = object.getClass();
@@ -472,7 +494,7 @@ public abstract class Assert {
         Class<?> fieldType = field.getType();
         if (!isAssignableFrom(expectedType, fieldType)) {
             String message = format("The type['{}'] of field[name : '{}'] in Class['{}'] can't match expected type['{}']",
-                    getTypeName(type), fieldName, getTypeName(type), getTypeName(expectedType));
+                    getTypeName(fieldType), fieldName, getTypeName(type), getTypeName(expectedType));
             throw new IllegalArgumentException(message);
         }
     }
