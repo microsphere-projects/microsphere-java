@@ -15,7 +15,6 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.List;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,10 +27,26 @@ import static java.nio.charset.Charset.forName;
 import static java.security.AccessController.doPrivileged;
 
 /**
- * {@link PropertyResourceBundle} {@link ResourceBundle.Control} Implementation which supports encoding {@link
- * Properties} files
+ * A {@link ResourceBundle.Control} implementation for loading property-based resource bundles with customizable
+ * character encoding.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <p>{@link PropertyResourceBundleControl} allows specifying the character encoding used when reading properties files,
+ * ensuring correct interpretation of non-ASCII characters. By default, it uses the platform's default encoding unless
+ * explicitly configured otherwise.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * // Create a control with UTF-8 encoding
+ * ResourceBundle.Control utf8Control = new PropertyResourceBundleControl("UTF-8");
+ *
+ * // Load a resource bundle using the custom control
+ * ResourceBundle bundle = ResourceBundle.getBundle("my.resources.Messages", Locale.US, utf8Control);
+ * </pre>
+ *
+ * <p>This class is thread-safe and can be reused across multiple calls to {@link ResourceBundle#getBundle(String,
+ * ResourceBundle.Control)}.</p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see PropertyResourceBundle
  * @see ResourceBundle.Control
  * @since 1.0.0
