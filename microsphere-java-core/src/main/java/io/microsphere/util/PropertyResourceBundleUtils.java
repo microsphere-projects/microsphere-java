@@ -144,7 +144,7 @@ public abstract class PropertyResourceBundleUtils implements Utils {
         ClassLoader classLoader = currentThread().getContextClassLoader();
         return getBundle(baseName, locale, classLoader, encoding);
     }
-    
+
     /**
      * Retrieves a resource bundle using the specified base name, locale, class loader, and character encoding.
      *
