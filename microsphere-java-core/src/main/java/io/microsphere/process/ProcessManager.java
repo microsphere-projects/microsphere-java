@@ -19,7 +19,7 @@ import static java.util.Collections.unmodifiableMap;
  * </ul>
  * </p>
  *
- * <h3>Usage Example:</h3>
+ * <h3>Example Usage</h3>
  * <pre>
  * // Adding a process
  * Process process = Runtime.getRuntime().exec("some-command");
