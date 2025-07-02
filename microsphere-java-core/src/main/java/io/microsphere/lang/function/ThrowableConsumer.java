@@ -192,10 +192,6 @@ public interface ThrowableConsumer<T> {
     static <T> void execute(T t, ThrowableConsumer<T> consumer, BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
         assertNotNull(consumer, "The 'consumer' must not be null");
         assertNotNull(exceptionHandler, () -> "The 'exceptionHandler' must not be null");
-        try {
-            consumer.accept(t);
-        } catch (Throwable e) {
-            exceptionHandler.accept(t, e);
-        }
+        consumer.execute(t, exceptionHandler);
     }
 }
