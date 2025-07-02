@@ -28,9 +28,55 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 
 /**
- * {@link FunctionalInterface} Configurer (No Thread-Safe)
+ * A fluent configuration utility for applying conditional operations on a value of type {@code T}.
+ * <p>
+ * The {@code Configurer} class provides a builder-style API to configure and manipulate values,
+ * with support for comparison, predicate checks, type conversion, and application of consumer actions.
+ * It is designed to be non-thread-safe and intended for single-thread usage.
+ * </p>
  *
- * @param <T> The type to be configured
+ * <h3>Key Features</h3>
+ * <ul>
+ *     <li>Value initialization with static factory methods.</li>
+ *     <li>Conditional comparison to detect changes in value.</li>
+ *     <li>Predicate-based filtering to control flow based on the current value.</li>
+ *     <li>Type conversion using functional interfaces.</li>
+ *     <li>Consumer application to perform side effects on the final value.</li>
+ *     <li>Detailed logging of each operation for traceability.</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <h4>Basic Configuration Flow</h4>
+ * <pre>{@code
+ * Configurer.configure("timeout", 30)
+ *           .compare(25)
+ *           .on(value -> value > 0)
+ *           .as(value -> value * 1000)
+ *           .apply(value -> System.setProperty("timeout.ms", String.valueOf(value)));
+ * }</pre>
+ *
+ * <h4>Chaining Multiple Operations</h4>
+ * <pre>{@code
+ * Configurer.configure(() -> System.getenv("DEBUG_MODE"))
+ *           .on(mode -> "true".equalsIgnoreCase(mode))
+ *           .as(Boolean::valueOf)
+ *           .apply(enabled -> logger.info("Debug mode is enabled: {}", enabled));
+ * }</pre>
+ *
+ * <h4>Discarding or Filtering Values</h4>
+ * <pre>{@code
+ * Configurer.configure("username", () -> System.getProperty("user.name"))
+ *           .on(name -> name.length() > 3)
+ *           .apply(name -> System.out.println("Welcome, " + name));
+ * }</pre>
+ *
+ * <p>
+ * In the above example, if the username length is less than or equal to 3, the value will be discarded,
+ * and no action will be taken.
+ * </p>
+ *
+ * @param <T> the type of the value being configured
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
