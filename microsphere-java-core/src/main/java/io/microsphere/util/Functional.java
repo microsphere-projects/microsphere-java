@@ -25,9 +25,37 @@ import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.lang.Boolean.FALSE;
 
 /**
- * Fluent API for {@link FunctionalInterface} (No Thread-Safe)
+ * A fluent API utility class for performing chained operations on a value of type {@code V}.
+ * <p>
+ * This class allows for conditional processing ({@link #on(Predicate)}), value transformation ({@link #as(Function)}),
+ * and side-effect execution ({@link #apply(Consumer)}) in a fluent and readable manner.
+ * </p>
+ * <p>
+ * The state of the object is not thread-safe due to the mutable internal state tracking (e.g., matched).
+ * It's designed for single-threaded use or must be externally synchronized when used concurrently.
+ * </p>
  *
- * @param <V> The type to be configured
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example 1: Conditional mapping
+ * String result = Functional.value("Hello")
+ *     .on(s -> s.length() > 3)
+ *     .as(String::toUpperCase)
+ *     .value();
+ *
+ * // Example 2: Conditional side effect
+ * Functional.value(42)
+ *     .on(n -> n > 40)
+ *     .apply(n -> System.out.println("Value is: " + n));
+ *
+ * // Example 3: Named functional operation
+ * Functional.of("user", user)
+ *     .on(u -> u.isActive())
+ *     .as(User::getName)
+ *     .apply(name -> System.out.println("Active user: " + name));
+ * }</pre>
+ *
+ * @param <V> The type of the value being operated on
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
