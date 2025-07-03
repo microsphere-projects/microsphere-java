@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -512,33 +513,44 @@ public abstract class SystemUtils implements Utils {
 
     /**
      * <p>
-     * Gets a System property, defaulting to {@code null} if the property cannot be read.
+     * Gets a system property with the given key, defaulting to {@code null} if the property cannot be read.
      * </p>
-     * <p>
      * If a {@code SecurityException} is caught, the return value is {@code null} and a message is written to
      * {@code System.err}.
-     * </p>
      *
-     * @param key the property key
-     * @return the system property value or {@code null} if a security problem occurs
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String javaVersion = SystemUtils.getSystemProperty("java.version");
+     * }</pre>
+     *
+     * @param key the name of the system property
+     * @return the string value of the system property, or {@code null} if the property is not found or access is denied
      */
+    @Nullable
     public static String getSystemProperty(String key) {
         return getSystemProperty(key, null);
     }
-
+    
     /**
      * <p>
-     * Gets a System property, <code>defaultValue</code> if the property cannot be read.
-     * </p>
-     * <p>
-     * If a {@code SecurityException} is caught, the return value is <code>defaultValue</code> and a message is written
-     * to {@code System.err}.
+     * Gets a system property with the given key, defaulting to the provided {@code defaultValue} if the property cannot be read.
      * </p>
      *
-     * @param key          the property key
-     * @param defaultValue the default value of property
-     * @return the system property value or <code>defaultValue</code> if a security problem occurs
+     * <p>
+     * If a {@link SecurityException} is caught while trying to access the system property, the method returns the specified
+     * default value and logs a warning message using the logger associated with this class.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String customProperty = SystemUtils.getSystemProperty("my.custom.property", "default-value");
+     * }</pre>
+     *
+     * @param key          the name of the system property
+     * @param defaultValue the default value to return if the property is not found or access is denied
+     * @return the string value of the system property, or the provided default value if the property is inaccessible or not found
      */
+    @Nullable
     public static String getSystemProperty(String key, String defaultValue) {
         try {
             return getProperty(key, defaultValue);
