@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
 import java.util.Map;
@@ -38,10 +40,35 @@ import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toSet;
 
 /**
- * The utilities class for ShutdownHook
+ * Utilities for managing shutdown hooks in a JVM application.
+ *
+ * <p>This class provides methods to register and manage shutdown hook callbacks, which are executed when the JVM begins its shutdown sequence.
+ * These callbacks can be used to perform cleanup operations, such as closing resources or saving state before the application exits.</p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <h4>Registering a Shutdown Hook</h4>
+ * <pre>{@code
+ * ShutdownHookUtils.addShutdownHookCallback(() -> {
+ *     System.out.println("Performing cleanup before shutdown...");
+ * });
+ * }</pre>
+ *
+ * <h4>Filtering Existing Shutdown Hooks</h4>
+ * <pre>{@code
+ * Set<Thread> shutdownHooks = ShutdownHookUtils.getShutdownHookThreads();
+ * shutdownHooks.forEach(System.out::println);
+ * }</pre>
+ *
+ * <h4>Clearing All Registered Callbacks</h4>
+ * <pre>{@code
+ * ShutdownHookUtils.clearShutdownHookCallbacks();
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see java.lang.Runtime#addShutdownHook(Thread)
  * @see java.lang.ApplicationShutdownHooks
+ * @see io.microsphere.util.ShutdownHookCallbacksThread
  * @since 1.0.0
  */
 public abstract class ShutdownHookUtils implements Utils {
@@ -74,9 +101,18 @@ public abstract class ShutdownHookUtils implements Utils {
     }
 
     /**
-     * Register the {@link ShutdownHookCallbacksThread} as the shutdown hook
+     * Registers the {@link ShutdownHookCallbacksThread} as a JVM shutdown hook to execute registered callbacks
+     * during application shutdown.
      *
-     * @see ShutdownHookCallbacksThread
+     * <p>If no such hook has been previously registered, this method adds the hook using
+     * {@link Runtime#addShutdownHook(Thread)}.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Ensure the shutdown hook is registered
+     * ShutdownHookUtils.registerShutdownHook();
+     * }</pre>
      */
     public static void registerShutdownHook() {
 
@@ -88,18 +124,100 @@ public abstract class ShutdownHookUtils implements Utils {
     }
 
     /**
-     * Get the shutdown hooks' threads that was added
+     * Retrieves an unmodifiable set of all registered JVM shutdown hook threads.
      *
-     * @return non-null
+     * <p>This method provides access to the current collection of threads that have been registered
+     * as JVM shutdown hooks. These hooks are typically added using {@link Runtime#addShutdownHook(Thread)}.
+     * The returned set reflects the current state and includes all known shutdown hook threads.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Listing All Shutdown Hook Threads</h4>
+     * <pre>{@code
+     * Set<Thread> shutdownHooks = ShutdownHookUtils.getShutdownHookThreads();
+     * System.out.println("Registered shutdown hook threads:");
+     * shutdownHooks.forEach(System.out::println);
+     * }</pre>
+     *
+     * <h4>Checking for Specific Shutdown Hooks</h4>
+     * <pre>{@code
+     * Set<Thread> shutdownHooks = ShutdownHookUtils.getShutdownHookThreads();
+     * boolean hasMyHook = shutdownHooks.contains(myCustomShutdownHookThread);
+     * if (hasMyHook) {
+     *     System.out.println("My custom shutdown hook is already registered.");
+     * }
+     * }</pre>
+     *
+     * @return A non-null, unmodifiable set containing all currently registered shutdown hook threads.
      */
+    @Nonnull
     public static Set<Thread> getShutdownHookThreads() {
         return filterShutdownHookThreads(t -> true);
     }
 
+    /**
+     * Filters and returns a set of registered JVM shutdown hook threads based on the provided predicate.
+     *
+     * <p>This method allows filtering of shutdown hook threads by applying a given condition (predicate).
+     * The returned set contains only those threads that match the filter criteria. It provides a way to
+     * selectively retrieve specific shutdown hooks, such as identifying custom shutdown hook threads.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Filtering MicroSphere Shutdown Hook Threads</h4>
+     * <pre>{@code
+     * Set<Thread> microsphereShutdownHooks = ShutdownHookUtils.filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER);
+     * System.out.println("MicroSphere shutdown hooks:");
+     * microsphereShutdownHooks.forEach(System.out::println);
+     * }</pre>
+     *
+     * <h4>Filtering Custom Shutdown Hooks</h4>
+     * <pre>{@code
+     * Predicate<Thread> myCustomHookPredicate = t -> t.getName().contains("MyCustomHook");
+     * Set<Thread> customShutdownHooks = ShutdownHookUtils.filterShutdownHookThreads(myCustomHookPredicate);
+     * System.out.println("Custom shutdown hooks:");
+     * customShutdownHooks.forEach(System.out::println);
+     * }</pre>
+     *
+     * @param hookThreadFilter A {@link Predicate} used to filter which shutdown hook threads should be included in the result.
+     *                         Only threads for which the predicate returns {@code true} will be included.
+     * @return A non-null, unmodifiable set containing the filtered shutdown hook threads.
+     */
     public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter) {
         return filterShutdownHookThreads(hookThreadFilter, false);
     }
 
+    /**
+     * Filters and returns a set of registered JVM shutdown hook threads based on the provided predicate.
+     *
+     * <p>This method allows filtering of shutdown hook threads by applying a given condition (predicate).
+     * The returned set contains only those threads that match the filter criteria. If the {@code removed}
+     * flag is set to {@code true}, matching threads will be removed from the internal registry after being collected.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Filtering and Retaining MicroSphere Shutdown Hook Threads</h4>
+     * <pre>{@code
+     * Set<Thread> microsphereShutdownHooks = ShutdownHookUtils.filterShutdownHookThreads(
+     *     ShutdownHookCallbacksThread.class::isInstance, false);
+     * System.out.println("MicroSphere shutdown hooks:");
+     * microsphereShutdownHooks.forEach(System.out::println);
+     * }</pre>
+     *
+     * <h4>Filtering and Removing Custom Shutdown Hooks</h4>
+     * <pre>{@code
+     * Predicate<Thread> myCustomHookPredicate = t -> t.getName().contains("MyCustomHook");
+     * Set<Thread> customShutdownHooks = ShutdownHookUtils.filterShutdownHookThreads(myCustomHookPredicate, true);
+     * System.out.println("Removed custom shutdown hooks:");
+     * customShutdownHooks.forEach(System.out::println);
+     * }</pre>
+     *
+     * @param hookThreadFilter A {@link Predicate} used to filter which shutdown hook threads should be included in the result.
+     *                         Only threads for which the predicate returns {@code true} will be included.
+     * @param removed          If {@code true}, the filtered threads will be removed from the internal registry.
+     * @return A non-null, unmodifiable set containing the filtered shutdown hook threads.
+     */
+    @Nonnull
     public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter, boolean removed) {
         Map<Thread, Thread> shutdownHookThreadsMap = shutdownHookThreadsMap();
 
@@ -115,12 +233,35 @@ public abstract class ShutdownHookUtils implements Utils {
     }
 
     /**
-     * Add the Shutdown Hook Callback
+     * Adds a shutdown hook callback to be executed during JVM shutdown.
      *
-     * @param callback the {@link Runnable} callback
-     * @return <code>true</code> if the specified Shutdown Hook Callback added, otherwise <code>false</code>
+     * <p>This method registers a {@link Runnable} callback that will be invoked when the JVM begins its shutdown sequence.
+     * The callback is added to an internal queue and will be executed in the order determined by its priority.
+     * If the callback is already registered, it will not be added again.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Registering a Simple Shutdown Hook</h4>
+     * <pre>{@code
+     * boolean registered = ShutdownHookUtils.addShutdownHookCallback(() -> {
+     *     System.out.println("Performing cleanup before application exit...");
+     * });
+     * if (registered) {
+     *     System.out.println("Shutdown hook successfully registered.");
+     * }
+     * }</pre>
+     *
+     * <h4>Registering a Prioritized Shutdown Hook</h4>
+     * <pre>{@code
+     * boolean registered = ShutdownHookUtils.addShutdownHookCallback(new PrioritizedRunnable(() -> {
+     *     System.out.println("High-priority cleanup task.");
+     * }, 100));
+     * }</pre>
+     *
+     * @param callback the {@link Runnable} callback to be executed during JVM shutdown; may be {@code null}, in which case no action is taken
+     * @return {@code true} if the callback was successfully added; {@code false} otherwise
      */
-    public static boolean addShutdownHookCallback(Runnable callback) {
+    public static boolean addShutdownHookCallback(@Nullable Runnable callback) {
         boolean added = false;
         if (callback != null) {
             added = shutdownHookCallbacks.add(callback);
@@ -129,12 +270,45 @@ public abstract class ShutdownHookUtils implements Utils {
     }
 
     /**
-     * Remove the Shutdown Hook Callback
+     * Removes a previously registered shutdown hook callback from the queue.
      *
-     * @param callback the {@link Runnable} callback
-     * @return <code>true</code> if the specified Shutdown Hook Callback removed, otherwise <code>false</code>
+     * <p>This method attempts to remove the specified {@link Runnable} callback from the internal queue
+     * of shutdown hook callbacks. If the callback is not present in the queue, this method returns
+     * {@code false} and no action is taken.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Removing a Simple Shutdown Hook Callback</h4>
+     * <pre>{@code
+     * Runnable cleanupTask = () -> System.out.println("Cleaning up resources...");
+     * ShutdownHookUtils.addShutdownHookCallback(cleanupTask);
+     *
+     * boolean removed = ShutdownHookUtils.removeShutdownHookCallback(cleanupTask);
+     * if (removed) {
+     *     System.out.println("Cleanup task removed successfully.");
+     * } else {
+     *     System.out.println("Cleanup task was not found.");
+     * }
+     * }</pre>
+     *
+     * <h4>Removing a Prioritized Shutdown Hook Callback</h4>
+     * <pre>{@code
+     * PrioritizedRunnable highPriorityTask = new PrioritizedRunnable(() -> {
+     *     System.out.println("High-priority cleanup task.");
+     * }, 100);
+     *
+     * ShutdownHookUtils.addShutdownHookCallback(highPriorityTask);
+     * boolean removed = ShutdownHookUtils.removeShutdownHookCallback(highPriorityTask);
+     *
+     * if (removed) {
+     *     System.out.println("High-priority task removed.");
+     * }
+     * }</pre>
+     *
+     * @param callback the {@link Runnable} callback to be removed; may be {@code null}, in which case no action is taken
+     * @return {@code true} if the callback was successfully removed; {@code false} if it was not found or if it was {@code null}
      */
-    public static boolean removeShutdownHookCallback(Runnable callback) {
+    public static boolean removeShutdownHookCallback(@Nullable Runnable callback) {
         boolean removed = false;
         if (callback != null) {
             removed = shutdownHookCallbacks.remove(callback);
@@ -143,10 +317,32 @@ public abstract class ShutdownHookUtils implements Utils {
     }
 
     /**
-     * Get all Shutdown Hook Callbacks
+     * Retrieves an unmodifiable {@link Queue} containing all registered shutdown hook callbacks.
      *
-     * @return non-null
+     * <p>These callbacks are executed in the order determined by their priority when the JVM begins its shutdown sequence.
+     * The returned queue reflects the current state and includes all known shutdown hook callbacks.</p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Accessing All Registered Shutdown Hook Callbacks</h4>
+     * <pre>{@code
+     * Queue<Runnable> callbacks = ShutdownHookUtils.getShutdownHookCallbacks();
+     * System.out.println("Registered shutdown hook callbacks:");
+     * callbacks.forEach(callback -> System.out.println(callback));
+     * }</pre>
+     *
+     * <h4>Checking for Specific Callbacks</h4>
+     * <pre>{@code
+     * Queue<Runnable> callbacks = ShutdownHookUtils.getShutdownHookCallbacks();
+     * boolean hasMyCallback = callbacks.contains(myCustomRunnable);
+     * if (hasMyCallback) {
+     *     System.out.println("My custom callback is registered.");
+     * }
+     * }</pre>
+     *
+     * @return A non-null, unmodifiable queue containing all currently registered shutdown hook callbacks.
      */
+    @Nonnull
     public static Queue<Runnable> getShutdownHookCallbacks() {
         return unmodifiableQueue(shutdownHookCallbacks);
     }
@@ -160,7 +356,7 @@ public abstract class ShutdownHookUtils implements Utils {
         return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);
     }
 
-    private ShutdownHookUtils(){
+    private ShutdownHookUtils() {
     }
 
 }

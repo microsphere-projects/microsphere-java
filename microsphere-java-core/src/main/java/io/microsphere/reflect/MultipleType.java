@@ -25,7 +25,20 @@ import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Objects.hash;
 
 /**
- * Multiple {@link Type}
+ * Represents a composite type that encapsulates multiple {@link Type} instances.
+ * <p>
+ * This class is useful when dealing with scenarios requiring the combination of multiple types,
+ * such as generic type resolution or complex type signatures in reflective operations.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a MultipleType instance from two types:
+ * MultipleType typePair = MultipleType.of(String.class, Integer.class);
+ *
+ * // Create a MultipleType instance from three types:
+ * MultipleType typeCombo = MultipleType.of(String.class, Integer.class, List.class);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

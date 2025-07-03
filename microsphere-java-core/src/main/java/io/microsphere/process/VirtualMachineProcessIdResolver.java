@@ -29,7 +29,30 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static java.lang.Long.valueOf;
 
 /**
- * {@link ProcessIdResolver} class for SUN JVM
+ * A {@link ProcessIdResolver} implementation for retrieving the process ID using the SUN JVM internal APIs.
+ *
+ * <p>This resolver utilizes reflection to access the internal fields and methods of the JVM, specifically
+ * targeting the {@code sun.management.VMManagementImpl} class which provides a method to retrieve the native
+ * process ID.</p>
+ *
+ * <h3>How It Works</h3>
+ * <p>The process ID is obtained via reflection by accessing the hidden "jvm" field in the {@link RuntimeMXBean}
+ * instance, and then invoking the {@code getProcessId()} method on that internal object. This approach is
+ * specific to the HotSpot JVM and may not be available on all JVM implementations.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * ProcessIdResolver resolver = new VirtualMachineProcessIdResolver();
+ * if (resolver.supports()) {
+ *     Long pid = resolver.current();
+ *     System.out.println("Current Process ID: " + pid);
+ * }
+ * }</pre>
+ *
+ * <h3>Priority</h3>
+ * <p>This resolver has a priority level of {@link #getPriority()}, making it preferred over some other resolvers
+ * but not the highest priority. The priority helps determine which resolver should be used when multiple
+ * resolvers are available.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ProcessIdResolver

@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
@@ -97,12 +98,25 @@ public abstract class Sets implements Utils {
     private static final MethodHandle ofMethodHandle = findPublicStatic(Set.class, "of", Object[].class);
 
     /**
-     * Returns an unmodifiable set containing zero elements.
+     * Returns an empty unmodifiable set.
      *
-     * @param <E> the {@code Set}'s element type
-     * @return an empty {@code Set}
+     * <p>Unlike the {@link java.util.Set#of()} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to returning an empty set via
+     * {@link java.util.Collections#emptySet()}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> emptySet = Sets.ofSet();
+     * }</pre>
+     *
+     * @param <E> the element type
+     * @return an empty unmodifiable set
+     * @see java.util.Set#of()
+     * @see java.util.Collections#emptySet()
      */
-    static <E> Set<E> ofSet() {
+    @Nonnull
+    public static <E> Set<E> ofSet() {
         if (of0MethodHandle == null) {
             return emptySet();
         }
@@ -116,12 +130,25 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing one element.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using
+     * {@link java.util.Collections#singleton(Object)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> singleElementSet = Sets.ofSet("apple");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the single element
      * @return a {@code Set} containing the specified element
      * @throws NullPointerException if the element is {@code null}
+     * @see java.util.Set#of(Object)
+     * @see java.util.Collections#singleton(Object)
      */
-    static <E> Set<E> ofSet(E e1) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1) {
         if (of1MethodHandle == null) {
             return singleton(e1);
         }
@@ -135,13 +162,25 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing two elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> pairSet = Sets.ofSet("apple", "banana");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2) {
         if (of2MethodHandle == null) {
             return of(e1, e2);
         }
@@ -155,14 +194,26 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing three elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> trioSet = Sets.ofSet("apple", "banana", "cherry");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3) {
         if (of3MethodHandle == null) {
             return of(e1, e2, e3);
         }
@@ -176,15 +227,26 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing four elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> quadSet = Sets.ofSet("apple", "banana", "cherry", "date");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
      * @param e4  the fourth element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4) {
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4) {
         if (of4MethodHandle == null) {
             return of(e1, e2, e3, e4);
         }
@@ -207,7 +269,8 @@ public abstract class Sets implements Utils {
      * @return a {@code Set} containing the specified elements
      * @throws NullPointerException if an element is {@code null}
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5) {
         if (of5MethodHandle == null) {
             return of(e1, e2, e3, e4, e5);
         }
@@ -221,7 +284,17 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing six elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object, Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> hexSet = Sets.ofSet("apple", "banana", "cherry", "date", "elderberry", "fig");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -229,9 +302,11 @@ public abstract class Sets implements Utils {
      * @param e5  the fifth element
      * @param e6  the sixth element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object, Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6) {
         if (of6MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6);
         }
@@ -245,7 +320,17 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing seven elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object, Object, Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> heptadSet = Sets.ofSet("a", "b", "c", "d", "e", "f", "g");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -254,9 +339,11 @@ public abstract class Sets implements Utils {
      * @param e6  the sixth element
      * @param e7  the seventh element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object, Object, Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
         if (of7MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7);
         }
@@ -270,7 +357,17 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing eight elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object, Object, Object, Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#ofSet(Object...)}
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> octetSet = Sets.ofSet("a", "b", "c", "d", "e", "f", "g", "h");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -280,9 +377,11 @@ public abstract class Sets implements Utils {
      * @param e7  the seventh element
      * @param e8  the eighth element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object, Object, Object, Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
         if (of8MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
         }
@@ -296,7 +395,17 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing nine elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object, Object, Object, Object, Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> nonadSet = Sets.ofSet("a", "b", "c", "d", "e", "f", "g", "h", "i");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -307,9 +416,11 @@ public abstract class Sets implements Utils {
      * @param e8  the eighth element
      * @param e9  the ninth element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object, Object, Object, Object, Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
         if (of9MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         }
@@ -323,7 +434,17 @@ public abstract class Sets implements Utils {
     /**
      * Returns an unmodifiable set containing ten elements.
      *
-     * @param <E> the {@code Set}'s element type
+     * <p>Unlike the {@link java.util.Set#of(Object, Object, Object, Object, Object, Object, Object, Object, Object, Object)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> decadSet = Sets.ofSet("a", "b", "c", "d", "e", "f", "g", "h", "i", "j");
+     * }</pre>
+     *
+     * @param <E> the element type
      * @param e1  the first element
      * @param e2  the second element
      * @param e3  the third element
@@ -335,9 +456,11 @@ public abstract class Sets implements Utils {
      * @param e9  the ninth element
      * @param e10 the tenth element
      * @return a {@code Set} containing the specified elements
-     * @throws NullPointerException if an element is {@code null}
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object, Object, Object, Object, Object, Object, Object, Object, Object, Object)
      */
-    static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
+    @Nonnull
+    public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
         if (of10MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         }
@@ -349,13 +472,25 @@ public abstract class Sets implements Utils {
     }
 
     /**
-     * Returns an unmodifiable set containing an arbitrary number of elements.
+     * Returns an unmodifiable set containing the provided elements.
      *
-     * @param elements the elements array
+     * <p>Unlike the {@link java.util.Set#of(Object...)} method introduced in JDK 9, this method
+     * provides a fallback behavior when running on older Java versions. If MethodHandle lookup
+     * for Set.of() fails, it gracefully degrades to using the internal utility method
+     * {@link io.microsphere.collection.SetUtils#of(Object...)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> varArgsSet = Sets.ofSet("apple", "banana", "cherry");
+     * }</pre>
+     *
      * @param <E>      the element type
-     * @return non-null
-     * @see SetUtils#ofSet(E...)
+     * @param elements the elements to include in the set
+     * @return a {@code Set} containing the specified elements
+     * @throws NullPointerException if any element is {@code null}
+     * @see java.util.Set#of(Object...)
      */
+    @Nonnull
     public static <E> Set<E> ofSet(E... elements) {
         if (length(elements) < 1) {
             return ofSet();

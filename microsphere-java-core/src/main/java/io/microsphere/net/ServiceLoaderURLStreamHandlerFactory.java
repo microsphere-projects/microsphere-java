@@ -16,8 +16,6 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.lang.Prioritized;
-
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -25,23 +23,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 
-import static io.microsphere.collection.MapUtils.ofEntry;
+import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.emptyMap;
 
 /**
- * Decorating {@link URLStreamHandlerFactory} class delegates the composite of {@link URLStreamHandlerFactory} and
- * {@link URLStreamHandler} instances that are loaded by the JDK's {@link ServiceLoader}.
- * <p>
- * First, the {@link #createURLStreamHandler(String)} method tries to create an instance of {@link URLStreamHandler}
- * vid each {@link URLStreamHandlerFactory} delegate in the {@link Prioritized prioritized} order, once some one returns
- * a non-null result, it will be taken. Otherwise, {@link ExtendableProtocolURLStreamHandler} delegates will be used to resolve the
- * result if possible.
+ * A {@link URLStreamHandlerFactory} implementation that uses the JDK's {@link ServiceLoader}
+ * to load and compose multiple delegates for creating {@link URLStreamHandler} instances.
+ *
+ * <p>{@link ServiceLoaderURLStreamHandlerFactory} extends from {@link DelegatingURLStreamHandlerFactory},
+ * delegating to a composite chain of factories and handlers discovered via service loading.
+ * It ensures extensibility by allowing custom protocol handling through service provider implementations.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Register the factory globally with the URL class
+ * ServiceLoaderURLStreamHandlerFactory.attach();
+ * }</pre>
+ *
+ * <h3>How It Works</h3>
+ * 1. Loads all available {@link URLStreamHandlerFactory} implementations using the service loader mechanism.<br>
+ * 2. Composes them in prioritized order using a {@link CompositeURLStreamHandlerFactory}.<br>
+ * 3. Adds a fallback handler for extendable protocols, if any are found.<br>
+ * 4. Delegates creation of stream handlers to this composed factory chain.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see Prioritized
+ * @see URLStreamHandlerFactory
+ * @see ServiceLoader
+ * @see CompositeURLStreamHandlerFactory
+ * @see ExtendableProtocolURLStreamHandler
  * @since 1.0.0
  */
 public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHandlerFactory {
@@ -76,7 +88,7 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         }
 
         Map<String, ExtendableProtocolURLStreamHandler> handlersMap = toFixedMap(
-                handlers, handler -> ofEntry(handler.getProtocol(), handler));
+                handlers, handler -> immutableEntry(handler.getProtocol(), handler));
 
         return handlersMap;
 

@@ -23,9 +23,40 @@ import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.length;
 
 /**
- * The abstract class of {@link Logger}
+ * An abstract implementation of the {@link Logger} interface, providing common functionality for concrete logger implementations.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <p>
+ * This class ensures consistent handling of logging operations across different logging frameworks by implementing shared logic
+ * such as message formatting and exception handling. Subclasses are expected to implement the basic logging methods (e.g.,
+ * {@link #trace(String)}, {@link #debug(String)}, etc.) according to their specific logging backend.
+ * </p>
+ *
+ * <h3>Message Formatting</h3>
+ * <p>
+ * The class supports formatted logging using a syntax similar to SLF4J or Java's {@link String#format(String, Object...)}. For example:
+ * </p>
+ * <pre>{@code
+ * logger.info("User {} logged in from {}", username, ip);
+ * }</pre>
+ *
+ * <h3>Exception Logging</h3>
+ * <p>
+ * If the last argument passed to a formatted logging method is an instance of {@link Throwable}, it will be treated as an exception,
+ * and the appropriate method accepting both a message and a throwable will be invoked:
+ * </p>
+ * <pre>{@code
+ * try {
+ *     // some operation that may throw an exception
+ * } catch (Exception e) {
+ *     logger.error("Operation failed", e);
+ * }
+ * }</pre>
+ *
+ * <p>
+ * This behavior is handled internally by the {@link #log(Consumer, BiConsumer, String, Object...)} method.
+ * </p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Logger
  * @since 1.0.0
  */

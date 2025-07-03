@@ -23,12 +23,39 @@ import java.util.function.Function;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link Consumer} with {@link Throwable}
+ * Represents an operation that accepts a single input argument and returns no
+ * result, which may throw a {@link Throwable}.
  *
- * @param <T> the source type
- * @see Function
+ * <p>This is the two-arity specialization of {@link Function} and the
+ * throwable-aware functional interface whose functional method is
+ * {@link #accept(Object)}.
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * // Basic usage:
+ * ThrowableConsumer<String> printer = System.out::println;
+ *
+ * printer.accept("Hello World"); // Outputs: Hello World
+ *
+ * // Throwing an exception:
+ * ThrowableConsumer<Integer> riskyConsumer = i -> {
+ *     if (i < 0) {
+ *         throw new IllegalArgumentException("Negative value not allowed");
+ *     }
+ * };
+ *
+ * try {
+ *     riskyConsumer.accept(-1);
+ * } catch (Throwable t) {
+ *     System.err.println("Caught exception: " + t.getMessage());
+ * }
+ * }</pre>
+ *
+ * @param <T> the type of the input to the operation
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Consumer
  * @see Throwable
- * @since 1.0.0
  */
 @FunctionalInterface
 public interface ThrowableConsumer<T> {
@@ -87,19 +114,80 @@ public interface ThrowableConsumer<T> {
      * @return the result after execution
      * @throws NullPointerException if <code>consumer</code> is <code>null</code>
      */
+    /**
+     * Executes the given {@link ThrowableConsumer} with the default exception handling.
+     *
+     * <p>If an exception is thrown during execution, it will be handled by the
+     * {@link #handleException(Object, Throwable)} method of the consumer.
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Example 1: Basic usage without any exception
+     * ThrowableConsumer<String> printConsumer = System.out::println;
+     *
+     * ThrowableConsumer.execute("Hello World", printConsumer);
+     * // Output: Hello World
+     *
+     * // Example 2: Consumer that throws an exception
+     * ThrowableConsumer<Integer> riskyConsumer = i -> {
+     *     if (i < 0) {
+     *         throw new IllegalArgumentException("Negative value not allowed");
+     *     }
+     * };
+     *
+     * try {
+     *     ThrowableConsumer.execute(-1, riskyConsumer);
+     * } catch (RuntimeException e) {
+     *     System.err.println("Caught exception: " + e.getCause().getMessage());
+     *     // Output: Caught exception: Negative value not allowed
+     * }
+     * }</pre>
+     *
+     * @param t        the input argument to be consumed
+     * @param consumer the instance of {@link ThrowableConsumer} to execute
+     * @param <T>      the type of the input argument
+     * @throws NullPointerException if the given consumer is null
+     */
     static <T> void execute(T t, ThrowableConsumer<T> consumer) throws NullPointerException {
         consumer.execute(t, consumer::handleException);
     }
 
     /**
-     * Executes {@link ThrowableConsumer} with the customized exception handling
+     * Executes the given {@link ThrowableConsumer} with a custom exception handler.
      *
-     * @param t                the function argument
-     * @param consumer         {@link ThrowableConsumer}
-     * @param exceptionHandler the handler to handle any {@link Throwable exception} that the {@link #accept(T)} ()} method throws
-     * @param <T>              the source type
-     * @return the result after execution
-     * @throws NullPointerException if <code>consumer</code> and <code>exceptionHandler</code> is <code>null</code>
+     * <p>If an exception is thrown during execution, it will be passed to the provided
+     * {@code exceptionHandler} along with the input value that caused the exception.
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <pre>{@code
+     * // Example 1: Basic usage without any exception
+     * ThrowableConsumer<String> printConsumer = System.out::println;
+     *
+     * ThrowableConsumer.execute("Hello World", printConsumer, (t, e) -> {});
+     * // Output: Hello World
+     *
+     * // Example 2: Custom exception handling
+     * ThrowableConsumer<Integer> riskyConsumer = i -> {
+     *     if (i < 0) {
+     *         throw new IllegalArgumentException("Negative value not allowed");
+     *     }
+     * };
+     *
+     * BiConsumer<Integer, Throwable> handler = (value, ex) -> {
+     *     System.err.println("Error at value " + value + ": " + ex.getMessage());
+     * };
+     *
+     * ThrowableConsumer.execute(-1, riskyConsumer, handler);
+     * // Output: Error at value -1: Negative value not allowed
+     * }</pre>
+     *
+     * @param t                the input argument to be consumed
+     * @param consumer         the instance of {@link ThrowableConsumer} to execute
+     * @param exceptionHandler the handler to manage exceptions thrown during execution
+     * @param <T>              the type of the input argument
+     * @throws NullPointerException if the given {@code consumer} or {@code exceptionHandler} is null
      */
     static <T> void execute(T t, ThrowableConsumer<T> consumer, BiConsumer<T, Throwable> exceptionHandler) throws NullPointerException {
         assertNotNull(consumer, "The 'consumer' must not be null");

@@ -23,9 +23,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Mutable {@link URLStreamHandlerFactory} that is not thread-safe extends {@link URLStreamHandler}.
+ * A mutable and non-thread-safe implementation of {@link URLStreamHandlerFactory} that allows dynamic
+ * registration and retrieval of {@link URLStreamHandler} instances for specific protocols.
  *
- * @param <H> The type of {@link URLStreamHandler} or the subtype of {@link URLStreamHandler}
+ * <p>
+ * This class provides methods to add, remove, and retrieve URL stream handlers dynamically at runtime,
+ * making it suitable for environments where protocol handling needs to be modified or extended
+ * programmatically.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * MutableURLStreamHandlerFactory factory = new MutableURLStreamHandlerFactory();
+ *
+ * // Add a custom handler for the "myproto" protocol
+ * factory.addURLStreamHandler("myproto", new MyCustomURLStreamHandler());
+ *
+ * // Retrieve a registered handler
+ * URLStreamHandler handler = factory.getURLStreamHandler("myproto");
+ *
+ * // Remove a handler
+ * factory.removeURLStreamHandler("myproto");
+ *
+ * // Clear all handlers
+ * factory.clearHandlers();
+ * }</pre>
+ *
+ * <p>
+ * Note: This class is not thread-safe. Concurrent access from multiple threads should be externally
+ * synchronized.
+ * </p>
+ *
+ * @param <H> The type of {@link URLStreamHandler} or subtype thereof
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see URLStreamHandlerFactory
  * @see URLStreamHandler
@@ -35,27 +64,59 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
 
     private final Map<String, H> handlers;
 
+    /**
+     * Constructs a new instance
+     */
     public MutableURLStreamHandlerFactory() {
         this(null);
     }
 
+    /**
+     * Constructs a new instance with the specified handlers
+     *
+     * @param handlers the handlers
+     */
     public MutableURLStreamHandlerFactory(Map<String, H> handlers) {
         this.handlers = handlers == null ? new HashMap<>() : new HashMap<>(handlers);
     }
 
+    /**
+     * Adds a new handler for the specified protocol
+     *
+     * @param protocol the protocol
+     * @param handler  the handler
+     * @return this instance
+     */
     public MutableURLStreamHandlerFactory addURLStreamHandler(String protocol, H handler) {
         this.handlers.put(protocol, handler);
         return this;
     }
 
+    /**
+     * Removes the handler for the specified protocol
+     *
+     * @param protocol the protocol
+     * @return the removed handler
+     */
     public H removeURLStreamHandler(String protocol) {
         return this.handlers.remove(protocol);
     }
 
+    /**
+     * Retrieves the handler for the specified protocol
+     *
+     * @param protocol the protocol
+     * @return the handler
+     */
     public H getURLStreamHandler(String protocol) {
         return this.handlers.get(protocol);
     }
 
+    /**
+     * Retrieves all handlers
+     *
+     * @return the handlers
+     */
     public Collection<H> getHandlers() {
         return this.handlers.values();
     }
@@ -65,6 +126,11 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
         return getURLStreamHandler(protocol);
     }
 
+    /**
+     * Clears all handlers
+     *
+     * @return this instance
+     */
     public MutableURLStreamHandlerFactory<H> clearHandlers() {
         this.handlers.clear();
         return this;

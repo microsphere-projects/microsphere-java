@@ -16,16 +16,41 @@
  */
 package io.microsphere.collection;
 
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+
+import static java.util.Collections.emptyIterator;
 
 /**
- * Empty {@link Iterator} Class
+ * An empty and immutable implementation of the {@link Iterator} interface.
+ * <p>
+ * This class provides a singleton instance through the public static field {@link #INSTANCE},
+ * which can be used directly without creating additional instances. It is safe for use in
+ * multi-threaded environments since it does not maintain any mutable state.
+ * </p>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Using the singleton instance
+ * Iterator<String> iterator = EmptyIterator.INSTANCE;
+ *
+ * // Iterating over the empty iterator
+ * while (iterator.hasNext()) {
+ *     String next = iterator.next(); // Will never enter the loop
+ * }
+ *
+ * // Attempting to remove from the iterator will throw an exception
+ * try {
+ *     iterator.remove();
+ * } catch (UnsupportedOperationException e) {
+ *     System.out.println("Cannot modify an empty, immutable iterator.");
+ * }
+ * }</pre>
+ *
+ * @param <E> the type of elements returned by this iterator
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Iterator
- * @see EmptyIterable
- * @since 1.0.0
+ * @see Collections#emptyIterator()
  */
 public class EmptyIterator<E> implements Iterator<E> {
 
@@ -34,18 +59,24 @@ public class EmptyIterator<E> implements Iterator<E> {
      */
     public static final EmptyIterator INSTANCE = new EmptyIterator();
 
+    private final Iterator<E> delegate;
+
+    public EmptyIterator() {
+        this.delegate = emptyIterator();
+    }
+
     @Override
     public boolean hasNext() {
-        return false;
+        return delegate.hasNext();
     }
 
     @Override
     public E next() {
-        throw new NoSuchElementException("EmptyIterator does not contain any element!");
+        return delegate.next();
     }
 
     @Override
     public void remove() {
-        throw new UnsupportedOperationException("EmptyIterator can't remove any element!");
+        delegate.remove();
     }
 }

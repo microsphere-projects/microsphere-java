@@ -35,50 +35,38 @@ import static io.microsphere.lang.function.ThrowableAction.execute;
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
  * be any mix of {@link JSONObject JSONObjects}, {@link JSONArray JSONArrays}, Strings,
- * Booleans, Integers, Longs, Doubles or {@link #NULL}. Values may not be {@code null},
- * {@link Double#isNaN() NaNs}, {@link Double#isInfinite() infinities}, or of any type not
- * listed here.
+ * Booleans, Integers, Longs, Doubles, or the special sentinel value {@link #NULL}.
  * <p>
- * This class can coerce values to another type when requested.
- * <ul>
- * <li>When the requested type is a boolean, strings will be coerced using a
- * case-insensitive comparison to "true" and "false".
- * <li>When the requested type is a double, other {@link Number} types will be coerced
- * using {@link Number#doubleValue() doubleValue}. Strings that can be coerced using
- * {@link Double#valueOf(String)} will be.
- * <li>When the requested type is an int, other {@link Number} types will be coerced using
- * {@link Number#intValue() intValue}. Strings that can be coerced using
- * {@link Double#valueOf(String)} will be, and then cast to int.
- * <li><a id="lossy">When the requested type is a long, other {@link Number} types will be
- * coerced using {@link Number#longValue() longValue}. Strings that can be coerced using
- * {@link Double#valueOf(String)} will be, and then cast to long. This two-step conversion
- * is lossy for very large values. For example, the string "9223372036854775806" yields
- * the long 9223372036854775807.</a>
- * <li>When the requested type is a String, other non-null values will be coerced using
- * {@link String#valueOf(Object)}. Although null cannot be coerced, the sentinel value
- * {@link JSONObject#NULL} is coerced to the string "null".
- * </ul>
- * <p>
- * This class can look up both mandatory and optional values:
- * <ul>
- * <li>Use <code>get<i>Type</i>()</code> to retrieve a mandatory value. This fails with a
- * {@code JSONException} if the requested name has no value or if the value cannot be
- * coerced to the requested type.
- * <li>Use <code>opt<i>Type</i>()</code> to retrieve an optional value. This returns a
- * system- or user-supplied default if the requested name has no value or if the value
- * cannot be coerced to the requested type.
- * </ul>
- * <p>
- * <strong>Warning:</strong> this class represents null in two incompatible ways: the
- * standard Java {@code null} reference, and the sentinel value {@link JSONObject#NULL}.
- * In particular, calling {@code put(name, null)} removes the named entry from the object
- * but {@code put(name, JSONObject.NULL)} stores an entry whose value is
- * {@code JSONObject.NULL}.
- * <p>
- * Instances of this class are not thread safe. Although this class is nonfinal, it was
- * not designed for inheritance and should not be subclassed. In particular, self-use by
- * overrideable methods is not specified. See <i>Effective Java</i> Item 17, "Design and
- * Document or inheritance or else prohibit it" for further information.
+ * This class provides methods to store and retrieve values by their associated names,
+ * with support for type coercion when accessing values. It also includes functionality
+ * for converting the object to and from JSON formatted strings.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Creating a new JSONObject and adding key-value pairs
+ * JSONObject obj = new JSONObject();
+ * obj.put("name", "Alice");
+ * obj.put("age", 30);
+ *
+ * // Retrieving values
+ * String name = obj.getString("name"); // returns "Alice"
+ * int age = obj.getInt("age");         // returns 30
+ *
+ * // Using opt methods to provide default values
+ * boolean isMember = obj.optBoolean("isMember", false); // returns false if not present
+ *
+ * // Converting to JSON string
+ * String jsonStr = obj.toString(); // {"name":"Alice","age":30}
+ *
+ * // Parsing from JSON string
+ * String inputJson = "{\"city\":\"New York\",\"population\":8175133}";
+ * JSONObject parsedObj = new JSONObject(inputJson);
+ * String city = parsedObj.getString("city"); // "New York"
+ * }</pre>
+ *
+ * @see JSONArray
+ * @see JSONTokener
  */
 public class JSONObject {
 
@@ -745,13 +733,14 @@ public class JSONObject {
     }
 
     /**
-     * Encodes this object as a human-readable JSON string for debugging, such as: <pre>
+     * Encodes this object as a human-readable JSON string for debugging, such as: <pre>{@code
      * {
      *     "query": "Pizza",
      *     "locations": [
      *         94043,
      *         90210
      *     ]
+     * }
      * }</pre>
      *
      * @param indentSpaces the number of spaces to indent for each level of nesting.

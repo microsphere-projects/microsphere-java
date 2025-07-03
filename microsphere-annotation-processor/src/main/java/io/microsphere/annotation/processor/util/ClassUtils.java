@@ -36,14 +36,41 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
  */
 public interface ClassUtils extends Utils {
 
+    /**
+     * Returns the fully qualified name of the class represented by the given {@link TypeMirror}.
+     *
+     * @param type the type mirror to get the class name from
+     * @return the fully qualified class name
+     */
     static String getClassName(TypeMirror type) {
         return ofTypeElement(type).getQualifiedName().toString();
     }
 
+
+    /**
+     * Loads the class represented by the given {@link TypeMirror}.
+     *
+     * <p>This method attempts to resolve the class using the fully qualified name derived from the type mirror.
+     * If the class cannot be resolved directly, an attempt is made to resolve it as a nested or inner class by
+     * replacing the last dot ({@code .}) with a dollar sign ({@code $}).
+     *
+     * @param type the type mirror representing the class to load
+     * @return the resolved {@link Class}, or {@code null} if the class cannot be found
+     */
     static Class loadClass(TypeMirror type) {
         return loadClass(getClassName(type));
     }
 
+    /**
+     * Loads the class represented by the given fully qualified class name.
+     *
+     * <p>This method attempts to resolve the class using the provided class name and the class loader
+     * obtained from {@link ClassUtils}. If the class is not found, an attempt is made to resolve it
+     * as a nested or inner class by replacing the last dot ({@code .}) with a dollar sign ({@code $}).
+     *
+     * @param className the fully qualified name of the class to load
+     * @return the resolved {@link Class}, or {@code null} if the class cannot be found
+     */
     static Class loadClass(String className) {
         ClassLoader classLoader = getClassLoader(ClassUtils.class);
         Class<?> klass = resolveClass(className, classLoader);

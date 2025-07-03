@@ -46,8 +46,23 @@ import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
  * </ul>
  * <p>
  *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ *     StringBuilderWriter writer = new StringBuilderWriter();
+ *     writer.write("Hello, World!");
+ *     System.out.println(writer.toString()); // Output: Hello, World!
+ * }</pre>
+ *
+ * <p>
+ * The class can also be used with a pre-defined capacity:
+ * <pre>{@code
+ *     StringBuilderWriter writer = new StringBuilderWriter(1024);
+ *     writer.write("Data");
+ * }</pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see StringWriter
+ * @see Writer
  */
 public class StringBuilderWriter extends Writer {
 

@@ -46,7 +46,28 @@ import static java.lang.Integer.compare;
 import static java.lang.Integer.parseInt;
 
 /**
- * The value object to represent a version consisting of major, minor and patch part.
+ * Represents a version number composed of major, minor, and patch components.
+ * <p>
+ * This class provides methods to compare versions using standard comparison operators such as greater than,
+ * less than, and equal to. It also supports parsing version strings in the format "major.minor.patch".
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * Version v1 = new Version(1, 2, 3);
+ * Version v2 = Version.of("1.2.3");
+ *
+ * // Comparison
+ * boolean isEqual = v1.equals(v2); // true
+ * boolean isGreaterThan = v1.isGreaterThan(Version.of("1.2.2")); // true
+ * boolean isLessThan = v1.lt(Version.of("1.3.0")); // true
+ *
+ * // Parsing from string
+ * Version v3 = Version.of("2.0.0");
+ *
+ * // Getting version from a class's manifest
+ * Version versionFromManifest = Version.getVersion(MyClass.class);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

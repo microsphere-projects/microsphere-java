@@ -23,9 +23,13 @@ import java.util.function.Consumer;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Singleton {@link Iterator}
+ * A specialized read-only {@link Iterator} implementation that iterates over a single element.
+ * <p>
+ * This iterator is useful when you need to expose an {@link Iterator} interface for a single element,
+ * ensuring that the underlying element cannot be modified or removed during iteration due to its read-only nature.
+ * </p>
  *
- * @param <E> the type of elements returned by this iterator
+ * @param <E> the type of the element returned by this iterator
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */

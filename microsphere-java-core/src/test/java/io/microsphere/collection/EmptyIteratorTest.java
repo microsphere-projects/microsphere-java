@@ -1,10 +1,10 @@
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -17,18 +17,25 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class EmptyIteratorTest {
 
+    private EmptyIterator emptyIterator;
+
+    @BeforeEach
+    public void before() {
+        emptyIterator = new EmptyIterator();
+    }
+
     @Test
     public void testHasNext() {
-        assertFalse(INSTANCE.hasNext());
+        assertFalse(emptyIterator.hasNext());
     }
 
     @Test
     public void testNext() {
-        assertThrows(NoSuchElementException.class, INSTANCE::next);
+        assertThrows(NoSuchElementException.class, emptyIterator::next);
     }
 
     @Test
     public void testRemove() {
-        assertThrows(UnsupportedOperationException.class, INSTANCE::remove);
+        assertThrows(IllegalStateException.class, emptyIterator::remove);
     }
 }

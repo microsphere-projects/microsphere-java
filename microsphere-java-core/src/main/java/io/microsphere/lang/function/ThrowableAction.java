@@ -17,14 +17,32 @@
 package io.microsphere.lang.function;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * A function interface for action with {@link Throwable}
+ * A functional interface for actions that may throw a {@link Throwable}.
+ * <p>
+ * This interface is similar to {@link Runnable}, but allows the action to throw any exception.
+ * It can be used as a base for more specific interfaces that require exception handling.
+ * </p>
  *
- * @see Function
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Simple usage with a lambda expression
+ * ThrowableAction action = () -> {
+ *     // some code that may throw an exception
+ * };
+ *
+ * // Execute the action with default exception handling
+ * action.execute();
+ *
+ * // Execute the action with custom exception handling
+ * action.execute(ex -> System.err.println("An error occurred: " + ex.getMessage()));
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Runnable
  * @see Throwable
  * @since 1.0.0
  */
@@ -63,21 +81,53 @@ public interface ThrowableAction {
     }
 
     /**
-     * Executes {@link ThrowableAction} with {@link #handleException(Throwable) the default exception handling}
+     * Executes the given {@link ThrowableAction} with default exception handling.
+     * <p>
+     * If the action throws an exception during execution, it will be passed to the
+     * {@link #handleException(Throwable)} method for handling.
+     * </p>
      *
-     * @param action {@link ThrowableAction}
-     * @throws NullPointerException if <code>action</code> is <code>null</code>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Execute an action with default exception handling
+     * ThrowableAction action = () -> {
+     *     if (someErrorCondition) {
+     *         throw new IOException("Something went wrong");
+     *     }
+     * };
+     *
+     * ThrowableAction.execute(action); // Uses default exception handling
+     * }</pre>
+     *
+     * @param action the {@link ThrowableAction} to execute
+     * @throws NullPointerException if the provided action is {@code null}
      */
     static void execute(ThrowableAction action) {
         execute(action, action::handleException);
     }
 
     /**
-     * Executes {@link ThrowableAction} with the customized {@link Throwable exception} handling
+     * Executes the given {@link ThrowableAction} with a custom exception handler.
+     * <p>
+     * If the action throws an exception during execution, it will be passed to the
+     * provided {@link Consumer} exception handler for customized handling.
+     * </p>
      *
-     * @param action           {@link ThrowableAction}
-     * @param exceptionHandler the handler to handle any {@link Throwable exception} that the {@link #execute()} method throws
-     * @throws NullPointerException if <code>action</code> or <code>exceptionHandler</code> is <code>null</code>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Execute an action with a custom exception handler
+     * ThrowableAction action = () -> {
+     *     if (someErrorCondition) {
+     *         throw new IOException("Something went wrong");
+     *     }
+     * };
+     *
+     * ThrowableAction.execute(action, ex -> System.err.println("Error: " + ex.getMessage()));
+     * }</pre>
+     *
+     * @param action the {@link ThrowableAction} to execute
+     * @param exceptionHandler the handler to manage any exceptions thrown by the action
+     * @throws NullPointerException if the provided action is {@code null}
      */
     static void execute(ThrowableAction action, Consumer<Throwable> exceptionHandler) throws NullPointerException {
         assertNotNull(action, () -> "The 'action' must not be null");

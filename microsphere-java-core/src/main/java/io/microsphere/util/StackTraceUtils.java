@@ -197,10 +197,41 @@ public abstract class StackTraceUtils implements Utils {
      *
      * @return non-null
      */
+    /**
+     * Retrieves the stack trace elements for the current thread's call stack.
+     *
+     * <p>This method is useful for inspecting the sequence of method calls that led to the current point of execution.
+     * It can be used for debugging, logging, or monitoring purposes.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StackTraceElement[] stackTrace = StackTraceUtils.getStackTrace();
+     * for (StackTraceElement element : stackTrace) {
+     *     System.out.println(element);
+     * }
+     * }</pre>
+     *
+     * @return a non-null array of {@link StackTraceElement} representing the current thread's stack trace
+     */
     public static StackTraceElement[] getStackTrace() {
         return currentThread().getStackTrace();
     }
 
+    /**
+     * Retrieves the fully qualified name of the class that called this method.
+     *
+     * <p>This method utilizes either {@link java.lang.StackWalker} (available in JDK 9+) or falls back to
+     * using {@link StackTraceElement} to determine the caller's class name. It ensures compatibility across different JVM versions.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String callerClassName = StackTraceUtils.getCallerClassName();
+     * System.out.println("Caller class: " + callerClassName);
+     * }</pre>
+     *
+     * @return the fully qualified name of the calling class
+     * @throws IndexOutOfBoundsException if the stack trace does not have enough frames to determine the caller
+     */
     public static String getCallerClassName() {
         if (stackWalkerInstance == null || !stackWalkerSupportedForTesting) {
             // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame

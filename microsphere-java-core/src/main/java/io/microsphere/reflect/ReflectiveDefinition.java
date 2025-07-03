@@ -33,9 +33,55 @@ import static io.microsphere.util.Version.ofVersion;
 import static java.util.Objects.hash;
 
 /**
- * The abstract definition class for Java Reflection
+ * The abstract definition class for Java Reflection.
+ * <p>
+ * This class serves as a base for defining reflective constructs such as classes, methods, fields, etc., providing common metadata and functionality including:
+ * <ul>
+ *     <li>The version since which the construct was introduced</li>
+ *     <li>Deprecation information (if applicable)</li>
+ *     <li>Class name resolution capabilities</li>
+ * </ul>
+ * </p>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example implementation: ClassDefinition extending ReflectiveDefinition
+ * public class ClassDefinition extends ReflectiveDefinition {
+ *     public ClassDefinition(@Nonnull String since, @Nonnull String className) {
+ *         super(since, className);
+ *     }
+ *
+ *     public ClassDefinition(@Nonnull Version since, @Nonnull String className) {
+ *         super(since, className);
+ *     }
+ *
+ *     public ClassDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String className) {
+ *         super(since, deprecation, className);
+ *     }
+ *
+ *     public ClassDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String className) {
+ *         super(since, deprecation, className);
+ *     }
+ *
+ *     // Implementing abstract method
+ *     @Override
+ *     public boolean isPresent() {
+ *         return getResolvedClass() != null;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <h3>Metadata Handling</h3>
+ * <p>
+ * Subclasses should represent metadata about reflective elements in the Java language. This includes handling of:
+ * </p>
+ * <ul>
+ *     <strong>Version Information</strong>: Indicates from which version of the library/framework the reflective element has been available.
+ *     <strong>Deprecation Details</strong>: Provides detailed information about why and when an element was deprecated, and optionally suggests replacements.
+ *     <strong>Class Name Resolution</strong>: Offers lazy resolution of the actual {@link Class} object via methods like {@link #getResolvedClass()}.
+ * </ul>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ClassDefinition
  * @see MemberDefinition
  * @since 1.0.0

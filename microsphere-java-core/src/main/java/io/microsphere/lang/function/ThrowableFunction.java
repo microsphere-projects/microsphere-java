@@ -22,10 +22,30 @@ import java.util.function.Function;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link Function} with {@link Throwable}
+ * Represents a function that accepts one argument and produces a result, which may throw a checked exception.
+ * <p>
+ * This interface is similar to {@link Function}, but allows the functional method to throw any {@link Throwable}.
+ * It also provides default methods for composing functions and handling exceptions gracefully.
+ * </p>
  *
- * @param <T> the source type
- * @param <R> the return type
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // <h3>Example Usage</h3>
+ * ThrowableFunction<String, Integer> parser = Integer::valueOf;
+ *
+ * // Using execute() with default exception handling (throws RuntimeException)
+ * Integer result1 = parser.execute("123"); // returns 123
+ *
+ * // Using execute() with custom exception handling
+ * Integer result2 = parser.execute("invalid", (input, ex) -> {
+ *     System.out.println("Parsing failed for: " + input);
+ *     return -1; // fallback value
+ * });
+ * }</pre>
+ *
+ * @param <T> the type of the input to the function
+ * @param <R> the type of the result of the function
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Function
  * @see Throwable
  * @since 1.0.0
@@ -119,30 +139,60 @@ public interface ThrowableFunction<T, R> {
     }
 
     /**
-     * Executes {@link ThrowableFunction} with {@link #handleException(T, Throwable) the default exception handling}
+     * Executes the given {@link ThrowableFunction} with the provided argument using the function's default exception handling.
+     * <p>
+     * If the execution of the function throws an exception, it will be handled by the function's own
+     * {@link #handleException(Object, Throwable)} method.
+     * </p>
      *
-     * @param t        the throwable-function argument
-     * @param function {@link ThrowableFunction}
-     * @param <T>      the source type
-     * @param <R>      the return type
-     * @return the result after execution
-     * @throws IllegalArgumentException if <code>function</code> is <code>null</code>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ThrowableFunction<String, Integer> parser = Integer::valueOf;
+     *
+     * // Successful execution
+     * Integer result1 = execute("123", parser); // returns 123
+     *
+     * // Execution that fails and uses the default exception handler (throws RuntimeException)
+     * Integer result2 = execute("invalid", parser); // throws RuntimeException wrapping NumberFormatException
+     * }</pre>
+     *
+     * @param t        the input argument to the function
+     * @param function the {@link ThrowableFunction} to execute
+     * @param <T>      the type of the input to the function
+     * @param <R>      the type of the result of the function
+     * @return the result of the function execution
+     * @throws IllegalArgumentException if the provided function is null
      */
     static <T, R> R execute(T t, ThrowableFunction<T, R> function) throws IllegalArgumentException {
         return execute(t, function, function::handleException);
     }
 
     /**
-     * Executes {@link ThrowableFunction} with the customized exception handling
+     * Executes the given {@link ThrowableFunction} with the provided argument using a custom exception handler.
+     * <p>
+     * This method applies the provided function to the input argument. If the function throws an exception,
+     * it is passed to the provided {@code exceptionHandler} for handling, allowing custom fallback behavior.
+     * </p>
      *
-     * @param t                the function argument
-     * @param exceptionHandler the handler to handle the function argument and
-     *                         the exception that the {@link #apply(T)} method throws
-     * @param function         {@link ThrowableFunction}
-     * @param <T>              the source type
-     * @param <R>              the return type
-     * @return the result after execution
-     * @throws IllegalArgumentException if <code>function</code> and <code>exceptionHandler</code> is <code>null</code>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ThrowableFunction<String, Integer> parser = Integer::valueOf;
+     *
+     * // Successful execution
+     * Integer result1 = execute("123", parser, (input, ex) -> -1); // returns 123
+     *
+     * // Execution that fails, using the custom exception handler
+     * Integer result2 = execute("invalid", parser, (input, ex) -> -1); // returns -1
+     * }</pre>
+     *
+     * @param t              the input argument to the function
+     * @param function       the {@link ThrowableFunction} to execute
+     * @param exceptionHandler the handler to use if the function throws an exception;
+     *                         takes the input and the exception, and returns a fallback value
+     * @param <T>            the type of the input to the function
+     * @param <R>            the type of the result of the function
+     * @return the result of the function execution
+     * @throws IllegalArgumentException if the provided function or exception handler is null
      */
     static <T, R> R execute(T t, ThrowableFunction<T, R> function, BiFunction<T, Throwable, R> exceptionHandler)
             throws IllegalArgumentException {

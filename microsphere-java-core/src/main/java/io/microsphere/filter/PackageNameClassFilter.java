@@ -6,10 +6,19 @@ package io.microsphere.filter;
 import static io.microsphere.constants.SymbolConstants.DOT;
 
 /**
- * {@link PackageNameClassFilter}
+ * {@link ClassFilter} implementation that filters classes based on their package name.
  *
- * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @see PackageNameClassFilter
+ * <h3>Example Usage</h3>
+ * <pre>
+ * // Create a filter for classes in the "io.microsphere" package only
+ * PackageNameClassFilter filter = new PackageNameClassFilter("io.microsphere", false);
+ *
+ * // Create a filter for classes in the "io.microsphere" package and its sub-packages
+ * PackageNameClassFilter filter = new PackageNameClassFilter("io.microsphere", true);
+ * </pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ClassFilter
  * @since 1.0.0
  */
 public class PackageNameClassFilter implements ClassFilter {

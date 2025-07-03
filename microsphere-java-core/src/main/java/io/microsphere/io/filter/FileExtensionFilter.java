@@ -26,7 +26,28 @@ import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 
 /**
- * {@link IOFileFilter} for file extension filter
+ * A filter that matches files based on their extensions.
+ *
+ * <p>
+ * This class implements the {@link IOFileFilter} interface and provides functionality to filter files
+ * by checking if their extension matches a specified extension. The comparison is case-insensitive on Windows systems,
+ * while it's case-sensitive on other operating systems.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a filter for ".txt" files
+ * IOFileFilter txtFilter = FileExtensionFilter.of(".txt");
+ *
+ * // Use the filter to accept only ".txt" files
+ * File dir = new File("/path/to/directory");
+ * File[] txtFiles = dir.listFiles((FileFilter) txtFilter);
+ * }</pre>
+ *
+ * <p>
+ * The above example creates a filter that accepts only files ending with the ".txt" extension.
+ * It then uses this filter to list all matching files in the specified directory.
+ * </p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see IOFileFilter
