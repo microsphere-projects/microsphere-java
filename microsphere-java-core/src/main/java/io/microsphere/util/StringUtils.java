@@ -33,12 +33,39 @@ import static java.lang.String.valueOf;
  */
 public abstract class StringUtils implements Utils {
 
+    /**
+     * Represents an empty string constant : ""
+     */
     public final static String EMPTY = "";
 
+    /**
+     * Represents an empty string constant: ""
+     */
     public final static String EMPTY_STRING = EMPTY;
 
+    /**
+     * An empty array of String.
+     */
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
 
+    /**
+     * <p>Checks if a String is whitespace, empty, or null.</p>
+     *
+     * <p>Whitespace is defined by the {@link Character#isWhitespace(char)} method.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.isBlank(null)      = true
+     * StringUtils.isBlank("")        = true
+     * StringUtils.isBlank(" ")       = true
+     * StringUtils.isBlank("  a  ")   = false
+     * StringUtils.isBlank("abc")    = false
+     * StringUtils.isBlank("\t\n\f")  = true
+     * }</pre>
+     *
+     * @param value the String to check, may be null
+     * @return {@code true} if the String is null, empty, or contains only whitespace characters
+     */
     public static boolean isBlank(String value) {
         int length = length(value);
         if (length < 1) {
@@ -52,14 +79,71 @@ public abstract class StringUtils implements Utils {
         return true;
     }
 
+    /**
+     * <p>Checks if a String is not blank.</p>
+     *
+     * <p>A string is considered not blank if it contains at least one non-whitespace character.
+     * This method is the inverse of {@link #isBlank(String)}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.isNotBlank(null)      = false
+     * StringUtils.isNotBlank("")        = false
+     * StringUtils.isNotBlank(" ")       = false
+     * StringUtils.isNotBlank("  a  ")   = true
+     * StringUtils.isNotBlank("abc")     = true
+     * StringUtils.isNotBlank("\t\n\f")  = false
+     * }</pre>
+     *
+     * @param value the String to check, may be null
+     * @return {@code true} if the String is not null, not empty, and contains at least one non-whitespace character
+     */
     public static boolean isNotBlank(String value) {
         return !isBlank(value);
     }
 
+    /**
+     * <p>Splits the provided String into an array of Strings using the specified char delimiter.</p>
+     *
+     * <p>A <code>null</code> or empty input String returns an empty array.
+     * If the delimiter is not found, an array containing just the input String is returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.split(null, ',')       = []
+     * StringUtils.split("", ';')         = []
+     * StringUtils.split("a,b,c", ',')    = ["a", "b", "c"]
+     * StringUtils.split("a;b;c", ',')    = ["a;b;c"]
+     * StringUtils.split("a,,b,c", ',')   = ["a", "", "b", "c"]
+     * }</pre>
+     *
+     * @param value     the String to split, may be null or empty
+     * @param delimiter the char used as a delimiter to split the String
+     * @return an array of Strings, split by the delimiter; never null
+     */
     public static String[] split(String value, char delimiter) {
         return split(value, valueOf(delimiter));
     }
 
+    /**
+     * <p>Splits the provided String into an array of Strings using the specified String delimiter.</p>
+     *
+     * <p>A <code>null</code> or empty input String returns an empty array.
+     * If the delimiter is not found, an array containing just the input String is returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.split(null, ",")       = []
+     * StringUtils.split("", ";")         = []
+     * StringUtils.split("a,b,c", ",")    = ["a", "b", "c"]
+     * StringUtils.split("a;b;c", ",")    = ["a;b;c"]
+     * StringUtils.split("a,,b,c", ",")   = ["a", "", "b", "c"]
+     * }</pre>
+     *
+     * @param value     the String to split, may be null or empty
+     * @param delimiter the String used as a delimiter to split the String, may be null or empty
+     * @return an array of Strings, split by the delimiter; never null
+     */
     public static String[] split(String value, String delimiter) {
         if (isEmpty(value) || isEmpty(delimiter)) {
             return EMPTY_STRING_ARRAY;
@@ -68,6 +152,28 @@ public abstract class StringUtils implements Utils {
         return (String[]) asArray(stringTokenizer, String.class);
     }
 
+    /**
+     * <p>Checks if a CharSequence contains another CharSequence.</p>
+     *
+     * <p>This method is case-sensitive and uses the {@link String#contains(CharSequence)} method.
+     * A <code>null</code> CharSequence returns <code>false</code>.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.contains(null, null)     = false
+     * StringUtils.contains(null, "abc")    = false
+     * StringUtils.contains("abc", null)    = false
+     * StringUtils.contains("", "")         = true
+     * StringUtils.contains("abc", "")      = true
+     * StringUtils.contains("abc", "a")     = true
+     * StringUtils.contains("abc", "z")     = false
+     * StringUtils.contains("abc", "abc")   = true
+     * }</pre>
+     *
+     * @param value the CharSequence to check, may be null
+     * @param part  the CharSequence to search for, may be null
+     * @return {@code true} if the value contains the part as a subsequence, case-sensitive
+     */
     public static boolean contains(String value, CharSequence part) {
         if (value != null && part != null) {
             return value == part ? true : value.contains(part);
@@ -75,6 +181,29 @@ public abstract class StringUtils implements Utils {
         return false;
     }
 
+    /**
+     * <p>Checks if a String starts with another String.</p>
+     *
+     * <p>This method is case-sensitive and uses the {@link String#startsWith(String)} method.
+     * A <code>null</code> reference for either parameter returns <code>false</code>.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.startsWith(null, null)     = false
+     * StringUtils.startsWith(null, "abc")    = false
+     * StringUtils.startsWith("abc", null)    = false
+     * StringUtils.startsWith("", "")         = true
+     * StringUtils.startsWith("abc", "")      = true
+     * StringUtils.startsWith("abc", "a")     = true
+     * StringUtils.startsWith("abc", "ab")    = true
+     * StringUtils.startsWith("abc", "z")     = false
+     * StringUtils.startsWith("abc", "abcd")  = false
+     * }</pre>
+     *
+     * @param value the String to check, may be null
+     * @param part  the String prefix to search for, may be null
+     * @return {@code true} if the value starts with the provided part, case-sensitive
+     */
     public static boolean startsWith(String value, String part) {
         if (value != null && part != null) {
             return value == part ? true : value.startsWith(part);
@@ -82,6 +211,30 @@ public abstract class StringUtils implements Utils {
         return false;
     }
 
+    /**
+     * <p>Checks if a String ends with another String.</p>
+     *
+     * <p>This method is case-sensitive and uses the {@link String#endsWith(String)} method.
+     * A <code>null</code> reference for either parameter returns <code>false</code>.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.endsWith(null, null)     = false
+     * StringUtils.endsWith(null, "abc")    = false
+     * StringUtils.endsWith("abc", null)    = false
+     * StringUtils.endsWith("", "")         = true
+     * StringUtils.endsWith("abc", "")      = true
+     * StringUtils.endsWith("abc", "c")     = true
+     * StringUtils.endsWith("abc", "bc")    = true
+     * StringUtils.endsWith("abc", "abc")   = true
+     * StringUtils.endsWith("abc", "d")     = false
+     * StringUtils.endsWith("abc", "abcd")  = false
+     * }</pre>
+     *
+     * @param value the String to check, may be null
+     * @param part  the String suffix to search for, may be null
+     * @return {@code true} if the value ends with the provided part, case-sensitive
+     */
     public static boolean endsWith(String value, String part) {
         if (value != null && part != null) {
             return value == part ? true : value.endsWith(part);
@@ -101,6 +254,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>A <code>null</code> reference passed to this method is a no-op.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.replace(null, *, *)        = null
      * StringUtils.replace("", *, *)          = ""
@@ -129,6 +283,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>A <code>null</code> reference passed to this method is a no-op.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.replace(null, *, *, *)         = null
      * StringUtils.replace("", *, *, *)           = ""
@@ -184,6 +339,7 @@ public abstract class StringUtils implements Utils {
      * <p>A <code>null</code> input String returns <code>null</code>.
      * A <code>null</code> tag returns <code>null</code>.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.substringBetween(null, *)            = null
      * StringUtils.substringBetween("", "")             = ""
@@ -209,6 +365,7 @@ public abstract class StringUtils implements Utils {
      * A <code>null</code> open/close returns <code>null</code> (no match).
      * An empty ("") open and close returns an empty string.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.substringBetween("wx[b]yz", "[", "]") = "b"
      * StringUtils.substringBetween(null, *, *)          = null
@@ -251,6 +408,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the string input is returned.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.substringBefore(null, *)      = null
      * StringUtils.substringBefore("", *)        = ""
@@ -292,6 +450,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the empty string is returned.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.substringAfter(null, *)      = null
      * StringUtils.substringAfter("", *)        = ""
@@ -332,6 +491,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the string input is returned.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.substringBeforeLast(null, *)      = null
      * StringUtils.substringBeforeLast("", *)        = ""
@@ -370,6 +530,7 @@ public abstract class StringUtils implements Utils {
      *
      * <p>If nothing is found, the empty string is returned.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.substringAfterLast(null, *)      = null
      * StringUtils.substringAfterLast("", *)        = ""
@@ -408,6 +569,7 @@ public abstract class StringUtils implements Utils {
      * <p><code>null</code> will return <code>false</code>.
      * An empty String (length()=0) will return <code>true</code>.</p>
      *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.isNumeric(null)   = false
      * StringUtils.isNumeric("")     = true
