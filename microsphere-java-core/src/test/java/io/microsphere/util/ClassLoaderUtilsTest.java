@@ -386,6 +386,11 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
         }
     }
 
+    @Test
+    public void testGetResourceAsStringOnNull() throws IOException {
+        assertNull(getResourceAsString("not-exists"));
+    }
+
     private void assertGetResource() {
         for (String testResource : testResources) {
             URL resourceURL = getResource(testResource);
