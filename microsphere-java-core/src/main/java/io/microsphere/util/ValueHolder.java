@@ -19,10 +19,29 @@ package io.microsphere.util;
 import java.util.Objects;
 
 /**
- * The class to hold a value  (No Thread-Safe)
+ * A container class to hold a mutable value of any type. This class is not thread-safe.
  *
- * @param <V> the value type
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <p>It provides methods to set, get, and reset the value, as well as utility methods like
+ * {@link #equals(Object)}, {@link #hashCode()}, and {@link #toString()} for general usage.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create an empty ValueHolder for String type
+ * ValueHolder<String> stringHolder = new ValueHolder<>();
+ * stringHolder.setValue("Hello");
+ * System.out.println(stringHolder.getValue());  // Output: Hello
+ *
+ * // Create a ValueHolder with an initial value using factory method
+ * ValueHolder<Integer> intHolder = ValueHolder.of(123);
+ * System.out.println(intHolder.getValue());     // Output: 123
+ *
+ * // Reset the value back to null
+ * intHolder.reset();
+ * System.out.println(intHolder.getValue());     // Output: null
+ * }</pre>
+ *
+ * @param <V> the type of the value being held
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 public class ValueHolder<V> {
