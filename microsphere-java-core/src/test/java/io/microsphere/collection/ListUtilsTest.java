@@ -32,6 +32,7 @@ import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.ListUtils.ofArrayList;
+import static io.microsphere.collection.ListUtils.ofLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.Arrays.asList;
@@ -153,6 +154,22 @@ public class ListUtilsTest extends AbstractTestCase {
     void testOfArrayListOnEmptyArray() {
         assertThrows(IllegalArgumentException.class, () -> ofArrayList(null));
         assertThrows(IllegalArgumentException.class, () -> ofArrayList());
+    }
+
+    @Test
+    void testOfLinkedList() {
+        List<String> list = ofLinkedList("A", "B", "C");
+        assertEquals(list, ofList("A", "B", "C"));
+        assertTrue(list.add("D"));
+        assertTrue(list.addAll(ofList("A", "B", "C", "D")));
+        assertTrue(list.removeAll(ofList("A", "B", "C")));
+        assertTrue(list.containsAll(ofList("D")));
+    }
+
+    @Test
+    void testOfLinkedListOnEmptyArray() {
+        assertThrows(IllegalArgumentException.class, () -> ofLinkedList(null));
+        assertThrows(IllegalArgumentException.class, () -> ofLinkedList());
     }
 
     @Test
