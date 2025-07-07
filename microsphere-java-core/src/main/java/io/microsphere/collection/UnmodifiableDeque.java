@@ -115,12 +115,12 @@ public class UnmodifiableDeque<E> extends UnmodifiableQueue<E> implements Deque<
 
     @Override
     public E peekFirst() {
-        return getFirst();
+        return delegate.peekFirst();
     }
 
     @Override
     public E peekLast() {
-        return getLast();
+        return delegate.peekLast();
     }
 
     @Override
