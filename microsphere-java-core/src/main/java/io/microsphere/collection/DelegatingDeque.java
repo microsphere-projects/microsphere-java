@@ -38,96 +38,98 @@ public class DelegatingDeque<E> extends DelegatingQueue<E> implements Deque<E> {
      */
     private static final MethodHandle reversedMethodHandle = findPublicVirtual(Deque.class, "reversed");
 
-    protected final Deque<E> delegate;
-
     public DelegatingDeque(Deque<E> delegate) {
         super(delegate);
-        this.delegate = delegate;
     }
 
     @Override
     public void addFirst(E e) {
-        delegate.addFirst(e);
+        getDelegate().addFirst(e);
     }
 
     @Override
     public void addLast(E e) {
-        delegate.addLast(e);
+        getDelegate().addLast(e);
     }
 
     @Override
     public boolean offerFirst(E e) {
-        return delegate.offerFirst(e);
+        return getDelegate().offerFirst(e);
     }
 
     @Override
     public boolean offerLast(E e) {
-        return delegate.offerLast(e);
+        return getDelegate().offerLast(e);
     }
 
     @Override
     public E removeFirst() {
-        return delegate.removeFirst();
+        return getDelegate().removeFirst();
     }
 
     @Override
     public E removeLast() {
-        return delegate.removeLast();
+        return getDelegate().removeLast();
     }
 
     @Override
     public E pollFirst() {
-        return delegate.pollFirst();
+        return getDelegate().pollFirst();
     }
 
     @Override
     public E pollLast() {
-        return delegate.pollLast();
+        return getDelegate().pollLast();
     }
 
     @Override
     public E getFirst() {
-        return delegate.getFirst();
+        return getDelegate().getFirst();
     }
 
     @Override
     public E getLast() {
-        return delegate.getLast();
+        return getDelegate().getLast();
     }
 
     @Override
     public E peekFirst() {
-        return delegate.peekFirst();
+        return getDelegate().peekFirst();
     }
 
     @Override
     public E peekLast() {
-        return delegate.peekLast();
+        return getDelegate().peekLast();
     }
 
     @Override
     public boolean removeFirstOccurrence(Object o) {
-        return delegate.removeFirstOccurrence(o);
+        return getDelegate().removeFirstOccurrence(o);
     }
 
     @Override
     public boolean removeLastOccurrence(Object o) {
-        return delegate.removeLastOccurrence(o);
+        return getDelegate().removeLastOccurrence(o);
     }
 
     @Override
     public void push(E e) {
-        delegate.push(e);
+        getDelegate().push(e);
     }
 
     @Override
     public E pop() {
-        return delegate.pop();
+        return getDelegate().pop();
     }
 
     @Override
     public Iterator<E> descendingIterator() {
-        return delegate.descendingIterator();
+        return getDelegate().descendingIterator();
+    }
+
+    @Override
+    public Deque<E> getDelegate() {
+        return (Deque<E>) super.getDelegate();
     }
 
     /**
@@ -135,8 +137,8 @@ public class DelegatingDeque<E> extends DelegatingQueue<E> implements Deque<E> {
      */
     public Deque<E> reversed() {
         if (reversedMethodHandle == null) {
-            return reversedDeque(delegate);
+            return reversedDeque(getDelegate());
         }
-        return execute(() -> (Deque<E>) reversedMethodHandle.invokeExact(delegate));
+        return execute(() -> (Deque<E>) reversedMethodHandle.invokeExact(getDelegate()));
     }
 }
