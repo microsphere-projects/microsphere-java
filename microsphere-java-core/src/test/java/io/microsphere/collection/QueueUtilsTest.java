@@ -8,9 +8,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+import static io.microsphere.collection.EmptyDeque.INSTANCE;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.ofLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.QueueUtils.EMPTY_DEQUE;
 import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.isDeque;
@@ -38,6 +40,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 public class QueueUtilsTest {
+
+    @Test
+    public void testConstants() {
+        assertSame(EMPTY_DEQUE, INSTANCE);
+    }
 
     @Test
     public void testIsQueue() {
