@@ -106,6 +106,16 @@ public class AbstractDequeTest {
             }
 
             @Override
+            public String peekFirst() {
+                return value;
+            }
+
+            @Override
+            public String peekLast() {
+                return value;
+            }
+
+            @Override
             public boolean removeLastOccurrence(Object o) {
                 if (Objects.equals(o, value)) {
                     value = null;
