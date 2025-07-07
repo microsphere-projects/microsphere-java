@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -179,11 +180,15 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
     @Test
     void testEquals() {
         assertFalse(instance.equals(new Object()));
+        assertFalse(instance.equals(ofList("A", "B")));
         assertTrue(instance.equals(new ArrayList<>(instance)));
     }
 
     @Test
     void testHashCode() {
+        assertEquals(instance.hashCode(), new ArrayList<>(instance).hashCode());
+
+        instance.add(null);
         assertEquals(instance.hashCode(), new ArrayList<>(instance).hashCode());
     }
 
