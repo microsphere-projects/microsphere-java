@@ -508,6 +508,8 @@ public abstract class ListUtils implements Utils {
      *     Integer[] numbers = {};
      *     List<Integer> numberList = ListUtils.ofArrayList(numbers); // throws IllegalArgumentException
      *
+     *     List<Integer> emptyList = ListUtils.ofLinkedList((Integer[]) null); // throws IllegalArgumentException
+     *
      * }</pre>
      *
      * @param array the array to convert
@@ -520,6 +522,43 @@ public abstract class ListUtils implements Utils {
         int length = length(array);
         assertTrue(length > 0, () -> "The array length must be greater than 0");
         ArrayList<E> list = newArrayList(length);
+        for (int i = 0; i < length; i++) {
+            list.add(array[i]);
+        }
+        return list;
+    }
+
+    /**
+     * Creates a new {@link LinkedList} containing all elements from the specified array.
+     *
+     * <p>This method copies the elements from the provided array into a newly created linked list,
+     * allowing for efficient insertions and deletions. If the array is empty or {@code null},
+     * an {@link IllegalArgumentException} will be thrown.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     String[] fruits = {"apple", "banana", "cherry"};
+     *     List<String> fruitList = ListUtils.ofLinkedList(fruits);
+     *     System.out.println(fruitList); // Output: [apple, banana, cherry]
+     *     fruitList.add("orange");       // return true
+     *     System.out.println(fruitList); // Output: [apple, banana, cherry, orange]
+     *
+     *     Integer[] numbers = {};
+     *     List<Integer> numberList = ListUtils.ofLinkedList(numbers); // throws IllegalArgumentException
+     *
+     *     List<Integer> emptyList = ListUtils.ofLinkedList((Integer[]) null); // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param array the array to convert
+     * @param <E>   the type of elements in the array
+     * @return a new {@link LinkedList} containing all elements from the array
+     * @throws IllegalArgumentException if the array is null or empty
+     * @see #ofList(Object[]) for creating an immutable version of the list
+     */
+    public static <E> LinkedList<E> ofLinkedList(E... array) throws IllegalArgumentException {
+        int length = length(array);
+        assertTrue(length > 0, () -> "The array length must be greater than 0");
+        LinkedList<E> list = newLinkedList();
         for (int i = 0; i < length; i++) {
             list.add(array[i]);
         }
