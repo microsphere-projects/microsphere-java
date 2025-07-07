@@ -74,7 +74,7 @@ import java.util.NoSuchElementException;
  *     }
  * }
  *  }</pre>
-
+ *
  * @param <E> The type of elements held in this deque
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
@@ -109,16 +109,6 @@ public abstract class AbstractDeque<E> extends AbstractQueue<E> implements Deque
             return x;
         else
             throw new NoSuchElementException();
-    }
-
-    @Override
-    public E peekFirst() {
-        return getFirst();
-    }
-
-    @Override
-    public E peekLast() {
-        return getLast();
     }
 
     @Override
