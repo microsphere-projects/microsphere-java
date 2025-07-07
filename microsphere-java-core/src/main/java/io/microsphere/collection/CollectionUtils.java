@@ -22,11 +22,12 @@ import io.microsphere.util.Utils;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
 
-import static io.microsphere.collection.EmptyIterable.INSTANCE;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.util.ArrayUtils.length;
 
@@ -92,7 +93,7 @@ public abstract class CollectionUtils implements Utils {
      */
     @Nonnull
     public static <E> Iterable<E> toIterable(@Nullable Collection<E> collection) {
-        return collection == null ? INSTANCE : collection;
+        return collection == null ? EmptyIterable.INSTANCE : collection;
     }
 
     /**
@@ -318,7 +319,7 @@ public abstract class CollectionUtils implements Utils {
      */
     @Nonnull
     public static <E> Iterable<E> emptyIterable() {
-        return INSTANCE;
+        return EmptyIterable.INSTANCE;
     }
 
     /**
@@ -563,6 +564,70 @@ public abstract class CollectionUtils implements Utils {
             return null;
         }
         return values.next();
+    }
+
+    /**
+     * Returns an empty, immutable {@link Queue} that throws {@link UnsupportedOperationException}
+     * for all modification operations.
+     *
+     * <p>
+     * This method returns a singleton instance of an empty queue. Any attempt to modify the returned queue
+     * will result in an {@link UnsupportedOperationException}. It is useful as a placeholder or default value
+     * where an empty queue is needed without creating a new instance every time.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Queue<String> emptyQueue = CollectionUtils.emptyQueue();
+     *
+     * System.out.println(emptyQueue.isEmpty()); // true
+     * System.out.println(emptyQueue.size());    // 0
+     *
+     * try {
+     *     emptyQueue.add("test");
+     * } catch (UnsupportedOperationException e) {
+     *     System.out.println("Modification not allowed"); // This block will execute
+     * }
+     * }</pre>
+     *
+     * @param <T> the type of elements held in the returned queue
+     * @return an empty and immutable queue instance
+     * @see EmptyDeque
+     */
+    public static <T> Queue<T> emptyQueue() {
+        return QueueUtils.emptyQueue();
+    }
+
+    /**
+     * Returns an empty, immutable {@link Deque} instance that throws {@link UnsupportedOperationException}
+     * for all modification operations.
+     *
+     * <p>
+     * This method returns a singleton instance of an empty deque. Any attempt to modify the returned deque
+     * will result in an {@link UnsupportedOperationException}. It is useful as a placeholder or default value
+     * where an empty deque is needed without creating a new instance every time.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Deque<String> emptyDeque = CollectionUtils.emptyDeque();
+     *
+     * System.out.println(emptyDeque.isEmpty()); // true
+     * System.out.println(emptyDeque.size());    // 0
+     *
+     * try {
+     *     emptyDeque.add("test");
+     * } catch (UnsupportedOperationException e) {
+     *     System.out.println("Modification not allowed"); // This block will execute
+     * }
+     * }</pre>
+     *
+     * @param <T> the type of elements held in this deque
+     * @return an empty and immutable deque instance
+     * @see EmptyDeque
+     */
+    public static <T> Deque<T> emptyDeque() {
+        return QueueUtils.emptyDeque();
     }
 
     private CollectionUtils() {
