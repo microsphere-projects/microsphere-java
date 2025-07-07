@@ -20,10 +20,13 @@ package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.NoSuchElementException;
+
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.EmptyDeque.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -60,22 +63,22 @@ class EmptyDequeTest {
 
     @Test
     void testPollFirst() {
-        assertThrows(UnsupportedOperationException.class, emptyDeque::pollFirst);
+        assertNull(emptyDeque.pollFirst());
     }
 
     @Test
     void testPollLast() {
-        assertThrows(UnsupportedOperationException.class, emptyDeque::pollLast);
+        assertNull(emptyDeque.pollLast());
     }
 
     @Test
     void testGetFirst() {
-        assertThrows(UnsupportedOperationException.class, emptyDeque::getFirst);
+        assertThrows(NoSuchElementException.class, emptyDeque::getFirst);
     }
 
     @Test
     void testGetLast() {
-        assertThrows(UnsupportedOperationException.class, emptyDeque::getLast);
+        assertThrows(NoSuchElementException.class, emptyDeque::getLast);
     }
 
     @Test
