@@ -33,7 +33,7 @@ import static io.microsphere.collection.ReversedDeque.of;
  */
 public abstract class QueueUtils implements Utils {
 
-    private static final Deque EMPTY_DEQUE = new EmptyDeque();
+    public static final Deque EMPTY_DEQUE = EmptyDeque.INSTANCE;
 
     /**
      * Checks whether the specified {@link Iterable} is an instance of {@link Queue}.
