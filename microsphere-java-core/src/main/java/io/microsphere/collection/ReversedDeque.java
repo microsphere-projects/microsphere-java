@@ -158,9 +158,15 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Iterable)) {
+        if (!(o instanceof Collection)) {
             return false;
         }
+
+        Collection<E> that = (Collection<E>) o;
+        if (that.size() != size()) {
+            return false;
+        }
+
         Iterator<E> iterator = iterator();
         Iterator<E> otherIterator = ((Iterable<E>) o).iterator();
         while (iterator.hasNext() && otherIterator.hasNext()) {
