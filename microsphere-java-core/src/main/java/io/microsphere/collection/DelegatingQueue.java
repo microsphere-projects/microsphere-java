@@ -177,7 +177,7 @@ public class DelegatingQueue<E> implements Queue<E>, DelegatingWrapper {
     }
 
     @Override
-    public Object getDelegate() {
+    public Queue<E> getDelegate() {
         return this.delegate;
     }
 }
