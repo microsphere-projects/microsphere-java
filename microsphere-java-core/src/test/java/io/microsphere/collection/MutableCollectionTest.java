@@ -121,6 +121,9 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
         assertTrue(instance.remove("B"));
         assertTrue(instance.remove("C"));
         assertFalse(instance.remove("D"));
+        instance.add(null);
+        assertTrue(instance.remove(null));
+        assertFalse(instance.remove(null));
     }
 
     @Test
@@ -181,6 +184,7 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
     void testEquals() {
         assertFalse(instance.equals(new Object()));
         assertFalse(instance.equals(ofList("A", "B")));
+        assertFalse(instance.equals(ofList("A", "B", "D")));
         assertTrue(instance.equals(new ArrayList<>(instance)));
     }
 
