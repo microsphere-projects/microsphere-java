@@ -27,8 +27,10 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.CollectionUtils.emptyDeque;
 import static io.microsphere.collection.CollectionUtils.emptyIterable;
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
+import static io.microsphere.collection.CollectionUtils.emptyQueue;
 import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
@@ -37,6 +39,7 @@ import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.QueueUtils.EMPTY_DEQUE;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyList;
@@ -212,6 +215,18 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertEquals(TEST_ELEMENT, first(TEST_SINGLETON_LIST));
         assertEquals(TEST_ELEMENT, first(TEST_SINGLETON_SET));
         assertEquals(TEST_ELEMENT, first(toIterable(TEST_SINGLETON_LIST)));
+    }
+
+    @Test
+    public void testEmptyQueue() {
+        assertSame(QueueUtils.emptyQueue(), emptyQueue());
+        assertSame(EMPTY_DEQUE, emptyQueue());
+    }
+
+    @Test
+    public void testEmptyDeque() {
+        assertSame(QueueUtils.emptyDeque(), emptyDeque());
+        assertSame(EMPTY_DEQUE, emptyDeque());
     }
 
 }
