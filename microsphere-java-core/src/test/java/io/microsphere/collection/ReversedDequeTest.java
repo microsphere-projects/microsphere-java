@@ -50,6 +50,15 @@ class ReversedDequeTest extends MutableDequeTest<Deque<Object>> {
         assertEquals(of(emptyDeque()), of(emptyDeque()));
     }
 
+    @Test
+    void testToString() {
+        super.testToString();
+        assertEquals("[]", of(emptyDeque()).toString());
+
+        Deque<Object> deque = newInstance();
+        deque.add(deque);
+        assertEquals("[(this Collection)]", deque.toString());
+    }
 
     @Test
     void testStream() {
