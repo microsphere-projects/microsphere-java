@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.QueueUtils.reversedDeque;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicVirtual;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -277,7 +278,7 @@ public class DelegatingDeque<E> implements Deque<E>, DelegatingWrapper {
      */
     public Deque<E> reversed() {
         if (reversedMethodHandle == null) {
-            return ReversedDeque.of(delegate);
+            return reversedDeque(delegate);
         }
         return execute(() -> (Deque<E>) reversedMethodHandle.invokeExact(delegate));
     }
