@@ -23,8 +23,11 @@ import org.junit.jupiter.api.Test;
 import java.util.Deque;
 import java.util.LinkedList;
 
+import static io.microsphere.collection.QueueUtils.emptyDeque;
+import static io.microsphere.collection.ReversedDeque.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link ReversedDeque} Test
@@ -37,9 +40,16 @@ class ReversedDequeTest extends MutableDequeTest<Deque<Object>> {
 
     @Override
     protected Deque<Object> newInstance() {
-        Deque<Object> reversedDeque = ReversedDeque.of(new LinkedList<>());
+        Deque<Object> reversedDeque = of(of(new LinkedList<>()));
         return reversedDeque;
     }
+
+    @Test
+    void testEquals() {
+        super.testEquals();
+        assertEquals(of(emptyDeque()), of(emptyDeque()));
+    }
+
 
     @Test
     void testStream() {
