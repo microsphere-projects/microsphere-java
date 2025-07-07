@@ -58,7 +58,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     }
 
     public Iterator<E> iterator() {
-        return delegate.descendingIterator();
+        return getDelegate().descendingIterator();
     }
 
     public Spliterator<E> spliterator() {
@@ -68,14 +68,14 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     // ========== Collection ==========
 
     public boolean add(E e) {
-        delegate.addFirst(e);
+        getDelegate().addFirst(e);
         return true;
     }
 
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
         for (E e : c) {
-            delegate.addFirst(e);
+            getDelegate().addFirst(e);
             modified = true;
         }
         return modified;
@@ -136,7 +136,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
 
     @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
-        return toArrayReversed(delegate, a);
+        return toArrayReversed(getDelegate(), a);
     }
 
     // copied from AbstractCollection
@@ -191,90 +191,90 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     // ========== Deque and Queue ==========
 
     public void addFirst(E e) {
-        delegate.addLast(e);
+        getDelegate().addLast(e);
     }
 
     public void addLast(E e) {
-        delegate.addFirst(e);
+        getDelegate().addFirst(e);
     }
 
     public Iterator<E> descendingIterator() {
-        return delegate.iterator();
+        return getDelegate().iterator();
     }
 
     public E element() {
-        return delegate.getLast();
+        return getDelegate().getLast();
     }
 
     public E getFirst() {
-        return delegate.getLast();
+        return getDelegate().getLast();
     }
 
     public E getLast() {
-        return delegate.getFirst();
+        return getDelegate().getFirst();
     }
 
     public boolean offer(E e) {
-        return delegate.offerFirst(e);
+        return getDelegate().offerFirst(e);
     }
 
     public boolean offerFirst(E e) {
-        return delegate.offerLast(e);
+        return getDelegate().offerLast(e);
     }
 
     public boolean offerLast(E e) {
-        return delegate.offerFirst(e);
+        return getDelegate().offerFirst(e);
     }
 
     public E peek() {
-        return delegate.peekLast();
+        return getDelegate().peekLast();
     }
 
     public E peekFirst() {
-        return delegate.peekLast();
+        return getDelegate().peekLast();
     }
 
     public E peekLast() {
-        return delegate.peekFirst();
+        return getDelegate().peekFirst();
     }
 
     public E poll() {
-        return delegate.pollLast();
+        return getDelegate().pollLast();
     }
 
     public E pollFirst() {
-        return delegate.pollLast();
+        return getDelegate().pollLast();
     }
 
     public E pollLast() {
-        return delegate.pollFirst();
+        return getDelegate().pollFirst();
     }
 
     public E pop() {
-        return delegate.removeLast();
+        return getDelegate().removeLast();
     }
 
     public void push(E e) {
-        delegate.addLast(e);
+        getDelegate().addLast(e);
     }
 
     public E remove() {
-        return delegate.removeLast();
+        return getDelegate().removeLast();
     }
 
     public E removeFirst() {
-        return delegate.removeLast();
+        return getDelegate().removeLast();
     }
 
     public E removeLast() {
-        return delegate.removeFirst();
+        return getDelegate().removeFirst();
     }
 
     public boolean removeFirstOccurrence(Object o) {
-        return delegate.removeLastOccurrence(o);
+        return getDelegate().removeLastOccurrence(o);
     }
 
     public boolean removeLastOccurrence(Object o) {
-        return delegate.removeFirstOccurrence(o);
+        return getDelegate().removeFirstOccurrence(o);
     }
 }
