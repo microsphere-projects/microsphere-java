@@ -38,25 +38,25 @@ public class URLClassPathHandleTest extends BaseURLClassPathHandleTest {
 
     @Override
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertFalse(handle.supports());
     }
 
     @Test
-    public void testGetURLs() {
+    void testGetURLs() {
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
         URL[] urls = new URL[0];
         assertArrayEquals(urls, handle.getURLs(new URLClassLoader(urls)));
     }
 
     @Test
-    public void testInitializeLoaders() {
+    void testInitializeLoaders() {
         assertFalse(handle.initializeLoaders(null));
     }
 
     @Override
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(MIN_PRIORITY, handle.getPriority());
     }
 }
