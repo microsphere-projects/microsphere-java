@@ -20,8 +20,8 @@ import java.util.Iterator;
 
 /**
  * A skeletal implementation of the {@link Iterator} interface, designed to support
- * read-only iteration. This class provides a default implementation for the 
- * {@link #remove()} method, which throws an {@link IllegalStateException}, 
+ * read-only iteration. This class provides a default implementation for the
+ * {@link #remove()} method, which throws an {@link IllegalStateException},
  * indicating that removal is not supported.
  *
  * <h3>Example Usage</h3>
