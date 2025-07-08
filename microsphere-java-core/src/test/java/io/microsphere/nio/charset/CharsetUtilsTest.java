@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see CharsetUtils
  * @since 1.0.0
  */
-public class CharsetUtilsTest  {
+class CharsetUtilsTest  {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertNotNull(DEFAULT_CHARSET);
     }
 
