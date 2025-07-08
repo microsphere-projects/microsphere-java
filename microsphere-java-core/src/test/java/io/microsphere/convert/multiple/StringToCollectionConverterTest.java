@@ -48,17 +48,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToCollectionConverterTest {
+class StringToCollectionConverterTest {
 
     private MultiValueConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToCollectionConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
 
         assertTrue(converter.accept(String.class, Collection.class));
 
@@ -86,7 +86,7 @@ public class StringToCollectionConverterTest {
     }
 
     @Test
-    public void testConvert() {
+    void testConvert() {
 
         List values = ofList(1L, 2L, 3L);
 
@@ -107,12 +107,12 @@ public class StringToCollectionConverterTest {
     }
 
     @Test
-    public void testGetSourceType() {
+    void testGetSourceType() {
         assertEquals(String.class, converter.getSourceType());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(MAX_VALUE - 1, converter.getPriority());
     }
 }
