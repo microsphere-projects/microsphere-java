@@ -116,7 +116,7 @@ public abstract class ExceptionUtils implements Utils {
      * }
      * }</pre>
      *
-     * @param <T>           the type of the Throwable to be created
+     * @param <T>            the type of the Throwable to be created
      * @param throwableClass the Class object of the Throwable to instantiate
      * @return a new instance of the specified Throwable
      */
