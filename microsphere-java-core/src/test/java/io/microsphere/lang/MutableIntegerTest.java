@@ -20,6 +20,7 @@ package io.microsphere.lang;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.lang.MutableInteger.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -35,19 +36,19 @@ public class MutableIntegerTest {
 
     @Test
     void testOfFactoryMethod() {
-        MutableInteger adder = MutableInteger.of(5);
+        MutableInteger adder = of(5);
         assertEquals(5, adder.get());
     }
 
     @Test
     void testGet() {
-        MutableInteger adder = new MutableInteger(7);
+        MutableInteger adder = of(7);
         assertEquals(7, adder.get());
     }
 
     @Test
     void testSet() {
-        MutableInteger adder = new MutableInteger(0);
+        MutableInteger adder = of(0);
         MutableInteger returned = adder.set(100);
         assertSame(adder, returned); // 返回自身
         assertEquals(100, adder.get());
@@ -55,7 +56,7 @@ public class MutableIntegerTest {
 
     @Test
     void testGetAndSet() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int oldValue = adder.getAndSet(20);
         assertEquals(5, oldValue);
         assertEquals(20, adder.get());
@@ -63,7 +64,7 @@ public class MutableIntegerTest {
 
     @Test
     void testIncrementAndGet() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int newValue = adder.incrementAndGet();
         assertEquals(6, newValue);
         assertEquals(6, adder.get());
@@ -71,7 +72,7 @@ public class MutableIntegerTest {
 
     @Test
     void testDecrementAndGet() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int newValue = adder.decrementAndGet();
         assertEquals(4, newValue);
         assertEquals(4, adder.get());
@@ -79,7 +80,7 @@ public class MutableIntegerTest {
 
     @Test
     void testGetAndIncrement() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int oldValue = adder.getAndIncrement();
         assertEquals(5, oldValue);
         assertEquals(6, adder.get());
@@ -87,7 +88,7 @@ public class MutableIntegerTest {
 
     @Test
     void testGetAndDecrement() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int oldValue = adder.getAndDecrement();
         assertEquals(5, oldValue);
         assertEquals(4, adder.get());
@@ -95,7 +96,7 @@ public class MutableIntegerTest {
 
     @Test
     void testAddAndGet() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int newValue = adder.addAndGet(3);
         assertEquals(8, newValue);
         assertEquals(8, adder.get());
@@ -103,7 +104,7 @@ public class MutableIntegerTest {
 
     @Test
     void testGetAndAdd() {
-        MutableInteger adder = new MutableInteger(5);
+        MutableInteger adder = of(5);
         int oldValue = adder.getAndAdd(3);
         assertEquals(5, oldValue);
         assertEquals(8, adder.get());
@@ -111,7 +112,7 @@ public class MutableIntegerTest {
 
     @Test
     void testNumberConversionMethods() {
-        MutableInteger adder = new MutableInteger(10);
+        MutableInteger adder = of(10);
         assertEquals(10, adder.intValue());
         assertEquals(10L, adder.longValue());
         assertEquals(10.0f, adder.floatValue());
@@ -120,21 +121,21 @@ public class MutableIntegerTest {
 
     @Test
     void testToString() {
-        MutableInteger adder = new MutableInteger(123);
+        MutableInteger adder = of(123);
         assertEquals("123", adder.toString());
     }
 
     @Test
     void testHashCode() {
-        MutableInteger adder = new MutableInteger(42);
+        MutableInteger adder = of(42);
         assertEquals(42, adder.hashCode());
     }
 
     @Test
     void testEquals() {
-        MutableInteger a = new MutableInteger(10);
-        MutableInteger b = new MutableInteger(10);
-        MutableInteger c = new MutableInteger(20);
+        MutableInteger a = of(10);
+        MutableInteger b = of(10);
+        MutableInteger c = of(20);
 
         assertTrue(a.equals(b));
         assertFalse(a.equals(c));
