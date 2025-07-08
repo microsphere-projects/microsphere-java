@@ -12,7 +12,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  * @see StringToDurationConverter
  * @since 1.0.0
  */
-public class StringToDurationConverterTest extends BaseConverterTest<String, Duration> {
+class StringToDurationConverterTest extends BaseConverterTest<String, Duration> {
 
     @Override
     protected AbstractConverter<String, Duration> createConverter() {
