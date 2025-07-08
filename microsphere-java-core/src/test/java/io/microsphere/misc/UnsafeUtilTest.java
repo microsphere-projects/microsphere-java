@@ -13,7 +13,7 @@
 // * @see UnsafeUtilTest
 // * @since 1.0.0
 // */
-//public class UnsafeUtilTest {
+//class UnsafeUtilTest {
 //
 //    private Model model;
 //
