@@ -33,10 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SeparatorConstantsTest {
+class SeparatorConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals("!/", ARCHIVE_ENTRY_SEPARATOR);
         assertEquals(separator, FILE_SEPARATOR);
         assertEquals(pathSeparator, PATH_SEPARATOR);
