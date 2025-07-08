@@ -40,7 +40,7 @@ class WrapperTest {
     }
 
     @Test
-    void testOnNull(){
+    void testOnNull() {
         assertNull(tryUnwrap(null, String.class));
     }
 
