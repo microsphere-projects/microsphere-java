@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see ConsoleURLConnection
  * @since 1.0.0
  */
-public class ConsoleURLConnectionTest {
+class ConsoleURLConnectionTest {
 
     private ConsoleURLConnection connection;
 
@@ -27,17 +27,17 @@ public class ConsoleURLConnectionTest {
     }
 
     @Test
-    public void testConnect() throws IOException {
+    void testConnect() throws IOException {
         connection.connect();
     }
 
     @Test
-    public void testGetInputStream() throws IOException {
+    void testGetInputStream() throws IOException {
         assertSame(System.in, connection.getInputStream());
     }
 
     @Test
-    public void testGetOutputStream() throws IOException {
+    void testGetOutputStream() throws IOException {
         assertSame(System.out, connection.getOutputStream());
     }
 }
