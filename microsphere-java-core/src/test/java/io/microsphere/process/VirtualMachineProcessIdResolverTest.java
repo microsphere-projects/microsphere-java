@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see VirtualMachineProcessIdResolver
  * @since 1.0.0
  */
-public class VirtualMachineProcessIdResolverTest {
+class VirtualMachineProcessIdResolverTest {
 
     private VirtualMachineProcessIdResolver resolver;
 
