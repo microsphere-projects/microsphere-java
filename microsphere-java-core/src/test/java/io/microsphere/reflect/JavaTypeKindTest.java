@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class JavaTypeKindTest {
+class JavaTypeKindTest {
 
     /**
      * ParameterizedType : {@link C<String>}
@@ -58,7 +58,7 @@ public class JavaTypeKindTest {
     static final GenericArrayType TEST_GENERIC_ARRAY_TYPE = (GenericArrayType) findMethod(Class.class, "getClasses").getGenericReturnType();
 
     @Test
-    public void testValueOf() {
+    void testValueOf() {
         assertSame(CLASS, valueOf(String.class));
         assertSame(PARAMETERIZED_TYPE, valueOf(C_STRING_PARAMETERIZED_TYPE));
         assertSame(TYPE_VARIABLE, valueOf(C.class.getTypeParameters()[0]));
