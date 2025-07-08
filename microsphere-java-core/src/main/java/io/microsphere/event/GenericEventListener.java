@@ -61,7 +61,7 @@ import static java.util.stream.Stream.of;
  *     }
  * }
  * }</pre>
- *
+ * <p>
  * When an event is received via the final {@link #onEvent(Event)} method, it will automatically invoke all matching
  * handler methods defined in the subclass. This allows for a dynamic dispatch mechanism based on the runtime type of the event.
  *
