@@ -61,7 +61,7 @@ public abstract class AbstractJavaTypeTest<T> {
     private Type type;
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         testEmptyJavaTypeArray();
         testObjectJavaType();
         testNullJavaType();
@@ -105,7 +105,7 @@ public abstract class AbstractJavaTypeTest<T> {
     }
 
     @BeforeEach
-    public void init() {
+    void init() {
         javaType = createJavaType();
     }
 
@@ -126,7 +126,7 @@ public abstract class AbstractJavaTypeTest<T> {
     }
 
     @Test
-    public void test() {
+    void test() {
         testType();
         testKind();
         testSource();
