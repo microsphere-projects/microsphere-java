@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see BeanProperty
  * @since 1.0.0
  */
-public class BeanPropertyTest {
+class BeanPropertyTest {
 
     private static final String TEST_VALUE = "test-value";
 
@@ -62,29 +62,29 @@ public class BeanPropertyTest {
     }
 
     @Test
-    public void testValue() {
+    void testValue() {
         assertEquals(TEST_VALUE, beanProperty.getValue());
         beanProperty.setValue("new-value");
         assertEquals("new-value", beanProperty.getValue());
     }
 
     @Test
-    public void testName() {
+    void testName() {
         assertEquals("value", beanProperty.getName());
     }
 
     @Test
-    public void testBeanClass() {
+    void testBeanClass() {
         assertEquals(BeanPropertyTest.class, beanProperty.getBeanClass());
     }
 
     @Test
-    public void testPropertyDescriptor() {
+    void testPropertyDescriptor() {
         assertNotNull(beanProperty.getDescriptor());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(this.beanProperty, this.beanProperty);
         assertEquals(this.beanProperty, of(this, "value"));
 
@@ -109,7 +109,7 @@ public class BeanPropertyTest {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(this.beanProperty.hashCode(), of(this, "value").hashCode());
 
         BeanPropertyTest bean = new BeanPropertyTest();
@@ -118,7 +118,7 @@ public class BeanPropertyTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals(beanProperty.toString(), of(this, "value").toString());
     }
 }
