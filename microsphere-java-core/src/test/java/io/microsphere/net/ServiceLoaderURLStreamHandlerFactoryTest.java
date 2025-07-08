@@ -40,20 +40,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ServiceLoaderURLStreamHandlerFactoryTest {
+class ServiceLoaderURLStreamHandlerFactoryTest {
 
     @BeforeEach
-    public void init() {
+    void init() {
         attach();
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         clearURLStreamHandlerFactory();
     }
 
     @Test
-    public void test() {
+    void test() {
         ServiceLoaderURLStreamHandlerFactory factory = new ServiceLoaderURLStreamHandlerFactory();
         URLStreamHandler handler = factory.createURLStreamHandler(FILE_PROTOCOL);
         assertEquals("sun.net.www.protocol.file.Handler", handler.getClass().getName());
@@ -69,7 +69,7 @@ public class ServiceLoaderURLStreamHandlerFactoryTest {
     }
 
     @Test
-    public void testAttach() throws IOException {
+    void testAttach() throws IOException {
         attach();
         URL url = new URL(TEST_PROPERTIES_CLASSPATH_URL);
         assertEquals("name = 测试名称", IOUtils.toString(url.openStream(), "UTF-8"));
