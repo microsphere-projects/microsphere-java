@@ -215,7 +215,7 @@ public abstract class IOUtils implements Utils {
      * }
      * }</pre>
      *
-     * @param in      the InputStream to copy from (may be {@code null} or empty)
+     * @param in       the InputStream to copy from (may be {@code null} or empty)
      * @param encoding the name of the character encoding to use; defaults to system file encoding if blank
      * @return the resulting String from the input stream, or {@code null} if the stream is empty or null
      * @throws IOException if an I/O error occurs during reading from the stream
