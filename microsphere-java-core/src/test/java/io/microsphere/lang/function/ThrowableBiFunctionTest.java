@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ThrowableBiFunction
  * @since 1.0.0
  */
-public class ThrowableBiFunctionTest {
+class ThrowableBiFunctionTest {
 
     private static final ThrowableBiFunction<String, String, String> stringConcat = (t, u) -> t + u;
 
