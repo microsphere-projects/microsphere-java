@@ -39,15 +39,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see QueueUtils
  * @since 1.0.0
  */
-public class QueueUtilsTest {
+class QueueUtilsTest {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertSame(EMPTY_DEQUE, INSTANCE);
     }
 
     @Test
-    public void testIsQueue() {
+    void testIsQueue() {
         assertTrue(isQueue(emptyQueue()));
         assertTrue(isQueue(emptyDeque()));
         assertFalse(isQueue(null));
@@ -56,7 +56,7 @@ public class QueueUtilsTest {
     }
 
     @Test
-    public void testIsDeque() {
+    void testIsDeque() {
         assertTrue(isDeque(emptyQueue()));
         assertTrue(isDeque(emptyDeque()));
         assertFalse(isDeque(null));
@@ -66,7 +66,7 @@ public class QueueUtilsTest {
     }
 
     @Test
-    public void testEmptyDeque() {
+    void testEmptyDeque() {
         Deque<String> deque = emptyDeque();
         assertTrue(deque.isEmpty());
         assertSame(emptyIterator(), deque.iterator());
@@ -84,19 +84,19 @@ public class QueueUtilsTest {
     }
 
     @Test
-    public void testUnmodifiableQueue() {
+    void testUnmodifiableQueue() {
         Queue<String> queue = unmodifiableQueue(emptyDeque());
         assertUnmodifiableQueue(queue);
     }
 
     @Test
-    public void testUnmodifiableDeque() {
+    void testUnmodifiableDeque() {
         Deque<String> deque = unmodifiableDeque(emptyDeque());
         assertUnmodifiableDeque(deque);
     }
 
     @Test
-    public void testSingletonDeque() {
+    void testSingletonDeque() {
         SingletonDeque<String> singletonDeque = (SingletonDeque<String>) singletonDeque("a");
         assertSingletonIterator(singletonDeque.iterator());
         assertSingletonIterator(singletonDeque.descendingIterator());
@@ -128,7 +128,7 @@ public class QueueUtilsTest {
     }
 
     @Test
-    public void testReversedQueue() {
+    void testReversedQueue() {
         Deque<String> deque = ofLinkedList("A", "B", "C");
         Deque<String> reversedDeque = reversedDeque(deque);
         assertTrue(reversedDeque.equals(ofList("C", "B", "A")));
