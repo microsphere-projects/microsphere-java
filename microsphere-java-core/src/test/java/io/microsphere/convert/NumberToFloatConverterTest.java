@@ -49,7 +49,7 @@ class NumberToFloatConverterTest extends BaseConverterTest<Number, Float> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert(1));
     }
 }
