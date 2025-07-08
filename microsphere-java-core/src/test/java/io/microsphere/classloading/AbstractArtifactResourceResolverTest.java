@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see AbstractArtifactResourceResolver
  * @since 1.0.0
  */
-public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactResourceResolver> {
+abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactResourceResolver> {
 
     static final Class<? extends Annotation> TEST_ANNOTATION_CLASS = Nonnull.class;
 
@@ -61,7 +61,7 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     @Test
-    public void testNonDefaultConstructor() throws Throwable {
+    void testNonDefaultConstructor() throws Throwable {
         Class<?> resolveClass = resolver.getClass();
 
         Constructor constructor = resolveClass.getConstructor(int.class);
@@ -93,7 +93,7 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     @Test
-    public void testResolve() throws Throwable {
+    void testResolve() throws Throwable {
         testResolve(this.resolver);
     }
 
