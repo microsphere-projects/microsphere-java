@@ -41,7 +41,7 @@ class SimpleClassScannerTest extends AbstractTestCase {
 
         classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, "java.lang", false, true);
         assertEquals(getBootstrapClassPaths().isEmpty(), classesSet.isEmpty());
-        
+
         classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, "i", false, true);
         assertTrue(classesSet.isEmpty());
 
