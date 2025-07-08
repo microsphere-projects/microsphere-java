@@ -523,7 +523,7 @@ public abstract class ListUtils implements Utils {
         assertTrue(length > 0, () -> "The array length must be greater than 0");
         ArrayList<E> list = newArrayList(length);
         for (int i = 0; i < length; i++) {
-            list.add(array[i]);
+            list.add(i, array[i]);
         }
         return list;
     }
