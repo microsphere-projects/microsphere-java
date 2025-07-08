@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see JarUtilsTest
  * @since 1.0.0
  */
-public class JarUtilsTest {
+class JarUtilsTest {
 
     private final static File tempDirectory = new File(JAVA_IO_TMPDIR);
 
