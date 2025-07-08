@@ -36,10 +36,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ProtocolConstantsTest {
+class ProtocolConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals("file", FILE_PROTOCOL);
         assertEquals("http", HTTP_PROTOCOL);
         assertEquals("https", HTTPS_PROTOCOL);
