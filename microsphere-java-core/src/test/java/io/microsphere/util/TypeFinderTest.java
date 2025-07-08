@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see io.microsphere.util.ClassFinder
  * @since 1.0.0
  */
-public class TypeFinderTest extends AbstractTestCase {
+class TypeFinderTest extends AbstractTestCase {
 
     @Test
     public void testConstructorOnNullType() {
