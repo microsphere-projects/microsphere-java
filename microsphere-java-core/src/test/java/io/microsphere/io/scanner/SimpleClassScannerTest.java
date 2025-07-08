@@ -24,18 +24,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see SimpleClassScannerTest
  * @since 1.0.0
  */
-public class SimpleClassScannerTest extends AbstractTestCase {
+class SimpleClassScannerTest extends AbstractTestCase {
 
     private static final SimpleClassScanner simpleClassScanner = INSTANCE;
 
     @Test
-    public void testScanPackageInDirectory() {
+    void testScanPackageInDirectory() {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "io.microsphere.io.scanner");
         assertFalse(classesSet.isEmpty());
     }
 
     @Test
-    public void testScanPackageInJar() {
+    void testScanPackageInJar() {
         Set<Class<?>> classesSet = simpleClassScanner.scan(classLoader, "javax.annotation.concurrent", false, true);
         assertEquals(4, classesSet.size());
 
@@ -48,7 +48,7 @@ public class SimpleClassScannerTest extends AbstractTestCase {
     }
 
     @Test
-    public void testScanInArchive() {
+    void testScanInArchive() {
         URL nonnullClassResource = getClassResource(classLoader, Nonnull.class);
         Set<Class<?>> classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, nonnullClassResource, false);
         assertFalse(classesSet.isEmpty());
