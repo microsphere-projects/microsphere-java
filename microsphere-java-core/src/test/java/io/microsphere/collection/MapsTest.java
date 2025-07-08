@@ -19,15 +19,15 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see Maps
  * @since 1.0.0
  */
-public class MapsTest {
+class MapsTest {
 
     @Test
-    public void testOfMap0() {
+    void testOfMap0() {
         assertEquals(emptyMap(), ofMap());
     }
 
     @Test
-    public void testOfMap1() {
+    void testOfMap1() {
         Map<String, Integer> map = ofMap("A", 1);
         assertEquals(1, map.size());
         assertEquals(1, map.get("A"));
@@ -36,7 +36,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap2() {
+    void testOfMap2() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2);
         assertEquals(2, map.size());
         assertEquals(1, map.get("A"));
@@ -46,7 +46,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap3() {
+    void testOfMap3() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3);
         assertEquals(3, map.size());
         assertEquals(1, map.get("A"));
@@ -57,7 +57,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap4() {
+    void testOfMap4() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4);
         assertEquals(4, map.size());
         assertEquals(1, map.get("A"));
@@ -69,7 +69,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap5() {
+    void testOfMap5() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4, "E", 5);
         assertEquals(5, map.size());
         assertEquals(1, map.get("A"));
@@ -82,7 +82,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap6() {
+    void testOfMap6() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4, "E", 5, "F", 6);
         assertEquals(6, map.size());
         assertEquals(1, map.get("A"));
@@ -96,7 +96,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap7() {
+    void testOfMap7() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4, "E", 5, "F", 6, "G", 7);
         assertEquals(7, map.size());
         assertEquals(1, map.get("A"));
@@ -111,7 +111,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap8() {
+    void testOfMap8() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4, "E", 5, "F", 6, "G", 7, "H", 8);
         assertEquals(8, map.size());
         assertEquals(1, map.get("A"));
@@ -127,7 +127,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap9() {
+    void testOfMap9() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4, "E", 5, "F", 6, "G", 7, "H", 8, "I", 9);
         assertEquals(9, map.size());
         assertEquals(1, map.get("A"));
@@ -144,7 +144,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMap10() {
+    void testOfMap10() {
         Map<String, Integer> map = ofMap("A", 1, "B", 2, "C", 3, "D", 4, "E", 5, "F", 6, "G", 7, "H", 8, "I", 9, "J", 10);
         assertEquals(10, map.size());
         assertEquals(1, map.get("A"));
@@ -162,7 +162,7 @@ public class MapsTest {
     }
 
     @Test
-    public void testOfMapOnEntries() {
+    void testOfMapOnEntries() {
         Map.Entry<String, Integer> entryA = ofEntry("A", 1);
         Map.Entry<String, Integer> entryB = ofEntry("B", 2);
         Map.Entry<String, Integer> entryC = ofEntry("C", 3);
@@ -176,13 +176,13 @@ public class MapsTest {
     }
 
     @Test
-    public void testMapOfOnNullEntries() {
+    void testMapOfOnNullEntries() {
         Map map = Maps.ofMap((Map.Entry[]) null);
         assertSame(emptyMap(), map);
     }
 
     @Test
-    public void testMapOfOnEmptyEntries() {
+    void testMapOfOnEmptyEntries() {
         Map map = Maps.ofMap(new Map.Entry[0]);
         assertSame(emptyMap(), map);
     }
