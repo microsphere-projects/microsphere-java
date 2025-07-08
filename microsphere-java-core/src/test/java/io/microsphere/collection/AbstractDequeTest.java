@@ -20,14 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see AbstractDeque
  * @since 1.0.0
  */
-public class AbstractDequeTest {
+class AbstractDequeTest {
 
     private static final String TEST_VALUE = "1";
 
     private AbstractDeque<String> deque;
 
     @BeforeEach
-    public void init() {
+    void init() {
 
         deque = new AbstractDeque<String>() {
 
@@ -132,45 +132,45 @@ public class AbstractDequeTest {
     }
 
     @Test
-    public void testAddFirst() {
+    void testAddFirst() {
         deque.addFirst(TEST_VALUE);
         assertThrows(IllegalStateException.class, () -> deque.addFirst(TEST_VALUE));
     }
 
     @Test
-    public void testOfferFirst() {
+    void testOfferFirst() {
         assertTrue(deque.offerFirst(TEST_VALUE));
         assertFalse(deque.offerFirst(TEST_VALUE));
     }
 
     @Test
-    public void testAddLast() {
+    void testAddLast() {
         deque.addLast(TEST_VALUE);
         assertThrows(IllegalStateException.class, () -> deque.addLast(TEST_VALUE));
     }
 
     @Test
-    public void testOfferLast() {
+    void testOfferLast() {
         assertTrue(deque.offerLast(TEST_VALUE));
         assertFalse(deque.offerLast(TEST_VALUE));
     }
 
     @Test
-    public void testRemoveFirst() {
+    void testRemoveFirst() {
         deque.add(TEST_VALUE);
         assertSame(TEST_VALUE, deque.removeFirst());
         assertThrows(NoSuchElementException.class, () -> deque.removeFirst());
     }
 
     @Test
-    public void testRemoveLast() {
+    void testRemoveLast() {
         deque.add(TEST_VALUE);
         assertSame(TEST_VALUE, deque.removeLast());
         assertThrows(NoSuchElementException.class, () -> deque.removeLast());
     }
 
     @Test
-    public void testPeekFirst() {
+    void testPeekFirst() {
         assertNull(deque.peekFirst());
         deque.add(TEST_VALUE);
         assertSame(TEST_VALUE, deque.peekFirst());
@@ -179,7 +179,7 @@ public class AbstractDequeTest {
     }
 
     @Test
-    public void testPeekLast() {
+    void testPeekLast() {
         assertNull(deque.peekLast());
         deque.add(TEST_VALUE);
         assertSame(TEST_VALUE, deque.peekLast());
@@ -188,7 +188,7 @@ public class AbstractDequeTest {
     }
 
     @Test
-    public void testRemoveFirstOccurrence() {
+    void testRemoveFirstOccurrence() {
         assertTrue(deque.removeFirstOccurrence(null));
         deque.add(TEST_VALUE);
         assertFalse(deque.removeFirstOccurrence(""));
@@ -197,33 +197,33 @@ public class AbstractDequeTest {
     }
 
     @Test
-    public void testPush() {
+    void testPush() {
         deque.push(TEST_VALUE);
         assertThrows(IllegalStateException.class, () -> deque.push(TEST_VALUE));
     }
 
     @Test
-    public void testPop() {
+    void testPop() {
         deque.add(TEST_VALUE);
         assertSame(TEST_VALUE, deque.pop());
         assertThrows(NoSuchElementException.class, () -> deque.pop());
     }
 
     @Test
-    public void testOffer() {
+    void testOffer() {
         assertTrue(deque.offer(TEST_VALUE));
         assertFalse(deque.offer(TEST_VALUE));
     }
 
     @Test
-    public void testPoll() {
+    void testPoll() {
         assertTrue(deque.offer(TEST_VALUE));
         assertSame(TEST_VALUE, deque.poll());
         assertNull(deque.poll());
     }
 
     @Test
-    public void testPeek() {
+    void testPeek() {
         assertTrue(deque.offer(TEST_VALUE));
         assertSame(TEST_VALUE, deque.peek());
         assertSame(TEST_VALUE, deque.peek());
