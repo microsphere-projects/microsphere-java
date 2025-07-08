@@ -20,22 +20,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DirectoryFileFilter
  * @since 1.0.0
  */
-public class DirectoryFileFilterTest {
+class DirectoryFileFilterTest {
 
     @Test
-    public void testAcceptOnNull() {
+    void testAcceptOnNull() {
         assertFalse(INSTANCE.accept(null));
     }
 
     @Test
-    public void testAcceptOnDirectory() {
+    void testAcceptOnDirectory() {
         assertTrue(INSTANCE.accept(new File(JAVA_HOME)));
         assertTrue(INSTANCE.accept(new File(USER_DIR)));
         assertTrue(INSTANCE.accept(new File(JAVA_IO_TMPDIR)));
     }
 
     @Test
-    public void testAcceptOnFile() throws IOException {
+    void testAcceptOnFile() throws IOException {
         File testFile = createTempFile("test", "txt");
         assertFalse(INSTANCE.accept(testFile));
         testFile.deleteOnExit();
