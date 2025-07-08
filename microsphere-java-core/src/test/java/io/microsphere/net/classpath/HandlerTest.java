@@ -55,7 +55,7 @@ public class HandlerTest extends AbstractExtendableProtocolURLStreamHandlerTest 
     }
 
     @Test
-    public void testOpenConnectionOnResourceNotFound() {
+    void testOpenConnectionOnResourceNotFound() {
         assertThrows(IOException.class, () -> {
             URL url = new URL(NOT_FOUND_URL);
             url.openStream();
