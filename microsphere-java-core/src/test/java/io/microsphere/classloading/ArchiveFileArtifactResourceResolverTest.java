@@ -33,10 +33,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ArchiveFileArtifactResourceResolver
  * @since 1.0.0
  */
-public class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<ArchiveFileArtifactResourceResolver> {
+class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactResourceResolverTest<ArchiveFileArtifactResourceResolver> {
 
     @Override
-    protected void testResolve(ArchiveFileArtifactResourceResolver resolver) throws Throwable {
+    void testResolve(ArchiveFileArtifactResourceResolver resolver) throws Throwable {
         testResolveOnNull(resolver);
         testResolveOnArchiveDirectory(resolver);
         testResolveOnNullArchiveFile(resolver);
@@ -44,23 +44,23 @@ public class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactRes
         testResolveOnArchiveFile(resolver);
     }
 
-    private void testResolveOnNull(ArchiveFileArtifactResourceResolver resolver) {
+    void testResolveOnNull(ArchiveFileArtifactResourceResolver resolver) {
         assertNull(resolver.resolve(null));
     }
 
-    private void testResolveOnArchiveDirectory(ArchiveFileArtifactResourceResolver resolver) {
+    void testResolveOnArchiveDirectory(ArchiveFileArtifactResourceResolver resolver) {
         URL classResource = getClassResource(resolver.classLoader, getClass());
         Artifact artifact = resolver.resolve(classResource);
         assertNull(artifact);
     }
 
-    private void testResolveOnNullArchiveFile(ArchiveFileArtifactResourceResolver resolver) {
+    void testResolveOnNullArchiveFile(ArchiveFileArtifactResourceResolver resolver) {
         URL url = ofURL("file:///non-exists");
         Artifact artifact = resolver.resolve(url);
         assertNull(artifact);
     }
 
-    private void testResolveOnInvalidFormatArchiveFile(ArchiveFileArtifactResourceResolver resolver) throws MalformedURLException {
+    void testResolveOnInvalidFormatArchiveFile(ArchiveFileArtifactResourceResolver resolver) throws MalformedURLException {
         URL resourceURL = resolver.classLoader.getResource("META-INF/.sar");
         File file = new File(resourceURL.getFile());
         assertTrue(file.exists());
@@ -69,7 +69,7 @@ public class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactRes
         assertNull(artifact);
     }
 
-    protected void testResolveOnArchiveFile(ArchiveFileArtifactResourceResolver resolver) {
+    void testResolveOnArchiveFile(ArchiveFileArtifactResourceResolver resolver) {
         URL classResource = getClassResource(resolver.classLoader, TEST_ANNOTATION_CLASS);
         Artifact artifact = resolver.resolve(classResource);
         assertEquals(TEST_ARTIFACT_ID, artifact.getArtifactId());
