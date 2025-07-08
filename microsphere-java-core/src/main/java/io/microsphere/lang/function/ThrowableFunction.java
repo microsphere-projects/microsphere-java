@@ -185,12 +185,12 @@ public interface ThrowableFunction<T, R> {
      * Integer result2 = execute("invalid", parser, (input, ex) -> -1); // returns -1
      * }</pre>
      *
-     * @param t              the input argument to the function
-     * @param function       the {@link ThrowableFunction} to execute
+     * @param t                the input argument to the function
+     * @param function         the {@link ThrowableFunction} to execute
      * @param exceptionHandler the handler to use if the function throws an exception;
      *                         takes the input and the exception, and returns a fallback value
-     * @param <T>            the type of the input to the function
-     * @param <R>            the type of the result of the function
+     * @param <T>              the type of the input to the function
+     * @param <R>              the type of the result of the function
      * @return the result of the function execution
      * @throws IllegalArgumentException if the provided function or exception handler is null
      */
