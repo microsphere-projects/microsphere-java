@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see AbstractEventDispatcher
  * @since 1.0.0
  */
-public class AbstractEventDispatcherTest {
+class AbstractEventDispatcherTest {
 
     @Test
     public void testConstructorOnFailed() {

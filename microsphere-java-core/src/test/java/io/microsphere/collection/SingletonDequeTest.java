@@ -40,7 +40,7 @@ class SingletonDequeTest {
     private SingletonDeque singletonDeque;
 
     @BeforeEach
-    public void before() {
+    void before() {
         singletonDeque = new SingletonDeque(TEST_ELEMENT);
     }
 
@@ -115,13 +115,13 @@ class SingletonDequeTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(singletonDeque, singletonDeque);
         assertNotEquals(singletonDeque, null);
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(singletonDeque.hashCode(), singletonDeque.hashCode());
         assertEquals(TEST_ELEMENT.hashCode(), singletonDeque.hashCode());
     }

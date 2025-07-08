@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see Assert
  * @since 1.0.0
  */
-public class AssertTest extends AbstractTestCase {
+class AssertTest extends AbstractTestCase {
 
     @Test
     public void testAssertTrue() {

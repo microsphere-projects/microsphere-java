@@ -26,6 +26,7 @@ import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
@@ -72,12 +73,15 @@ import static io.microsphere.util.ArrayUtils.ofFloats;
 import static io.microsphere.util.ArrayUtils.ofInts;
 import static io.microsphere.util.ArrayUtils.ofLongs;
 import static io.microsphere.util.ArrayUtils.ofShorts;
+import static io.microsphere.util.ArrayUtils.reverse;
 import static io.microsphere.util.ArrayUtils.size;
+import static io.microsphere.util.ArrayUtils.toArrayReversed;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static java.lang.reflect.Array.getLength;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -86,7 +90,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ArrayUtilsTest extends AbstractTestCase {
+class ArrayUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ArrayUtilsTest.class);
 
@@ -121,9 +125,9 @@ public class ArrayUtilsTest extends AbstractTestCase {
 
     @Test
     public void tesOf() {
-        assertArrayEquals(of("A"), array("A"));
-        assertArrayEquals(of("A", "B"), array("A", "B"));
-        assertArrayEquals(of("A", "B", "C"), array("A", "B", "C"));
+        assertArrayEquals(of("A"), ofArray("A"));
+        assertArrayEquals(of("A", "B"), ofArray("A", "B"));
+        assertArrayEquals(of("A", "B", "C"), ofArray("A", "B", "C"));
     }
 
     @Test
@@ -1151,8 +1155,28 @@ public class ArrayUtilsTest extends AbstractTestCase {
         assertFalse(contains(values, ofList("B")));
     }
 
-    private static <T> T[] array(T... values) {
-        return values;
+    @Test
+    public void testReverse() {
+        String[] array = ofArray("A", "B", "C");
+        String[] reversed = reverse(array);
+        assertSame(reversed, array);
+        assertArrayEquals(reversed, reverse(array));
+    }
+
+    @Test
+    public void testToArrayReversed() {
+        List<String> list = ofList("A", "B", "C");
+        String[] strings = new String[2];
+        String[] reversed = toArrayReversed(list, strings);
+        assertArrayEquals(reversed, ofArray("C", "B", "A"));
+
+        strings = new String[3];
+        reversed = toArrayReversed(list, strings);
+        assertArrayEquals(reversed, ofArray("C", "B", "A"));
+
+        strings = new String[5];
+        reversed = toArrayReversed(list, strings);
+        assertArrayEquals(reversed, ofArray("C", "B", "A", null, null));
     }
 
     private void assertEmptyArray(Object array, Class<?> expectedComponentType) {

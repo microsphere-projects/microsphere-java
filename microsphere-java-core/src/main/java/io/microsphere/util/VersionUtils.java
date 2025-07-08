@@ -150,7 +150,7 @@ public abstract class VersionUtils implements Utils {
      * @param operatorSymbol  the symbol of the comparison operator; must not be null
      * @param comparedVersion the version to compare against; must not be null
      * @return {@code true} if the result of applying the operator to the current Java version and the compared version is true;
-     *         otherwise, {@code false}
+     * otherwise, {@code false}
      * @throws IllegalArgumentException if any argument is null or the operator symbol is not supported
      */
     public static boolean testCurrentJavaVersion(String operatorSymbol, Version comparedVersion) {
@@ -194,7 +194,7 @@ public abstract class VersionUtils implements Utils {
      * @param operatorSymbol  the symbol of the comparison operator; must not be null
      * @param comparedVersion the version to compare against; must not be null
      * @return {@code true} if the result of applying the operator to the base and compared versions is true;
-     *         otherwise, {@code false}
+     * otherwise, {@code false}
      * @throws IllegalArgumentException if any argument is null or the operator symbol is not supported
      */
     public static boolean testVersion(String baseVersion, String operatorSymbol, String comparedVersion) {
@@ -242,7 +242,7 @@ public abstract class VersionUtils implements Utils {
      * @param versionOperator the comparison operator; must not be null
      * @param comparedVersion the version to compare against; must not be null
      * @return {@code true} if the result of applying the operator to the base and compared versions is true;
-     *         otherwise, {@code false}
+     * otherwise, {@code false}
      * @throws IllegalArgumentException if any argument is null
      */
     public static boolean testVersion(Version baseVersion, Version.Operator versionOperator, Version comparedVersion) {

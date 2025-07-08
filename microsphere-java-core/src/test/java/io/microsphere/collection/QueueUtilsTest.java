@@ -8,11 +8,16 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
 
+import static io.microsphere.collection.EmptyDeque.INSTANCE;
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.ListUtils.ofLinkedList;
+import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.QueueUtils.EMPTY_DEQUE;
 import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.isDeque;
 import static io.microsphere.collection.QueueUtils.isQueue;
+import static io.microsphere.collection.QueueUtils.reversedDeque;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.QueueUtils.unmodifiableDeque;
@@ -22,6 +27,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,10 +39,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see QueueUtils
  * @since 1.0.0
  */
-public class QueueUtilsTest {
+class QueueUtilsTest {
 
     @Test
-    public void testIsQueue() {
+    void testConstants() {
+        assertSame(EMPTY_DEQUE, INSTANCE);
+    }
+
+    @Test
+    void testIsQueue() {
         assertTrue(isQueue(emptyQueue()));
         assertTrue(isQueue(emptyDeque()));
         assertFalse(isQueue(null));
@@ -45,7 +56,7 @@ public class QueueUtilsTest {
     }
 
     @Test
-    public void testIsDeque() {
+    void testIsDeque() {
         assertTrue(isDeque(emptyQueue()));
         assertTrue(isDeque(emptyDeque()));
         assertFalse(isDeque(null));
@@ -55,7 +66,7 @@ public class QueueUtilsTest {
     }
 
     @Test
-    public void testEmptyDeque() {
+    void testEmptyDeque() {
         Deque<String> deque = emptyDeque();
         assertTrue(deque.isEmpty());
         assertSame(emptyIterator(), deque.iterator());
@@ -63,30 +74,29 @@ public class QueueUtilsTest {
 
         assertThrows(UnsupportedOperationException.class, () -> deque.offerFirst("a"));
         assertThrows(UnsupportedOperationException.class, () -> deque.offerLast("a"));
-        assertThrows(UnsupportedOperationException.class, () -> deque.pollFirst());
-        assertThrows(UnsupportedOperationException.class, () -> deque.pollLast());
-        assertThrows(UnsupportedOperationException.class, () -> deque.getFirst());
-        assertThrows(UnsupportedOperationException.class, () -> deque.getLast());
+        assertNull(deque.pollFirst());
+        assertNull(deque.pollLast());
+        assertThrows(NoSuchElementException.class, deque::getFirst);
+        assertThrows(NoSuchElementException.class, deque::getLast);
 
         assertFalse(deque.removeFirstOccurrence("a"));
         assertEquals(0, deque.size());
     }
 
     @Test
-    public void testUnmodifiableQueue() {
+    void testUnmodifiableQueue() {
         Queue<String> queue = unmodifiableQueue(emptyDeque());
         assertUnmodifiableQueue(queue);
     }
 
     @Test
-    public void testUnmodifiableDeque() {
+    void testUnmodifiableDeque() {
         Deque<String> deque = unmodifiableDeque(emptyDeque());
-        assertUnmodifiableQueue(deque);
         assertUnmodifiableDeque(deque);
     }
 
     @Test
-    public void testSingletonDeque() {
+    void testSingletonDeque() {
         SingletonDeque<String> singletonDeque = (SingletonDeque<String>) singletonDeque("a");
         assertSingletonIterator(singletonDeque.iterator());
         assertSingletonIterator(singletonDeque.descendingIterator());
@@ -117,20 +127,11 @@ public class QueueUtilsTest {
         assertEquals(1, singletonDeque.size());
     }
 
-    private void assertAbstractDeque(Deque<String> deque) {
-        assertThrows(UnsupportedOperationException.class, () -> deque.addFirst("a"));
-        assertThrows(UnsupportedOperationException.class, () -> deque.addLast("a"));
-        assertThrows(UnsupportedOperationException.class, deque::removeFirst);
-        assertThrows(UnsupportedOperationException.class, deque::removeLast);
-        assertThrows(UnsupportedOperationException.class, () -> deque.peekFirst());
-        assertThrows(UnsupportedOperationException.class, () -> deque.peekLast());
-        assertThrows(UnsupportedOperationException.class, () -> deque.removeFirstOccurrence("a"));
-        assertThrows(UnsupportedOperationException.class, () -> deque.push("a"));
-        assertThrows(UnsupportedOperationException.class, deque::pop);
-        assertThrows(UnsupportedOperationException.class, deque::pop);
-        assertThrows(UnsupportedOperationException.class, () -> deque.offer("a"));
-        assertThrows(UnsupportedOperationException.class, deque::poll);
-        assertThrows(UnsupportedOperationException.class, deque::peek);
+    @Test
+    void testReversedQueue() {
+        Deque<String> deque = ofLinkedList("A", "B", "C");
+        Deque<String> reversedDeque = reversedDeque(deque);
+        assertTrue(reversedDeque.equals(ofList("C", "B", "A")));
     }
 
     private static void assertSingletonIterator(Iterator<String> it) {
@@ -140,6 +141,7 @@ public class QueueUtilsTest {
     }
 
     private static void assertUnmodifiableDeque(Deque<String> deque) {
+        assertUnmodifiableQueue(deque);
         assertThrows(UnsupportedOperationException.class, () -> deque.addFirst("a"));
         assertThrows(UnsupportedOperationException.class, () -> deque.addLast("a"));
         assertThrows(UnsupportedOperationException.class, () -> deque.offerFirst("a"));
@@ -148,10 +150,10 @@ public class QueueUtilsTest {
         assertThrows(UnsupportedOperationException.class, deque::removeLast);
         assertThrows(UnsupportedOperationException.class, deque::pollFirst);
         assertThrows(UnsupportedOperationException.class, deque::pollLast);
-        assertThrows(UnsupportedOperationException.class, deque::getFirst);
-        assertThrows(UnsupportedOperationException.class, deque::getLast);
-        assertThrows(UnsupportedOperationException.class, deque::peekFirst);
-        assertThrows(UnsupportedOperationException.class, deque::peekLast);
+        assertThrows(NoSuchElementException.class, deque::getFirst);
+        assertThrows(NoSuchElementException.class, deque::getLast);
+        assertNull(deque.peekFirst());
+        assertNull(deque.peekLast());
         assertThrows(UnsupportedOperationException.class, () -> deque.removeFirstOccurrence(null));
         assertThrows(UnsupportedOperationException.class, () -> deque.removeLastOccurrence(null));
         assertThrows(UnsupportedOperationException.class, () -> deque.push("a"));
@@ -166,8 +168,8 @@ public class QueueUtilsTest {
         assertFalse(queue.contains("a"));
         Iterator<String> iterator = queue.iterator();
         assertFalse(iterator.hasNext());
-        assertThrows(NoSuchElementException.class, () -> iterator.next());
-        assertThrows(IllegalStateException.class, () -> iterator.remove());
+        assertThrows(NoSuchElementException.class, iterator::next);
+        assertThrows(IllegalStateException.class, iterator::remove);
 
         Object[] array = queue.toArray();
         assertEquals(0, array.length);
@@ -180,8 +182,8 @@ public class QueueUtilsTest {
         assertThrows(UnsupportedOperationException.class, () -> queue.offer("a"));
         assertThrows(UnsupportedOperationException.class, () -> queue.remove());
         assertThrows(UnsupportedOperationException.class, () -> queue.poll());
-        assertThrows(UnsupportedOperationException.class, () -> queue.element());
-        assertThrows(UnsupportedOperationException.class, () -> queue.peek());
+        assertThrows(NoSuchElementException.class, queue::element);
+        assertNull(queue.peek());
 
         assertTrue(queue.containsAll(emptyList()));
 

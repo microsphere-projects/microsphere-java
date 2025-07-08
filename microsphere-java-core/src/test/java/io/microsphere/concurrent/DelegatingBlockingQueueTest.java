@@ -30,14 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingBlockingQueue
  * @since 1.0.0
  */
-public class DelegatingBlockingQueueTest {
+class DelegatingBlockingQueueTest {
 
     private BlockingQueue<Integer> delegate = new LinkedBlockingDeque<>();
 
     private DelegatingBlockingQueue<Integer> queue = new DelegatingBlockingQueue<>(delegate);
 
     @Test
-    public void test() throws Throwable {
+    void test() throws Throwable {
 
         // test add
         assertTrue(queue.add(1));

@@ -36,7 +36,7 @@ import static io.microsphere.collection.EmptyIterator.INSTANCE;
  *         System.out.println(value);
  *     }
  *  }</pre>
- </p>
+ * </p>
  *
  * @param <T> the type of elements returned by the iterator.
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>

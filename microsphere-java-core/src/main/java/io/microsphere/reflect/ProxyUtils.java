@@ -40,7 +40,7 @@ import static java.lang.reflect.Modifier.isFinal;
  * @since 1.0.0
  */
 public abstract class ProxyUtils implements Utils {
-    
+
     /**
      * Determines whether the specified class is proxyable.
      *

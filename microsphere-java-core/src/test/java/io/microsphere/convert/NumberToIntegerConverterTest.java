@@ -49,7 +49,7 @@ class NumberToIntegerConverterTest extends BaseConverterTest<Number, Integer> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert(Double.valueOf(1.0)));
     }
 }

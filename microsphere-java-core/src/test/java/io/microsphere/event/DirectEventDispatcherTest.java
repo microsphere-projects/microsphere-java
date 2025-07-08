@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class DirectEventDispatcherTest {
+class DirectEventDispatcherTest {
 
     private DirectEventDispatcher dispatcher;
 

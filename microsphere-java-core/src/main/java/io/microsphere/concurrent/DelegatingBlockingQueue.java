@@ -38,7 +38,7 @@ import java.util.stream.Stream;
  * <pre>{@code
  * BlockingQueue<String> delegate = new LinkedBlockingQueue<>();
  * DelegatingBlockingQueue<String> queue = new DelegatingBlockingQueue<>(delegate);
- * 
+ *
  * queue.put("item");              // Adds an element to the queue
  * String item = queue.take();     // Retrieves and removes an element
  * }</pre>

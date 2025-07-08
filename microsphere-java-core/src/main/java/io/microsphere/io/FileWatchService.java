@@ -22,12 +22,6 @@ import io.microsphere.io.event.FileChangedListener;
 import java.io.File;
 
 /**
- * File Watch Service
- *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since 1.0.0
- */
-/**
  * A service that watches files or directories for changes and notifies registered listeners.
  * <p>
  * This interface provides methods to register listeners for specific files or directories,

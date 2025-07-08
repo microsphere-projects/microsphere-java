@@ -125,7 +125,7 @@ public interface ThrowableAction {
      * ThrowableAction.execute(action, ex -> System.err.println("Error: " + ex.getMessage()));
      * }</pre>
      *
-     * @param action the {@link ThrowableAction} to execute
+     * @param action           the {@link ThrowableAction} to execute
      * @param exceptionHandler the handler to manage any exceptions thrown by the action
      * @throws NullPointerException if the provided action is {@code null}
      */

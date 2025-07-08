@@ -39,22 +39,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class JavaTypeKindTestForGenericArrayType extends AbstractJavaTypeKindTest {
 
     @Test
-    public void testGetSuperType() {
+    void testGetSuperType() {
         assertNull(GENERIC_ARRAY_TYPE.getSuperType(Object.class));
     }
 
     @Test
-    public void testGetRawType() {
+    void testGetRawType() {
         assertNull(GENERIC_ARRAY_TYPE.getRawType(Object.class));
     }
 
     @Test
-    public void testGetInterfaces() {
+    void testGetInterfaces() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, GENERIC_ARRAY_TYPE.getInterfaces(Object.class));
     }
 
     @Test
-    public void testGetGenericTypes() {
+    void testGetGenericTypes() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, GENERIC_ARRAY_TYPE.getGenericTypes(from(Object.class)));
     }
 }

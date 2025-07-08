@@ -7,7 +7,7 @@ package io.microsphere.logging;
  * @see AbstractLogger
  * @since 1.0.0
  */
-public class NoOpLoggerTest extends AbstractLoggerTest {
+class NoOpLoggerTest extends AbstractLoggerTest {
 
     @Override
     protected Logger createLogger() {

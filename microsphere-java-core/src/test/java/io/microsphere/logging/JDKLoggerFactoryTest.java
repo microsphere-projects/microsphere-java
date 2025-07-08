@@ -14,7 +14,7 @@ import java.util.logging.LogManager;
  * @see JDKLoggerFactory
  * @since 1.0.0
  */
-public class JDKLoggerFactoryTest extends AbstractLoggerTest {
+class JDKLoggerFactoryTest extends AbstractLoggerTest {
 
     @BeforeAll
     public static void initAll() throws IOException {

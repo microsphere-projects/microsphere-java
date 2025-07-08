@@ -20,10 +20,10 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * <p>{@code ArrayEnumeration} is an implementation of enumeration based on an array, 
+ * <p>{@code ArrayEnumeration} is an implementation of enumeration based on an array,
  * used to sequentially access elements in the array.</p>
  *
- * <p>This class implements the {@link Enumeration} interface and is suitable for scenarios 
+ * <p>This class implements the {@link Enumeration} interface and is suitable for scenarios
  * where read-only sequential access to array elements is required.</p>
  *
  * <h3>Example Usage</h3>

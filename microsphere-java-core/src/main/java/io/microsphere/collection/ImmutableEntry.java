@@ -31,7 +31,7 @@ import java.util.Map;
  * ImmutableEntry<String, Integer> entry = ImmutableEntry.of("age", 30);
  * System.out.println(entry.getKey());   // Output: age
  * System.out.println(entry.getValue()); // Output: 30
- * 
+ *
  * // The following line would throw an exception:
  * // entry.setValue(25); // throws UnsupportedOperationException
  * }</pre>

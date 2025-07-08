@@ -1455,7 +1455,7 @@ public abstract class TypeUtils implements Utils {
             return klass != null ? klass.getComponentType() : null;
         }
     }
-    
+
     /**
      * Gets the fully qualified type name of the given {@link Type}.
      *

@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 public abstract class StreamArtifactResourceResolverTest<A extends StreamArtifactResourceResolver> extends AbstractArtifactResourceResolverTest<A> {
 
-    protected void testResolve(A resolver) throws Throwable {
+    void testResolve(A resolver) throws Throwable {
         testResolveForFile(resolver);
         testResolveForFileOnNotFound(resolver);
         testResolveForDirectory(resolver);
@@ -43,11 +43,11 @@ public abstract class StreamArtifactResourceResolverTest<A extends StreamArtifac
         testResolveOnNull(resolver);
     }
 
-    protected void testResolveForFile(A resolver) throws Throwable {
+    void testResolveForFile(A resolver) throws Throwable {
         assertArtifact(resolver, TEST_ANNOTATION_CLASS);
     }
 
-    protected void testResolveForFileOnNotFound(A resolver) throws Throwable {
+    void testResolveForFileOnNotFound(A resolver) throws Throwable {
         URL resourceURL = resolveResourceURL(String.class);
         resolver.resolve(resourceURL);
 
@@ -57,21 +57,21 @@ public abstract class StreamArtifactResourceResolverTest<A extends StreamArtifac
         resolver.resolve(resourceURL);
     }
 
-    protected void testResolveForDirectory(A resolver) throws Throwable {
+    void testResolveForDirectory(A resolver) throws Throwable {
         assertArtifact(resolver, StreamArtifactResourceResolverTest.class);
     }
 
-    protected void testResolveForDirectoryOnNotFound(A resolver) throws Throwable {
+    void testResolveForDirectoryOnNotFound(A resolver) throws Throwable {
         URL resourceURL = resolveResourceURL(StreamArtifactResourceResolver.class);
         assertNull(resolver.resolve(resourceURL));
     }
 
-    protected void testResolveOnResource(A resolver) throws Throwable {
+    void testResolveOnResource(A resolver) throws Throwable {
         URL resourceURL = new URL("http://localhost/not-found/");
         assertNull(resolver.resolve(resourceURL));
     }
 
-    protected void testResolveOnNull(A resolver) throws Throwable {
+    void testResolveOnNull(A resolver) throws Throwable {
         assertNull(resolver.resolve(null));
     }
 
@@ -87,6 +87,6 @@ public abstract class StreamArtifactResourceResolverTest<A extends StreamArtifac
         return archiveFile == null ? null : archiveFile.toURI().toURL();
     }
 
-    protected abstract void assertArtifact(Artifact artifact) throws Throwable;
+    abstract void assertArtifact(Artifact artifact) throws Throwable;
 
 }

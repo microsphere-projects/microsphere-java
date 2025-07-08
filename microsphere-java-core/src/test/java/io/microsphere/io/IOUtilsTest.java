@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see IOUtils
  * @since 1.0.0
  */
-public class IOUtilsTest extends AbstractTestCase {
+class IOUtilsTest extends AbstractTestCase {
 
     private static final String TEST_VALUE = "Hello";
 
@@ -40,152 +40,152 @@ public class IOUtilsTest extends AbstractTestCase {
     private FastByteArrayInputStream inputStream;
 
     @BeforeEach
-    public void init() {
+    void init() {
         inputStream = new FastByteArrayInputStream(TEST_BYTES);
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         inputStream.close();
     }
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals(2048, DEFAULT_BUFFER_SIZE);
         assertEquals(2048, BUFFER_SIZE);
     }
 
     @Test
-    public void testToByteArray() throws IOException {
+    void testToByteArray() throws IOException {
         assertArrayEquals(TEST_BYTES, toByteArray(inputStream));
     }
 
     @Test
-    public void testToStringWithInputStream() throws IOException {
+    void testToStringWithInputStream() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream));
     }
 
     @Test
-    public void testToStringWithInputStreamAndEncoding() throws IOException {
+    void testToStringWithInputStreamAndEncoding() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream, FILE_ENCODING));
     }
 
     @Test
-    public void testToStringWithInputStreamAndCharset() throws IOException {
+    void testToStringWithInputStreamAndCharset() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream, DEFAULT_CHARSET));
     }
 
     @Test
-    public void testToStringOnNullInputStream() throws IOException {
+    void testToStringOnNullInputStream() throws IOException {
         assertNull(IOUtils.toString((InputStream) null));
     }
 
     @Test
-    public void testToStringWithInputStreamAndNullEncoding() throws IOException {
+    void testToStringWithInputStreamAndNullEncoding() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream, TEST_NULL_STRING));
     }
 
     @Test
-    public void testToStringWithInputStreamAndEmptyEncoding() throws IOException {
+    void testToStringWithInputStreamAndEmptyEncoding() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream, ""));
     }
 
     @Test
-    public void testToStringWithInputStreamAndNullCharset() throws IOException {
+    void testToStringWithInputStreamAndNullCharset() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(inputStream, (Charset) null));
     }
 
     @Test
-    public void testToStringWithNullInputStreamAndNullCharset() throws IOException {
+    void testToStringWithNullInputStreamAndNullCharset() throws IOException {
         assertNull(IOUtils.toString(null, (Charset) null));
     }
 
     @Test
-    public void testToStringWithNullInputStreamAndNullEncoding() throws IOException {
+    void testToStringWithNullInputStreamAndNullEncoding() throws IOException {
         assertNull(IOUtils.toString(null, TEST_NULL_STRING));
     }
 
     @Test
-    public void testToStringWithWithReader() throws IOException {
+    void testToStringWithWithReader() throws IOException {
         assertEquals(TEST_VALUE, IOUtils.toString(new StringReader(TEST_VALUE)));
     }
 
     @Test
-    public void testCopyToStringWithInputStreamAndNullEncoding() throws IOException {
+    void testCopyToStringWithInputStreamAndNullEncoding() throws IOException {
         assertEquals(TEST_VALUE, copyToString(inputStream, TEST_NULL_STRING));
     }
 
     @Test
-    public void testCopyToStringWithInputStreamAndEmptyEncoding() throws IOException {
+    void testCopyToStringWithInputStreamAndEmptyEncoding() throws IOException {
         assertEquals(TEST_VALUE, copyToString(inputStream, ""));
     }
 
     @Test
-    public void testCopyToStringWithInputStreamAndEncoding() throws IOException {
+    void testCopyToStringWithInputStreamAndEncoding() throws IOException {
         assertEquals(TEST_VALUE, copyToString(inputStream, FILE_ENCODING));
     }
 
     @Test
-    public void testCopyToStringWithInputStreamAndNullCharset() throws IOException {
+    void testCopyToStringWithInputStreamAndNullCharset() throws IOException {
         assertEquals(TEST_VALUE, copyToString(inputStream, (Charset) null));
     }
 
     @Test
-    public void testCopyToStringWithInputStreamAndCharset() throws IOException {
+    void testCopyToStringWithInputStreamAndCharset() throws IOException {
         assertEquals(TEST_VALUE, copyToString(inputStream, UTF_8));
     }
 
     @Test
-    public void testCopyToStringWithInputStreamAndDefaultCharset() throws IOException {
+    void testCopyToStringWithInputStreamAndDefaultCharset() throws IOException {
         assertEquals(TEST_VALUE, copyToString(inputStream));
     }
 
     @Test
-    public void testCopyToStringWithNullInputStream() throws IOException {
+    void testCopyToStringWithNullInputStream() throws IOException {
         assertNull(copyToString((InputStream) null));
     }
 
     @Test
-    public void testCopyToStringOnNull() throws IOException {
+    void testCopyToStringOnNull() throws IOException {
         assertNull(copyToString(null, (Charset) null));
     }
 
     @Test
-    public void testCopyToStringOnNull1() throws IOException {
+    void testCopyToStringOnNull1() throws IOException {
         assertNull(copyToString(null, TEST_NULL_STRING));
     }
 
     @Test
-    public void testCopyToStringWithReader() throws IOException {
+    void testCopyToStringWithReader() throws IOException {
         assertEquals(TEST_VALUE, copyToString(new StringReader(TEST_VALUE)));
     }
 
     @Test
-    public void testCopyToStringWithNullReader() throws IOException {
+    void testCopyToStringWithNullReader() throws IOException {
         assertNull(copyToString((Reader) null));
     }
 
 
     @Test
-    public void testCopy() throws IOException {
+    void testCopy() throws IOException {
         FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream(TEST_BYTES.length);
         copy(inputStream, outputStream);
         assertArrayEquals(TEST_BYTES, outputStream.toByteArray());
     }
 
     @Test
-    public void testClose() {
+    void testClose() {
         destroy();
         close(new FastByteArrayOutputStream(0));
     }
 
     @Test
-    public void testCloseOnNull() {
+    void testCloseOnNull() {
         close(null);
     }
 
     @Test
-    public void testCloseOnIOException() {
+    void testCloseOnIOException() {
         close(() -> {
             throw new IOException("For testing");
         });

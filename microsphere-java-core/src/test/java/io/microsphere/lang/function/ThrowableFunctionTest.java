@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-public class ThrowableFunctionTest {
+class ThrowableFunctionTest {
 
     private static final ThrowableFunction<String, String> function = t -> t;
 

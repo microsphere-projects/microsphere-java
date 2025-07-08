@@ -328,7 +328,7 @@ public abstract class JarUtils implements Utils {
      * JarUtils.extract(jarURL, outputDir, classFileFilter);
      * }</pre>
      *
-     * @param jarResourceURL the URL pointing to a resource within a JAR file; must not be {@code null}
+     * @param jarResourceURL  the URL pointing to a resource within a JAR file; must not be {@code null}
      * @param targetDirectory the directory where the contents should be extracted; must not be {@code null}
      * @param jarEntryFilter  an optional filter to determine which entries to extract; if {@code null}, all entries are extracted
      * @throws IOException if an I/O error occurs during extraction or resolving the JAR resource

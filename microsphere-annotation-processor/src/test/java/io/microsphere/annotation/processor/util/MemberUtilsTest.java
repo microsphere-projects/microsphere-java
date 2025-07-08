@@ -40,49 +40,49 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
+class MemberUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
-    public void testGetDeclaredMembers() {
+    void testGetDeclaredMembers() {
         assertGetDeclaredMembersOfModel();
     }
 
     @Test
-    public void testGetDeclaredMembersOnNull() {
+    void testGetDeclaredMembersOnNull() {
         assertEmptyList(getDeclaredMembers(NULL_TYPE_ELEMENT));
         assertEmptyList(getDeclaredMembers(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetAllDeclaredMembers() {
+    void testGetAllDeclaredMembers() {
         assertGetAllDeclaredMembersOfModel();
     }
 
     @Test
-    public void testGetAllDeclaredMembersOnNull() {
+    void testGetAllDeclaredMembersOnNull() {
         assertEmptyList(getAllDeclaredMembers(NULL_TYPE_ELEMENT));
         assertEmptyList(getAllDeclaredMembers(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetDeclaredMembersOnAll() {
+    void testGetDeclaredMembersOnAll() {
         assertGetAllDeclaredMembersOfModel(getDeclaredMembers(getDeclaredType(Model.class), true));
         assertGetAllDeclaredMembersOfModel(getDeclaredMembers(getTypeElement(Model.class), true));
     }
 
     @Test
-    public void testGetDeclaredMembersOnNotAll() {
+    void testGetDeclaredMembersOnNotAll() {
         assertGetDeclaredMembersOfModel(getDeclaredMembers(getDeclaredType(Model.class), false));
         assertGetDeclaredMembersOfModel(getDeclaredMembers(getTypeElement(Model.class), false));
     }
 
     @Test
-    public void testFindDeclaredMembers() {
+    void testFindDeclaredMembers() {
         assertFindDeclaredMembersOfModel();
     }
 
     @Test
-    public void testFindDeclaredMembersOnNull() {
+    void testFindDeclaredMembersOnNull() {
         assertEmptyList(findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
         assertEmptyList(findDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
         assertEmptyList(findDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -90,12 +90,12 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredMembers() {
+    void testFindAllDeclaredMembers() {
         assertFindAllDeclaredMembersOfModel();
     }
 
     @Test
-    public void testFindAllDeclaredMembersOnNull() {
+    void testFindAllDeclaredMembersOnNull() {
         assertEmptyList(findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllDeclaredMembers(NULL_TYPE_ELEMENT, alwaysFalse()));
         assertEmptyList(findAllDeclaredMembers(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -103,13 +103,13 @@ public class MemberUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredMembersOnAll() {
+    void testFindDeclaredMembersOnAll() {
         assertGetAllDeclaredMembersOfModel(findDeclaredMembers(getDeclaredType(Model.class), true, alwaysTrue()));
         assertGetAllDeclaredMembersOfModel(findDeclaredMembers(getTypeElement(Model.class), true, alwaysTrue()));
     }
 
     @Test
-    public void testFindDeclaredMembersOnNotAll() {
+    void testFindDeclaredMembersOnNotAll() {
         assertGetDeclaredMembersOfModel(findDeclaredMembers(getDeclaredType(Model.class), false, alwaysTrue()));
         assertGetDeclaredMembersOfModel(findDeclaredMembers(getTypeElement(Model.class), false, alwaysTrue()));
     }

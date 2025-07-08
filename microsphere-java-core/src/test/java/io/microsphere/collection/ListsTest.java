@@ -15,65 +15,65 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Lists
  * @since 1.0.0
  */
-public class ListsTest extends AbstractTestCase {
+class ListsTest extends AbstractTestCase {
 
     @Test
-    public void testOfList0() {
+    void testOfList0() {
         assertEquals(emptyList(), ofList());
     }
 
     @Test
-    public void testOfList1() {
+    void testOfList1() {
         assertEquals(of(1), ofList(1));
     }
 
     @Test
-    public void testOfList2() {
+    void testOfList2() {
         assertEquals(of(1, 2), ofList(1, 2));
     }
 
     @Test
-    public void testOfList3() {
+    void testOfList3() {
         assertEquals(of(1, 2, 3), ofList(1, 2, 3));
     }
 
     @Test
-    public void testOfList4() {
+    void testOfList4() {
         assertEquals(of(1, 2, 3, 4), ofList(1, 2, 3, 4));
     }
 
     @Test
-    public void testOfList5() {
+    void testOfList5() {
         assertEquals(of(1, 2, 3, 4, 5), ofList(1, 2, 3, 4, 5));
     }
 
     @Test
-    public void testOfList6() {
+    void testOfList6() {
         assertEquals(of(1, 2, 3, 4, 5, 6), ofList(1, 2, 3, 4, 5, 6));
     }
 
     @Test
-    public void testOfList7() {
+    void testOfList7() {
         assertEquals(of(1, 2, 3, 4, 5, 6, 7), ofList(1, 2, 3, 4, 5, 6, 7));
     }
 
     @Test
-    public void testOfList8() {
+    void testOfList8() {
         assertEquals(of(1, 2, 3, 4, 5, 6, 7, 8), ofList(1, 2, 3, 4, 5, 6, 7, 8));
     }
 
     @Test
-    public void testOfList9() {
+    void testOfList9() {
         assertEquals(of(1, 2, 3, 4, 5, 6, 7, 8, 9), ofList(1, 2, 3, 4, 5, 6, 7, 8, 9));
     }
 
     @Test
-    public void testOfList10() {
+    void testOfList10() {
         assertEquals(of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), ofList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10));
     }
 
     @Test
-    public void testOfList() {
+    void testOfList() {
         assertEquals(emptyList(), ofList(TEST_NULL_OBJECT_ARRAY));
         assertEquals(of(1, 2, 3), ofList(1, 2, 3));
     }

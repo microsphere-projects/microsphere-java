@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -34,6 +35,7 @@ import static io.microsphere.util.ClassUtils.isArray;
 import static java.lang.System.arraycopy;
 import static java.lang.reflect.Array.newInstance;
 import static java.util.Arrays.binarySearch;
+import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.list;
 
 /**
@@ -2066,6 +2068,78 @@ public abstract class ArrayUtils implements Utils {
      */
     public static <T> String arrayToString(T[] array) {
         return Arrays.toString(array);
+    }
+
+    /**
+     * Reverses the elements of the specified array in-place.
+     *
+     * <p>This method reverses the order of elements in the given array. The reversal is done in-place,
+     * meaning that no additional memory is used for the operation, and the original array is modified directly.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String[] strings = {"one", "two", "three"};
+     * ArrayUtils.reverse(strings);
+     * // strings now contains ["three", "two", "one"]
+     *
+     * Integer[] numbers = {1, 2, 3, 4};
+     * ArrayUtils.reverse(numbers);
+     * // numbers now contains [4, 3, 2, 1]
+     *
+     * Object[] nullArray = null;
+     * ArrayUtils.reverse(nullArray); // Throws NullPointerException
+     * }</pre>
+     * <p>
+     * (Forks jdk.internal.util.ArraysSupport#reverse(Object[])).
+     *
+     * @param a   the array to reverse
+     * @param <T> the type of elements in the array
+     * @return the reversed array (same reference as input)
+     * @throws NullPointerException if the provided array is null
+     * @see jdk.internal.util.ArraysSupport#reverse(Object[])
+     */
+    public static <T> T[] reverse(T[] a) {
+        int limit = a.length / 2;
+        for (int i = 0, j = a.length - 1; i < limit; i++, j--) {
+            T t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+        }
+        return a;
+    }
+
+    /**
+     * Dump the contents of the given collection into the given array, in reverse order.
+     * This mirrors the semantics of Collection.toArray(T[]) in regard to reusing the given
+     * array, appending null if necessary, or allocating a new array of the same component type.
+     * <p>
+     * A constraint is that this method should issue exactly one method call on the collection
+     * to obtain the elements and the size. Having a separate size() call or using an Iterator
+     * could result in errors if the collection changes size between calls. This implies that
+     * the elements need to be obtained via a single call to one of the toArray() methods.
+     * This further implies allocating memory proportional to the number of elements and
+     * making an extra copy, but this seems unavoidable.
+     * <p>
+     * An obvious approach would be simply to call coll.toArray(array) and then reverse the
+     * order of the elements. This doesn't work, because if given array is sufficiently long,
+     * we cannot tell how many elements were copied into it and thus there is no way to reverse
+     * the right set of elements while leaving the remaining array elements undisturbed.
+     * (Forks jdk.internal.util.ArraysSupport#toArrayReversed(Collection, Object[])).
+     *
+     * @throws ArrayStoreException if coll contains elements that can't be stored in the array
+     * @see jdk.internal.util.ArraysSupport#toArrayReversed(Collection, Object[])
+     */
+    public static <T> T[] toArrayReversed(Collection<?> coll, T[] array) {
+        T[] newArray = reverse(coll.toArray(copyOfRange(array, 0, 0)));
+        if (newArray.length > array.length) {
+            return newArray;
+        } else {
+            arraycopy(newArray, 0, array, 0, newArray.length);
+            if (array.length > newArray.length) {
+                array[newArray.length] = null;
+            }
+            return array;
+        }
     }
 
     private ArrayUtils() {

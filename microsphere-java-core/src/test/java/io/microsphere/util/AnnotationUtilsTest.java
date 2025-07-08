@@ -91,7 +91,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class AnnotationUtilsTest extends AbstractTestCase {
+class AnnotationUtilsTest extends AbstractTestCase {
 
     private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);
 

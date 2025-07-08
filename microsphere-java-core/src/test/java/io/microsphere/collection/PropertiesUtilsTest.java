@@ -34,10 +34,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class PropertiesUtilsTest {
+class PropertiesUtilsTest {
 
     @Test
-    public void testFlatProperties() {
+    void testFlatProperties() {
         Map<String, Object> level3Properties = ofMap("f", "F");
         Map<String, Object> level2Properties = ofMap("c", "C", "d", level3Properties);
         Map<String, Object> properties = ofMap("a", "A", "b", level2Properties, "z", emptyList());
@@ -48,12 +48,12 @@ public class PropertiesUtilsTest {
     }
 
     @Test
-    public void testFlatPropertiesOnEmptyMap() {
+    void testFlatPropertiesOnEmptyMap() {
         assertSame(emptyMap(), flatProperties(emptyMap()));
     }
 
     @Test
-    public void testFlatPropertiesOnNull() {
+    void testFlatPropertiesOnNull() {
         assertNull(flatProperties(null));
     }
 }

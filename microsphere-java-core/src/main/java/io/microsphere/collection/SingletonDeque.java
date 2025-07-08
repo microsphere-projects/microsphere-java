@@ -113,6 +113,16 @@ public class SingletonDeque<E> extends AbstractDeque<E> implements Serializable 
     }
 
     @Override
+    public E peekFirst() {
+        return element;
+    }
+
+    @Override
+    public E peekLast() {
+        return element;
+    }
+
+    @Override
     public boolean removeLastOccurrence(Object o) {
         throw new UnsupportedOperationException();
     }

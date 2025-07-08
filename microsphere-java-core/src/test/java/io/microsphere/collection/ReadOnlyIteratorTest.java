@@ -40,12 +40,12 @@ public abstract class ReadOnlyIteratorTest extends AbstractTestCase {
     protected abstract Iterator<?> createIterator();
 
     @Test
-    public void testHasNext() {
+    void testHasNext() {
         assertTrue(instance.hasNext());
     }
 
     @Test
-    public void testNext() {
+    void testNext() {
         assertThrows(NoSuchElementException.class, () -> {
             assertEquals(TEST_ELEMENT, instance.next());
             // throws exception
@@ -54,12 +54,12 @@ public abstract class ReadOnlyIteratorTest extends AbstractTestCase {
     }
 
     @Test
-    public void testRemove() {
+    void testRemove() {
         assertThrows(IllegalStateException.class, instance::remove);
     }
 
     @Test
-    public void testForEachRemaining() {
+    void testForEachRemaining() {
         instance.forEachRemaining(this::log);
     }
 

@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-public class StringToIntegerConverterTest extends BaseConverterTest<String, Integer> {
+class StringToIntegerConverterTest extends BaseConverterTest<String, Integer> {
 
     @Override
     protected AbstractConverter<String, Integer> createConverter() {
@@ -45,7 +45,7 @@ public class StringToIntegerConverterTest extends BaseConverterTest<String, Inte
     }
 
     @Test
-    public void testConvertOnFailed() {
+    void testConvertOnFailed() {
         assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StopWatchTest {
+class StopWatchTest {
 
     private static final Logger logger = LoggerFactory.getLogger(StopWatchTest.class);
 

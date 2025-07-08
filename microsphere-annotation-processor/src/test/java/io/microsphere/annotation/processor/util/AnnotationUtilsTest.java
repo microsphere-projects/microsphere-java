@@ -94,34 +94,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
+class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
-    public void testGetAnnotation() {
+    void testGetAnnotation() {
         asserGetAnnotation(Service.class);
     }
 
     @Test
-    public void testGetAnnotationWithClassName() {
+    void testGetAnnotationWithClassName() {
         asserGetAnnotation("org.springframework.stereotype.Service");
     }
 
     @Test
-    public void testGetAnnotationOnNull() {
+    void testGetAnnotationOnNull() {
         assertNull(getAnnotation(testTypeElement, NULL_CLASS));
         assertNull(getAnnotation(testTypeElement.asType(), NULL_CLASS));
         assertNull(getAnnotation(NULL_ANNOTATED_CONSTRUCT, NULL_CLASS));
     }
 
     @Test
-    public void testGetAnnotationWithClassNameOnNull() {
+    void testGetAnnotationWithClassNameOnNull() {
         assertNull(getAnnotation(testTypeElement, NULL_STRING));
         assertNull(getAnnotation(testTypeElement.asType(), NULL_STRING));
         assertNull(getAnnotation(NULL_ANNOTATED_CONSTRUCT, NULL_STRING));
     }
 
     @Test
-    public void testGetAnnotations() {
+    void testGetAnnotations() {
         List<AnnotationMirror> annotations = getAnnotations(testTypeElement);
         assertEquals(4, annotations.size());
         assertAnnotation(annotations.get(0), Service.class);
@@ -131,26 +131,26 @@ public class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAnnotationsOnNull() {
+    void testGetAnnotationsOnNull() {
         List<AnnotationMirror> annotations = getAnnotations(NULL_ANNOTATED_CONSTRUCT);
         assertEmptyList(annotations);
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationClass() {
+    void testGetAnnotationsWithAnnotationClass() {
         assertGetAnnotations(Service.class);
         assertGetAnnotations(ServiceMode.class);
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationClassOnNull() {
+    void testGetAnnotationsWithAnnotationClassOnNull() {
         assertTrue(getAnnotations(NULL_ANNOTATED_CONSTRUCT, NULL_CLASS).isEmpty());
         assertTrue(getAnnotations(testTypeElement, NULL_CLASS).isEmpty());
         assertTrue(getAnnotations(NULL_ANNOTATED_CONSTRUCT, Service.class).isEmpty());
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationClassOnNotFound() {
+    void testGetAnnotationsWithAnnotationClassOnNotFound() {
         List<AnnotationMirror> annotations = getAnnotations(testTypeElement, Override.class);
         assertEquals(0, annotations.size());
     }

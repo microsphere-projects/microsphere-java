@@ -48,7 +48,7 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
  * Queue<String> unmodifiableQueue = new UnmodifiableQueue<>(mutableQueue);
  * unmodifiableQueue.add("World"); // throws UnsupportedOperationException
  *  }</pre>
-
+ *
  * <p>
  * This class is serializable if the underlying queue is serializable.
  * </p>

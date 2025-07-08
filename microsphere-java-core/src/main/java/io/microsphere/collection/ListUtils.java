@@ -32,6 +32,8 @@ import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.CollectionUtils.toIterator;
 import static io.microsphere.util.ArrayUtils.isEmpty;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.Assert.assertTrue;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -269,7 +271,6 @@ public abstract class ListUtils implements Utils {
         return new ArrayList<>();
     }
 
-
     /**
      * Creates a new {@link ArrayList} instance with the specified initial capacity.
      *
@@ -318,8 +319,8 @@ public abstract class ListUtils implements Utils {
      * @see CollectionUtils#toIterable(Enumeration)
      */
     @Nonnull
-    public static <E> LinkedList<E> newArrayList(Enumeration<E> values) {
-        return newLinkedList(toIterable(values));
+    public static <E> ArrayList<E> newArrayList(Enumeration<E> values) {
+        return newArrayList(toIterable(values));
     }
 
     /**
@@ -486,6 +487,80 @@ public abstract class ListUtils implements Utils {
         LinkedList<E> list = newLinkedList();
         while (iterator.hasNext()) {
             list.add(iterator.next());
+        }
+        return list;
+    }
+
+    /**
+     * Creates a new {@link ArrayList} containing all elements from the specified array.
+     * The resulting list is modifiable, allowing for further additions or modifications after creation.
+     *
+     * <p>If the given array is empty, the {@link IllegalArgumentException} will be thrown</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     String[] fruits = {"apple", "banana", "cherry"};
+     *     List<String> fruitList = ListUtils.ofArrayList(fruits);
+     *     System.out.println(fruitList); // Output: [apple, banana, cherry]
+     *     fruitList.add("orange");       // return true
+     *     System.out.println(fruitList); // Output: [apple, banana, cherry, orange]
+     *
+     *     Integer[] numbers = {};
+     *     List<Integer> numberList = ListUtils.ofArrayList(numbers); // throws IllegalArgumentException
+     *
+     *     List<Integer> emptyList = ListUtils.ofLinkedList((Integer[]) null); // throws IllegalArgumentException
+     *
+     * }</pre>
+     *
+     * @param array the array to convert
+     * @param <E>   the type of elements in the array
+     * @return a new {@link ArrayList} containing all elements from the array
+     * @throws IllegalArgumentException if the array is null or empty
+     * @see #ofList(Object[]) for creating an immutable version of the list
+     */
+    public static <E> ArrayList<E> ofArrayList(E... array) throws IllegalArgumentException {
+        int length = length(array);
+        assertTrue(length > 0, () -> "The array length must be greater than 0");
+        ArrayList<E> list = newArrayList(length);
+        for (int i = 0; i < length; i++) {
+            list.add(i, array[i]);
+        }
+        return list;
+    }
+
+    /**
+     * Creates a new {@link LinkedList} containing all elements from the specified array.
+     *
+     * <p>This method copies the elements from the provided array into a newly created linked list,
+     * allowing for efficient insertions and deletions. If the array is empty or {@code null},
+     * an {@link IllegalArgumentException} will be thrown.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     String[] fruits = {"apple", "banana", "cherry"};
+     *     List<String> fruitList = ListUtils.ofLinkedList(fruits);
+     *     System.out.println(fruitList); // Output: [apple, banana, cherry]
+     *     fruitList.add("orange");       // return true
+     *     System.out.println(fruitList); // Output: [apple, banana, cherry, orange]
+     *
+     *     Integer[] numbers = {};
+     *     List<Integer> numberList = ListUtils.ofLinkedList(numbers); // throws IllegalArgumentException
+     *
+     *     List<Integer> emptyList = ListUtils.ofLinkedList((Integer[]) null); // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param array the array to convert
+     * @param <E>   the type of elements in the array
+     * @return a new {@link LinkedList} containing all elements from the array
+     * @throws IllegalArgumentException if the array is null or empty
+     * @see #ofList(Object[]) for creating an immutable version of the list
+     */
+    public static <E> LinkedList<E> ofLinkedList(E... array) throws IllegalArgumentException {
+        int length = length(array);
+        assertTrue(length > 0, () -> "The array length must be greater than 0");
+        LinkedList<E> list = newLinkedList();
+        for (int i = 0; i < length; i++) {
+            list.add(array[i]);
         }
         return list;
     }

@@ -32,10 +32,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class IterableAdapterTest extends AbstractTestCase {
+class IterableAdapterTest extends AbstractTestCase {
 
     @Test
-    public void test() {
+    void test() {
         Iterator<String> iterator = singletonIterator(TEST_ELEMENT);
         Iterable<String> iterable = toIterable(iterator);
         assertSame(iterator, iterable.iterator());

@@ -63,16 +63,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MapUtils
  * @since 1.0.0
  */
-public class MapUtilsTest {
+class MapUtilsTest {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals(MIN_VALUE, MIN_LOAD_FACTOR);
         assertEquals(1.f, FIXED_LOAD_FACTOR);
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertTrue(isEmpty(null));
         assertTrue(isEmpty(emptyMap()));
         assertTrue(isEmpty(newHashMap()));
@@ -82,7 +82,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testIsNotEmpty() {
+    void testIsNotEmpty() {
         assertFalse(isNotEmpty(null));
         assertFalse(isNotEmpty(emptyMap()));
         assertFalse(isNotEmpty(newLinkedHashMap()));
@@ -92,7 +92,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOf1() {
+    void testOf1() {
         Map<String, Integer> map = of("A", 1);
         assertEquals(1, map.size());
         assertEquals(1, map.get("A"));
@@ -101,7 +101,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOf2() {
+    void testOf2() {
         Map<String, Integer> map = of("A", 1, "B", 2);
         assertEquals(2, map.size());
         assertEquals(1, map.get("A"));
@@ -111,7 +111,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOf3() {
+    void testOf3() {
         Map<String, Integer> map = of("A", 1, "B", 2, "C", 3);
         assertEquals(3, map.size());
         assertEquals(1, map.get("A"));
@@ -122,7 +122,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOf4() {
+    void testOf4() {
         Map<String, Integer> map = of("A", 1, "B", 2, "C", 3, "D", 4);
         assertEquals(4, map.size());
         assertEquals(1, map.get("A"));
@@ -134,7 +134,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOf5() {
+    void testOf5() {
         Map<String, Integer> map = of("A", 1, "B", 2, "C", 3, "D", 4, "E", 5);
         assertEquals(5, map.size());
         assertEquals(1, map.get("A"));
@@ -147,7 +147,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOf() {
+    void testOf() {
         Map<String, Integer> map = of("B", 2, "C", 3, "D", 4, "E", 5, "F", 6);
         assertEquals(6, map.get("F"));
         assertEquals(5, map.get("E"));
@@ -169,7 +169,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOfOnEntries() {
+    void testOfOnEntries() {
         Map.Entry<String, Integer> entryA = ofEntry("A", 1);
         Map.Entry<String, Integer> entryB = ofEntry("B", 2);
         Map.Entry<String, Integer> entryC = ofEntry("C", 3);
@@ -183,19 +183,19 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOfOnNullEntries() {
+    void testOfOnNullEntries() {
         Map map = of((Map.Entry[]) null);
         assertSame(emptyMap(), map);
     }
 
     @Test
-    public void testOfOnEmptyEntries() {
+    void testOfOnEmptyEntries() {
         Map map = of(new Map.Entry[0]);
         assertSame(emptyMap(), map);
     }
 
     @Test
-    public void testOfMap1() {
+    void testOfMap1() {
         Map<String, Integer> map = ofMap("A", 1);
         assertEquals(1, map.size());
         assertEquals(1, map.get("A"));
@@ -204,7 +204,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOfMap() {
+    void testOfMap() {
         Map<String, Integer> map = ofMap("A", 1, "C", 3);
         assertEquals(2, map.size());
         assertEquals(1, map.get("A"));
@@ -214,21 +214,21 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testOfMapOnEmptyArray() {
+    void testOfMapOnEmptyArray() {
         Map map = ofMap(EMPTY_OBJECT_ARRAY);
         assertTrue(map.isEmpty());
         assertSame(emptyMap(), map);
     }
 
     @Test
-    public void testOfMapOnNull() {
+    void testOfMapOnNull() {
         Map map = ofMap(null);
         assertTrue(map.isEmpty());
         assertSame(emptyMap(), map);
     }
 
     @Test
-    public void testOfEntry() {
+    void testOfEntry() {
         Map.Entry<String, Integer> entry = ofEntry("A", 1);
         assertEquals(DefaultEntry.class, entry.getClass());
         assertEquals("A", entry.getKey());
@@ -238,7 +238,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testImmutableEntry() {
+    void testImmutableEntry() {
         Map.Entry<String, Integer> entry = immutableEntry("A", 1);
         assertEquals(ImmutableEntry.class, entry.getClass());
         assertEquals("A", entry.getKey());
@@ -247,7 +247,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testNewHashMap() {
+    void testNewHashMap() {
         assertNewMap(HashMap.class, newHashMap());
         assertNewMap(HashMap.class, newHashMap(2));
         assertNewMap(HashMap.class, newHashMap(2, 0.75f));
@@ -255,7 +255,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testNewLinkedHashMap() {
+    void testNewLinkedHashMap() {
         assertNewMap(LinkedHashMap.class, newLinkedHashMap());
         assertNewMap(LinkedHashMap.class, newLinkedHashMap(2));
         assertNewMap(LinkedHashMap.class, newLinkedHashMap(2, 0.75f));
@@ -264,7 +264,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testNewTreeMap() {
+    void testNewTreeMap() {
         assertNewMap(TreeMap.class, newTreeMap());
         assertNewMap(TreeMap.class, newTreeMap(Integer::compare));
         assertNewMap(TreeMap.class, newTreeMap(emptyMap()));
@@ -272,7 +272,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testNewConcurrentHashMap() {
+    void testNewConcurrentHashMap() {
         assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap());
         assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(emptyMap()));
         assertNewMap(ConcurrentHashMap.class, newConcurrentHashMap(newHashMap()));
@@ -282,17 +282,17 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testNewFixedHashMap() {
+    void testNewFixedHashMap() {
         assertNewFixedMap(8, MapUtils::newFixedHashMap);
     }
 
     @Test
-    public void testNewFixedLinkedHashMap() {
+    void testNewFixedLinkedHashMap() {
         assertNewFixedMap(8, MapUtils::newFixedLinkedHashMap);
     }
 
     @Test
-    public void testToFixedMap() {
+    void testToFixedMap() {
         Map<String, Integer> map = toFixedMap(Collections.<String>emptyList(), a -> ofEntry(a, a.hashCode()));
         assertTrue(map.isEmpty());
 
@@ -303,7 +303,7 @@ public class MapUtilsTest {
     }
 
     @Test
-    public void testShallowCloneMap() {
+    void testShallowCloneMap() {
         Map<String, Integer> map = of("A", 1);
         Map<String, Integer> cloneMap = shallowCloneMap(map);
         assertEquals(map, cloneMap);

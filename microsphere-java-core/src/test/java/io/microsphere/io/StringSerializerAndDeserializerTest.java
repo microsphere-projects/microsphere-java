@@ -30,14 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringSerializerAndDeserializerTest {
+class StringSerializerAndDeserializerTest {
 
     private StringSerializer serializer = new StringSerializer();
 
     private StringDeserializer deserializer = new StringDeserializer();
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         String value = "Test";
         byte[] bytes = serializer.serialize(value);
         assertArrayEquals(value.getBytes(StandardCharsets.UTF_8), bytes);

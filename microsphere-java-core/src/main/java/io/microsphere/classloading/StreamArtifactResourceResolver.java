@@ -39,7 +39,7 @@ import static io.microsphere.util.jar.JarUtils.filter;
 
 
 /**
- * An abstract base class for implementing {@link ArtifactResourceResolver} that provides a 
+ * An abstract base class for implementing {@link ArtifactResourceResolver} that provides a
  * skeletal implementation to resolve artifact resources from either a streamable resource (like a URL)
  * or an archive file (like a JAR). This class handles common concerns such as:
  *
@@ -47,7 +47,7 @@ import static io.microsphere.util.jar.JarUtils.filter;
  *     <li><b>Stream Handling:</b> Reads and processes artifact metadata from various sources including URLs, JAR files, and directories.</li>
  *     <li><b>Error Handling:</b> Provides consistent error logging when reading or resolving artifacts fails.</li>
  *     <li><b>Archive Support:</b> Offers utility methods to extract metadata from JARs or files within a directory structure.</li>
- *     <li><b>Extensibility:</b> Declares abstract methods that subclasses must implement to define custom logic for identifying 
+ *     <li><b>Extensibility:</b> Declares abstract methods that subclasses must implement to define custom logic for identifying
  *         metadata locations and constructing artifact instances.</li>
  * </ul>
  *

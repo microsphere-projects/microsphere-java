@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see FilterUtilsTest
  * @since 1.0.0
  */
-public class FilterUtilsTest extends AbstractTestCase {
+class FilterUtilsTest extends AbstractTestCase {
 
     @Test
     public void testFilter() {

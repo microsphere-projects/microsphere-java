@@ -27,8 +27,10 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.CollectionUtils.emptyDeque;
 import static io.microsphere.collection.CollectionUtils.emptyIterable;
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
+import static io.microsphere.collection.CollectionUtils.emptyQueue;
 import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
@@ -37,6 +39,7 @@ import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.QueueUtils.EMPTY_DEQUE;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyList;
@@ -54,10 +57,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class CollectionUtilsTest extends AbstractTestCase {
+class CollectionUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertTrue(isEmpty(TEST_NULL_COLLECTION));
         assertTrue(isEmpty(TEST_NULL_LIST));
         assertTrue(isEmpty(TEST_NULL_SET));
@@ -77,7 +80,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsNotEmpty() {
+    void testIsNotEmpty() {
 
         assertFalse(isNotEmpty(TEST_NULL_COLLECTION));
         assertFalse(isNotEmpty(TEST_NULL_LIST));
@@ -98,7 +101,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testToIterable() {
+    void testToIterable() {
         Iterable iterable = toIterable(emptyList());
         assertEmptyIterable(iterable);
 
@@ -133,17 +136,17 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testEmptyIterator() {
+    void testEmptyIterator() {
         assertSame(Collections.emptyIterator(), emptyIterator());
     }
 
     @Test
-    public void testEmptyIterable() {
+    void testEmptyIterable() {
         assertSame(EmptyIterable.INSTANCE, emptyIterable());
     }
 
     @Test
-    public void testSize() {
+    void testSize() {
         assertEquals(0, size(TEST_NULL_ITERABLE));
         assertEquals(0, size(TEST_NULL_COLLECTION));
         assertEquals(0, size(TEST_NULL_LIST));
@@ -167,7 +170,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertFalse(CollectionUtils.equals(null, TEST_SINGLETON_LIST));
         assertFalse(CollectionUtils.equals(TEST_SINGLETON_LIST, null));
 
@@ -187,7 +190,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAddAll() {
+    void testAddAll() {
         List<String> values = new LinkedList<>();
         assertEquals(0, addAll(TEST_EMPTY_LIST));
         assertEquals(0, addAll(TEST_NULL_COLLECTION, "A"));
@@ -200,7 +203,7 @@ public class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFirst() {
+    void testFirst() {
         assertNull(first(TEST_NULL_ITERATOR));
         assertNull(first(TEST_EMPTY_QUEUE.iterator()));
         assertNull(first(TEST_NULL_ITERABLE));
@@ -212,6 +215,18 @@ public class CollectionUtilsTest extends AbstractTestCase {
         assertEquals(TEST_ELEMENT, first(TEST_SINGLETON_LIST));
         assertEquals(TEST_ELEMENT, first(TEST_SINGLETON_SET));
         assertEquals(TEST_ELEMENT, first(toIterable(TEST_SINGLETON_LIST)));
+    }
+
+    @Test
+    void testEmptyQueue() {
+        assertSame(QueueUtils.emptyQueue(), emptyQueue());
+        assertSame(EMPTY_DEQUE, emptyQueue());
+    }
+
+    @Test
+    void testEmptyDeque() {
+        assertSame(QueueUtils.emptyDeque(), emptyDeque());
+        assertSame(EMPTY_DEQUE, emptyDeque());
     }
 
 }

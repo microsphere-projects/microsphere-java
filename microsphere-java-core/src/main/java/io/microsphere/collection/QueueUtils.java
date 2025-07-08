@@ -22,6 +22,8 @@ import io.microsphere.util.Utils;
 import java.util.Deque;
 import java.util.Queue;
 
+import static io.microsphere.collection.ReversedDeque.of;
+
 /**
  * The utilities class for Java {@link Queue}
  *
@@ -31,7 +33,7 @@ import java.util.Queue;
  */
 public abstract class QueueUtils implements Utils {
 
-    private static final Deque EMPTY_DEQUE = new EmptyDeque();
+    public static final Deque<?> EMPTY_DEQUE = EmptyDeque.INSTANCE;
 
     /**
      * Checks whether the specified {@link Iterable} is an instance of {@link Queue}.
@@ -121,7 +123,7 @@ public abstract class QueueUtils implements Utils {
      * Queue<String> mutableQueue = new LinkedList<>();
      * mutableQueue.add("Hello");
      * Queue<String> unmodifiable = unmodifiableQueue(mutableQueue);
-     * 
+     *
      * unmodifiable.add("World"); // throws UnsupportedOperationException
      * }</pre>
      *
@@ -148,7 +150,7 @@ public abstract class QueueUtils implements Utils {
      * Deque<String> mutableDeque = new LinkedList<>();
      * mutableDeque.add("Hello");
      * Deque<String> unmodifiable = unmodifiableDeque(mutableDeque);
-     * 
+     *
      * unmodifiable.addFirst("World"); // throws UnsupportedOperationException
      * }</pre>
      *
@@ -207,6 +209,42 @@ public abstract class QueueUtils implements Utils {
      */
     public static <E> Deque<E> singletonDeque(E element) {
         return new SingletonDeque<>(element);
+    }
+
+    /**
+     * Returns a reversed view of the specified deque.
+     *
+     * <p>
+     * This method wraps the provided deque in a {@link ReversedDeque}, which presents the elements in reverse order.
+     * Modifications to the original deque are reflected in the reversed view, and vice versa.
+     * However, attempts to modify the reversed view may result in an {@link UnsupportedOperationException}
+     * depending on the underlying implementation.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Deque<String> deque = new LinkedList<>();
+     * deque.addLast("A");
+     * deque.addLast("B");
+     * deque.addLast("C");
+     *
+     * Deque<String> reversed = reversedDeque(deque);
+     * String first = reversed.peekFirst(); // returns "C"
+     * String last = reversed.peekLast();   // returns "A"
+     *
+     * // Iterating through the reversed view
+     * for (String value : reversed) {
+     *     System.out.println(value); // prints "C", "B", "A"
+     * }
+     * }</pre>
+     *
+     * @param <E>   the type of elements held in the deque
+     * @param deque the deque to be viewed in reverse order, must not be null
+     * @return a reversed view of the specified deque
+     * @throws NullPointerException if the provided deque is null
+     */
+    public static <E> Deque<E> reversedDeque(Deque<E> deque) {
+        return of(deque);
     }
 
     private QueueUtils() {

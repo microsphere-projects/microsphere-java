@@ -18,9 +18,11 @@ package io.microsphere.collection;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.logging.Logger;
+import io.microsphere.lang.MutableInteger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -31,6 +33,8 @@ import static io.microsphere.collection.ListUtils.last;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.of;
+import static io.microsphere.collection.ListUtils.ofArrayList;
+import static io.microsphere.collection.ListUtils.ofLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.Arrays.asList;
@@ -43,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -52,14 +57,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
-public class ListUtilsTest extends AbstractTestCase {
+class ListUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ListUtilsTest.class);
 
     private static final List<String> TEST_LIST = asList("A", "B", "C");
 
     @Test
-    public void testIsList() {
+    void testIsList() {
         assertTrue(isList(new ArrayList()));
         assertTrue(isList(emptyList()));
         assertFalse(isList(emptyEnumeration()));
@@ -68,21 +73,21 @@ public class ListUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFirst() {
+    void testFirst() {
         assertEquals("A", first(TEST_LIST));
         assertNull(first(emptyList()));
         assertNull(first(of()));
     }
 
     @Test
-    public void testLast() {
+    void testLast() {
         assertEquals("C", last(TEST_LIST));
         assertNull(last(emptyList()));
         assertNull(last(of()));
     }
 
     @Test
-    public void testOf() {
+    void testOf() {
         List<String> list = of();
         assertTrue(list.isEmpty());
 
@@ -92,7 +97,7 @@ public class ListUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOfList() {
+    void testOfList() {
         List<String> rawList = TEST_LIST;
         List<String> list = ofList(rawList);
         assertEquals(rawList, list);
@@ -124,27 +129,68 @@ public class ListUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewArrayList() {
+    void testNewArrayList() {
         assertEquals(newArrayList(), newArrayList(1));
         assertEquals(newArrayList(), newArrayList(emptyEnumeration()));
         assertEquals(newArrayList(newArrayList()), newArrayList(emptyIterator()));
     }
 
     @Test
-    public void testNewLinkedList() {
+    void testNewLinkedList() {
         assertEquals(emptyList(), newLinkedList());
         assertEquals(newLinkedList(), newLinkedList(emptyEnumeration()));
         assertEquals(newLinkedList(newArrayList()), newLinkedList(emptyIterator()));
     }
 
     @Test
-    public void testForEach() {
+    void testOfArrayList() {
+        List<String> list = ofArrayList("A", "B", "C");
+        assertEquals(list, ofList("A", "B", "C"));
+        assertTrue(list.add("D"));
+        assertTrue(list.addAll(ofList("A", "B", "C", "D")));
+        assertTrue(list.removeAll(ofList("A", "B", "C")));
+        assertTrue(list.containsAll(ofList("D")));
+    }
+
+    @Test
+    void testOfArrayListOnEmptyArray() {
+        assertThrows(IllegalArgumentException.class, () -> ofArrayList(null));
+        assertThrows(IllegalArgumentException.class, () -> ofArrayList());
+    }
+
+    @Test
+    void testOfLinkedList() {
+        List<String> list = ofLinkedList("A", "B", "C");
+        assertEquals(list, ofList("A", "B", "C"));
+        assertTrue(list.add("D"));
+        assertTrue(list.addAll(ofList("A", "B", "C", "D")));
+        assertTrue(list.removeAll(ofList("A", "B", "C")));
+        assertTrue(list.containsAll(ofList("D")));
+    }
+
+    @Test
+    void testOfLinkedListOnEmptyArray() {
+        assertThrows(IllegalArgumentException.class, () -> ofLinkedList(null));
+        assertThrows(IllegalArgumentException.class, () -> ofLinkedList());
+    }
+
+    @Test
+    void testForEach() {
         List<String> list = TEST_LIST;
+        MutableInteger mutableInteger = MutableInteger.of(0);
+        Iterator<String> iterator = list.iterator();
         forEach(list, (index, value) -> {
             logger.trace("forEach(index = {} , value = '{}')", index, value);
+            assertEquals(index, mutableInteger.getAndIncrement());
+            assertTrue(iterator.hasNext());
+            assertEquals(iterator.next(), value);
         });
+
+        Iterator<String> iterator2 = list.iterator();
         forEach(list, (value) -> {
             logger.trace("forEach(value = '{}')", value);
+            assertTrue(iterator2.hasNext());
+            assertEquals(iterator2.next(), value);
         });
     }
 }

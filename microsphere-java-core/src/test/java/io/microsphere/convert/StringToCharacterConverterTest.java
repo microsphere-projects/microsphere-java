@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-public class StringToCharacterConverterTest extends BaseConverterTest<String, Character> {
+class StringToCharacterConverterTest extends BaseConverterTest<String, Character> {
 
     @Override
     protected AbstractConverter<String, Character> createConverter() {
@@ -46,12 +46,12 @@ public class StringToCharacterConverterTest extends BaseConverterTest<String, Ch
     }
 
     @Test
-    public void testConvertOnEmpty() {
+    void testConvertOnEmpty() {
         assertNull(this.converter.convert(""));
     }
 
     @Test
-    public void testConvertOnFailed() {
+    void testConvertOnFailed() {
         assertThrows(IllegalArgumentException.class, () -> this.converter.convert("123"));
     }
 }

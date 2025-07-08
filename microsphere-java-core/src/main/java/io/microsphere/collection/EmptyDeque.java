@@ -20,6 +20,7 @@ package io.microsphere.collection;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
 
@@ -60,7 +61,7 @@ public class EmptyDeque<E> extends AbstractDeque<E> implements Serializable {
 
     private static final long serialVersionUID = -1L;
 
-    public static final EmptyDeque INSTANCE = new EmptyDeque();
+    public static final EmptyDeque<?> INSTANCE = new EmptyDeque<>();
 
     @Override
     public Iterator<E> iterator() {
@@ -84,26 +85,41 @@ public class EmptyDeque<E> extends AbstractDeque<E> implements Serializable {
 
     @Override
     public E pollFirst() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public E pollLast() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public E getFirst() {
-        throw new UnsupportedOperationException();
+        throw new NoSuchElementException();
     }
 
     @Override
     public E getLast() {
-        throw new UnsupportedOperationException();
+        throw new NoSuchElementException();
+    }
+
+    @Override
+    public E peekFirst() {
+        return null;
+    }
+
+    @Override
+    public E peekLast() {
+        return null;
     }
 
     @Override
     public boolean removeLastOccurrence(Object o) {
+        return false;
+    }
+
+    @Override
+    public boolean remove(Object o) {
         return false;
     }
 

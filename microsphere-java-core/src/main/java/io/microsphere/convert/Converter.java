@@ -130,8 +130,8 @@ public interface Converter<S, T> extends Prioritized {
      *
      * @param sourceType the class of the source type
      * @param targetType the class of the target type
-     * @param <S>         the source type
-     * @param <T>         the target type
+     * @param <S>        the source type
+     * @param <T>        the target type
      * @return a converter instance that can handle the specified types, or {@code null} if no suitable converter is found
      */
     static <S, T> Converter<S, T> getConverter(Class<S> sourceType, Class<T> targetType) {

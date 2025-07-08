@@ -35,6 +35,7 @@ import java.util.Comparator;
  * The comparison is based on lexicographical ordering similar to {@link String#compareTo(String)}.
  * Null values are considered smaller than non-null values. When both sequences are null, they are considered equal.
  * </p>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */

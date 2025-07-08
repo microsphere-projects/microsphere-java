@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see DelegatingWrapper
  * @since 1.0.0
  */
-public class WrapperTest {
+class WrapperTest {
 
     @Test
-    public void test() {
+    void test() {
         String delegate = "Hello";
         Wrapper wrapper = new DelegatingWrapperImpl(delegate);
         assertEquals(delegate, tryUnwrap(wrapper, String.class));
@@ -40,7 +40,7 @@ public class WrapperTest {
     }
 
     @Test
-    public void testOnNull(){
+    void testOnNull() {
         assertNull(tryUnwrap(null, String.class));
     }
 

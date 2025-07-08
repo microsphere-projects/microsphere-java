@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see PackageNameClassFilter
  * @since 1.0.0
  */
-public class PackageNameClassFilterTest {
+class PackageNameClassFilterTest {
 
     @Test
     void testAccept() {

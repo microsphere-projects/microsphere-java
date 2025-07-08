@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see FileChangedEvent
  * @since 1.0.0
  */
-public class FileChangedEventTest {
+class FileChangedEventTest {
 
     @Test
-    public void test() {
+    void test() {
         File file = new File("new");
         FileChangedEvent event = new FileChangedEvent(file, CREATED);
         assertSame(file, event.getFile());
@@ -29,7 +29,7 @@ public class FileChangedEventTest {
     }
 
     @Test
-    public void testOnFailed() {
+    void testOnFailed() {
         assertThrows(IllegalArgumentException.class, () -> new FileChangedEvent(null, CREATED));
         assertThrows(IllegalArgumentException.class, () -> new FileChangedEvent(new File(""), null));
     }

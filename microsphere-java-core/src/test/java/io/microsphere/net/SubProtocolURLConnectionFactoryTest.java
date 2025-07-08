@@ -34,10 +34,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SubProtocolURLConnectionFactoryTest {
+class SubProtocolURLConnectionFactoryTest {
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         URL url = new URL("ftp://...");
         List<String> subProtocols = emptyList();
         ConsoleSubProtocolURLConnectionFactory instance = new ConsoleSubProtocolURLConnectionFactory();

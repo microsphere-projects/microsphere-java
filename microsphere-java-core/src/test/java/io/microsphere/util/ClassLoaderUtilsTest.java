@@ -88,7 +88,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassLoaderUtils
  * @since 1.0.0
  */
-public class ClassLoaderUtilsTest extends AbstractTestCase {
+class ClassLoaderUtilsTest extends AbstractTestCase {
 
     private static final boolean isLessThanJava12 = testCurrentJavaVersion("<", JAVA_VERSION_12);
 

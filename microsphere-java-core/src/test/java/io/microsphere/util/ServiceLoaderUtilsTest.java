@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ServiceLoaderUtilsTest
  * @since 1.0.0
  */
-public class ServiceLoaderUtilsTest extends AbstractTestCase {
+class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     private static final Class<EventListener> TEST_CLASS = EventListener.class;
 

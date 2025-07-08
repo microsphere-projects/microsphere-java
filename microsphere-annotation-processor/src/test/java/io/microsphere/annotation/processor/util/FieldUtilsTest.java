@@ -65,10 +65,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
+class FieldUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
-    public void testGetDeclaredField() {
+    void testGetDeclaredField() {
         TypeElement type = getTypeElement(Model.class);
         testGetDeclaredField(type, "f", float.class);
         testGetDeclaredField(type, "d", double.class);
@@ -79,7 +79,7 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredFieldOnNotFound() {
+    void testGetDeclaredFieldOnNotFound() {
         TypeElement type = getTypeElement(Model.class);
         assertNull(getDeclaredField(type, "b"));
         assertNull(getDeclaredField(type, "s"));
@@ -89,13 +89,13 @@ public class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredFieldOnNull() {
+    void testGetDeclaredFieldOnNull() {
         assertNull(getDeclaredField(NULL_ELEMENT, "z"));
         assertNull(getDeclaredField(NULL_TYPE_MIRROR, "z"));
     }
 
     @Test
-    public void testGetDeclaredFields() {
+    void testGetDeclaredFields() {
         TypeElement type = getTypeElement(Model.class);
         List<VariableElement> fields = getDeclaredFields(type);
         assertModelFields(fields);

@@ -17,12 +17,6 @@
 package io.microsphere.logging;
 
 /**
- * Microsphere Logger Interface
- *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @since 1.0.0
- */
-/**
  * Logger interface for logging messages with different severity levels.
  * <p>
  * The {@code Logger} provides methods to log messages at various levels such as TRACE, DEBUG, INFO, WARN, and ERROR.

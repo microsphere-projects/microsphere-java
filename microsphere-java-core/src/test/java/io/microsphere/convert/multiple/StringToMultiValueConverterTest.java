@@ -14,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
  * @see StringToMultiValueConverter
  * @since
  */
-public class StringToMultiValueConverterTest {
+class StringToMultiValueConverterTest {
 
     private StringToMultiValueConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToMultiValueConverter() {
             @Override
             public boolean accept(Class<String> sourceType, Class<?> multiValueType) {
@@ -34,7 +34,7 @@ public class StringToMultiValueConverterTest {
     }
 
     @Test
-    public void testConvert() {
+    void testConvert() {
         String source = "";
         assertArrayEquals(EMPTY_STRING_ARRAY, (String[]) converter.convert(source, null, null));
 
@@ -43,7 +43,7 @@ public class StringToMultiValueConverterTest {
     }
 
     @Test
-    public void testConvertOnNull() {
+    void testConvertOnNull() {
         assertArrayEquals(null, (String[]) converter.convert(null, null, null));
     }
 }

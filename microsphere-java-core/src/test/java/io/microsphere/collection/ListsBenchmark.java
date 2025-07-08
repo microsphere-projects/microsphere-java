@@ -48,7 +48,7 @@ public class ListsBenchmark {
 
     @Benchmark
     public void testOfList() {
-        ofList("a","b","c");
+        ofList("a", "b", "c");
     }
 
     @Benchmark

@@ -12,7 +12,7 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
  * @see ShutdownHookCallbacksThread
  * @since 1.0.0
  */
-public class ShutdownHookCallbacksThreadTest {
+class ShutdownHookCallbacksThreadTest {
 
     @Test
     public void testRun() {

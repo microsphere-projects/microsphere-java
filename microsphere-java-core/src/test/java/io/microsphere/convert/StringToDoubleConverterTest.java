@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-public class StringToDoubleConverterTest extends BaseConverterTest<String, Double> {
+class StringToDoubleConverterTest extends BaseConverterTest<String, Double> {
 
     @Override
     protected AbstractConverter<String, Double> createConverter() {
@@ -45,7 +45,7 @@ public class StringToDoubleConverterTest extends BaseConverterTest<String, Doubl
     }
 
     @Test
-    public void testConvertOnFailed() {
+    void testConvertOnFailed() {
         assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

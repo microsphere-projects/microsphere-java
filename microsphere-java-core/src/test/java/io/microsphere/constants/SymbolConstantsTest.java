@@ -88,10 +88,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SymbolConstantsTest {
+class SymbolConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals(',', COMMA_CHAR);
         assertEquals(' ', SPACE_CHAR);
         assertEquals('@', AT_CHAR);
