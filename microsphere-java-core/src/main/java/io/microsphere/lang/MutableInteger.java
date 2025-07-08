@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package io.microsphere.util;
+package io.microsphere.lang;
 
 /**
  * A mutable integer container that provides various atomic operations for integer addition,
@@ -24,26 +24,26 @@ package io.microsphere.util;
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * IntegerAdder adder = IntegerAdder.of(5);
+ * MutableInteger i = MutableInteger.of(5);
  *
  * // Get and set a new value
- * int oldValue = adder.getAndSet(10); // Returns 5, value becomes 10
+ * int oldValue = i.getAndSet(10); // Returns 5, value becomes 10
  *
  * // Increment and get the new value
- * int newValue = adder.incrementAndGet(); // Returns 11, value becomes 11
+ * int newValue = i.incrementAndGet(); // Returns 11, value becomes 11
  *
  * // Add a delta and get the updated value
- * int result = adder.addAndGet(5); // Returns 16, value becomes 16
+ * int result = i.addAndGet(5); // Returns 16, value becomes 16
  *
  * // Get current value
- * int currentValue = adder.get(); // Returns 16
+ * int currentValue = i.get(); // Returns 16
  * }</pre>
  */
-public class IntegerAdder extends Number {
+public class MutableInteger extends Number {
 
     private int value;
 
-    public IntegerAdder(int value) {
+    public MutableInteger(int value) {
         super();
         this.value = value;
     }
@@ -56,10 +56,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int oldValue = adder.getAndSet(10); // sets the value to 10, returns 5
+     * MutableInteger i = new MutableInteger(5);
+     * int oldValue = i.getAndSet(10); // sets the value to 10, returns 5
      * System.out.println(oldValue); // prints 5
-     * System.out.println(adder.get()); // prints 10
+     * System.out.println(i.get()); // prints 10
      * }</pre>
      */
     public int getAndSet(int newValue) {
@@ -72,29 +72,29 @@ public class IntegerAdder extends Number {
      * Sets the value to the given newValue and returns this instance.
      *
      * @param newValue the new value to set
-     * @return this instance of {@link IntegerAdder}
+     * @return this instance of {@link MutableInteger}
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(0);
-     * adder.set(10); // sets the value to 10
-     * System.out.println(adder.get()); // prints 10
+     * MutableInteger i = new MutableInteger(0);
+     * i.set(10); // sets the value to 10
+     * System.out.println(i.get()); // prints 10
      * }</pre>
      */
-    public IntegerAdder set(int newValue) {
+    public MutableInteger set(int newValue) {
         this.value = newValue;
         return this;
     }
 
     /**
-     * Gets the current value stored in this {@link IntegerAdder}.
+     * Gets the current value stored in this {@link MutableInteger}.
      *
      * @return the current integer value
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int currentValue = adder.get(); // retrieves the current value
+     * MutableInteger i = new MutableInteger(5);
+     * int currentValue = i.get(); // retrieves the current value
      * System.out.println(currentValue); // prints 5
      * }</pre>
      */
@@ -112,10 +112,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int oldValue = adder.getAndIncrement(); // increments the value to 6, returns 5
+     * MutableInteger i = new MutableInteger(5);
+     * int oldValue = i.getAndIncrement(); // increments the value to 6, returns 5
      * System.out.println(oldValue); // prints 5
-     * System.out.println(adder.get()); // prints 6
+     * System.out.println(i.get()); // prints 6
      * }</pre>
      */
     public int getAndIncrement() {
@@ -132,10 +132,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int oldValue = adder.getAndDecrement(); // decrements the value to 4, returns 5
+     * MutableInteger i = new MutableInteger(5);
+     * int oldValue = i.getAndDecrement(); // decrements the value to 4, returns 5
      * System.out.println(oldValue); // prints 5
-     * System.out.println(adder.get()); // prints 4
+     * System.out.println(i.get()); // prints 4
      * }</pre>
      */
     public int getAndDecrement() {
@@ -153,10 +153,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int oldValue = adder.getAndAdd(3); // adds 3 to the current value (5), returns 5
+     * MutableInteger i = new MutableInteger(5);
+     * int oldValue = i.getAndAdd(3); // adds 3 to the current value (5), returns 5
      * System.out.println(oldValue); // prints 5
-     * System.out.println(adder.get()); // prints 8
+     * System.out.println(i.get()); // prints 8
      * }</pre>
      */
     public int getAndAdd(int delta) {
@@ -175,10 +175,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int newValue = adder.incrementAndGet(); // increments the value to 6, returns 6
+     * MutableInteger i = new MutableInteger(5);
+     * int newValue = i.incrementAndGet(); // increments the value to 6, returns 6
      * System.out.println(newValue); // prints 6
-     * System.out.println(adder.get()); // prints 6
+     * System.out.println(i.get()); // prints 6
      * }</pre>
      */
     public int incrementAndGet() {
@@ -195,10 +195,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int newValue = adder.decrementAndGet(); // decrements the value to 4, returns 4
+     * MutableInteger i = new MutableInteger(5);
+     * int newValue = i.decrementAndGet(); // decrements the value to 4, returns 4
      * System.out.println(newValue); // prints 4
-     * System.out.println(adder.get()); // prints 4
+     * System.out.println(i.get()); // prints 4
      * }</pre>
      */
     public int decrementAndGet() {
@@ -216,10 +216,10 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * int newValue = adder.addAndGet(3); // adds 3 to the current value (5), returns 8
+     * MutableInteger i = new MutableInteger(5);
+     * int newValue = i.addAndGet(3); // adds 3 to the current value (5), returns 8
      * System.out.println(newValue); // prints 8
-     * System.out.println(adder.get()); // prints 8
+     * System.out.println(i.get()); // prints 8
      * }</pre>
      */
     public int addAndGet(int delta) {
@@ -229,7 +229,7 @@ public class IntegerAdder extends Number {
     }
 
     /**
-     * Returns the integer value stored in this {@link IntegerAdder}.
+     * Returns the integer value stored in this {@link MutableInteger}.
      *
      * <p>This method provides the implementation for the {@link Number} class's abstract method,
      * allowing this class to be used where a {@code Number} is expected.</p>
@@ -238,8 +238,8 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(7);
-     * int value = adder.intValue(); // retrieves the current integer value
+     * MutableInteger i = new MutableInteger(7);
+     * int value = i.intValue(); // retrieves the current integer value
      * System.out.println(value); // prints 7
      * }</pre>
      */
@@ -259,8 +259,8 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * long value = adder.longValue(); // retrieves the current value as a long
+     * MutableInteger i = new MutableInteger(5);
+     * long value = i.longValue(); // retrieves the current value as a long
      * System.out.println(value); // prints 5
      * }</pre>
      */
@@ -278,8 +278,8 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * float value = adder.floatValue(); // retrieves the current value as a float
+     * MutableInteger i = new MutableInteger(5);
+     * float value = i.floatValue(); // retrieves the current value as a float
      * System.out.println(value); // prints 5.0
      * }</pre>
      */
@@ -298,8 +298,8 @@ public class IntegerAdder extends Number {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = new IntegerAdder(5);
-     * double value = adder.doubleValue(); // retrieves the current value as a double
+     * MutableInteger i = new MutableInteger(5);
+     * double value = i.doubleValue(); // retrieves the current value as a double
      * System.out.println(value); // prints 5.0
      * }</pre>
      */
@@ -320,28 +320,28 @@ public class IntegerAdder extends Number {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof IntegerAdder)) {
+        if (!(obj instanceof MutableInteger)) {
             return false;
         }
-        return value == ((IntegerAdder) obj).value;
+        return value == ((MutableInteger) obj).value;
     }
 
     /**
-     * Creates a new instance of {@link IntegerAdder} initialized with the given value.
+     * Creates a new instance of {@link MutableInteger} initialized with the given value.
      *
      * <p>This static factory method provides a convenient way to create an instance of
-     * {@link IntegerAdder} with the specified initial value.</p>
+     * {@link MutableInteger} with the specified initial value.</p>
      *
-     * @param value the initial value for the {@link IntegerAdder}
-     * @return a new instance of {@link IntegerAdder} initialized with the given value
+     * @param value the initial value for the {@link MutableInteger}
+     * @return a new instance of {@link MutableInteger} initialized with the given value
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * IntegerAdder adder = IntegerAdder.of(10); // creates an IntegerAdder with initial value 10
-     * System.out.println(adder.get()); // prints 10
+     * MutableInteger i = MutableInteger.of(10); // creates an MutableInteger with initial value 10
+     * System.out.println(i.get()); // prints 10
      * }</pre>
      */
-    public static IntegerAdder of(int value) {
-        return new IntegerAdder(value);
+    public static MutableInteger of(int value) {
+        return new MutableInteger(value);
     }
 }
