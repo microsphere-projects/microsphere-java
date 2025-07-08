@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see IOFileFilter
  * @since 1.0.0
  */
-public class IOFileFilterTest {
+class IOFileFilterTest {
 
     @Test
-    public void tes() {
+    void tes() {
         File file = new File("test");
         IOFileFilter filter = f -> Objects.equals(f, file);
         assertTrue(filter.accept(file));
