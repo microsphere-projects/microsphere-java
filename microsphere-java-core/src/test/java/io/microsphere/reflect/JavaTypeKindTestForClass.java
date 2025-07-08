@@ -46,7 +46,7 @@ public class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
 
     @Test
     @Override
-    public void testGetSuperType() {
+    void testGetSuperType() {
         Type superType = CLASS.getSuperType(Object.class);
         assertNull(superType);
 
@@ -56,7 +56,7 @@ public class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
 
     @Test
     @Override
-    public void testGetRawType() {
+    void testGetRawType() {
         Type rawType = CLASS.getRawType(Object.class);
         assertSame(Object.class, rawType);
 
@@ -66,7 +66,7 @@ public class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
 
     @Test
     @Override
-    public void testGetInterfaces() {
+    void testGetInterfaces() {
         Type[] interfaces = CLASS.getInterfaces(Object.class);
         assertArrayEquals(EMPTY_TYPE_ARRAY, interfaces);
 
@@ -77,7 +77,7 @@ public class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
 
     @Test
     @Override
-    public void testGetGenericTypes() {
+    void testGetGenericTypes() {
         Type[] genericTypes = CLASS.getGenericTypes(from(Object.class));
         assertArrayEquals(EMPTY_TYPE_ARRAY, genericTypes);
 
