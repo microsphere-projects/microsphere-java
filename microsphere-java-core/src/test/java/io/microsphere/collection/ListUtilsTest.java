@@ -18,9 +18,11 @@ package io.microsphere.collection;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.IntegerAdder;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -175,11 +177,20 @@ class ListUtilsTest extends AbstractTestCase {
     @Test
     void testForEach() {
         List<String> list = TEST_LIST;
+        IntegerAdder integerAdder = IntegerAdder.of(0);
+        Iterator<String> iterator = list.iterator();
         forEach(list, (index, value) -> {
             logger.trace("forEach(index = {} , value = '{}')", index, value);
+            assertEquals(index, integerAdder.getAndIncrement());
+            assertTrue(iterator.hasNext());
+            assertEquals(iterator.next(), value);
         });
+
+        Iterator<String> iterator2 = list.iterator();
         forEach(list, (value) -> {
             logger.trace("forEach(value = '{}')", value);
+            assertTrue(iterator2.hasNext());
+            assertEquals(iterator2.next(), value);
         });
     }
 }
