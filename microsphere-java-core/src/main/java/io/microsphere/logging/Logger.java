@@ -22,6 +22,7 @@ package io.microsphere.logging;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
+
 /**
  * Logger interface for logging messages with different severity levels.
  * <p>
