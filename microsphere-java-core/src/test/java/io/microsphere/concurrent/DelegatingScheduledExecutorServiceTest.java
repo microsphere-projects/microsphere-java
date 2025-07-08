@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingScheduledExecutorService
  * @since 1.0.0
  */
-public class DelegatingScheduledExecutorServiceTest {
+class DelegatingScheduledExecutorServiceTest {
 
     private static final Logger logger = getLogger(DelegatingScheduledExecutorServiceTest.class);
 
@@ -33,7 +33,7 @@ public class DelegatingScheduledExecutorServiceTest {
     private DelegatingScheduledExecutorService instance = new DelegatingScheduledExecutorService(delegate);
 
     @Test
-    public void test() throws Throwable {
+    void test() throws Throwable {
         // test getDelegate
         assertSame(delegate, instance.getDelegate());
 
