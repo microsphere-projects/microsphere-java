@@ -36,15 +36,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see EnumerationUtils
  * @since 1.0.0
  */
-public class EnumerationUtilsTest {
+class EnumerationUtilsTest {
 
     @Test
-    public void testOf() {
+    void testOf() {
         assertEnumeration(of("A", "B", "C"));
     }
 
     @Test
-    public void testOfEnumeration() {
+    void testOfEnumeration() {
         assertEnumeration(ofEnumeration("A", "B", "C"));
     }
 
