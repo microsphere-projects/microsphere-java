@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ObjectToByteConverter
  * @since 1.0.0
  */
-public class ObjectToByteConverterTest extends BaseConverterTest<Object, Byte> {
+class ObjectToByteConverterTest extends BaseConverterTest<Object, Byte> {
 
     @Override
     protected AbstractConverter<Object, Byte> createConverter() {
