@@ -29,7 +29,7 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
  * @see List
  * @since 1.0.0
  */
-public class LinkedListTest extends MutableDequeTest<LinkedList<Object>> {
+class LinkedListTest extends MutableDequeTest<LinkedList<Object>> {
     @Override
     protected LinkedList<Object> newInstance() {
         return newLinkedList();
