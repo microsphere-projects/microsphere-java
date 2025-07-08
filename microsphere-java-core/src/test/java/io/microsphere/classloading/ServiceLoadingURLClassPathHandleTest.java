@@ -39,7 +39,7 @@ class ServiceLoadingURLClassPathHandleTest {
     private ServiceLoadingURLClassPathHandle handle;
 
     @BeforeEach
-    public void init() {
+    void init() {
         this.handle = new ServiceLoadingURLClassPathHandle();
     }
 
