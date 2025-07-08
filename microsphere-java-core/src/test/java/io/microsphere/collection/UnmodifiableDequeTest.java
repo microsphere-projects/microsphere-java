@@ -38,7 +38,7 @@ class UnmodifiableDequeTest {
     private UnmodifiableDeque deque;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         deque = new UnmodifiableDeque(new SingletonDeque(TEST_ELEMENT));
     }
 
