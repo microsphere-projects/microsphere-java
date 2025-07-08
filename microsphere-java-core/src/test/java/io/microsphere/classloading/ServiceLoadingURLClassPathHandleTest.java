@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ServiceLoadingURLClassPathHandleTest {
+class ServiceLoadingURLClassPathHandleTest {
 
     private ServiceLoadingURLClassPathHandle handle;
 
@@ -44,7 +44,7 @@ public class ServiceLoadingURLClassPathHandleTest {
     }
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         ServiceLoadingURLClassPathHandle handle = new ServiceLoadingURLClassPathHandle();
         assertTrue(handle.supports());
         ClassLoader classLoader = getDefaultClassLoader();
