@@ -82,7 +82,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see URLUtilsTest
  * @since 1.0.0
  */
-public class URLUtilsTest extends AbstractTestCase {
+class URLUtilsTest extends AbstractTestCase {
 
     private static final String TEST_PATH = "/abc/def";
 
@@ -111,7 +111,7 @@ public class URLUtilsTest extends AbstractTestCase {
     private static URL classArchiveEntryURL;
 
     @BeforeAll
-    public static void beforeAll() throws Throwable {
+    static void beforeAll() throws Throwable {
         userDirURL = get(USER_DIR).toUri().toURL();
         classPathURL = getResource(getClassLoader(URLUtilsTest.class), SLASH);
         classFileURL = getClassResource(StringUtils.class);
@@ -119,22 +119,22 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @AfterEach
-    public void after() {
+    void after() {
         clearURLStreamHandlerFactory();
     }
 
     @Test
-    public void testOfURL() throws MalformedURLException {
+    void testOfURL() throws MalformedURLException {
         assertEquals(new URL(userDirURLString), ofURL(userDirURLString));
     }
 
     @Test
-    public void testOfURLOnFailed() {
+    void testOfURLOnFailed() {
         assertThrows(IllegalArgumentException.class, () -> ofURL("unknown://localhost/"));
     }
 
     @Test
-    public void testResolveArchiveEntryPath() {
+    void testResolveArchiveEntryPath() {
         URL resourceURL = getClassResource(classLoader, Nonnull.class);
         String expectedPath = "javax/annotation/Nonnull.class";
         String relativePath = resolveArchiveEntryPath(resourceURL);
@@ -142,36 +142,36 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveArchiveEntryPathOnFile() {
+    void testResolveArchiveEntryPathOnFile() {
         assertNull(resolveArchiveEntryPath(userDirURL));
     }
 
     @Test
-    public void testResolveBasePathOnFile() {
+    void testResolveBasePathOnFile() {
         assertEquals(new File(USER_DIR), new File(resolveBasePath(userDirURL)));
     }
 
     @Test
-    public void testResolveBasePathOnArchiveEntry() throws MalformedURLException {
+    void testResolveBasePathOnArchiveEntry() throws MalformedURLException {
         String basePath = resolveBasePath(classArchiveEntryURL);
         assertNotNull(basePath);
         assertTrue(new File(basePath).exists());
     }
 
     @Test
-    public void testResolveArchiveFile() {
+    void testResolveArchiveFile() {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
         assertTrue(archiveFile.exists());
     }
 
     @Test
-    public void testResolveArchiveFileOnClassFile() {
+    void testResolveArchiveFileOnClassFile() {
         File archiveFile = resolveArchiveFile(classFileURL);
         assertTrue(archiveFile.exists());
     }
 
     @Test
-    public void testResolveQueryParameters() {
+    void testResolveQueryParameters() {
         String url = TEST_HTTP_WITH_QUERY_STRING;
         Map<String, List<String>> parametersMap = resolveQueryParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
@@ -195,7 +195,7 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveMatrixParameters() {
+    void testResolveMatrixParameters() {
         String url = TEST_HTTP_WITH_MATRIX_STRING;
         Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
         Map<String, List<String>> expectedParametersMap = new LinkedHashMap<>();
@@ -219,7 +219,7 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNormalizePath() {
+    void testNormalizePath() {
         String path = null;
         String expectedPath = null;
         String resolvedPath = null;
@@ -250,42 +250,42 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testEncode() {
+    void testEncode() {
         assertEquals(UTF8_ENCODED_TEST_PATH, encode(TEST_PATH));
     }
 
     @Test
-    public void testEncodeWithEncoding() {
+    void testEncodeWithEncoding() {
         assertEquals(UTF8_ENCODED_TEST_PATH, encode(TEST_PATH, "UTF-8"));
     }
 
     @Test
-    public void testEncodeOnNull() {
+    void testEncodeOnNull() {
         assertThrows(IllegalArgumentException.class, () -> encode(TEST_NULL_STRING, "UTF-8"));
     }
 
     @Test
-    public void testEncodeOnInvalidEncoding() {
+    void testEncodeOnInvalidEncoding() {
         assertThrows(IllegalArgumentException.class, () -> encode(TEST_PATH, "unknown-encoding"));
     }
 
     @Test
-    public void testDecode() {
+    void testDecode() {
         assertEquals(TEST_PATH, decode(UTF8_ENCODED_TEST_PATH));
     }
 
     @Test
-    public void testDecodeWithEncoding() {
+    void testDecodeWithEncoding() {
         assertEquals(TEST_PATH, decode(UTF8_ENCODED_TEST_PATH, "UTF-8"));
     }
 
     @Test
-    public void testDecodeOnInvalidEncoding() {
+    void testDecodeOnInvalidEncoding() {
         assertThrows(IllegalArgumentException.class, () -> decode(UTF8_ENCODED_TEST_PATH, "unknown-encoding"));
     }
 
     @Test
-    public void testIsDirectoryURL() throws Exception {
+    void testIsDirectoryURL() throws Exception {
         URL resourceURL = getClassResource(classLoader, StringUtils.class);
         assertFalse(isDirectoryURL(classFileURL));
 
@@ -306,44 +306,44 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsJarURLOnDirectory() {
+    void testIsJarURLOnDirectory() {
         assertFalse(isJarURL(userDirURL));
     }
 
     @Test
-    public void testIsJarURLOnClassFile() {
+    void testIsJarURLOnClassFile() {
         assertFalse(isJarURL(classFileURL));
     }
 
     @Test
-    public void testIsJarURLOnArchiveEntry() {
+    void testIsJarURLOnArchiveEntry() {
         assertTrue(isJarURL(classArchiveEntryURL));
     }
 
     @Test
-    public void testIsJarURLOnArchiveFile() throws MalformedURLException {
+    void testIsJarURLOnArchiveFile() throws MalformedURLException {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
         assertTrue(isJarURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
     }
 
     @Test
-    public void testIsArchiveURLOnJar() throws MalformedURLException {
+    void testIsArchiveURLOnJar() throws MalformedURLException {
         assertTrue(isArchiveURL(classArchiveEntryURL));
     }
 
     @Test
-    public void testIsArchiveURLOnFile() throws MalformedURLException {
+    void testIsArchiveURLOnFile() throws MalformedURLException {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
         assertTrue(isArchiveURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
     }
 
     @Test
-    public void testIsArchiveURLOnNotJar() throws MalformedURLException {
+    void testIsArchiveURLOnNotJar() throws MalformedURLException {
         assertFalse(isArchiveURL(classFileURL));
     }
 
     @Test
-    public void testBuildURI() {
+    void testBuildURI() {
         String path = buildURI("a", "b", "c");
         assertEquals("/a/b/c", path);
 
@@ -352,7 +352,7 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testBuildURIOnEmpty() {
+    void testBuildURIOnEmpty() {
         String path = buildURI();
         assertEquals(SLASH, path);
 
@@ -361,7 +361,7 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testBuildMatrixString() {
+    void testBuildMatrixString() {
         String matrixString = buildMatrixString("n", "1");
         assertEquals(";n=1", matrixString);
 
@@ -373,44 +373,44 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testBuildMatrixStringOnEmptyMap() {
+    void testBuildMatrixStringOnEmptyMap() {
         assertNull(buildMatrixString(null));
         assertNull(buildMatrixString(emptyMap()));
         assertNull(buildMatrixString(newHashMap()));
     }
 
     @Test
-    public void testToExternalFormOnDirectory() {
+    void testToExternalFormOnDirectory() {
         testToExternalForm(userDirURL);
     }
 
     @Test
-    public void testToExternalFormOnClassFile() {
+    void testToExternalFormOnClassFile() {
         testToExternalForm(classFileURL);
     }
 
     @Test
-    public void testToExternalFormOnClassArchiveEntry() {
+    void testToExternalFormOnClassArchiveEntry() {
         testToExternalForm(classArchiveEntryURL);
     }
 
     @Test
-    public void testToExternalFormWithMatrixString() throws MalformedURLException {
+    void testToExternalFormWithMatrixString() throws MalformedURLException {
         testToExternalForm(TEST_HTTP_WITH_MATRIX_STRING);
     }
 
     @Test
-    public void testToExternalFormWithQueryString() throws MalformedURLException {
+    void testToExternalFormWithQueryString() throws MalformedURLException {
         testToExternalForm(TEST_HTTP_WITH_QUERY_STRING);
     }
 
     @Test
-    public void testToExternalFormWithPath() throws MalformedURLException {
+    void testToExternalFormWithPath() throws MalformedURLException {
         testToExternalForm(TEST_HTTP_WITH_PATH);
     }
 
     @Test
-    public void testToExternalFormWithRef() throws MalformedURLException {
+    void testToExternalFormWithRef() throws MalformedURLException {
         testToExternalForm(TEST_HTTP_WITH_PATH_HASH);
     }
 
@@ -423,17 +423,17 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetSubProtocol() {
+    void testGetSubProtocol() {
         assertEquals("text", getSubProtocol(TEST_HTTP_WITH_SP_MATRIX));
     }
 
     @Test
-    public void testGetSubProtocolWithSubProtocol() {
+    void testGetSubProtocolWithSubProtocol() {
         assertNull(getSubProtocol(TEST_HTTP_BASE));
     }
 
     @Test
-    public void testResolveSubProtocolsFromMatrixString() throws MalformedURLException {
+    void testResolveSubProtocolsFromMatrixString() throws MalformedURLException {
         URL url = ofURL(TEST_HTTP_WITH_SP_MATRIX);
         List<String> subProtocols = resolveSubProtocols(url);
         assertEquals(2, subProtocols.size());
@@ -442,7 +442,7 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveSubProtocolsFromProtocol() throws MalformedURLException {
+    void testResolveSubProtocolsFromProtocol() throws MalformedURLException {
         new Handler();
         URL url = ofURL("console:text:properties://localhost");
         List<String> subProtocols = resolveSubProtocols(url);
@@ -452,7 +452,7 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveProtocol() {
+    void testResolveProtocol() {
         assertNull(resolveProtocol(null));
         assertNull(resolveProtocol(""));
         assertNull(resolveProtocol(SPACE));
@@ -466,19 +466,19 @@ public class URLUtilsTest extends AbstractTestCase {
 
 
     @Test
-    public void testResolvePath() {
+    void testResolvePath() {
         assertResolvePath(userDirURL);
         assertResolvePath(classPathURL);
         assertResolvePath(classFileURL);
     }
 
     @Test
-    public void testResolvePathWithMatrixString() {
+    void testResolvePathWithMatrixString() {
         assertEquals(new File(USER_DIR), new File(resolvePath(userDirURL)));
     }
 
     @Test
-    public void testAttachURLStreamHandlerFactory() {
+    void testAttachURLStreamHandlerFactory() {
         URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
         assertSame(factory, getURLStreamHandlerFactory());
@@ -492,12 +492,12 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetURLStreamHandlerFactory() {
+    void testGetURLStreamHandlerFactory() {
         assertNull(getURLStreamHandlerFactory());
     }
 
     @Test
-    public void testRegisterURLStreamHandler() throws IOException {
+    void testRegisterURLStreamHandler() throws IOException {
         Handler handler = new Handler();
         registerURLStreamHandler(handler);
         URL url = ofURL(TEST_CONSOLE_URL);
@@ -505,57 +505,57 @@ public class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testClose() throws IOException {
+    void testClose() throws IOException {
         URL url = ofURL("http://localhost");
         URLConnection urlConnection = url.openConnection();
         close(urlConnection);
     }
 
     @Test
-    public void testCloseOnNonHttp() throws IOException {
+    void testCloseOnNonHttp() throws IOException {
         URL url = ofURL("ftp://localhost");
         URLConnection urlConnection = url.openConnection();
         close(urlConnection);
     }
 
     @Test
-    public void testCloseOnNull() {
+    void testCloseOnNull() {
         close(null);
     }
 
     @Test
-    public void testGetMutableURLStreamHandlerFactory() {
+    void testGetMutableURLStreamHandlerFactory() {
         MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory();
         assertNull(factory);
     }
 
     @Test
-    public void testGetMutableURLStreamHandlerFactoryFromAttached() {
+    void testGetMutableURLStreamHandlerFactoryFromAttached() {
         MutableURLStreamHandlerFactory factory = new MutableURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
         assertSame(factory, getMutableURLStreamHandlerFactory());
     }
 
     @Test
-    public void testGetMutableURLStreamHandlerFactoryOnCreateIfAbsent() {
+    void testGetMutableURLStreamHandlerFactoryOnCreateIfAbsent() {
         MutableURLStreamHandlerFactory factory = getMutableURLStreamHandlerFactory(true);
         assertNotNull(factory);
     }
 
     @Test
-    public void testClearURLStreamHandlerFactory() {
+    void testClearURLStreamHandlerFactory() {
         testGetMutableURLStreamHandlerFactoryFromAttached();
         clearURLStreamHandlerFactory();
         testGetMutableURLStreamHandlerFactory();
     }
 
     @Test
-    public void testResolveParametersOnNull() {
+    void testResolveParametersOnNull() {
         assertSame(emptyMap(), resolveParameters(null, AND_CHAR));
     }
 
     @Test
-    public void testResolveParametersOnEmptyString() {
+    void testResolveParametersOnEmptyString() {
         assertSame(emptyMap(), resolveParameters(EMPTY_STRING, AND_CHAR));
     }
 
