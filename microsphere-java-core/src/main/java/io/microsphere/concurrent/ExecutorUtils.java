@@ -39,7 +39,7 @@ public abstract class ExecutorUtils implements Utils {
 
     /**
      * Registers a shutdown hook to gracefully shut down the given {@link Executor} instances when the JVM exits.
-     * 
+     *
      * <p>
      * This method adds a JVM shutdown hook using {@link ShutdownHookUtils#addShutdownHookCallback(Runnable)},
      * ensuring that all provided executors are shut down properly upon application exit.
@@ -87,7 +87,7 @@ public abstract class ExecutorUtils implements Utils {
      *
      * @param executor the {@link Executor} instance to check and potentially shut down; may be {@code null}
      * @return <code>true</code> if the executor was an {@link ExecutorService} and has been successfully shut down;
-     *         <code>false</code> otherwise
+     * <code>false</code> otherwise
      */
     public static boolean shutdown(Executor executor) {
         if (executor instanceof ExecutorService) {
@@ -122,7 +122,7 @@ public abstract class ExecutorUtils implements Utils {
      *
      * @param executorService the {@link ExecutorService} instance to shut down; may be {@code null}
      * @return <code>true</code> if the executor was actively running and has been successfully shut down;
-     *         <code>false</code> if it was already shutdown or null
+     * <code>false</code> if it was already shutdown or null
      */
     public static boolean shutdown(ExecutorService executorService) {
         if (executorService == null) {
