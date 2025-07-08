@@ -30,17 +30,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 @Disabled
-public abstract class AbstractURLClassPathHandleTest extends BaseURLClassPathHandleTest<AbstractURLClassPathHandle> {
+abstract class AbstractURLClassPathHandleTest extends BaseURLClassPathHandleTest<AbstractURLClassPathHandle> {
 
     @Test
-    public abstract void testGetURLClassPathClassName();
+    abstract void testGetURLClassPathClassName();
 
     @Test
-    public abstract void testGetUrlsFieldName();
+    abstract void testGetUrlsFieldName();
 
     @Override
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(DEFAULT_PRIORITY, handle.getPriority());
     }
 }
