@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTest {
+class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTest {
 
     @Override
     protected AbstractURLClassPathHandle createHandle() {
@@ -42,22 +42,22 @@ public class ClassicURLClassPathHandleTest extends AbstractURLClassPathHandleTes
     }
 
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertEquals(CURRENT_JAVA_VERSION.le(JAVA_VERSION_8), handle.supports());
     }
 
     @Test
-    public void testGetURLClassPathClassName() {
+    void testGetURLClassPathClassName() {
         assertEquals("sun.misc.URLClassPath", handle.getURLClassPathClassName());
     }
 
     @Test
-    public void testGetUrlsFieldName() {
+    void testGetUrlsFieldName() {
         assertEquals("urls", handle.getUrlsFieldName());
     }
 
     @Test
-    public void test() {
+    void test() {
         if (handle.supports()) {
             Set<URL> urls = findAllClassPathURLs(classLoader);
             for (URL url : urls) {
