@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see Artifact
  * @since 1.0.0
  */
-public class ArtifactTest extends AbstractTestCase {
+class ArtifactTest extends AbstractTestCase {
 
     private static final String ARTIFACT_ID = "microsphere-core";
 
