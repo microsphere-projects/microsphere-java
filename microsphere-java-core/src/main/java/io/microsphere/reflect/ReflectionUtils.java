@@ -471,7 +471,7 @@ public abstract class ReflectionUtils implements Utils {
         }
         return fieldsAsMap;
     }
-    
+
     /**
      * Checks whether the specified {@link Throwable} is an instance of
      * {@link java.lang.reflect.InaccessibleObjectException}.
