@@ -101,7 +101,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class SystemUtilsTest {
+class SystemUtilsTest {
 
     private static final Class<SystemUtils> CLASS = SystemUtils.class;
 
