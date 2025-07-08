@@ -530,7 +530,7 @@ public abstract class SystemUtils implements Utils {
     public static String getSystemProperty(String key) {
         return getSystemProperty(key, null);
     }
-    
+
     /**
      * <p>
      * Gets a system property with the given key, defaulting to the provided {@code defaultValue} if the property cannot be read.
