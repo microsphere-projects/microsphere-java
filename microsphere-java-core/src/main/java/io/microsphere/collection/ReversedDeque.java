@@ -51,27 +51,31 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     }
 
     // ========== Iterable ==========
-
+    @Override
     public void forEach(Consumer<? super E> action) {
         for (E e : this)
             action.accept(e);
     }
 
+    @Override
     public Iterator<E> iterator() {
         return getDelegate().descendingIterator();
     }
 
+    @Override
     public Spliterator<E> spliterator() {
         return Spliterators.spliterator(this, Spliterator.ORDERED);
     }
 
     // ========== Collection ==========
 
+    @Override
     public boolean add(E e) {
         getDelegate().addFirst(e);
         return true;
     }
 
+    @Override
     public boolean addAll(Collection<? extends E> c) {
         boolean modified = false;
         for (E e : c) {
@@ -82,6 +86,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     }
 
     // copied from AbstractCollection
+    @Override
     public boolean remove(Object o) {
         Iterator<E> it = iterator();
         if (o == null) {
@@ -103,6 +108,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     }
 
     // copied from AbstractCollection
+    @Override
     public boolean removeAll(Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
@@ -117,6 +123,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     }
 
     // copied from AbstractCollection
+    @Override
     public boolean retainAll(Collection<?> c) {
         Objects.requireNonNull(c);
         boolean modified = false;
@@ -130,16 +137,19 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
         return modified;
     }
 
+    @Override
     public Object[] toArray() {
         return reverse(super.toArray());
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public <T> T[] toArray(T[] a) {
         return toArrayReversed(getDelegate(), a);
     }
 
     // copied from AbstractCollection
+    @Override
     public String toString() {
         Iterator<E> it = iterator();
         if (!it.hasNext())
@@ -189,91 +199,112 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
     }
 
     // ========== Deque and Queue ==========
-
+    @Override
     public void addFirst(E e) {
         getDelegate().addLast(e);
     }
 
+    @Override
     public void addLast(E e) {
         getDelegate().addFirst(e);
     }
 
+    @Override
     public Iterator<E> descendingIterator() {
         return getDelegate().iterator();
     }
 
+    @Override
     public E element() {
         return getDelegate().getLast();
     }
 
+    @Override
     public E getFirst() {
         return getDelegate().getLast();
     }
 
+    @Override
     public E getLast() {
         return getDelegate().getFirst();
     }
 
+    @Override
     public boolean offer(E e) {
         return getDelegate().offerFirst(e);
     }
 
+    @Override
     public boolean offerFirst(E e) {
         return getDelegate().offerLast(e);
     }
 
+    @Override
     public boolean offerLast(E e) {
         return getDelegate().offerFirst(e);
     }
 
+    @Override
     public E peek() {
         return getDelegate().peekLast();
     }
 
+    @Override
     public E peekFirst() {
         return getDelegate().peekLast();
     }
 
+    @Override
     public E peekLast() {
         return getDelegate().peekFirst();
     }
 
+    @Override
     public E poll() {
         return getDelegate().pollLast();
     }
 
+    @Override
     public E pollFirst() {
         return getDelegate().pollLast();
     }
 
+    @Override
     public E pollLast() {
         return getDelegate().pollFirst();
     }
 
+    @Override
     public E pop() {
         return getDelegate().removeLast();
     }
 
+    @Override
     public void push(E e) {
         getDelegate().addLast(e);
     }
 
+    @Override
     public E remove() {
         return getDelegate().removeLast();
     }
 
+    @Override
     public E removeFirst() {
         return getDelegate().removeLast();
     }
 
+    @Override
     public E removeLast() {
         return getDelegate().removeFirst();
     }
 
+    @Override
     public boolean removeFirstOccurrence(Object o) {
         return getDelegate().removeLastOccurrence(o);
     }
 
+    @Override
     public boolean removeLastOccurrence(Object o) {
         return getDelegate().removeFirstOccurrence(o);
     }
