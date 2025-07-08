@@ -56,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see VersionUtils
  * @since 1.0.0
  */
-public class VersionUtilsTest extends AbstractTestCase {
+class VersionUtilsTest extends AbstractTestCase {
 
     private static final String TEST_VERSION_STRING_1_1_0 = "1.1.0";
 
