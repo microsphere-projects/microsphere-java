@@ -15,30 +15,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see DelegatingURLStreamHandlerFactory
  * @since 1.0.0
  */
-public class DelegatingURLStreamHandlerFactoryTest {
+class DelegatingURLStreamHandlerFactoryTest {
 
     private StandardURLStreamHandlerFactory delegate;
 
     private DelegatingURLStreamHandlerFactory factory;
 
     @BeforeEach
-    public void init() {
+    void init() {
         this.delegate = new StandardURLStreamHandlerFactory();
         this.factory = new DelegatingURLStreamHandlerFactory(this.delegate);
     }
 
     @Test
-    public void testConstructorOnNull() {
+    void testConstructorOnNull() {
         assertThrows(IllegalArgumentException.class, () -> new DelegatingURLStreamHandlerFactory(null));
     }
 
     @Test
-    public void testCreateURLStreamHandler() {
+    void testCreateURLStreamHandler() {
         assertNotNull(this.factory.createURLStreamHandler(FILE_PROTOCOL));
     }
 
     @Test
-    public void testGetDelegate() {
+    void testGetDelegate() {
         assertSame(this.delegate, this.factory.getDelegate());
     }
 }
