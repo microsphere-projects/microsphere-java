@@ -64,7 +64,7 @@ class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactResourceRe
         URL resourceURL = resolver.classLoader.getResource("META-INF/.sar");
         File file = new File(resourceURL.getFile());
         assertTrue(file.exists());
-        resourceURL = ofURL("jar:"+file.toURI().toURL() +"!/com/acme/Test.class");
+        resourceURL = ofURL("jar:" + file.toURI().toURL() + "!/com/acme/Test.class");
         Artifact artifact = resolver.resolve(resourceURL);
         assertNull(artifact);
     }
