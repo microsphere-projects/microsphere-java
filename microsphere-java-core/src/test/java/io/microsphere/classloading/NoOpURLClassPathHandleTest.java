@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see 1.0.0
  * @since 1.0.0
  */
-public class NoOpURLClassPathHandleTest extends BaseURLClassPathHandleTest {
+class NoOpURLClassPathHandleTest extends BaseURLClassPathHandleTest {
 
     @Override
     protected URLClassPathHandle createHandle() {
@@ -41,23 +41,23 @@ public class NoOpURLClassPathHandleTest extends BaseURLClassPathHandleTest {
 
     @Override
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertTrue(handle.supports());
     }
 
     @Test
-    public void testGetURLs() {
+    void testGetURLs() {
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
     }
 
     @Test
-    public void testRemoveURL() {
-        assertFalse(handle.removeURL(null,null));
+    void testRemoveURL() {
+        assertFalse(handle.removeURL(null, null));
     }
 
     @Override
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(MIN_PRIORITY, handle.getPriority());
     }
 }
