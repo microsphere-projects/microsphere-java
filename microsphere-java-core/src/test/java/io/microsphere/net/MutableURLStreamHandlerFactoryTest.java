@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see MutableURLStreamHandlerFactory
  * @since 1.0.0
  */
-public class MutableURLStreamHandlerFactoryTest {
+class MutableURLStreamHandlerFactoryTest {
 
     MutableURLStreamHandlerFactory factory;
 
@@ -29,38 +29,38 @@ public class MutableURLStreamHandlerFactoryTest {
     private static final int OP_CLEAR = OP_REMOVE << 1;
 
     @BeforeEach
-    public void init() {
+    void init() {
         factory = new MutableURLStreamHandlerFactory();
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         factory.clearHandlers();
     }
 
     @Test
-    public void testAddURLStreamHandler() {
+    void testAddURLStreamHandler() {
         assertURLStreamHandler(new io.microsphere.net.classpath.Handler(), OP_ADD);
         assertURLStreamHandler(new io.microsphere.net.console.Handler(), OP_ADD);
         assertURLStreamHandler(new io.microsphere.net.test.Handler(), OP_ADD);
     }
 
     @Test
-    public void testRemoveURLStreamHandler() {
+    void testRemoveURLStreamHandler() {
         assertURLStreamHandler(new io.microsphere.net.classpath.Handler(), OP_ADD | OP_REMOVE);
         assertURLStreamHandler(new io.microsphere.net.console.Handler(), OP_ADD | OP_REMOVE);
         assertURLStreamHandler(new io.microsphere.net.test.Handler(), OP_ADD | OP_REMOVE);
     }
 
     @Test
-    public void testGetURLStreamHandler() {
+    void testGetURLStreamHandler() {
         assertURLStreamHandler(new io.microsphere.net.classpath.Handler(), OP_ADD | OP_GET);
         assertURLStreamHandler(new io.microsphere.net.console.Handler(), OP_ADD | OP_GET);
         assertURLStreamHandler(new io.microsphere.net.test.Handler(), OP_ADD | OP_GET);
     }
 
     @Test
-    public void testGetHandlers() {
+    void testGetHandlers() {
         assertURLStreamHandler(new io.microsphere.net.classpath.Handler(), OP_ADD);
         assertEquals(1, factory.getHandlers().size());
 
@@ -72,14 +72,14 @@ public class MutableURLStreamHandlerFactoryTest {
     }
 
     @Test
-    public void testCreateURLStreamHandler() {
+    void testCreateURLStreamHandler() {
         assertURLStreamHandler(new io.microsphere.net.classpath.Handler(), OP_ADD | OP_CREATE);
         assertURLStreamHandler(new io.microsphere.net.console.Handler(), OP_ADD | OP_CREATE);
         assertURLStreamHandler(new io.microsphere.net.test.Handler(), OP_ADD | OP_CREATE);
     }
 
     @Test
-    public void testClearHandlers() {
+    void testClearHandlers() {
         assertURLStreamHandler(new io.microsphere.net.classpath.Handler(), OP_ADD | OP_CLEAR);
         assertURLStreamHandler(new io.microsphere.net.console.Handler(), OP_ADD | OP_CLEAR);
         assertURLStreamHandler(new io.microsphere.net.test.Handler(), OP_ADD | OP_CLEAR);
