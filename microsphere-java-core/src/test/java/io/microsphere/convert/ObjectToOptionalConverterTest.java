@@ -29,22 +29,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class ObjectToOptionalConverterTest {
+class ObjectToOptionalConverterTest {
 
     private ObjectToOptionalConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new ObjectToOptionalConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
         assertTrue(converter.accept(String.class, Optional.class));
     }
 
     @Test
-    public void testConvert() {
+    void testConvert() {
         assertEquals(Optional.of("1"), converter.convert("1"));
         assertEquals(Optional.empty(), converter.convert(null));
     }
