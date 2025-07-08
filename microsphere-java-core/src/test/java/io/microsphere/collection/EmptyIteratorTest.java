@@ -15,27 +15,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see EmptyIterator
  * @since 1.0.0
  */
-public class EmptyIteratorTest {
+class EmptyIteratorTest {
 
     private EmptyIterator emptyIterator;
 
     @BeforeEach
-    public void before() {
+    void before() {
         emptyIterator = new EmptyIterator();
     }
 
     @Test
-    public void testHasNext() {
+    void testHasNext() {
         assertFalse(emptyIterator.hasNext());
     }
 
     @Test
-    public void testNext() {
+    void testNext() {
         assertThrows(NoSuchElementException.class, emptyIterator::next);
     }
 
     @Test
-    public void testRemove() {
+    void testRemove() {
         assertThrows(IllegalStateException.class, emptyIterator::remove);
     }
 }
