@@ -27,12 +27,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see SimpleJarEntryScannerTest
  * @since 1.0.0
  */
-public class SimpleJarEntryScannerTest extends AbstractTestCase {
+class SimpleJarEntryScannerTest extends AbstractTestCase {
 
     private static final SimpleJarEntryScanner simpleJarEntryScanner = INSTANCE;
 
     @Test
-    public void testScanInJarURL() throws IOException {
+    void testScanInJarURL() throws IOException {
         URL resourceURL = getClassResource(classLoader, Nonnull.class);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(resourceURL, true);
         assertEquals(1, jarEntrySet.size());
@@ -44,7 +44,7 @@ public class SimpleJarEntryScannerTest extends AbstractTestCase {
 
 
     @Test
-    public void testScanInJarFile() throws IOException {
+    void testScanInJarFile() throws IOException {
         URL resourceURL = getClassResource(classLoader, Nonnull.class);
         JarFile jarFile = JarUtils.toJarFile(resourceURL);
         Set<JarEntry> jarEntrySet = simpleJarEntryScanner.scan(jarFile, true);
