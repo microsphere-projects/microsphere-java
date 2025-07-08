@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see BaseUtils
  * @since 1.0.0
  */
-public class BaseUtilsTest {
+class BaseUtilsTest {
 
     @Test
     public void testConstructor() {
