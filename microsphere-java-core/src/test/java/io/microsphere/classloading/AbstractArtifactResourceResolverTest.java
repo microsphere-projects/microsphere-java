@@ -72,23 +72,23 @@ abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactRe
     }
 
     @Test
-    public final void testLogger() {
+    final void testLogger() {
         assertNotNull(this.resolver.logger);
         assertEquals(this.resolver.getClass().getName(), this.resolver.logger.getName());
     }
 
     @Test
-    public final void testClassLoader() {
+    final void testClassLoader() {
         assertNotNull(this.resolver.classLoader);
     }
 
     @Test
-    public final void testGetPriority() {
+    final void testGetPriority() {
         assertEquals(this.resolver.priority, this.resolver.getPriority());
     }
 
     @Test
-    public final void testToString() {
+    final void testToString() {
         assertNotNull(this.resolver.toString());
     }
 
@@ -97,6 +97,6 @@ abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactRe
         testResolve(this.resolver);
     }
 
-    protected abstract void testResolve(A resolver) throws Throwable;
+    abstract void testResolve(A resolver) throws Throwable;
 
 }
