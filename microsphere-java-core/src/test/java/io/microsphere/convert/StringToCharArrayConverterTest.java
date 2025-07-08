@@ -23,7 +23,7 @@ import static io.microsphere.convert.StringToCharArrayConverter.INSTANCE;
  *
  * @since 1.0.0
  */
-public class StringToCharArrayConverterTest extends BaseConverterTest<String, char[]> {
+class StringToCharArrayConverterTest extends BaseConverterTest<String, char[]> {
 
     @Override
     protected AbstractConverter<String, char[]> createConverter() {
