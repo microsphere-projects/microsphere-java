@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ModernProcessIdResolver
  * @since 1.0.0
  */
-public class ModernProcessIdResolverTest {
+class ModernProcessIdResolverTest {
 
     private ModernProcessIdResolver resolver;
 
