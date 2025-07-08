@@ -124,7 +124,7 @@ public class JavaTypeTestForParameterizedType extends AbstractJavaTypeTest<C<Str
         // test super type
         assertNull(objectType.getSuperType());
         assertNull(objectType.getSuperType());
-        
+
         // test interfaces
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getInterfaces());
