@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see CharsetUtils
  * @since 1.0.0
  */
-class CharsetUtilsTest  {
+class CharsetUtilsTest {
 
     @Test
     void testConstants() {
