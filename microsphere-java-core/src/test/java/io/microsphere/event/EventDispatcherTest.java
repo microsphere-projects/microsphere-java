@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see DirectEventDispatcher
  * @since 1.0.0
  */
-public class EventDispatcherTest {
+class EventDispatcherTest {
 
     private EventDispatcher defaultInstance = EventDispatcher.newDefault();
 
