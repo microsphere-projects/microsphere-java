@@ -32,17 +32,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToArrayConverterTest {
+class StringToArrayConverterTest {
 
     private StringToArrayConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToArrayConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
         assertTrue(converter.accept(String.class, char[].class));
         assertTrue(converter.accept(null, char[].class));
         assertFalse(converter.accept(null, String.class));
@@ -51,7 +51,7 @@ public class StringToArrayConverterTest {
     }
 
     @Test
-    public void testConvert() {
+    void testConvert() {
         assertArrayEquals(new Integer[]{123}, (Integer[]) converter.convert("123", Integer[].class, Integer.class));
         assertArrayEquals(new Integer[]{1, 2, 3}, (Integer[]) converter.convert("1,2,3", Integer[].class, null));
         assertArrayEquals(EMPTY_INTEGER_OBJECT_ARRAY, (Integer[]) converter.convert("", Integer[].class, null));
@@ -59,12 +59,12 @@ public class StringToArrayConverterTest {
     }
 
     @Test
-    public void testGetSourceType() {
+    void testGetSourceType() {
         assertEquals(String.class, converter.getSourceType());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(MAX_VALUE, converter.getPriority());
     }
 }
