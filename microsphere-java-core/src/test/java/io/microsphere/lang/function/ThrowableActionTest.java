@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-public class ThrowableActionTest extends AbstractTestCase {
+class ThrowableActionTest extends AbstractTestCase {
 
     private final ThrowableAction action = () -> {
         logger.trace("ThrowableAction#execute()");
@@ -38,7 +38,7 @@ public class ThrowableActionTest extends AbstractTestCase {
     };
 
     @Test
-    public void testExecute() throws Throwable {
+    void testExecute() throws Throwable {
         action.execute();
         assertThrows(Exception.class, exceptionalAction::execute);
     }
