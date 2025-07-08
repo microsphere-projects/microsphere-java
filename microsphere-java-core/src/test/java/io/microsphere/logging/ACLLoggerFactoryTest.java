@@ -7,7 +7,7 @@ package io.microsphere.logging;
  * @see ACLLoggerFactory
  * @since 1.0.0
  */
-public class ACLLoggerFactoryTest extends AbstractLoggerTest {
+class ACLLoggerFactoryTest extends AbstractLoggerTest {
 
     @Override
     protected Logger createLogger() {
