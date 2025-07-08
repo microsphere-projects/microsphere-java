@@ -55,7 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
-public class ListUtilsTest extends AbstractTestCase {
+class ListUtilsTest extends AbstractTestCase {
 
     private static final Logger logger = getLogger(ListUtilsTest.class);
 
