@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
-public class ClassPathUtilsTest extends AbstractTestCase {
+class ClassPathUtilsTest extends AbstractTestCase {
 
     @Test
     public void testGetBootstrapClassPaths() {
