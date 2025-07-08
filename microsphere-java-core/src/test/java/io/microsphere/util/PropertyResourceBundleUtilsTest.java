@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see PropertyResourceBundleUtils
  * @since 1.0.0
  */
-public class PropertyResourceBundleUtilsTest {
+class PropertyResourceBundleUtilsTest {
 
     private static final String BASE_NAME = "META-INF.test";
 
