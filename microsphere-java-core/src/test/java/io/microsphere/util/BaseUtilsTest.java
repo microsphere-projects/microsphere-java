@@ -15,7 +15,8 @@ class BaseUtilsTest {
 
     @Test
     public void testConstructor() {
-        assertThrows(IllegalStateException.class, () -> new BaseUtils(){});
+        assertThrows(IllegalStateException.class, () -> new BaseUtils() {
+        });
     }
 
 }
