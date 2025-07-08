@@ -108,8 +108,8 @@ public class TypeFinder<T> {
     private final Function<T, ? super T[]> getInterfacesFunction;
 
     public TypeFinder(T type, Function<T, T> getSuperClassFunction,
-                         Function<T, T[]> getInterfacesFunction, boolean includeSelf,
-                         boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+                      Function<T, T[]> getInterfacesFunction, boolean includeSelf,
+                      boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         assertNotNull(type, () -> "The 'type' must not be null");
         assertNotNull(getSuperClassFunction, () -> "The 'getSuperClassFunction' must not be null");
         assertNotNull(getInterfacesFunction, () -> "The 'getInterfacesFunction' must not be null");
