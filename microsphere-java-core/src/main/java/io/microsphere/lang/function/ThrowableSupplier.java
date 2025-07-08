@@ -137,9 +137,9 @@ public interface ThrowableSupplier<T> {
      * );
      * }</pre>
      *
-     * @param supplier       The supplier to execute. Must not be null.
+     * @param supplier         The supplier to execute. Must not be null.
      * @param exceptionHandler The handler to manage any exception thrown by the supplier. Must not be null.
-     * @param <T>            The type of result supplied by the supplier.
+     * @param <T>              The type of result supplied by the supplier.
      * @return The result of the supplier after execution or after handling an exception.
      * @throws NullPointerException if either the supplier or the exception handler is null.
      */
