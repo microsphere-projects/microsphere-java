@@ -29,7 +29,7 @@ import static java.util.Objects.hash;
  * // Matching Maven artifacts based on group ID, artifact ID, and version
  * boolean isMatch = mavenArtifact1.matches(mavenArtifact2); // returns false
  *  }</pre>
-
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Artifact
  * @see ArtifactResourceResolver
