@@ -99,7 +99,7 @@ public interface ThrowableBiFunction<T, U, R> {
     static <T, U, R> R execute(T first, U second, ThrowableBiFunction<T, U, R> function) throws NullPointerException {
         return execute(first, second, function, (ExceptionHandler<T, U, R>) DEFAULT_EXCEPTION_HANDLER);
     }
-    
+
     /**
      * Executes the given {@link ThrowableBiFunction} with the provided arguments using a custom exception handler.
      *
