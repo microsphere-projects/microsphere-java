@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingQueue
  * @since 1.0.0
  */
-public class DelegatingQueueTest extends MutableQueueTest<Queue<Object>> {
+class DelegatingQueueTest extends MutableQueueTest<Queue<Object>> {
     @Override
     protected Queue<Object> newInstance() {
         return new DelegatingQueue(newLinkedList());
