@@ -49,23 +49,19 @@ public class MutableInteger extends Number {
     }
 
     /**
-     * Sets the value to the given {@code newValue} and returns the previous value.
+     * Gets the current value stored in this {@link MutableInteger}.
      *
-     * @param newValue the new value to set
-     * @return the previous value before the update
+     * @return the current integer value
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      * MutableInteger i = new MutableInteger(5);
-     * int oldValue = i.getAndSet(10); // sets the value to 10, returns 5
-     * System.out.println(oldValue); // prints 5
-     * System.out.println(i.get()); // prints 10
+     * int currentValue = i.get(); // retrieves the current value
+     * System.out.println(currentValue); // prints 5
      * }</pre>
      */
-    public int getAndSet(int newValue) {
-        int oldValue = this.value;
-        this.value = newValue;
-        return oldValue;
+    public final int get() {
+        return value;
     }
 
     /**
@@ -81,25 +77,29 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 10
      * }</pre>
      */
-    public MutableInteger set(int newValue) {
+    public final MutableInteger set(int newValue) {
         this.value = newValue;
         return this;
     }
 
     /**
-     * Gets the current value stored in this {@link MutableInteger}.
+     * Sets the value to the given {@code newValue} and returns the previous value.
      *
-     * @return the current integer value
+     * @param newValue the new value to set
+     * @return the previous value before the update
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      * MutableInteger i = new MutableInteger(5);
-     * int currentValue = i.get(); // retrieves the current value
-     * System.out.println(currentValue); // prints 5
+     * int oldValue = i.getAndSet(10); // sets the value to 10, returns 5
+     * System.out.println(oldValue); // prints 5
+     * System.out.println(i.get()); // prints 10
      * }</pre>
      */
-    public int get() {
-        return value;
+    public final int getAndSet(int newValue) {
+        int oldValue = this.value;
+        this.value = newValue;
+        return oldValue;
     }
 
     /**
@@ -118,7 +118,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 6
      * }</pre>
      */
-    public int getAndIncrement() {
+    public final int getAndIncrement() {
         return value++;
     }
 
@@ -138,7 +138,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 4
      * }</pre>
      */
-    public int getAndDecrement() {
+    public final int getAndDecrement() {
         return value--;
     }
 
@@ -159,7 +159,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 8
      * }</pre>
      */
-    public int getAndAdd(int delta) {
+    public final int getAndAdd(int delta) {
         int oldValue = this.value;
         this.value = oldValue + delta;
         return oldValue;
@@ -181,7 +181,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 6
      * }</pre>
      */
-    public int incrementAndGet() {
+    public final int incrementAndGet() {
         return ++value;
     }
 
@@ -201,7 +201,7 @@ public class MutableInteger extends Number {
      * System.out.println(i.get()); // prints 4
      * }</pre>
      */
-    public int decrementAndGet() {
+    public final int decrementAndGet() {
         return --value;
     }
 
@@ -226,6 +226,11 @@ public class MutableInteger extends Number {
         int value = this.value + delta;
         this.value = value;
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(value);
     }
 
     /**
@@ -285,7 +290,7 @@ public class MutableInteger extends Number {
      */
     @Override
     public float floatValue() {
-        return (float) get();
+        return get();
     }
 
     /**
@@ -305,12 +310,7 @@ public class MutableInteger extends Number {
      */
     @Override
     public double doubleValue() {
-        return (double) get();
-    }
-
-    @Override
-    public String toString() {
-        return String.valueOf(value);
+        return get();
     }
 
     @Override
