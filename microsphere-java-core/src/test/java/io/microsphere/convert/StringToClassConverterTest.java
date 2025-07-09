@@ -24,7 +24,7 @@ import static io.microsphere.convert.StringToClassConverter.INSTANCE;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToClassConverterTest extends BaseConverterTest<String, Class> {
+class StringToClassConverterTest extends BaseConverterTest<String, Class> {
 
     @Override
     protected AbstractConverter<String, Class> createConverter() {

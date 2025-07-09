@@ -32,43 +32,43 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class LoggerUtilsTest {
+class LoggerUtilsTest {
 
     @Test
-    public void testLogger() {
+    void testLogger() {
         assertNotNull(LOGGER);
     }
 
     @Test
-    public void testTrace() {
+    void testTrace() {
         trace("Hello,World");
         trace("Hello,{}", "World");
         trace("{},{}", "Hello", "World");
     }
 
     @Test
-    public void testDebug() {
+    void testDebug() {
         debug("Hello,World");
         debug("Hello,{}", "World");
         debug("{},{}", "Hello", "World");
     }
 
     @Test
-    public void testInfo() {
+    void testInfo() {
         info("Hello,World");
         info("Hello,{}", "World");
         info("{},{}", "Hello", "World");
     }
 
     @Test
-    public void testWarn() {
+    void testWarn() {
         warn("Hello,World");
         warn("Hello,{}", "World");
         warn("{},{}", "Hello", "World");
     }
 
     @Test
-    public void testError() {
+    void testError() {
         error("Hello,World");
         error("Hello,{}", "World");
         error("{},{}", "Hello", "World");

@@ -16,12 +16,57 @@
  */
 package io.microsphere.lang;
 
-
 /**
- * {@link Wrapper} interface
+ * A {@link Wrapper} is an interface that provides the ability to wrap objects and provide access to their underlying
+ * implementations, especially when those implementations expose non-standard or extended APIs.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since 1.0.0
+ * <p>
+ * Implementations of this interface must ensure that they can either directly implement a requested type,
+ * or delegate to a wrapped object recursively until the appropriate implementation is found. This allows
+ * for flexible proxying and unwrapping patterns, particularly useful in frameworks where implementations
+ * may be layered with proxies or decorators.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * public class MyWrapper implements Wrapper {
+ *     private final MyService wrapped;
+ *
+ *     public MyWrapper(MyService wrapped) {
+ *         this.wrapped = wrapped;
+ *     }
+ *
+ *     public <T> T unwrap(Class<T> type) {
+ *         if (type.isInstance(wrapped)) {
+ *             return type.cast(wrapped);
+ *         }
+ *         throw new IllegalArgumentException("Cannot unwrap to " + type.getName());
+ *     }
+ *
+ *     public boolean isWrapperFor(Class<?> type) {
+ *         return type.isInstance(wrapped);
+ *     }
+ * }
+ *
+ * // Usage:
+ * MyService service = new MyServiceImpl();
+ * Wrapper wrapper = new MyWrapper(service);
+ *
+ * if (wrapper.isWrapperFor(MyService.class)) {
+ *     MyService unwrapped = wrapper.unwrap(MyService.class); // returns service
+ * }
+ * }</pre>
+ *
+ * <p>
+ * The above example demonstrates a basic implementation of the {@link Wrapper} interface. It checks whether
+ * the wrapped object supports the requested type via {@link #isWrapperFor(Class)}, and safely returns the
+ * underlying instance via {@link #unwrap(Class)}.
+ * </p>
+ *
+ * @see #unwrap(Class)
+ * @see #isWrapperFor(Class)
+ * @see #tryUnwrap(Object, Class)
  */
 public interface Wrapper {
 

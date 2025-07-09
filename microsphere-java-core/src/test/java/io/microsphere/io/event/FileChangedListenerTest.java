@@ -27,27 +27,27 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see FileChangedListener
  * @since
  */
-public class FileChangedListenerTest extends AbstractTestCase {
+class FileChangedListenerTest extends AbstractTestCase {
 
     private FileChangedListener listener;
 
     @BeforeEach
-    public void init() {
+    void init() {
         listener = new DefaultFileChangedListener();
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         listener = null;
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(NORMAL_PRIORITY, listener.getPriority());
     }
 
     @Test
-    public void testOnEvent() throws IOException {
+    void testOnEvent() throws IOException {
         ValueHolder<FileChangedEvent> eventHolder = of(null);
 
         FileChangedListener listener = new FileChangedListener() {
@@ -75,22 +75,22 @@ public class FileChangedListenerTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOnEventOnNull() {
+    void testOnEventOnNull() {
         assertThrows(NullPointerException.class, () -> listener.onEvent(null));
     }
 
     @Test
-    public void testOnFileCreated() throws IOException {
+    void testOnFileCreated() throws IOException {
         testEvent(listener, CREATED);
     }
 
     @Test
-    public void testOnFileModified() throws IOException {
+    void testOnFileModified() throws IOException {
         testEvent(listener, MODIFIED);
     }
 
     @Test
-    public void testOnFileDeleted() throws IOException {
+    void testOnFileDeleted() throws IOException {
         testEvent(listener, DELETED);
     }
 

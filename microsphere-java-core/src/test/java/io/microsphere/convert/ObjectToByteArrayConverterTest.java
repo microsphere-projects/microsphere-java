@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ObjectToByteArrayConverter
  * @since 1.0.0
  */
-public class ObjectToByteArrayConverterTest extends BaseConverterTest<Object, byte[]> {
+class ObjectToByteArrayConverterTest extends BaseConverterTest<Object, byte[]> {
 
     @Override
     protected AbstractConverter<Object, byte[]> createConverter() {
@@ -47,7 +47,7 @@ public class ObjectToByteArrayConverterTest extends BaseConverterTest<Object, by
     }
 
     @Test
-    public void testCovertOnFailed() {
+    void testCovertOnFailed() {
         assertThrows(RuntimeException.class, () -> converter.convert(new Object()));
     }
 }

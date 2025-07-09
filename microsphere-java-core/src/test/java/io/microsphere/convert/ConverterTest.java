@@ -33,17 +33,17 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  *
  * @since 1.0.0
  */
-public class ConverterTest {
+class ConverterTest {
 
     @Test
-    public void testGetConverter() {
+    void testGetConverter() {
         loadServicesList(Converter.class, Converter.class.getClassLoader()).stream().sorted().forEach(converter -> {
             assertSame(converter.getClass(), getConverter(converter.getSourceType(), converter.getTargetType()).getClass());
         });
     }
 
     @Test
-    public void testConvertIfPossible() {
+    void testConvertIfPossible() {
         assertEquals(Integer.valueOf(2), convertIfPossible("2", Integer.class));
         assertEquals(FALSE, convertIfPossible("false", Boolean.class));
         assertEquals(Double.valueOf(1), convertIfPossible("1", Double.class));

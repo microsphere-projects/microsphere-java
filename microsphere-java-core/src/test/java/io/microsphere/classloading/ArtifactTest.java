@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see Artifact
  * @since 1.0.0
  */
-public class ArtifactTest extends AbstractTestCase {
+class ArtifactTest extends AbstractTestCase {
 
     private static final String ARTIFACT_ID = "microsphere-core";
 
@@ -51,12 +51,12 @@ public class ArtifactTest extends AbstractTestCase {
     private Artifact artifact;
 
     @BeforeEach
-    public void init() {
+    void init() {
         this.artifact = create(ARTIFACT_ID, VERSION, LOCATION);
     }
 
     @Test
-    public void testCreateOnArtifactId() {
+    void testCreateOnArtifactId() {
         Artifact artifact = create(ARTIFACT_ID);
         assertEquals(ARTIFACT_ID, artifact.getArtifactId());
         assertEquals(UNKNOWN, artifact.getVersion());
@@ -64,7 +64,7 @@ public class ArtifactTest extends AbstractTestCase {
     }
 
     @Test
-    public void testCreateOnArtifactIdAndVersion() {
+    void testCreateOnArtifactIdAndVersion() {
         Artifact artifact = create(ARTIFACT_ID, VERSION);
         assertEquals(ARTIFACT_ID, artifact.getArtifactId());
         assertEquals(VERSION, artifact.getVersion());
@@ -72,7 +72,7 @@ public class ArtifactTest extends AbstractTestCase {
     }
 
     @Test
-    public void testCreateOnArtifactIdAndVersionAndLocation() {
+    void testCreateOnArtifactIdAndVersionAndLocation() {
         Artifact artifact = create(ARTIFACT_ID, VERSION, LOCATION);
         assertEquals(ARTIFACT_ID, artifact.getArtifactId());
         assertEquals(VERSION, artifact.getVersion());
@@ -80,7 +80,7 @@ public class ArtifactTest extends AbstractTestCase {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertTrue(artifact.equals(create(ARTIFACT_ID, VERSION, LOCATION)));
 
         assertFalse(artifact.equals(null));
@@ -92,17 +92,17 @@ public class ArtifactTest extends AbstractTestCase {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(artifact.hashCode(), create(ARTIFACT_ID, VERSION, LOCATION).hashCode());
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertNotNull(artifact.toString());
     }
 
     @Test
-    public void testMatches() {
+    void testMatches() {
         assertTrue(create(WILDCARD, WILDCARD).matches(artifact));
         assertTrue(create(WILDCARD, WILDCARD).matches(artifact));
         assertTrue(create(ARTIFACT_ID, WILDCARD).matches(artifact));

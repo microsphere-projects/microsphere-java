@@ -17,7 +17,44 @@
 package io.microsphere.logging;
 
 /**
- * Microsphere Logger Interface
+ * Logger interface for logging messages with different severity levels.
+ * <p>
+ * The {@code Logger} provides methods to log messages at various levels such as TRACE, DEBUG, INFO, WARN, and ERROR.
+ * Each level has corresponding methods to check if the level is enabled ({@code isXxxEnabled()}) and to log messages
+ * either as simple strings, formatted strings, or with associated exceptions.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <h4>Basic Usage</h4>
+ * <pre>{@code
+ * if (logger.isInfoEnabled()) {
+ *     logger.info("Application started successfully.");
+ * }
+ * }</pre>
+ *
+ * <h4>Formatted Logging</h4>
+ * <pre>{@code
+ * String user = "JohnDoe";
+ * int attempts = 3;
+ * logger.warn("User '{}' exceeded maximum login attempts: {}", user, attempts);
+ * }</pre>
+ *
+ * <h4>Logging Exceptions</h4>
+ * <pre>{@code
+ * try {
+ *     // some operation that may fail
+ * } catch (Exception e) {
+ *     logger.error("An error occurred during processing", e);
+ * }
+ * }</pre>
+ *
+ * <h4>Conditional Logging</h4>
+ * <pre>{@code
+ * if (logger.isDebugEnabled()) {
+ *     logger.debug("Detailed debug information: {}", generateDebugData());
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0

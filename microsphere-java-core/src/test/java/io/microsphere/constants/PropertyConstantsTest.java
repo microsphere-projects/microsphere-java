@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see PropertyConstants
  * @since 1.0.0
  */
-public class PropertyConstantsTest {
+class PropertyConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals("enabled", ENABLED_PROPERTY_NAME);
         assertEquals("microsphere.", MICROSPHERE_PROPERTY_NAME_PREFIX);
     }

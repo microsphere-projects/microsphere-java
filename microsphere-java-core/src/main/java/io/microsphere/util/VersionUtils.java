@@ -129,12 +129,29 @@ public abstract class VersionUtils implements Utils {
     public static final Version JAVA_VERSION_24 = ofVersion(24);
 
     /**
-     * Determine whether {@link #CURRENT_JAVA_VERSION current Java version} matches the specified version
+     * Determines whether the current Java version matches the specified version based on the given operator symbol.
      *
-     * @param operatorSymbol  the {@link Version.Operator}
-     * @param comparedVersion the {@link Version} to be compared
-     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
-     * {@link #CURRENT_JAVA_VERSION current Java version} and <code>comparedVersion</code>
+     * <h3>Supported Operators</h3>
+     * <ul>
+     *   <li>{@code =} - Equal to</li>
+     *   <li>{@code >} - Greater than</li>
+     *   <li>{@code >=} - Greater than or equal to</li>
+     *   <li>{@code <} - Less than</li>
+     *   <li>{@code <=} - Less than or equal to</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * VersionUtils.testCurrentJavaVersion("=", VersionUtils.JAVA_VERSION_8);  // true if current Java version is 8
+     * VersionUtils.testCurrentJavaVersion(">", VersionUtils.JAVA_VERSION_8);   // true if current Java version is higher than 8
+     * VersionUtils.testCurrentJavaVersion("<", VersionUtils.JAVA_VERSION_11);  // true if current Java version is lower than 11
+     * }</pre>
+     *
+     * @param operatorSymbol  the symbol of the comparison operator; must not be null
+     * @param comparedVersion the version to compare against; must not be null
+     * @return {@code true} if the result of applying the operator to the current Java version and the compared version is true;
+     * otherwise, {@code false}
+     * @throws IllegalArgumentException if any argument is null or the operator symbol is not supported
      */
     public static boolean testCurrentJavaVersion(String operatorSymbol, Version comparedVersion) {
         return testCurrentJavaVersion(of(operatorSymbol), comparedVersion);
@@ -153,22 +170,32 @@ public abstract class VersionUtils implements Utils {
     }
 
     /**
-     * Determine whether the base version matches the compared version
+     * Determines whether the specified base version matches the compared version based on the given operator symbol.
      *
-     * <pre>
+     * <h3>Supported Operators</h3>
+     * <ul>
+     *   <li>{@code =} - Equal to</li>
+     *   <li>{@code >} - Greater than</li>
+     *   <li>{@code >=} - Greater than or equal to</li>
+     *   <li>{@code <} - Less than</li>
+     *   <li>{@code <=} - Less than or equal to</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
      * VersionUtils.testVersion("1.8", "=", "1.8.0") == true
      * VersionUtils.testVersion("1.8", ">=", "1.7") == true
      * VersionUtils.testVersion("1.8", "<=", "1.7") == false
      * VersionUtils.testVersion("1.8", "<", "1.7") == false
      * VersionUtils.testVersion("1.8", ">", "1.7") == true
-     * </pre>
+     * }</pre>
      *
-     * @param baseVersion     the {@link Version} to be tested
-     * @param operatorSymbol  the  symbol of {@link Version.Operator}
-     * @param comparedVersion the {@link Version} to be compared
-     * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
-     * @throws IllegalArgumentException if the base version or the compared version can't be resolved
-     *                                  or the operator symbol is not supported, only supports "=", ">=", "<=", "<", ">"
+     * @param baseVersion     the version to be tested; must not be null
+     * @param operatorSymbol  the symbol of the comparison operator; must not be null
+     * @param comparedVersion the version to compare against; must not be null
+     * @return {@code true} if the result of applying the operator to the base and compared versions is true;
+     * otherwise, {@code false}
+     * @throws IllegalArgumentException if any argument is null or the operator symbol is not supported
      */
     public static boolean testVersion(String baseVersion, String operatorSymbol, String comparedVersion) {
         if (baseVersion == null || operatorSymbol == null || comparedVersion == null) {
@@ -184,6 +211,39 @@ public abstract class VersionUtils implements Utils {
      * @param versionOperator the {@link Version.Operator}
      * @param comparedVersion the {@link Version} to be compared
      * @return <code>true</code> if {@link Version.Operator} {@link Version.Operator#test(Object, Object) matches}
+     */
+    /**
+     * Determines whether the specified base version matches the compared version based on the given operator.
+     *
+     * <h3>Supported Operators</h3>
+     * <ul>
+     *   <li>{@code =} - Equal to</li>
+     *   <li>{@code >} - Greater than</li>
+     *   <li>{@code >=} - Greater than or equal to</li>
+     *   <li>{@code <} - Less than</li>
+     *   <li>{@code <=} - Less than or equal to</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Version v1 = Version.of("1.8.0");
+     * Version v2 = Version.of("1.7.0");
+     *
+     * Version.Operator eq = Version.Operator.of("=");  // Equals
+     * Version.Operator gt = Version.Operator.of(">");  // Greater than
+     * Version.Operator lt = Version.Operator.of("<");  // Less than
+     *
+     * testVersion(v1, eq, v1); // true
+     * testVersion(v1, gt, v2); // true
+     * testVersion(v2, lt, v1); // true
+     * }</pre>
+     *
+     * @param baseVersion     the version to be tested; must not be null
+     * @param versionOperator the comparison operator; must not be null
+     * @param comparedVersion the version to compare against; must not be null
+     * @return {@code true} if the result of applying the operator to the base and compared versions is true;
+     * otherwise, {@code false}
+     * @throws IllegalArgumentException if any argument is null
      */
     public static boolean testVersion(Version baseVersion, Version.Operator versionOperator, Version comparedVersion) {
         if (baseVersion == null || versionOperator == null || comparedVersion == null) {

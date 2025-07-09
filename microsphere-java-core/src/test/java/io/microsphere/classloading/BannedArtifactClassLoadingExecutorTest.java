@@ -24,12 +24,12 @@ import org.junit.jupiter.api.Test;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class BannedArtifactClassLoadingExecutorTest {
+class BannedArtifactClassLoadingExecutorTest {
 
     private BannedArtifactClassLoadingExecutor detector = new BannedArtifactClassLoadingExecutor();
 
     @Test
-    public void testDetect() {
+    void testDetect() {
         detector.execute();
     }
 }

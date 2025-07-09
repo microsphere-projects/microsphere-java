@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see AbstractArtifactResourceResolver
  * @since 1.0.0
  */
-public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactResourceResolver> {
+abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactResourceResolver> {
 
     static final Class<? extends Annotation> TEST_ANNOTATION_CLASS = Nonnull.class;
 
@@ -48,7 +48,7 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     protected A resolver;
 
     @BeforeEach
-    public void init() throws Throwable {
+    void init() throws Throwable {
         this.resolver = createResolver();
     }
 
@@ -61,7 +61,7 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     @Test
-    public void testNonDefaultConstructor() throws Throwable {
+    void testNonDefaultConstructor() throws Throwable {
         Class<?> resolveClass = resolver.getClass();
 
         Constructor constructor = resolveClass.getConstructor(int.class);
@@ -72,31 +72,31 @@ public abstract class AbstractArtifactResourceResolverTest<A extends AbstractArt
     }
 
     @Test
-    public final void testLogger() {
+    final void testLogger() {
         assertNotNull(this.resolver.logger);
         assertEquals(this.resolver.getClass().getName(), this.resolver.logger.getName());
     }
 
     @Test
-    public final void testClassLoader() {
+    final void testClassLoader() {
         assertNotNull(this.resolver.classLoader);
     }
 
     @Test
-    public final void testGetPriority() {
+    final void testGetPriority() {
         assertEquals(this.resolver.priority, this.resolver.getPriority());
     }
 
     @Test
-    public final void testToString() {
+    final void testToString() {
         assertNotNull(this.resolver.toString());
     }
 
     @Test
-    public void testResolve() throws Throwable {
+    void testResolve() throws Throwable {
         testResolve(this.resolver);
     }
 
-    protected abstract void testResolve(A resolver) throws Throwable;
+    abstract void testResolve(A resolver) throws Throwable;
 
 }

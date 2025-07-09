@@ -23,14 +23,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @see SimpleFileScanner
  * @since 1.0.0
  */
-public class SimpleFileScannerTest extends AbstractTestCase {
+class SimpleFileScannerTest extends AbstractTestCase {
 
     private static final SimpleFileScanner simpleFileScanner = INSTANCE;
 
     private static final File JAVA_HOME_DIR = new File(JAVA_HOME);
 
     @Test
-    public void testScan() {
+    void testScan() {
         Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true);
         assertFalse(directories.isEmpty());
 
@@ -39,13 +39,13 @@ public class SimpleFileScannerTest extends AbstractTestCase {
     }
 
     @Test
-    public void testScanOnDirectory() {
+    void testScanOnDirectory() {
         Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true, DirectoryFileFilter.INSTANCE);
         assertFalse(directories.isEmpty());
     }
 
     @Test
-    public void testScanOnBinDirectory() {
+    void testScanOnBinDirectory() {
         Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true, new NameFileFilter("bin"));
         assertEquals(1, directories.size());
     }

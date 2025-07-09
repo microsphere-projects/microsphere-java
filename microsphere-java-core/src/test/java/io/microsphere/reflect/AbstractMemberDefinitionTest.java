@@ -28,31 +28,31 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see MemberDefinition
  * @since 1.0.0
  */
-public abstract class AbstractMemberDefinitionTest<D extends MemberDefinition> extends AbstractReflectiveDefinitionTest<D> {
+abstract class AbstractMemberDefinitionTest<D extends MemberDefinition> extends AbstractReflectiveDefinitionTest<D> {
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         for (D definition : definitions) {
             assertNotNull(definition.getName());
         }
     }
 
     @Test
-    public void testGetDeclaredClassName() {
+    void testGetDeclaredClassName() {
         for (D definition : definitions) {
             assertSame(definition.getDeclaredClassName(), definition.getClassName());
         }
     }
 
     @Test
-    public void testGetDeclaredClass() {
+    void testGetDeclaredClass() {
         for (D definition : definitions) {
             assertSame(definition.getDeclaredClass(), definition.getResolvedClass());
         }
     }
 
     @Test
-    public void testGetMember() {
+    void testGetMember() {
         for (D definition : definitions) {
             assertNotNull(definition.getMember());
         }

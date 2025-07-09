@@ -36,12 +36,43 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
 
 /**
- * Abstract {@link URLClassPathHandle}
+ * Abstract implementation of {@link URLClassPathHandle} that provides a base for handling URL Class-Path entries.
+ *
+ * <p>This class offers reflective access to internal structures like the {@code ucp}, {@code urls}, and
+ * {@code loaders} fields used by the JVM's class loading mechanism. It is primarily designed for advanced use cases
+ * where fine-grained control over class loader URLs is required, such as dynamic removal or modification of URLs from
+ * a class loader.
+ *
+ * <h3>Key Features:</h3>
+ * <ul>
+ *   <li>Supports reflective manipulation of internal JVM class loading structures.</li>
+ *   <li>Provides abstraction over different versions of JVM internals (e.g., classic vs modern JDK).</li>
+ *   <li>Implements the {@link Prioritized} interface to allow prioritization among multiple handlers.</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class ClassicURLClassPathHandle extends AbstractURLClassPathHandle {
+ *
+ *     public ClassicURLClassPathHandle() {
+ *         // Default constructor
+ *     }
+ *
+ *     protected String getURLClassPathClassName() {
+ *         return "sun.misc.URLClassPath";
+ *     }
+ *
+ *     protected String getUrlsFieldName() {
+ *         return "urls"; // Classic field name
+ *     }
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ClassicURLClassPathHandle
  * @see ModernURLClassPathHandle
  * @see URLClassPathHandle
+ * @see Prioritized
  * @since 1.0.0
  */
 public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, Prioritized {

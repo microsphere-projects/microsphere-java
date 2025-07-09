@@ -21,44 +21,44 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see CompositeURLStreamHandlerFactory
  * @since 1.0.0
  */
-public class CompositeURLStreamHandlerFactoryTest {
+class CompositeURLStreamHandlerFactoryTest {
 
     private StandardURLStreamHandlerFactory factory;
 
     private CompositeURLStreamHandlerFactory compositeFactory;
 
     @BeforeEach
-    public void init() {
+    void init() {
         factory = new StandardURLStreamHandlerFactory();
         compositeFactory = new CompositeURLStreamHandlerFactory();
         compositeFactory.addURLStreamHandlerFactory(factory);
     }
 
     @Test
-    public void testCreateURLStreamHandler() {
+    void testCreateURLStreamHandler() {
         URLStreamHandler handler = compositeFactory.createURLStreamHandler(FILE_PROTOCOL);
         assertNotNull(handler);
     }
 
     @Test
-    public void testAddURLStreamHandlerFactory() {
+    void testAddURLStreamHandlerFactory() {
         compositeFactory.addURLStreamHandlerFactory(compositeFactory);
     }
 
     @Test
-    public void testAddURLStreamHandlerFactoryOnNull() {
+    void testAddURLStreamHandlerFactoryOnNull() {
         compositeFactory.addURLStreamHandlerFactory(null);
     }
 
     @Test
-    public void testAddURLStreamHandlerFactoryOnComposite() {
+    void testAddURLStreamHandlerFactoryOnComposite() {
         CompositeURLStreamHandlerFactory newCompositeFactory = new CompositeURLStreamHandlerFactory();
         newCompositeFactory.addURLStreamHandlerFactory(factory);
         compositeFactory.addURLStreamHandlerFactory(newCompositeFactory);
     }
 
     @Test
-    public void testGetFactories() {
+    void testGetFactories() {
         testAddURLStreamHandlerFactoryOnComposite();
         List<URLStreamHandlerFactory> factories = compositeFactory.getFactories();
         assertEquals(1, factories.size());
@@ -66,12 +66,12 @@ public class CompositeURLStreamHandlerFactoryTest {
     }
 
     @Test
-    public void testGetComparator() {
+    void testGetComparator() {
         assertSame(Prioritized.COMPARATOR, compositeFactory.getComparator());
     }
 
     @Test
-    public void testTestToString() {
+    void testTestToString() {
         assertNotNull(compositeFactory.toString());
     }
 }

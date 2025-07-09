@@ -33,12 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see CustomizedThreadFactory
  * @since 1.0.0
  */
-public class CustomizedThreadFactoryTest {
+class CustomizedThreadFactoryTest {
 
     private final String namePrefix = "test-thread-";
 
     @Test
-    public void test() throws InterruptedException {
+    void test() throws InterruptedException {
         ThreadFactory threadFactory = newThreadFactory(namePrefix);
         assertThreadFactory(threadFactory, DEFAULT_DAEMON, DEFAULT_PRIORITY);
 

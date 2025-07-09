@@ -88,7 +88,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassLoaderUtils
  * @since 1.0.0
  */
-public class ClassLoaderUtilsTest extends AbstractTestCase {
+class ClassLoaderUtilsTest extends AbstractTestCase {
 
     private static final boolean isLessThanJava12 = testCurrentJavaVersion("<", JAVA_VERSION_12);
 
@@ -384,6 +384,11 @@ public class ClassLoaderUtilsTest extends AbstractTestCase {
             String resource = getResourceAsString(testResource);
             assertNotNull(resource);
         }
+    }
+
+    @Test
+    public void testGetResourceAsStringOnNull() throws IOException {
+        assertNull(getResourceAsString("not-exists"));
     }
 
     private void assertGetResource() {

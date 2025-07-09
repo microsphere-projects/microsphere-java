@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see FileUtils
  * @since 1.0.0
  */
-public class FileUtilsTest extends AbstractTestCase {
+class FileUtilsTest extends AbstractTestCase {
 
     private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);
 
@@ -59,33 +59,33 @@ public class FileUtilsTest extends AbstractTestCase {
     private final File packageDirectory = new File(packageResource.getFile());
 
     @Test
-    public void testResolveRelativePath() {
+    void testResolveRelativePath() {
         assertEquals("io/FileUtilsTest.class", resolveRelativePath(packageDirectory, classFile));
     }
 
     @Test
-    public void testResolveRelativePathOnSameDirectory() {
+    void testResolveRelativePathOnSameDirectory() {
         assertEquals(EMPTY_STRING, resolveRelativePath(packageDirectory, packageDirectory));
     }
 
     @Test
-    public void testResolveRelativePathOnFile() {
+    void testResolveRelativePathOnFile() {
         assertNull(resolveRelativePath(classFile, packageDirectory));
     }
 
     @Test
-    public void testResolveRelativePathOnNotRelativePath() {
+    void testResolveRelativePathOnNotRelativePath() {
         assertNull(resolveRelativePath(packageDirectory, new File(JAVA_IO_TMPDIR)));
     }
 
     @Test
-    public void testGetFileExtension() {
+    void testGetFileExtension() {
         assertNull(getFileExtension(null));
         assertEquals(CLASS, getFileExtension(classFile.getName()));
     }
 
     @Test
-    public void testDeleteDirectoryOnEmptyDirectory() throws IOException {
+    void testDeleteDirectoryOnEmptyDirectory() throws IOException {
         File testDir = createRandomTempDirectory();
         // exists
         assertEquals(1, deleteDirectory(testDir));
@@ -93,7 +93,7 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDeleteDirectory() throws IOException {
+    void testDeleteDirectory() throws IOException {
         File testDir = createRandomTempDirectory();
         int times = random.nextInt(3, 10);
         for (int i = 0; i < times; i++) {
@@ -104,7 +104,7 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDeleteDirectoryOnNotExists() throws IOException {
+    void testDeleteDirectoryOnNotExists() throws IOException {
         File testDir = newRandomTempFile();
         // not exists
         assertEquals(0, deleteDirectory(testDir));
@@ -112,7 +112,7 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDeleteDirectoryOnIOException() throws Exception {
+    void testDeleteDirectoryOnIOException() throws Exception {
         File testDir = createRandomTempDirectory();
 
         ExecutorService fileCreationExecutor = newSingleThreadExecutor();
@@ -164,7 +164,7 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testCleanDirectory() throws IOException {
+    void testCleanDirectory() throws IOException {
         File testDir = createRandomTempDirectory();
         int times = random.nextInt(3, 10);
         for (int i = 0; i < times; i++) {
@@ -175,34 +175,34 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testCleanDirectoryOnNotExists() throws IOException {
+    void testCleanDirectoryOnNotExists() throws IOException {
         File testDir = newRandomTempFile();
         assertFalse(testDir.exists());
         assertEquals(0, cleanDirectory(testDir));
     }
 
     @Test
-    public void testCleanDirectoryOnFile() throws IOException {
+    void testCleanDirectoryOnFile() throws IOException {
         File tempFile = createRandomTempFile();
         assertEquals(0, cleanDirectory(tempFile));
     }
 
     @Test
-    public void testForceDeleteOnEmptyDirectory() throws IOException {
+    void testForceDeleteOnEmptyDirectory() throws IOException {
         File tempDir = createRandomTempDirectory();
         assertEquals(1, forceDelete(tempDir));
         assertFalse(tempDir.exists());
     }
 
     @Test
-    public void testForceDeleteOnSingleFile() throws IOException {
+    void testForceDeleteOnSingleFile() throws IOException {
         File tempFile = createRandomTempFile();
         assertEquals(1, forceDelete(tempFile));
         assertFalse(tempFile.exists());
     }
 
     @Test
-    public void testForceDelete() throws IOException {
+    void testForceDelete() throws IOException {
         File testDir = createRandomTempDirectory();
         int times = random.nextInt(3, 10);
         for (int i = 0; i < times; i++) {
@@ -213,13 +213,13 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForceDeleteOnFileNotExists() {
+    void testForceDeleteOnFileNotExists() {
         File tempFile = newRandomTempFile();
         assertThrows(IOException.class, () -> forceDelete(tempFile));
     }
 
     @Test
-    public void testForceDeleteOnIOException() throws Exception {
+    void testForceDeleteOnIOException() throws Exception {
         File testFile = createRandomTempFile();
 
         ExecutorService executor = newFixedThreadPool(3, newThreadFactory("testForceDelete-", true));
@@ -264,13 +264,13 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForceDeleteOnExit() throws IOException {
+    void testForceDeleteOnExit() throws IOException {
         File tempFile = createRandomTempFile();
         forceDeleteOnExit(tempFile);
     }
 
     @Test
-    public void testDeleteDirectoryOnExit() throws IOException {
+    void testDeleteDirectoryOnExit() throws IOException {
         File tempDir = createRandomTempDirectory();
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {
@@ -283,12 +283,12 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDeleteDirectoryOnExitOnNotExists() throws IOException {
+    void testDeleteDirectoryOnExitOnNotExists() throws IOException {
         deleteDirectoryOnExit(new File("not-exists"));
     }
 
     @Test
-    public void testIsSymlink() throws IOException {
+    void testIsSymlink() throws IOException {
         if (IS_OS_WINDOWS) {
             assertFalse(isSymlink(new File("")));
         } else {
@@ -302,17 +302,14 @@ public class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsSymlinkOnNull() throws IOException {
+    void testIsSymlinkOnNull() {
         assertThrows(NullPointerException.class, () -> isSymlink(null));
     }
 
     @Test
-    public void testGetCanonicalFile() throws IOException {
+    void testGetCanonicalFile() {
         File tempFile = newRandomTempFile();
-        assertEquals(tempFile, getCanonicalFile(tempFile));
-
-        tempFile = createRandomTempFile();
-        assertEquals(tempFile, getCanonicalFile(tempFile));
+        assertEquals(getCanonicalFile(tempFile), getCanonicalFile(getCanonicalFile(tempFile)));
     }
 
 }

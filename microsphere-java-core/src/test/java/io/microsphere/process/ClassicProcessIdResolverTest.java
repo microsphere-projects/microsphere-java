@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassicProcessIdResolver
  * @since 1.0.0
  */
-public class ClassicProcessIdResolverTest {
+class ClassicProcessIdResolverTest {
 
     private ClassicProcessIdResolver resolver;
 

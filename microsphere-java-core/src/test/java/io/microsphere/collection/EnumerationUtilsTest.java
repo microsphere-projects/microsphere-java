@@ -22,7 +22,7 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.EnumerationUtils.of;
-import static io.microsphere.collection.EnumerationUtils.ofEnums;
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,16 +36,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see EnumerationUtils
  * @since 1.0.0
  */
-public class EnumerationUtilsTest {
+class EnumerationUtilsTest {
 
     @Test
-    public void testOf() {
+    void testOf() {
         assertEnumeration(of("A", "B", "C"));
     }
 
     @Test
-    public void testOfEnums() {
-        assertEnumeration(ofEnums("A", "B", "C"));
+    void testOfEnumeration() {
+        assertEnumeration(ofEnumeration("A", "B", "C"));
     }
 
     private static <E> void assertEnumeration(Enumeration<String> e) {

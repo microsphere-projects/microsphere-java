@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.ResolvableType;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -30,14 +29,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
+import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
+import static io.microsphere.reflect.JavaType.fromField;
 import static io.microsphere.reflect.JavaType.fromMethodParameter;
 import static io.microsphere.reflect.JavaType.fromMethodParameters;
 import static io.microsphere.reflect.JavaType.fromMethodReturnType;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.core.ResolvableType.forType;
 
@@ -47,7 +49,7 @@ import static org.springframework.core.ResolvableType.forType;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class JavaTypeTest {
+class JavaTypeTest {
 
     /**
      * Type -> ParameterizedType
@@ -62,7 +64,7 @@ public class JavaTypeTest {
     }
 
     @Test
-    public void testFromType() {
+    void testFromType() {
         JavaType javaType = from(StringIntegerBooleanHashMap.class);
         assertGenericTypes(javaType);
 
@@ -82,13 +84,47 @@ public class JavaTypeTest {
         assertGenericTypes(javaType, null, null);
     }
 
-
     @Test
-    public void testFromMethod() {
-        Method method = findMethod(getClass(), "fromValue", HashMap.class);
-        JavaType methodReturnType = fromMethodReturnType(method);
+    void testFromMethodReturnType() {
+        JavaType methodReturnType = fromMethodReturnType(getClass(), "fromValue", HashMap.class);
         assertJavaType(methodReturnType);
 
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
+        methodReturnType = fromMethodReturnType(method);
+        assertJavaType(methodReturnType);
+    }
+
+    @Test
+    void testFromMethodReturnTypeOnMethodNotFound() {
+        JavaType methodReturnType = fromMethodReturnType(getClass(), "fromValue", String.class);
+        assertSame(NULL_JAVA_TYPE, methodReturnType);
+
+        methodReturnType = fromMethodReturnType(null);
+        assertSame(NULL_JAVA_TYPE, methodReturnType);
+    }
+
+    @Test
+    void testFromMethodParameters() {
+        JavaType[] javaTypes = fromMethodParameters(getClass(), "fromValue", HashMap.class);
+        assertEquals(1, javaTypes.length);
+        assertJavaType(javaTypes[0]);
+
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
+        javaTypes = fromMethodParameters(method);
+        assertEquals(1, javaTypes.length);
+        assertJavaType(javaTypes[0]);
+    }
+
+    @Test
+    void testFromMethodParametersOnMethodNotFound() {
+        JavaType[] javaTypes = fromMethodParameters(getClass(), "fromValue", String.class);
+        assertEquals(0, javaTypes.length);
+        assertSame(EMPTY_JAVA_TYPE_ARRAY, javaTypes);
+    }
+
+    @Test
+    void testFromMethodParameter() {
+        Method method = findMethod(getClass(), "fromValue", HashMap.class);
         JavaType methodParameterType = fromMethodParameter(method, 0);
         assertJavaType(methodParameterType);
 
@@ -98,75 +134,83 @@ public class JavaTypeTest {
     }
 
     @Test
-    public void testFromField() {
-        Field field = findField(getClass(), "mapField");
-        JavaType javaType = from(field);
+    void testFromField() {
+        JavaType javaType = fromField(getClass(), "mapField");
         assertJavaType(javaType);
     }
 
     @Test
-    public void testForClass() throws Throwable {
+    void testFromFieldOnNull() {
+        JavaType javaType = fromField(getClass(), "notFoundField");
+        assertEquals(NULL_JAVA_TYPE, javaType);
+
+        javaType = fromField(null);
+        assertEquals(NULL_JAVA_TYPE, javaType);
+    }
+
+    @Test
+    void testForClass() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForClass.class);
     }
 
     @Test
-    public void testForGenericArrayType() throws Throwable {
+    void testForGenericArrayType() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForGenericArrayType.class);
     }
 
     @Test
-    public void testForObjectClass() throws Throwable {
+    void testForObjectClass() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForObjectClass.class);
     }
 
     @Test
-    public void testForParameterizedType() throws Throwable {
+    void testForParameterizedType() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForParameterizedType.class);
 
     }
 
     @Test
-    public void testForTypeVariable() throws Throwable {
+    void testForTypeVariable() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForTypeVariable.class);
     }
 
     @Test
-    public void testForUnknown() throws Throwable {
+    void testForUnknown() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForUnknown.class);
     }
 
     @Test
-    public void testForWildcardType() throws Throwable {
+    void testForWildcardType() throws Throwable {
         testAbstractJavaTypeTest(JavaTypeTestForWildcardType.class);
     }
 
     @Test
-    public void testKindForClass() throws Throwable {
+    void testKindForClass() throws Throwable {
         testAbstractJavaTypeKindTest(JavaTypeKindTestForClass.class);
     }
 
     @Test
-    public void testKindForGenericArrayType() throws Throwable {
+    void testKindForGenericArrayType() throws Throwable {
         testAbstractJavaTypeKindTest(JavaTypeKindTestForGenericArrayType.class);
     }
 
     @Test
-    public void testKindForParameterizedType() throws Throwable {
+    void testKindForParameterizedType() throws Throwable {
         testAbstractJavaTypeKindTest(JavaTypeKindTestForParameterizedType.class);
     }
 
     @Test
-    public void testKindForTypeVariable() throws Throwable {
+    void testKindForTypeVariable() throws Throwable {
         testAbstractJavaTypeKindTest(JavaTypeKindTestForTypeVariable.class);
     }
 
     @Test
-    public void testKindForUnknown() throws Throwable {
+    void testKindForUnknown() throws Throwable {
         testAbstractJavaTypeKindTest(JavaTypeKindTestForUnknown.class);
     }
 
     @Test
-    public void testKindForWildcardType() throws Throwable {
+    void testKindForWildcardType() throws Throwable {
         testAbstractJavaTypeKindTest(JavaTypeKindTestForWildcardType.class);
     }
 

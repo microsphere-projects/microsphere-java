@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @since 1.0.0
  */
-public class EventListenerTest {
+class EventListenerTest {
 
     @Test
     public void testFindEventHierarchicalTypes() {

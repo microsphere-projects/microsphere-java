@@ -21,40 +21,40 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ExecutorUtils
  * @since 1.0.0
  */
-public class ExecutorUtilsTest extends AbstractTestCase {
+class ExecutorUtilsTest extends AbstractTestCase {
 
     private ExecutorService executorService;
 
     @BeforeEach
-    public void init() {
+    void init() {
         executorService = newSingleThreadExecutor(newThreadFactory("ExecutorUtilsTest-", true));
         executorService.execute(() -> log("Running..."));
     }
 
     @Test
-    public void testShutdownOnExit() {
+    void testShutdownOnExit() {
         shutdownOnExit(executorService, executorService, executorService);
     }
 
     @Test
-    public void testShutdownForExecutor() {
+    void testShutdownForExecutor() {
         assertTrue(shutdown((Executor) executorService));
         assertTrue(shutdown((Executor) executorService));
     }
 
     @Test
-    public void testShutdownForExecutorOnNull() {
+    void testShutdownForExecutorOnNull() {
         assertFalse(shutdown((Executor) null));
     }
 
     @Test
-    public void testShutdownForExecutorService() {
+    void testShutdownForExecutorService() {
         assertTrue(shutdown(executorService));
         assertTrue(shutdown(executorService));
     }
 
     @Test
-    public void testShutdownForExecutorServiceOnNull() {
+    void testShutdownForExecutorServiceOnNull() {
         assertFalse(shutdown(null));
     }
 }

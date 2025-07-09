@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class JavaTypeKindTestForParameterizedType extends AbstractJavaTypeKindTest {
 
     @Test
-    public void testGetSuperType() {
+    void testGetSuperType() {
         Type superType = PARAMETERIZED_TYPE.getSuperType(C_STRING_PARAMETERIZED_TYPE);
         assertSame(B.class, superType);
 
@@ -56,7 +56,7 @@ public class JavaTypeKindTestForParameterizedType extends AbstractJavaTypeKindTe
     }
 
     @Test
-    public void testGetRawType() {
+    void testGetRawType() {
         Type rawType = PARAMETERIZED_TYPE.getRawType(C_STRING_PARAMETERIZED_TYPE);
         assertSame(C.class, rawType);
 
@@ -65,7 +65,7 @@ public class JavaTypeKindTestForParameterizedType extends AbstractJavaTypeKindTe
     }
 
     @Test
-    public void testGetInterfaces() {
+    void testGetInterfaces() {
         Type[] interfaces = PARAMETERIZED_TYPE.getInterfaces(C_STRING_PARAMETERIZED_TYPE);
         assertEquals(1, interfaces.length);
         assertEquals(RandomAccess.class, interfaces[0]);
@@ -74,7 +74,7 @@ public class JavaTypeKindTestForParameterizedType extends AbstractJavaTypeKindTe
     }
 
     @Test
-    public void testGetGenericTypes() {
+    void testGetGenericTypes() {
         Type[] genericTypes = PARAMETERIZED_TYPE.getGenericTypes(from(C_STRING_PARAMETERIZED_TYPE));
         assertEquals(1, genericTypes.length);
         assertEquals(String.class, genericTypes[0]);

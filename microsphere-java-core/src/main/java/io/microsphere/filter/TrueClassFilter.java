@@ -4,9 +4,23 @@
 package io.microsphere.filter;
 
 /**
- * {@link Class} {@link Filter} returns <code>true</code> forever
+ * A {@link ClassFilter} implementation that always returns {@code true}.
+ * <p>
+ * This class is a singleton and provides a consistent filtering behavior
+ * across the application lifecycle. It is typically used when all classes
+ * need to be accepted without any filtering logic.
+ * </p>
  *
- * @author <a href="mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Get the singleton instance
+ * ClassFilter filter = TrueClassFilter.INSTANCE;
+ *
+ * // Test against any Class object
+ * boolean result = filter.accept(String.class); // returns true
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ClassFilter
  * @since 1.0.0
  */

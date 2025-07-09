@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ObjectToBooleanConverter
  * @since 1.0.0
  */
-public class ObjectToBooleanConverterTest extends BaseConverterTest<Object, Boolean> {
+class ObjectToBooleanConverterTest extends BaseConverterTest<Object, Boolean> {
 
     @Override
     protected AbstractConverter<Object, Boolean> createConverter() {
@@ -48,7 +48,7 @@ public class ObjectToBooleanConverterTest extends BaseConverterTest<Object, Bool
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert("true"));
     }
 }

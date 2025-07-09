@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see EmptyIterable
  * @since 1.0.0
  */
-public class EmptyIterableTest {
+class EmptyIterableTest {
 
     @Test
-    public void testIterator() {
+    void testIterator() {
         assertSame(EmptyIterator.INSTANCE, INSTANCE.iterator());
     }
 }

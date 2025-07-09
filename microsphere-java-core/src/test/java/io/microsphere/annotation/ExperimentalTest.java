@@ -28,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @since 1.0.0
  */
 @Experimental(description = "ExperimentalTest")
-public class ExperimentalTest {
+class ExperimentalTest {
 
     @Test
-    public void test() {
+    void test() {
         assertNull(ExperimentalTest.class.getAnnotation(Experimental.class));
     }
 }

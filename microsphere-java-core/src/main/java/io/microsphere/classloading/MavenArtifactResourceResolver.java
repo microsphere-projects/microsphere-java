@@ -24,10 +24,52 @@ import java.util.Properties;
 import static io.microsphere.classloading.MavenArtifact.create;
 
 /**
- * {@link ArtifactResourceResolver} for Maven
+ * A resolver implementation for Maven artifact metadata, extracting information from Maven POM properties files.
+ *
+ * <p>This class extends the {@link StreamArtifactResourceResolver}, which provides a base for resolving artifacts by reading
+ * metadata from streams (either from archives or directly from resources). This resolver specifically targets Maven-style
+ * artifacts where metadata is stored in "pom.properties" files under the "META-INF/maven/" directory.</p>
+ *
+ * <h3>How It Works</h3>
+ * <ul>
+ *     <li>The resolver checks if a given resource path matches the pattern of a Maven POM properties file using the
+ *     {@link #isArtifactMetadata(String)} method. The pattern is typically:
+ *     <code>META-INF/maven/&lt;groupId&gt;/&lt;artifactId&gt;/pom.properties</code>.</li>
+ *     <li>If a match is found, it reads the properties file via the
+ *     {@link #resolve(URL, InputStream, ClassLoader)} method and extracts key metadata: groupId, artifactId, and version.</li>
+ *     <li>It then constructs an {@link Artifact} object using these properties and associates it with the original URL.</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a resolver with default priority
+ * MavenArtifactResourceResolver resolver = new MavenArtifactResourceResolver();
+ *
+ * // Resolve artifact metadata from a JAR that contains META-INF/maven/org.example/my-artifact/pom.properties
+ * URL resourceURL = new URL("jar:file:/path/to/your-artifact.jar!/some/path");
+ * Artifact artifact = resolver.resolve(resourceURL);
+ *
+ * if (artifact != null) {
+ *     System.out.println("Resolved Artifact:");
+ *     System.out.println("Group ID: " + artifact.getGroupId());
+ *     System.out.println("Artifact ID: " + artifact.getArtifactId());
+ *     System.out.println("Version: " + artifact.getVersion());
+ * }
+ * }</pre>
+ *
+ * <h3>Customization</h3>
+ * <p>You may extend this class to customize how artifact metadata is resolved or how the resulting artifact object is
+ * constructed. For example, you could override the following methods:</p>
+ *
+ * <ul>
+ *     <li>{@link #isArtifactMetadata(String)} – to support custom metadata paths.</li>
+ *     <li>{@link #resolveArtifactMetaInfoInMavenPomProperties(Properties, URL)} – to add additional logic when parsing the
+ *     POM properties or to enrich the resulting artifact.</li>
+ * </ul>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ArtifactResourceResolver
+ * @see Artifact
+ * @see StreamArtifactResourceResolver
  * @since 1.0.0
  */
 public class MavenArtifactResourceResolver extends StreamArtifactResourceResolver {

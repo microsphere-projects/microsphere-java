@@ -30,10 +30,40 @@ import static java.util.Objects.hash;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
- * Stop Watch supports the nest tasks, the default task can't be reentrant, unless {@link Task#isReentrant()} is true by
- * {@link #start(String, boolean)} method setting.
- * <p>
- * Note : {@link StopWatch} is not thread-safe
+ * <p>{@code StopWatch} provides a simple way to measure execution time for tasks, supporting nested task tracking.
+ * Each task can be started with optional reentrancy control via {@link #start(String, boolean)}.</p>
+ *
+ * <p>By default, tasks are non-reentrant. Attempting to start a non-reentrant task while it's already running will
+ * throw an {@link IllegalStateException}. If reentrancy is enabled, subsequent calls to start the same task will
+ * be ignored until it is stopped.</p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * // Basic usage
+ * StopWatch stopWatch = new StopWatch("MyStopWatch");
+ * stopWatch.start("Task 1");
+ * // perform operations
+ * stopWatch.stop();
+ * System.out.println(stopWatch);  // Outputs: StopWatch[id='MyStopWatch', running tasks=[], completed tasks=[Task[name='Task 1', elapsed(ns)=...]], totalTime(ns)=...]
+ *
+ * // Nested tasks
+ * stopWatch.start("Task A");
+ * // do something
+ * stopWatch.start("Task B");
+ * // do something else
+ * stopWatch.stop();  // stops Task B
+ * stopWatch.stop();  // stops Task A
+ *
+ * // Reentrant task example
+ * stopWatch.start("Reentrant Task", true);
+ * // do something
+ * stopWatch.start("Reentrant Task", true);  // this call is ignored
+ * // ...
+ * stopWatch.stop();  // ends the original task
+ * }</pre>
+ *
+ * <p>Note: This class is not thread-safe and should only be used within a single thread.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

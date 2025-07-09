@@ -24,9 +24,23 @@ import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 
 /**
- * The {@link Comparator} for the annotation {@link javax.annotation.Priority}
- * <p>
- * The less value of {@link javax.annotation.Priority}, the more priority
+ * A {@link Comparator} implementation that sorts objects based on the value of the
+ * {@link javax.annotation.Priority} annotation.
+ *
+ * <p>If an object does not have the {@link javax.annotation.Priority} annotation,
+ * it is treated as having a default priority value of -1. If both objects lack the
+ * annotation, they are considered equal in priority.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * List<Object> list = new ArrayList<>();
+ * list.add(new HighPriorityService());
+ * list.add(new LowPriorityService());
+ * Collections.sort(list, PriorityComparator.INSTANCE);
+ * }</pre>
+ *
+ * <p>Note: The comparison is consistent with equals only if the compared objects
+ * are of the same class or both lack the Priority annotation.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see javax.annotation.Priority

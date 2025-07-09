@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ValueHolder
  * @since 1.0.0
  */
-public class ValueHolderTest {
+class ValueHolderTest {
 
     @Test
     public void testValueHolder() {

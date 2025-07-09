@@ -20,10 +20,23 @@ import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
 /**
- * {@link Enumeration} based on array
+ * <p>{@code ArrayEnumeration} is an implementation of enumeration based on an array,
+ * used to sequentially access elements in the array.</p>
  *
+ * <p>This class implements the {@link Enumeration} interface and is suitable for scenarios
+ * where read-only sequential access to array elements is required.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * String[] data = {"one", "two", "three"};
+ * ArrayEnumeration<String> enumeration = new ArrayEnumeration<>(data);
+ * while (enumeration.hasMoreElements()) {
+ *     System.out.println(enumeration.nextElement());
+ * }
+ * }</pre>
+ *
+ * @param <E> the type of elements in the array
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Enumeration
  * @since 1.0.0
  */
 public class ArrayEnumeration<E> implements Enumeration<E> {

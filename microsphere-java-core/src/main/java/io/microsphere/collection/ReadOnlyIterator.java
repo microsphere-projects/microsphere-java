@@ -19,17 +19,36 @@ package io.microsphere.collection;
 import java.util.Iterator;
 
 /**
- * Abstract Read-Only {@link Iterator}
+ * A skeletal implementation of the {@link Iterator} interface, designed to support
+ * read-only iteration. This class provides a default implementation for the
+ * {@link #remove()} method, which throws an {@link IllegalStateException},
+ * indicating that removal is not supported.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MyReadOnlyIterator extends ReadOnlyIterator<String> {
+ *     private String[] data = {"apple", "banana", "cherry"};
+ *     private int index = 0;
+ *
+ *     @Override
+ *     public boolean hasNext() {
+ *         return index < data.length;
+ *     }
+ *
+ *     @Override
+ *     public String next() {
+ *         return data[index++];
+ *     }
+ * }
+ * }</pre>
  *
  * @param <E> the type of elements returned by this iterator
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since 1.0.0
  */
 public abstract class ReadOnlyIterator<E> implements Iterator<E> {
 
     @Override
     public final void remove() {
-        throw new UnsupportedOperationException("Read-Only");
+        throw new IllegalStateException("Read-Only");
     }
 
 }

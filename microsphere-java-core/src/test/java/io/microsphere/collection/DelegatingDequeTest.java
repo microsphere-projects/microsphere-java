@@ -1,93 +1,65 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 
-import java.util.NoSuchElementException;
+import java.util.Deque;
+import java.util.LinkedList;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
-import static io.microsphere.collection.Lists.ofList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static io.microsphere.util.ArrayUtils.ofArray;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link DelegatingDeque} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see AbstractDeque
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see DelegatingDeque
  * @since 1.0.0
  */
-public class DelegatingDequeTest {
+class DelegatingDequeTest extends MutableDequeTest<Deque<Object>> {
 
-    private AbstractDeque<String> deque;
-
-    @BeforeEach
-    public void init() {
-        this.deque = new DelegatingDeque(newLinkedList(ofList("a")));
+    @Override
+    protected Deque<Object> newInstance() {
+        return new DelegatingDeque<>(newLinkedList());
     }
 
     @Test
-    public void testAddFirst() {
-        assertThrows(IllegalStateException.class, () -> deque.addFirst("test"));
+    void testReversed() {
+        DelegatingDeque<Object> delegatingDeque = (DelegatingDeque<Object>) this.instance;
+        Deque<Object> reversedDeque = delegatingDeque.reversed();
+        assertArrayEquals(ofArray("C", "B", "A"), reversedDeque.toArray());
     }
 
     @Test
-    public void testAddLast() {
-        assertThrows(IllegalStateException.class, () -> deque.addLast("test"));
+    void testGetDelegate() {
+        DelegatingDeque delegatingDeque = (DelegatingDeque) this.instance;
+        assertTrue(delegatingDeque.getDelegate() instanceof LinkedList);
     }
 
     @Test
-    public void testRemoveFirst() {
-        assertEquals("a", deque.removeFirst());
-        assertThrows(NoSuchElementException.class, deque::removeFirst);
-    }
-
-    @Test
-    public void testRemoveLast() {
-        assertEquals("a", deque.removeLast());
-        assertThrows(NoSuchElementException.class, deque::removeLast);
-    }
-
-    @Test
-    public void testPeekFirst() {
-        assertEquals("a", deque.peekFirst());
-    }
-
-    @Test
-    public void testPeekLast() {
-        assertEquals("a", deque.peekLast());
-    }
-
-    @Test
-    public void testRemoveFirstOccurrence() {
-        assertTrue(deque.removeFirstOccurrence("a"));
-    }
-
-    @Test
-    public void testPush() {
-        assertThrows(IllegalStateException.class, () -> deque.push("b"));
-    }
-
-    @Test
-    public void testPop() {
-        assertEquals("a", deque.pop());
-        assertThrows(NoSuchElementException.class, deque::pop);
-    }
-
-    @Test
-    public void testOffer() {
-        assertFalse(deque.offer("b"));
-    }
-
-    @Test
-    public void testPoll() {
-        assertEquals("a", deque.poll());
-    }
-
-    @Test
-    public void testPeek() {
-        assertEquals("a", deque.peek());
+    void testUnwrap() {
+        DelegatingDeque delegatingDeque = (DelegatingDeque) this.instance;
+        LinkedList linkedList = delegatingDeque.unwrap(LinkedList.class);
+        assertNotNull(linkedList);
     }
 }

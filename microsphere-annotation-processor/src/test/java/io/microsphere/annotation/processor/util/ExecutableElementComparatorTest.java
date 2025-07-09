@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ExecutableElementComparator
  * @since 1.0.0
  */
-public class ExecutableElementComparatorTest extends AbstractAnnotationProcessingTest {
+class ExecutableElementComparatorTest extends AbstractAnnotationProcessingTest {
 
     private final ExecutableElementComparator comparator = INSTANCE;
 
     @Test
-    public void testCompareOnSameMethods() {
+    void testCompareOnSameMethods() {
         // Object#toString()
         String methodName = "toString";
         ExecutableElement method = getMethod(methodName);
@@ -32,12 +32,12 @@ public class ExecutableElementComparatorTest extends AbstractAnnotationProcessin
     }
 
     @Test
-    public void testCompareOnDifferentMethods() {
+    void testCompareOnDifferentMethods() {
         assertEquals("toString".compareTo("hashCode"), comparator.compare(getMethod("toString"), getMethod("hashCode")));
     }
 
     @Test
-    public void testCompareOnOverloadMethodsWithSameParameterCount() {
+    void testCompareOnOverloadMethodsWithSameParameterCount() {
         // Integer#valueOf(int) | Integer#valueOf(String)
         TypeElement typeElement = getTypeElement(Integer.class);
         String methodName = "valueOf";
@@ -45,7 +45,7 @@ public class ExecutableElementComparatorTest extends AbstractAnnotationProcessin
     }
 
     @Test
-    public void testCompareOnOverloadMethodsWithDifferentParameterCount() {
+    void testCompareOnOverloadMethodsWithDifferentParameterCount() {
         // StringBuilder#append(char[]) | StringBuilder#append(char[],int,int)
         TypeElement typeElement = getTypeElement(StringBuilder.class);
         String methodName = "append";
@@ -55,7 +55,7 @@ public class ExecutableElementComparatorTest extends AbstractAnnotationProcessin
     }
 
     @Test
-    public void testCompare() {
+    void testCompare() {
         // AutoCloseable#close()
         assertEquals(0, comparator.compare(getMethod("close"),
                 findMethod(getTypeElement(AutoCloseable.class), "close")));

@@ -50,17 +50,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see BlockingDeque
  * @since 1.0.0
  */
-public class StringToBlockingDequeConverterTest {
+class StringToBlockingDequeConverterTest {
 
     private MultiValueConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToBlockingDequeConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
 
         assertFalse(converter.accept(String.class, Collection.class));
 
@@ -88,7 +88,7 @@ public class StringToBlockingDequeConverterTest {
     }
 
     @Test
-    public void testConvert() throws NoSuchFieldException {
+    void testConvert() throws NoSuchFieldException {
 
         BlockingQueue<Integer> values = new LinkedBlockingDeque(ofList(1, 2, 3));
 
@@ -108,12 +108,12 @@ public class StringToBlockingDequeConverterTest {
     }
 
     @Test
-    public void testGetSourceType() {
+    void testGetSourceType() {
         assertEquals(String.class, converter.getSourceType());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertTrue(MAX_VALUE > converter.getPriority());
     }
 }

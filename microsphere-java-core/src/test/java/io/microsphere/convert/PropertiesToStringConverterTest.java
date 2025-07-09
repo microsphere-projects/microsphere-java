@@ -31,10 +31,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class PropertiesToStringConverterTest extends BaseConverterTest<Properties, String> {
+class PropertiesToStringConverterTest extends BaseConverterTest<Properties, String> {
 
     @Test
-    public void test() {
+    void test() {
         PropertiesToStringConverter converter = INSTANCE;
         Properties properties = new Properties();
         properties.setProperty("A", "1");

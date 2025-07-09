@@ -36,22 +36,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class JavaTypeKindTestForUnknown extends AbstractJavaTypeKindTest {
 
     @Test
-    public void testGetSuperType() {
+    void testGetSuperType() {
         assertNull(UNKNOWN.getSuperType(Object.class));
     }
 
     @Test
-    public void testGetRawType() {
+    void testGetRawType() {
         assertNull(UNKNOWN.getRawType(Object.class));
     }
 
     @Test
-    public void testGetInterfaces() {
+    void testGetInterfaces() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, UNKNOWN.getInterfaces(Object.class));
     }
 
     @Test
-    public void testGetGenericTypes() {
+    void testGetGenericTypes() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, UNKNOWN.getGenericTypes(from(Object.class)));
     }
 }

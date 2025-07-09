@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see FilterOperator
  * @since 1.0.0
  */
-public class FilterOperatorTest {
+class FilterOperatorTest {
 
     TrueClassFilter filter1 = TrueClassFilter.INSTANCE;
 

@@ -48,17 +48,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToNavigableSetConverterTest {
+class StringToNavigableSetConverterTest {
 
     private MultiValueConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToNavigableSetConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
 
         assertFalse(converter.accept(String.class, Collection.class));
 
@@ -86,7 +86,7 @@ public class StringToNavigableSetConverterTest {
     }
 
     @Test
-    public void testConvert() {
+    void testConvert() {
 
         Set values = new TreeSet(ofList(1, 2, 3));
 
@@ -105,12 +105,12 @@ public class StringToNavigableSetConverterTest {
     }
 
     @Test
-    public void testGetSourceType() {
+    void testGetSourceType() {
         assertEquals(String.class, converter.getSourceType());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertTrue(MAX_VALUE > converter.getPriority());
     }
 }

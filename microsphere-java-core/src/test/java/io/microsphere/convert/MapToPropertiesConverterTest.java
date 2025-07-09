@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class MapToPropertiesConverterTest extends BaseConverterTest<Map, Properties> {
+class MapToPropertiesConverterTest extends BaseConverterTest<Map, Properties> {
 
     @Override
     protected AbstractConverter<Map, Properties> createConverter() {
@@ -51,7 +51,7 @@ public class MapToPropertiesConverterTest extends BaseConverterTest<Map, Propert
     }
 
     @Test
-    public void testConvertOnFailed() throws Throwable {
+    void testConvertOnFailed() throws Throwable {
         Map<String, Object> map = singletonMap("key", null);
         assertThrows(NullPointerException.class, () -> this.converter.convert(map));
     }

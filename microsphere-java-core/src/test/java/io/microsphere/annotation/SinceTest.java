@@ -28,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 @Since(module = "microsphere-java-core", value = "1.0.0")
-public class SinceTest {
+class SinceTest {
 
     @Test
-    public void test() {
+    void test() {
         Since since = SinceTest.class.getAnnotation(Since.class);
         assertEquals("microsphere-java-core", since.module());
         assertEquals("1.0.0", since.value());

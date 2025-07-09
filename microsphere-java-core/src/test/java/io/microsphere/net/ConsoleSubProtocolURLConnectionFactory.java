@@ -31,7 +31,7 @@ import java.util.List;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since
  */
-public class ConsoleSubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
+class ConsoleSubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
 
     @Override
     public boolean supports(URL url, List<String> subProtocols) {

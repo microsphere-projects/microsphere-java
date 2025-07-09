@@ -10,10 +10,14 @@ import io.microsphere.filter.Filter;
 import java.util.Set;
 
 /**
- * {@link Scanner}
+ * A component that scans elements of type {@code S} and produces a set of results of type {@code R}.
  *
- * @param <S> the type of scanned source
- * @param <R> the type of scan result
+ * <p>Implementations of this interface are expected to process a source object of type {@code S},
+ * extract or compute a set of result objects of type {@code R}, and return them in a non-null collection.
+ * Optionally, a {@link Filter} can be provided to further refine the results.</p>
+ *
+ * @param <S> the type of the scanned source
+ * @param <R> the type of the scan result
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Scanner
  * @since 1.0.0

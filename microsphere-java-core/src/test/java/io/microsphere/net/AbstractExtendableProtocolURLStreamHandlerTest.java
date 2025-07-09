@@ -57,34 +57,34 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
     protected URL testURLWithSP;
 
     @BeforeEach
-    public final void init() throws IOException {
+    final void init() throws IOException {
         handler = createHandler();
         this.testURL = new URL(getTestURL());
         this.testURLWithSP = new URL(getTestURLWithSP());
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
     @Test
-    public final void testGetHandlePackages() {
+    final void testGetHandlePackages() {
         assertEquals(ofSet(resolveHandlePackage(this.handler)), getHandlePackages());
     }
 
     @Test
-    public final void testGetHandlePackagesPropertyValue() {
+    final void testGetHandlePackagesPropertyValue() {
         assertEquals(resolveHandlePackage(this.handler), getHandlePackagesPropertyValue());
     }
 
     @Test
-    public final void testInit() {
+    final void testInit() {
         handler.init();
     }
 
     @Test
-    public final void testInitSubProtocolURLConnectionFactories() {
+    final void testInitSubProtocolURLConnectionFactories() {
         List<SubProtocolURLConnectionFactory> factories = emptyList();
         List<SubProtocolURLConnectionFactory> copy = newLinkedList(factories);
         handler.initSubProtocolURLConnectionFactories(copy);
@@ -92,36 +92,36 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
     }
 
     @Test
-    public final void testCustomizeSubProtocolURLConnectionFactories() {
+    final void testCustomizeSubProtocolURLConnectionFactories() {
         handler.customizeSubProtocolURLConnectionFactories(factories -> {
             factories.add(new CompositeSubProtocolURLConnectionFactory());
         });
     }
 
     @Test
-    public void testOpenConnection() throws IOException {
+    void testOpenConnection() throws IOException {
         testOpenConnection(testURL);
         testOpenConnection(testURLWithSP);
     }
 
     @Test
-    public void testOpenConnectionWithProxy() throws IOException {
+    void testOpenConnectionWithProxy() throws IOException {
         testOpenConnection(testURL, NO_PROXY);
         testOpenConnection(testURLWithSP, NO_PROXY);
     }
 
     @Test
-    public void testOpenFallbackConnection() throws IOException {
+    void testOpenFallbackConnection() throws IOException {
         assertNull(handler.openFallbackConnection(null, null));
     }
 
     @Test
-    public final void testGetProtocol() {
+    final void testGetProtocol() {
         assertEquals(resolveProtocol(this.handler), handler.getProtocol());
     }
 
     @Test
-    public final void testToString() {
+    final void testToString() {
         assertEquals(format("{} {defaultPort = -1 , protocol = '{}'}", handler.getClass().getName(), handler.getProtocol()), handler.toString());
     }
 

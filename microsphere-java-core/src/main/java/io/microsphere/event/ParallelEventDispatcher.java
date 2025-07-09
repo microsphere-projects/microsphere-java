@@ -19,18 +19,21 @@ package io.microsphere.event;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
+import static java.util.concurrent.ForkJoinPool.commonPool;
+
 /**
  * Parallel {@link EventDispatcher} implementation.
  * <p>
  * The default constructor uses {@link ForkJoinPool#commonPool() JDK common thread pool}.
  *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ForkJoinPool#commonPool()
  * @since 1.0.0
  */
 public class ParallelEventDispatcher extends AbstractEventDispatcher {
 
     public ParallelEventDispatcher() {
-        this(ForkJoinPool.commonPool());
+        this(commonPool());
     }
 
     public ParallelEventDispatcher(Executor executor) {

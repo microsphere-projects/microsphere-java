@@ -71,7 +71,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
+class MethodUtilsTest extends AbstractAnnotationProcessingTest {
 
     private List<ExecutableElement> objectMethods;
 
@@ -92,7 +92,7 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testDeclaredMethods() {
+    void testDeclaredMethods() {
         TypeElement type = getTypeElement(Model.class);
         List<ExecutableElement> methods = getDeclaredMethods(type);
         assertEquals(12, methods.size());
@@ -102,13 +102,13 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testDeclaredMethodsOnNull() {
+    void testDeclaredMethodsOnNull() {
         assertTrue(getDeclaredMethods(NULL_TYPE_ELEMENT).isEmpty());
         assertTrue(getDeclaredMethods(NULL_TYPE_MIRROR).isEmpty());
     }
 
     @Test
-    public void testGetAllDeclaredMethods() {
+    void testGetAllDeclaredMethods() {
         TypeElement type = getTypeElement(Model.class);
         List<ExecutableElement> methods = getAllDeclaredMethods(type);
         assertEquals(objectMethodsSize + 22, methods.size());
@@ -118,13 +118,13 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllDeclaredMethodsOnNull() {
+    void testGetAllDeclaredMethodsOnNull() {
         assertTrue(getAllDeclaredMethods(NULL_TYPE_ELEMENT).isEmpty());
         assertTrue(getAllDeclaredMethods(NULL_TYPE_MIRROR).isEmpty());
     }
 
     @Test
-    public void testFindDeclaredMethods() {
+    void testFindDeclaredMethods() {
         List<ExecutableElement> methods = findDeclaredMethods(testTypeElement, alwaysTrue());
         assertEquals(2, methods.size());
 
@@ -139,21 +139,21 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredMethodsOnNoMemberType() {
+    void testFindDeclaredMethodsOnNoMemberType() {
         TypeElement typeElement = getTypeElement(Serializable.class);
         List<ExecutableElement> methods = findDeclaredMethods(typeElement, alwaysTrue());
         assertEmptyList(methods);
     }
 
     @Test
-    public void testFindDeclaredMethodsOnNoMethodType() {
+    void testFindDeclaredMethodsOnNoMethodType() {
         TypeElement typeElement = getTypeElement(PropertyConstants.class);
         List<ExecutableElement> methods = findDeclaredMethods(typeElement, alwaysTrue());
         assertEmptyList(methods);
     }
 
     @Test
-    public void testFindAllDeclaredMethods() {
+    void testFindAllDeclaredMethods() {
         List<ExecutableElement> methods = findAllDeclaredMethods(testTypeElement, alwaysTrue());
         assertEquals(objectMethodsSize + 14, methods.size());
 
@@ -168,14 +168,14 @@ public class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredMethodsOnNoMemberType() {
+    void testFindAllDeclaredMethodsOnNoMemberType() {
         TypeElement typeElement = getTypeElement(Serializable.class);
         List<ExecutableElement> methods = findAllDeclaredMethods(typeElement, alwaysTrue());
         assertEmptyList(methods);
     }
 
     @Test
-    public void testFindAllDeclaredMethodsOnNoMethodType() {
+    void testFindAllDeclaredMethodsOnNoMethodType() {
         TypeElement typeElement = getTypeElement(Constants.class);
         List<ExecutableElement> methods = findAllDeclaredMethods(typeElement, alwaysTrue());
         assertEmptyList(methods);

@@ -40,12 +40,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ClassDataRepository
  * @since 1.0.0
  */
-public class ClassDataRepositoryTest extends AbstractTestCase {
+class ClassDataRepositoryTest extends AbstractTestCase {
 
     private static final ClassDataRepository repository = ClassDataRepository.INSTANCE;
 
     @Test
-    public void testGetClassNamesInClassPath() {
+    void testGetClassNamesInClassPath() {
         Set<String> classPaths = getClassPaths();
         for (String classPath : classPaths) {
             Set<String> classNames = repository.getClassNamesInClassPath(classPath, true);
@@ -54,7 +54,7 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassNamesInPackage() {
+    void testGetClassNamesInPackage() {
         Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
         for (String packageName : packageNames) {
             assertFalse(repository.getClassNamesInPackage(packageName).isEmpty());
@@ -65,13 +65,13 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllPackageNamesInClassPaths() {
+    void testGetAllPackageNamesInClassPaths() {
         Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
         assertNotNull(packageNames);
     }
 
     @Test
-    public void testFindClassPath() {
+    void testFindClassPath() {
         String classPath = repository.findClassPath(ReflectionUtils.class);
         assertNotNull(classPath);
 
@@ -80,19 +80,19 @@ public class ClassDataRepositoryTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllClassNamesMapInClassPath() {
+    void testGetAllClassNamesMapInClassPath() {
         Map<String, Set<String>> allClassNamesMapInClassPath = repository.getClassPathToClassNamesMap();
         assertFalse(allClassNamesMapInClassPath.isEmpty());
     }
 
     @Test
-    public void testGetAllClassNamesInClassPath() {
+    void testGetAllClassNamesInClassPath() {
         Set<String> allClassNames = repository.getAllClassNamesInClassPaths();
         assertFalse(allClassNames.isEmpty());
     }
 
     @Test
-    public void testGetCodeSourceLocation() throws IOException {
+    void testGetCodeSourceLocation() throws IOException {
         URL codeSourceLocation = null;
 
         codeSourceLocation = repository.getCodeSourceLocation(ClassDataRepositoryTest.class);

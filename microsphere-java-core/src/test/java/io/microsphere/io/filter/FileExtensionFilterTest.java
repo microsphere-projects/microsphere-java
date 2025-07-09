@@ -26,24 +26,24 @@ class FileExtensionFilterTest {
     private FileExtensionFilter instance;
 
     @BeforeEach
-    public void init() {
+    void init() {
         instance = of("txt");
     }
 
     @Test
-    public void testAcceptOnNull() {
+    void testAcceptOnNull() {
         assertFalse(instance.accept(null));
     }
 
     @Test
-    public void testAcceptOnDirectory() {
+    void testAcceptOnDirectory() {
         assertFalse(instance.accept(new File(JAVA_HOME)));
         assertFalse(instance.accept(new File(USER_DIR)));
         assertFalse(instance.accept(new File(JAVA_IO_TMPDIR)));
     }
 
     @Test
-    public void testAcceptOnFile() throws IOException {
+    void testAcceptOnFile() throws IOException {
         File testFile = createTempFile("test", ".txt");
         assertTrue(instance.accept(testFile));
         testFile.deleteOnExit();

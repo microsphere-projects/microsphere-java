@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see Functional
  * @since 1.0.0
  */
-public class FunctionalTest {
+class FunctionalTest {
 
     private ValueHolder<Object> valueHolder = new ValueHolder();
 

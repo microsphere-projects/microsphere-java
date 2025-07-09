@@ -49,7 +49,7 @@ class NumberToByteConverterTest extends BaseConverterTest<Number, Byte> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert(1));
     }
 }

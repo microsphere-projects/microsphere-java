@@ -27,11 +27,45 @@ import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
 
 /**
- * The handle interface for URL Class-Path
+ * A strategy interface for handling URL Class-Path entries in a {@link ClassLoader}.
+ * Implementations of this interface can provide custom logic for interacting with
+ * URLs related to class loading, such as retrieving or removing URLs from a class loader.
+ *
+ * <p>
+ * This interface extends {@link Prioritized}, allowing implementations to define their
+ * priority order. The default implementation of {@link #getPriority()} returns
+ * {@link Prioritized#MIN_PRIORITY}, making it the lowest priority unless overridden.
+ * </p>
+ *
+ * <h3>Example Implementation</h3>
+ * <pre>{@code
+ * public class ClassicURLClassPathHandle implements URLClassPathHandle {
+ *
+ *     private final int priority;
+ *
+ *     public ClassicURLClassPathHandle(int priority) {
+ *         this.priority = priority;
+ *     }
+ *
+ *     public boolean supports() {
+ *         return true; // Always support classic handling
+ *     }
+ *
+ *     public boolean removeURL(ClassLoader classLoader, URL url) {
+ *         // Custom logic to remove a URL from the class loader
+ *         return false; // Placeholder implementation
+ *     }
+ *
+ *     public int getPriority() {
+ *         return priority; // Custom priority
+ *     }
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ClassicURLClassPathHandle
  * @see ModernURLClassPathHandle
+ * @see Prioritized
  * @since 1.0.0
  */
 public interface URLClassPathHandle extends Prioritized {

@@ -9,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.toIterable;
-import static io.microsphere.collection.EnumerationUtils.ofEnums;
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
@@ -31,18 +31,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see SetUtils
  * @since 1.0.0
  */
-public class SetUtilsTest extends AbstractTestCase {
+class SetUtilsTest extends AbstractTestCase {
 
     private static final String[] ELEMENTS = new String[]{"a", "b", "c"};
 
     @Test
-    public void testIsSet() {
+    void testIsSet() {
         assertTrue(isSet(emptySet()));
         assertFalse(isSet(emptyList()));
     }
 
     @Test
-    public void testOfSet() {
+    void testOfSet() {
         Set<String> set = ofSet();
         assertEquals(emptySet(), set);
 
@@ -58,7 +58,7 @@ public class SetUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOf() {
+    void testOf() {
         Set<String> set = of(ELEMENTS);
         assertSet(set);
 
@@ -67,26 +67,26 @@ public class SetUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOfSetForArray() {
+    void testOfSetForArray() {
         Set<String> set = ofSet("a", "b", "c");
         assertSet(set);
     }
 
     @Test
-    public void testOfSetForEnumeration() {
+    void testOfSetForEnumeration() {
         Enumeration<String> e = null;
         assertSame(emptySet(), ofSet(e));
 
         e = emptyEnumeration();
         assertSame(emptySet(), ofSet(e));
 
-        e = ofEnums(ELEMENTS);
+        e = ofEnumeration(ELEMENTS);
         Set<String> set = ofSet(e);
         assertSet(set);
     }
 
     @Test
-    public void testOfSetIterable() {
+    void testOfSetIterable() {
         Iterable<String> iterable = null;
         assertSame(emptySet(), ofSet(iterable));
         iterable = emptyList();
@@ -103,7 +103,7 @@ public class SetUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewHashSet() {
+    void testNewHashSet() {
         Iterable<String> iterable = newHashSet(1, FIXED_LOAD_FACTOR);
         assertEquals(iterable, newHashSet(iterable));
 
@@ -115,7 +115,7 @@ public class SetUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewLinkedHashSet() {
+    void testNewLinkedHashSet() {
         Iterable<String> iterable = newLinkedHashSet(1, FIXED_LOAD_FACTOR);
         Collection<String> elements = newLinkedHashSet(iterable);
         assertEquals(iterable, elements);

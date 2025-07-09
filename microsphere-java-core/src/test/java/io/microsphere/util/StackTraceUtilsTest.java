@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see StackTraceUtils
  * @since 1.0.0
  */
-public class StackTraceUtilsTest {
+class StackTraceUtilsTest {
 
     private static final String CALLER_CLASS_NAME = StackTraceUtilsTest.class.getName();
 

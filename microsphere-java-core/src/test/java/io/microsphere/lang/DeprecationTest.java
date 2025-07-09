@@ -45,7 +45,7 @@ public class DeprecationTest {
     public static Deprecation DEPRECATION = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK, LEVEL);
 
     @Test
-    public void test() {
+    void test() {
         Deprecation deprecation = Deprecation.of(SINCE, REPLACEMENT, REASON, LINK, LEVEL);
 
         assertObjectMethods(deprecation);
