@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @since 1.0.0
  */
-public class ConditionalEventListenerTest {
+class ConditionalEventListenerTest {
 
     private final EventDispatcher eventDispatcher = EventDispatcher.newDefault();
 

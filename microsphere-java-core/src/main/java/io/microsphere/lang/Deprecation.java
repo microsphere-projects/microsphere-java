@@ -28,10 +28,42 @@ import static io.microsphere.lang.Deprecation.Level.DEFAULT;
 import static java.util.Objects.hash;
 
 /**
- * The info class for deprecation
+ * A serializable class that provides detailed information about deprecation.
+ * <p>
+ * This class is used to indicate that a specific API or component is deprecated, and optionally provides details such as:
+ * <ul>
+ *     <li>The version since when it became deprecated</li>
+ *     <li>A suggested replacement (if available)</li>
+ *     <li>The reason for deprecation</li>
+ *     <li>A link to further documentation or migration guide</li>
+ *     <li>The deprecation level, e.g., whether it's marked for removal</li>
+ * </ul>
+ * </p>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a simple deprecation notice with the version string
+ * Deprecation deprecation = Deprecation.of("1.2.0");
+ *
+ * // Create a deprecation notice with replacement and reason
+ * Deprecation deprecation = Deprecation.of("1.5.0", "NewClass", "Use NewClass instead for better performance");
+ *
+ * // Create a full deprecation notice with all fields
+ * Deprecation deprecation = Deprecation.of("2.0.0", "NewApi", "OldApi is inefficient", "https://example.com/docs/migration", Deprecation.Level.REMOVAL);
+ *
+ * // Using the Builder API for more flexibility
+ * Deprecation deprecation = Deprecation.builder()
+ *     .since("2.1.0")
+ *     .replacement("ImprovedUtil")
+ *     .reason("LegacyUtil has known issues and will be removed in future versions.")
+ *     .link("https://docs.example.com/legacyutil-removal")
+ *     .level(Deprecation.Level.REMOVAL)
+ *     .build();
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see Serializable
+ * @see Version
  * @since 1.0.0
  */
 public final class Deprecation implements Serializable {

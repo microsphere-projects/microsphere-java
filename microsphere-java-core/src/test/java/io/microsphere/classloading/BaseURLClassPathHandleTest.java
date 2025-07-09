@@ -37,23 +37,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @Disabled
-public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> extends AbstractTestCase {
+abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> extends AbstractTestCase {
 
     protected H handle;
 
     @BeforeEach
-    public void init() {
+    void init() {
         this.handle = createHandle();
     }
 
     protected abstract H createHandle();
 
-    public abstract void testSupports();
+    abstract void testSupports();
 
-    public abstract void testGetPriority();
+    abstract void testGetPriority();
 
     @Test
-    public void test() {
+    void test() {
         if (handle.supports()) {
             URL[] urls = handle.getURLs(classLoader);
             for (URL url : urls) {
@@ -66,17 +66,17 @@ public abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> e
     }
 
     @Test
-    public void testGetURLsOnNullClassLoader() {
+    void testGetURLsOnNullClassLoader() {
         assertSame(EMPTY_URL_ARRAY, handle.getURLs(null));
     }
 
     @Test
-    public void testRemoveURLOnNullClassLoader() {
+    void testRemoveURLOnNullClassLoader() {
         assertFalse(handle.removeURL(null, ofURL("file://a.jar")));
     }
 
     @Test
-    public void testRemoveURLOnNullURL() {
+    void testRemoveURLOnNullURL() {
         assertFalse(handle.removeURL(classLoader, null));
     }
 }

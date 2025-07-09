@@ -39,10 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @since 1.0.0
  */
-public class MultiValueConverterTest {
+class MultiValueConverterTest {
 
     @Test
-    public void testFind() {
+    void testFind() {
         MultiValueConverter converter = MultiValueConverter.find(String.class, String[].class);
         assertEquals(StringToArrayConverter.class, converter.getClass());
 
@@ -75,7 +75,7 @@ public class MultiValueConverterTest {
     }
 
     @Test
-    public void testConvertIfPossible() {
+    void testConvertIfPossible() {
         assertEquals(ofSet(1, 2, 3), convertIfPossible("1,2,3", Set.class, Integer.class));
         assertNull(convertIfPossible("1,2,3", Array.class, String.class));
     }

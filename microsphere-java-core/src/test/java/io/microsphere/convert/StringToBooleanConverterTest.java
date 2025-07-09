@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToBooleanConverterTest extends BaseConverterTest<String, Boolean> {
+class StringToBooleanConverterTest extends BaseConverterTest<String, Boolean> {
 
     @Override
     protected AbstractConverter<String, Boolean> createConverter() {
@@ -46,7 +46,7 @@ public class StringToBooleanConverterTest extends BaseConverterTest<String, Bool
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertTrue(converter.convert("True"));
         assertFalse(converter.convert("a"));
         assertNull(converter.convert(""));

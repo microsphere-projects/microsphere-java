@@ -51,14 +51,17 @@ import static java.util.Collections.sort;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,
- * like "{protocol}:{sub-protocols[0]}: ... :{sub-protocols[n]}://...",
+ * like :
+ * {@code
+ * {protocol}:{sub-protocols[0]}: ... :{sub-protocols[n]}://...
+ * },
  * <ul>
  *     <li>{protocol} : The protocol of {@link URLStreamHandler URLStreamHandler} is recognized by {@link URL} (required) </li>
  *     <li>{sub-protocols} : the list of sub-protocols that is {@link #resolveSubProtocols(URL) resolved} from {@link URL} (optional) </li>
  * </ul>
  * <p>
  * The method {@link #initSubProtocolURLConnectionFactories(List)} that is overridden allows the sub-protocols to be extended,
- * the prerequisite is the method {@link #init() being invoked later.
+ * the prerequisite is the method {@link #init()} being invoked later.
  * <p>
  * If no {@link SubProtocolURLConnectionFactory} initialized or {@link URLConnection} open,
  * the {@link #openFallbackConnection(URL, Proxy) fallback strategy} will be applied.
@@ -83,6 +86,41 @@ import static java.util.Collections.sort;
  *     <li>{@link #hashCode(URL)}</li>
  *     <li>{@link #toExternalForm(URL)}</li>
  * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * Consider a custom protocol handler for "jdbc" supporting sub-protocols like "mysql", "postgresql", etc.:
+ *
+ * <pre>{@code
+ * public class Handler extends ExtendableProtocolURLStreamHandler {
+ *     public Handler() {
+ *         super("jdbc");
+ *     }
+ *
+ *     @Override
+ *     protected void initSubProtocolURLConnectionFactories(List<SubProtocolURLConnectionFactory> factories) {
+ *         factories.add(new JdbcSubProtocolConnectionFactory());
+ *     }
+ *
+ *     @Override
+ *     protected URLConnection openFallbackConnection(URL url, Proxy proxy) throws IOException {
+ *         throw new IOException("Unsupported JDBC sub-protocol: " + url.getProtocol());
+ *     }
+ * }
+ * }</pre>
+ * <p>
+ * The above example allows URLs like:
+ * <ul>
+ *     <li>{@code jdbc:mysql://localhost/mydb}</li>
+ *     <li>{@code jdbc:postgresql://example.com/mydb}</li>
+ * </ul>
+ *
+ * <h3>Fallback Connection Handling</h3>
+ * If none of the registered {@link SubProtocolURLConnectionFactory} instances can create a connection,
+ * the method {@link #openFallbackConnection(URL, Proxy)} is invoked, which by default returns {@code null}.
+ * Subclasses should override this method to provide fallback behavior.
+ *
+ * <h3>Initialization</h3>
+ * To initialize the handler and register it with the system, call the {@link #init()} method after construction.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see SubProtocolURLConnectionFactory

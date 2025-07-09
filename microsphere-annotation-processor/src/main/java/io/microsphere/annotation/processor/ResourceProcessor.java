@@ -41,10 +41,22 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
 /**
- * The {@link ProcessingEnvironment} Processor
+ * A processor class that provides a comprehensive and exception-safe mechanism for handling resources during annotation processing.
+ * It extends the capabilities of the {@link FilerProcessor} to manage both reading from and writing to resources using various I/O operations.
+ * This class abstracts away boilerplate code required for resource management, including opening/closing streams, handling exceptions,
+ * and caching accessed file objects to avoid redundant operations.
+ *
+ * <p>It supports functional-style interaction with resources through callback interfaces like {@link ThrowableFunction},
+ * allowing custom logic to be applied on resources such as reading content, writing data, or manipulating streams in a type-safe manner.</p>
+ *
+ * <p>The class also maintains an internal cache of accessed file objects to optimize performance by avoiding repeated calls to locate or create them.
+ * It handles both input (read) and output (write) operations seamlessly, offering convenience methods for common use cases like:
+ * - Processing resources via InputStream or Reader
+ * - Manipulating resources via OutputStream or Writer
+ * - Reading or modifying the content directly as CharSequence</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ProcessingEnvironment
+ * @see FilerProcessor
  * @since 1.0.0
  */
 public class ResourceProcessor {

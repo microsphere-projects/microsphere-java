@@ -49,17 +49,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToDequeConverterTest {
+class StringToDequeConverterTest {
 
     private MultiValueConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToDequeConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
 
         assertFalse(converter.accept(String.class, Collection.class));
 
@@ -87,7 +87,7 @@ public class StringToDequeConverterTest {
     }
 
     @Test
-    public void testConvert() {
+    void testConvert() {
 
         Deque values = new ArrayDeque(ofList(1, 2, 3));
 
@@ -106,12 +106,12 @@ public class StringToDequeConverterTest {
     }
 
     @Test
-    public void testGetSourceType() {
+    void testGetSourceType() {
         assertEquals(String.class, converter.getSourceType());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertTrue(MAX_VALUE > converter.getPriority());
     }
 }

@@ -19,8 +19,24 @@ package io.microsphere.util;
 import java.util.Comparator;
 
 /**
- * The {@link Comparator} for {@link CharSequence}
+ * A {@link Comparator} implementation for comparing {@link CharSequence} objects.
+ * <p>
+ * This class provides a consistent and null-safe comparison mechanism for CharSequence instances,
+ * primarily designed to be used in sorting and ordering operations.
+ * </p>
  *
+ * <h2>Example Usage</h2>
+ * <pre>{@code
+ * List<CharSequence> sequences = Arrays.asList("apple", "banana", "apple", null);
+ * Collections.sort(sequences, CharSequenceComparator.INSTANCE);
+ * }</pre>
+ *
+ * <p>
+ * The comparison is based on lexicographical ordering similar to {@link String#compareTo(String)}.
+ * Null values are considered smaller than non-null values. When both sequences are null, they are considered equal.
+ * </p>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
 public class CharSequenceComparator implements Comparator<CharSequence> {

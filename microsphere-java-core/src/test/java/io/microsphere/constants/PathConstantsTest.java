@@ -31,10 +31,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class PathConstantsTest {
+class PathConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals('/', SLASH_CHAR);
         assertEquals('\\', BACK_SLASH_CHAR);
         assertEquals("/", SLASH);

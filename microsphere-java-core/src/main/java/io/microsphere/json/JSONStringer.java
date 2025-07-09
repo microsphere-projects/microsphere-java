@@ -25,9 +25,13 @@ import static java.util.Arrays.fill;
 
 /**
  * Implements {@link JSONObject#toString} and {@link JSONArray#toString}. Most application
- * developers should use those methods directly and disregard this API. For example:<pre>
+ * developers should use those methods directly and disregard this API.
+ * <p>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
  * JSONObject object = ...
- * String json = object.toString();</pre>
+ * String json = object.toString();
+ * }</pre>
  * <p>
  * Stringers only encode well-formed JSON strings. In particular:
  * <ul>

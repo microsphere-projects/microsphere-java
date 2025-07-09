@@ -26,6 +26,31 @@ import static java.lang.Integer.compare;
  * {@code Prioritized} interface can be implemented by objects that
  * should be sorted, for example the tasks in executable queue.
  *
+ * <p>Implementing classes should typically also implement the {@link #getPriority()} method
+ * to define their priority value. The priority is used to determine ordering via the
+ * {@link #compareTo(Prioritized)} method, which compares based on the returned priority values.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MyTask implements Prioritized {
+ *     private final int priority;
+ *
+ *     public MyTask(int priority) {
+ *         this.priority = priority;
+ *     }
+ *
+ *     public int getPriority() {
+ *         return priority;
+ *     }
+ * }
+ *
+ * // Sorting a list of Prioritized objects
+ * List<Prioritized> tasks = new ArrayList<>();
+ * tasks.add(new MyTask(5));
+ * tasks.add(new MyTask(1));
+ * Collections.sort(tasks);
+ * }</pre>
+ *
  * @since 1.0.0
  */
 public interface Prioritized extends Comparable<Prioritized> {

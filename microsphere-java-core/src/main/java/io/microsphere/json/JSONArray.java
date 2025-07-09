@@ -37,24 +37,40 @@ import static java.lang.Math.min;
 import static java.lang.reflect.Array.getLength;
 
 /**
- * A dense indexed sequence of values. Values may be any mix of {@link JSONObject
- * JSONObjects}, other {@link JSONArray JSONArrays}, Strings, Booleans, Integers, Longs,
- * Doubles, {@code null} or {@link JSONObject#NULL}. Values may not be
- * {@link Double#isNaN() NaNs}, {@link Double#isInfinite() infinities}, or of any type not
- * listed here.
- * <p>
- * {@code JSONArray} has the same type coercion behavior and optional/mandatory accessors
+ * A dense indexed sequence of values. Values may be any mix of {@link JSONObject JSONObjects},
+ * other {@link JSONArray JSONArrays}, Strings, Booleans, Integers, Longs, Doubles,
+ * {@code null} or {@link JSONObject#NULL}. Values may not be {@link Double#isNaN() NaNs},
+ * {@link Double#isInfinite() infinities}, or of any type not listed here.
+ *
+ * <p>{@code JSONArray} has the same type coercion behavior and optional/mandatory accessors
  * as {@link JSONObject}. See that class' documentation for details.
- * <p>
- * <strong>Warning:</strong> this class represents null in two incompatible ways: the
+ *
+ * <p><strong>Warning:</strong> this class represents null in two incompatible ways: the
  * standard Java {@code null} reference, and the sentinel value {@link JSONObject#NULL}.
  * In particular, {@code get} fails if the requested index holds the null reference, but
  * succeeds if it holds {@code JSONObject.NULL}.
- * <p>
- * Instances of this class are not thread safe. Although this class is nonfinal, it was
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create an empty JSONArray
+ * JSONArray array = new JSONArray();
+ *
+ * // Add elements to the array
+ * array.put("Hello");
+ * array.put(123);
+ * array.put(true);
+ *
+ * // Convert to JSON string
+ * String json = array.toString();  // Result: ["Hello",123,true]
+ *
+ * // Parse from JSON string
+ * JSONArray parsedArray = new JSONArray(json);
+ * }</pre>
+ *
+ * <p>Instances of this class are not thread safe. Although this class is nonfinal, it was
  * not designed for inheritance and should not be subclassed. In particular, self-use by
  * overridable methods is not specified. See <i>Effective Java</i> Item 17, "Design and
- * Document or inheritance or else prohibit it" for further information.
+ * Document for inheritance or else prohibit it" for further information.
  */
 public class JSONArray {
 
@@ -674,11 +690,12 @@ public class JSONArray {
     }
 
     /**
-     * Encodes this array as a human-readable JSON string for debugging, such as: <pre>
+     * Encodes this array as a human-readable JSON string for debugging, such as: <pre>{@code
      * [
      *     94043,
      *     90210
-     * ]</pre>
+     * ]
+     * }</pre>
      *
      * @param indentSpaces the number of spaces to indent for each level of nesting.
      * @return a human-readable JSON string of this array

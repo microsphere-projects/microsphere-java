@@ -28,7 +28,7 @@ import static io.microsphere.convert.StringToInputStreamConverter.INSTANCE;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StringToInputStreamConverterTest extends BaseConverterTest<String, InputStream> {
+class StringToInputStreamConverterTest extends BaseConverterTest<String, InputStream> {
 
     @Override
     protected AbstractConverter<String, InputStream> createConverter() {

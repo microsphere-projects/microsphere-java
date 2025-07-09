@@ -20,7 +20,70 @@ import io.microsphere.event.Event;
 import io.microsphere.event.EventListener;
 
 /**
- * The event listener for {@link FileChangedEvent}
+ * A listener interface for receiving file change events.
+ *
+ * <p>This interface extends {@link EventListener} to handle {@link FileChangedEvent} instances,
+ * providing a more specific way to react to changes in files or directories. When implementing
+ * this interface, you can either override the general {@link #onEvent(FileChangedEvent)} method
+ * or selectively override the more specific methods like {@link #onFileCreated(FileChangedEvent)},
+ * {@link #onFileModified(FileChangedEvent)}, and {@link #onFileDeleted(FileChangedEvent)}.</p>
+ *
+ * <h3>Example Usage</h3>
+ * Here's an example of how to implement this interface:
+ *
+ * <pre>{@code
+ * public class MyFileChangeListener implements FileChangedListener {
+ *
+ *     private final int priority;
+ *
+ *     public MyFileChangeListener(int priority) {
+ *         this.priority = priority;
+ *     }
+ *
+ *     @Override
+ *     public void onFileCreated(FileChangedEvent event) {
+ *         System.out.println("File created: " + event.getFile().getAbsolutePath());
+ *     }
+ *
+ *     @Override
+ *     public void onFileModified(FileChangedEvent event) {
+ *         System.out.println("File modified: " + event.getFile().getAbsolutePath());
+ *     }
+ *
+ *     @Override
+ *     public void onFileDeleted(FileChangedEvent event) {
+ *         System.out.println("File deleted: " + event.getFile().getAbsolutePath());
+ *     }
+ *
+ *     @Override
+ *     public int getPriority() {
+ *         return priority;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>If you need custom handling logic that applies to all types of file changes, you can also
+ * override the general {@code onEvent} method:</p>
+ *
+ * <pre>{@code
+ * @Override
+ * public void onEvent(FileChangedEvent event) {
+ *     switch (event.getKind()) {
+ *         case CREATED:
+ *             // Handle file creation
+ *             break;
+ *         case MODIFIED:
+ *             // Handle file modification
+ *             break;
+ *         case DELETED:
+ *             // Handle file deletion
+ *             break;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>The default implementation of the {@code onEvent} method routes the event to the appropriate
+ * handler based on the event kind.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see FileChangedEvent

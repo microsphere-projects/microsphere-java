@@ -42,9 +42,37 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 /**
- * The finder class for Type
+ * A utility class for finding related types based on a given type.
+ * <p>
+ * This class allows searching for various related types such as:
+ * <ul>
+ *     <li>Self (the type itself)</li>
+ *     <li>Direct superclass</li>
+ *     <li>Interfaces directly implemented by the type</li>
+ *     <li>Hierarchical types (recursive search through superclasses and interfaces)</li>
+ * </ul>
  *
- * @param <T> the type
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Find all hierarchical types of String.class including itself
+ * TypeFinder<Class<?>> finder = TypeFinder.classFinder(String.class, TypeFinder.Include.HIERARCHICAL);
+ * List<Class<?>> types = finder.getTypes();
+ *
+ * // Find only interfaces implemented by ArrayList.class
+ * TypeFinder<Class<?>> finder = TypeFinder.classFinder(ArrayList.class, TypeFinder.Include.INTERFACES);
+ * List<Class<?>> interfaceTypes = finder.getTypes();
+ *
+ * // Custom combination: include self and interfaces but not superclass
+ * TypeFinder<Class<?>> finder = new TypeFinder<>(MyClass.class,
+ *     TypeFinder.classGetSuperClassFunction,
+ *     TypeFinder.classGetInterfacesFunction,
+ *     true,  // includeSelf
+ *     false, // includeHierarchicalTypes
+ *     false, // includeSuperclass
+ *     true); // includeInterfaces
+ * }</pre>
+ *
+ * @param <T> the specific type to find related types from
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Type
  * @since 1.0.0
@@ -80,8 +108,8 @@ public class TypeFinder<T> {
     private final Function<T, ? super T[]> getInterfacesFunction;
 
     public TypeFinder(T type, Function<T, T> getSuperClassFunction,
-                         Function<T, T[]> getInterfacesFunction, boolean includeSelf,
-                         boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
+                      Function<T, T[]> getInterfacesFunction, boolean includeSelf,
+                      boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         assertNotNull(type, () -> "The 'type' must not be null");
         assertNotNull(getSuperClassFunction, () -> "The 'getSuperClassFunction' must not be null");
         assertNotNull(getInterfacesFunction, () -> "The 'getInterfacesFunction' must not be null");

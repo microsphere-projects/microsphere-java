@@ -31,14 +31,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class SerializersAndDeserializersTest {
+class SerializersAndDeserializersTest {
 
     private Serializers serializers;
 
     private Deserializers deserializers;
 
     @BeforeEach
-    public void init() {
+    void init() {
         serializers = new Serializers();
         deserializers = new Deserializers();
         serializers.loadSPI();
@@ -46,7 +46,7 @@ public class SerializersAndDeserializersTest {
     }
 
     @Test
-    public void testGetHighestPriority() throws IOException {
+    void testGetHighestPriority() throws IOException {
         Serializer<String> serializer = serializers.getHighestPriority(String.class);
         String value = "Test";
         byte[] bytes = serializer.serialize(value);
@@ -56,7 +56,7 @@ public class SerializersAndDeserializersTest {
     }
 
     @Test
-    public void testGetMostCompatible() throws IOException {
+    void testGetMostCompatible() throws IOException {
         Serializer serializer = serializers.getMostCompatible(Integer.class);
         Integer value = 1;
         byte[] bytes = serializer.serialize(value);

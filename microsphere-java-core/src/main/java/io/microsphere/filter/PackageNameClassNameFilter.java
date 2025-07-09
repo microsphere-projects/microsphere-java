@@ -8,9 +8,22 @@ import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
- * {@link PackageNameClassNameFilter}
+ * {@link PackageNameClassNameFilter} is a {@link Filter} implementation that filters class names based on their package name.
+ * <p>
+ * This filter can be configured to match either exact package names or include sub-packages.
+ * </p>
  *
- * @author <a href="mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <ul>
+ *     <li>To filter classes exactly in the package "io.microsphere":<br>
+ *         {@code new PackageNameClassNameFilter("io.microsphere", false)}
+ *     </li>
+ *     <li>To filter classes in the package "io.microsphere" and its sub-packages:<br>
+ *         {@code new PackageNameClassNameFilter("io.microsphere", true)}
+ *     </li>
+ * </ul>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see PackageNameClassNameFilter
  * @since 1.0.0
  */

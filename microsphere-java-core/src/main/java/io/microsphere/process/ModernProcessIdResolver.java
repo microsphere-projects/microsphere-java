@@ -24,7 +24,22 @@ import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 
 /**
- * {@link ProcessIdResolver} class for Modern JDK (9+)
+ * A {@link ProcessIdResolver} implementation for modern JDKs (Java 9+).
+ *
+ * <p>This class uses the {@link java.lang.ProcessHandle} API introduced in Java 9 to retrieve the current process ID.
+ * It dynamically checks for the presence of the required classes and methods at runtime, ensuring compatibility with
+ * different JDK versions.</p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * ProcessIdResolver resolver = new ModernProcessIdResolver();
+ * if (resolver.supports()) {
+ *     Long pid = resolver.current();
+ *     System.out.println("Current Process ID: " + pid);
+ * } else {
+ *     System.out.println("Process ID resolution not supported on this JVM version.");
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ProcessIdResolver

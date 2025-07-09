@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ObjectToIntegerConverter
  * @since 1.0.0
  */
-public class ObjectToIntegerConverterTest extends BaseConverterTest<Object, Integer> {
+class ObjectToIntegerConverterTest extends BaseConverterTest<Object, Integer> {
 
     @Override
     protected AbstractConverter<Object, Integer> createConverter() {
@@ -48,7 +48,7 @@ public class ObjectToIntegerConverterTest extends BaseConverterTest<Object, Inte
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert("1"));
     }
 }

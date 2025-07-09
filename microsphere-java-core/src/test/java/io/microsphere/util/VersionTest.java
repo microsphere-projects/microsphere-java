@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see Version
  * @since 1.0.0
  */
-public class VersionTest extends AbstractTestCase {
+class VersionTest extends AbstractTestCase {
 
     private static final int MAJOR = 1;
 
@@ -56,7 +56,7 @@ public class VersionTest extends AbstractTestCase {
     private static final Version TEST_VERSION = of(VERSION);
 
     @Test
-    public void testGetValue() {
+    void testGetValue() {
         assertEquals(MAJOR, getValue("1"));
         assertEquals(MINOR, getValue("2"));
         assertEquals(PATCH, getValue("3"));
@@ -67,14 +67,14 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetValueOnFailed() {
+    void testGetValueOnFailed() {
         assertThrows(IllegalArgumentException.class, () -> getValue(""));
         assertThrows(IllegalArgumentException.class, () -> getValue(SPACE));
         assertThrows(IllegalArgumentException.class, () -> getValue("a"));
     }
 
     @Test
-    public void testOfWithMajor() {
+    void testOfWithMajor() {
         Version version = of(MAJOR);
         assertEquals(MAJOR, version.getMajor());
         assertEquals(0, version.getMinor());
@@ -82,7 +82,7 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOfWithMajorAndMinor() {
+    void testOfWithMajorAndMinor() {
         Version version = of(MAJOR, MINOR);
         assertEquals(MAJOR, version.getMajor());
         assertEquals(MINOR, version.getMinor());
@@ -90,7 +90,7 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOfWithMajorAndMinorAndPatch() {
+    void testOfWithMajorAndMinorAndPatch() {
         Version version = of(MAJOR, MINOR, PATCH);
         assertEquals(MAJOR, version.getMajor());
         assertEquals(MINOR, version.getMinor());
@@ -98,7 +98,7 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOfWithVersion() {
+    void testOfWithVersion() {
         Version version = of(VERSION);
         assertEquals(MAJOR, version.getMajor());
         assertEquals(MINOR, version.getMinor());
@@ -106,17 +106,17 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOfOnNullPointException() {
+    void testOfOnNullPointException() {
         assertThrows(IllegalArgumentException.class, () -> of(null));
     }
 
     @Test
-    public void testOfOnIllegalArgumentException() {
+    void testOfOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> of(SPACE));
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertTrue(TEST_VERSION.equals(TEST_VERSION));
         assertTrue(TEST_VERSION.equals((Object) TEST_VERSION));
         assertTrue(TEST_VERSION.equals(of(MAJOR, MINOR, PATCH)));
@@ -127,25 +127,25 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testEqualsOnNull() {
+    void testEqualsOnNull() {
         assertFalse(TEST_VERSION.equals(null));
         assertFalse(TEST_VERSION.equals((Object) null));
     }
 
     @Test
-    public void testEq() {
+    void testEq() {
         assertTrue(TEST_VERSION.eq(TEST_VERSION));
         assertTrue(TEST_VERSION.eq(of(MAJOR, MINOR, PATCH)));
     }
 
     @Test
-    public void testEqOnNull() {
+    void testEqOnNull() {
         assertFalse(TEST_VERSION.eq(null));
         assertFalse(TEST_VERSION.equals(null));
     }
 
     @Test
-    public void testGt() {
+    void testGt() {
         assertFalse(TEST_VERSION.gt(TEST_VERSION));
 
         assertFalse(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH)));
@@ -163,12 +163,12 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGtOnNull() {
+    void testGtOnNull() {
         assertFalse(TEST_VERSION.gt(null));
     }
 
     @Test
-    public void testGe() {
+    void testGe() {
         assertTrue(TEST_VERSION.ge(TEST_VERSION));
 
         assertTrue(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH)));
@@ -186,12 +186,12 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGeOnNull() {
+    void testGeOnNull() {
         assertFalse(TEST_VERSION.ge(null));
     }
 
     @Test
-    public void testLt() {
+    void testLt() {
         assertFalse(TEST_VERSION.lt(TEST_VERSION));
 
         assertFalse(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH)));
@@ -209,12 +209,12 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testLtOnNull() {
+    void testLtOnNull() {
         assertFalse(TEST_VERSION.lt(null));
     }
 
     @Test
-    public void testLe() {
+    void testLe() {
         assertTrue(TEST_VERSION.le(TEST_VERSION));
 
         assertTrue(TEST_VERSION.le(of(MAJOR, MINOR, PATCH)));
@@ -232,23 +232,23 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testLeOnNull() {
+    void testLeOnNull() {
         assertFalse(TEST_VERSION.le(null));
     }
 
     @Test
-    public void testGetVersion() {
+    void testGetVersion() {
         Version version = getVersion(Test.class);
         assertNotNull(version);
     }
 
     @Test
-    public void testGetVersionOnIllegalArgumentException() {
+    void testGetVersionOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> getVersion(VersionTest.class));
     }
 
     @Test
-    public void testOperator() {
+    void testOperator() {
         assertEquals(EQ, Operator.of("="));
         assertEquals(LT, Operator.of("<"));
         assertEquals(LE, Operator.of("<="));
@@ -257,12 +257,12 @@ public class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testOperatorOnIllegalArgumentException() {
+    void testOperatorOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> Operator.of(""));
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals("Version{major=1, minor=2, patch=3}", TEST_VERSION.toString());
     }
 }

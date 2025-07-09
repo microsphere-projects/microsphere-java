@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see AbstractExtendableProtocolURLStreamHandlerTest
  * @since 1.0.0
  */
-public class HandlerTest extends AbstractExtendableProtocolURLStreamHandlerTest {
+class HandlerTest extends AbstractExtendableProtocolURLStreamHandlerTest {
 
     private static final String TEST_URL = "test:////META-INF/test.properties";
 

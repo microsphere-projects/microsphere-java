@@ -54,7 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ExtendableProtocolURLStreamHandlerTest {
+class ExtendableProtocolURLStreamHandlerTest {
 
     private static final String TEST_URL = "test://localhost:12345/abc";
 
@@ -63,41 +63,41 @@ public class ExtendableProtocolURLStreamHandlerTest {
     private ExtendableProtocolURLStreamHandler handler;
 
     @BeforeEach
-    public void init() {
+    void init() {
         // Handler for "test" protocol
         handler = new Handler();
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
     @Test
-    public void testAssertClassTopLevelOnLocalClass() {
+    void testAssertClassTopLevelOnLocalClass() {
         class LocalClass extends ExtendableProtocolURLStreamHandler {
         }
         assertThrows(IllegalArgumentException.class, () -> assertClassTopLevel(LocalClass.class));
     }
 
     @Test
-    public void testAssertClassTopLevelOnMemberClass() {
+    void testAssertClassTopLevelOnMemberClass() {
         assertThrows(IllegalArgumentException.class, () -> assertClassTopLevel(MemberClass.class));
     }
 
     @Test
-    public void testAssertClassTopLevelOnAnonymousClass() {
+    void testAssertClassTopLevelOnAnonymousClass() {
         assertThrows(IllegalArgumentException.class, () -> assertClassTopLevel(new ExtendableProtocolURLStreamHandler() {
         }.getClass()));
     }
 
     @Test
-    public void testAssertClassNameOnWrongClassName() {
+    void testAssertClassNameOnWrongClassName() {
         assertThrows(IllegalArgumentException.class, () -> assertClassName(MemberClass.class));
     }
 
     @Test
-    public void testAssertPackageOnSunHandlerClass() {
+    void testAssertPackageOnSunHandlerClass() {
         Class<?> handler = resolveClass("sun.net.www.protocol.file.Handler");
         if (handler != null) {
             assertThrows(IllegalArgumentException.class, () -> assertPackage(handler));
@@ -105,7 +105,7 @@ public class ExtendableProtocolURLStreamHandlerTest {
     }
 
     @Test
-    public void testConstructorWithProtocolArg() {
+    void testConstructorWithProtocolArg() {
         assertTestHandler("test-1");
         assertTestHandler("test-2");
         assertTestHandler("test-3");
@@ -117,29 +117,29 @@ public class ExtendableProtocolURLStreamHandlerTest {
     }
 
     @Test
-    public void testGetHandlePackages() {
+    void testGetHandlePackages() {
         assertEquals(ofSet("io.microsphere.net"), getHandlePackages());
     }
 
     @Test
-    public void testGetHandlePackagesPropertyValue() {
+    void testGetHandlePackagesPropertyValue() {
         assertEquals("io.microsphere.net", getHandlePackagesPropertyValue());
     }
 
     @Test
-    public void testAppendHandlePackage() {
+    void testAppendHandlePackage() {
         appendHandlePackage("io.microsphere.lang");
         assertEquals(ofSet("io.microsphere.net", "io.microsphere"), getHandlePackages());
         assertEquals("io.microsphere.net|io.microsphere", getHandlePackagesPropertyValue());
     }
 
     @Test
-    public void testInit() {
+    void testInit() {
         handler.init();
     }
 
     @Test
-    public void testInitSubProtocolURLConnectionFactories() {
+    void testInitSubProtocolURLConnectionFactories() {
         List<SubProtocolURLConnectionFactory> factories = emptyList();
         List<SubProtocolURLConnectionFactory> copy = newLinkedList(factories);
         handler.initSubProtocolURLConnectionFactories(copy);
@@ -147,21 +147,21 @@ public class ExtendableProtocolURLStreamHandlerTest {
     }
 
     @Test
-    public void testOpenConnection() throws IOException {
+    void testOpenConnection() throws IOException {
         URL url = new URL(TEST_URL);
         assertNull(url.openConnection());
         assertEquals(TEST_URL, url.toString());
     }
 
     @Test
-    public void testCustomizeSubProtocolURLConnectionFactories() {
+    void testCustomizeSubProtocolURLConnectionFactories() {
         handler.customizeSubProtocolURLConnectionFactories(factories -> {
             factories.add(new CompositeSubProtocolURLConnectionFactory());
         });
     }
 
     @Test
-    public void testOpenConnectionWithProxy() throws IOException {
+    void testOpenConnectionWithProxy() throws IOException {
         handler.customizeSubProtocolURLConnectionFactories(factories -> {
             factories.add(new ConsoleSubProtocolURLConnectionFactory());
         });
@@ -176,44 +176,44 @@ public class ExtendableProtocolURLStreamHandlerTest {
     }
 
     @Test
-    public void testOpenFallbackConnection() throws IOException {
+    void testOpenFallbackConnection() throws IOException {
         assertNull(handler.openFallbackConnection(null, null));
     }
 
     @Test
-    public void testEquals() throws IOException {
+    void testEquals() throws IOException {
         assertTrue(handler.equals(new URL(TEST_URL), new URL(TEST_URL)));
         assertTrue(handler.equals(new URL(TEST_URL_WITH_SP), new URL(TEST_URL_WITH_SP)));
         assertFalse(handler.equals(new URL(TEST_URL), new URL(TEST_URL_WITH_SP)));
     }
 
     @Test
-    public void testHashCode() throws IOException {
+    void testHashCode() throws IOException {
         assertEquals(handler.hashCode(new URL(TEST_URL)), new URL(TEST_URL).hashCode());
         assertEquals(handler.hashCode(new URL(TEST_URL_WITH_SP)), new URL(TEST_URL_WITH_SP).hashCode());
         assertNotEquals(handler.hashCode(new URL(TEST_URL)), new URL(TEST_URL_WITH_SP).hashCode());
     }
 
     @Test
-    public void testHostsEqual() throws IOException {
+    void testHostsEqual() throws IOException {
         assertTrue(handler.hostsEqual(new URL(TEST_URL), new URL(TEST_URL)));
         assertTrue(handler.hostsEqual(new URL(TEST_URL), new URL(TEST_URL_WITH_SP)));
     }
 
     @Test
-    public void testToExternalForm() throws IOException {
+    void testToExternalForm() throws IOException {
         assertEquals(handler.toExternalForm(new URL(TEST_URL)), toExternalForm(new URL(TEST_URL)));
         assertEquals(handler.toExternalForm(new URL(TEST_URL_WITH_SP)), toExternalForm(new URL(TEST_URL_WITH_SP)));
     }
 
     @Test
-    public void testResolveSubProtocols() throws IOException {
+    void testResolveSubProtocols() throws IOException {
         assertEquals(emptyList(), handler.resolveSubProtocols(new URL(TEST_URL)));
         assertEquals(ofList("text"), handler.resolveSubProtocols(new URL(TEST_URL_WITH_SP)));
     }
 
     @Test
-    public void testResolveAuthority() throws IOException {
+    void testResolveAuthority() throws IOException {
         assertEquals("localhost:12345", handler.resolveAuthority(new URL(TEST_URL)));
         assertEquals("localhost:12345", handler.resolveAuthority(new URL(TEST_URL_WITH_SP)));
     }

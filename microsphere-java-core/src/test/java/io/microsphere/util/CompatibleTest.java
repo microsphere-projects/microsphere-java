@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class CompatibleTest {
+class CompatibleTest {
 
     private Compatible<Test, String> compatible = of(Test.class)
             .on("<", "4.13", version -> "<")

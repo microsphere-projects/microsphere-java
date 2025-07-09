@@ -22,7 +22,31 @@ import io.microsphere.io.event.FileChangedListener;
 import java.io.File;
 
 /**
- * File Watch Service
+ * A service that watches files or directories for changes and notifies registered listeners.
+ * <p>
+ * This interface provides methods to register listeners for specific files or directories,
+ * specifying the types of events the listener is interested in. When a watched file or directory
+ * experiences an event (e.g., creation, modification, deletion), the associated listeners are notified.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example 1: Watching a single file with a single listener and specific event kinds
+ * FileWatchService watchService = ...; // implementation instance
+ * File fileToWatch = new File("/path/to/file.txt");
+ * FileChangedListener listener = event -> System.out.println("File changed: " + event.getFile());
+ *
+ * watchService.watch(fileToWatch, listener, FileChangedEvent.Kind.MODIFIED);
+ *
+ * // Example 2: Watching a directory with multiple listeners and all event kinds
+ * File dirToWatch = new File("/path/to/directory");
+ * List<FileChangedListener> listeners = Arrays.asList(
+ *     event -> System.out.println("Listener 1 triggered: " + event),
+ *     event -> System.out.println("Listener 2 triggered: " + event)
+ * );
+ *
+ * watchService.watch(dirToWatch, listeners); // All kinds by default
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

@@ -71,7 +71,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassUtilsTest
  * @since 1.0.0
  */
-public class ClassUtilsTest extends AbstractTestCase {
+class ClassUtilsTest extends AbstractTestCase {
 
     @Test
     public void testConstants() {

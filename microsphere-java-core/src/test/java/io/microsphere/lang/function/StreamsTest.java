@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @since 1.0.0
  */
-public class StreamsTest {
+class StreamsTest {
 
     static final Integer[] INTEGERS = ofArray(1, 2, 3, 4, 5);
 
@@ -62,37 +62,37 @@ public class StreamsTest {
     static final Set<Integer> EVEN_SET = ofSet(2, 4);
 
     @Test
-    public void testStreamOnArray() {
+    void testStreamOnArray() {
         Stream<Integer> stream = stream(INTEGERS);
         assertEquals(INTEGERS.length, stream.count());
     }
 
     @Test
-    public void testStreamOnIterable() {
+    void testStreamOnIterable() {
         Stream<Integer> stream = stream(INTEGERS_LIST);
         assertEquals(5, stream.count());
     }
 
     @Test
-    public void testFilterStreamOnArray() {
+    void testFilterStreamOnArray() {
         Stream<Integer> stream = filterStream(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, stream.collect(toList()));
     }
 
     @Test
-    public void testFilterStreamOnIterable() {
+    void testFilterStreamOnIterable() {
         Stream<Integer> stream = filterStream(INTEGERS_LIST, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, stream.collect(toList()));
     }
 
     @Test
-    public void testFilterListOnArray() {
+    void testFilterListOnArray() {
         List<Integer> list = filterList(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
     }
 
     @Test
-    public void testFilterListOnIterable() {
+    void testFilterListOnIterable() {
         List<Integer> list = filterList(INTEGERS_LIST, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
     }

@@ -39,22 +39,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class JavaTypeKindTestForWildcardType extends AbstractJavaTypeKindTest {
 
     @Test
-    public void testGetSuperType() {
+    void testGetSuperType() {
         assertNull(WILDCARD_TYPE.getSuperType(Object.class));
     }
 
     @Test
-    public void testGetRawType() {
+    void testGetRawType() {
         assertNull(WILDCARD_TYPE.getRawType(Object.class));
     }
 
     @Test
-    public void testGetInterfaces() {
+    void testGetInterfaces() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, WILDCARD_TYPE.getInterfaces(Object.class));
     }
 
     @Test
-    public void testGetGenericTypes() {
+    void testGetGenericTypes() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, WILDCARD_TYPE.getGenericTypes(from(Object.class)));
     }
 }

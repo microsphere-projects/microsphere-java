@@ -39,10 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class FileConstantsTest {
+class FileConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals("zip", ZIP);
         assertEquals("jar", JAR);
         assertEquals("war", WAR);

@@ -10,9 +10,29 @@ import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.util.Objects.hash;
 
 /**
- * Maven {@link Artifact}
+ * Represents a Maven software artifact with attributes such as group ID, artifact ID, version, and location.
+ * This class extends the basic {@link Artifact} by adding Maven-specific identification through group ID.
+ * It supports matching artifacts based on group ID, in addition to the properties defined in the parent class.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a Maven artifact with group ID, artifact ID, and default version (UNKNOWN)
+ * MavenArtifact mavenArtifact1 = MavenArtifact.create("com.example", "my-artifact");
+ *
+ * // Create a Maven artifact with group ID, artifact ID, and specific version
+ * MavenArtifact mavenArtifact2 = MavenArtifact.create("com.example", "my-artifact", "1.0.0");
+ *
+ * // Create a Maven artifact with group ID, artifact ID, version, and location
+ * URL location = new URL("http://example.com/artifact.jar");
+ * MavenArtifact mavenArtifact3 = MavenArtifact.create("com.example", "my-artifact", "1.0.0", location);
+ *
+ * // Matching Maven artifacts based on group ID, artifact ID, and version
+ * boolean isMatch = mavenArtifact1.matches(mavenArtifact2); // returns false
+ *  }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Artifact
+ * @see ArtifactResourceResolver
  * @since 1.0.0
  */
 public class MavenArtifact extends Artifact {
@@ -41,6 +61,7 @@ public class MavenArtifact extends Artifact {
 
     /**
      * Get the group id of Maven Artifact
+     *
      * @return non-null
      */
     @Nonnull

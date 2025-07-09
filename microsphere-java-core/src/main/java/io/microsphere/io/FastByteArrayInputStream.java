@@ -23,7 +23,39 @@ import static java.lang.System.arraycopy;
 import static java.util.Objects.hash;
 
 /**
- * Fast(No ThreadSafe without synchronization) {@link ByteArrayInputStream}
+ * A fast, non-thread-safe implementation of {@link ByteArrayInputStream}.
+ *
+ * <p>
+ * This class extends the standard {@link ByteArrayInputStream} to provide optimized performance in single-threaded scenarios.
+ * Unlike the standard implementation, it does not perform synchronization, making it faster but unsafe for concurrent use.
+ * </p>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * byte[] data = "Hello, World!".getBytes(StandardCharsets.UTF_8);
+ * FastByteArrayInputStream inputStream = new FastByteArrayInputStream(data);
+ *
+ * int c;
+ * while ((c = inputStream.read()) != -1) {
+ *     System.out.print((char) c);
+ * }
+ * inputStream.close();
+ * }</pre>
+ *
+ * <p>
+ * For reading a subset of the byte array:
+ * </p>
+ *
+ * <pre>{@code
+ * byte[] data = "Microservices are great!".getBytes(StandardCharsets.UTF_8);
+ * FastByteArrayInputStream inputStream = new FastByteArrayInputStream(data, 0, 11); // Read only first 11 bytes
+ *
+ * int c;
+ * while ((c = inputStream.read()) != -1) {
+ *     System.out.print((char) c);
+ * }
+ * inputStream.close();
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ByteArrayInputStream

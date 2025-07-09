@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see LoggerFactory
  * @since 1.0.0
  */
-public class LoggerFactoryTest {
+class LoggerFactoryTest {
 
     @BeforeAll
     public static void init() throws IOException {

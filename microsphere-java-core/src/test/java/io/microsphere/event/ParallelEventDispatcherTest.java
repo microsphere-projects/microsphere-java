@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @since 1.0.0
  */
-public class ParallelEventDispatcherTest {
+class ParallelEventDispatcherTest {
 
     private EventDispatcher eventDispatcher;
 

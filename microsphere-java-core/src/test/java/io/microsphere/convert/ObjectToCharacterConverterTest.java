@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ObjectToCharacterConverter
  * @since 1.0.0
  */
-public class ObjectToCharacterConverterTest extends BaseConverterTest<Object, Character> {
+class ObjectToCharacterConverterTest extends BaseConverterTest<Object, Character> {
 
     @Override
     protected AbstractConverter<Object, Character> createConverter() {
@@ -48,7 +48,7 @@ public class ObjectToCharacterConverterTest extends BaseConverterTest<Object, Ch
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert(1));
     }
 }

@@ -114,7 +114,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
+class TypeUtilsTest extends AbstractAnnotationProcessingTest {
 
     /**
      * self type
@@ -195,7 +195,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsSimpleType() {
+    void testIsSimpleType() {
         assertTrue(isSimpleType(getTypeElement(Void.class)));
         assertTrue(isSimpleType(getTypeElement(Boolean.class)));
         assertTrue(isSimpleType(getTypeElement(Character.class)));
@@ -215,20 +215,20 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsSimpleTypeOnNull() {
+    void testIsSimpleTypeOnNull() {
         assertFalse(isSimpleType(NULL_TYPE_ELEMENT));
         assertFalse(isSimpleType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsSameType() {
+    void testIsSameType() {
         assertIsSameType(testTypeElement, testClass);
 
         assertFalse(isSameType(getDeclaredType(String.class), "java.lang.Void"));
     }
 
     @Test
-    public void testIsSameTypeOnNull() {
+    void testIsSameTypeOnNull() {
         assertFalse(isSameType(NULL_TYPE_MIRROR, testClass));
         assertFalse(isSameType(NULL_TYPE_MIRROR, testClassName));
         assertFalse(isSameType(NULL_ELEMENT, testClass));
@@ -247,7 +247,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsArrayTypeOnTypeMirror() {
+    void testIsArrayTypeOnTypeMirror() {
         assertIsArrayType(ArrayTypeModel.class);
 
         assertFalse(isArrayType(getTypeMirror(Color.class)));
@@ -255,7 +255,7 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsArrayTypeOnElement() {
+    void testIsArrayTypeOnElement() {
         assertIsArrayType(getTypeElement(ArrayTypeModel.class));
 
         assertFalse(isArrayType(getTypeElement(Color.class)));
@@ -263,19 +263,19 @@ public class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsArrayTypeOnNull() {
+    void testIsArrayTypeOnNull() {
         assertFalse(isArrayType(NULL_ELEMENT));
         assertFalse(isArrayType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsEnumType() {
+    void testIsEnumType() {
         assertTrue(isEnumType(getDeclaredType(Color.class)));
         assertFalse(isEnumType(getTypeElement(ArrayTypeModel.class)));
     }
 
     @Test
-    public void testIsEnumTypeOnNull() {
+    void testIsEnumTypeOnNull() {
         assertFalse(isEnumType(NULL_ELEMENT));
         assertFalse(isEnumType(NULL_TYPE_MIRROR));
     }

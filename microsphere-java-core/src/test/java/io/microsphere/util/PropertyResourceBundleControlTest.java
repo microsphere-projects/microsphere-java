@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see PropertyResourceBundleControlTest
  * @since 1.0.0
  */
-public class PropertyResourceBundleControlTest {
+class PropertyResourceBundleControlTest {
 
     private static final String BASE_NAME = "META-INF.test";
 

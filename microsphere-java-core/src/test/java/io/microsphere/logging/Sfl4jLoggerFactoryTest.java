@@ -7,7 +7,7 @@ package io.microsphere.logging;
  * @see Sfl4jLoggerFactory
  * @since 1.0.0
  */
-public class Sfl4jLoggerFactoryTest extends AbstractLoggerTest {
+class Sfl4jLoggerFactoryTest extends AbstractLoggerTest {
 
     @Override
     protected Logger createLogger() {

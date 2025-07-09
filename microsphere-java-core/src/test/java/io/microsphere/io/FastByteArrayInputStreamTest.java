@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see FastByteArrayInputStream
  * @since 1.0.0
  */
-public class FastByteArrayInputStreamTest {
+class FastByteArrayInputStreamTest {
 
     private static final String TEST_VALUE = "Hello";
 
@@ -31,19 +31,19 @@ public class FastByteArrayInputStreamTest {
     private FastByteArrayInputStream inputStream2;
 
     @BeforeEach
-    public void init() {
+    void init() {
         inputStream = new FastByteArrayInputStream(TEST_BYTES);
         inputStream2 = new FastByteArrayInputStream(TEST_BYTES, TEST_OFFSET, TEST_VALUE.length());
     }
 
     @AfterEach
-    public void destroy() throws IOException {
+    void destroy() throws IOException {
         inputStream.close();
         inputStream2.close();
     }
 
     @Test
-    public void testRead() {
+    void testRead() {
         assertEquals('H', inputStream.read());
         assertEquals('e', inputStream.read());
         assertEquals('l', inputStream.read());
@@ -58,7 +58,7 @@ public class FastByteArrayInputStreamTest {
     }
 
     @Test
-    public void testRead1() {
+    void testRead1() {
         byte[] bytes = new byte[8];
         int offset = 0;
         int length = inputStream.available();
@@ -71,13 +71,13 @@ public class FastByteArrayInputStreamTest {
     }
 
     @Test
-    public void testRead1OnNullPointer() {
+    void testRead1OnNullPointer() {
         assertThrows(NullPointerException.class, () -> inputStream.read(null, 0, 0));
         assertThrows(NullPointerException.class, () -> inputStream2.read(null, 0, 0));
     }
 
     @Test
-    public void testRead1OnIndexOutOfBounds() {
+    void testRead1OnIndexOutOfBounds() {
         byte[] bytes = new byte[8];
 
         assertThrows(IndexOutOfBoundsException.class, () -> inputStream.read(bytes, -1, 0));
@@ -91,13 +91,13 @@ public class FastByteArrayInputStreamTest {
     }
 
     @Test
-    public void testSkip() {
+    void testSkip() {
         assertEquals(0, inputStream.skip(0));
         assertEquals(1, inputStream.skip(1));
     }
 
     @Test
-    public void testAvailable() throws IOException {
+    void testAvailable() throws IOException {
         testAvailable(inputStream, inputStream.available());
         testAvailable(inputStream2, inputStream2.available());
     }
@@ -110,7 +110,7 @@ public class FastByteArrayInputStreamTest {
     }
 
     @Test
-    public void testReset() {
+    void testReset() {
         testRead();
         inputStream.reset();
         inputStream2.reset();
@@ -119,12 +119,12 @@ public class FastByteArrayInputStreamTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(inputStream, inputStream2);
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(inputStream.hashCode(), inputStream2.hashCode());
     }
 }

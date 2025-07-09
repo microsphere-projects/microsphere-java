@@ -13,12 +13,12 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see DefaultDeserializer
  * @since 1.0.0
  */
-public class DefaultDeserializerTest {
+class DefaultDeserializerTest {
 
     private DefaultDeserializer deserializer = DefaultDeserializer.INSTANCE;
 
     @Test
-    public void testDeserializeOnNull() throws IOException {
+    void testDeserializeOnNull() throws IOException {
         assertNull(deserializer.deserialize(null));
     }
 }

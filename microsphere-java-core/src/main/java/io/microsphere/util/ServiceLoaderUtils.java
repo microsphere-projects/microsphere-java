@@ -1,8 +1,9 @@
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -21,9 +22,55 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.ServiceLoader.load;
 
 /**
- * {@link ServiceLoader} Utility
+ * Utility class for loading and managing service providers via {@link ServiceLoader}, with support for caching,
+ * prioritization, and ClassLoader hierarchy traversal.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <p>{@link ServiceLoaderUtils} provides methods to load all implementations of a service type, retrieve the first or last
+ * implementation based on declaration order or priority, and return them as either a list or an array. It supports custom
+ * class loaders and optional caching of loaded services.</p>
+ *
+ * <h3>Key Features</h3>
+ * <ul>
+ *     <li>Load services using the context class loader or a specified class loader.</li>
+ *     <li>Supports caching of loaded services (configurable).</li>
+ *     <li>Sorts services by priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</li>
+ *     <li>Returns read-only lists or arrays of service instances.</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <h4>Loading All Services</h4>
+ * <pre>{@code
+ * List<MyService> services = ServiceLoaderUtils.loadServicesList(MyService.class);
+ * for (MyService service : services) {
+ *     service.execute();
+ * }
+ * }</pre>
+ *
+ * <h4>Loading First Service (Highest Priority)</h4>
+ * <pre>{@code
+ * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class);
+ * service.initialize();
+ * }</pre>
+ *
+ * <h4>Loading Last Service (Lowest Priority)</h4>
+ * <pre>{@code
+ * MyService service = ServiceLoaderUtils.loadLastService(MyService.class);
+ * service.shutdown();
+ * }</pre>
+ *
+ * <h4>Loading With Custom ClassLoader</h4>
+ * <pre>{@code
+ * ClassLoader cl = MyClassLoader.getInstance();
+ * MyService[] services = ServiceLoaderUtils.loadServices(MyService.class, cl);
+ * }</pre>
+ *
+ * <h4>Loading Without Caching</h4>
+ * <pre>{@code
+ * List<MyService> services = ServiceLoaderUtils.loadServicesList(MyService.class, false);
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ServiceLoader
  * @since 1.0.0
  */
@@ -36,287 +83,459 @@ public abstract class ServiceLoaderUtils implements Utils {
     private static final ConcurrentMap<Class<?>, List<?>> servicesCache = newConcurrentHashMap();
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the context class loader.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @return service type all implementation objects of {@link Collections#unmodifiableList(List) readonly list}
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned list contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * List<MyService> services = ServiceLoaderUtils.loadServicesList(MyService.class);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @return a read-only list containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> List<S> loadServicesList(Class<S> serviceType) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType));
     }
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader}.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param classLoader {@link ClassLoader}
-     * @return service type all implementation objects of {@link Collections#unmodifiableList(List) readonly list}
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned list contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * List<MyService> services = ServiceLoaderUtils.loadServicesList(MyService.class, classLoader);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @return a read-only list containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> List<S> loadServicesList(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadServicesList(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the context class loader,
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param cached      the list of services to be cached
-     * @return service type all implementation objects of {@link Collections#unmodifiableList(List) readonly list}
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned list contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * List<MyService> services = ServiceLoaderUtils.loadServicesList(MyService.class, true);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return a read-only list containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> List<S> loadServicesList(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType), cached);
     }
 
-
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader},
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param classLoader {@link ClassLoader}
-     * @param cached      the list of services to be cached
-     * @return service type all implementation objects of {@link Collections#unmodifiableList(List) readonly list}
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned list contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * List<MyService> services = ServiceLoaderUtils.loadServicesList(MyService.class, classLoader, true);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return a read-only list containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> List<S> loadServicesList(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return unmodifiableList(loadServicesAsList(serviceType, classLoader, cached));
     }
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the context class loader.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @return service type all implementation objects
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned array contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * MyService[] services = ServiceLoaderUtils.loadServices(MyService.class);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @return an array containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> S[] loadServices(Class<S> serviceType) throws IllegalArgumentException {
         return loadServices(serviceType, getClassLoader(serviceType));
     }
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader}.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param classLoader {@link ClassLoader}
-     * @return service type all implementation objects
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned array contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * MyService[] services = ServiceLoaderUtils.loadServices(MyService.class, classLoader);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @return an array containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> S[] loadServices(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> S[] loadServices(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadServices(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the context class loader,
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param cached      the list of services to be cached
-     * @return service type all implementation objects
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method utilizes the context class loader associated with the provided service type to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned array contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * MyService[] services = ServiceLoaderUtils.loadServices(MyService.class, true);
+     * for (MyService service : services) {
+     *     service.initialize();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return an array containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> S[] loadServices(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadServices(serviceType, getClassLoader(serviceType), cached);
     }
 
     /**
-     * Using the hierarchy of {@link ClassLoader}, each level of ClassLoader ( ClassLoader , its parent ClassLoader and higher)
-     * will be able to load the configuration file META-INF/services <code>serviceType<code> under its class path.
-     * The configuration file of each service type can define multiple lists of implementation classes.
-     * <p/>
+     * Loads all implementation instances of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader},
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param classLoader {@link ClassLoader}
-     * @param cached      the list of services to be cached
-     * @return service type all implementation objects
-     * @throws IllegalArgumentException If it refers to the implementation class that does not define <code>serviceType<code>
-     *                                  in the configuration file /META-INF/services/<code>serviceType</code>
+     * <p>This method traverses the hierarchy of {@link ClassLoader} to load the service configuration file located at
+     * {@code /META-INF/services/<serviceType>}. The returned array contains all discovered implementations in the order they were found,
+     * sorted by their priority if they implement the {@link io.microsphere.lang.Prioritized} interface.</p>
+     *
+     * <h3>Usage Example</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * MyService[] services = ServiceLoaderUtils.loadServices(MyService.class, classLoader, true);
+     * for (MyService service : services) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return an array containing all implementation instances of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> S[] loadServices(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> S[] loadServices(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return asArray(loadServicesAsList(serviceType, classLoader, cached), serviceType);
     }
 
     /**
-     * Load the first instance of {@link #loadServicesList(Class) Service interface instances list}
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, each level of ClassLoader will be able to access the configuration files under its class path
-     * /META-INF/services/<code>serviceType</code>.
-     * Then, override the first implementation class of the configuration file under the class path of ClassLoader,
-     * thereby providing a mechanism for overriding the implementation class.
+     * Loads the first instance of the specified {@link ServiceLoader} service type using the context class loader.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @return If it exists, {@link #loadServicesList(Class, ClassLoader) loads the first in the list of implementation objects of service type}.
-     * @throws IllegalArgumentException If the implementation class that does not define <code>serviceType<code> is in the configuration file
-     *                                  META-INF/services/<code>serviceType<code>, IllegalArgumentException will be thrown
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader)}, and returns the first element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class);
+     * if (service != null) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @return the first implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> S loadFirstService(Class<S> serviceType) throws IllegalArgumentException {
         return loadFirstService(serviceType, getClassLoader(serviceType));
     }
 
     /**
-     * Load the first instance of {@link #loadServicesList(Class) Service interface instances list}
-     * <p/>
+     * Loads the first instance of the specified {@link ServiceLoader} service type using the context class loader,
+     * with an option to enable or disable caching of the loaded services.
+     *
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader, boolean)}, and returns the first element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     * <p>
      * Design Purpose : Using the hierarchy of {@link ClassLoader}, each level of ClassLoader will be able to access the configuration files under its class path
      * /META-INF/services/<code>serviceType</code>.
      * Then, override the first implementation class of the configuration file under the class path of ClassLoader,
      * thereby providing a mechanism for overriding the implementation class.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param cached      the list of services to be cached
-     * @return If it exists, {@link #loadServicesList(Class, ClassLoader) loads the first in the list of implementation objects of service type}.
-     * @throws IllegalArgumentException If the implementation class that does not define <code>serviceType<code> is in the configuration file
-     *                                  META-INF/services/<code>serviceType<code>, IllegalArgumentException will be thrown
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, true);
+     * if (service != null) {
+     *     service.initialize();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return the first implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> S loadFirstService(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadFirstService(serviceType, getClassLoader(serviceType), cached);
     }
 
     /**
-     * Load the first instance of {@link #loadServicesList(Class, ClassLoader) Service interface instances list}
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, each level of ClassLoader will be able to access the configuration files under its class path
-     * /META-INF/services/<code>serviceType</code>.
-     * Then, override the first implementation class of the configuration file under the class path of ClassLoader,
-     * thereby providing a mechanism for overriding the implementation class.
+     * Loads the first instance of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader}.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @return If it exists, {@link #loadServicesList(Class, ClassLoader) loads the first in the list of implementation objects of service type}.
-     * @throws IllegalArgumentException If the implementation class that does not define <code>serviceType<code> is in the configuration file
-     *                                  META-INF/services/<code>serviceType<code>, IllegalArgumentException will be thrown
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader)}, and returns the first element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, classLoader);
+     * if (service != null) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @return the first implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> S loadFirstService(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> S loadFirstService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadFirstService(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
-     * Load the first instance of {@link #loadServicesList(Class, ClassLoader) Service interface instances list}
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, each level of ClassLoader will be able to access the configuration files under its class path
-     * /META-INF/services/<code>serviceType</code>.
-     * Then, override the first implementation class of the configuration file under the class path of ClassLoader,
-     * thereby providing a mechanism for overriding the implementation class.
+     * Loads the first instance of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader},
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param cached      the list of services to be cached
-     * @return If it exists, {@link #loadServicesList(Class, ClassLoader) loads the first in the list of implementation objects of service type}.
-     * @throws IllegalArgumentException If the implementation class that does not define <code>serviceType<code> is in the configuration file
-     *                                  META-INF/services/<code>serviceType<code>, IllegalArgumentException will be thrown
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader, boolean)}, and returns the first element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, classLoader, true);
+     * if (service != null) {
+     *     service.initialize();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return the first implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> S loadFirstService(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> S loadFirstService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return loadService(serviceType, classLoader, cached, true);
     }
 
     /**
-     * Loads the last in the list of objects implementing the service type, if present.
-     * <p/>
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, once the configuration file is loaded in the parent's ClassLoader at a higher level (here the highest-level ClassLoader is Bootstrap ClassLoader)
-     * /META-INF/services/<code>serviceType</code>
-     * If the last implementation class is used, the lower-level Class Loader will not be able to override the previous definition。
+     * Loads the last instance of the specified {@link ServiceLoader} service type using the context class loader.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @return Loads the last in the list of objects implementing the service type, if present.
-     * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader)}, and returns the last element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * MyService service = ServiceLoaderUtils.loadLastService(MyService.class);
+     * if (service != null) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @return the last implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> S loadLastService(Class<S> serviceType) throws IllegalArgumentException {
         return loadLastService(serviceType, getClassLoader(serviceType));
     }
 
     /**
-     * Loads the last in the list of objects implementing the service type, if present.
-     * <p/>
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, once the configuration file is loaded in the parent's ClassLoader at a higher level (here the highest-level ClassLoader is Bootstrap ClassLoader)
-     * /META-INF/services/<code>serviceType</code>
-     * If the last implementation class is used, the lower-level Class Loader will not be able to override the previous definition。
+     * Loads the last instance of the specified {@link ServiceLoader} service type using the context class loader,
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param cached      the list of services to be cached
-     * @return Loads the last in the list of objects implementing the service type, if present.
-     * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader, boolean)}, and returns the last element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, true);
+     * if (service != null) {
+     *     service.initialize();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return the last implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
+    @Nonnull
     public static <S> S loadLastService(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadLastService(serviceType, getClassLoader(serviceType), cached);
     }
 
     /**
-     * Loads the last in the list of objects implementing the service type, if present.
-     * <p/>
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, once the configuration file is loaded in the parent's ClassLoader at a higher level (here the highest-level ClassLoader is Bootstrap ClassLoader)
-     * /META-INF/services/<code>serviceType</code>
-     * If the last implementation class is used, the lower-level Class Loader will not be able to override the previous definition。
+     * Loads the last instance of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader}.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @param classLoader {@link ClassLoader}
-     * @return Loads the last in the list of objects implementing the service type, if present.
-     * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader)}, and returns the last element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, classLoader);
+     * if (service != null) {
+     *     service.execute();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @return the last implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> S loadLastService(Class<S> serviceType, ClassLoader classLoader) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> S loadLastService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadLastService(serviceType, classLoader, serviceLoaderCached);
     }
 
     /**
-     * Loads the last in the list of objects implementing the service type, if present.
-     * <p/>
-     * <p/>
-     * Design Purpose : Using the hierarchy of {@link ClassLoader}, once the configuration file is loaded in the parent's ClassLoader at a higher level (here the highest-level ClassLoader is Bootstrap ClassLoader)
-     * /META-INF/services/<code>serviceType</code>
-     * If the last implementation class is used, the lower-level Class Loader will not be able to override the previous definition。
+     * Loads the last instance of the specified {@link ServiceLoader} service type using the provided {@link ClassLoader},
+     * with an option to enable or disable caching of the loaded services.
      *
-     * @param <S>         service type
-     * @param serviceType service type
-     * @return Loads the last in the list of objects implementing the service type, if present.
-     * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
+     * <p>This method retrieves the list of service implementations using
+     * {@link #loadServicesList(Class, ClassLoader, boolean)}, and returns the last element from the list.
+     * The order of service instances is determined by their declaration in the configuration files,
+     * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
+     *
+     * <h3>Usage Example</h3>
+     *
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, classLoader, true);
+     * if (service != null) {
+     *     service.initialize();
+     * }
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to load service implementations; must not be null
+     * @param cached      flag indicating whether to cache the loaded services
+     * @return the last implementation instance of the service type
+     * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
-    public static <S> S loadLastService(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    @Nonnull
+    public static <S> S loadLastService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return loadService(serviceType, classLoader, cached, false);
     }
 
-    private static <S> S loadService(Class<S> serviceType, ClassLoader classLoader, boolean cached, boolean first) {
+    static <S> S loadService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached, boolean first) {
         List<S> serviceList = loadServicesAsList(serviceType, classLoader, cached);
         int index = first ? 0 : serviceList.size() - 1;
         return serviceList.get(index);
@@ -332,7 +551,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @return Load all instances of service type
      * @throws IllegalArgumentException see {@link #loadServicesList(Class, ClassLoader)}
      */
-    static <S> List<S> loadServicesAsList(Class<S> serviceType, ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
+    static <S> List<S> loadServicesAsList(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         final List<S> serviceList;
         if (cached) {
             serviceList = (List<S>) servicesCache.computeIfAbsent(serviceType, type -> loadServicesAsList(type, classLoader));
@@ -347,7 +566,7 @@ public abstract class ServiceLoaderUtils implements Utils {
         return serviceList;
     }
 
-    static <S> List<S> loadServicesAsList(Class<S> serviceType, ClassLoader classLoader) {
+    static <S> List<S> loadServicesAsList(Class<S> serviceType, @Nullable ClassLoader classLoader) {
         if (classLoader == null) {
             classLoader = getClassLoader(serviceType);
         }
@@ -358,7 +577,7 @@ public abstract class ServiceLoaderUtils implements Utils {
 
         if (!iterator.hasNext()) {
             String className = serviceType.getName();
-            String message = format("No Service interface[type : %s] implementation was defined in service loader configuration file[/META-INF/services/%s] under ClassLoader[%s]", className, className, classLoader);
+            String message = format("No Service interface[type : {}] implementation was defined in service loader configuration file[/META-INF/services/{}] under ClassLoader[{}]", className, className, classLoader);
             throw new IllegalArgumentException(message);
         }
 

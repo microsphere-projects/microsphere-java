@@ -33,23 +33,23 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ArtifactDetector
  * @since 1.0.0
  */
-public class ArtifactDetectorTest {
+class ArtifactDetectorTest {
 
     @Test
-    public void testDetect() {
+    void testDetect() {
         ArtifactDetector instance = new ArtifactDetector();
         List<Artifact> artifacts = instance.detect();
         assertNotNull(artifacts);
     }
 
     @Test
-    public void testDetectOnNullSet() {
+    void testDetectOnNullSet() {
         ArtifactDetector instance = new ArtifactDetector(getDefaultClassLoader());
         assertTrue(instance.detect(null).isEmpty());
     }
 
     @Test
-    public void testDetectOnEmptySet() {
+    void testDetectOnEmptySet() {
         ArtifactDetector instance = new ArtifactDetector(null);
         assertTrue(instance.detect(emptySet()).isEmpty());
     }

@@ -39,22 +39,22 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class JavaTypeKindTestForTypeVariable extends AbstractJavaTypeKindTest {
 
     @Test
-    public void testGetSuperType() {
+    void testGetSuperType() {
         assertNull(TYPE_VARIABLE.getSuperType(Object.class));
     }
 
     @Test
-    public void testGetRawType() {
+    void testGetRawType() {
         assertNull(TYPE_VARIABLE.getRawType(Object.class));
     }
 
     @Test
-    public void testGetInterfaces() {
+    void testGetInterfaces() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, TYPE_VARIABLE.getInterfaces(Object.class));
     }
 
     @Test
-    public void testGetGenericTypes() {
+    void testGetGenericTypes() {
         assertArrayEquals(EMPTY_TYPE_ARRAY, TYPE_VARIABLE.getGenericTypes(from(Object.class)));
     }
 }

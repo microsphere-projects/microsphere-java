@@ -29,10 +29,10 @@ import static io.microsphere.collection.CollectionUtils.singletonIterator;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class EnumerationIteratorAdapterTest extends AbstractTestCase {
+class EnumerationIteratorAdapterTest extends AbstractTestCase {
 
     @Test
-    public void test() {
+    void test() {
         Iterator<String> iterator = singletonIterator(TEST_ELEMENT);
 
     }

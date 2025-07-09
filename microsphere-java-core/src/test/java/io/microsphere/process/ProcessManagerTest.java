@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see ProcessManager
  * @since 1.0.0
  */
-public class ProcessManagerTest extends AbstractTestCase {
+class ProcessManagerTest extends AbstractTestCase {
 
     @Test
     public void test() throws Throwable {

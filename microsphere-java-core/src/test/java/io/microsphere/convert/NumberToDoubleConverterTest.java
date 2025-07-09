@@ -49,7 +49,7 @@ class NumberToDoubleConverterTest extends BaseConverterTest<Number, Double> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert(1));
     }
 }

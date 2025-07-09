@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see Listenable
  * @since 1.0.0
  */
-public class ListenableTest {
+class ListenableTest {
 
     @Test
     public void testAssertListenerNoNull() {

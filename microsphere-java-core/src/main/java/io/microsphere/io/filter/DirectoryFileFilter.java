@@ -19,9 +19,23 @@ package io.microsphere.io.filter;
 import java.io.File;
 
 /**
- * This filter accepts Files that are directories.
+ * This filter accepts {@link File} objects that are directories.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Example Usage</h3>
+ * <h4>Example 1 - Using the Singleton Instance</h4>
+ * <pre>{@code
+ * File dir = new File(".");
+ * File[] files = dir.listFiles(DirectoryFileFilter.INSTANCE);
+ * }</pre>
+ *
+ * <h4>Example 2 - Using the Class Directly</h4>
+ * <pre>{@code
+ * File dir = new File(".");
+ * DirectoryFileFilter filter = new DirectoryFileFilter();
+ * File[] files = dir.listFiles(filter);
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see IOFileFilter
  * @since 1.0.0
  */

@@ -68,14 +68,28 @@ public abstract class AccessibleObjectUtils implements Utils {
     private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
 
     /**
-     * Try to set the {@link AccessibleObject} accessible.
-     * <p>
-     * If JDK >=9 , {@link AccessibleObject#trySetAccessible()} method will be invoked,
-     * or {@link AccessibleObject#setAccessible(boolean)} method will be invoked if
-     * {@link AccessibleObject#isAccessible()} is <code>false</code>.
+     * Attempts to set the accessibility of the given {@link AccessibleObject}.
      *
-     * @param accessibleObject the {@link AccessibleObject} instance
-     * @return
+     * <p>
+     * This method intelligently selects the appropriate approach based on the JDK version:
+     * </p>
+     * <ul>
+     *   <li>If running on JDK 9 or later, it uses the {@link AccessibleObject#trySetAccessible()} method via a {@link MethodHandle}.</li>
+     *   <li>If running on JDK 8 or earlier, it falls back to calling the traditional {@link AccessibleObject#setAccessible(boolean)} method,
+     *       but only if it is not already accessible.</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Field field = MyClass.class.getDeclaredField("myField");
+     * boolean success = AccessibleObjectUtils.trySetAccessible(field);
+     * if (success) {
+     *     // Access the field reflectively
+     * }
+     * }</pre>
+     *
+     * @param accessibleObject The {@link AccessibleObject} instance to make accessible.
+     * @return {@code true} if the object was successfully made accessible; {@code false} otherwise.
      * @see AccessibleObject#trySetAccessible()
      * @see AccessibleObject#setAccessible(boolean)
      * @see AccessibleObject#isAccessible()
@@ -87,6 +101,52 @@ public abstract class AccessibleObjectUtils implements Utils {
         } else { // JDK 9+
             return trySetAccessible(methodHandle, accessibleObject);
         }
+    }
+
+    /**
+     * Tests whether the caller can access the specified {@link AccessibleObject} with the given instance.
+     *
+     * <p>
+     * If the reflected object corresponds to an instance method or field, the provided
+     * {@code object} must be an instance of the declaring class. For static members and constructors,
+     * the {@code object} must be {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     *
+     * <h4>Testing Access to an Instance Field</h4>
+     * <pre>{@code
+     * MyClass instance = new MyClass();
+     * Field field = MyClass.class.getDeclaredField("myField");
+     * boolean accessible = AccessibleObjectUtils.canAccess(instance, field);
+     * if (accessible) {
+     *     System.out.println("Field is accessible.");
+     * }
+     * }</pre>
+     *
+     * <h4>Testing Access to a Static Method</h4>
+     * <pre>{@code
+     * Method method = MyClass.class.getDeclaredMethod("myStaticMethod");
+     * boolean accessible = AccessibleObjectUtils.canAccess(null, method);
+     * if (accessible) {
+     *     System.out.println("Static method is accessible.");
+     * }
+     * }</pre>
+     *
+     * @param object           An instance of the declaring class for instance methods/fields; must be
+     *                         {@code null} for static members or constructors.
+     * @param accessibleObject The reflected object (field, method, constructor) to test access for.
+     * @return {@code true} if the caller can access this reflected object;
+     * {@code false} otherwise.
+     * @see AccessibleObject#isAccessible()
+     */
+    public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
+        Member member = asMember(accessibleObject);
+        if (isPublic(member)) {
+            return true;
+        }
+        Boolean access = tryCanAccess(object, accessibleObject);
+        return access == null ? accessibleObject.isAccessible() : access;
     }
 
     /**
@@ -106,26 +166,6 @@ public abstract class AccessibleObjectUtils implements Utils {
             }
         }
         return accessible;
-    }
-
-    /**
-     * Test if the caller can access this reflected object. If this reflected
-     * object corresponds to an instance method or field then this method tests
-     * if the caller can access the given {@code obj} with the reflected object.
-     * For instance methods or fields then the {@code obj} argument must be an
-     * instance of the {@link Member#getDeclaringClass() declaring class}. For
-     * static members and constructors then {@code obj} must be {@code null}.
-     *
-     * @param object an instance object of the declaring class of this reflected object if it is an instance method or field
-     * @return {@code true} if the caller can access this reflected object.
-     */
-    public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
-        Member member = asMember(accessibleObject);
-        if (isPublic(member)) {
-            return true;
-        }
-        Boolean access = tryCanAccess(object, accessibleObject);
-        return access == null ? accessibleObject.isAccessible() : access;
     }
 
     private static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {

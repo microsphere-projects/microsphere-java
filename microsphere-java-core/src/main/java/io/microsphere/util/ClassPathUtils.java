@@ -5,6 +5,7 @@ package io.microsphere.util;
 
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
@@ -24,9 +25,31 @@ import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
 
 /**
- * {@link ClassPathUtils}
+ * {@link ClassPathUtils} is an abstract utility class that provides methods for retrieving various class path-related information.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Key Features:</h3>
+ * <ul>
+ *     <li>Retrieving bootstrap class paths</li>
+ *     <li>Retrieving application class paths</li>
+ *     <li>Locating the runtime URL of a class by name or type</li>
+ * </ul>
+ *
+ * <h3>Example Usage:</h3>
+ * <pre>{@code
+ * // Get all application class paths
+ * Set<String> classPaths = ClassPathUtils.getClassPaths();
+ * for (String path : classPaths) {
+ *     System.out.println("ClassPath: " + path);
+ * }
+ *
+ * // Get the location of a specific class
+ * URL location = ClassPathUtils.getRuntimeClassLocation(io.microsphere.util.ClassPathUtils.class);
+ * if (location != null) {
+ *     System.out.println("Class Location: " + location);
+ * }
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ClassPathUtils
  * @since 1.0.0
  */
@@ -54,11 +77,22 @@ public abstract class ClassPathUtils implements Utils {
         return ofSet(classPathsArray);
     }
 
-
     /**
-     * Get Bootstrap Class Paths {@link Set}
+     * Returns the set of bootstrap class paths.
      *
-     * @return If {@link RuntimeMXBean#isBootClassPathSupported()} == <code>false</code>, will return empty set.
+     * <p>If {@link RuntimeMXBean#isBootClassPathSupported()} returns <code>false</code>,
+     * this method will return an empty set.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> bootClassPaths = ClassPathUtils.getBootstrapClassPaths();
+     * for (String path : bootClassPaths) {
+     *     System.out.println("Bootstrap ClassPath: " + path);
+     * }
+     * }</pre>
+     *
+     * @return a non-null set of bootstrap class paths; if boot class path is not supported,
+     * returns an empty set.
      */
     @Nonnull
     public static Set<String> getBootstrapClassPaths() {
@@ -66,23 +100,50 @@ public abstract class ClassPathUtils implements Utils {
     }
 
     /**
-     * Get {@link #classPaths}
+     * Returns the set of application class paths.
      *
-     * @return Class Paths {@link Set}
-     **/
+     * <p>This method provides access to the class paths used by the Java runtime for loading application classes.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> classPaths = ClassPathUtils.getClassPaths();
+     * for (String path : classPaths) {
+     *     System.out.println("ClassPath: " + path);
+     * }
+     * }</pre>
+     *
+     * @return a non-null set of class paths; if no class paths are available, returns an empty set.
+     * @see RuntimeMXBean#getClassPath()
+     */
     @Nonnull
     public static Set<String> getClassPaths() {
         return classPaths;
     }
 
     /**
-     * Get Class Location URL from specified class name at runtime
+     * Get Class Location URL from specified class name at runtime.
      *
-     * @param className class name
-     * @return If <code>className</code> associated class is loaded on {@link Thread#getContextClassLoader() Thread
-     * context ClassLoader} , return class location URL, or return <code>null</code>
+     * <p>If the class associated with the provided {@code className} is loaded by the default class loader
+     * (see {@link ClassLoaderUtils#getDefaultClassLoader()}), this method returns the location URL of that class.
+     * Otherwise, it returns <code>null</code>.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String className = "io.microsphere.util.ClassPathUtils";
+     * URL classLocation = ClassPathUtils.getRuntimeClassLocation(className);
+     * if (classLocation != null) {
+     *     System.out.println("Class Location: " + classLocation);
+     * } else {
+     *     System.out.println("Class not found or not loadable.");
+     * }
+     * }</pre>
+     *
+     * @param className the fully qualified name of the class to find the location for
+     * @return the URL representing the location of the class if it is loaded by the default class loader;
+     * otherwise, <code>null</code>
      * @see #getRuntimeClassLocation(Class)
      */
+    @Nullable
     public static URL getRuntimeClassLocation(String className) {
         ClassLoader classLoader = getDefaultClassLoader();
         if (isLoadedClass(classLoader, className)) {
@@ -92,14 +153,27 @@ public abstract class ClassPathUtils implements Utils {
     }
 
     /**
-     * Get Class Location URL from specified {@link Class} at runtime
+     * Get Class Location URL from specified {@link Class} at runtime.
      *
-     * @param type {@link Class}
-     * @return If <code>type</code> is <code>{@link Class#isPrimitive() primitive type}</code>, <code>{@link
-     * Class#isArray() array type}</code>, <code>{@link Class#isSynthetic() synthetic type}</code> or {a security
-     * manager exists and its <code>checkPermission</code> method doesn't allow getting the ProtectionDomain., return
-     * <code>null</code>
+     * <p>This method determines the location (URL) from which the provided class was loaded. If the class is a
+     * primitive type, array type, or synthetic type, or if a security manager prevents access to the protection domain,
+     * this method returns <code>null</code>.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> type = io.microsphere.util.ClassPathUtils.class;
+     * URL classLocation = ClassPathUtils.getRuntimeClassLocation(type);
+     * if (classLocation != null) {
+     *     System.out.println("Class Location: " + classLocation);
+     * } else {
+     *     System.out.println("Class location could not be determined.");
+     * }
+     * }</pre>
+     *
+     * @param type The class for which to find the location.
+     * @return The URL representing the location of the class if it can be determined; otherwise, <code>null</code>.
      */
+    @Nullable
     public static URL getRuntimeClassLocation(Class<?> type) {
         ClassLoader classLoader = type.getClassLoader();
         URL location = null;

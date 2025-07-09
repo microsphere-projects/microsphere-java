@@ -49,7 +49,7 @@ class NumberToShortConverterTest extends BaseConverterTest<Number, Short> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert(1));
     }
 }

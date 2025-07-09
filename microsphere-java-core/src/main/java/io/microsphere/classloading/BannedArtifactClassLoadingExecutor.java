@@ -34,7 +34,29 @@ import static io.microsphere.util.SystemUtils.FILE_ENCODING;
  *     <li>version : Artifact Maven version</li>
  * </ul>
  *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a default instance and execute to remove banned artifacts from classpath
+ * BannedArtifactClassLoadingExecutor executor = new BannedArtifactClassLoadingExecutor();
+ * executor.execute();
+ * }</pre>
+ *
+ * <p>This will load all the banned artifact definitions from "META-INF/banned-artifacts"
+ * resources in the current classloader, detect all non-JDK artifacts in the classpath,
+ * and remove URLs corresponding to any matched banned artifacts.</p>
+ *
+ * <p>You can also provide a custom {@link ClassLoader} if you want to inspect a specific one:</p>
+ *
+ * <pre>{@code
+ * ClassLoader customClassLoader = ...; // your custom class loader
+ * BannedArtifactClassLoadingExecutor executor = new BannedArtifactClassLoadingExecutor(customClassLoader);
+ * executor.execute();
+ * }</pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see ArtifactDetector
+ * @see MavenArtifact
+ * @see Artifact
  * @since 1.0.0
  */
 public class BannedArtifactClassLoadingExecutor {

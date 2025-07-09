@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Prioritized
  * @since 1.0.0
  */
-public class PrioritizedTest {
+class PrioritizedTest {
 
     private static final Prioritized prioritized = new Prioritized() {
     };
@@ -37,7 +37,7 @@ public class PrioritizedTest {
     };
 
     @Test
-    public void testDefaultMethods() {
+    void testDefaultMethods() {
         // test getPriority()
         assertEquals(NORMAL_PRIORITY, prioritized.getPriority());
         assertEquals(MIN_PRIORITY, minPriority.getPriority());
@@ -54,7 +54,7 @@ public class PrioritizedTest {
     }
 
     @Test
-    public void testComparator() {
+    void testComparator() {
         assertEquals(0, COMPARATOR.compare(prioritized, prioritized));
         assertEquals(0, COMPARATOR.compare(minPriority, minPriority));
         assertEquals(0, COMPARATOR.compare(maxPriority, maxPriority));

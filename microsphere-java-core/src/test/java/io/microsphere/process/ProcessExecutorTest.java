@@ -20,22 +20,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ProcessExecutorTest
  * @since 1.0.0
  */
-public class ProcessExecutorTest extends AbstractTestCase {
+class ProcessExecutorTest extends AbstractTestCase {
 
     private ProcessExecutor executor;
 
     @BeforeEach
-    public void init() {
+    void init() {
         this.executor = new ProcessExecutor("java", "-version");
     }
 
     @Test
-    public void testIsFinished() throws Exception {
+    void testIsFinished() throws Exception {
         assertFalse(this.executor.isFinished());
     }
 
     @Test
-    public void testExecute() throws Exception {
+    void testExecute() throws Exception {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
         this.executor.execute(outputStream);
         assertTrue(outputStream.size() > 0);
@@ -45,7 +45,7 @@ public class ProcessExecutorTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExecuteWithTimeout() {
+    void testExecuteWithTimeout() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
         assertThrows(TimeoutException.class, () -> this.executor.execute(outputStream, 1));
         assertEquals(0, outputStream.size());
@@ -53,7 +53,7 @@ public class ProcessExecutorTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExecuteOnWrongCommand() {
+    void testExecuteOnWrongCommand() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
         ProcessExecutor processExecutor = new ProcessExecutor("ttttt");
         assertThrows(IOException.class, () -> processExecutor.execute(outputStream));

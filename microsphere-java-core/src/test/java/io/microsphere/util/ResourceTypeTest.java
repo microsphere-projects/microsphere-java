@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassLoaderUtils.ResourceType
  * @since 1.0.0
  */
-public class ResourceTypeTest {
+class ResourceTypeTest {
 
     private static final Map<ClassLoaderUtils.ResourceType, String[]> resourceNamesMap = ofMap(
             DEFAULT, ofArray("///////META-INF//abc\\/def", "META-INF/abc/def"),

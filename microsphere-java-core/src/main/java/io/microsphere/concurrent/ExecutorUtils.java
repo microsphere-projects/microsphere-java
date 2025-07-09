@@ -16,6 +16,7 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.util.ShutdownHookUtils;
 import io.microsphere.util.Utils;
 
 import java.util.concurrent.Executor;
@@ -37,10 +38,23 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 public abstract class ExecutorUtils implements Utils {
 
     /**
-     * Shutdown one or more {@link Executor executors} on JVM exit
+     * Registers a shutdown hook to gracefully shut down the given {@link Executor} instances when the JVM exits.
      *
-     * @param one    One {@link Executor}
-     * @param others the other {@link Executor executors}
+     * <p>
+     * This method adds a JVM shutdown hook using {@link ShutdownHookUtils#addShutdownHookCallback(Runnable)},
+     * ensuring that all provided executors are shut down properly upon application exit.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ExecutorService executor1 = Executors.newFixedThreadPool(2);
+     * ExecutorService executor2 = Executors.newSingleThreadExecutor();
+     *
+     * ExecutorUtils.shutdownOnExit(executor1, executor2);
+     * }</pre>
+     *
+     * @param one    the first {@link Executor} to shut down on JVM exit; must not be {@code null}
+     * @param others additional {@link Executor} instances to shut down; may be empty or {@code null}
      */
     public static void shutdownOnExit(Executor one, Executor... others) {
         addShutdownHookCallback(() -> {
@@ -50,10 +64,30 @@ public abstract class ExecutorUtils implements Utils {
     }
 
     /**
-     * Shutdown {@link Executor} if it's not shutdown
+     * Attempts to shut down the given {@link Executor} if it is an instance of {@link ExecutorService}.
      *
-     * @param executor {@link ExecutorService}
-     * @return <code>true</code> if shutdown successfully, otherwise <code>false</code>
+     * <p>
+     * If the provided {@link Executor} is an instance of {@link ExecutorService}, this method will
+     * delegate the shutdown process to the {@link #shutdown(ExecutorService)} method.
+     * Otherwise, no action is taken and the method returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ExecutorService executor = Executors.newFixedThreadPool(2);
+     * boolean isShutdown = ExecutorUtils.shutdown(executor);
+     * System.out.println("Executor shutdown: " + isShutdown); // Output: true
+     * }</pre>
+     *
+     * <pre>{@code
+     * Executor nonServiceExecutor = (runnable) -> new Thread(runnable).start();
+     * boolean isShutdown = ExecutorUtils.shutdown(nonServiceExecutor);
+     * System.out.println("Executor shutdown: " + isShutdown); // Output: false
+     * }</pre>
+     *
+     * @param executor the {@link Executor} instance to check and potentially shut down; may be {@code null}
+     * @return <code>true</code> if the executor was an {@link ExecutorService} and has been successfully shut down;
+     * <code>false</code> otherwise
      */
     public static boolean shutdown(Executor executor) {
         if (executor instanceof ExecutorService) {
@@ -63,10 +97,32 @@ public abstract class ExecutorUtils implements Utils {
     }
 
     /**
-     * Shutdown {@link ExecutorService} if it's not shutdown
+     * Attempts to shut down the given {@link ExecutorService} gracefully.
      *
-     * @param executorService {@link ExecutorService}
-     * @return <code>true</code> if shutdown successfully, otherwise <code>false</code>
+     * <p>
+     * This method checks if the provided {@link ExecutorService} is not already shutdown.
+     * If it is still active, this method initiates an orderly shutdown by calling
+     * {@link ExecutorService#shutdown()}. If the executor is already shutdown or
+     * null, no action is taken and the method returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ExecutorService executor = Executors.newFixedThreadPool(2);
+     * boolean isShutdown = ExecutorUtils.shutdown(executor);
+     * System.out.println("Executor shutdown: " + isShutdown); // Output: true
+     * }</pre>
+     *
+     * <pre>{@code
+     * ExecutorService alreadyShutdownExecutor = Executors.newSingleThreadExecutor();
+     * alreadyShutdownExecutor.shutdown(); // manually shutting down
+     * boolean result = ExecutorUtils.shutdown(alreadyShutdownExecutor);
+     * System.out.println("Executor shutdown: " + result); // Output: false
+     * }</pre>
+     *
+     * @param executorService the {@link ExecutorService} instance to shut down; may be {@code null}
+     * @return <code>true</code> if the executor was actively running and has been successfully shut down;
+     * <code>false</code> if it was already shutdown or null
      */
     public static boolean shutdown(ExecutorService executorService) {
         if (executorService == null) {

@@ -16,7 +16,8 @@
  */
 package io.microsphere.event;
 
-import io.microsphere.lang.function.ThrowableConsumer;
+import io.microsphere.lang.Prioritized;
+import io.microsphere.lang.function.ThrowableFunction;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -24,25 +25,55 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static io.microsphere.lang.function.ThrowableFunction.execute;
+import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
 
 /**
- * An abstract class of {@link EventListener} for Generic events, the sub class could add more {@link Event event}
- * handle methods, rather than only binds the {@link EventListener#onEvent(Event)} method that is declared to be
- * <code>final</code> the implementation can't override. It's notable that all {@link Event event} handle methods must
- * meet following conditions:
+ * A generic implementation of the {@link EventListener} interface that supports multiple event handling methods.
+ *
+ * <p>This class provides a flexible way to handle events by allowing subclasses to define additional event handler methods,
+ * beyond the mandatory {@link EventListener#onEvent(Event)} method, which is declared as final and cannot be overridden.
+ * Subclasses can define any number of custom event handler methods, provided they meet certain criteria:
+ *
  * <ul>
- * <li>not {@link #onEvent(Event)} method</li>
- * <li><code>public</code> accessibility</li>
- * <li><code>void</code> return type</li>
- * <li>no {@link Exception exception} declaration</li>
- * <li>only one {@link Event} type argument</li>
+ *   <li>The method must not be the same as the {@link #onEvent(Event)} method.</li>
+ *   <li>It must be declared as <code>public</code>.</li>
+ *   <li>It must return <code>void</code>.</li>
+ *   <li>It must not declare any exceptions.</li>
+ *   <li>It must accept exactly one parameter, which must be a subclass of {@link Event} or an instance of it.</li>
  * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * Here's how you might extend this class to handle specific types of events:
+ *
+ * <pre>{@code
+ * public class MyGenericEventListener extends GenericEventListener {
+ *
+ *     // Custom event handler method
+ *     public void onMyEvent(MyEvent event) {
+ *         System.out.println("Received MyEvent: " + event);
+ *     }
+ *
+ *     // Another event handler for a different type of event
+ *     public void onAnotherEvent(AnotherEvent event) {
+ *         System.out.println("Received AnotherEvent: " + event);
+ *     }
+ * }
+ * }</pre>
+ * <p>
+ * When an event is received via the final {@link #onEvent(Event)} method, it will automatically invoke all matching
+ * handler methods defined in the subclass. This allows for a dynamic dispatch mechanism based on the runtime type of the event.
+ *
+ * <p>For example, if the above listener receives a {@code MyEvent}, it will call the <code>onMyEvent()</code> method.
+ * Similarly, for an instance of {@code AnotherEvent}, it will call the <code>onAnotherEvent()</code> method.
+ *
+ * <p>This class also supports priority-based ordering through its implementation of the {@link Prioritized} interface,
+ * allowing instances to be sorted based on their priority values.
  *
  * @see Event
  * @see EventListener
+ * @see Prioritized
  * @since 1.0.0
  */
 public abstract class GenericEventListener implements EventListener<Event> {
@@ -57,7 +88,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
     }
 
     private Method findOnEventMethod() {
-        return execute(getClass(), listenerClass -> listenerClass.getMethod("onEvent", Event.class));
+        return ThrowableFunction.execute(getClass(), listenerClass -> listenerClass.getMethod("onEvent", Event.class));
     }
 
     private Map<Class<?>, Set<Method>> findHandleEventMethods() {
@@ -74,7 +105,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
     public final void onEvent(Event event) {
         Class<?> eventClass = event.getClass();
         handleEventMethods.getOrDefault(eventClass, emptySet()).forEach(method -> {
-            ThrowableConsumer.execute(method, m -> {
+            execute(method, m -> {
                 m.invoke(this, event);
             });
         });
@@ -93,7 +124,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
      * @param method
      * @return
      */
-    private boolean isHandleEventMethod(Method method) {
+    protected boolean isHandleEventMethod(Method method) {
 
         if (onEventMethod.equals(method)) { // not {@link #onEvent(Event)} method
             return false;

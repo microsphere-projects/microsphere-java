@@ -35,10 +35,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class CompositeSubProtocolURLConnectionFactoryTest {
+class CompositeSubProtocolURLConnectionFactoryTest {
 
     @Test
-    public void test() throws IOException {
+    void test() throws IOException {
         CompositeSubProtocolURLConnectionFactory composite = new CompositeSubProtocolURLConnectionFactory();
         ConsoleSubProtocolURLConnectionFactory instance = new ConsoleSubProtocolURLConnectionFactory();
         composite.add(instance);

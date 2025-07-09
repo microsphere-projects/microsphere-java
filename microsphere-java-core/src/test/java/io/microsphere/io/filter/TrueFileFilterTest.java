@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see TrueFileFilter
  * @since 1.0.0
  */
-public class TrueFileFilterTest {
+class TrueFileFilterTest {
 
     @Test
-    public void test() {
+    void test() {
         assertTrue(INSTANCE.accept(null));
         assertTrue(INSTANCE.accept(null, null));
     }

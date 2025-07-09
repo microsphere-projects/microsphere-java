@@ -42,42 +42,114 @@ import static javax.tools.Diagnostic.Kind.WARNING;
  */
 public interface MessagerUtils extends Utils {
 
+    /**
+     * Prints a note message using the {@link ProcessingEnvironment}'s {@link Messager}.
+     *
+     * @param processingEnv the processing environment to obtain the messager from
+     * @param pattern       the message pattern to format
+     * @param args          the arguments for the message pattern
+     */
     static void printNote(ProcessingEnvironment processingEnv, String pattern, Object... args) {
         printNote(processingEnv.getMessager(), pattern, args);
     }
 
+    /**
+     * Prints a note message using the provided {@link Messager}.
+     *
+     * @param messager the messager to use for printing the message
+     * @param pattern  the message pattern to format
+     * @param args     the arguments for the message pattern
+     */
     static void printNote(Messager messager, String pattern, Object... args) {
         printMessage(messager, NOTE, pattern, args);
     }
 
+    /**
+     * Prints a warning message using the {@link ProcessingEnvironment}'s {@link Messager}.
+     *
+     * @param processingEnv the processing environment to obtain the messager from
+     * @param pattern       the message pattern to format
+     * @param args          the arguments for the message pattern
+     */
     static void printWarning(ProcessingEnvironment processingEnv, String pattern, Object... args) {
         printWarning(processingEnv.getMessager(), pattern, args);
     }
 
+    /**
+     * Prints a warning message using the provided {@link Messager}.
+     *
+     * @param messager the messager to use for printing the message
+     * @param pattern  the message pattern to format
+     * @param args     the arguments for the message pattern
+     */
     static void printWarning(Messager messager, String pattern, Object... args) {
         printMessage(messager, WARNING, pattern, args);
     }
 
+    /**
+     * Prints a mandatory warning message using the {@link ProcessingEnvironment}'s {@link Messager}.
+     *
+     * @param processingEnv the processing environment to obtain the messager from
+     * @param pattern       the message pattern to format
+     * @param args          the arguments for the message pattern
+     */
     static void printMandatoryWarning(ProcessingEnvironment processingEnv, String pattern, Object... args) {
         printMandatoryWarning(processingEnv.getMessager(), pattern, args);
     }
 
+    /**
+     * Prints a mandatory warning message using the provided {@link Messager}.
+     *
+     * @param messager the messager to use for printing the message
+     * @param pattern  the message pattern to format
+     * @param args     the arguments for the message pattern
+     */
     static void printMandatoryWarning(Messager messager, String pattern, Object... args) {
         printMessage(messager, MANDATORY_WARNING, pattern, args);
     }
 
+    /**
+     * Prints an error message using the {@link ProcessingEnvironment}'s {@link Messager}.
+     *
+     * @param processingEnv the processing environment to obtain the messager from
+     * @param pattern       the message pattern to format
+     * @param args          the arguments for the message pattern
+     */
     static void printError(ProcessingEnvironment processingEnv, String pattern, Object... args) {
         printError(processingEnv.getMessager(), pattern, args);
     }
 
+    /**
+     * Prints an error message using the provided {@link Messager}.
+     *
+     * @param messager the messager to use for printing the message
+     * @param pattern  the message pattern to format
+     * @param args     the arguments for the message pattern
+     */
     static void printError(Messager messager, String pattern, Object... args) {
         printMessage(messager, ERROR, pattern, args);
     }
 
+    /**
+     * Prints a message of the specified kind using the {@link ProcessingEnvironment}'s {@link Messager}.
+     *
+     * @param processingEnv the processing environment to obtain the messager from
+     * @param kind          the kind of message to print (e.g., error, warning, note)
+     * @param pattern       the message pattern to format
+     * @param args          the arguments for the message pattern
+     */
     static void printMessage(ProcessingEnvironment processingEnv, Kind kind, String pattern, Object... args) {
         printMessage(processingEnv.getMessager(), kind, pattern, args);
     }
 
+    /**
+     * Prints a message of the specified kind using the provided {@link Messager}.
+     *
+     * @param messager the messager to use for printing the message
+     * @param kind     the kind of message to print (e.g., error, warning, note)
+     * @param pattern  the message pattern to format
+     * @param args     the arguments for the message pattern
+     */
     static void printMessage(Messager messager, Kind kind, String pattern, Object... args) {
         String message = format(pattern, args);
         messager.printMessage(kind, message);

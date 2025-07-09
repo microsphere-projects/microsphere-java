@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see NoOpLoggerFactory
  * @since 1.0.0
  */
-public class NoOpLoggerFactoryTest {
+class NoOpLoggerFactoryTest {
 
     private static NoOpLoggerFactory factory;
 

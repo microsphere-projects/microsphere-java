@@ -23,7 +23,45 @@ import java.net.URLConnection;
 import java.util.List;
 
 /**
- * The {@link URLConnection} factory for the sub protocol
+ * A factory for creating {@link URLConnection} instances that handle sub-protocols.
+ *
+ * <p>
+ * Implementations of this interface are responsible for determining whether they can handle a specific URL and its associated sub-protocols,
+ * and for creating the appropriate connection if possible.
+ * </p>
+ *
+ * <h3>Example Implementation</h3>
+ *
+ * <pre>{@code
+ * public class MySubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
+ *     @Override
+ *     public boolean supports(URL url, List<String> subProtocols) {
+ *         // Check if the URL and sub-protocols are supported
+ *         return url.getProtocol().equals("http") && subProtocols.contains("myprotocol");
+ *     }
+ *
+ *     @Override
+ *     public URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException {
+ *         // Create and return a custom URLConnection
+ *         return new MyCustomURLConnection(url, proxy);
+ *     }
+ * }
+ * }</pre>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <p>
+ * This factory can be used in conjunction with a URL stream handler to support custom protocols:
+ * </p>
+ *
+ * <pre>{@code
+ * URL.setURLStreamHandlerFactory(handler -> {
+ *     if (handler.equals("http")) {
+ *         return new MyURLStreamHandler();
+ *     }
+ *     return null;
+ * });
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

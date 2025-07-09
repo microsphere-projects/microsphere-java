@@ -27,22 +27,55 @@ import static java.lang.reflect.Modifier.isFinal;
 import static java.util.stream.StreamSupport.stream;
 
 /**
- * Event Listenable
+ * A component that allows registration and management of {@link EventListener} instances.
+ * Implementations of this interface provide methods to add, remove, and retrieve event listeners,
+ * and may support additional features such as ordering based on listener priority.
  *
+ * <p><strong>Example:</strong>
+ * <pre>
+ * public class MyListenable implements Listenable<MyEventListener> {
+ *     // Implementation details...
+ * }
+ *
+ * Listenable<MyEventListener> listenable = new MyListenable();
+ * listenable.addEventListener(new MyEventListener());
+ * </pre>
+ *
+ * @param <E> the type of the {@link EventListener} supported by this component
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see EventDispatcher
  * @since 1.0.0
  */
 public interface Listenable<E extends EventListener<?>> {
 
     /**
-     * Assets the listener is valid or not, rules:
+     * Validates the given {@link EventListener} instance to ensure it meets certain criteria.
+     *
+     * <p>This method checks that:
      * <ul>
-     *     <li>the <code>listener</code> must not be null</li>
-     *     <li>the class of <code>listener</code> must not be final</li>
+     *   <li>The listener is not null.</li>
+     *   <li>The class of the listener is not a final class.</li>
      * </ul>
      *
-     * @param listener the instance of {@link EventListener}
-     * @throws IllegalArgumentException
+     * <h3>Example Usage</h3>
+     * Here's how you might use this method in practice:
+     * <pre>{@code
+     * EventListener<MyEvent> listener = new MyEventListener();
+     * Listenable.assertListener(listener);
+     * }</pre>
+     *
+     * <p>If the listener class is final, an exception will be thrown:
+     * <pre>{@code
+     * final class FinalEventListener implements EventListener<MyEvent> {
+     *     public void onEvent(MyEvent event) {}
+     * }
+     *
+     * EventListener<MyEvent> listener = new FinalEventListener();
+     * Listenable.assertListener(listener); // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param listener the instance of {@link EventListener} to validate
+     * @throws IllegalArgumentException if the listener is null or its class is final
      */
     static void assertListener(EventListener<?> listener) throws IllegalArgumentException {
         assertNotNull(listener, () -> "The 'listener' must not be null.");

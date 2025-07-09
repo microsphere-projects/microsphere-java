@@ -17,9 +17,31 @@
 package io.microsphere.event;
 
 /**
- * An {@link EventListener} extending the conditional feature that {@link #accept(Event) decides} some
- * {@link Event event} is handled or not by current listener.
+ * A conditional extension of the {@link EventListener} interface that allows filtering events before handling.
  *
+ * <p>{@link ConditionalEventListener} provides an additional method, {@link #accept(Event)}, which is invoked
+ * before the actual event handling ({@link EventListener#onEvent(Event)}) takes place. If the method returns
+ * <code>true</code>, the event will be processed by this listener; otherwise, it will be skipped.
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <pre>{@code
+ * ConditionalEventListener<MyEvent> listener = new ConditionalEventListener<>() {
+ *     public boolean accept(MyEvent event) {
+ *         // Only accept events with a specific flag
+ *         return event.isImportant();
+ *     }
+ *
+ *     public void onEvent(MyEvent event) {
+ *         System.out.println("Handling important event: " + event);
+ *     }
+ * };
+ * }</pre>
+ *
+ * <p>In this example, only events marked as "important" are handled by the listener.
+ *
+ * @param <E> the concrete class of {@link Event}
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see EventListener
  * @since 1.0.0
  */

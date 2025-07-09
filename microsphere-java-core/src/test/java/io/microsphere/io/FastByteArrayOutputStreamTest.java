@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see FastByteArrayOutputStream
  * @since 1.0.0
  */
-public class FastByteArrayOutputStreamTest {
+class FastByteArrayOutputStreamTest {
 
     private static final String TEST_VALUE = "Hello";
 
@@ -26,22 +26,22 @@ public class FastByteArrayOutputStreamTest {
     private FastByteArrayOutputStream outputStream;
 
     @BeforeEach
-    public void init() {
+    void init() {
         outputStream = new FastByteArrayOutputStream(2);
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         outputStream.close();
     }
 
     @Test
-    public void testConstructorOnIllegalArgumentException() {
+    void testConstructorOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> new FastByteArrayOutputStream(-1));
     }
 
     @Test
-    public void testWrite() {
+    void testWrite() {
         for (byte b : TEST_BYTES) {
             outputStream.write(b);
         }
@@ -49,18 +49,18 @@ public class FastByteArrayOutputStreamTest {
     }
 
     @Test
-    public void testWrite0() throws IOException {
+    void testWrite0() throws IOException {
         outputStream.write(TEST_BYTES);
         assertArrayEquals(outputStream.toByteArray(), TEST_BYTES);
     }
 
     @Test
-    public void testWrite0OnNullPointerException() {
+    void testWrite0OnNullPointerException() {
         assertThrows(NullPointerException.class, () -> outputStream.write(null));
     }
 
     @Test
-    public void testWrite0OnIndexOutOfBoundsException() {
+    void testWrite0OnIndexOutOfBoundsException() {
         assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, -1, 0));
         assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, TEST_BYTES.length + 1, 0));
         assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, 0, -1));
@@ -68,7 +68,7 @@ public class FastByteArrayOutputStreamTest {
     }
 
     @Test
-    public void testWriteTo() throws IOException {
+    void testWriteTo() throws IOException {
         FastByteArrayOutputStream toOutputStream = new FastByteArrayOutputStream();
         outputStream.write(TEST_BYTES);
         outputStream.writeTo(toOutputStream);
@@ -76,7 +76,7 @@ public class FastByteArrayOutputStreamTest {
     }
 
     @Test
-    public void testReset() throws IOException {
+    void testReset() throws IOException {
         testSize();
 
         outputStream.reset();
@@ -84,31 +84,31 @@ public class FastByteArrayOutputStreamTest {
     }
 
     @Test
-    public void testToByteArray() throws IOException {
+    void testToByteArray() throws IOException {
         testWrite0();
     }
 
     @Test
-    public void testSize() throws IOException {
+    void testSize() throws IOException {
         assertEquals(0, outputStream.size());
         outputStream.write(TEST_BYTES);
         assertEquals(TEST_BYTES.length, outputStream.size());
     }
 
     @Test
-    public void testToString() throws IOException {
+    void testToString() throws IOException {
         outputStream.write(TEST_BYTES);
         assertEquals(TEST_VALUE, outputStream.toString());
     }
 
     @Test
-    public void testToString1() throws IOException {
+    void testToString1() throws IOException {
         outputStream.write(TEST_BYTES);
         assertEquals(TEST_VALUE, outputStream.toString("UTF-8"));
     }
 
     @Test
-    public void testClose() {
+    void testClose() {
         destroy();
     }
 }

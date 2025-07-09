@@ -46,7 +46,11 @@ public abstract class Assert {
     /**
      * Assert a boolean expression, throwing an {@code IllegalArgumentException}
      * if the expression evaluates to {@code false}.
-     * <pre>assertTrue(i &gt; 0, "The value must be greater than zero");</pre>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertTrue(i > 0, "The value must be greater than zero");
+     * }</pre>
      *
      * @param expression a boolean expression
      * @param message    the exception message to use if the assertion fails
@@ -61,9 +65,10 @@ public abstract class Assert {
     /**
      * Assert a boolean expression, throwing an {@code IllegalArgumentException}
      * if the expression evaluates to {@code false}.
-     * <pre>
-     * assertTrue(i &gt; 0, () -&gt; "The value '" + i + "' must be greater than zero");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertTrue(i > 0, () -> "The value '" + i + "' must be greater than zero");
+     * }</pre>
      *
      * @param expression      a boolean expression
      * @param messageSupplier a supplier for the exception message to use if the
@@ -78,7 +83,10 @@ public abstract class Assert {
 
     /**
      * Assert that an object is {@code null}.
-     * <pre>assertNull(value, "The value must be null");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNull(value, "The value must be null");
+     * }</pre>
      *
      * @param object  the object to check
      * @param message the exception message to use if the assertion fails
@@ -92,9 +100,10 @@ public abstract class Assert {
 
     /**
      * Assert that an object is {@code null}.
-     * <pre>
-     * assertNull(value, () -&gt; "The value '" + value + "' must be null");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNull(value, () -> "The value '" + value + "' must be null");
+     * }</pre>
      *
      * @param object          the object to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -109,7 +118,10 @@ public abstract class Assert {
 
     /**
      * Assert that an object is not {@code null}.
-     * <pre>assertNotNull(clazz, "The class must not be null");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotNull(clazz, "The class must not be null");
+     * }</pre>
      *
      * @param object  the object to check
      * @param message the exception message to use if the assertion fails
@@ -123,9 +135,10 @@ public abstract class Assert {
 
     /**
      * Assert that an object is not {@code null}.
-     * <pre>
-     * assertNotNull(entity.getId(), () -&gt; "ID for entity " + entity.getName() + " must not be null");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNotNull(entity.getId(), () -> "ID for entity " + entity.getName() + " must not be null");
+     * }</pre>
      *
      * @param object          the object to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -140,9 +153,10 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not empty ("").
-     * <pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
      * assertNotEmpty(entity.getName(), "Name for entity " + entity.getName() + " must not be empty");
-     * </pre>
+     * }</pre>
      *
      * @param text    the text to check
      * @param message the exception message to use if the
@@ -156,9 +170,10 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not empty ("").
-     * <pre>
-     * assertNotEmpty(entity.getName(), () -&gt; "Name for entity " + entity.getName() + " must not be empty");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNotEmpty(entity.getName(), () -> "Name for entity " + entity.getName() + " must not be empty");
+     * }</pre>
      *
      * @param text            the text to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -172,9 +187,10 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not blank.
-     * <pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
      * assertNotBlank(entity.getName(), "Name for entity " + entity.getName() + " must not be blank");
-     * </pre>
+     * }</pre>
      *
      * @param text    the text to check
      * @param message the exception message to use if the
@@ -188,9 +204,10 @@ public abstract class Assert {
 
     /**
      * Assert that a string is not blank.
-     * <pre>
-     * assertNotBlank(entity.getName(), () -&gt; "Name for entity " + entity.getName() + " must not be blank");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNotBlank(entity.getName(), () -> "Name for entity " + entity.getName() + " must not be blank");
+     * }</pre>
      *
      * @param text            the text to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -205,7 +222,10 @@ public abstract class Assert {
     /**
      * Assert that an array contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
-     * <pre>assertNotEmpty(array, "The array must contain elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotEmpty(array, "The array must contain elements");
+     * }</pre>
      *
      * @param array   the array to check
      * @param message the exception message to use if the assertion fails
@@ -220,9 +240,10 @@ public abstract class Assert {
     /**
      * Assert that an array contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
-     * <pre>
-     * assertNotEmpty(array, () -&gt; "The " + arrayType + " array must contain elements");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNotEmpty(array, () -> "The " + arrayType + " array must contain elements");
+     * }</pre>
      *
      * @param array           the array to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -238,7 +259,10 @@ public abstract class Assert {
     /**
      * Assert that a collection contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
-     * <pre>assertNotEmpty(collection, "Collection must contain elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotEmpty(collection, "Collection must contain elements");
+     * }</pre>
      *
      * @param collection the collection to check
      * @param message    the exception message to use if the assertion fails
@@ -254,9 +278,10 @@ public abstract class Assert {
     /**
      * Assert that a collection contains elements; that is, it must not be
      * {@code null} and must contain at least one element.
-     * <pre>
-     * assertNotEmpty(collection, () -&gt; "The " + collectionType + " collection must contain elements");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNotEmpty(collection, () -> "The " + collectionType + " collection must contain elements");
+     * }</pre>
      *
      * @param collection      the collection to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -273,7 +298,10 @@ public abstract class Assert {
     /**
      * Assert that a Map contains entries; that is, it must not be {@code null}
      * and must contain at least one entry.
-     * <pre>assertNotEmpty(map, "Map must contain entries");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNotEmpty(map, "Map must contain entries");
+     * }</pre>
      *
      * @param map     the map to check
      * @param message the exception message to use if the assertion fails
@@ -288,9 +316,10 @@ public abstract class Assert {
     /**
      * Assert that a Map contains entries; that is, it must not be {@code null}
      * and must contain at least one entry.
-     * <pre>
-     * assertNotEmpty(map, () -&gt; "The " + mapType + " map must contain entries");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNotEmpty(map, () -> "The " + mapType + " map must contain entries");
+     * }</pre>
      *
      * @param map             the map to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -306,7 +335,10 @@ public abstract class Assert {
     /**
      * Assert that an array contains no {@code null} elements.
      * <p>Note: Does not complain if the array is empty!
-     * <pre>assertNoNullElements(array, "The array must contain non-null elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNoNullElements(array, "The array must contain non-null elements");
+     * }</pre>
      *
      * @param array   the array to check
      * @param message the exception message to use if the assertion fails
@@ -325,9 +357,10 @@ public abstract class Assert {
     /**
      * Assert that an array contains no {@code null} elements.
      * <p>Note: Does not complain if the array is empty!
-     * <pre>
-     * assertNoNullElements(array, () -&gt; "The " + arrayType + " array must contain non-null elements");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNoNullElements(array, () -> "The " + arrayType + " array must contain non-null elements");
+     * }</pre>
      *
      * @param array           the array to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -347,7 +380,10 @@ public abstract class Assert {
     /**
      * Assert that a elements contains no {@code null} elements.
      * <p>Note: Does not complain if the elements is empty!
-     * <pre>assertNoNullElements(elements, "Elements must contain non-null elements");</pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     assertNoNullElements(elements, "Elements must contain non-null elements");
+     * }</pre>
      *
      * @param elements the elements to check
      * @param message  the exception message to use if the assertion fails
@@ -366,9 +402,10 @@ public abstract class Assert {
     /**
      * Assert that a elements contains no {@code null} elements.
      * <p>Note: Does not complain if the elements is empty!
-     * <pre>
-     * assertNoNullElements(elements, () -&gt; "Collection " + collectionName + " must contain non-null elements");
-     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertNoNullElements(elements, () -> "Collection " + collectionName + " must contain non-null elements");
+     * }</pre>
      *
      * @param elements        the elements to check
      * @param messageSupplier a supplier for the exception message to use if the
@@ -386,12 +423,17 @@ public abstract class Assert {
     }
 
     /**
-     * Assert array index
+     * Assert the index is valid for the given array.
      *
-     * @param array Array object
-     * @param index index
-     * @throws IllegalArgumentException       see {@link #assertArrayType(Object)}
-     * @throws ArrayIndexOutOfBoundsException If <code>index</code> is less than 0 or equals or greater than length of array
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertArrayIndex(array, index); // throws IllegalArgumentException if index is invalid
+     * }</pre>
+     *
+     * @param array Object array to check
+     * @param index Index value to validate
+     * @throws IllegalArgumentException       if the object is not an array
+     * @throws ArrayIndexOutOfBoundsException if the index is negative or exceeds the array length
      */
     public static void assertArrayIndex(Object array, int index) throws IllegalArgumentException {
         if (index < 0) {
@@ -407,10 +449,16 @@ public abstract class Assert {
     }
 
     /**
-     * Assert the object is array or not
+     * Assert the provided object is an array.
      *
-     * @param array asserted object
-     * @throws IllegalArgumentException if the object is not a array
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * assertArrayType(new String[]{"one", "two"}); // passes
+     * assertArrayType("notAnArray");              // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param array the object to check
+     * @throws IllegalArgumentException if the object is not an array
      */
     public static void assertArrayType(Object array) throws IllegalArgumentException {
         Class<?> type = array.getClass();
@@ -421,13 +469,24 @@ public abstract class Assert {
     }
 
     /**
-     * Assert Field type match
+     * Assert that the field with the specified name in the given object's class matches the expected type.
      *
-     * @param object       Object
-     * @param fieldName    field name
-     * @param expectedType expected type
-     * @throws NullPointerException     if field can't be found in the specified object by name
-     * @throws IllegalArgumentException if type is not matched
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Example {
+     *     private String name;
+     * }
+     *
+     * Example example = new Example();
+     * assertFieldMatchType(example, "name", String.class);  // passes
+     * assertFieldMatchType(example, "name", Integer.class); // throws IllegalArgumentException
+     * }</pre>
+     *
+     * @param object       the object whose class is to be checked
+     * @param fieldName    the name of the field
+     * @param expectedType the expected type of the field
+     * @throws NullPointerException     if the field cannot be found in the object's class
+     * @throws IllegalArgumentException if the field's type does not match the expected type
      */
     public static void assertFieldMatchType(Object object, String fieldName, Class<?> expectedType) throws NullPointerException, IllegalArgumentException {
         Class<?> type = object.getClass();
@@ -435,7 +494,7 @@ public abstract class Assert {
         Class<?> fieldType = field.getType();
         if (!isAssignableFrom(expectedType, fieldType)) {
             String message = format("The type['{}'] of field[name : '{}'] in Class['{}'] can't match expected type['{}']",
-                    getTypeName(type), fieldName, getTypeName(type), getTypeName(expectedType));
+                    getTypeName(fieldType), fieldName, getTypeName(type), getTypeName(expectedType));
             throw new IllegalArgumentException(message);
         }
     }

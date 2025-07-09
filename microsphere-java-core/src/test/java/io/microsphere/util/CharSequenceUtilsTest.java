@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see CharSequenceUtils
  * @since 1.0.0
  */
-public class CharSequenceUtilsTest {
+class CharSequenceUtilsTest {
 
     static final String TEST_EMPTY_STRING = "";
 

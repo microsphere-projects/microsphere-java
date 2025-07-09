@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class GenericEventTest {
+class GenericEventTest {
 
     @Test
     public void test() {

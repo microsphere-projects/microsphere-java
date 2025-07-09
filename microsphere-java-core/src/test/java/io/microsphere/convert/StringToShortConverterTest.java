@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-public class StringToShortConverterTest extends BaseConverterTest<String, Short> {
+class StringToShortConverterTest extends BaseConverterTest<String, Short> {
 
     @Override
     protected AbstractConverter<String, Short> createConverter() {
@@ -45,7 +45,7 @@ public class StringToShortConverterTest extends BaseConverterTest<String, Short>
     }
 
     @Test
-    public void testConvertOnFailed() {
+    void testConvertOnFailed() {
         assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

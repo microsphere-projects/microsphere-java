@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MavenArtifact
  * @since 1.0.0
  */
-public class MavenArtifactTest {
+class MavenArtifactTest {
 
     private static final String GROUP_ID = "io.github.microsphere-projects";
 
@@ -53,12 +53,12 @@ public class MavenArtifactTest {
     private MavenArtifact artifact;
 
     @BeforeEach
-    public void init() {
+    void init() {
         this.artifact = create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION);
     }
 
     @Test
-    public void testCreateOnGroupIdAndArtifactId() {
+    void testCreateOnGroupIdAndArtifactId() {
         MavenArtifact artifact = create(GROUP_ID, ARTIFACT_ID);
         assertEquals(GROUP_ID, artifact.getGroupId());
         assertEquals(ARTIFACT_ID, artifact.getArtifactId());
@@ -67,7 +67,7 @@ public class MavenArtifactTest {
     }
 
     @Test
-    public void testCreateOnGroupIdAndArtifactIdAndVersion() {
+    void testCreateOnGroupIdAndArtifactIdAndVersion() {
         MavenArtifact artifact = create(GROUP_ID, ARTIFACT_ID, VERSION);
         assertEquals(GROUP_ID, artifact.getGroupId());
         assertEquals(ARTIFACT_ID, artifact.getArtifactId());
@@ -76,7 +76,7 @@ public class MavenArtifactTest {
     }
 
     @Test
-    public void testCreateOnGroupIdAndArtifactIdAndVersionAndLocation() {
+    void testCreateOnGroupIdAndArtifactIdAndVersionAndLocation() {
         MavenArtifact artifact = create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION);
         assertEquals(GROUP_ID, artifact.getGroupId());
         assertEquals(ARTIFACT_ID, artifact.getArtifactId());
@@ -85,7 +85,7 @@ public class MavenArtifactTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertTrue(artifact.equals(create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION)));
 
         assertFalse(artifact.equals(null));
@@ -98,17 +98,17 @@ public class MavenArtifactTest {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(artifact.hashCode(), create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION).hashCode());
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertNotNull(artifact.toString());
     }
 
     @Test
-    public void testMatches() {
+    void testMatches() {
         assertTrue(create(WILDCARD, WILDCARD, WILDCARD).matches(artifact));
         assertTrue(create(GROUP_ID, WILDCARD, WILDCARD).matches(artifact));
         assertTrue(create(GROUP_ID, ARTIFACT_ID, WILDCARD).matches(artifact));

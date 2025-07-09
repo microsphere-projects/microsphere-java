@@ -30,6 +30,23 @@ import static io.microsphere.reflect.FieldUtils.setFieldValue;
 /**
  * The definition class of {@link Field}
  *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a FieldDefinition for the 'name' field of the User class, introduced in version 1.0.0.
+ * FieldDefinition fieldDef = new FieldDefinition("1.0.0", "com.example.User", "name");
+ *
+ * // Get the resolved Field object (null if not found or not resolvable)
+ * Field field = fieldDef.getResolvedField();
+ *
+ * // Access and modify the field value on an instance
+ * User user = new User();
+ * fieldDef.set(user, "John Doe"); // Set the 'name' field to "John Doe"
+ * String name = fieldDef.get(user); // Retrieve the value of 'name' field
+ * }</pre>
+ *
+ * <p>This class provides utilities to define, resolve, and manipulate fields reflectively,
+ * with support for versioning and deprecation information inherited from {@link MemberDefinition}.
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Field
  * @since 1.0.0

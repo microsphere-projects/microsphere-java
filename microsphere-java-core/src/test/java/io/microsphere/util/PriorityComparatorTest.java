@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Priority
  * @since 1.0.0
  */
-public class PriorityComparatorTest {
+class PriorityComparatorTest {
 
     @Test
     public void test() {

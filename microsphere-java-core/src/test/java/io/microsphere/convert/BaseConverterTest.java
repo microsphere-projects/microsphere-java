@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see AbstractConverter
  * @since 1.0.0
  */
-public abstract class BaseConverterTest<S, T> extends AbstractTestCase {
+abstract class BaseConverterTest<S, T> extends AbstractTestCase {
 
     protected AbstractConverter<S, T> converter;
 

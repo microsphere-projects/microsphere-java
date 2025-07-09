@@ -29,17 +29,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @since 1.0.0
  */
-public class StringToFloatConverterTest extends BaseConverterTest<String, Float> {
+class StringToFloatConverterTest extends BaseConverterTest<String, Float> {
 
     private StringToFloatConverter converter;
 
     @BeforeEach
-    public void init() {
+    void init() {
         converter = new StringToFloatConverter();
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
         assertTrue(converter.accept(String.class, Float.class));
     }
 
@@ -59,7 +59,7 @@ public class StringToFloatConverterTest extends BaseConverterTest<String, Float>
     }
 
     @Test
-    public void testConvertOnFailed() {
+    void testConvertOnFailed() {
         assertThrows(NumberFormatException.class, () -> converter.convert("a"));
     }
 }

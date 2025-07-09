@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see StringUtils
  * @since 1.0.0
  */
-public class StringUtilsTest {
+class StringUtilsTest {
 
     @Test
     public void testConstants() {

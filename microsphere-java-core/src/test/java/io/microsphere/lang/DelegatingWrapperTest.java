@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingWrapper
  * @since 1.0.0
  */
-public class DelegatingWrapperTest {
+class DelegatingWrapperTest {
 
     @Test
-    public void test() {
+    void test() {
         String delegate = "Hello";
         DelegatingWrapper wrapper = new DelegatingWrapperImpl(delegate);
         assertTrue(wrapper.isWrapperFor(String.class));

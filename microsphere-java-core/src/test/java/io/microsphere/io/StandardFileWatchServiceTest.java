@@ -57,26 +57,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class StandardFileWatchServiceTest extends AbstractTestCase {
+class StandardFileWatchServiceTest extends AbstractTestCase {
 
     private File testDir;
 
     private ExecutorService executor;
 
     @BeforeEach
-    public void init() throws Exception {
+    void init() throws Exception {
         this.testDir = createRandomTempDirectory();
         this.executor = newSingleThreadExecutor();
     }
 
     @AfterEach
-    public void destroy() throws Exception {
+    void destroy() throws Exception {
         shutdown(this.executor);
         deleteDirectory(this.testDir);
     }
 
     @Test
-    public void testFile() throws Exception {
+    void testFile() throws Exception {
         URL resource = getResource(super.classLoader, "test.txt");
         String resourceFilePath = resource.getFile();
         File sourceFile = new File(resourceFilePath);
@@ -107,7 +107,7 @@ public class StandardFileWatchServiceTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDirectory() throws Exception {
+    void testDirectory() throws Exception {
 
         AtomicReference<File> fileReference = new AtomicReference<>();
 
