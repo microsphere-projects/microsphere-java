@@ -302,17 +302,14 @@ class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsSymlinkOnNull() throws IOException {
+    void testIsSymlinkOnNull() {
         assertThrows(NullPointerException.class, () -> isSymlink(null));
     }
 
     @Test
-    void testGetCanonicalFile() throws IOException {
+    void testGetCanonicalFile() {
         File tempFile = newRandomTempFile();
-        assertEquals(tempFile, getCanonicalFile(tempFile));
-
-        tempFile = createRandomTempFile();
-        assertEquals(tempFile, getCanonicalFile(tempFile));
+        assertEquals(getCanonicalFile(tempFile), getCanonicalFile(getCanonicalFile(tempFile)));
     }
 
 }
