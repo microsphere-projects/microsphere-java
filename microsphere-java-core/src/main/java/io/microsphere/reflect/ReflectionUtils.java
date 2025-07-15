@@ -147,7 +147,7 @@ public abstract class ReflectionUtils implements Utils {
      * can be used to retrieve caller class information. This class and its methods are specific
      * to the Sun/HotSpot JVM and may not be present or functional on other JVM implementations.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * if (ReflectionUtils.isSupportedSunReflectReflection()) {
      *     System.out.println("sun.reflect.Reflection is supported.");
@@ -171,7 +171,7 @@ public abstract class ReflectionUtils implements Utils {
      * available. If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
      * the {@link StackTraceElement} approach.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * public class Example {
      *     public void exampleMethod() {
@@ -317,7 +317,7 @@ public abstract class ReflectionUtils implements Utils {
      * available and supported. If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
      * the {@link StackTraceElement} approach.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * public class Example {
      *     public void exampleMethod() {
@@ -359,7 +359,7 @@ public abstract class ReflectionUtils implements Utils {
      * <p>This method is useful for converting any array type (including nested arrays) into a list structure.
      * If the array contains nested arrays, they will be recursively converted into lists as well.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * String[] stringArray = {"apple", "banana", "cherry"};
      * List<String> stringList = ReflectionUtils.toList(stringArray);
