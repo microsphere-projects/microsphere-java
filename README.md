@@ -1,6 +1,7 @@
 # Microsphere Java Framework
 > The common features used in the other microsphere sub-projects
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/microsphere-projects/microsphere-java)
 [![Maven Build](https://github.com/microsphere-projects/microsphere-java/actions/workflows/maven-build.yml/badge.svg)](https://github.com/microsphere-projects/microsphere-java/actions/workflows/maven-build.yml)
 [![Codecov](https://codecov.io/gh/microsphere-projects/microsphere-java/branch/main/graph/badge.svg)](https://app.codecov.io/gh/microsphere-projects/microsphere-java)
 ![Maven](https://img.shields.io/maven-central/v/io.github.microsphere-projects/microsphere-java.svg)
