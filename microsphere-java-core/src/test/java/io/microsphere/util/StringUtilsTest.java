@@ -17,6 +17,7 @@ import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.contains;
+import static io.microsphere.util.StringUtils.containsWhitespace;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.isNotBlank;
@@ -251,5 +252,15 @@ class StringUtilsTest {
         assertTrue(isNumeric("12"));
         assertTrue(isNumeric("123"));
         assertFalse(isNumeric("12a"));
+    }
+
+    @Test
+    public void testContainsWhitespace() {
+        assertFalse(containsWhitespace(null));
+        assertFalse(containsWhitespace(TEST_EMPTY_STRING));
+        assertTrue(containsWhitespace(TEST_BLANK_STRING));
+        assertTrue(containsWhitespace("hello world"));
+        assertTrue(containsWhitespace("hello\tworld"));
+        assertFalse(containsWhitespace("helloworld"));
     }
 }
