@@ -29,7 +29,6 @@ import io.microsphere.util.Version;
  * environment.</p>
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * // Create a ClassDefinition for a class introduced in version "1.0.0"
  * ClassDefinition definition = new ClassDefinition("1.0.0", "java.util.ArrayList");
