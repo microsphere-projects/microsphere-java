@@ -31,7 +31,7 @@ import static java.util.stream.StreamSupport.stream;
  * Implementations of this interface provide methods to add, remove, and retrieve event listeners,
  * and may support additional features such as ordering based on listener priority.
  *
- * <p><strong>Example:</strong>
+ * <h3>Example Usage</h3>
  * <pre>
  * public class MyListenable implements Listenable<MyEventListener> {
  *     // Implementation details...
