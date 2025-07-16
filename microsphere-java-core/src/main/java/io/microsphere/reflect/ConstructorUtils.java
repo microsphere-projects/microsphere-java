@@ -112,7 +112,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Filtering</h4>
      * <pre>{@code
      * List<Constructor<?>> constructors = findConstructors(MyClass.class);
@@ -151,7 +150,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Filtering</h4>
      * <pre>{@code
      * List<Constructor<?>> constructors = findDeclaredConstructors(MyClass.class);
@@ -236,7 +234,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Finding a Constructor</h4>
      * <pre>{@code
      * Constructor<MyClass> constructor = findConstructor(MyClass.class, String.class, int.class);
@@ -278,7 +275,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Instantiation</h4>
      * <pre>{@code
      * Constructor<MyClass> constructor = MyClass.class.getConstructor(String.class, int.class);
