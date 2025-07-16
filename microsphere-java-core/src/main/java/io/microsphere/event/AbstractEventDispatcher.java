@@ -53,7 +53,6 @@ import static java.util.Collections.unmodifiableList;
  * </ul>
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * public class MyEvent extends Event {}
  *
