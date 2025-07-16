@@ -31,6 +31,8 @@ import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static io.microsphere.util.StringUtils.trimAllWhitespace;
+import static io.microsphere.util.StringUtils.trimLeadingWhitespace;
+import static io.microsphere.util.StringUtils.trimTrailingWhitespace;
 import static io.microsphere.util.StringUtils.trimWhitespace;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -277,6 +279,25 @@ class StringUtilsTest {
     }
 
     @Test
+    public void testTrimLeadingWhitespace() {
+        assertNull(trimLeadingWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimLeadingWhitespace(TEST_EMPTY_STRING));
+        assertEquals(TEST_EMPTY_STRING, trimLeadingWhitespace(TEST_BLANK_STRING));
+        assertEquals("a ", trimLeadingWhitespace(" a "));
+        assertEquals("a", trimLeadingWhitespace(" a"));
+        assertEquals("a ", trimLeadingWhitespace("a "));
+    }
+
+    @Test
+    public void testTrimTrailingWhitespace() {
+        assertNull(trimTrailingWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimTrailingWhitespace(TEST_EMPTY_STRING));
+        assertEquals(" a", trimTrailingWhitespace(" a "));
+        assertEquals(" a", trimTrailingWhitespace(" a"));
+        assertEquals("a", trimTrailingWhitespace("a "));
+    }
+
+    @Test
     public void testTrimAllWhitespace() {
         assertNull(trimAllWhitespace(null));
         assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_EMPTY_STRING));
@@ -284,4 +305,5 @@ class StringUtilsTest {
         assertEquals("helloworld", trimAllWhitespace("  hello  world  "));
         assertEquals("hello", trimAllWhitespace("  \t\n  h e l l o  \r\n\f"));
     }
+
 }
