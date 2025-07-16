@@ -3,6 +3,7 @@ package io.microsphere.util;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.CharSequenceUtils.containsWhitespace;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
@@ -52,5 +53,15 @@ class CharSequenceUtilsTest {
         assertTrue(isNotEmpty(TEST_BLANK_STRING));
         assertTrue(isNotEmpty(TEST_CSV_STRING));
         assertTrue(isNotEmpty(TEST_STRING));
+    }
+
+    @Test
+    public void testContainsWhitespace() {
+        assertFalse(containsWhitespace(null));
+        assertFalse(containsWhitespace(TEST_EMPTY_STRING));
+        assertTrue(containsWhitespace(TEST_BLANK_STRING));
+        assertTrue(containsWhitespace("hello world"));
+        assertTrue(containsWhitespace("hello\tworld"));
+        assertFalse(containsWhitespace("helloworld"));
     }
 }
