@@ -307,7 +307,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class);
      * if (service != null) {
@@ -340,7 +339,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * thereby providing a mechanism for overriding the implementation class.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, true);
      * if (service != null) {
@@ -368,7 +366,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, classLoader);
@@ -398,7 +395,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, classLoader, true);
@@ -428,7 +424,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class);
      * if (service != null) {
@@ -456,7 +451,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, true);
      * if (service != null) {
@@ -484,7 +478,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, classLoader);
@@ -514,7 +507,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, classLoader, true);
