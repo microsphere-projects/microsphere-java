@@ -109,6 +109,41 @@ public abstract class CharSequenceUtils implements Utils {
         return false;
     }
 
+    /**
+     * Trims all whitespace characters from the given {@link CharSequence}.
+     *
+     * <p>
+     * This method removes all whitespace characters (as defined by {@link Character#isWhitespace(char)})
+     * from the beginning, end, and middle of the input sequence. If the input is {@code null} or empty,
+     * it will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code trimAllWhitespace(null)} returns {@code null}</li>
+     *     <li>{@code trimAllWhitespace("")} returns {@code ""}</li>
+     *     <li>{@code trimAllWhitespace("  hello  world  ")} returns {@code "helloworld"}</li>
+     *     <li>{@code trimAllWhitespace("  \t\n  h e l l o  \r\n\f")} returns {@code "hello"}</li>
+     * </ul>
+     *
+     * @param str the {@link CharSequence} to trim (may be {@code null})
+     * @return a new {@link CharSequence} with all whitespace characters removed, or the original if none exist
+     */
+    public static CharSequence trimAllWhitespace(CharSequence str) {
+        int len = length(str);
+        if (len < 1) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (!isWhitespace(c)) {
+                sb.append(c);
+            }
+        }
+        return sb;
+    }
+
     private CharSequenceUtils() {
     }
 }
