@@ -26,7 +26,6 @@ import java.util.concurrent.Executor;
  * </p>
  *
  * <h3>Example Usage</h3>
- *
  * <h4>Example 1: Using Default Dispatcher (Sequential Execution)</h4>
  * <pre>{@code
  * EventDispatcher dispatcher = EventDispatcher.newDefault();
