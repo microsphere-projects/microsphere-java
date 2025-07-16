@@ -25,6 +25,8 @@ import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static java.lang.Character.isDigit;
 import static java.lang.Character.isWhitespace;
+import static java.lang.Character.toLowerCase;
+import static java.lang.Character.toUpperCase;
 import static java.lang.String.valueOf;
 
 /**
@@ -726,6 +728,76 @@ public abstract class StringUtils implements Utils {
      */
     public static String trimAllWhitespace(String str) {
         return isEmpty(str) ? str : CharSequenceUtils.trimAllWhitespace(str).toString();
+    }
+
+    /**
+     * Capitalizes the first character of the given String, converting it to uppercase using
+     * {@link Character#toUpperCase(char)}. The rest of the characters remain unchanged.
+     *
+     * <p>
+     * A {@code null} or empty input will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code capitalize(null)} returns {@code null}</li>
+     *     <li>{@code capitalize("")} returns {@code ""}</li>
+     *     <li>{@code capitalize("hello")} returns {@code "Hello"}</li>
+     *     <li>{@code capitalize("HELLO")} returns {@code "HELLO"}</li>
+     *     <li>{@code capitalize("hELLO")} returns {@code "HELLO"}</li>
+     * </ul>
+     *
+     * @param str the String to capitalize (may be {@code null})
+     * @return a new String with the first character capitalized, or the original if it is {@code null} or empty
+     */
+    public static String capitalize(String str) {
+        return changeFirstCharacter(str, true);
+    }
+
+    /**
+     * Uncapitalizes the first character of the given String, converting it to lowercase using
+     * {@link Character#toLowerCase(char)}. The rest of the characters remain unchanged.
+     *
+     * <p>
+     * A {@code null} or empty input will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code uncapitalize(null)} returns {@code null}</li>
+     *     <li>{@code uncapitalize("")} returns {@code ""}</li>
+     *     <li>{@code uncapitalize("Hello")} returns {@code "hello"}</li>
+     *     <li>{@code uncapitalize("HELLO")} returns {@code "hELLO"}</li>
+     *     <li>{@code uncapitalize("hELLO")} returns {@code "hELLO"}</li>
+     * </ul>
+     *
+     * @param str the String to uncapitalize (may be {@code null})
+     * @return a new String with the first character uncapitalized, or the original if it is {@code null} or empty
+     */
+    public static String uncapitalize(String str) {
+        return changeFirstCharacter(str, false);
+    }
+
+    static String changeFirstCharacter(String str, boolean capitalize) {
+        int len = length(str);
+        if (len < 1) {
+            return str;
+        }
+
+        char baseChar = str.charAt(0);
+        char updatedChar;
+        if (capitalize) {
+            updatedChar = toUpperCase(baseChar);
+        } else {
+            updatedChar = toLowerCase(baseChar);
+        }
+        if (baseChar == updatedChar) {
+            return str;
+        }
+
+        char[] chars = str.toCharArray();
+        chars[0] = updatedChar;
+        return new String(chars);
     }
 
     static String trimWhitespace(String str, boolean includeLeading, boolean includeTrailing) {
