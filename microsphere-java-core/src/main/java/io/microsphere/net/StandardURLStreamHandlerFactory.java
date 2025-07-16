@@ -39,7 +39,6 @@ import static java.lang.Class.forName;
  * for JDK 8 and below.</p>
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * URLStreamHandlerFactory factory = new StandardURLStreamHandlerFactory();
  * URL.setURLStreamHandlerFactory(factory);
