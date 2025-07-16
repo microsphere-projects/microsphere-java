@@ -732,7 +732,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * The resolved resource name is normalized and searched through the provided ClassLoader's {@link ClassLoader#getResource(String)} method.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Retrieve a class resource using a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -981,7 +980,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Get inheritable ClassLoaders from a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1026,7 +1024,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * {@link #getDefaultClassLoader()}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Get loaded classes map using a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1072,7 +1069,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Get all loaded classes using a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1110,7 +1106,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Get loaded classes from a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1145,7 +1140,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * {@link #getDefaultClassLoader()}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Find loaded classes using the default ClassLoader
      * try {
@@ -1184,7 +1178,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * classes using the specified ClassLoader. If a class is found, it is added to the resulting set of loaded classes.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Find loaded classes from specific class paths using a custom ClassLoader
      * Set<String> classPaths = new HashSet<>(Arrays.asList("path/to/classes", "lib/dependency.jar"));
@@ -1230,7 +1223,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * {@link #getDefaultClassLoader()}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Find loaded classes from a specific class path using a custom ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1352,7 +1344,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * the {@link #loadClass(ClassLoader, String, boolean)} method with caching disabled by default.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Resolve a class using a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1397,7 +1388,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Resolve a class using a specific ClassLoader without caching
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1449,7 +1439,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * {@link #getDefaultClassLoader()}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Get all class path URLs using a specific ClassLoader
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
@@ -1493,7 +1482,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Remove a URL from a URLClassLoader
      * URL urlToRemove = new URL("file:/path/to/removed.jar");
@@ -1531,7 +1519,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * it returns null.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Find URLClassLoader from a known URLClassLoader instance
      * URLClassLoader urlClassLoader = (URLClassLoader) MyClass.class.getClassLoader();
@@ -1657,7 +1644,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * If the 'urls' array is null or contains null elements, an {@link IllegalArgumentException} will be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Create a URLClassLoader with a custom parent ClassLoader
      * URL[] urls = { new URL("file:/path/to/library.jar") };
@@ -1720,7 +1706,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * a new URLClassLoader is created using all URLs from the class path associated with the given ClassLoader.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Resolve an existing URLClassLoader
      * ClassLoader classLoader = MyClass.class.getClassLoader();
