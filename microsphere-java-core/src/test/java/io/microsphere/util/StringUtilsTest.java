@@ -30,6 +30,7 @@ import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
+import static io.microsphere.util.StringUtils.trimAllWhitespace;
 import static io.microsphere.util.StringUtils.trimWhitespace;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -273,5 +274,14 @@ class StringUtilsTest {
         assertEquals("a", trimWhitespace(" a "));
         assertEquals("a", trimWhitespace(" a"));
         assertEquals("a", trimWhitespace("a "));
+    }
+
+    @Test
+    public void testTrimAllWhitespace() {
+        assertNull(trimAllWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_EMPTY_STRING));
+        assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_BLANK_STRING));
+        assertEquals("helloworld", trimAllWhitespace("  hello  world  "));
+        assertEquals("hello", trimAllWhitespace("  \t\n  h e l l o  \r\n\f"));
     }
 }
