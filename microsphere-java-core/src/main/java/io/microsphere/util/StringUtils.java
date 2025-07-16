@@ -624,6 +624,33 @@ public abstract class StringUtils implements Utils {
         return CharSequenceUtils.containsWhitespace(str);
     }
 
+    /**
+     * Trim leading and trailing whitespace from the given {@code String}.
+     *
+     * @param str the {@code String} to check
+     * @return the trimmed {@code String}
+     * @see Character#isWhitespace
+     */
+    public static String trimWhitespace(String str) {
+        int len = length(str);
+        if (len < 1) {
+            return str;
+        }
+
+        int beginIndex = 0;
+        int endIndex = len - 1;
+
+        while (beginIndex <= endIndex && isWhitespace(str.charAt(beginIndex))) {
+            beginIndex++;
+        }
+
+        while (endIndex > beginIndex && isWhitespace(str.charAt(endIndex))) {
+            endIndex--;
+        }
+
+        return str.substring(beginIndex, endIndex + 1);
+    }
+
     private StringUtils() {
         super();
     }
