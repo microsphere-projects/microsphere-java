@@ -625,30 +625,83 @@ public abstract class StringUtils implements Utils {
     }
 
     /**
-     * Trim leading and trailing whitespace from the given {@code String}.
+     * Trims leading and trailing whitespace from the given {@code String}.
      *
-     * @param str the {@code String} to check
-     * @return the trimmed {@code String}
-     * @see Character#isWhitespace
+     * <p>
+     * This method removes whitespace characters (as defined by
+     * {@link Character#isWhitespace(char)}) from the beginning and end of the input string.
+     * If the input is {@code null} or empty, it will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code trimWhitespace(null)} returns {@code null}</li>
+     *     <li>{@code trimWhitespace("")} returns {@code ""}</li>
+     *     <li>{@code trimWhitespace("  abc  ")} returns {@code "abc"}</li>
+     *     <li>{@code trimWhitespace("abc")} returns {@code "abc"}</li>
+     *     <li>{@code trimWhitespace("   abc def   ")} returns {@code "abc def"}</li>
+     * </ul>
+     *
+     * @param str the {@code String} to trim (may be {@code null})
+     * @return a new {@code String} with leading and trailing whitespace removed,
+     * or the original if it is {@code null} or empty
      */
     public static String trimWhitespace(String str) {
-        int len = length(str);
-        if (len < 1) {
-            return str;
-        }
+        return trimWhitespace(str, true, true);
+    }
 
-        int beginIndex = 0;
-        int endIndex = len - 1;
+    /**
+     * Trims leading whitespace from the given {@code String}.
+     *
+     * <p>
+     * This method removes whitespace characters (as defined by
+     * {@link Character#isWhitespace(char)}) from the beginning of the input string.
+     * If the input is {@code null} or empty, it will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code trimLeadingWhitespace(null)} returns {@code null}</li>
+     *     <li>{@code trimLeadingWhitespace("")} returns {@code ""}</li>
+     *     <li>{@code trimLeadingWhitespace("  abc  ")} returns {@code "abc  "}</li>
+     *     <li>{@code trimLeadingWhitespace("abc")} returns {@code "abc"}</li>
+     *     <li>{@code trimLeadingWhitespace("   abc def   ")} returns {@code "abc def   "}</li>
+     * </ul>
+     *
+     * @param str the {@code String} to trim (may be {@code null})
+     * @return a new {@code String} with leading whitespace removed,
+     * or the original if it is {@code null} or empty
+     * @see Character#isWhitespace
+     */
+    public static String trimLeadingWhitespace(String str) {
+        return trimWhitespace(str, true, false);
+    }
 
-        while (beginIndex <= endIndex && isWhitespace(str.charAt(beginIndex))) {
-            beginIndex++;
-        }
-
-        while (endIndex > beginIndex && isWhitespace(str.charAt(endIndex))) {
-            endIndex--;
-        }
-
-        return str.substring(beginIndex, endIndex + 1);
+    /**
+     * Trims trailing whitespace from the given {@code String}.
+     *
+     * <p>
+     * This method removes whitespace characters (as defined by
+     * {@link Character#isWhitespace(char)}) from the end of the input string.
+     * If the input is {@code null} or empty, it will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code trimTrailingWhitespace(null)} returns {@code null}</li>
+     *     <li>{@code trimTrailingWhitespace("")} returns {@code ""}</li>
+     *     <li>{@code trimTrailingWhitespace("  abc  ")} returns {@code "  abc"}</li>
+     *     <li>{@code trimTrailingWhitespace("abc")} returns {@code "abc"}</li>
+     *     <li>{@code trimTrailingWhitespace("abc def   ")} returns {@code "abc def"}</li>
+     * </ul>
+     *
+     * @param str the {@code String} to trim (may be {@code null})
+     * @return a new {@code String} with trailing whitespace removed,
+     * or the original if it is {@code null} or empty
+     * @see Character#isWhitespace
+     */
+    public static String trimTrailingWhitespace(String str) {
+        return trimWhitespace(str, false, true);
     }
 
     /**
@@ -673,6 +726,29 @@ public abstract class StringUtils implements Utils {
      */
     public static String trimAllWhitespace(String str) {
         return isEmpty(str) ? str : CharSequenceUtils.trimAllWhitespace(str).toString();
+    }
+
+    static String trimWhitespace(String str, boolean includeLeading, boolean includeTrailing) {
+        int len = length(str);
+        if (len < 1) {
+            return str;
+        }
+        int beginIndex = 0;
+        int endIndex = len - 1;
+
+        if (includeLeading) {
+            while (beginIndex <= endIndex && isWhitespace(str.charAt(beginIndex))) {
+                beginIndex++;
+            }
+        }
+
+        if (includeTrailing) {
+            while (endIndex > beginIndex && isWhitespace(str.charAt(endIndex))) {
+                endIndex--;
+            }
+        }
+
+        return str.substring(beginIndex, endIndex + 1);
     }
 
     private StringUtils() {
