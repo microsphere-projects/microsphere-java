@@ -9,7 +9,7 @@ package io.microsphere.filter;
  * <p>Implementations of this interface can be used to filter classes based on specific criteria,
  * such as whether they are interfaces, annotations, or belong to a particular package.</p>
  *
- * <h3>Example Implementation</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class MyTestClassFilter implements ClassFilter {
  *     public boolean accept(Class<?> clazz) {
