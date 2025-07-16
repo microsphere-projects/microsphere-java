@@ -34,7 +34,6 @@ import static io.microsphere.util.Version.ofVersion;
  * actual reflection object.
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * public class FieldDefinition extends MemberDefinition<Field> {
  *
