@@ -7,8 +7,10 @@ import static io.microsphere.util.CharSequenceUtils.containsWhitespace;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
+import static io.microsphere.util.CharSequenceUtils.trimAllWhitespace;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -63,5 +65,15 @@ class CharSequenceUtilsTest {
         assertTrue(containsWhitespace("hello world"));
         assertTrue(containsWhitespace("hello\tworld"));
         assertFalse(containsWhitespace("helloworld"));
+    }
+
+    @Test
+    public void testTrimAllWhitespace() {
+        assertNull(trimAllWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_EMPTY_STRING));
+        assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_BLANK_STRING).toString());
+        assertEquals("helloworld", trimAllWhitespace("hello world").toString());
+        assertEquals("helloworld", trimAllWhitespace("hello\tworld").toString());
+        assertEquals("helloworld", trimAllWhitespace("helloworld").toString());
     }
 }
