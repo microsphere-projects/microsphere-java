@@ -31,7 +31,6 @@ import java.util.List;
  * </p>
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * public class MySubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
  *     @Override
