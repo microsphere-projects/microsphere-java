@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nullable;
+
 import java.util.StringTokenizer;
 
 import static io.microsphere.util.ArrayUtils.asArray;
@@ -595,6 +597,31 @@ public abstract class StringUtils implements Utils {
             }
         }
         return true;
+    }
+
+    /**
+     * Checks whether the given {@code String} contains any whitespace characters.
+     *
+     * <p>
+     * A whitespace character is defined as any character that returns {@code true} when passed to
+     * {@link Character#isWhitespace(char)}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code containsWhitespace(null)} returns {@code false}</li>
+     *     <li>{@code containsWhitespace("")} returns {@code false}</li>
+     *     <li>{@code containsWhitespace("hello world")} returns {@code true}</li>
+     *     <li>{@code containsWhitespace("hello\tworld")} returns {@code true}</li>
+     *     <li>{@code containsWhitespace("helloworld")} returns {@code false}</li>
+     * </ul>
+     *
+     * @param str the {@code String} to check (may be {@code null})
+     * @return {@code true} if the provided sequence is not empty and contains at least one whitespace character;
+     * otherwise, {@code false}
+     */
+    public static boolean containsWhitespace(@Nullable String str) {
+        return CharSequenceUtils.containsWhitespace(str);
     }
 
     private StringUtils() {
