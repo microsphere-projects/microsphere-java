@@ -108,7 +108,6 @@ public abstract class ShutdownHookUtils implements Utils {
      * {@link Runtime#addShutdownHook(Thread)}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Ensure the shutdown hook is registered
      * ShutdownHookUtils.registerShutdownHook();
