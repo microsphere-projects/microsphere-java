@@ -651,6 +651,30 @@ public abstract class StringUtils implements Utils {
         return str.substring(beginIndex, endIndex + 1);
     }
 
+    /**
+     * Trims all whitespace characters from the given {@link String}.
+     *
+     * <p>
+     * This method removes all whitespace characters (as defined by {@link Character#isWhitespace(char)})
+     * from the beginning, end, and middle of the input sequence. If the input is {@code null} or empty,
+     * it will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code trimAllWhitespace(null)} returns {@code null}</li>
+     *     <li>{@code trimAllWhitespace("")} returns {@code ""}</li>
+     *     <li>{@code trimAllWhitespace("  hello  world  ")} returns {@code "helloworld"}</li>
+     *     <li>{@code trimAllWhitespace("  \t\n  h e l l o  \r\n\f")} returns {@code "hello"}</li>
+     * </ul>
+     *
+     * @param str the {@link String} to trim (may be {@code null})
+     * @return a new {@link String} with all whitespace characters removed, or the original if none exist
+     */
+    public static String trimAllWhitespace(String str) {
+        return isEmpty(str) ? str : CharSequenceUtils.trimAllWhitespace(str).toString();
+    }
+
     private StringUtils() {
         super();
     }
