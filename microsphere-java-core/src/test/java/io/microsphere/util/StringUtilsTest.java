@@ -16,6 +16,7 @@ import static io.microsphere.util.CharSequenceUtilsTest.TEST_STRING;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.StringUtils.capitalize;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.containsWhitespace;
 import static io.microsphere.util.StringUtils.endsWith;
@@ -34,6 +35,7 @@ import static io.microsphere.util.StringUtils.trimAllWhitespace;
 import static io.microsphere.util.StringUtils.trimLeadingWhitespace;
 import static io.microsphere.util.StringUtils.trimTrailingWhitespace;
 import static io.microsphere.util.StringUtils.trimWhitespace;
+import static io.microsphere.util.StringUtils.uncapitalize;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -304,6 +306,24 @@ class StringUtilsTest {
         assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_BLANK_STRING));
         assertEquals("helloworld", trimAllWhitespace("  hello  world  "));
         assertEquals("hello", trimAllWhitespace("  \t\n  h e l l o  \r\n\f"));
+    }
+
+    @Test
+    public void testCapitalize() {
+        assertNull(capitalize(null));
+        assertSame(TEST_EMPTY_STRING, capitalize(TEST_EMPTY_STRING));
+        assertSame(TEST_BLANK_STRING, capitalize(TEST_BLANK_STRING));
+        assertEquals("Hello world", capitalize("hello world"));
+        assertSame("Hello world", capitalize("Hello world"));
+    }
+
+    @Test
+    public void testUncapitalize() {
+        assertNull(uncapitalize(null));
+        assertSame(TEST_EMPTY_STRING, uncapitalize(TEST_EMPTY_STRING));
+        assertSame(TEST_BLANK_STRING, uncapitalize(TEST_BLANK_STRING));
+        assertEquals("hello world", uncapitalize("Hello world"));
+        assertSame("hello world", uncapitalize("hello world"));
     }
 
 }
