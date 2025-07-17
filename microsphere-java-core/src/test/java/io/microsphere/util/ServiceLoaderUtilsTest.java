@@ -14,7 +14,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.ServiceLoaderUtils.loadLastService;
 import static io.microsphere.util.ServiceLoaderUtils.loadServices;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static io.microsphere.util.ServiceLoaderUtils.serviceLoaderCached;
+import static io.microsphere.util.ServiceLoaderUtils.SERVICE_LOADER_CACHED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,7 +30,7 @@ class ServiceLoaderUtilsTest extends AbstractTestCase {
 
     private static final Class<EventListener> TEST_CLASS = EventListener.class;
 
-    private static final boolean TEST_CACHED = serviceLoaderCached;
+    private static final boolean TEST_CACHED = SERVICE_LOADER_CACHED;
 
     @Test
     public void testLoadServicesListWithServiceType() {
