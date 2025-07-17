@@ -19,10 +19,10 @@ package io.microsphere.beans;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
@@ -197,10 +197,16 @@ public class ConfigurationProperty {
         private String description;
 
         /**
+         * The sources of the property
+         */
+        private Set<String> sources;
+
+        /**
          * The targets of the property
          */
-        private Set<String> targets = new LinkedHashSet<>(8);
+        private Set<String> targets;
 
+        @Nonnull
         public String getDescription() {
             return description;
         }
@@ -209,7 +215,51 @@ public class ConfigurationProperty {
             this.description = description;
         }
 
+        /**
+         * Retrieves the set of sources associated with this configuration property.
+         * If the sources set is null, it will be initialized with an empty linked hash set.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         * ConfigurationProperty.Metadata metadata = new ConfigurationProperty.Metadata();
+         * metadata.getSources().add("source1");
+         * metadata.getSources().add("source2");
+         *
+         * // Retrieving the sources
+         * Set<String> sources = metadata.getSources(); // contains "source1", "source2"
+         * }</pre>
+         *
+         * @return the set of sources; never null
+         */
+        @Nonnull
+        public Set<String> getSources() {
+            if (sources == null) {
+                sources = newLinkedHashSet(2);
+            }
+            return sources;
+        }
+
+        /**
+         * Retrieves the set of targets associated with this configuration property.
+         * If the targets set is null, it will be initialized with an empty linked hash set.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         * ConfigurationProperty.Metadata metadata = new ConfigurationProperty.Metadata();
+         * metadata.getTargets().add("target1");
+         * metadata.getTargets().add("target2");
+         *
+         * // Retrieving the targets
+         * Set<String> targets = metadata.getTargets(); // contains "target1", "target2"
+         * }</pre>
+         *
+         * @return the set of targets; never null
+         */
+        @Nonnull
         public Set<String> getTargets() {
+            if (targets == null) {
+                targets = newLinkedHashSet(2);
+            }
             return targets;
         }
 
@@ -220,13 +270,15 @@ public class ConfigurationProperty {
             Metadata metadata = (Metadata) o;
 
             return Objects.equals(description, metadata.description)
-                    && Objects.equals(targets, metadata.targets);
+                    && Objects.equals(getSources(), metadata.getSources())
+                    && Objects.equals(getTargets(), metadata.getTargets());
         }
 
         @Override
         public int hashCode() {
             int result = Objects.hashCode(description);
-            result = 31 * result + Objects.hashCode(targets);
+            result = 31 * result + Objects.hashCode(getSources());
+            result = 31 * result + Objects.hashCode(getTargets());
             return result;
         }
 
@@ -234,7 +286,8 @@ public class ConfigurationProperty {
         public String toString() {
             return "Metadata{" +
                     "description='" + description + '\'' +
-                    ", targets=" + targets +
+                    ", sources=" + getSources() +
+                    ", targets=" + getTargets() +
                     '}';
         }
     }
