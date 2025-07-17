@@ -93,5 +93,10 @@ public @interface ConfigurationProperty {
          * OS Environment Variables
          */
         String ENVIRONMENT_VARIABLES = "environment-variables";
+
+        /**
+         * Application
+         */
+        String APPLICATION = "application";
     }
 }
