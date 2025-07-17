@@ -1,5 +1,6 @@
 package io.microsphere.util;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -9,14 +10,17 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentMap;
 
+import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
-import static java.lang.Boolean.getBoolean;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.System.getProperty;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
 import static java.util.ServiceLoader.load;
@@ -78,7 +82,26 @@ public abstract class ServiceLoaderUtils implements Utils {
 
     private static final Logger logger = getLogger(ServiceLoaderUtils.class);
 
-    static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
+    /**
+     * The default value of the {@link #SERVICE_LOADER_CACHED} property : {@code "false"}
+     */
+    public static final String DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE = "false";
+
+    /**
+     * The name of the {@link #SERVICE_LOADER_CACHED} property : {@code "microsphere.service-loader.cached"}
+     */
+    public static final String SERVICE_LOADER_CACHED_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "service-loader.cached";
+
+    /**
+     * Whether to cache the loaded services
+     */
+    @ConfigurationProperty(
+            name = SERVICE_LOADER_CACHED_PROPERTY_NAME,
+            defaultValue = DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE,
+            description = "Whether to cache the loaded services",
+            source = SYSTEM_PROPERTIES
+    )
+    public static final boolean SERVICE_LOADER_CACHED = parseBoolean(getProperty(SERVICE_LOADER_CACHED_PROPERTY_NAME, DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE));
 
     private static final ConcurrentMap<Class<?>, List<?>> servicesCache = newConcurrentHashMap();
 
@@ -131,7 +154,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadServicesList(serviceType, classLoader, serviceLoaderCached);
+        return loadServicesList(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -239,7 +262,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> S[] loadServices(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadServices(serviceType, classLoader, serviceLoaderCached);
+        return loadServices(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -382,7 +405,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> S loadFirstService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadFirstService(serviceType, classLoader, serviceLoaderCached);
+        return loadFirstService(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -494,7 +517,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> S loadLastService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadLastService(serviceType, classLoader, serviceLoaderCached);
+        return loadLastService(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
