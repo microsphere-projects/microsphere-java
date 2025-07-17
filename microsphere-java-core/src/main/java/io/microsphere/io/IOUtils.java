@@ -81,7 +81,6 @@ public abstract class IOUtils implements Utils {
      */
     @ConfigurationProperty(
             name = BUFFER_SIZE_PROPERTY_NAME,
-            type = int.class,
             defaultValue = DEFAULT_BUFFER_SIZE_PROPERTY_VALUE,
             description = "The buffer size for I/O",
             source = SYSTEM_PROPERTIES
