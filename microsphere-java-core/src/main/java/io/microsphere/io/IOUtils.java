@@ -16,6 +16,7 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
 import io.microsphere.util.Utils;
@@ -30,12 +31,15 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Integer.getInteger;
+import static java.lang.Integer.parseInt;
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 
@@ -51,15 +55,38 @@ public abstract class IOUtils implements Utils {
 
     private static final Logger logger = getLogger(IOUtils.class);
 
+    static final String DEFAULT_BUFFER_SIZE_PROPERTY_VALUE = "2048";
+
     /**
      * The default buffer size for I/O
      */
-    public static final int DEFAULT_BUFFER_SIZE = 2048;
+    public static final int DEFAULT_BUFFER_SIZE = parseInt(DEFAULT_BUFFER_SIZE_PROPERTY_VALUE);
+
+    /**
+     * The property name used to configure the I/O buffer size({@code "microsphere.io.buffer.size"}).
+     *
+     * <p>This property can be set in system properties or configuration files to customize
+     * the default buffer size used by I/O operations within the MicroSphere framework.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Set the custom buffer size property
+     * System.setProperty(IOUtils.BUFFER_SIZE_PROPERTY_NAME, "4096");
+     * }</pre>
+     */
+    public static final String BUFFER_SIZE_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "io.buffer.size";
 
     /**
      * The buffer size for I/O
      */
-    public static final int BUFFER_SIZE = getInteger("microsphere.io.buffer.size", DEFAULT_BUFFER_SIZE);
+    @ConfigurationProperty(
+            name = BUFFER_SIZE_PROPERTY_NAME,
+            type = int.class,
+            defaultValue = DEFAULT_BUFFER_SIZE_PROPERTY_VALUE,
+            description = "The buffer size for I/O",
+            source = SYSTEM_PROPERTIES
+    )
+    public static final int BUFFER_SIZE = getInteger(BUFFER_SIZE_PROPERTY_NAME, DEFAULT_BUFFER_SIZE);
 
     /**
      * Copies the content of the given {@link InputStream} into a new byte array.
