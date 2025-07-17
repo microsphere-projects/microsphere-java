@@ -72,4 +72,26 @@ public @interface ConfigurationProperty {
      */
     String description() default "";
 
+    /**
+     * The source of the configuration property.
+     *
+     * @return empty array as default
+     */
+    String[] source() default {};
+
+    /**
+     * The source constants of the configuration property.
+     */
+    interface Sources {
+
+        /**
+         * JDK System Properties
+         */
+        String SYSTEM_PROPERTIES = "system-properties";
+
+        /**
+         * OS Environment Variables
+         */
+        String ENVIRONMENT_VARIABLES = "environment-variables";
+    }
 }
