@@ -106,6 +106,12 @@ public class ConfigurationPropertyTest {
         assertEquals(metadata1.getDescription(), metadata.getDescription());
         assertEquals(metadata, metadata1);
 
+        metadata.getSources().add("source");
+        assertNotEquals(metadata, metadata1);
+        metadata1.getSources().add("source");
+        assertEquals(metadata.getSources(), metadata1.getSources());
+        assertEquals(metadata, metadata1);
+
         metadata.getTargets().add("target");
         assertNotEquals(metadata, metadata1);
         metadata1.getTargets().add("target");
