@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
@@ -35,11 +36,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
@@ -51,6 +54,7 @@ import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.lang.Integer.getInteger;
+import static java.lang.Integer.parseInt;
 import static java.lang.Math.min;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -78,9 +82,33 @@ public abstract class TypeUtils implements Utils {
 
     public static final Predicate<? super Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
 
-    public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = "microsphere.reflect.resolved-generic-types.cache.size";
+    /**
+     * The property name for resolved generic types cache size : {@code "microsphere.reflect.resolved-generic-types.cache.size"}
+     */
+    public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "reflect.resolved-generic-types.cache.size";
 
-    private static final ConcurrentMap<MultipleType, List<Type>> resolvedGenericTypesCache = newConcurrentHashMap(getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, 256));
+    /**
+     * The default value of resolved generic types cache size : {@code "256"}
+     */
+    public static final String DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE = "256";
+
+    /**
+     * The default size of resolved generic types cache
+     */
+    public static final int DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE = parseInt(DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE);
+
+    /**
+     * The size of resolved generic types cache
+     */
+    @ConfigurationProperty(
+            name = RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME,
+            defaultValue = DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE,
+            description = "The size of resolved generic types cache",
+            source = SYSTEM_PROPERTIES
+    )
+    public static final int RESOLVED_GENERIC_TYPES_CACHE_SIZE = getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE);
+
+    private static final ConcurrentMap<MultipleType, List<Type>> resolvedGenericTypesCache = newConcurrentHashMap(RESOLVED_GENERIC_TYPES_CACHE_SIZE);
 
     /**
      * Checks if the given object is an instance of {@link Class}.
