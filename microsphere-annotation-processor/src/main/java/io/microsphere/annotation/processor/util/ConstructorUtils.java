@@ -56,6 +56,25 @@ public interface ConstructorUtils extends Utils {
      * If the input {@code type} is {@code null}, an empty list is returned.
      * </p>
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement
+     * List<ExecutableElement> constructors = getDeclaredConstructors(typeElement);
+     * if (!constructors.isEmpty()) {
+     *     for (ExecutableElement constructor : constructors) {
+     *         System.out.println("Constructor: " + constructor);
+     *     }
+     * } else {
+     *     System.out.println("No constructors found.");
+     * }
+     * }</pre>
+     *
+     * <p>
+     * This method is particularly useful when processing annotations during compilation,
+     * where it is necessary to inspect the constructors of a class without throwing exceptions
+     * for null inputs.
+     * </p>
+     *
      * @param type the {@link TypeElement} representing the type to retrieve constructors from
      * @return a {@link List} of {@link ExecutableElement} objects representing the declared constructors;
      * never {@code null}, but may be empty if no constructors are found or if the input is {@code null}
@@ -69,6 +88,25 @@ public interface ConstructorUtils extends Utils {
      * <p>
      * This method provides a null-safe way to obtain the constructors of a given type.
      * If the input {@code type} is {@code null}, an empty list is returned.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror
+     * List<ExecutableElement> constructors = getDeclaredConstructors(typeMirror);
+     * if (!constructors.isEmpty()) {
+     *     for (ExecutableElement constructor : constructors) {
+     *         System.out.println("Constructor: " + constructor);
+     *     }
+     * } else {
+     *     System.out.println("No constructors found.");
+     * }
+     * }</pre>
+     *
+     * <p>
+     * This method is particularly useful when processing annotations during compilation,
+     * where it is necessary to inspect the constructors of a class without throwing exceptions
+     * for null inputs.
      * </p>
      *
      * @param type the {@link TypeMirror} representing the type to retrieve constructors from
@@ -86,6 +124,18 @@ public interface ConstructorUtils extends Utils {
      * If the input {@code type} is {@code null}, or no matching constructor is found, {@code null} is returned.
      * </p>
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement
+     * Type[] paramTypes = new Type[] { String.class, int.class };
+     * ExecutableElement constructor = findConstructor(typeElement, paramTypes);
+     * if (constructor != null) {
+     *     System.out.println("Found constructor: " + constructor);
+     * } else {
+     *     System.out.println("Constructor not found.");
+     * }
+     * }</pre>
+     *
      * @param type           the {@link TypeElement} representing the type to search for constructors
      * @param parameterTypes the array of {@link Type} objects representing the parameter types to match
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
@@ -100,6 +150,18 @@ public interface ConstructorUtils extends Utils {
      * This method provides a null-safe way to locate a constructor based on its parameter types.
      * If the input {@code type} is {@code null}, or no matching constructor is found, {@code null} is returned.
      * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror
+     * Type[] paramTypes = new Type[] { String.class, int.class };
+     * ExecutableElement constructor = findConstructor(typeMirror, paramTypes);
+     * if (constructor != null) {
+     *     System.out.println("Found constructor: " + constructor);
+     * } else {
+     *     System.out.println("Constructor not found.");
+     * }
+     * }</pre>
      *
      * @param type           the {@link TypeMirror} representing the type to search for constructors
      * @param parameterTypes the array of {@link Type} objects representing the parameter types to match
@@ -119,6 +181,25 @@ public interface ConstructorUtils extends Utils {
      * If the input {@code type} is {@code null}, an empty list is returned.
      * The provided filters can be used to selectively include only those constructors that match the criteria.
      * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement
+     * // Get all declared constructors
+     * List<ExecutableElement> allConstructors = findDeclaredConstructors(typeElement);
+     *
+     * // Get only constructors with specific parameter types
+     * List<ExecutableElement> filteredConstructors = findDeclaredConstructors(typeElement,
+     *     constructor -> matchParameterTypes(constructor, String.class, int.class));
+     *
+     * if (!filteredConstructors.isEmpty()) {
+     *     for (ExecutableElement constructor : filteredConstructors) {
+     *         System.out.println("Matching Constructor: " + constructor);
+     *     }
+     * } else {
+     *     System.out.println("No matching constructors found.");
+     * }
+     * }</pre>
      *
      * @param type               the {@link TypeElement} representing the type to retrieve constructors from
      * @param constructorFilters optional predicates to filter the constructors; if none are provided, all constructors are included
@@ -153,6 +234,26 @@ public interface ConstructorUtils extends Utils {
      * and applying the specified filters to narrow down the results. If the input {@code type}
      * is {@code null}, an empty list is returned.
      * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror
+     *
+     * // Get all declared constructors
+     * List<ExecutableElement> allConstructors = filterDeclaredConstructors(typeMirror);
+     *
+     * // Get only constructors with specific parameter types
+     * List<ExecutableElement> filteredConstructors = filterDeclaredConstructors(typeMirror,
+     *     constructor -> matchParameterTypes(constructor, String.class, int.class));
+     *
+     * if (!filteredConstructors.isEmpty()) {
+     *     for (ExecutableElement constructor : filteredConstructors) {
+     *         System.out.println("Matching Constructor: " + constructor);
+     *     }
+     * } else {
+     *     System.out.println("No matching constructors found.");
+     * }
+     * }</pre>
      *
      * @param type               the {@link TypeMirror} representing the type to retrieve constructors from
      * @param constructorFilters optional predicates to filter the constructors; if none are provided, all constructors are included
