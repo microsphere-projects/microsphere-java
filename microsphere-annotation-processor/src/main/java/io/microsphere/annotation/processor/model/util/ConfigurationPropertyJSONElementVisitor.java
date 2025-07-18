@@ -22,7 +22,6 @@ import io.microsphere.annotation.processor.model.element.StringAnnotationValue;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import java.util.Map;
@@ -39,11 +38,41 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.json.JSONUtils.append;
 
 /**
- * The {@link ElementVisitor} for {@link io.microsphere.annotation.ConfigurationProperty} JSON
+ * A concrete implementation of {@link AnnotatedElementJSONElementVisitor} that processes elements
+ * annotated with {@link io.microsphere.annotation.ConfigurationProperty} and generates JSON
+ * representations for them.
+ *
+ * <p>This class is responsible for visiting variable elements (fields) annotated with the
+ * {@link io.microsphere.annotation.ConfigurationProperty} annotation and converting their
+ * metadata into a structured JSON format. It captures key information such as the property name,
+ * type, source type, and source field.</p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <p>Assume the following annotation usage:</p>
+ *
+ * <pre>{@code
+ * @ConfigurationProperty(name = "customName", type = String.class)
+ * private String myProperty;
+ * }</pre>
+ *
+ * <p>When this field is processed by the visitor, it generates JSON output similar to the following:</p>
+ *
+ * <pre>{@code
+ * {
+ *   "name": "customName",
+ *   "type": "java.lang.String",
+ *   "sourceType": "com.example.MyClass",
+ *   "sourceField": "myProperty"
+ * }
+ * }</pre>
+ *
+ * <p>If the {@code name} attribute is not explicitly provided, the visitor uses the field's constant value.
+ * Similarly, if the {@code type} attribute is not specified, it defaults to the field's actual type.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see io.microsphere.annotation.ConfigurationProperty
- * @see ElementVisitor
+ * @see AnnotatedElementJSONElementVisitor
  * @since 1.0.0
  */
 public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
