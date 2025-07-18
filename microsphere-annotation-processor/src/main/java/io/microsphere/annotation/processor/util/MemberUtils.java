@@ -44,6 +44,17 @@ public interface MemberUtils extends Utils {
      * Returns the directly declared members of the provided {@link TypeMirror}.
      * If the given type is {@code null}, an empty list will be returned.
      *
+     * <h3>Example Usage</h3>
+     * <pre>
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror instance
+     * List<? extends Element> members = getDeclaredMembers(typeMirror);
+     * if (!members.isEmpty()) {
+     *     for (Element member : members) {
+     *         System.out.println("Declared member: " + member);
+     *     }
+     * }
+     * </pre>
+     *
      * @param type the type mirror to retrieve declared members from
      * @return a list of directly declared members, or an empty list if the type is {@code null}
      */
@@ -54,6 +65,17 @@ public interface MemberUtils extends Utils {
     /**
      * Returns the directly declared members of the provided {@link TypeElement}.
      * If the given type is {@code null}, an empty list will be returned.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement instance
+     * List<? extends Element> members = getDeclaredMembers(typeElement);
+     * if (!members.isEmpty()) {
+     *     for (Element member : members) {
+     *         System.out.println("Declared member: " + member);
+     *     }
+     * }
+     * }</pre>
      *
      * @param type the type element to retrieve declared members from
      * @return a list of directly declared members, or an empty list if the type is {@code null}
@@ -66,6 +88,17 @@ public interface MemberUtils extends Utils {
      * Returns all declared members (including those from superclasses and interfaces) of the provided {@link TypeMirror}.
      * If the given type is {@code null}, an empty list will be returned.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror instance
+     * List<? extends Element> allMembers = getAllDeclaredMembers(typeMirror);
+     * if (!allMembers.isEmpty()) {
+     *     for (Element member : allMembers) {
+     *         System.out.println("All declared member: " + member);
+     *     }
+     * }
+     * }</pre>
+     *
      * @param type the type mirror to retrieve all declared members from
      * @return a list of all declared members, or an empty list if the type is {@code null}
      */
@@ -77,6 +110,17 @@ public interface MemberUtils extends Utils {
      * Returns all declared members (including those from superclasses and interfaces) of the provided {@link TypeElement}.
      * If the given type is {@code null}, an empty list will be returned.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement instance
+     * List<? extends Element> allMembers = getAllDeclaredMembers(typeElement);
+     * if (!allMembers.isEmpty()) {
+     *     for (Element member : allMembers) {
+     *         System.out.println("All declared member: " + member);
+     *     }
+     * }
+     * }</pre>
+     *
      * @param type the type element to retrieve all declared members from
      * @return a list of all declared members, or an empty list if the type is {@code null}
      */
@@ -85,10 +129,22 @@ public interface MemberUtils extends Utils {
     }
 
     /**
-     * Returns the declared members of the provided {@link TypeMirror}, optionally including hierarchical types.
-     * If the given type is {@code null}, an empty list will be returned.
+     * Returns the declared members of the provided {@link TypeMirror}, optionally including
+     * members from superclasses and interfaces.
      *
-     * @param type                  the type mirror to retrieve declared members from
+     * <p>If the given type is {@code null}, an empty list will be returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror instance
+     * boolean includeSuperMembers = true; // Include members from superclasses/interfaces
+     * List<? extends Element> members = getDeclaredMembers(typeMirror, includeSuperMembers);
+     * for (Element member : members) {
+     *     System.out.println("Member: " + member);
+     * }
+     * }</pre>
+     *
+     * @param type                     the type mirror to retrieve declared members from
      * @param includeHierarchicalTypes whether to include members from superclasses and interfaces
      * @return a list of declared members, or an empty list if the type is {@code null}
      */
@@ -102,7 +158,17 @@ public interface MemberUtils extends Utils {
      *
      * <p>If the given type is {@code null}, an empty list will be returned.</p>
      *
-     * @param type                  the type element to retrieve declared members from
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement instance
+     * boolean includeSuperMembers = true; // Include members from superclasses/interfaces
+     * List<? extends Element> members = getDeclaredMembers(typeElement, includeSuperMembers);
+     * for (Element member : members) {
+     *     System.out.println("Member: " + member);
+     * }
+     * }</pre>
+     *
+     * @param type                     the type element to retrieve declared members from
      * @param includeHierarchicalTypes whether to include members from superclasses and interfaces
      * @return a list of declared members, or an empty list if the type is {@code null}
      */
@@ -111,8 +177,21 @@ public interface MemberUtils extends Utils {
     }
 
     /**
-     * Returns the declared members of the provided {@link TypeMirror} that match the given filters.
-     * If the given type is {@code null}, an empty list will be returned.
+     * Returns the declared members of the provided {@link TypeMirror}, optionally filtered by one or more predicates.
+     *
+     * <p>If the given type is {@code null}, an empty list will be returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror instance
+     * List<ExecutableElement> methods = findDeclaredMembers(typeMirror,
+     *     element -> element.getKind() == ElementKind.METHOD,
+     *     element -> element.getSimpleName().toString().startsWith("get")
+     * );
+     * for (Element method : methods) {
+     *     System.out.println("Matching method: " + method);
+     * }
+     * }</pre>
      *
      * @param <T>           the type of elements to filter
      * @param type          the type mirror to retrieve declared members from
@@ -127,6 +206,18 @@ public interface MemberUtils extends Utils {
      * Returns the directly declared members of the provided {@link TypeElement}, optionally filtered by one or more predicates.
      *
      * <p>If the given type is {@code null}, an empty list will be returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement instance
+     * List<VariableElement> fields = findDeclaredMembers(typeElement,
+     *     element -> element.getKind() == ElementKind.FIELD,
+     *     element -> element.getSimpleName().toString().startsWith("m_")
+     * );
+     * for (Element field : fields) {
+     *     System.out.println("Matching field: " + field);
+     * }
+     * }</pre>
      *
      * @param <T>           the type of elements to filter
      * @param type          the type element to retrieve declared members from
@@ -146,6 +237,18 @@ public interface MemberUtils extends Utils {
      *
      * <p>If the given type is {@code null}, an empty list will be returned.</p>
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror instance
+     * List<ExecutableElement> methods = findAllDeclaredMembers(typeMirror,
+     *     element -> element.getKind() == ElementKind.METHOD,
+     *     element -> element.getSimpleName().toString().startsWith("get")
+     * );
+     * for (Element method : methods) {
+     *     System.out.println("Matching method: " + method);
+     * }
+     * }</pre>
+     *
      * @param <T>           the type of elements to filter
      * @param type          the type mirror to retrieve all declared members from
      * @param memberFilters the predicates used to filter members
@@ -156,10 +259,32 @@ public interface MemberUtils extends Utils {
     }
 
     /**
-     * Returns all declared members (including those from superclasses and interfaces) of the provided {@link TypeElement},
-     * optionally filtered by one or more predicates.
+     * Retrieves all declared members (fields, methods, constructors, etc.) from the given {@link TypeElement},
+     * including those inherited from superclasses and implemented interfaces.
      *
-     * <p>If the given type is {@code null}, an empty list will be returned.</p>
+     * <p>This method collects all declared members by traversing the type hierarchy and applying
+     * the provided filters to narrow down the results.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement instance
+     * List<VariableElement> fields = findAllDeclaredMembers(typeElement,
+     *     element -> element.getKind() == ElementKind.FIELD
+     * );
+     * for (Element field : fields) {
+     *     System.out.println("Field: " + field);
+     * }
+     * }</pre>
+     *
+     * <pre>{@code
+     * List<ExecutableElement> methods = findAllDeclaredMembers(typeElement,
+     *     element -> element.getKind() == ElementKind.METHOD,
+     *     element -> element.getSimpleName().toString().startsWith("get")
+     * );
+     * for (Element method : methods) {
+     *     System.out.println("Getter method: " + method);
+     * }
+     * }</pre>
      *
      * @param <T>           the type of elements to filter
      * @param type          the type element to retrieve all declared members from
@@ -184,10 +309,23 @@ public interface MemberUtils extends Utils {
      *
      * <p>If the given type is {@code null}, an empty list will be returned.</p>
      *
-     * @param <T>           the type of elements to filter
-     * @param type          the type mirror to retrieve declared members from
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror typeMirror = ...; // Obtain a valid TypeMirror instance
+     * boolean includeSuperMembers = true; // Include members from superclasses/interfaces
+     * List<ExecutableElement> methods = findDeclaredMembers(typeMirror, includeSuperMembers,
+     *     element -> element.getKind() == ElementKind.METHOD,
+     *     element -> element.getSimpleName().toString().startsWith("get")
+     * );
+     * for (Element method : methods) {
+     *     System.out.println("Matching method: " + method);
+     * }
+     * }</pre>
+     *
+     * @param <T>                      the type of elements to filter
+     * @param type                     the type mirror to retrieve declared members from
      * @param includeHierarchicalTypes whether to include members from superclasses and interfaces
-     * @param memberFilters the predicates used to filter members
+     * @param memberFilters            the predicates used to filter members
      * @return a list of declared members matching the filters, or an empty list if the type is {@code null}
      */
     static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super T>... memberFilters) {
@@ -199,6 +337,19 @@ public interface MemberUtils extends Utils {
      * members from superclasses and interfaces, and filtered by one or more predicates.
      *
      * <p>If the given type is {@code null}, an empty list will be returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement typeElement = ...; // Obtain a valid TypeElement instance
+     * boolean includeSuperMembers = true; // Include members from superclasses/interfaces
+     * List<VariableElement> fields = findDeclaredMembers(typeElement, includeSuperMembers,
+     *     element -> element.getKind() == ElementKind.FIELD,
+     *     element -> element.getSimpleName().toString().startsWith("m_")
+     * );
+     * for (Element field : fields) {
+     *     System.out.println("Matching field: " + field);
+     * }
+     * }</pre>
      *
      * @param <T>           the type of elements to filter
      * @param type          the type element to retrieve declared members from
