@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
 import static io.microsphere.classloading.Artifact.create;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
@@ -125,7 +126,8 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     @ConfigurationProperty(
             type = String[].class,
             defaultValue = DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE,
-            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id"
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id",
+            source = SYSTEM_PROPERTIES
     )
     public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-id.manifest-attribute-names";
 
@@ -143,7 +145,8 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     @ConfigurationProperty(
             type = String[].class,
             defaultValue = DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE,
-            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version"
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version",
+            source = SYSTEM_PROPERTIES
     )
     public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-version.manifest-attribute-names";
 
