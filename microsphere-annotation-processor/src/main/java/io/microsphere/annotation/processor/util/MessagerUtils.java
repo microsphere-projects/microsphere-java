@@ -50,7 +50,7 @@ public interface MessagerUtils extends Utils {
      * and delegates to the underlying {@link Messager} obtained from the processing environment.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * ProcessingEnvironment processingEnv = ...; // Obtain processing environment
      * printNote(processingEnv, "Found {0} elements matching criteria", count);
@@ -72,7 +72,7 @@ public interface MessagerUtils extends Utils {
      * and forwards it to the underlying {@link Messager}.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * Messager messager = processingEnv.getMessager();
      * printNote(messager, "Found {0} elements matching criteria", count);
@@ -90,7 +90,7 @@ public interface MessagerUtils extends Utils {
      * and forwards it to the underlying {@link Messager}.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * Messager messager = processingEnv.getMessager();
      * printNote(messager, "Found {0} elements matching criteria", count);
@@ -114,7 +114,7 @@ public interface MessagerUtils extends Utils {
      * and internal logging utilities.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * ProcessingEnvironment processingEnv = ...; // Obtain processing environment
      * printWarning(processingEnv, "Found {0} deprecated elements", count);
@@ -137,7 +137,7 @@ public interface MessagerUtils extends Utils {
      * The message will also be logged through internal logging utilities at the warning level.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * Messager messager = processingEnv.getMessager();
      * printWarning(messager, "Found {0} deprecated elements", count);
@@ -161,7 +161,7 @@ public interface MessagerUtils extends Utils {
      * and internal logging utilities.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * ProcessingEnvironment processingEnv = ...; // Obtain processing environment
      * printMandatoryWarning(processingEnv, "Found {0} obsolete elements", count);
@@ -184,7 +184,7 @@ public interface MessagerUtils extends Utils {
      * The message will also be logged through internal logging utilities at the warning level.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * Messager messager = processingEnv.getMessager();
      * printMandatoryWarning(messager, "Found {0} obsolete elements", count);
@@ -208,7 +208,7 @@ public interface MessagerUtils extends Utils {
      * and internal logging utilities.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * ProcessingEnvironment processingEnv = ...; // Obtain processing environment
      * printError(processingEnv, "Failed to process {0} elements", count);
@@ -231,7 +231,7 @@ public interface MessagerUtils extends Utils {
      * The message will also be logged through internal logging utilities at the error level.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * Messager messager = processingEnv.getMessager();
      * printError(messager, "Failed to process {0} elements", count);
@@ -254,7 +254,7 @@ public interface MessagerUtils extends Utils {
      * to handle message formatting and output.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * ProcessingEnvironment processingEnv = ...; // Obtain processing environment
      * printMessage(processingEnv, Kind.WARNING, "Found {0} deprecated elements", count);
@@ -278,7 +278,7 @@ public interface MessagerUtils extends Utils {
      * internal logging utilities at the appropriate level.
      * </p>
      *
-     * <h3>Example:</h3>
+     * <h3>Example Usage</h3>
      * <pre>
      * Messager messager = processingEnv.getMessager();
      * printMessage(messager, Kind.ERROR, "Failed to process {0} elements", count);
