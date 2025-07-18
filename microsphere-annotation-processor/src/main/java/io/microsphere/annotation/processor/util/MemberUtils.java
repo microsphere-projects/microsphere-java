@@ -33,9 +33,42 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 /**
- * The utilities class for the members in the package "javax.lang.model.", such as "field", "method", "constructor"
+ * A utility interface for handling members (such as fields, methods, constructors) from types
+ * in the {@link javax.lang.model} package.
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * <h3>Overview</h3>
+ * <p>
+ * This interface provides a set of static methods to retrieve and filter members of a type,
+ * including direct members and those inherited from superclasses and interfaces.
+ * It is designed to simplify the process of working with type elements and their enclosed elements
+ * during annotation processing.
+ * </p>
+ *
+ * <h3>Key Features</h3>
+ * <ul>
+ *     <li>{@link #getDeclaredMembers(TypeMirror) getDeclaredMembers(TypeMirror)} - Retrieves directly declared members of a type.</li>
+ *     <li>{@link #getAllDeclaredMembers(TypeMirror) getAllDeclaredMembers(TypeMirror)} - Retrieves all declared members, including those from superclasses and interfaces.</li>
+ *     <li>{@link #findDeclaredMembers(TypeMirror, Predicate...) findDeclaredMembers(TypeMirror, Predicate...)} - Retrieves and filters declared members based on provided predicates.</li>
+ *     <li>{@link #findAllDeclaredMembers(TypeMirror, Predicate...) findAllDeclaredMembers(TypeMirror, Predicate...)} - Retrieves all declared members and applies filtering via predicates.</li>
+ * </ul>
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Retrieve all declared methods from a TypeMirror
+ * List<ExecutableElement> methods = findDeclaredMembers(typeMirror,
+ *     element -> element.getKind() == ElementKind.METHOD
+ * );
+ * }</pre>
+ *
+ * <pre>{@code
+ * // Retrieve all fields that start with "m_"
+ * List<VariableElement> filteredFields = findDeclaredMembers(typeElement,
+ *     element -> element.getKind() == ElementKind.FIELD,
+ *     element -> element.getSimpleName().toString().startsWith("m_")
+ * );
+ * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 public interface MemberUtils extends Utils {
