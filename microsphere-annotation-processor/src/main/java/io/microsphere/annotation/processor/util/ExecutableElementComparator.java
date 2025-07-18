@@ -32,7 +32,7 @@ import java.util.List;
  *     <li>Comparing to the type names of parameters {@link String#compareTo(String) lexicographically}</li>
  * </ol>
  *
- * <h3>Example:</h3>
+ * <h3>Example Usage</h3>
  * <pre>
  * class Example {
  *     void methodA() {}
