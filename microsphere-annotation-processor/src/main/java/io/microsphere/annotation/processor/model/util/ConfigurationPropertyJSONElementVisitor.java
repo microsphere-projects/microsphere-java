@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValues;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeMethod;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeValue;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesDefaultAttributeValue;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeName;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
@@ -81,8 +81,11 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
             for (Entry<ExecutableElement, AnnotationValue> elementValue : elementValues.entrySet()) {
                 ExecutableElement attributeMethod = elementValue.getKey();
                 AnnotationValue annotationValue = elementValue.getValue();
-                if (matchesAttributeMethod(attributeMethod, "name") && matchesAttributeValue(annotationValue, "")) {
+                if (matchesAttributeMethod(attributeMethod, "name") && matchesDefaultAttributeValue(attributeMethod, annotationValue)) {
                     annotationValue = new StringAnnotationValue((String) field.getConstantValue());
+                }
+                if (matchesAttributeMethod(attributeMethod, "type") && matchesDefaultAttributeValue(attributeMethod, annotationValue)) {
+                    annotationValue = new StringAnnotationValue(getTypeName(field.asType()));
                 }
                 visitor.visit(annotationValue, attributeMethod);
                 jsonBuilder.append(COMMA_CHAR);
