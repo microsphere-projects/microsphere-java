@@ -18,7 +18,7 @@ package io.microsphere.annotation.processor.model.util;
 
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.processor.AbstractAnnotationProcessingTest;
-import io.microsphere.classloading.ManifestArtifactResourceResolver;
+import io.microsphere.annotation.processor.model.ConfigurationPropertyModel;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.Element;
@@ -41,7 +41,7 @@ public class ConfigurationPropertyJSONElementVisitorTest extends AbstractAnnotat
 
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-        compiledClasses.add(ManifestArtifactResourceResolver.class);
+        compiledClasses.add(ConfigurationPropertyModel.class);
     }
 
     @Test
@@ -65,13 +65,4 @@ public class ConfigurationPropertyJSONElementVisitorTest extends AbstractAnnotat
 
         trace(jsonBuilder.toString());
     }
-//
-//    @Test
-//    public void test2() throws Throwable {
-//        Filer filer = processingEnv.getFiler();
-//        FileObject fileObject = filer.createResource(CLASS_OUTPUT, "", "META-INF/test.json");
-//        try (OutputStream outputStream = fileObject.openOutputStream()) {
-//            outputStream.write("{}".getBytes());
-//        }
-//    }
 }
