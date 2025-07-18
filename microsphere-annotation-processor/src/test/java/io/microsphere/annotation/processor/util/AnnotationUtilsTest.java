@@ -21,6 +21,7 @@ import io.microsphere.annotation.processor.TestAnnotation;
 import io.microsphere.annotation.processor.TestService;
 import io.microsphere.annotation.processor.TestServiceImpl;
 import io.microsphere.annotation.processor.model.Model;
+import io.microsphere.annotation.processor.model.element.StringAnnotationValue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -70,6 +71,7 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.isAnnotat
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAnnotationTypeName;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeMethod;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeValue;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesDefaultAttributeValue;
 import static io.microsphere.annotation.processor.util.FieldUtils.findField;
 import static io.microsphere.annotation.processor.util.MethodUtils.findMethod;
 import static io.microsphere.annotation.processor.util.MethodUtils.getAllDeclaredMethods;
@@ -549,18 +551,32 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
         Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(testTypeElement, TestAnnotation.class);
         for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
             AnnotationValue annotationValue = entry.getValue();
+            assertTrue(matchesAttributeValue(annotationValue, annotationValue));
             assertTrue(matchesAttributeValue(annotationValue, annotationValue.getValue()));
         }
+
+        assertTrue(matchesAttributeValue(new StringAnnotationValue(""), new StringAnnotationValue("")));
     }
 
     @Test
     public void testMatchesAttributeValueOnNull() {
-        assertFalse(matchesAttributeValue(null, null));
+        assertTrue(matchesAttributeValue(null, null));
+        assertFalse(matchesAttributeValue(null, (Object) null));
 
         Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(testTypeElement, TestAnnotation.class);
         for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
             AnnotationValue annotationValue = entry.getValue();
             assertFalse(matchesAttributeValue(annotationValue, null));
+            assertFalse(matchesAttributeValue(annotationValue, (Object) null));
+        }
+    }
+
+    @Test
+    public void testMatchesDefaultAttributeValue() {
+        Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(testTypeElement, ServiceMode.class);
+        for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
+            ExecutableElement attributeMethod = entry.getKey();
+            assertTrue(matchesDefaultAttributeValue(attributeMethod, attributeMethod.getDefaultValue()));
         }
     }
 
