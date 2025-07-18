@@ -37,22 +37,40 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 public interface ClassUtils extends Utils {
 
     /**
-     * Returns the fully qualified name of the class represented by the given {@link TypeMirror}.
+     * Gets the fully qualified class name from the given {@link TypeMirror}.
      *
-     * @param type the type mirror to get the class name from
-     * @return the fully qualified class name
+     * <p>
+     * This method is useful when working with annotation processors or other
+     * compile-time code analysis tools that deal with type information represented
+     * as a {@link TypeMirror}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>
+     * TypeMirror type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass").asType();
+     * String className = getClassName(type); // returns "com.example.MyClass"
+     * </pre>
+     *
+     * @param type the type mirror to extract the class name from
+     * @return the fully qualified class name as a String
      */
     static String getClassName(TypeMirror type) {
         return ofTypeElement(type).getQualifiedName().toString();
     }
 
-
     /**
      * Loads the class represented by the given {@link TypeMirror}.
      *
-     * <p>This method attempts to resolve the class using the fully qualified name derived from the type mirror.
-     * If the class cannot be resolved directly, an attempt is made to resolve it as a nested or inner class by
-     * replacing the last dot ({@code .}) with a dollar sign ({@code $}).
+     * <p>This method derives the fully qualified class name from the type mirror and
+     * delegates to the other {@link #loadClass(String)} method for class loading.
+     * It is particularly useful in annotation processors or compile-time tools where
+     * types are primarily accessed via their mirror representations.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>
+     * TypeMirror type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass").asType();
+     * Class<?> clazz = ClassUtils.loadClass(type); // loads com.example.MyClass
+     * </pre>
      *
      * @param type the type mirror representing the class to load
      * @return the resolved {@link Class}, or {@code null} if the class cannot be found
@@ -67,6 +85,12 @@ public interface ClassUtils extends Utils {
      * <p>This method attempts to resolve the class using the provided class name and the class loader
      * obtained from {@link ClassUtils}. If the class is not found, an attempt is made to resolve it
      * as a nested or inner class by replacing the last dot ({@code .}) with a dollar sign ({@code $}).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>
+     * Class<?> clazz = ClassUtils.loadClass("com.example.MyClass");
+     * // If MyClass is an inner class, this may also attempt to load "com.example.My$Class"
+     * </pre>
      *
      * @param className the fully qualified name of the class to load
      * @return the resolved {@link Class}, or {@code null} if the class cannot be found
