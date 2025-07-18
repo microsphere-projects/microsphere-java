@@ -616,6 +616,21 @@ public interface AnnotationUtils extends Utils {
      * <p>This method compares the actual value extracted from the annotation value with the provided
      * attribute value. Returns {@code false} if either parameter is {@code null} or if the values do not match.</p>
      *
+     * @param one     the annotation value to compare; may be {@code null}
+     * @param another the target annotation value to match against; may be {@code null}
+     * @return {@code true} if both parameters are non-null and their values match;
+     * {@code false} otherwise
+     */
+    static boolean matchesAttributeValue(AnnotationValue one, AnnotationValue another) {
+        return one == another ? true : another != null && matchesAttributeValue(one, another.getValue());
+    }
+
+    /**
+     * Checks if the value of the given {@link AnnotationValue} matches the specified attribute value.
+     *
+     * <p>This method compares the actual value extracted from the annotation value with the provided
+     * attribute value. Returns {@code false} if either parameter is {@code null} or if the values do not match.</p>
+     *
      * @param annotationValue the annotation value to compare; may be {@code null}
      * @param attributeValue  the target value to match against; may be {@code null}
      * @return {@code true} if both parameters are non-null and their values match;
@@ -623,6 +638,34 @@ public interface AnnotationUtils extends Utils {
      */
     static boolean matchesAttributeValue(AnnotationValue annotationValue, Object attributeValue) {
         return annotationValue != null && Objects.equals(annotationValue.getValue(), attributeValue);
+    }
+
+    /**
+     * Checks if the provided annotation value matches the default value of the specified attribute method.
+     *
+     * <p>This method is useful when determining if an attribute value in an annotation is explicitly set or
+     * if it falls back to the default value declared in the annotation interface.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public @interface MyAnnotation {
+     *     String value() default "default";
+     * }
+     *
+     * AnnotationMirror annotation = ...; // obtained from an annotated element
+     * ExecutableElement attributeMethod = getAttributeMethod(annotation, "value");
+     * AnnotationValue annotationValue = getAttributeValue(annotation, "value");
+     *
+     * boolean isDefaultValue = matchesDefaultAttributeValue(attributeMethod, annotationValue);
+     * }</pre></p>
+     *
+     * @param attributeMethod the executable element representing the annotation attribute method, may be {@code null}
+     * @param annotationValue the annotation value to compare against the default, may be {@code null}
+     * @return {@code true} if both the attribute method and annotation value are non-null and the value matches the default;
+     * {@code false} otherwise
+     */
+    static boolean matchesDefaultAttributeValue(ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+        return attributeMethod != null && matchesAttributeValue(attributeMethod.getDefaultValue(), annotationValue);
     }
 
     /**
