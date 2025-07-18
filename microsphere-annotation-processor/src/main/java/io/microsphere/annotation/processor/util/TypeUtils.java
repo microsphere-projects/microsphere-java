@@ -90,10 +90,24 @@ public interface TypeUtils extends Utils {
 
 
     /**
-     * Check if the given element is a simple type.
+     * Checks if the given Element represents a simple type.
      * A simple type is defined as a basic data type that can be directly represented without further resolution.
      *
-     * @param element the element to check
+     * <p>
+     * Examples of simple types include primitive types (e.g., int, boolean),
+     * built-in types like void, and commonly used basic classes like String or Number.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element intElement = ...; // represents 'int'
+     * boolean isSimple = TypeUtils.isSimpleType(intElement); // returns true
+     *
+     * Element customClassElement = ...; // represents a custom class like 'MyClass'
+     * boolean isSimple = TypeUtils.isSimpleType(customClassElement); // returns false
+     * }</pre>
+     *
+     * @param element the element to check, may be null
      * @return true if the element is a simple type, false otherwise
      */
     static boolean isSimpleType(Element element) {
@@ -105,6 +119,23 @@ public interface TypeUtils extends Utils {
      * A simple type is one that can be directly represented without further resolution,
      * such as primitive types, built-in types like void, or commonly recognized basic types.
      *
+     * <p>
+     * Examples of simple types include:
+     * <ul>
+     *     <li>Primitive types: int, boolean, char, etc.</li>
+     *     <li>Built-in types: void, java.lang.String, java.lang.Number</li>
+     * </ul>
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror intType = ...; // represents 'int'
+     * boolean isSimple = TypeUtils.isSimpleType(intType); // returns true
+     *
+     * TypeMirror customType = ...; // represents a custom class like 'MyClass'
+     * boolean isSimple = TypeUtils.isSimpleType(customType); // returns false
+     * }</pre>
+     *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a simple type; false otherwise
      */
@@ -114,7 +145,24 @@ public interface TypeUtils extends Utils {
 
     /**
      * Checks if the given Element and Type represent the same type.
-     * 
+     *
+     * <p>
+     * This method compares the type information of the provided Element and Type objects
+     * to determine if they represent the same type. If either parameter is null, the comparison
+     * is made based on whether both are null.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element element = ...; // represents a type like String
+     * Type type = ...; // represents the same type as the element
+     * boolean isSame = TypeUtils.isSameType(element, type); // returns true
+     *
+     * Element element2 = ...; // represents a different type
+     * Type type2 = ...; // represents a different type
+     * boolean isSame2 = TypeUtils.isSameType(element2, type2); // returns false
+     * }</pre>
+     *
      * @param element the Element to compare, may be null
      * @param type    the Type to compare, may be null
      * @return true if both represent the same type; false otherwise
@@ -126,8 +174,23 @@ public interface TypeUtils extends Utils {
     /**
      * Checks if the given Element and type name represent the same type.
      *
-     * @param type      the Element to compare, may be null
-     * @param typeName  the fully qualified class name to compare, may be null
+     * <p>
+     * This method compares the type information of the provided Element and the fully qualified class name
+     * to determine if they represent the same type. If either parameter is null, the comparison
+     * is made based on whether both are null.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element stringElement = ...; // represents 'java.lang.String'
+     * boolean isSame = TypeUtils.isSameType(stringElement, "java.lang.String"); // returns true
+     *
+     * Element customElement = ...; // represents 'com.example.MyClass'
+     * boolean isSame2 = TypeUtils.isSameType(customElement, "com.example.OtherClass"); // returns false
+     * }</pre>
+     *
+     * @param type     the Element to compare, may be null
+     * @param typeName the fully qualified class name to compare, may be null
      * @return true if both represent the same type; false otherwise
      */
     static boolean isSameType(Element type, CharSequence typeName) {
@@ -135,7 +198,28 @@ public interface TypeUtils extends Utils {
     }
 
     /**
-     * Checks if the given TypeMirror and Type represent the same type.
+     * Checks if the given {@link TypeMirror} and {@link Type} represent the same type.
+     *
+     * <p>
+     * This method compares the fully qualified type name of the {@link TypeMirror} with the
+     * {@link Type#getTypeName() type name} of the provided {@link Type} to determine if they
+     * represent the same type. If both are {@code null}, they are considered the same.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror stringTypeMirror = element.asType(); // represents 'java.lang.String'
+     * Type stringType = Class.forName("java.lang.String");
+     * boolean isSame = TypeUtils.isSameType(stringTypeMirror, stringType); // returns true
+     *
+     * TypeMirror intTypeMirror = processingEnv.getTypeUtils().getPrimitiveType(TypeKind.INT);
+     * Type intType = int.class;
+     * boolean isSamePrimitive = TypeUtils.isSameType(intTypeMirror, intType); // returns true
+     *
+     * TypeMirror customTypeMirror = ...; // represents 'com.example.MyClass'
+     * Type customType = Class.forName("com.example.OtherClass");
+     * boolean isSameCustom = TypeUtils.isSameType(customTypeMirror, customType); // returns false
+     * }</pre>
      *
      * @param typeMirror the TypeMirror to compare, may be null
      * @param type       the Type to compare, may be null
@@ -147,6 +231,21 @@ public interface TypeUtils extends Utils {
 
     /**
      * Checks if the given TypeMirror and type name represent the same type.
+     *
+     * <p>
+     * This method compares the fully qualified type name of the TypeMirror with the provided
+     * typeName to determine if they represent the same type. If both are null, they are considered
+     * the same.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror stringTypeMirror = element.asType(); // represents 'java.lang.String'
+     * boolean isSame = TypeUtils.isSameType(stringTypeMirror, "java.lang.String"); // returns true
+     *
+     * TypeMirror customTypeMirror = ...; // represents 'com.example.MyClass'
+     * boolean isSameCustom = TypeUtils.isSameType(customTypeMirror, "com.example.OtherClass"); // returns false
+     * }</pre>
      *
      * @param type     the TypeMirror to compare, may be null
      * @param typeName the fully qualified class name to compare, may be null
@@ -162,6 +261,21 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given {@link TypeMirror} represents an array type.
      *
+     * <p>
+     * This method determines if the provided TypeMirror corresponds to an array type
+     * by checking its kind against the array type kind defined in the Java language model.
+     * If the provided TypeMirror is null, the method returns false.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror arrayTypeMirror = processingEnv.getTypeUtils().getArrayType(...); // represents an array type
+     * boolean isArray = TypeUtils.isArrayType(arrayTypeMirror); // returns true
+     *
+     * TypeMirror stringTypeMirror = element.asType(); // represents 'java.lang.String'
+     * boolean isArray = TypeUtils.isArrayType(stringTypeMirror); // returns false
+     * }</pre>
+     *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an array type; false otherwise
      */
@@ -172,6 +286,21 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given Element represents an array type.
      *
+     * <p>
+     * This method determines if the provided Element corresponds to an array type
+     * by checking its kind against the array type kind defined in the Java language model.
+     * If the provided Element is null, the method returns false.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element arrayElement = ...; // represents an array type like String[]
+     * boolean isArray = TypeUtils.isArrayType(arrayElement); // returns true
+     *
+     * Element stringElement = ...; // represents 'java.lang.String'
+     * boolean isArray = TypeUtils.isArrayType(stringElement); // returns false
+     * }</pre>
+     *
      * @param element the Element to check, may be null
      * @return true if the element represents an array type; false otherwise
      */
@@ -181,6 +310,22 @@ public interface TypeUtils extends Utils {
 
     /**
      * Checks whether the given {@link TypeMirror} represents an enum type.
+     *
+     * <p>
+     * This method determines if the provided TypeMirror corresponds to an enum type
+     * by checking its kind via the underlying element's {@link Element#getKind()}.
+     * If the provided TypeMirror is null or cannot be resolved to a declared type,
+     * the method returns false.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror enumTypeMirror = element.asType(); // represents an enum type like MyEnum
+     * boolean isEnum = TypeUtils.isEnumType(enumTypeMirror); // returns true
+     *
+     * TypeMirror stringTypeMirror = element.asType(); // represents 'java.lang.String'
+     * boolean isEnum = TypeUtils.isEnumType(stringTypeMirror); // returns false
+     * }</pre>
      *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an enum type; false otherwise
@@ -193,6 +338,22 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given Element represents an enum type.
      *
+     * <p>
+     * This method determines if the provided Element corresponds to an enum type
+     * by checking its kind via the underlying element's {@link Element#getKind()}.
+     * If the provided Element is null or cannot be resolved to a declared type,
+     * the method returns false.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element enumElement = ...; // represents an enum type like MyEnum
+     * boolean isEnum = TypeUtils.isEnumType(enumElement); // returns true
+     *
+     * Element stringElement = ...; // represents 'java.lang.String'
+     * boolean isEnum = TypeUtils.isEnumType(stringElement); // returns false
+     * }</pre>
+     *
      * @param element the Element to check, may be null
      * @return true if the element represents an enum type; false otherwise
      */
@@ -203,6 +364,15 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given {@link TypeMirror} represents a class type.
      * A class type is determined by checking if its corresponding element has the kind of a class.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * boolean isClass = TypeUtils.isClassType(classTypeMirror); // returns true
+     *
+     * TypeMirror interfaceTypeMirror = element.asType(); // represents an interface like MyInterface
+     * boolean isClass = TypeUtils.isClassType(interfaceTypeMirror); // returns false
+     * }</pre>
      *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a class type; false otherwise
@@ -216,6 +386,15 @@ public interface TypeUtils extends Utils {
      * Checks whether the given Element represents a class type.
      * A class type is determined by checking if its corresponding element has the kind of a class.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * boolean isClass = TypeUtils.isClassType(classElement); // returns true
+     *
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     * boolean isClass = TypeUtils.isClassType(interfaceElement); // returns false
+     * }</pre>
+     *
      * @param element the Element to check, may be null
      * @return true if the element represents a class type; false otherwise
      */
@@ -226,6 +405,15 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given {@link TypeMirror} represents a primitive type.
      * A primitive type is one of the predefined types in Java such as int, boolean, etc.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror intTypeMirror = processingEnv.getTypeUtils().getPrimitiveType(TypeKind.INT);
+     * boolean isPrimitive = TypeUtils.isPrimitiveType(intTypeMirror); // returns true
+     *
+     * TypeMirror stringTypeMirror = elementUtils.getTypeElement("java.lang.String").asType();
+     * boolean isPrimitiveString = TypeUtils.isPrimitiveType(stringTypeMirror); // returns false
+     * }</pre>
      *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a primitive type; false otherwise
@@ -238,6 +426,15 @@ public interface TypeUtils extends Utils {
      * Checks whether the given Element represents a primitive type.
      * A primitive type is one of the predefined types in Java such as int, boolean, etc.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element intElement = ...; // represents 'int'
+     * boolean isPrimitive = TypeUtils.isPrimitiveType(intElement); // returns true
+     *
+     * Element stringElement = ...; // represents 'java.lang.String'
+     * boolean isPrimitiveString = TypeUtils.isPrimitiveType(stringElement); // returns false
+     * }</pre>
+     *
      * @param element the Element to check, may be null
      * @return true if the element represents a primitive type; false otherwise
      */
@@ -248,6 +445,15 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given {@link TypeMirror} represents an interface type.
      * An interface type is determined by checking if its corresponding element has the kind of an interface.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror interfaceTypeMirror = element.asType(); // represents an interface like MyInterface
+     * boolean isInterface = TypeUtils.isInterfaceType(interfaceTypeMirror); // returns true
+     *
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * boolean isInterface = TypeUtils.isInterfaceType(classTypeMirror); // returns false
+     * }</pre>
      *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an interface type; false otherwise
@@ -261,6 +467,15 @@ public interface TypeUtils extends Utils {
      * Checks whether the given Element represents an interface type.
      * An interface type is determined by checking if its corresponding element has the kind of an interface.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     * boolean isInterface = TypeUtils.isInterfaceType(interfaceElement); // returns true
+     *
+     * Element classElement = ...; // represents a class like MyClass
+     * boolean isInterface = TypeUtils.isInterfaceType(classElement); // returns false
+     * }</pre>
+     *
      * @param element the Element to check, may be null
      * @return true if the element represents an interface type; false otherwise
      */
@@ -271,6 +486,15 @@ public interface TypeUtils extends Utils {
     /**
      * Checks whether the given {@link TypeMirror} represents an annotation type.
      * An annotation type is determined by checking if its corresponding element has the kind of an annotation.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror annotationTypeMirror = element.asType(); // represents an annotation like MyAnnotation
+     * boolean isAnnotation = TypeUtils.isAnnotationType(annotationTypeMirror); // returns true
+     *
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * boolean isAnnotation = TypeUtils.isAnnotationType(classTypeMirror); // returns false
+     * }</pre>
      *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is an annotation type; false otherwise
@@ -284,6 +508,15 @@ public interface TypeUtils extends Utils {
      * Checks whether the given Element represents an annotation type.
      * An annotation type is determined by checking if its corresponding element has the kind of an annotation.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element annotationElement = ...; // represents an annotation like MyAnnotation
+     * boolean isAnnotation = TypeUtils.isAnnotationType(annotationElement); // returns true
+     *
+     * Element classElement = ...; // represents a class like MyClass
+     * boolean isAnnotation = TypeUtils.isAnnotationType(classElement); // returns false
+     * }</pre>
+     *
      * @param element the Element to check, may be null
      * @return true if the element represents an annotation type; false otherwise
      */
@@ -294,7 +527,22 @@ public interface TypeUtils extends Utils {
     /**
      * Checks if the given Element is a TypeElement.
      *
-     * @param element The element to check, may be null.
+     * <p>
+     * This method verifies whether the provided Element represents a type element,
+     * such as a class, interface, enum, or annotation type. If the element is null,
+     * it returns false.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * boolean isType = TypeUtils.isTypeElement(classElement); // returns true
+     *
+     * Element packageElement = ...; // represents a package
+     * boolean isType = TypeUtils.isTypeElement(packageElement); // returns false
+     * }</pre>
+     *
+     * @param element The Element to check, may be null.
      * @return true if the element is a TypeElement; false otherwise.
      */
     static boolean isTypeElement(Element element) {
@@ -303,6 +551,20 @@ public interface TypeUtils extends Utils {
 
     /**
      * Checks if the given TypeMirror represents a TypeElement.
+     * A TypeElement is a type that corresponds to a class, interface, enum, or annotation type
+     * that has been explicitly defined in the source code.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * boolean isType = TypeUtils.isTypeElement(classTypeMirror); // returns true
+     *
+     * TypeMirror intTypeMirror = processingEnv.getTypeUtils().getPrimitiveType(TypeKind.INT);
+     * boolean isTypePrimitive = TypeUtils.isTypeElement(intTypeMirror); // returns false
+     *
+     * TypeMirror stringArrayTypeMirror = processingEnv.getTypeUtils().getArrayType(...); // represents String[]
+     * boolean isTypeArray = TypeUtils.isTypeElement(stringArrayTypeMirror); // returns false
+     * }</pre>
      *
      * @param type the TypeMirror to check, may be null
      * @return true if the TypeMirror represents a TypeElement; false otherwise
@@ -313,9 +575,18 @@ public interface TypeUtils extends Utils {
     }
 
     /**
-     * Checks if the given Element represents a DeclaredType.
-     * A DeclaredType typically refers to a type that is explicitly declared in the code,
-     * such as classes, interfaces, enums, or annotation types.
+     * Checks whether the given Element represents a declared type.
+     * A declared type is a type that corresponds to a class, interface, enum, or annotation type
+     * that has been explicitly defined in the source code.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * boolean isDeclared = TypeUtils.isDeclaredType(classElement); // returns true
+     *
+     * Element packageElement = ...; // represents a package
+     * boolean isDeclaredPackage = TypeUtils.isDeclaredType(packageElement); // returns false
+     * }</pre>
      *
      * @param element the Element to check, may be null
      * @return true if the element represents a DeclaredType; false otherwise
@@ -329,6 +600,18 @@ public interface TypeUtils extends Utils {
      * A declared type is a type that corresponds to a class, interface, enum, or annotation type
      * that has been explicitly defined in the source code.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * boolean isDeclared = TypeUtils.isDeclaredType(classTypeMirror); // returns true
+     *
+     * TypeMirror intTypeMirror = processingEnv.getTypeUtils().getPrimitiveType(TypeKind.INT);
+     * boolean isDeclaredPrimitive = TypeUtils.isDeclaredType(intTypeMirror); // returns false
+     *
+     * TypeMirror stringArrayTypeMirror = processingEnv.getTypeUtils().getArrayType(...); // represents String[]
+     * boolean isDeclaredArray = TypeUtils.isDeclaredType(stringArrayTypeMirror); // returns false
+     * }</pre>
+     *
      * @param type the TypeMirror to check, may be null
      * @return true if the type is a declared type; false otherwise
      */
@@ -339,8 +622,22 @@ public interface TypeUtils extends Utils {
     /**
      * Converts the given Element to a TypeElement if it is an instance of TypeElement.
      *
+     * <p>
+     * This method checks if the provided Element represents a type element such as a class, interface,
+     * enum, or annotation type. If the element is null or not a TypeElement, this method returns null.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * TypeElement typeElement = TypeUtils.ofTypeElement(classElement); // returns a valid TypeElement
+     *
+     * Element packageElement = ...; // represents a package
+     * TypeElement typeElementForPackage = TypeUtils.ofTypeElement(packageElement); // returns null
+     * }</pre>
+     *
      * @param element The Element to convert, may be null.
-     * @return The converted TypeElement, or null if the element is not a TypeElement or is null.
+     * @return The converted TypeElement if the element is a TypeElement; otherwise, null.
      */
     static TypeElement ofTypeElement(Element element) {
         return isTypeElement(element) ? (TypeElement) element : null;
@@ -349,9 +646,25 @@ public interface TypeUtils extends Utils {
     /**
      * Converts the given TypeMirror to a TypeElement if it represents a declared type.
      *
+     * <p>
+     * This method checks if the provided TypeMirror corresponds to a declared type
+     * (such as a class, interface, enum, or annotation type). If it does, the corresponding
+     * TypeElement is returned. If the TypeMirror is null or not a declared type,
+     * this method returns null.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * TypeElement typeElement = TypeUtils.ofTypeElement(classTypeMirror); // returns a valid TypeElement
+     *
+     * TypeMirror intTypeMirror = processingEnv.getTypeUtils().getPrimitiveType(TypeKind.INT);
+     * TypeElement primitiveTypeElement = TypeUtils.ofTypeElement(intTypeMirror); // returns null
+     * }</pre>
+     *
      * @param type The TypeMirror to convert, may be null.
      * @return The corresponding TypeElement if the TypeMirror represents a declared type;
-     *         otherwise, null if the type is null or not a DeclaredType.
+     * otherwise, null if the type is null or not a DeclaredType.
      */
     static TypeElement ofTypeElement(TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
@@ -361,9 +674,22 @@ public interface TypeUtils extends Utils {
     /**
      * Converts the given DeclaredType to a TypeElement if it is not null.
      *
+     * <p>This method attempts to convert the provided {@link DeclaredType} to a corresponding
+     * {@link TypeElement}. If the declared type is null, or if it cannot be resolved to a type element,
+     * this method returns null.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * DeclaredType declaredType = ...; // represents a declared type like MyClass
+     * TypeElement typeElement = TypeUtils.ofTypeElement(declaredType); // returns a valid TypeElement if available
+     *
+     * DeclaredType nullDeclaredType = null;
+     * TypeElement nullTypeElement = TypeUtils.ofTypeElement(nullDeclaredType); // returns null
+     * }</pre>
+     *
      * @param declaredType the DeclaredType to convert, may be null
      * @return the corresponding TypeElement if the DeclaredType is not null;
-     *         otherwise, null
+     * otherwise, null
      */
     static TypeElement ofTypeElement(DeclaredType declaredType) {
         if (declaredType != null) {
@@ -376,9 +702,24 @@ public interface TypeUtils extends Utils {
      * Converts the given Element to a DeclaredType by first converting it to a TypeElement.
      * If the element is null or cannot be converted to a DeclaredType, returns null.
      *
+     * <p>
+     * This method checks if the provided Element represents a type element (class, interface, enum, or annotation).
+     * If it does, the corresponding TypeElement is obtained, and its asType() method is called to retrieve the TypeMirror.
+     * Then, the TypeMirror is converted to a DeclaredType if it represents a declared type.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * DeclaredType declaredType = TypeUtils.ofDeclaredType(classElement); // returns a valid DeclaredType
+     *
+     * Element packageElement = ...; // represents a package
+     * DeclaredType packageDeclaredType = TypeUtils.ofDeclaredType(packageElement); // returns null
+     * }</pre>
+     *
      * @param element The Element to convert, may be null.
      * @return The corresponding DeclaredType if the element is valid and represents a declared type;
-     *         otherwise, null if the element is null or conversion fails.
+     * otherwise, null if the element is null or conversion fails.
      */
     static DeclaredType ofDeclaredType(Element element) {
         return element == null ? null : ofDeclaredType(element.asType());
@@ -389,9 +730,21 @@ public interface TypeUtils extends Utils {
      * A declared type is a type that corresponds to a class, interface, enum, or annotation type
      * that has been explicitly defined in the source code.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * DeclaredType declaredType = TypeUtils.ofDeclaredType(classTypeMirror); // returns a valid DeclaredType
+     *
+     * TypeMirror intTypeMirror = processingEnv.getTypeUtils().getPrimitiveType(TypeKind.INT);
+     * DeclaredType primitiveDeclaredType = TypeUtils.ofDeclaredType(intTypeMirror); // returns null
+     *
+     * TypeMirror stringArrayTypeMirror = processingEnv.getTypeUtils().getArrayType(...); // represents String[]
+     * DeclaredType arrayDeclaredType = TypeUtils.ofDeclaredType(stringArrayTypeMirror); // returns null
+     * }</pre>
+     *
      * @param type The TypeMirror to convert, may be null.
      * @return The corresponding DeclaredType if the TypeMirror represents a declared type;
-     *         otherwise, null if the type is null or not a DeclaredType.
+     * otherwise, null if the type is null or not a DeclaredType.
      */
     static DeclaredType ofDeclaredType(TypeMirror type) {
         return isDeclaredType(type) ? (DeclaredType) type : null;
@@ -400,6 +753,17 @@ public interface TypeUtils extends Utils {
     /**
      * Converts an array of Elements to a List of TypeMirrors.
      * If the input array is null or empty, returns an empty list.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     *
+     * List<TypeMirror> typeMirrors = TypeUtils.ofTypeMirrors(classElement, interfaceElement);
+     * // typeMirrors now contains the TypeMirror of MyClass and MyInterface
+     *
+     * List<TypeMirror> emptyList = TypeUtils.ofTypeMirrors(); // returns an empty list
+     * }</pre>
      *
      * @param elements the array of Elements to convert
      * @return a List of TypeMirrors derived from the given Elements
@@ -411,6 +775,17 @@ public interface TypeUtils extends Utils {
     /**
      * Converts a collection of Elements to a list of TypeMirrors.
      * Optionally applies an array of predicates to filter the resulting TypeMirrors.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     *
+     * List<TypeMirror> typeMirrors = TypeUtils.ofTypeMirrors(Arrays.asList(classElement, interfaceElement));
+     * // typeMirrors now contains the TypeMirror of MyClass and MyInterface
+     *
+     * List<TypeMirror> emptyList = TypeUtils.ofTypeMirrors(Collections.emptyList()); // returns an empty list
+     * }</pre>
      *
      * @param elements The collection of Elements to convert. Must not be null.
      * @return A list of TypeMirrors derived from the given Elements.
@@ -428,6 +803,17 @@ public interface TypeUtils extends Utils {
      * Converts an array of TypeMirrors to a List of TypeElements.
      * If the input array is null or empty, returns an empty list.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * TypeMirror interfaceTypeMirror = element.asType(); // represents an interface like MyInterface
+     *
+     * List<TypeElement> typeElements = TypeUtils.ofTypeElements(classTypeMirror, interfaceTypeMirror);
+     * // typeElements now contains the TypeElement of MyClass and MyInterface
+     *
+     * List<TypeElement> emptyList = TypeUtils.ofTypeElements(); // returns an empty list
+     * }</pre>
+     *
      * @param types The array of TypeMirrors to convert. May be null or contain null elements.
      * @return A List of TypeElements derived from the given TypeMirrors.
      */
@@ -437,7 +823,18 @@ public interface TypeUtils extends Utils {
 
     /**
      * Converts a collection of TypeMirrors to a list of TypeElements.
-     * If the input collection is null or empty, returns an empty list.
+     * Optionally applies an array of predicates to filter the resulting TypeElements.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * TypeMirror interfaceTypeMirror = element.asType(); // represents an interface like MyInterface
+     *
+     * List<TypeElement> typeElements = TypeUtils.ofTypeElements(Arrays.asList(classTypeMirror, interfaceTypeMirror));
+     * // typeElements now contains the TypeElement of MyClass and MyInterface
+     *
+     * List<TypeElement> emptyList = TypeUtils.ofTypeElements(Collections.emptyList()); // returns an empty list
+     * }</pre>
      *
      * @param types The collection of TypeMirrors to convert. Must not be null.
      * @return A list of TypeElements derived from the given TypeMirrors.
@@ -449,6 +846,17 @@ public interface TypeUtils extends Utils {
     /**
      * Converts a collection of TypeMirrors to a list of TypeElements.
      * Optionally applies an array of predicates to filter the resulting TypeElements.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror classTypeMirror = element.asType(); // represents a class like MyClass
+     * TypeMirror interfaceTypeMirror = element.asType(); // represents an interface like MyInterface
+     *
+     * List<TypeElement> typeElements = TypeUtils.ofTypeElements(Arrays.asList(classTypeMirror, interfaceTypeMirror));
+     * // typeElements now contains the TypeElement of MyClass and MyInterface
+     *
+     * List<TypeElement> emptyList = TypeUtils.ofTypeElements(Collections.emptyList()); // returns an empty list
+     * }</pre>
      *
      * @param types       The collection of TypeMirrors to convert. Must not be null.
      * @param typeFilters Optional predicates to filter the TypeElements. May be null or empty.
@@ -464,6 +872,17 @@ public interface TypeUtils extends Utils {
      * Converts an array of Elements to a List of DeclaredTypes.
      * If the input array is null or empty, returns an empty list.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     *
+     * List<DeclaredType> declaredTypes = TypeUtils.ofDeclaredTypes(classElement, interfaceElement);
+     * // declaredTypes now contains the DeclaredType of MyClass and MyInterface
+     *
+     * List<DeclaredType> emptyList = TypeUtils.ofDeclaredTypes(); // returns an empty list
+     * }</pre>
+     *
      * @param elements the array of Elements to convert
      * @return a List of DeclaredTypes derived from the given Elements
      */
@@ -475,6 +894,17 @@ public interface TypeUtils extends Utils {
      * Converts a collection of Elements to a list of DeclaredTypes.
      * Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     *
+     * List<DeclaredType> declaredTypes = TypeUtils.ofDeclaredTypes(Arrays.asList(classElement, interfaceElement));
+     * // declaredTypes now contains the DeclaredType of MyClass and MyInterface
+     *
+     * List<DeclaredType> emptyList = TypeUtils.ofDeclaredTypes(Collections.emptyList()); // returns an empty list
+     * }</pre>
+     *
      * @param elements The collection of Elements to convert. Must not be null.
      * @return A list of DeclaredTypes derived from the given Elements.
      */
@@ -485,6 +915,17 @@ public interface TypeUtils extends Utils {
     /**
      * Converts a collection of Elements to a list of DeclaredTypes.
      * Optionally applies an array of predicates to filter the resulting DeclaredTypes.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element classElement = ...; // represents a class like MyClass
+     * Element interfaceElement = ...; // represents an interface like MyInterface
+     *
+     * List<DeclaredType> declaredTypes = TypeUtils.ofDeclaredTypes(Arrays.asList(classElement, interfaceElement));
+     * // declaredTypes now contains the DeclaredType of MyClass and MyInterface
+     *
+     * List<DeclaredType> emptyList = TypeUtils.ofDeclaredTypes(Collections.emptyList()); // returns an empty list
+     * }</pre>
      *
      * @param elements    The collection of Elements to convert. Must not be null.
      * @param typeFilters Optional predicates to filter the DeclaredTypes. May be null or empty.
@@ -510,7 +951,25 @@ public interface TypeUtils extends Utils {
     }
 
     /**
-     * Gets the TypeElement representing the superclass of the given TypeElement.
+     * Retrieves the TypeElement representing the superclass of the given TypeElement.
+     *
+     * <p>If the provided TypeElement is null or represents a class without a superclass
+     * (e.g., {@link Object}, an interface, or an enum), this method returns null.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = ...; // represents a class like MyClass which extends SomeBaseClass
+     * TypeElement superClass = TypeUtils.getTypeElementOfSuperclass(type);
+     * // superClass now represents SomeBaseClass if available
+     *
+     * TypeElement interfaceType = ...; // represents an interface
+     * TypeElement superClassForInterface = TypeUtils.getTypeElementOfSuperclass(interfaceType);
+     * // superClassForInterface will be null since interfaces do not have a superclass
+     *
+     * TypeElement objectType = processingEnv.getElementUtils().getTypeElement("java.lang.Object");
+     * TypeElement superClassForObject = TypeUtils.getTypeElementOfSuperclass(objectType);
+     * // superClassForObject will be null since Object has no superclass
+     * }</pre>
      *
      * @param type the TypeElement whose superclass is to be retrieved, may be null
      * @return the TypeElement of the superclass if available; otherwise, null
@@ -520,12 +979,25 @@ public interface TypeUtils extends Utils {
     }
 
     /**
-     * Retrieves all super type elements (superclasses and interfaces) of the given TypeElement,
-     * including those from its entire hierarchy.
+     * Retrieves all TypeElements representing the superclasses and interfaces in the hierarchy of the given TypeElement.
+     * This includes both direct and indirect superclasses as well as implemented interfaces from the entire hierarchy.
      *
-     * @param type The TypeElement whose super types are to be retrieved, may be null
-     * @return A list of TypeElements representing the super types of the given TypeElement.
-     *         Returns an empty list if the input is null or no super types exist.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> superTypes = TypeUtils.getAllTypeElementsOfSuperTypes(type);
+     * // superTypes now contains all superclasses and interfaces in the hierarchy of MyClass
+     *
+     * TypeElement interfaceType = processingEnv.getElementUtils().getTypeElement("com.example.MyInterface");
+     * List<TypeElement> interfaceSuperTypes = TypeUtils.getAllTypeElementsOfSuperTypes(interfaceType);
+     * // interfaceSuperTypes now contains all superinterfaces of MyInterface
+     *
+     * List<TypeElement> emptyList = TypeUtils.getAllTypeElementsOfSuperTypes(null); // returns an empty list
+     * }</pre>
+     *
+     * @param type The TypeElement whose hierarchy is to be explored, may be null.
+     * @return A list of TypeElements representing all superclasses and interfaces in the hierarchy of the provided TypeElement.
+     * Returns an empty list if the input is null or no super types exist.
      */
     static List<TypeElement> getAllTypeElementsOfSuperTypes(TypeElement type) {
         return findAllTypeElementsOfSuperTypes(type, EMPTY_PREDICATE_ARRAY);
@@ -535,9 +1007,18 @@ public interface TypeUtils extends Utils {
      * Retrieves all TypeElements representing the superclasses in the hierarchy of the given TypeElement.
      * This includes direct and indirect superclasses, but excludes interfaces.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> superclasses = TypeUtils.getAllTypeElementsOfSuperclasses(type);
+     * // superclasses now contains all superclass TypeElements in the hierarchy of MyClass
+     *
+     * List<TypeElement> emptyList = TypeUtils.getAllTypeElementsOfSuperclasses(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeElement whose superclass hierarchy is to be explored, may be null.
      * @return A list of TypeElements representing all superclasses in the hierarchy of the provided TypeElement.
-     *         Returns an empty list if the input is null or no superclasses exist in the hierarchy.
+     * Returns an empty list if the input is null or no superclasses exist in the hierarchy.
      */
     static List<TypeElement> getAllTypeElementsOfSuperclasses(TypeElement type) {
         return findAllTypeElementsOfSuperclasses(type, EMPTY_PREDICATE_ARRAY);
@@ -545,12 +1026,21 @@ public interface TypeUtils extends Utils {
 
     /**
      * Retrieves the direct interface types implemented by the given TypeElement.
-     * This method does not include superinterfaces from the entire hierarchy,
-     * and only returns interfaces directly declared on the specified type.
+     * This method only returns interfaces directly declared on the specified type,
+     * and does not include superinterfaces from the entire hierarchy.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> interfaces = TypeUtils.getTypeElementsOfInterfaces(type);
+     * // interfaces now contains the directly implemented interfaces of MyClass
+     *
+     * List<TypeElement> emptyList = TypeUtils.getTypeElementsOfInterfaces(null); // returns an empty list
+     * }</pre>
      *
      * @param type The TypeElement whose directly implemented interfaces are to be retrieved, may be null.
      * @return A list of TypeElements representing the directly implemented interfaces.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<TypeElement> getTypeElementsOfInterfaces(TypeElement type) {
         return findTypeElementsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
@@ -560,22 +1050,47 @@ public interface TypeUtils extends Utils {
      * Retrieves all TypeElements representing the interfaces implemented in the entire hierarchy of the given TypeElement.
      * This includes both directly and indirectly implemented interfaces from superclasses and superinterfaces.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> interfaces = TypeUtils.getAllTypeElementsOfInterfaces(type);
+     * // interfaces now contains all interfaces implemented by MyClass, including those from superclasses
+     *
+     * List<TypeElement> emptyList = TypeUtils.getAllTypeElementsOfInterfaces(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeElement whose interface hierarchy is to be explored, may be null.
      * @return A list of TypeElements representing all implemented interfaces in the hierarchy of the provided TypeElement.
-     *         Returns an empty list if the input is null or no interfaces are found in the hierarchy.
+     * Returns an empty list if the input is null or no interfaces are found in the hierarchy.
      */
     static List<TypeElement> getAllTypeElementsOfInterfaces(TypeElement type) {
         return findAllTypeElementsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves the type elements directly associated with the given TypeElement.
-     * This includes its own type, any directly implemented interfaces,
-     * and the immediate superclass if present.
+     * Retrieves the directly associated TypeElements of the given TypeElement.
+     * This includes:
+     * - The type itself
+     * - Direct superclass (if any)
+     * - Directly implemented interfaces (if any)
      *
-     * @param type The TypeElement to retrieve associated types from, may be null.
+     * <p>This method does not traverse the entire hierarchy. It only includes direct relationships.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> directTypes = TypeUtils.getTypeElements(type);
+     * // directTypes contains:
+     * // - MyClass itself
+     * // - Its direct superclass (if any)
+     * // - Interfaces directly implemented by MyClass (if any)
+     *
+     * List<TypeElement> emptyList = TypeUtils.getTypeElements(null); // returns an empty list
+     * }</pre>
+     *
+     * @param type The TypeElement to retrieve directly associated types from, may be null.
      * @return A list of TypeElements representing the directly associated types.
-     *         Returns an empty list if the input is null or no types are found.
+     * Returns an empty list if the input is null or no direct associations exist.
      */
     static List<TypeElement> getTypeElements(TypeElement type) {
         return getTypeElements(type, true, false, true, true);
@@ -587,9 +1102,21 @@ public interface TypeUtils extends Utils {
      * - Direct and hierarchical superclasses
      * - Direct and hierarchical interfaces
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> allTypes = TypeUtils.getAllTypeElements(type);
+     * // allTypes contains:
+     * // - MyClass itself
+     * // - All superclasses in the hierarchy (e.g., Object, SomeBaseClass)
+     * // - All implemented interfaces, including those from superclasses and superinterfaces
+     *
+     * List<TypeElement> emptyList = TypeUtils.getAllTypeElements(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeElement to retrieve all associated types from, may be null.
      * @return A list of TypeElements representing all associated types in the hierarchy.
-     *         Returns an empty list if the input is null or no types are found.
+     * Returns an empty list if the input is null or no types are found.
      */
     static List<TypeElement> getAllTypeElements(TypeElement type) {
         return getTypeElements(type, true, true, true, true);
@@ -598,13 +1125,41 @@ public interface TypeUtils extends Utils {
     /**
      * Retrieves a list of TypeElements associated with the given TypeElement based on the specified inclusion criteria.
      *
-     * @param type                  The TypeElement to find associated types for, may be null.
-     * @param includeSelf           Whether to include the type itself in the result.
+     * <p>
+     * This method allows fine-grained control over which types are included in the result:
+     * </p>
+     *
+     * <ul>
+     * <li>{@code includeSelf} - Whether to include the given TypeElement itself in the result.</li>
+     * <li>{@code includeHierarchicalTypes} - Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).</li>
+     * <li>{@code includeSuperclass} - Whether to include direct or hierarchical superclasses based on the value of includeHierarchicalTypes.</li>
+     * <li>{@code includeSuperInterfaces} - Whether to include direct or hierarchical interfaces based on the value of includeHierarchicalTypes.</li>
+     * </ul>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     *
+     * // Get the type itself and all direct superclasses and interfaces
+     * List<TypeElement> directTypes = TypeUtils.getTypeElements(type, false, false, true, true);
+     *
+     * // Get the type itself and all hierarchical superclasses and interfaces
+     * List<TypeElement> hierarchicalTypes = TypeUtils.getTypeElements(type, true, true, true, true);
+     *
+     * // Get only the direct superclasses without including interfaces
+     * List<TypeElement> superclassesOnly = TypeUtils.getTypeElements(type, false, false, true, false);
+     *
+     * // Get only the hierarchical interfaces
+     * List<TypeElement> interfacesOnly = TypeUtils.getTypeElements(type, false, true, false, true);
+     * }</pre>
+     *
+     * @param type                     The TypeElement to find associated types for, may be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).
-     * @param includeSuperClasses   Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
-     * @param includeSuperInterfaces Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
+     * @param includeSuperClasses      Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
+     * @param includeSuperInterfaces   Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
      * @return A list of TypeElements representing the associated types according to the inclusion criteria.
-     *         Returns an empty list if the input type is null or no matching types are found.
+     * Returns an empty list if the input type is null or no matching types are found.
      */
     static List<TypeElement> getTypeElements(TypeElement type,
                                              boolean includeSelf,
@@ -615,14 +1170,23 @@ public interface TypeUtils extends Utils {
     }
 
     /**
-     * Retrieves the direct interface types implemented by the given TypeElement.
-     * This method only returns interfaces directly declared on the specified type,
-     * and does not include superinterfaces from the hierarchy.
+     * Retrieves the TypeElements representing the interfaces directly implemented by the given TypeElement.
+     * This method only returns interfaces that are directly declared on the specified type,
+     * and does not include superinterfaces from the entire hierarchy.
      *
-     * @param type          The TypeElement whose directly implemented interfaces are to be retrieved, may be null.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> interfaces = TypeUtils.findTypeElementsOfInterfaces(type);
+     * // interfaces now contains the directly implemented interfaces of MyClass
+     *
+     * List<TypeElement> emptyList = TypeUtils.findTypeElementsOfInterfaces(null); // returns an empty list
+     * }</pre>
+     *
+     * @param type             The TypeElement whose directly implemented interfaces are to be retrieved, may be null.
      * @param interfaceFilters Optional predicates to filter the resulting TypeElements. May be null or empty.
      * @return A list of TypeElements representing the directly implemented interfaces.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<TypeElement> findTypeElementsOfInterfaces(TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
         return findTypeElements(type, false, false, false, true, interfaceFilters);
@@ -632,10 +1196,19 @@ public interface TypeUtils extends Utils {
      * Retrieves all TypeElements representing the superclasses in the hierarchy of the given TypeElement.
      * This includes direct and indirect superclasses, but excludes interfaces.
      *
-     * @param type       The TypeElement whose superclass hierarchy is to be explored, may be null.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> superclasses = TypeUtils.findAllTypeElementsOfSuperclasses(type);
+     * // superclasses now contains all superclass TypeElements in the hierarchy of MyClass
+     *
+     * List<TypeElement> emptyList = TypeUtils.findAllTypeElementsOfSuperclasses(null); // returns an empty list
+     * }</pre>
+     *
+     * @param type        The TypeElement whose superclass hierarchy is to be explored, may be null.
      * @param typeFilters Optional predicates to filter the resulting TypeElements. May be null or empty.
      * @return A list of TypeElements representing all superclasses in the hierarchy of the provided TypeElement.
-     *         Returns an empty list if the input is null or no superclasses exist in the hierarchy.
+     * Returns an empty list if the input is null or no superclasses exist in the hierarchy.
      */
     static List<TypeElement> findAllTypeElementsOfSuperclasses(TypeElement type, Predicate<? super TypeElement>... typeFilters) {
         return findTypeElements(type, false, true, true, false, typeFilters);
@@ -645,9 +1218,18 @@ public interface TypeUtils extends Utils {
      * Retrieves all TypeElements representing the interfaces implemented in the entire hierarchy of the given TypeElement.
      * This includes both directly and indirectly implemented interfaces from superclasses and superinterfaces.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> interfaces = TypeUtils.findAllTypeElementsOfInterfaces(type);
+     * // interfaces now contains all interfaces implemented by MyClass, including those from superclasses
+     *
+     * List<TypeElement> emptyList = TypeUtils.findAllTypeElementsOfInterfaces(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeElement whose interface hierarchy is to be explored, may be null.
      * @return A list of TypeElements representing all implemented interfaces in the hierarchy of the provided TypeElement.
-     *         Returns an empty list if the input is null or no interfaces are found in the hierarchy.
+     * Returns an empty list if the input is null or no interfaces are found in the hierarchy.
      */
     static List<TypeElement> findAllTypeElementsOfInterfaces(TypeElement type, Predicate<? super TypeElement>... interfaceFilters) {
         return findTypeElements(type, false, true, false, true, interfaceFilters);
@@ -656,11 +1238,25 @@ public interface TypeUtils extends Utils {
     /**
      * Retrieves all TypeElements representing the superclasses and interfaces in the hierarchy of the given TypeElement.
      * This includes both direct and indirect superclasses as well as implemented interfaces from the entire hierarchy.
+     * Optionally applies an array of predicates to filter the resulting TypeElements.
      *
-     * @param type       The TypeElement whose hierarchy is to be explored, may be null.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<TypeElement> superTypes = TypeUtils.findAllTypeElementsOfSuperTypes(type);
+     * // superTypes now contains all superclasses and interfaces in the hierarchy of MyClass
+     *
+     * List<TypeElement> filteredSuperTypes = TypeUtils.findAllTypeElementsOfSuperTypes(type,
+     *     t -> t.getQualifiedName().toString().startsWith("com.example"));
+     * // filteredSuperTypes contains only those superTypes whose qualified names start with "com.example"
+     *
+     * List<TypeElement> emptyList = TypeUtils.findAllTypeElementsOfSuperTypes(null); // returns an empty list
+     * }</pre>
+     *
+     * @param type        The TypeElement whose hierarchy is to be explored, may be null.
      * @param typeFilters Optional predicates to filter the resulting TypeElements. May be null or empty.
-     * @return A list of TypeElements representing all superclasses and interfaces in the hierarchy of the provided TypeElement.
-     *         Returns an empty list if the input is null or no types are found in the hierarchy.
+     * @return A list of TypeElements representing all superclasses and interfaces in the hierarchy of the provided TypeElement,
+     * filtered by the provided predicates. Returns an empty list if the input is null or no types are found in the hierarchy.
      */
     static List<TypeElement> findAllTypeElementsOfSuperTypes(TypeElement type, Predicate<? super TypeElement>... typeFilters) {
         return findTypeElements(type, false, true, true, true, typeFilters);
@@ -669,14 +1265,36 @@ public interface TypeUtils extends Utils {
     /**
      * Finds and returns a list of TypeElements based on the specified criteria.
      *
-     * @param type                  The TypeElement to start the search from, may be null.
-     * @param includeSelf           Whether to include the type itself in the result.
+     * <p>This method allows detailed control over which types are included in the result:
+     * - Whether to include the type itself
+     * - Whether to include hierarchical types (e.g., superclasses and interfaces)
+     * - Whether to include superclasses and/or interfaces based on the inclusion criteria</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeElement type = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     *
+     * // Get the type itself and all direct superclasses and interfaces
+     * List<TypeElement> directTypes = TypeUtils.findTypeElements(type, true, false, true, true);
+     *
+     * // Get all types in the hierarchy including superclasses and interfaces
+     * List<TypeElement> hierarchicalTypes = TypeUtils.findTypeElements(type, true, true, true, true);
+     *
+     * // Get only direct superclasses without including interfaces
+     * List<TypeElement> superclassesOnly = TypeUtils.findTypeElements(type, false, false, true, false);
+     *
+     * // Get only interfaces from the entire hierarchy
+     * List<TypeElement> interfacesOnly = TypeUtils.findTypeElements(type, false, true, false, true);
+     * }</pre>
+     *
+     * @param type                     The TypeElement to start the search from, may be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).
-     * @param includeSuperclass     Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
-     * @param includeSuperInterfaces Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
-     * @param typeFilters           Optional predicates to filter the resulting TypeElements. May be null or empty.
+     * @param includeSuperclass        Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
+     * @param includeSuperInterfaces   Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
+     * @param typeFilters              Optional predicates to filter the resulting TypeElements. May be null or empty.
      * @return A list of TypeElements matching the specified criteria.
-     *         Returns an empty list if the input type is null or no matching types are found.
+     * Returns an empty list if the input type is null or no matching types are found.
      * @throws IllegalArgumentException if any element of 'typeFilters' array is null.
      */
     static List<TypeElement> findTypeElements(TypeElement type,
@@ -697,6 +1315,20 @@ public interface TypeUtils extends Utils {
      * If the provided Element is null or does not represent a type with a superclass,
      * this method will return null.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element typeElement = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * DeclaredType superClassType = TypeUtils.getDeclaredTypeOfSuperclass(typeElement);
+     * // superClassType now contains the DeclaredType of the superclass of MyClass, if available
+     *
+     * Element interfaceElement = processingEnv.getElementUtils().getTypeElement("com.example.MyInterface");
+     * DeclaredType superClassTypeForInterface = TypeUtils.getDeclaredTypeOfSuperclass(interfaceElement);
+     * // superClassTypeForInterface will be null since interfaces do not have a superclass
+     *
+     * DeclaredType nullCase = TypeUtils.getDeclaredTypeOfSuperclass(null);
+     * // nullCase will be null since the input is null
+     * }</pre>
+     *
      * @param typeElement the Element to retrieve the superclass declared type from, may be null
      * @return the DeclaredType representing the superclass of the given Element, or null if none exists
      */
@@ -708,6 +1340,16 @@ public interface TypeUtils extends Utils {
      * Retrieves the declared type of the superclass for the given TypeMirror.
      * If the provided TypeMirror is null or does not represent a type with a superclass,
      * this method will return null.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror type = processingEnv.getTypeUtils().getDeclaredType(typeElement);
+     * DeclaredType superClassType = TypeUtils.getDeclaredTypeOfSuperclass(type);
+     * // superClassType contains the DeclaredType of the superclass if available
+     *
+     * DeclaredType nullCase = TypeUtils.getDeclaredTypeOfSuperclass(null);
+     * // nullCase will be null since the input is null
+     * }</pre>
      *
      * @param type the TypeMirror to retrieve the superclass declared type from, may be null
      * @return the DeclaredType representing the superclass of the given TypeMirror, or null if none exists
@@ -722,9 +1364,18 @@ public interface TypeUtils extends Utils {
      * This method only returns interfaces that are directly declared on the specified type,
      * and does not include interfaces from superclasses or superinterfaces.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element typeElement = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<DeclaredType> interfaces = TypeUtils.getDeclaredTypesOfInterfaces(typeElement);
+     * // interfaces now contains the directly implemented interfaces of MyClass
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getDeclaredTypesOfInterfaces(null); // returns an empty list
+     * }</pre>
+     *
      * @param element The Element whose directly implemented interfaces are to be retrieved, may be null.
      * @return A list of DeclaredTypes representing the interfaces directly implemented by the given Element.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<DeclaredType> getDeclaredTypesOfInterfaces(Element element) {
         return element == null ? emptyList() : findDeclaredTypesOfInterfaces(element.asType(), EMPTY_PREDICATE_ARRAY);
@@ -735,9 +1386,18 @@ public interface TypeUtils extends Utils {
      * This method only returns interfaces that are directly declared on the specified type,
      * and does not include interfaces from superclasses or superinterfaces.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror type = processingEnv.getTypeUtils().getDeclaredType(typeElement);
+     * List<DeclaredType> interfaces = TypeUtils.getDeclaredTypesOfInterfaces(type);
+     * // interfaces now contains the directly implemented interfaces of the given type
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getDeclaredTypesOfInterfaces(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeMirror whose directly implemented interfaces are to be retrieved, may be null.
      * @return A list of DeclaredTypes representing the interfaces directly implemented by the given TypeMirror.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<DeclaredType> getDeclaredTypesOfInterfaces(TypeMirror type) {
         return findDeclaredTypesOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
@@ -748,9 +1408,18 @@ public interface TypeUtils extends Utils {
      * This includes both direct and indirect superclasses, traversing up through the entire type hierarchy.
      * If the provided Element is null or does not have any superclasses, an empty list is returned.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element typeElement = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<DeclaredType> superclasses = TypeUtils.getAllDeclaredTypesOfSuperclasses(typeElement);
+     * // superclasses now contains all superclass DeclaredTypes in the hierarchy of MyClass
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypesOfSuperclasses(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The Element to retrieve superclass declared types from, may be null.
      * @return A list of DeclaredTypes representing all superclasses in the hierarchy of the provided Element.
-     *         Returns an empty list if the input is null or no superclasses exist in the hierarchy.
+     * Returns an empty list if the input is null or no superclasses exist in the hierarchy.
      */
     static List<DeclaredType> getAllDeclaredTypesOfSuperclasses(Element type) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperclasses(type.asType(), EMPTY_PREDICATE_ARRAY);
@@ -760,61 +1429,108 @@ public interface TypeUtils extends Utils {
      * Retrieves a list of DeclaredTypes representing all superclasses in the hierarchy of the given TypeMirror.
      * This includes both direct and indirect superclasses, traversing up through the entire type hierarchy.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror type = processingEnv.getTypeUtils().getDeclaredType(typeElement);
+     * List<DeclaredType> superclasses = TypeUtils.getAllDeclaredTypesOfSuperclasses(type);
+     * // superclasses now contains all superclass DeclaredTypes in the hierarchy of the given type
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypesOfSuperclasses(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeMirror whose superclass hierarchy is to be explored, may be null.
      * @return A list of DeclaredTypes representing all superclasses in the hierarchy of the provided TypeMirror.
-     *         Returns an empty list if the input is null or no superclasses exist in the hierarchy.
+     * Returns an empty list if the input is null or no superclasses exist in the hierarchy.
      */
     static List<DeclaredType> getAllDeclaredTypesOfSuperclasses(TypeMirror type) {
         return findAllDeclaredTypesOfSuperclasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy of the given Element.
-     * This includes both directly and indirectly implemented interfaces from superclasses and superinterfaces.
+     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy
+     * of the given Element. This includes both directly and indirectly implemented interfaces from
+     * superclasses and superinterfaces.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element typeElement = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<DeclaredType> interfaces = TypeUtils.getAllDeclaredTypesOfInterfaces(typeElement);
+     * // interfaces now contains all interfaces implemented by MyClass, including those from superclasses
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypesOfInterfaces(null); // returns an empty list
+     * }</pre>
      *
      * @param type The Element whose interface hierarchy is to be explored, may be null.
-     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of the provided Element.
-     *         Returns an empty list if the input is null or no interfaces are found in the hierarchy.
+     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of
+     * the provided Element. Returns an empty list if the input is null or no interfaces
+     * are found in the hierarchy.
      */
     static List<DeclaredType> getAllDeclaredTypesOfInterfaces(Element type) {
         return type == null ? emptyList() : findAllDeclaredTypesOfInterfaces(type.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy 
-     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy
+     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror type = processingEnv.getTypeUtils().getDeclaredType(typeElement);
+     * List<DeclaredType> interfaces = TypeUtils.getAllDeclaredTypesOfInterfaces(type);
+     * // interfaces now contains all interfaces implemented by the given type, including those from superclasses
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypesOfInterfaces(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The TypeMirror whose interface hierarchy is to be explored, may be null.
-     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of 
-     *         the provided TypeMirror. Returns an empty list if the input is null or no interfaces 
-     *         are found in the hierarchy.
+     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of
+     * the provided TypeMirror. Returns an empty list if the input is null or no interfaces
+     * are found in the hierarchy.
      */
     static List<DeclaredType> getAllDeclaredTypesOfInterfaces(TypeMirror type) {
         return findAllDeclaredTypesOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy 
-     * of the given Element. This includes both direct and indirect superclasses as well as implemented 
+     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy
+     * of the given Element. This includes both direct and indirect superclasses as well as implemented
      * interfaces from the entire hierarchy.
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element typeElement = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<DeclaredType> superTypes = TypeUtils.getAllDeclaredTypesOfSuperTypes(typeElement);
+     * // superTypes now contains all superclasses and interfaces in the hierarchy of MyClass
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypesOfSuperTypes(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The Element to retrieve super types from, may be null.
-     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy 
-     *         of the provided Element. Returns an empty list if the input is null or no types are found.
+     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy
+     * of the provided Element. Returns an empty list if the input is null or no types are found.
      */
     static List<DeclaredType> getAllDeclaredTypesOfSuperTypes(Element type) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperTypes(type.asType(), EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy 
-     * of the given TypeMirror. This includes both direct and indirect superclasses as well as 
-     * implemented interfaces from the entire hierarchy.
+     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy
+     * of the given TypeMirror. This includes both direct and indirect superclasses as well as implemented
+     * interfaces from the entire hierarchy.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * TypeMirror type = processingEnv.getTypeUtils().getDeclaredType(typeElement);
+     * List<DeclaredType> superTypes = TypeUtils.getAllDeclaredTypesOfSuperTypes(type);
+     * // superTypes now contains all superclasses and interfaces in the hierarchy of the given type
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypesOfSuperTypes(null); // returns an empty list
+     * }</pre>
      *
      * @param type The TypeMirror whose hierarchy is to be explored, may be null.
-     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy 
-     *         of the provided TypeMirror. Returns an empty list if the input is null or no types are found.
+     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy of
+     * the provided TypeMirror. Returns an empty list if the input is null or no types are found.
      */
     static List<DeclaredType> getAllDeclaredTypesOfSuperTypes(TypeMirror type) {
         return findAllDeclaredTypesOfSuperTypes(type, EMPTY_PREDICATE_ARRAY);
@@ -827,9 +1543,18 @@ public interface TypeUtils extends Utils {
      * - Direct and hierarchical superclasses
      * - Direct and hierarchical interfaces implemented by the type
      *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Element typeElement = processingEnv.getElementUtils().getTypeElement("com.example.MyClass");
+     * List<DeclaredType> allTypes = TypeUtils.getAllDeclaredTypes(typeElement);
+     * // allTypes now contains MyClass itself, its superclasses, and all implemented interfaces
+     *
+     * List<DeclaredType> emptyList = TypeUtils.getAllDeclaredTypes(null); // returns an empty list
+     * }</pre>
+     *
      * @param type The Element to retrieve associated DeclaredTypes from, may be null.
      * @return A list of DeclaredTypes derived from the given Element. Returns an empty list if
-     *         the input is null or no DeclaredTypes are found.
+     * the input is null or no DeclaredTypes are found.
      */
     static List<DeclaredType> getAllDeclaredTypes(Element type) {
         return type == null ? emptyList() : findAllDeclaredTypes(type.asType(), EMPTY_PREDICATE_ARRAY);
@@ -844,7 +1569,7 @@ public interface TypeUtils extends Utils {
      *
      * @param type The TypeMirror to retrieve associated DeclaredTypes from, may be null.
      * @return A list of DeclaredTypes representing all associated types in the hierarchy of the provided TypeMirror.
-     *         Returns an empty list if the input is null or no DeclaredTypes are found.
+     * Returns an empty list if the input is null or no DeclaredTypes are found.
      */
     static List<DeclaredType> getAllDeclaredTypes(TypeMirror type) {
         return findAllDeclaredTypes(type, EMPTY_PREDICATE_ARRAY);
@@ -855,13 +1580,13 @@ public interface TypeUtils extends Utils {
      * A DeclaredType typically refers to a type that is explicitly declared in the code, such as classes,
      * interfaces, enums, or annotation types.
      *
-     * @param type                  The Element to retrieve DeclaredTypes from, may be null.
-     * @param includeSelf           Whether to include the type itself in the result.
+     * @param type                     The Element to retrieve DeclaredTypes from, may be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).
-     * @param includeSuperClasses   Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
-     * @param includeSuperInterfaces Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
+     * @param includeSuperClasses      Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
+     * @param includeSuperInterfaces   Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
      * @return A list of DeclaredTypes derived from the given Element according to the inclusion criteria.
-     *         Returns an empty list if the input is null or no DeclaredTypes are found.
+     * Returns an empty list if the input is null or no DeclaredTypes are found.
      */
     static List<DeclaredType> getDeclaredTypes(Element type,
                                                boolean includeSelf,
@@ -876,13 +1601,13 @@ public interface TypeUtils extends Utils {
      * A DeclaredType typically refers to a type that is explicitly declared in the code, such as classes,
      * interfaces, enums, or annotation types.
      *
-     * @param type                  The TypeMirror to retrieve DeclaredTypes from, may be null.
-     * @param includeSelf           Whether to include the type itself in the result.
+     * @param type                     The TypeMirror to retrieve DeclaredTypes from, may be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).
-     * @param includeSuperClasses   Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
-     * @param includeSuperInterfaces Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
+     * @param includeSuperClasses      Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
+     * @param includeSuperInterfaces   Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
      * @return A list of DeclaredTypes derived from the given TypeMirror according to the inclusion criteria.
-     *         Returns an empty list if the input is null or no DeclaredTypes are found.
+     * Returns an empty list if the input is null or no DeclaredTypes are found.
      */
     static List<DeclaredType> getDeclaredTypes(TypeMirror type,
                                                boolean includeSelf,
@@ -894,13 +1619,13 @@ public interface TypeUtils extends Utils {
 
 
     /**
-     * Finds and returns a list of DeclaredTypes associated with the given TypeMirror, 
+     * Finds and returns a list of DeclaredTypes associated with the given TypeMirror,
      * excluding any types that match the specified excludedTypes.
      *
      * @param type          The TypeMirror to find associated DeclaredTypes from, may be null.
      * @param excludedTypes The array of Types to exclude from the result. May be null or empty.
      * @return A list of DeclaredTypes derived from the given TypeMirror, excluding the specified types.
-     *         Returns an empty list if the input type is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input type is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findDeclaredTypes(TypeMirror type, Type... excludedTypes) {
         return type == null ? emptyList() : findDeclaredTypes(ofTypeElement(type), excludedTypes);
@@ -913,7 +1638,7 @@ public interface TypeUtils extends Utils {
      * @param type          The Element to find associated DeclaredTypes from, may be null.
      * @param excludedTypes The array of Types to exclude from the result. May be null or empty.
      * @return A list of DeclaredTypes derived from the given Element, excluding the specified types.
-     *         Returns an empty list if the input type is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input type is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findDeclaredTypes(Element type, Type... excludedTypes) {
         return type == null ? emptyList() : findDeclaredTypes(type, getTypeNames(excludedTypes));
@@ -927,7 +1652,7 @@ public interface TypeUtils extends Utils {
      * @param excludedTypeNames An array of fully qualified type names to exclude from the result.
      *                          May be null or empty.
      * @return A list of DeclaredTypes derived from the given TypeMirror, excluding the specified types.
-     *         Returns an empty list if the input type is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input type is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findDeclaredTypes(ofTypeElement(type), excludedTypeNames);
@@ -941,7 +1666,7 @@ public interface TypeUtils extends Utils {
      * @param excludedTypeNames An array of fully qualified type names to exclude from the result.
      *                          May be null or empty.
      * @return A list of DeclaredTypes derived from the given Element, excluding the specified types.
-     *         Returns an empty list if the input is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findDeclaredTypes(type, false, false, true, true, t -> !contains(excludedTypeNames, t.toString()));
@@ -955,7 +1680,7 @@ public interface TypeUtils extends Utils {
      * @param type        The Element whose directly implemented interfaces are to be retrieved, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes representing the interfaces directly implemented by the given Element.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<DeclaredType> findDeclaredTypesOfInterfaces(Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findDeclaredTypesOfInterfaces(type.asType(), typeFilters);
@@ -966,10 +1691,10 @@ public interface TypeUtils extends Utils {
      * This method only returns interfaces that are directly declared on the specified type,
      * and does not include interfaces from superclasses or superinterfaces.
      *
-     * @param type       The TypeMirror whose directly implemented interfaces are to be retrieved, may be null.
+     * @param type        The TypeMirror whose directly implemented interfaces are to be retrieved, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes representing the interfaces directly implemented by the given TypeMirror.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<DeclaredType> findDeclaredTypesOfInterfaces(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
@@ -980,10 +1705,10 @@ public interface TypeUtils extends Utils {
      * This includes both direct and indirect superclasses, traversing up through the entire type hierarchy.
      * Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
-     * @param type       The Element to retrieve superclass declared types from, may be null.
+     * @param type        The Element to retrieve superclass declared types from, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes representing all superclasses in the hierarchy of the provided Element.
-     *         Returns an empty list if the input is null or no superclasses exist in the hierarchy.
+     * Returns an empty list if the input is null or no superclasses exist in the hierarchy.
      */
     static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperclasses(type.asType(), typeFilters);
@@ -994,78 +1719,78 @@ public interface TypeUtils extends Utils {
      * This includes both direct and indirect superclasses, traversing up through the entire type hierarchy.
      * Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
-     * @param type       The TypeMirror whose superclass hierarchy is to be explored, may be null.
+     * @param type        The TypeMirror whose superclass hierarchy is to be explored, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes representing all superclasses in the hierarchy of the provided TypeMirror,
-     *         filtered by the provided predicates. Returns an empty list if the input is null or no superclasses
-     *         exist in the hierarchy.
+     * filtered by the provided predicates. Returns an empty list if the input is null or no superclasses
+     * exist in the hierarchy.
      */
     static List<DeclaredType> findAllDeclaredTypesOfSuperclasses(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfSuperclasses(ofTypeElement(type)), typeFilters);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy 
-     * of the given Element. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy
+     * of the given Element. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces. Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
-     * @param type       The Element whose interface hierarchy is to be explored, may be null.
+     * @param type        The Element whose interface hierarchy is to be explored, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
-     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of 
-     *         the provided Element, filtered by the provided predicates. Returns an empty list if 
-     *         the input is null or no interfaces are found in the hierarchy.
+     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of
+     * the provided Element, filtered by the provided predicates. Returns an empty list if
+     * the input is null or no interfaces are found in the hierarchy.
      */
     static List<DeclaredType> findAllDeclaredTypesOfInterfaces(Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypesOfInterfaces(type.asType(), typeFilters);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy 
-     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of DeclaredTypes representing all interfaces implemented in the entire hierarchy
+     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces. Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
-     * @param type       The TypeMirror whose interface hierarchy is to be explored, may be null.
+     * @param type        The TypeMirror whose interface hierarchy is to be explored, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
-     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of 
-     *         the provided TypeMirror, filtered by the provided predicates. Returns an empty list if 
-     *         the input is null or no interfaces are found in the hierarchy.
+     * @return A list of DeclaredTypes representing all implemented interfaces in the hierarchy of
+     * the provided TypeMirror, filtered by the provided predicates. Returns an empty list if
+     * the input is null or no interfaces are found in the hierarchy.
      */
     static List<DeclaredType> findAllDeclaredTypesOfInterfaces(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfInterfaces(ofTypeElement(type)), typeFilters);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy 
-     * of the given Element. This includes both direct and indirect superclasses as well as implemented 
+     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy
+     * of the given Element. This includes both direct and indirect superclasses as well as implemented
      * interfaces from the entire hierarchy. Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
-     * @param type       The Element to retrieve superclass and interface declared types from, may be null.
+     * @param type        The Element to retrieve superclass and interface declared types from, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
-     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy of 
-     *         the provided Element, filtered by the provided predicates. Returns an empty list if the 
-     *         input is null or no matching DeclaredTypes are found.
+     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy of
+     * the provided Element, filtered by the provided predicates. Returns an empty list if the
+     * input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypesOfSuperTypes(type.asType(), typeFilters);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy 
-     * of the given TypeMirror. This includes both direct and indirect superclasses as well as implemented 
+     * Retrieves a list of DeclaredTypes representing all superclasses and interfaces in the hierarchy
+     * of the given TypeMirror. This includes both direct and indirect superclasses as well as implemented
      * interfaces from the entire hierarchy. Optionally applies an array of predicates to filter the resulting DeclaredTypes.
      *
-     * @param type       The TypeMirror whose superclass and interface hierarchy is to be explored, may be null.
+     * @param type        The TypeMirror whose superclass and interface hierarchy is to be explored, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
-     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy of 
-     *         the provided TypeMirror, filtered by the provided predicates. Returns an empty list if the 
-     *         input is null or no matching DeclaredTypes are found.
+     * @return A list of DeclaredTypes representing all superclasses and interfaces in the hierarchy of
+     * the provided TypeMirror, filtered by the provided predicates. Returns an empty list if the
+     * input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypesOfSuperTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElementsOfSuperTypes(ofTypeElement(type)), typeFilters);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy 
+     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy
      * of the given TypeMirror, excluding any types that match the specified excludedTypes.
      * This includes:
      * - The type itself (if it is a declared type)
@@ -1075,14 +1800,14 @@ public interface TypeUtils extends Utils {
      * @param type          The TypeMirror to retrieve associated DeclaredTypes from, may be null.
      * @param excludedTypes The array of Types to exclude from the result. May be null or empty.
      * @return A list of DeclaredTypes derived from the given TypeMirror, excluding the specified types.
-     *         Returns an empty list if the input is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Type... excludedTypes) {
         return type == null ? emptyList() : findAllDeclaredTypes(ofTypeElement(type), excludedTypes);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy 
+     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy
      * of the given Element, excluding any types that match the specified excludedTypes.
      * This includes:
      * - The type itself (if it is a declared type)
@@ -1092,14 +1817,14 @@ public interface TypeUtils extends Utils {
      * @param type          The Element to retrieve associated DeclaredTypes from, may be null.
      * @param excludedTypes The array of Types to exclude from the result. May be null or empty.
      * @return A list of DeclaredTypes derived from the given Element, excluding the specified types.
-     *         Returns an empty list if the input is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypes(Element type, Type... excludedTypes) {
         return type == null ? emptyList() : findAllDeclaredTypes(type, getTypeNames(excludedTypes));
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy 
+     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy
      * of the given TypeMirror, excluding any types whose names match the specified excludedTypeNames.
      * This includes:
      * - The type itself (if it is a declared type)
@@ -1110,14 +1835,14 @@ public interface TypeUtils extends Utils {
      * @param excludedTypeNames An array of fully qualified type names to exclude from the result.
      *                          May be null or empty.
      * @return A list of DeclaredTypes derived from the given TypeMirror, excluding the specified types.
-     *         Returns an empty list if the input type is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input type is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findAllDeclaredTypes(ofTypeElement(type), excludedTypeNames);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy 
+     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy
      * of the given Element, excluding any types whose names match the specified excludedTypeNames.
      * This includes:
      * - The type itself (if it is a declared type)
@@ -1128,41 +1853,41 @@ public interface TypeUtils extends Utils {
      * @param excludedTypeNames An array of fully qualified type names to exclude from the result.
      *                          May be null or empty.
      * @return A list of DeclaredTypes derived from the given Element, excluding the specified types.
-     *         Returns an empty list if the input is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypes(Element type, CharSequence... excludedTypeNames) {
         return type == null ? emptyList() : findAllDeclaredTypes(type, t -> !contains(excludedTypeNames, t.toString()));
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy 
+     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy
      * of the given Element, filtered by the provided predicates.
      * This includes:
      * - The type itself (if it is a declared type)
      * - Direct and hierarchical superclasses
      * - Direct and hierarchical interfaces implemented by the type
      *
-     * @param type       The Element to retrieve associated DeclaredTypes from, may be null.
+     * @param type        The Element to retrieve associated DeclaredTypes from, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes derived from the given Element, filtered by the provided predicates.
-     *         Returns an empty list if the input is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypes(Element type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : findAllDeclaredTypes(type.asType(), typeFilters);
     }
 
     /**
-     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy 
+     * Retrieves a list of DeclaredTypes representing all associated types in the hierarchy
      * of the given TypeMirror, filtered by the provided predicates.
      * This includes:
      * - The type itself (if it is a declared type)
      * - Direct and hierarchical superclasses
      * - Direct and hierarchical interfaces implemented by the type
      *
-     * @param type       The TypeMirror to retrieve associated DeclaredTypes from, may be null.
+     * @param type        The TypeMirror to retrieve associated DeclaredTypes from, may be null.
      * @param typeFilters Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes derived from the given TypeMirror, filtered by the provided predicates.
-     *         Returns an empty list if the input is null or no matching DeclaredTypes are found.
+     * Returns an empty list if the input is null or no matching DeclaredTypes are found.
      */
     static List<DeclaredType> findAllDeclaredTypes(TypeMirror type, Predicate<? super DeclaredType>... typeFilters) {
         return type == null ? emptyList() : ofDeclaredTypes(getAllTypeElements(ofTypeElement(type)), typeFilters);
@@ -1176,15 +1901,15 @@ public interface TypeUtils extends Utils {
      * - The type itself
      * - Direct or hierarchical superclasses (based on the includeHierarchicalTypes flag)
      * - Direct or hierarchical interfaces (based on the includeHierarchicalTypes flag)
-     * 
-     * @param type                  The Element to find associated DeclaredTypes from. May be null.
-     * @param includeSelf           Whether to include the type itself in the result.
+     *
+     * @param type                     The Element to find associated DeclaredTypes from. May be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).
-     * @param includeSuperClasses   Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
-     * @param includeSuperInterfaces Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
-     * @param typeFilters           Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
+     * @param includeSuperClasses      Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
+     * @param includeSuperInterfaces   Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
+     * @param typeFilters              Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes matching the specified criteria.
-     *         Returns an empty list if the input type is null or no matching types are found.
+     * Returns an empty list if the input type is null or no matching types are found.
      * @throws IllegalArgumentException if any element of 'typeFilters' array is null.
      */
     static List<DeclaredType> findDeclaredTypes(Element type,
@@ -1205,14 +1930,14 @@ public interface TypeUtils extends Utils {
      * - Direct or hierarchical superclasses (based on the includeHierarchicalTypes flag)
      * - Direct or hierarchical interfaces (based on the includeHierarchicalTypes flag)
      *
-     * @param type                  The TypeMirror to find associated DeclaredTypes from. May be null.
-     * @param includeSelf           Whether to include the type itself in the result.
+     * @param type                     The TypeMirror to find associated DeclaredTypes from. May be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy (e.g., superclasses and interfaces).
-     * @param includeSuperClasses   Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
-     * @param includeSuperInterfaces Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
-     * @param typeFilters           Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
+     * @param includeSuperClasses      Whether to include direct or hierarchical superclasses based on includeHierarchicalTypes.
+     * @param includeSuperInterfaces   Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.
+     * @param typeFilters              Optional predicates to filter the resulting DeclaredTypes. May be null or empty.
      * @return A list of DeclaredTypes matching the specified criteria.
-     *         Returns an empty list if the input type is null or no matching types are found.
+     * Returns an empty list if the input type is null or no matching types are found.
      * @throws IllegalArgumentException if any element of 'typeFilters' array is null.
      */
     static List<DeclaredType> findDeclaredTypes(TypeMirror type,
@@ -1231,7 +1956,7 @@ public interface TypeUtils extends Utils {
      *
      * @param type The TypeMirror whose directly implemented interfaces are to be retrieved, may be null.
      * @return A list of TypeMirrors representing the interfaces directly implemented by the given TypeMirror.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeMirror type) {
         return type == null ? emptyList() : findTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
@@ -1244,7 +1969,7 @@ public interface TypeUtils extends Utils {
      *
      * @param type The TypeElement whose directly implemented interfaces are to be retrieved, may be null.
      * @return A list of TypeMirrors representing the interfaces directly implemented by the given TypeElement.
-     *         Returns an empty list if the input is null or no interfaces are directly implemented.
+     * Returns an empty list if the input is null or no interfaces are directly implemented.
      */
     static List<TypeMirror> getTypeMirrorsOfInterfaces(TypeElement type) {
         return type == null ? emptyList() : findTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
@@ -1255,11 +1980,11 @@ public interface TypeUtils extends Utils {
      * This method only returns interfaces that are directly declared on the specified type,
      * and does not include interfaces from superclasses or superinterfaces.
      *
-     * @param type           The TypeMirror whose directly implemented interfaces are to be retrieved, may be null.
+     * @param type             The TypeMirror whose directly implemented interfaces are to be retrieved, may be null.
      * @param interfaceFilters Optional predicates to filter the resulting TypeMirrors. May be null or empty.
      * @return A list of TypeMirrors representing the interfaces directly implemented by the given TypeMirror,
-     *         filtered by the provided predicates. Returns an empty list if the input is null or no interfaces
-     *         are directly implemented.
+     * filtered by the provided predicates. Returns an empty list if the input is null or no interfaces
+     * are directly implemented.
      */
     static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
         return type == null ? emptyList() : findTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
@@ -1270,11 +1995,11 @@ public interface TypeUtils extends Utils {
      * This method only returns interfaces that are directly declared on the specified type,
      * and does not include interfaces from superclasses or superinterfaces.
      *
-     * @param type           The TypeElement whose directly implemented interfaces are to be retrieved, may be null.
+     * @param type             The TypeElement whose directly implemented interfaces are to be retrieved, may be null.
      * @param interfaceFilters Optional predicates to filter the resulting TypeMirrors. May be null or empty.
      * @return A list of TypeMirrors representing the interfaces directly implemented by the given TypeElement,
-     *         filtered by the provided predicates. Returns an empty list if the input is null or no interfaces
-     *         are directly implemented.
+     * filtered by the provided predicates. Returns an empty list if the input is null or no interfaces
+     * are directly implemented.
      */
     static List<TypeMirror> findTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
         if (type == null) {
@@ -1288,58 +2013,58 @@ public interface TypeUtils extends Utils {
     }
 
     /**
-     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy 
-     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy
+     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces.
      *
      * @param type The TypeMirror whose interface hierarchy is to be explored, may be null.
-     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of 
-     *         the provided TypeMirror. Returns an empty list if the input is null or no interfaces 
-     *         are found in the hierarchy.
+     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of
+     * the provided TypeMirror. Returns an empty list if the input is null or no interfaces
+     * are found in the hierarchy.
      */
     static List<TypeMirror> getAllTypeMirrorsOfInterfaces(TypeMirror type) {
         return findAllTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy 
-     * of the given TypeElement. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy
+     * of the given TypeElement. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces.
      *
      * @param type The TypeElement whose interface hierarchy is to be explored, may be null.
-     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of 
-     *         the provided TypeElement. Returns an empty list if the input is null or no interfaces 
-     *         are found in the hierarchy.
+     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of
+     * the provided TypeElement. Returns an empty list if the input is null or no interfaces
+     * are found in the hierarchy.
      */
     static List<TypeMirror> getAllTypeMirrorsOfInterfaces(TypeElement type) {
         return findAllTypeMirrorsOfInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy 
-     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy
+     * of the given TypeMirror. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces. Optionally applies an array of predicates to filter the resulting TypeMirrors.
      *
-     * @param type           The TypeMirror whose interface hierarchy is to be explored, may be null.
+     * @param type             The TypeMirror whose interface hierarchy is to be explored, may be null.
      * @param interfaceFilters Optional predicates to filter the resulting TypeMirrors. May be null or empty.
-     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of 
-     *         the provided TypeMirror, filtered by the provided predicates. Returns an empty list if 
-     *         the input is null or no interfaces are found in the hierarchy.
+     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of
+     * the provided TypeMirror, filtered by the provided predicates. Returns an empty list if
+     * the input is null or no interfaces are found in the hierarchy.
      */
     static List<TypeMirror> findAllTypeMirrorsOfInterfaces(TypeMirror type, Predicate<TypeMirror>... interfaceFilters) {
         return type == null ? emptyList() : findAllTypeMirrorsOfInterfaces(ofTypeElement(type), interfaceFilters);
     }
 
     /**
-     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy 
-     * of the given TypeElement. This includes both directly and indirectly implemented interfaces from 
+     * Retrieves a list of TypeMirrors representing all interfaces implemented in the entire hierarchy
+     * of the given TypeElement. This includes both directly and indirectly implemented interfaces from
      * superclasses and superinterfaces. Optionally applies an array of predicates to filter the resulting TypeMirrors.
      *
-     * @param type           The TypeElement whose interface hierarchy is to be explored, may be null.
+     * @param type             The TypeElement whose interface hierarchy is to be explored, may be null.
      * @param interfaceFilters Optional predicates to filter the resulting TypeMirrors. May be null or empty.
-     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of 
-     *         the provided TypeElement, filtered by the provided predicates. Returns an empty list if 
-     *         the input is null or no interfaces are found in the hierarchy.
+     * @return A list of TypeMirrors representing all implemented interfaces in the hierarchy of
+     * the provided TypeElement, filtered by the provided predicates. Returns an empty list if
+     * the input is null or no interfaces are found in the hierarchy.
      */
     static List<TypeMirror> findAllTypeMirrorsOfInterfaces(TypeElement type, Predicate<TypeMirror>... interfaceFilters) {
         if (type == null) {
@@ -1380,7 +2105,7 @@ public interface TypeUtils extends Utils {
      * Finds and returns the TypeMirror representing the specified interface type from the given Element.
      * If the provided Element or interfaceClassName is null, returns null.
      *
-     * @param type              The Element to find the interface TypeMirror from. May be null.
+     * @param type               The Element to find the interface TypeMirror from. May be null.
      * @param interfaceClassName The fully qualified class name of the interface to search for. May be null.
      * @return The TypeMirror of the specified interface if found; otherwise, null.
      */
@@ -1391,11 +2116,11 @@ public interface TypeUtils extends Utils {
     /**
      * Finds and returns the TypeMirror representing the specified interface type from the given TypeMirror.
      * If the provided TypeMirror or interfaceClassName is null, returns null.
-     * 
+     *
      * <p>This method searches through all interfaces implemented in the entire hierarchy of the given TypeMirror,
      * including both directly and indirectly implemented interfaces from superclasses and superinterfaces.
      *
-     * @param type              The TypeMirror to find the interface TypeMirror from. May be null.
+     * @param type               The TypeMirror to find the interface TypeMirror from. May be null.
      * @param interfaceClassName The fully qualified class name of the interface to search for. May be null.
      * @return The TypeMirror of the specified interface if found; otherwise, null.
      */
@@ -1410,7 +2135,7 @@ public interface TypeUtils extends Utils {
      * @param processingEnv The ProcessingEnvironment used to resolve TypeMirrors. Must not be null.
      * @param types         The array of Type objects to convert. May contain null elements which will be ignored.
      * @return A list of TypeMirror instances derived from the given Types. Returns an empty list if the input array is null or empty,
-     *         or if no valid TypeMirror instances could be resolved.
+     * or if no valid TypeMirror instances could be resolved.
      */
     static List<TypeMirror> getTypeMirrors(ProcessingEnvironment processingEnv, Type... types) {
         if (isEmpty(types)) {
@@ -1446,7 +2171,7 @@ public interface TypeUtils extends Utils {
      * @param processingEnv The ProcessingEnvironment used to resolve TypeElements. Must not be null.
      * @param types         The array of Type objects to convert. May contain null elements which will be ignored.
      * @return A list of TypeElement instances derived from the given Types. Returns an empty list if the input array is null or empty,
-     *         or if no valid TypeElement instances could be resolved.
+     * or if no valid TypeElement instances could be resolved.
      */
     static List<TypeElement> getTypeElements(ProcessingEnvironment processingEnv, Type... types) {
         if (isEmpty(types)) {
@@ -1606,11 +2331,11 @@ public interface TypeUtils extends Utils {
      *   <li>{@code includeInterfaces} - Whether to include direct or hierarchical interfaces based on includeHierarchicalTypes.</li>
      * </ul>
      *
-     * @param typeElement            The TypeElement to start the search from. Must not be null.
-     * @param includeSelf            Whether to include the type itself in the result.
+     * @param typeElement              The TypeElement to start the search from. Must not be null.
+     * @param includeSelf              Whether to include the type itself in the result.
      * @param includeHierarchicalTypes Whether to include types from the entire hierarchy.
-     * @param includeSuperclass      Whether to include direct or hierarchical superclasses.
-     * @param includeInterfaces      Whether to include direct or hierarchical interfaces.
+     * @param includeSuperclass        Whether to include direct or hierarchical superclasses.
+     * @param includeInterfaces        Whether to include direct or hierarchical interfaces.
      * @return A TypeFinder instance configured with the given parameters.
      * @throws IllegalArgumentException if any parameter is invalid or if assertions fail.
      */
