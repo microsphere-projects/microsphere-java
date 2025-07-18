@@ -17,8 +17,12 @@
 
 package io.microsphere.annotation.processor;
 
-import io.microsphere.annotation.processor.model.ConfigurationPropertyModel;
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.classloading.ManifestArtifactResourceResolver;
+import io.microsphere.io.IOUtils;
+import io.microsphere.io.StandardFileWatchService;
+import io.microsphere.reflect.TypeUtils;
+import io.microsphere.util.ServiceLoaderUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -39,8 +43,12 @@ public class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnota
 
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-        compiledClasses.add(ConfigurationPropertyModel.class);
         compiledClasses.add(ManifestArtifactResourceResolver.class);
+        compiledClasses.add(IOUtils.class);
+        compiledClasses.add(StandardFileWatchService.class);
+        compiledClasses.add(TypeUtils.class);
+        compiledClasses.add(ServiceLoaderUtils.class);
+        compiledClasses.add(ConfigurationProperty.class);
     }
 
     @Test
