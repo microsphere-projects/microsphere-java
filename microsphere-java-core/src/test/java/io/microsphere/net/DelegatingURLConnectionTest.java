@@ -64,7 +64,7 @@ class DelegatingURLConnectionTest {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
     }
 
     @Test
