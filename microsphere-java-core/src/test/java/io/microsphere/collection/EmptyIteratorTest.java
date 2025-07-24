@@ -20,7 +20,7 @@ class EmptyIteratorTest {
     private EmptyIterator emptyIterator;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         emptyIterator = new EmptyIterator();
     }
 
