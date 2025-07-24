@@ -122,7 +122,7 @@ class DirectEventDispatcherTest {
         dispatcher.addEventListener(echoEventListener2);
 
         // reset the listeners
-        init();
+        setUp();
         dispatcher.addEventListeners(echoEventListener, echoEventListener2);
 
         // dispatch a Event
