@@ -31,7 +31,7 @@ class FastByteArrayOutputStreamTest {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         outputStream.close();
     }
 
@@ -109,6 +109,6 @@ class FastByteArrayOutputStreamTest {
 
     @Test
     void testClose() {
-        destroy();
+        tearDown();
     }
 }
