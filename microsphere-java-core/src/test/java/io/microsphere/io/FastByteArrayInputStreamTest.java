@@ -37,7 +37,7 @@ class FastByteArrayInputStreamTest {
     }
 
     @AfterEach
-    void destroy() throws IOException {
+    void tearDown() throws IOException {
         inputStream.close();
         inputStream2.close();
     }
