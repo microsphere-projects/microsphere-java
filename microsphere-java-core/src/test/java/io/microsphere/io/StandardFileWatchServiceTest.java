@@ -70,7 +70,7 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
     }
 
     @AfterEach
-    void destroy() throws Exception {
+    void tearDown() throws Exception {
         shutdown(this.executor);
         deleteDirectory(this.testDir);
     }
