@@ -48,7 +48,7 @@ class ServiceLoaderURLStreamHandlerFactoryTest {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         clearURLStreamHandlerFactory();
     }
 
