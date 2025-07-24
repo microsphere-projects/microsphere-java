@@ -225,7 +225,7 @@ class JavaTypeTest {
     private void testAbstractJavaTypeTest(Class<? extends AbstractJavaTypeTest> testClass) throws Throwable {
         AbstractJavaTypeTest.beforeAll();
         AbstractJavaTypeTest test = testClass.getConstructor().newInstance();
-        test.init();
+        test.setUp();
         test.test();
     }
 
