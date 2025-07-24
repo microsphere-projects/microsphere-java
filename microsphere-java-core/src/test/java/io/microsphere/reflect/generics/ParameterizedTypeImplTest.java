@@ -43,7 +43,7 @@ public class ParameterizedTypeImplTest {
     private ParameterizedTypeImpl complexType;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         topLevelType = of(Map.class, actualTypeArguments);
         nestedType = of(Map.Entry.class, actualTypeArguments, Map.class);
         complexType = of(Map.Entry.class, actualTypeArguments, topLevelType);
