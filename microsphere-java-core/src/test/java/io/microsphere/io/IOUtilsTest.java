@@ -45,7 +45,7 @@ class IOUtilsTest extends AbstractTestCase {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         inputStream.close();
     }
 
@@ -175,7 +175,7 @@ class IOUtilsTest extends AbstractTestCase {
 
     @Test
     void testClose() {
-        destroy();
+        tearDown();
         close(new FastByteArrayOutputStream(0));
     }
 
