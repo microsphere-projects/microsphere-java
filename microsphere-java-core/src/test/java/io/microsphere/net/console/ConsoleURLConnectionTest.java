@@ -21,7 +21,7 @@ class ConsoleURLConnectionTest {
     private ConsoleURLConnection connection;
 
     @BeforeEach
-    public void init() throws IOException {
+    public void setUp() throws IOException {
         Handler handler = new Handler();
         this.connection = (ConsoleURLConnection) handler.openConnection(new URL("console://localhost:12345/abc"), NO_PROXY);
     }
