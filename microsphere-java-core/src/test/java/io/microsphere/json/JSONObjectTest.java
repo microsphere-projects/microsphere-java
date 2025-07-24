@@ -58,7 +58,7 @@ class JSONObjectTest {
     private JSONObject jsonObject;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         this.jsonObject = new JSONObject();
     }
 
