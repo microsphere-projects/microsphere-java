@@ -48,7 +48,7 @@ public class ConfigurationPropertyTest {
     private ConfigurationProperty property;
 
     @BeforeEach
-    public void before() {
+    public void setUp() {
         this.property = new ConfigurationProperty(name);
     }
 
