@@ -40,7 +40,7 @@ class SingletonDequeTest {
     private SingletonDeque singletonDeque;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         singletonDeque = new SingletonDeque(TEST_ELEMENT);
     }
 
