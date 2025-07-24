@@ -23,7 +23,7 @@ class NoOpLoggerFactoryTest {
     private static NoOpLoggerFactory factory;
 
     @BeforeAll
-    public static void setUp() {
+    public static void beforeAll() {
         List<LoggerFactory> factories = loadAvailableFactories();
         for (LoggerFactory f : factories) {
             if (f instanceof NoOpLoggerFactory) {
