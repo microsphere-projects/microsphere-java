@@ -52,7 +52,7 @@ class ParallelEventDispatcherTest {
     }
 
     @AfterAll
-    public static void destroy() {
+    public static void afterAll() {
         ForkJoinPool.commonPool().shutdown();
     }
 
