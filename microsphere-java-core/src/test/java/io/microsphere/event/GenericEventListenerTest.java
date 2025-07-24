@@ -41,7 +41,7 @@ class GenericEventListenerTest {
     }
 
     @AfterEach
-    public void destroy() {
+    public void tearDown() {
         this.eventDispatcher.removeAllEventListeners();
     }
 
