@@ -36,7 +36,7 @@ class StringAnnotationValueTest {
     private StringAnnotationValue value;
 
     @BeforeEach
-    public void before() {
+    public void setUp() {
         this.value = new StringAnnotationValue("testing");
     }
 
