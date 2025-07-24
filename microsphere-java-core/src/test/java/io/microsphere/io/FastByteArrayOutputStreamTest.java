@@ -26,7 +26,7 @@ class FastByteArrayOutputStreamTest {
     private FastByteArrayOutputStream outputStream;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         outputStream = new FastByteArrayOutputStream(2);
     }
 

@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ServiceLoaderURLStreamHandlerFactoryTest {
 
     @BeforeEach
-    void init() {
+    void setUp() {
         attach();
     }
 

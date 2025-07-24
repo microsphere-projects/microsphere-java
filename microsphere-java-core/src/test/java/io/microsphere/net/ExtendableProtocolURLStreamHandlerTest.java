@@ -63,7 +63,7 @@ class ExtendableProtocolURLStreamHandlerTest {
     private ExtendableProtocolURLStreamHandler handler;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         // Handler for "test" protocol
         handler = new Handler();
     }

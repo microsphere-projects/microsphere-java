@@ -34,7 +34,7 @@ class StringToFloatConverterTest extends BaseConverterTest<String, Float> {
     private StringToFloatConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToFloatConverter();
     }
 

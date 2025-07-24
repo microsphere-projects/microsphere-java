@@ -42,7 +42,7 @@ abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> extends 
     protected H handle;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         this.handle = createHandle();
     }
 

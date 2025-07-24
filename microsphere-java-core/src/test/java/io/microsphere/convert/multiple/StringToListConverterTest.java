@@ -53,7 +53,7 @@ class StringToListConverterTest {
     private MultiValueConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToListConverter();
     }
 

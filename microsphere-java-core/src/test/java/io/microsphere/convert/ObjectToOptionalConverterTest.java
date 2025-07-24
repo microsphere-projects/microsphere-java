@@ -34,7 +34,7 @@ class ObjectToOptionalConverterTest {
     private ObjectToOptionalConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new ObjectToOptionalConverter();
     }
 

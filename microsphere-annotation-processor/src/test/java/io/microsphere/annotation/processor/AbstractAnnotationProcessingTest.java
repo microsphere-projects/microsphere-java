@@ -133,7 +133,7 @@ public abstract class AbstractAnnotationProcessingTest {
     protected DeclaredType testDeclaredType;
 
     @BeforeEach
-    final void init() {
+    final void setUp() {
         testInstanceHolder.set(this);
     }
 

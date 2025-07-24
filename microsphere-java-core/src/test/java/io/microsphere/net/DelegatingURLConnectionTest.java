@@ -56,7 +56,7 @@ class DelegatingURLConnectionTest {
     private DelegatingURLConnection urlConnection;
 
     @BeforeEach
-    void init() throws Exception {
+    void setUp() throws Exception {
         URL baseURL = getClass().getProtectionDomain().getCodeSource().getLocation();
         this.url = new URL(baseURL.toString() + "META-INF/test.properties");
         this.delegate = url.openConnection();

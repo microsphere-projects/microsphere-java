@@ -64,7 +64,7 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
     private ExecutorService executor;
 
     @BeforeEach
-    void init() throws Exception {
+    void setUp() throws Exception {
         this.testDir = createRandomTempDirectory();
         this.executor = newSingleThreadExecutor();
     }

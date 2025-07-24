@@ -73,7 +73,7 @@ public class JmxUtilsTest extends AbstractTestCase {
     private static String notFoundAttributeName;
 
     @BeforeAll
-    public static void init() throws Throwable {
+    public static void setUp() throws Throwable {
         mBeanServer = getPlatformMBeanServer();
         objectName = getInstance("java.lang:type=ClassLoading");
         notFoundObjectName = getInstance("java.lang:type=NotFound");

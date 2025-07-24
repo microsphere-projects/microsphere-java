@@ -51,7 +51,7 @@ class ArtifactTest extends AbstractTestCase {
     private Artifact artifact;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         this.artifact = create(ARTIFACT_ID, VERSION, LOCATION);
     }
 

@@ -40,7 +40,7 @@ class IOUtilsTest extends AbstractTestCase {
     private FastByteArrayInputStream inputStream;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         inputStream = new FastByteArrayInputStream(TEST_BYTES);
     }
 

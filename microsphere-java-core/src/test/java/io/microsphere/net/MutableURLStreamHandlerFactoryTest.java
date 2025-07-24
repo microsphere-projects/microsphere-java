@@ -29,7 +29,7 @@ class MutableURLStreamHandlerFactoryTest {
     private static final int OP_CLEAR = OP_REMOVE << 1;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         factory = new MutableURLStreamHandlerFactory();
     }
 

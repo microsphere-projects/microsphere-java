@@ -46,7 +46,7 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
     protected C instance;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         this.instance = newInstance();
         init(this.instance);
     }

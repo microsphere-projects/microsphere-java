@@ -105,7 +105,7 @@ public abstract class AbstractJavaTypeTest<T> {
     }
 
     @BeforeEach
-    void init() {
+    void setUp() {
         javaType = createJavaType();
     }
 
