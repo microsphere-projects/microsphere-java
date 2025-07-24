@@ -49,7 +49,7 @@ class ShutdownHookUtilsTest {
     private static final Logger logger = getLogger(ShutdownHookUtilsTest.class);
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         registerShutdownHook();
     }
 
