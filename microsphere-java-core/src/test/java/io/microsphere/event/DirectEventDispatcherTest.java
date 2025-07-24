@@ -39,7 +39,7 @@ class DirectEventDispatcherTest {
     private EchoEventListener2 echoEventListener2;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         dispatcher = new DirectEventDispatcher();
         dispatcher.removeAllEventListeners();
         echoEventListener = new EchoEventListener();
