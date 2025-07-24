@@ -45,7 +45,7 @@ class StopWatchTest {
     private StopWatch stopWatch;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         stopWatch = new StopWatch("test");
     }
 
