@@ -37,7 +37,7 @@ class FileChangedListenerTest extends AbstractTestCase {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         listener = null;
     }
 
