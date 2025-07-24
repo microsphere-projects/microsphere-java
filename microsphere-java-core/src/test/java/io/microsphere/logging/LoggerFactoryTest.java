@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LoggerFactoryTest {
 
     @BeforeAll
-    public static void setUp() throws IOException {
+    public static void beforeAll() throws IOException {
         URL resource = LoggerFactoryTest.class.getResource("/META-INF/logging.properties");
         try (InputStream inputStream = resource.openStream()) {
             LogManager.getLogManager().readConfiguration(inputStream);
