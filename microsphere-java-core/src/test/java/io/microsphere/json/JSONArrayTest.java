@@ -47,7 +47,7 @@ class JSONArrayTest {
     private JSONArray jsonArray;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         this.jsonArray = new JSONArray();
     }
 
