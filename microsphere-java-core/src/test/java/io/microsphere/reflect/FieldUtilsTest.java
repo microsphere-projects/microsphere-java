@@ -55,7 +55,7 @@ public class FieldUtilsTest {
     private final ReflectionTest test = new ReflectionTest();
 
     @AfterEach
-    public void destroy() {
+    public void tearDown() {
         ReflectionTest.staticField = "staticField";
     }
 
