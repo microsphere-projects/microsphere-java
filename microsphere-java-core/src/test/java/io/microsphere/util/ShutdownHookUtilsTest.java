@@ -54,7 +54,7 @@ class ShutdownHookUtilsTest {
     }
 
     @AfterEach
-    public void destroy() {
+    public void tearDown() {
         clearShutdownHookCallbacks();
     }
 
