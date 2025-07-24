@@ -37,7 +37,7 @@ class ParallelEventDispatcherTest {
     private AbstractEventListener listener;
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         eventDispatcher = new ParallelEventDispatcher();
         listener = new EchoEventListener();
         eventDispatcher.addEventListener(listener);
