@@ -64,7 +64,7 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 
