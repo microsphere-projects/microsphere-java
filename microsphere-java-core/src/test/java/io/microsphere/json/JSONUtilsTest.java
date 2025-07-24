@@ -48,7 +48,7 @@ class JSONUtilsTest {
     private StringBuilder jsonBuilder;
 
     @BeforeEach
-    public void before() {
+    public void setUp() {
         this.jsonBuilder = new StringBuilder();
     }
 
