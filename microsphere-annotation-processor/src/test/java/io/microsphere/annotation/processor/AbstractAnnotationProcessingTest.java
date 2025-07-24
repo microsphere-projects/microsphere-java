@@ -138,7 +138,7 @@ public abstract class AbstractAnnotationProcessingTest {
     }
 
     @AfterEach
-    final void destroy() {
+    final void tearDown() {
         testInstanceHolder.remove();
     }
 
