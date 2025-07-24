@@ -24,7 +24,7 @@ class ModernProcessIdResolverTest {
     private static final boolean isGEJava9 = testCurrentJavaVersion(GE, JAVA_VERSION_9);
 
     @BeforeEach
-    public void init() {
+    public void setUp() {
         resolver = new ModernProcessIdResolver();
     }
 
