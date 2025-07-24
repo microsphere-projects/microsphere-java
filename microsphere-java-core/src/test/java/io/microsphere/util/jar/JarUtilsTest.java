@@ -50,7 +50,7 @@ class JarUtilsTest {
     private URL resourceURL;
 
     @BeforeEach
-    public void init() throws IOException {
+    public void setUp() throws IOException {
         deleteDirectory(targetDirectory);
         targetDirectory.mkdirs();
         this.resourceURL = getClassResource(classLoader, Nonnull.class);
