@@ -42,7 +42,7 @@ class JSONStringerTest {
     private JSONStringer jsonStringer;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         this.jsonStringer = new JSONStringer(1);
     }
 
