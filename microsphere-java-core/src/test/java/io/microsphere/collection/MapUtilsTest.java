@@ -31,9 +31,12 @@ import java.util.function.Function;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.MapUtils.MIN_LOAD_FACTOR;
+import static io.microsphere.collection.MapUtils.extraProperties;
+import static io.microsphere.collection.MapUtils.flattenMap;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.isNotEmpty;
+import static io.microsphere.collection.MapUtils.nestedMap;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
@@ -42,11 +45,13 @@ import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.MapUtils.shallowCloneMap;
+import static io.microsphere.collection.MapUtils.size;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static java.lang.Float.MIN_VALUE;
 import static java.lang.Integer.valueOf;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -89,6 +94,14 @@ class MapUtilsTest {
         assertFalse(isNotEmpty(newLinkedHashMap(2)));
         assertFalse(isNotEmpty(newLinkedHashMap(2, 0.01f)));
         assertTrue(isNotEmpty(of("A", 1)));
+    }
+
+    @Test
+    void testSize() {
+        assertEquals(0, size(null));
+        assertEquals(0, size(emptyMap()));
+        assertEquals(0, size(newHashMap()));
+        assertEquals(1, size(of("A", 1)));
     }
 
     @Test
@@ -331,6 +344,58 @@ class MapUtilsTest {
         map = unmodifiableMap(map);
         cloneMap = shallowCloneMap(map);
         assertEquals(map, cloneMap);
+    }
+
+    @Test
+    void testFlattenMap() {
+        Map<String, Object> level3Properties = ofMap("f", "F");
+        Map<String, Object> level2Properties = ofMap("c", "C", "d", level3Properties);
+        Map<String, Object> properties = ofMap("a", "A", "b", level2Properties, "z", emptyList());
+        Map<String, Object> flattenMap = flattenMap(properties);
+        assertEquals("A", flattenMap.get("a"));
+        assertEquals("C", flattenMap.get("b.c"));
+        assertEquals("F", flattenMap.get("b.d.f"));
+    }
+
+    @Test
+    void testNestedMap() {
+        Map<String, Object> map = newLinkedHashMap();
+        map.put("a.b.1", "1");
+        map.put("a.b.2", "2");
+        map.put("d.e.f.1", "1");
+        map.put("d.e.f.2", "2");
+        map.put("d.e.f.3", "3");
+
+        // {a={b={1=1, 2=2}}, d={e={f={1=1, 2=2, 3=3}}}}
+        Map<String, Object> nestedMap = nestedMap(map);
+        assertEquals(2, nestedMap.size());
+        Map<String, Object> aMap = (Map<String, Object>) nestedMap.get("a");
+        assertEquals(1, aMap.size());
+
+        Map<String, Object> bMap = (Map<String, Object>) aMap.get("b");
+        assertEquals(2, bMap.size());
+        assertEquals("1", bMap.get("1"));
+        assertEquals("2", bMap.get("2"));
+
+        Map<String, Object> dMap = (Map<String, Object>) nestedMap.get("d");
+        assertEquals(1, dMap.size());
+
+        Map<String, Object> eMap = (Map<String, Object>) dMap.get("e");
+        assertEquals(1, eMap.size());
+
+        Map<String, Object> fMap = (Map<String, Object>) eMap.get("f");
+        assertEquals(3, fMap.size());
+        assertEquals("1", fMap.get("1"));
+        assertEquals("2", fMap.get("2"));
+        assertEquals("3", fMap.get("3"));
+
+    }
+
+    @Test
+    public void testExtraProperties() {
+        assertEquals(emptyMap(), extraProperties(null));
+        assertEquals(emptyMap(), extraProperties(emptyMap()));
+        assertEquals(emptyMap(), extraProperties(newHashMap()));
     }
 
     static void assertOfMap(Map map) {
