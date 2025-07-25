@@ -34,7 +34,8 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
-import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.PropertiesUtils.flatProperties;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.lang.Float.MIN_VALUE;
 import static java.util.Collections.emptyMap;
@@ -107,6 +108,34 @@ public abstract class MapUtils implements Utils {
      */
     public static boolean isNotEmpty(Map<?, ?> map) {
         return !isEmpty(map);
+    }
+
+
+    /**
+     * Returns the size of the specified map, or {@code 0} if the map is {@code null}.
+     *
+     * <p>This method provides a null-safe way to obtain the size of a map. It avoids
+     * {@link NullPointerException} by returning zero when the input map is {@code null}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map1 = new HashMap<>();
+     * map1.put("one", 1);
+     * map1.put("two", 2);
+     * System.out.println(size(map1)); // Output: 2
+     *
+     * Map<String, Integer> map2 = null;
+     * System.out.println(size(map2)); // Output: 0
+     *
+     * Map<String, Integer> map3 = new HashMap<>();
+     * System.out.println(size(map3)); // Output: 0
+     * }</pre>
+     *
+     * @param map the map whose size is to be returned, may be {@code null}
+     * @return the size of the map, or {@code 0} if the map is {@code null}
+     */
+    public static int size(Map<?, ?> map) {
+        return map == null ? 0 : map.size();
     }
 
     /**
@@ -951,7 +980,7 @@ public abstract class MapUtils implements Utils {
     @Nonnull
     public static <K, V, E> Map<K, V> toFixedMap(Collection<E> values,
                                                  Function<E, Map.Entry<K, V>> entryMapper) {
-        int size = size(values);
+        int size = CollectionUtils.size(values);
         if (size < 1) {
             return emptyMap();
         }
@@ -1024,6 +1053,114 @@ public abstract class MapUtils implements Utils {
     @Nonnull
     public static <K, V> Map.Entry<K, V> immutableEntry(K key, V value) {
         return ImmutableEntry.of(key, value);
+    }
+
+    /**
+     * Flattens a nested map of properties into a single-level map.
+     *
+     * <p>If the input map is empty or null, the same map instance is returned.</p>
+     *
+     * <p>For example, given the following input:
+     * <pre>{@code
+     * {
+     *   "a": "1",
+     *   "b": {
+     *     "c": "2",
+     *     "d": {
+     *       "e": "3"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     * The resulting flattened map would be:
+     * <pre>{@code
+     * {
+     *   "a": "1",
+     *   "b.c": "2",
+     *   "b.d.e": "3"
+     * }
+     * }</pre>
+     *
+     * @param map The map containing potentially nested properties to be flattened.
+     * @return A new unmodifiable map with all properties flattened to a single level.
+     */
+    public static Map<String, Object> flattenMap(Map<String, Object> map) {
+        return flatProperties(map);
+    }
+
+    /**
+     * Resolve nested map.
+     *
+     * <pre>
+     * {@code
+     * Map<String, Object> map = newLinkedHashMap();
+     * map.put("a.b.1", "1");
+     * map.put("a.b.2", "2");
+     * map.put("d.e.f.1", "1");
+     * map.put("d.e.f.2", "2");
+     * map.put("d.e.f.3", "3");
+     * }
+     * </pre>
+     * resolved result :
+     * <pre>
+     * {@code
+     * {a={b={1=1, 2=2}}, d={e={f={1=1, 2=2, 3=3}}}}
+     * }
+     * </pre>
+     *
+     * @param map Map
+     * @return Resolved map
+     */
+    public static Map<String, Object> nestedMap(Map<String, Object> map) {
+        Map<String, Object> nestedMap = newLinkedHashMap();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String propertyName = entry.getKey();
+            String propertyValue = String.valueOf(entry.getValue());
+            int index = propertyName.indexOf(DOT_CHAR);
+            if (index > 0) {
+                String actualPropertyName = propertyName.substring(0, index);
+                String subPropertyName = propertyName.substring(index + 1, propertyName.length());
+                Object actualPropertyValue = nestedMap.get(actualPropertyName);
+                if (actualPropertyValue == null) {
+                    actualPropertyValue = newLinkedHashMap();
+                    nestedMap.put(actualPropertyName, actualPropertyValue);
+                }
+
+                if (actualPropertyValue instanceof Map) {
+                    Map<String, Object> nestedProperties = (Map<String, Object>) actualPropertyValue;
+                    Map<String, Object> subProperties = extraProperties(nestedProperties);
+                    subProperties.put(subPropertyName, propertyValue);
+                    Map<String, Object> subNestedMap = nestedMap(subProperties);
+                    nestedProperties.putAll(subNestedMap);
+                }
+            } else {
+                nestedMap.put(propertyName, propertyValue);
+            }
+        }
+        return nestedMap;
+    }
+
+    static Map<String, Object> extraProperties(Map<String, Object> map) {
+        int size = size(map);
+        Map<String, Object> properties = newLinkedHashMap(size);
+        if (size > 0) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof Map) {
+                    Map<String, String> subProperties = extraProperties((Map) value);
+                    for (Map.Entry<String, String> e : subProperties.entrySet()) {
+                        String subKey = e.getKey();
+                        String subValue = e.getValue();
+                        properties.put(key + DOT_CHAR + subKey, subValue);
+                    }
+                } else if (value instanceof String) {
+                    properties.put(key, value.toString());
+                }
+            }
+        }
+        return properties;
     }
 
     private MapUtils() {
