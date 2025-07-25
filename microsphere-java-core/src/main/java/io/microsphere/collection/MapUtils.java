@@ -1089,27 +1089,37 @@ public abstract class MapUtils implements Utils {
     }
 
     /**
-     * Resolve nested map.
+     * Converts a flat map with dot-separated keys into a nested map structure.
      *
-     * <pre>
-     * {@code
-     * Map<String, Object> map = newLinkedHashMap();
-     * map.put("a.b.1", "1");
-     * map.put("a.b.2", "2");
-     * map.put("d.e.f.1", "1");
-     * map.put("d.e.f.2", "2");
-     * map.put("d.e.f.3", "3");
-     * }
-     * </pre>
-     * resolved result :
-     * <pre>
-     * {@code
-     * {a={b={1=1, 2=2}}, d={e={f={1=1, 2=2, 3=3}}}}
-     * }
-     * </pre>
+     * <p>This method takes a map where keys represent hierarchical paths (e.g., "a.b.c") and
+     * transforms it into a nested map structure where each level of the hierarchy becomes
+     * a separate map. This is particularly useful for configuration properties or data
+     * that needs to be organized in a tree-like structure.</p>
      *
-     * @param map Map
-     * @return Resolved map
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Object> flatMap = new LinkedHashMap<>();
+     * flatMap.put("a.b.1", "value1");
+     * flatMap.put("a.b.2", "value2");
+     * flatMap.put("a.c", "value3");
+     * flatMap.put("d", "value4");
+     *
+     * Map<String, Object> nested = MapUtils.nestedMap(flatMap);
+     * // Result:
+     * // {
+     * //   "a": {
+     * //     "b": {
+     * //       "1": "value1",
+     * //       "2": "value2"
+     * //     },
+     * //     "c": "value3"
+     * //   },
+     * //   "d": "value4"
+     * // }
+     * }</pre>
+     *
+     * @param map the flat map to be converted into a nested structure, may be {@code null}
+     * @return a new map with nested structure, or an empty map if input is {@code null} or empty
      */
     public static Map<String, Object> nestedMap(Map<String, Object> map) {
         Map<String, Object> nestedMap = newLinkedHashMap();
@@ -1141,6 +1151,28 @@ public abstract class MapUtils implements Utils {
         return nestedMap;
     }
 
+    /**
+     * Extracts and flattens properties from a nested map structure into a single-level map.
+     *
+     * <p>This method recursively processes the input map, converting any nested maps into
+     * dot-separated key paths in the resulting map. Non-map values are converted to strings.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Object> nested = new LinkedHashMap<>();
+     * Map<String, Object> inner = new LinkedHashMap<>();
+     * inner.put("x", "10");
+     * inner.put("y", "20");
+     * nested.put("a", inner);
+     * nested.put("b", "value");
+     *
+     * Map<String, Object> result = MapUtils.extraProperties(nested);
+     * // Result: {"a.x"="10", "a.y"="20", "b"="value"}
+     * }</pre>
+     *
+     * @param map the map from which to extract properties, may be {@code null}
+     * @return a new map containing flattened properties, or an empty map if input is {@code null} or empty
+     */
     static Map<String, Object> extraProperties(Map<String, Object> map) {
         int size = size(map);
         Map<String, Object> properties = newLinkedHashMap(size);
