@@ -37,6 +37,7 @@ import java.util.function.Function;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.lang.Float.MIN_VALUE;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
@@ -60,6 +61,48 @@ public abstract class MapUtils implements Utils {
      * The fixed load factor for {@link HashMap} or {@link Hashtable} = 1.00
      */
     public static final float FIXED_LOAD_FACTOR = 1.00f;
+
+    /**
+     * Checks if the specified object is an instance of {@link Map}.
+     *
+     * <p>This method provides a convenient way to determine whether a given object
+     * is a map. It returns {@code true} if the object is an instance of {@link Map},
+     * otherwise {@code false}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * System.out.println(MapUtils.isMap(new HashMap<>())); // true
+     * System.out.println(MapUtils.isMap(new ArrayList<>())); // false
+     * System.out.println(MapUtils.isMap(null)); // false
+     * }</pre>
+     *
+     * @param instance the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link Map}, otherwise {@code false}
+     */
+    public static boolean isMap(Object instance) {
+        return instance instanceof Map;
+    }
+
+    /**
+     * Checks if the specified class type is an implementation of {@link Map}.
+     *
+     * <p>This method provides a convenient way to determine whether a given class
+     * implements the {@link Map} interface. It returns {@code true} if the class
+     * is assignable from {@link Map}, indicating that it is a map type.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * System.out.println(MapUtils.isMap(HashMap.class)); // true
+     * System.out.println(MapUtils.isMap(List.class));    // false
+     * System.out.println(MapUtils.isMap(null));         // false
+     * }</pre>
+     *
+     * @param type the class type to check, may be {@code null}
+     * @return {@code true} if the type is a {@link Map} implementation, otherwise {@code false}
+     */
+    public static boolean isMap(Class<?> type) {
+        return isAssignableFrom(Map.class, type);
+    }
 
     /**
      * Checks if the specified map is either {@code null} or empty.
