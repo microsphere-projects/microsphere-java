@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.toIterable;
@@ -36,9 +37,19 @@ class SetUtilsTest extends AbstractTestCase {
     private static final String[] ELEMENTS = new String[]{"a", "b", "c"};
 
     @Test
-    void testIsSet() {
+    void testIsSetWithInstance() {
         assertTrue(isSet(emptySet()));
         assertFalse(isSet(emptyList()));
+        assertFalse(isSet("Hello,World"));
+        assertFalse(isSet((Object) null));
+    }
+
+    @Test
+    void testIsSetWithType() {
+        assertTrue(isSet(Set.class));
+        assertFalse(isSet(Collection.class));
+        assertFalse(isSet(Map.class));
+        assertFalse(isSet(null));
     }
 
     @Test
