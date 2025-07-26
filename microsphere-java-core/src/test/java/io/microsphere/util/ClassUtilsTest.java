@@ -46,6 +46,7 @@ import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.isCharSequence;
+import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.ClassUtils.isDerived;
 import static io.microsphere.util.ClassUtils.isFinal;
@@ -269,6 +270,13 @@ class ClassUtilsTest extends AbstractTestCase {
 
         assertFalse(isNumber(Character.class));
         assertFalse(isNumber(null));
+    }
+
+    @Test
+    public void testIsClass() {
+        assertTrue(isClass(String.class));
+        assertTrue(isClass("Hello"));
+        assertTrue(isClass(null));
     }
 
     @Test
