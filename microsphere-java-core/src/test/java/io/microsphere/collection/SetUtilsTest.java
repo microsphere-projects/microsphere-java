@@ -13,6 +13,8 @@ import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.SetUtils.isSet;
+import static io.microsphere.collection.SetUtils.newFixedHashSet;
+import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.SetUtils.of;
@@ -136,6 +138,24 @@ class SetUtilsTest extends AbstractTestCase {
         assertEquals(iterable, newLinkedHashSet(iterable));
         assertEquals(iterable, newLinkedHashSet(elements));
         assertSet((Set<String>) iterable);
+    }
+
+    @Test
+    public void testNewFixedHashSet() {
+        Set<String> set = newFixedHashSet(3);
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        assertSet(set);
+    }
+
+    @Test
+    public void testNewFixedLinkedHashSet() {
+        Set<String> set = newFixedLinkedHashSet(3);
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        assertSet(set);
     }
 
     private void assertSet(Set<String> set) {
