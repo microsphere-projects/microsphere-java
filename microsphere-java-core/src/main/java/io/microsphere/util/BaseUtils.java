@@ -23,7 +23,7 @@ package io.microsphere.util;
  * @since 1.0.0
  */
 @Deprecated
-public abstract class BaseUtils {
+public abstract class BaseUtils implements Utils {
 
     protected BaseUtils() throws IllegalStateException {
         throw new IllegalStateException("Not Supported!");
