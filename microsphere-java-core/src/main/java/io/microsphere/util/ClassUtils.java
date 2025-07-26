@@ -369,6 +369,24 @@ public abstract class ClassUtils implements Utils {
         return isAssignableFrom(Number.class, type);
     }
 
+
+    /**
+     * Checks if the given object is an instance of {@link Class}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isClass(String.class); // returns true
+     * boolean result2 = ClassUtils.isClass("Hello");      // returns false
+     * boolean result3 = ClassUtils.isClass(null);         // returns false
+     * }</pre>
+     *
+     * @param object the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link Class}, {@code false} otherwise
+     */
+    public static boolean isClass(Object object) {
+        return object instanceof Class;
+    }
+
     /**
      * Resolve the primitive class from the specified type
      *
