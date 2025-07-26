@@ -11,9 +11,13 @@ import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.Serializable;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.nio.CharBuffer;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
@@ -41,11 +45,14 @@ import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
+import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.ClassUtils.isDerived;
 import static io.microsphere.util.ClassUtils.isFinal;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
+import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.ClassUtils.isSimpleType;
 import static io.microsphere.util.ClassUtils.isTopLevelClass;
 import static io.microsphere.util.ClassUtils.isWrapperType;
 import static io.microsphere.util.ClassUtils.newInstance;
@@ -213,6 +220,55 @@ class ClassUtilsTest extends AbstractTestCase {
         assertTrue(isFinal(Boolean.class));
         assertFalse(isFinal(null));
         assertFalse(isFinal(Object.class));
+    }
+
+    @Test
+    public void testIsSimpleType() {
+        assertTrue(isSimpleType(Void.class));
+        assertTrue(isSimpleType(Boolean.class));
+        assertTrue(isSimpleType(Character.class));
+        assertTrue(isSimpleType(Byte.class));
+        assertTrue(isSimpleType(Short.class));
+        assertTrue(isSimpleType(Integer.class));
+        assertTrue(isSimpleType(Long.class));
+        assertTrue(isSimpleType(Float.class));
+        assertTrue(isSimpleType(Double.class));
+        assertTrue(isSimpleType(String.class));
+        assertTrue(isSimpleType(BigDecimal.class));
+        assertTrue(isSimpleType(BigInteger.class));
+        assertTrue(isSimpleType(Date.class));
+        assertTrue(isSimpleType(Object.class));
+
+        assertFalse(isSimpleType(StringBuilder.class));
+        assertFalse(isSimpleType(null));
+    }
+
+    @Test
+    public void testIsCharSequence() {
+        assertTrue(isCharSequence(CharSequence.class));
+        assertTrue(isCharSequence(String.class));
+        assertTrue(isCharSequence(StringBuilder.class));
+        assertTrue(isCharSequence(StringBuffer.class));
+        assertTrue(isCharSequence(CharBuffer.class));
+
+        assertFalse(isCharSequence(Character.class));
+        assertFalse(isCharSequence(null));
+    }
+
+    @Test
+    public void testIsNumber() {
+        assertTrue(isNumber(Number.class));
+        assertTrue(isNumber(Byte.class));
+        assertTrue(isNumber(Short.class));
+        assertTrue(isNumber(Integer.class));
+        assertTrue(isNumber(Long.class));
+        assertTrue(isNumber(Float.class));
+        assertTrue(isNumber(Double.class));
+        assertTrue(isNumber(BigDecimal.class));
+        assertTrue(isNumber(BigInteger.class));
+
+        assertFalse(isNumber(Character.class));
+        assertFalse(isNumber(null));
     }
 
     @Test
