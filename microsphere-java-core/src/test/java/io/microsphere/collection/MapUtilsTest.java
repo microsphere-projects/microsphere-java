@@ -35,6 +35,7 @@ import static io.microsphere.collection.MapUtils.extraProperties;
 import static io.microsphere.collection.MapUtils.flattenMap;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.isMap;
 import static io.microsphere.collection.MapUtils.isNotEmpty;
 import static io.microsphere.collection.MapUtils.nestedMap;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
@@ -74,6 +75,28 @@ class MapUtilsTest {
     void testConstants() {
         assertEquals(MIN_VALUE, MIN_LOAD_FACTOR);
         assertEquals(1.f, FIXED_LOAD_FACTOR);
+    }
+
+    @Test
+    public void testIsMapWithInstance() {
+        assertTrue(isMap(new HashMap()));
+        assertTrue(isMap(emptyMap()));
+        assertFalse(isMap("Hello,World"));
+        assertFalse(isMap((Object) null));
+    }
+
+    @Test
+    public void testIsMapWithClass() {
+        assertTrue(isMap(Map.class));
+        assertTrue(isMap(HashMap.class));
+        assertTrue(isMap(LinkedHashMap.class));
+        assertTrue(isMap(TreeMap.class));
+        assertTrue(isMap(ConcurrentHashMap.class));
+        assertTrue(isMap(ConcurrentSkipListMap.class));
+        assertTrue(isMap(IdentityHashMap.class));
+        assertFalse(isMap(Map.Entry.class));
+        assertFalse(isMap(Object.class));
+        assertFalse(isMap(null));
     }
 
     @Test
