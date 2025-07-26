@@ -30,6 +30,7 @@ import java.util.Set;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableSet;
@@ -61,11 +62,33 @@ public abstract class SetUtils implements Utils {
      * boolean result2 = SetUtils.isSet(list); // returns false
      * }</pre>
      *
-     * @param elements the {@link Iterable} to check, may be null
+     * @param values the values to check, may be null
      * @return {@code true} if the given iterable is a {@link Set}; otherwise, {@code false}
      */
-    public static boolean isSet(@Nullable Iterable<?> elements) {
-        return elements instanceof Set;
+    public static boolean isSet(@Nullable Object values) {
+        return values instanceof Set;
+    }
+
+    /**
+     * Checks whether the specified {@link Class type} is assignable from {@link Set} interface.
+     *
+     * <p>This method returns {@code true} if the provided type is a {@link Set} interface or its sub-interface,
+     * or the implementation class of {@link Set} interface.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = SetUtils.isSet(Set.class);        // returns true
+     * boolean result2 = SetUtils.isSet(HashSet.class);    // returns true
+     * boolean result3 = SetUtils.isSet(List.class);       // returns false
+     * boolean result4 = SetUtils.isSet(String.class);     // returns false
+     * }</pre>
+     *
+     * @param type the {@link Class type} to check, may be null
+     * @return {@code true} if the given type is a {@link Set} interface or its sub-interface,
+     * or the implementation class of {@link Set} interface.
+     */
+    public static boolean isSet(@Nullable Class<?> type) {
+        return isAssignableFrom(Set.class, type);
     }
 
     /**
