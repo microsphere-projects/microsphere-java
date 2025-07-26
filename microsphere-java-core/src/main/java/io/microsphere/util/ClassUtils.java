@@ -338,6 +338,38 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
+     * Checks if the given type is a subtype of {@link CharSequence}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     boolean result = ClassUtils.isCharSequence(String.class); // returns true
+     *     boolean result2 = ClassUtils.isCharSequence(Integer.class); // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the type is a subtype of {@link CharSequence}, {@code false} otherwise
+     */
+    public static boolean isCharSequence(Class<?> type) {
+        return isAssignableFrom(CharSequence.class, type);
+    }
+
+    /**
+     * Checks if the given type is a subtype of {@link Number}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     boolean result = ClassUtils.isNumber(Integer.class); // returns true
+     *     boolean result2 = ClassUtils.isNumber(String.class); // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the type is a subtype of {@link Number}, {@code false} otherwise
+     */
+    public static boolean isNumber(Class<?> type) {
+        return isAssignableFrom(Number.class, type);
+    }
+
+    /**
      * Resolve the primitive class from the specified type
      *
      * @param type the specified type
