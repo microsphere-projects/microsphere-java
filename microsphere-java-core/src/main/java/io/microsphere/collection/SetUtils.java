@@ -626,6 +626,53 @@ public abstract class SetUtils implements Utils {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
     }
 
+    /**
+     * Creates a new, empty {@link HashSet} with the specified initial capacity and fixed load factor.
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance
+     * with the given initial capacity and a fixed load factor defined by {@link MapUtils#FIXED_LOAD_FACTOR}.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newFixedHashSet(32);
+     * // returns a new empty hash set with initial capacity of 32 and fixed load factor
+     * }</pre>
+     *
+     * @param size the initial capacity of the returned set
+     * @param <E>  the type of elements in the set
+     * @return a new empty {@link HashSet} with the specified initial capacity and fixed load factor
+     * @see MapUtils#FIXED_LOAD_FACTOR
+     */
+    @Nonnull
+    public static <E> Set<E> newFixedHashSet(int size) {
+        return newHashSet(size, FIXED_LOAD_FACTOR);
+    }
+
+    /**
+     * Creates a new, empty {@link LinkedHashSet} with the specified initial capacity and fixed load factor.
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance
+     * with the given initial capacity and a fixed load factor defined by {@link MapUtils#FIXED_LOAD_FACTOR}.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newFixedLinkedHashSet(32);
+     * // returns a new empty linked hash set with initial capacity of 32 and fixed load factor
+     * }</pre>
+     *
+     * @param size the initial capacity of the returned set
+     * @param <E>  the type of elements in the set
+     * @return a new empty {@link LinkedHashSet} with the specified initial capacity and fixed load factor
+     * @see MapUtils#FIXED_LOAD_FACTOR
+     */
+    @Nonnull
+    public static <E> Set<E> newFixedLinkedHashSet(int size) {
+        return newLinkedHashSet(size, FIXED_LOAD_FACTOR);
+    }
+
+
     private SetUtils() {
     }
 }
