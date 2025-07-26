@@ -19,8 +19,9 @@ package io.microsphere.metadata;
 
 
 import io.microsphere.beans.ConfigurationProperty;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,21 +35,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class ConfigurationPropertyGeneratorTest {
 
-    private ConfigurationPropertyGenerator configurationPropertyGenerator;
-
-    @BeforeEach
-    void setUp() {
-        this.configurationPropertyGenerator = new ConfigurationPropertyGenerator() {
-            @Override
-            public ConfigurationProperty generate() throws Throwable {
-                return newConfigurationProperty();
-            }
-        };
+    @Test
+    void testGenerate() throws Throwable {
+        assertEquals(newConfigurationProperty(), new DefaultConfigurationPropertyGenerator().generate());
     }
 
     @Test
-    void testGenerate() throws Throwable {
-        assertEquals(newConfigurationProperty(), configurationPropertyGenerator.generate());
+    void testGenerateAll() throws Throwable {
+        List<ConfigurationProperty> configurationProperties = ConfigurationPropertyGenerator.generateAll();
+        assertEquals(1, configurationProperties.size());
+        assertEquals(newConfigurationProperty(), configurationProperties.get(0));
     }
 
     ConfigurationProperty newConfigurationProperty() {
