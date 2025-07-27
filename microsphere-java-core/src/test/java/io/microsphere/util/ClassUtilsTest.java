@@ -275,8 +275,8 @@ class ClassUtilsTest extends AbstractTestCase {
     @Test
     public void testIsClass() {
         assertTrue(isClass(String.class));
-        assertTrue(isClass("Hello"));
-        assertTrue(isClass(null));
+        assertFalse(isClass("Hello"));
+        assertFalse(isClass(null));
     }
 
     @Test
