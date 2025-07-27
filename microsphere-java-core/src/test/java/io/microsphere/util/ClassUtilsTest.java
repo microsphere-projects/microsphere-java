@@ -59,7 +59,7 @@ import static io.microsphere.util.ClassUtils.isWrapperType;
 import static io.microsphere.util.ClassUtils.newInstance;
 import static io.microsphere.util.ClassUtils.resolveClassName;
 import static io.microsphere.util.ClassUtils.resolvePackageName;
-import static io.microsphere.util.ClassUtils.resolvePrimitiveClassName;
+import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static java.util.Collections.emptyList;
@@ -387,19 +387,19 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolvePrimitiveClassName() {
-        assertNull(resolvePrimitiveClassName(null));
-        assertNull(resolvePrimitiveClassName(""));
-        assertNull(resolvePrimitiveClassName(SPACE));
-        assertNull(resolvePrimitiveClassName("java.lang.String"));
-        assertEquals(boolean.class, resolvePrimitiveClassName("boolean"));
-        assertEquals(byte.class, resolvePrimitiveClassName("byte"));
-        assertEquals(char.class, resolvePrimitiveClassName("char"));
-        assertEquals(short.class, resolvePrimitiveClassName("short"));
-        assertEquals(int.class, resolvePrimitiveClassName("int"));
-        assertEquals(long.class, resolvePrimitiveClassName("long"));
-        assertEquals(float.class, resolvePrimitiveClassName("float"));
-        assertEquals(double.class, resolvePrimitiveClassName("double"));
+    public void testResolvePrimitiveClassForName() {
+        assertNull(resolvePrimitiveClassForName(null));
+        assertNull(resolvePrimitiveClassForName(""));
+        assertNull(resolvePrimitiveClassForName(SPACE));
+        assertNull(resolvePrimitiveClassForName("java.lang.String"));
+        assertEquals(boolean.class, resolvePrimitiveClassForName("boolean"));
+        assertEquals(byte.class, resolvePrimitiveClassForName("byte"));
+        assertEquals(char.class, resolvePrimitiveClassForName("char"));
+        assertEquals(short.class, resolvePrimitiveClassForName("short"));
+        assertEquals(int.class, resolvePrimitiveClassForName("int"));
+        assertEquals(long.class, resolvePrimitiveClassForName("long"));
+        assertEquals(float.class, resolvePrimitiveClassForName("float"));
+        assertEquals(double.class, resolvePrimitiveClassForName("double"));
     }
 
     @Test
