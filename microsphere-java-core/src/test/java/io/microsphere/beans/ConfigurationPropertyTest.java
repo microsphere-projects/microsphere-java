@@ -55,7 +55,7 @@ public class ConfigurationPropertyTest {
     @Test
     public void testNull() {
         assertThrows(IllegalArgumentException.class, () -> new ConfigurationProperty(null));
-        assertThrows(IllegalArgumentException.class, () -> new ConfigurationProperty("test").setType(null));
+        assertThrows(IllegalArgumentException.class, () -> new ConfigurationProperty("test").setType((String) null));
     }
 
     @Test
@@ -65,9 +65,9 @@ public class ConfigurationPropertyTest {
 
     @Test
     public void testType() {
-        assertEquals(String.class, this.property.getType());
+        assertEquals(String.class.getName(), this.property.getType());
         this.property.setType(type);
-        assertEquals(type, this.property.getType());
+        assertEquals(type.getName(), this.property.getType());
     }
 
     @Test
