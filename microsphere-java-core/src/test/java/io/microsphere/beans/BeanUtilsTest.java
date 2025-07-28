@@ -19,6 +19,7 @@ package io.microsphere.beans;
 
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.io.event.FileChangedEvent;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -33,10 +34,13 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.Sets.ofSet;
+import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link BeanUtils} Test
@@ -119,6 +123,16 @@ class BeanUtilsTest extends AbstractTestCase {
     @Test
     void testResolvePropertiesAsMapOnRuntimeException() {
         assertThrows(RuntimeException.class, () -> resolvePropertiesAsMap(new Object()));
+    }
+
+    @Test
+    void testResolvePropertiesAsMapOnMaxResolvedLevelsExceeded() {
+        Map<String, Object> propertiesMap = resolvePropertiesAsMap(new FileChangedEvent(newRandomTempFile(), MODIFIED));
+        assertNotNull(propertiesMap);
+        assertTrue(propertiesMap.containsKey("file"));
+        assertTrue(propertiesMap.containsKey("kind"));
+        assertTrue(propertiesMap.containsKey("timestamp"));
+        assertTrue(propertiesMap.containsKey("source"));
     }
 
     static class TestBean {
