@@ -18,10 +18,13 @@
 package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.logging.Logger;
 
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 /**
@@ -62,12 +65,17 @@ public interface ConfigurationPropertyGenerator {
      * @see #generate()
      * @see io.microsphere.util.ServiceLoaderUtils#loadServicesList(Class)
      */
-    static List<ConfigurationProperty> generateAll() throws Throwable {
+    static List<ConfigurationProperty> generateAll() {
+        Logger logger = getLogger(ConfigurationPropertyGenerator.class);
         List<ConfigurationPropertyGenerator> generators = loadServicesList(ConfigurationPropertyGenerator.class);
         List<ConfigurationProperty> configurationProperties = newArrayList(generators.size());
         for (ConfigurationPropertyGenerator generator : generators) {
-            ConfigurationProperty configurationProperty = generator.generate();
-            configurationProperties.add(configurationProperty);
+            try {
+                ConfigurationProperty configurationProperty = generator.generate();
+                configurationProperties.add(configurationProperty);
+            } catch (Throwable e) {
+                logger.error("Failed to generate the configuration property from {}", getTypeName(generator.getClass()), e);
+            }
         }
         return configurationProperties;
     }
