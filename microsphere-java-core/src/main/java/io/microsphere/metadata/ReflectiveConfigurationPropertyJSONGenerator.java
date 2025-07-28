@@ -29,6 +29,43 @@ import static io.microsphere.util.Assert.assertNotNull;
 /**
  * {@link ConfigurationPropertyJSONGenerator} class based on Java Reflection API
  *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * ConfigurationProperty property = new ConfigurationProperty("server.port", Integer.class);
+ * property.setValue(8080);
+ * property.setDefaultValue(8080);
+ * property.setRequired(true);
+ * property.setDescription("The port number for the server");
+ *
+ * ConfigurationProperty.Metadata metadata = property.getMetadata();
+ * metadata.getSources().add("application.properties");
+ * metadata.getTargets().add("server");
+ * metadata.setDeclaredClass("com.example.ServerConfig");
+ * metadata.setDeclaredField("port");
+ * }</pre>
+ * <p>
+ * The JSON representation of the above ConfigurationProperty object would be:
+ * <pre>{@code
+ * {
+ *   "name": "server.port",
+ *   "type": "java.lang.Integer",
+ *   "value": 8080,
+ *   "defaultValue": 8080,
+ *   "required": true,
+ *   "description": "The port number for the server",
+ *   "metadata": {
+ *     "sources": [
+ *       "application.properties"
+ *     ],
+ *     "targets": [
+ *       "server"
+ *     ],
+ *     "declaredClass": "com.example.ServerConfig",
+ *     "declaredField": "port"
+ *   }
+ * }
+ * }</pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationPropertyJSONGenerator
  * @see JSONObject
