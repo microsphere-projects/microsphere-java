@@ -1,1 +1,2 @@
 io.microsphere.metadata.DefaultConfigurationPropertyGenerator
+io.microsphere.metadata.ErrorConfigurationPropertyGenerator
