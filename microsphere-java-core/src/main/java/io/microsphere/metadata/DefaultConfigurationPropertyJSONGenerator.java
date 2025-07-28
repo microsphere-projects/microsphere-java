@@ -47,7 +47,7 @@ import static io.microsphere.util.ClassUtils.getTypeName;
  * metadata.setDeclaredClass("com.example.ServerConfig");
  * metadata.setDeclaredField("port");
  * }</pre>
- *
+ * <p>
  * The JSON representation of the above ConfigurationProperty object would be:
  * <pre>{@code
  * {
@@ -145,5 +145,10 @@ public class DefaultConfigurationPropertyJSONGenerator implements ConfigurationP
 
         jsonBuilder.append(RIGHT_CURLY_BRACE_CHAR);
         return jsonBuilder.toString();
+    }
+
+    @Override
+    public int getPriority() {
+        return MIN_PRIORITY;
     }
 }
