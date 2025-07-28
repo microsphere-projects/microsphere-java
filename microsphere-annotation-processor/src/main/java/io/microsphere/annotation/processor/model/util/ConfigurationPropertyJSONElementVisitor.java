@@ -75,6 +75,7 @@ import static io.microsphere.json.JSONUtils.append;
  * @see AnnotatedElementJSONElementVisitor
  * @since 1.0.0
  */
+@Deprecated
 public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
 
     public static final String ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
