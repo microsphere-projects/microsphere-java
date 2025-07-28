@@ -48,7 +48,7 @@ public interface ConfigurationPropertyLoader {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * ConfigurationPropertyLoader loader = ...; // Obtain an instance of a concrete implementation
-     * List<ConfigurationProperty> properties = loader.generate();
+     * List<ConfigurationProperty> properties = loader.load();
      * for (ConfigurationProperty property : properties) {
      *     System.out.println("Property Name: " + property.getName());
      *     System.out.println("Property Type: " + property.getType());
