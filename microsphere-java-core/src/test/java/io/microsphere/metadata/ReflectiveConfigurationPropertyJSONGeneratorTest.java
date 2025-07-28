@@ -22,8 +22,10 @@ import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.assertJSON;
 import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.newConfigurationProperty;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link ReflectiveConfigurationPropertyJSONGenerator} Test
@@ -46,5 +48,11 @@ class ReflectiveConfigurationPropertyJSONGeneratorTest {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = generator.generate(configurationProperty);
         assertJSON(json);
+    }
+
+    @Test
+    void testGetPriority() {
+        int priority = generator.getPriority();
+        assertEquals(NORMAL_PRIORITY, priority);
     }
 }
