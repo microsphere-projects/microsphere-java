@@ -57,10 +57,12 @@ class BeanUtilsTest extends AbstractTestCase {
         configurationProperty.setValue("value");
         configurationProperty.setDefaultValue("defaultValue");
         configurationProperty.setRequired(true);
+        configurationProperty.setDescription("description");
         ConfigurationProperty.Metadata metadata = configurationProperty.getMetadata();
-        metadata.setDescription("description");
         metadata.getSources().add("source-1");
         metadata.getTargets().add("target-1");
+        metadata.setDeclaredClass("declaredClass");
+        metadata.setDeclaredField("declaredField");
 
         Map<String, Object> propertiesMap = resolvePropertiesAsMap(configurationProperty);
 
