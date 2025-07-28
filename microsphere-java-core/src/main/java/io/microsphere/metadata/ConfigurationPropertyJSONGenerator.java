@@ -19,6 +19,7 @@ package io.microsphere.metadata;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.lang.Prioritized;
 
 /**
  * ConfigurationPropertyJSONGenerator is an interface that defines the contract for generating
@@ -42,7 +43,7 @@ import io.microsphere.beans.ConfigurationProperty;
  * @see ConfigurationProperty
  * @since 1.0.0
  */
-public interface ConfigurationPropertyJSONGenerator {
+public interface ConfigurationPropertyJSONGenerator extends Prioritized {
 
     /**
      * Generates a JSON representation of the given {@link ConfigurationProperty}.
