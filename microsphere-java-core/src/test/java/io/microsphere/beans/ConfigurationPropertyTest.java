@@ -95,16 +95,12 @@ public class ConfigurationPropertyTest {
     public void testMetadata() {
         Metadata metadata = this.property.getMetadata();
         assertNotNull(metadata);
-        assertNull(metadata.getDescription());
+        assertNotNull(metadata.getSources());
         assertNotNull(metadata.getTargets());
+        assertNull(metadata.getDeclaredClass());
+        assertNull(metadata.getDeclaredField());
 
         Metadata metadata1 = new Metadata();
-
-        metadata.setDescription("description");
-        assertNotEquals(metadata, metadata1);
-        metadata1.setDescription("description");
-        assertEquals(metadata1.getDescription(), metadata.getDescription());
-        assertEquals(metadata, metadata1);
 
         metadata.getSources().add("source");
         assertNotEquals(metadata, metadata1);
@@ -116,6 +112,16 @@ public class ConfigurationPropertyTest {
         assertNotEquals(metadata, metadata1);
         metadata1.getTargets().add("target");
         assertEquals(metadata.getTargets(), metadata1.getTargets());
+        assertEquals(metadata, metadata1);
+
+        metadata.setDeclaredClass("io.microsphere.beans.ConfigurationProperty");
+        assertNotEquals(metadata, metadata1);
+        metadata1.setDeclaredClass("io.microsphere.beans.ConfigurationProperty");
+        assertEquals(metadata, metadata1);
+
+        metadata.setDeclaredField("name");
+        assertNotEquals(metadata, metadata1);
+        metadata1.setDeclaredField("name");
         assertEquals(metadata, metadata1);
 
         assertNotEquals(metadata, new Object());
@@ -145,8 +151,8 @@ public class ConfigurationPropertyTest {
         property.setRequired(true);
         assertEquals(this.property.hashCode(), property.hashCode());
 
-        this.property.getMetadata().setDescription("description");
-        property.getMetadata().setDescription("description");
+        this.property.setDescription("description");
+        property.setDescription("description");
         assertEquals(this.property.hashCode(), property.hashCode());
 
         this.property.getMetadata().getTargets().add("target");
@@ -181,9 +187,9 @@ public class ConfigurationPropertyTest {
         property.setRequired(true);
         assertEquals(this.property, property);
 
-        this.property.getMetadata().setDescription("description");
+        this.property.setDescription("description");
         assertNotEquals(this.property, property);
-        property.getMetadata().setDescription("description");
+        property.setDescription("description");
         assertEquals(this.property, property);
 
         this.property.getMetadata().getTargets().add("target");
@@ -213,8 +219,8 @@ public class ConfigurationPropertyTest {
         property.setRequired(true);
         assertEquals(this.property.toString(), property.toString());
 
-        this.property.getMetadata().setDescription("description");
-        property.getMetadata().setDescription("description");
+        this.property.setDescription("description");
+        property.setDescription("description");
         assertEquals(this.property.toString(), property.toString());
 
         this.property.getMetadata().getTargets().add("target");
