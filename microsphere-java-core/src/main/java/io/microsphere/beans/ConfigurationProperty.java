@@ -19,6 +19,7 @@ package io.microsphere.beans;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,36 +27,41 @@ import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * Represents a configuration property with metadata, value, and type information.
- * <p>
- * A {@link ConfigurationProperty} instance holds the name, type, and value of a configuration property,
- * along with additional metadata such as description and targets. It is typically used to manage and
- * validate configuration properties in a structured way.
- * </p>
+ * {@code ConfigurationProperty} is a class that represents a configuration property
+ * with its name, type, value, default value, requirement status, description, and metadata.
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * // Creating a simple configuration property with a name and default type (String.class)
- * ConfigurationProperty property = new ConfigurationProperty("my.property.name");
+ * ConfigurationProperty property = new ConfigurationProperty("server.port", Integer.class);
+ * property.setValue(8080);
+ * property.setDefaultValue(8080);
+ * property.setRequired(true);
+ * property.setDescription("The port number for the server");
  *
- * // Setting a custom type and value
- * property.setType(Integer.class);
- * property.setValue(42);
+ * ConfigurationProperty.Metadata metadata = property.getMetadata();
+ * metadata.getSources().add("application.properties");
+ * metadata.getTargets().add("server");
+ * metadata.getDeclaredClass("com.example.ServerConfig");
+ * metadata.getDeclaredField("port");
  *
- * // Accessing metadata to add a description
- * property.getMetadata().setDescription("This is an example property");
- * property.getMetadata().getTargets().add("example.target");
- *
- * // Checking equality
- * ConfigurationProperty another = new ConfigurationProperty("my.property.name", Integer.class);
- * boolean isEqual = property.equals(another); // true if all fields match
+ * System.out.println(property.getName());        // server.port
+ * System.out.println(property.getType());        // class java.lang.Integer
+ * System.out.println(property.getValue());       // 8080
+ * System.out.println(property.getDefaultValue()); // 8080
+ * System.out.println(property.isRequired());     // true
+ * System.out.println(property.getDescription()); // The port number for the server
+ * System.out.println(metadata.getSources());     // [application.properties]
+ * System.out.println(metadata.getTargets());     // [server]
+ * System.out.println(metadata.getDeclaredClass()); // com.example.ServerConfig
+ * System.out.println(metadata.getDeclaredField()); // port
  * }</pre>
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Metadata
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ConfigurationProperty {
+public class ConfigurationProperty implements Serializable {
+
+    private static final long serialVersionUID = 2959491970141947471L;
 
     /**
      * The name of the property
@@ -85,6 +91,21 @@ public class ConfigurationProperty {
      * Whether the property is required
      */
     private boolean required;
+
+    /**
+     * The description of the property
+     */
+    @Nullable
+    private String description;
+
+    @Nonnull
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     /**
      * The metadata of the property
@@ -160,6 +181,7 @@ public class ConfigurationProperty {
                 && getType().equals(that.getType())
                 && Objects.equals(getValue(), that.getValue())
                 && Objects.equals(getDefaultValue(), that.getDefaultValue())
+                && Objects.equals(getDescription(), that.getDescription())
                 && Objects.equals(getMetadata(), that.getMetadata());
     }
 
@@ -169,6 +191,7 @@ public class ConfigurationProperty {
         result = 31 * result + getType().hashCode();
         result = 31 * result + Objects.hashCode(getValue());
         result = 31 * result + Objects.hashCode(getDefaultValue());
+        result = 31 * result + Objects.hashCode(getDescription());
         result = 31 * result + Boolean.hashCode(isRequired());
         result = 31 * result + Objects.hashCode(getMetadata());
         return result;
@@ -189,12 +212,9 @@ public class ConfigurationProperty {
     /**
      * The metadata class of the Spring Configuration Property
      */
-    public static class Metadata {
+    public static class Metadata implements Serializable {
 
-        /**
-         * The description of the property
-         */
-        private String description;
+        private static final long serialVersionUID = 2777274495621491888L;
 
         /**
          * The sources of the property
@@ -206,14 +226,15 @@ public class ConfigurationProperty {
          */
         private Set<String> targets;
 
-        @Nonnull
-        public String getDescription() {
-            return description;
-        }
+        /**
+         * The declared class of the property
+         */
+        private String declaredClass;
 
-        public void setDescription(String description) {
-            this.description = description;
-        }
+        /**
+         * The declared field of the property
+         */
+        private String declaredField;
 
         /**
          * Retrieves the set of sources associated with this configuration property.
@@ -263,31 +284,71 @@ public class ConfigurationProperty {
             return targets;
         }
 
+        /**
+         * Get the declared class name.
+         *
+         * @return the declared class name
+         */
+        @Nullable
+        public String getDeclaredClass() {
+            return declaredClass;
+        }
+
+        /**
+         * Get the declared field name.
+         *
+         * @return the declared field name
+         */
+        @Nullable
+        public String getDeclaredField() {
+            return declaredField;
+        }
+
+        /**
+         * Set the declared class name.
+         *
+         * @param declaredClass the declared class name
+         */
+        public void setDeclaredClass(@Nullable String declaredClass) {
+            this.declaredClass = declaredClass;
+        }
+
+        /**
+         * Set the declared field name.
+         *
+         * @param declaredField the declared field name
+         */
+        public void setDeclaredField(@Nullable String declaredField) {
+            this.declaredField = declaredField;
+        }
+
         @Override
         public final boolean equals(Object o) {
             if (!(o instanceof Metadata)) return false;
 
             Metadata metadata = (Metadata) o;
-
-            return Objects.equals(description, metadata.description)
-                    && Objects.equals(getSources(), metadata.getSources())
-                    && Objects.equals(getTargets(), metadata.getTargets());
+            return Objects.equals(getSources(), metadata.getSources())
+                    && Objects.equals(getTargets(), metadata.getTargets())
+                    && Objects.equals(getDeclaredClass(), metadata.getDeclaredClass())
+                    && Objects.equals(getDeclaredField(), metadata.getDeclaredField());
         }
 
         @Override
         public int hashCode() {
-            int result = Objects.hashCode(description);
-            result = 31 * result + Objects.hashCode(getSources());
+            int result = Objects.hashCode(getSources());
             result = 31 * result + Objects.hashCode(getTargets());
+            result = 31 * result + Objects.hashCode(getDeclaredClass());
+            result = 31 * result + Objects.hashCode(getDeclaredField());
             return result;
         }
 
         @Override
         public String toString() {
             return "Metadata{" +
-                    "description='" + description + '\'' +
-                    ", sources=" + getSources() +
-                    ", targets=" + getTargets() +
+                    "sources=" + sources +
+                    ", targets=" + targets +
+                    ", declaredClass='" + declaredClass + '\'' +
+                    ", declaredField='" + declaredField + '\'' +
                     '}';
         }
     }
