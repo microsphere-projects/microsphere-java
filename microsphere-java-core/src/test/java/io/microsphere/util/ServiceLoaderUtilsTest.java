@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Set;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.util.ServiceLoaderUtils.SERVICE_LOADER_CACHED;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.ServiceLoaderUtils.loadLastService;
 import static io.microsphere.util.ServiceLoaderUtils.loadServices;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static io.microsphere.util.ServiceLoaderUtils.SERVICE_LOADER_CACHED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
