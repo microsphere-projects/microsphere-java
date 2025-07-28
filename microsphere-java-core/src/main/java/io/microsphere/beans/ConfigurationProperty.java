@@ -24,7 +24,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
+import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassUtils.getTypeName;
 
 /**
  * {@code ConfigurationProperty} is a class that represents a configuration property
@@ -73,7 +75,7 @@ public class ConfigurationProperty implements Serializable {
      * The type of the property
      */
     @Nonnull
-    private Class<?> type;
+    private String type;
 
     /**
      * The value of the property
@@ -130,12 +132,17 @@ public class ConfigurationProperty implements Serializable {
     }
 
     @Nonnull
-    public Class<?> getType() {
+    public String getType() {
         return type;
     }
 
     public void setType(@Nonnull Class<?> type) {
         assertNotNull(type, () -> "the property type must not null");
+        setType(getTypeName(type));
+    }
+
+    public void setType(String type) {
+        assertNotEmpty(type, () -> "the property type must not null");
         this.type = type;
     }
 
