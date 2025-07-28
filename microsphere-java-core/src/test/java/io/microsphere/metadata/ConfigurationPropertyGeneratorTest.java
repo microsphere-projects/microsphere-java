@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.metadata.ConfigurationPropertyGenerator.generateAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,7 +39,7 @@ class ConfigurationPropertyGeneratorTest {
 
     @Test
     void testGenerate() throws Throwable {
-        assertEquals(newConfigurationProperty(), new DefaultConfigurationPropertyGenerator().generate());
+        assertEquals(ofList(newConfigurationProperty()), new DefaultConfigurationPropertyGenerator().generate());
     }
 
     @Test
