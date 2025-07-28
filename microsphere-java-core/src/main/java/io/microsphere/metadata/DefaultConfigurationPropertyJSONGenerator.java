@@ -28,7 +28,6 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.json.JSONUtils.append;
 import static io.microsphere.json.JSONUtils.appendName;
 import static io.microsphere.util.Assert.assertNotNull;
-import static io.microsphere.util.ClassUtils.getTypeName;
 
 /**
  * The default implementation class of {@link ConfigurationPropertyJSONGenerator}.
@@ -87,7 +86,7 @@ public class DefaultConfigurationPropertyJSONGenerator implements ConfigurationP
         String name = configurationProperty.getName();
         append(jsonBuilder, "name", name);
 
-        String type = getTypeName(configurationProperty.getType());
+        String type = configurationProperty.getType();
         jsonBuilder.append(COMMA_CHAR);
         append(jsonBuilder, "type", type);
 
