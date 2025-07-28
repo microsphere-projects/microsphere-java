@@ -23,6 +23,7 @@ import io.microsphere.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -46,6 +47,12 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = generator.generate(configurationProperty);
         assertJSON(json);
+    }
+
+    @Test
+    void testGetPriority() {
+        int priority = generator.getPriority();
+        assertEquals(MIN_PRIORITY, priority);
     }
 
     static void assertJSON(String json) throws Throwable {
