@@ -490,6 +490,7 @@ class JSONObjectTest {
         assertWrap(Double.MIN_VALUE);
         assertWrap("Hello");
         assertEquals("1.0", wrap(new StringBuilder("1.0")));
+        assertEquals("java.lang.String", wrap(String.class));
         assertNull(wrap(this));
     }
 
