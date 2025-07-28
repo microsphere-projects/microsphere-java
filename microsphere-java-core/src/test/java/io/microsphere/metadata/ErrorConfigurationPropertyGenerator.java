@@ -19,6 +19,8 @@ package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
 
+import java.util.List;
+
 /**
  * Error {@link ConfigurationPropertyGenerator}
  *
@@ -28,7 +30,7 @@ import io.microsphere.beans.ConfigurationProperty;
  */
 public class ErrorConfigurationPropertyGenerator implements ConfigurationPropertyGenerator {
     @Override
-    public ConfigurationProperty generate() throws Throwable {
+    public List<ConfigurationProperty> generate() throws Throwable {
         throw new Throwable("For testing purpose only");
     }
 }
