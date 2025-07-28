@@ -41,8 +41,8 @@ import static io.microsphere.util.Assert.assertNotNull;
  * ConfigurationProperty.Metadata metadata = property.getMetadata();
  * metadata.getSources().add("application.properties");
  * metadata.getTargets().add("server");
- * metadata.getDeclaredClass("com.example.ServerConfig");
- * metadata.getDeclaredField("port");
+ * metadata.setDeclaredClass("com.example.ServerConfig");
+ * metadata.setDeclaredField("port");
  *
  * System.out.println(property.getName());        // server.port
  * System.out.println(property.getType());        // class java.lang.Integer
