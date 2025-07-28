@@ -19,6 +19,9 @@ package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
 
+import java.util.List;
+
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 
 /**
@@ -30,7 +33,7 @@ import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NA
  */
 public class DefaultConfigurationPropertyGenerator implements ConfigurationPropertyGenerator {
     @Override
-    public ConfigurationProperty generate() throws Throwable {
-        return new ConfigurationProperty(MICROSPHERE_PROPERTY_NAME_PREFIX + "test");
+    public List<ConfigurationProperty> generate() throws Throwable {
+        return ofList(new ConfigurationProperty(MICROSPHERE_PROPERTY_NAME_PREFIX + "test"));
     }
 }
