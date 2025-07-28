@@ -17,7 +17,9 @@
 
 package io.microsphere.beans;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.collection.MapUtils;
+import io.microsphere.lang.MutableInteger;
 import io.microsphere.util.Utils;
 
 import java.beans.BeanInfo;
@@ -35,6 +37,8 @@ import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
+import static io.microsphere.lang.MutableInteger.of;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassUtils.isCharSequence;
@@ -43,6 +47,8 @@ import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static io.microsphere.util.StringUtils.uncapitalize;
 import static java.beans.Introspector.getBeanInfo;
+import static java.lang.Integer.getInteger;
+import static java.lang.Integer.parseInt;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyMap;
@@ -57,8 +63,133 @@ import static java.util.Collections.unmodifiableMap;
  */
 public abstract class BeanUtils implements Utils {
 
-    protected static Map<String, Object> resolvePropertiesAsMap(Object bean) {
+    public static final String BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "bean.properties.max-resolved-depth";
+
+    static final String DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE = "100";
+
+    public static final int DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_LEVELS = parseInt(DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE);
+
+    /**
+     * The maximum levels of resolving properties of a bean, default is 100
+     */
+    @ConfigurationProperty(
+            name = BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME,
+            defaultValue = DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE,
+            description = "The maximum depth of resolving properties of a bean in order to avoid stack overflow, " +
+                    "default is " + DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE
+    )
+    public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME, DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_LEVELS);
+
+    /**
+     * Resolves the properties of a given Java Bean and returns them as a {@link Map}.
+     * <p>
+     * This method introspects the provided bean, extracts its properties using
+     * {@link PropertyDescriptor PropertyDescriptors}, and constructs a map where
+     * each key is the uncapitalized property name and each value is the resolved
+     * property value. The resolution process handles nested objects, arrays, lists,
+     * sets, and maps recursively up to a maximum depth defined by
+     * {@link #BEAN_PROPERTIES_MAX_RESOLVED_DEPTH}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Person {
+     *     private String name;
+     *     private Address address;
+     *
+     *     // Getters and setters...
+     * }
+     *
+     * public class Address {
+     *     private String city;
+     *
+     *     // Getters and setters...
+     * }
+     *
+     * Person person = new Person();
+     * person.setName("John Doe");
+     * Address address = new Address();
+     * address.setCity("New York");
+     * person.setAddress(address);
+     *
+     * Map<String, Object> properties = BeanUtils.resolvePropertiesAsMap(person);
+     * // Resulting map:
+     * // {
+     * //   "name": "John Doe",
+     * //   "address": {
+     * //     "city": "New York"
+     * //   }
+     * // }
+     * }</pre>
+     *
+     * @param bean the Java Bean whose properties are to be resolved; may be {@code null}
+     * @return an unmodifiable {@link Map} containing the resolved properties,
+     * or an empty map if the bean is {@code null} or maximum resolution
+     * depth is reached
+     * @see #resolvePropertiesAsMap(Object, MutableInteger)
+     * @see #BEAN_PROPERTIES_MAX_RESOLVED_DEPTH
+     */
+    public static Map<String, Object> resolvePropertiesAsMap(Object bean) {
+        return resolvePropertiesAsMap(bean, of(0));
+    }
+
+    /**
+     * Resolves the properties of a given Java Bean and returns them as a {@link Map}, while tracking the depth
+     * of nested property resolution using a {@link MutableInteger}.
+     * <p>
+     * This method introspects the provided bean, extracts its properties using {@link PropertyDescriptor PropertyDescriptors},
+     * and constructs a map where each key is the uncapitalized property name and each value is the resolved property value.
+     * The resolution process handles nested objects, arrays, lists, sets, and maps recursively. The {@code resolvedDepth}
+     * parameter is used to track how deep the resolution has gone to prevent stack overflow by limiting the depth.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Person {
+     *     private String name;
+     *     private Address address;
+     *
+     *     // Getters and setters...
+     * }
+     *
+     * public class Address {
+     *     private String city;
+     *
+     *     // Getters and setters...
+     * }
+     *
+     * Person person = new Person();
+     * person.setName("John Doe");
+     * Address address = new Address();
+     * address.setCity("New York");
+     * person.setAddress(address);
+     *
+     * MutableInteger levels = MutableInteger.of(0);
+     * Map<String, Object> properties = BeanUtils.resolvePropertiesAsMap(person, levels);
+     * // Resulting map:
+     * // {
+     * //   "name": "John Doe",
+     * //   "address": {
+     * //     "city": "New York"
+     * //   }
+     * // }
+     * System.out.println(levels.get()); // prints the depth of resolution
+     * }</pre>
+     *
+     * @param bean          the Java Bean whose properties are to be resolved; may be {@code null}
+     * @param resolvedDepth a {@link MutableInteger} that tracks the current depth of property resolution
+     * @return an unmodifiable {@link Map} containing the resolved properties,
+     * or an empty map if the bean is {@code null} or maximum resolution depth is reached
+     * @see #resolvePropertiesAsMap(Object)
+     * @see #BEAN_PROPERTIES_MAX_RESOLVED_DEPTH
+     * @see MutableInteger
+     */
+    public static Map<String, Object> resolvePropertiesAsMap(Object bean, MutableInteger resolvedDepth) {
         if (bean == null) {
+            return emptyMap();
+        }
+        // check the maximum depth of resolving properties
+        if (resolvedDepth.incrementAndGet() >= BEAN_PROPERTIES_MAX_RESOLVED_DEPTH) {
             return emptyMap();
         }
 
@@ -70,7 +201,7 @@ public abstract class BeanUtils implements Utils {
             for (int i = 0; i < propertyDescriptors.length; i++) {
                 PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
                 String propertyName = uncapitalize(propertyDescriptor.getName());
-                Object propertyValue = resolveProperty(bean, propertyDescriptor);
+                Object propertyValue = resolveProperty(bean, propertyDescriptor, resolvedDepth);
                 propertiesMap.put(propertyName, propertyValue);
             }
         } catch (Throwable e) {
@@ -79,19 +210,19 @@ public abstract class BeanUtils implements Utils {
         return unmodifiableMap(propertiesMap);
     }
 
-    static Object resolveProperty(Object instance, PropertyDescriptor propertyDescriptor) {
+    static Object resolveProperty(Object instance, PropertyDescriptor propertyDescriptor, MutableInteger resolvedDepth) {
         Method readMethod = propertyDescriptor.getReadMethod();
         trySetAccessible(readMethod);
         Object propertyValue = invokeMethod(instance, readMethod);
         Class<?> propertyType = propertyDescriptor.getPropertyType();
-        return resolveProperty(propertyValue, propertyType);
+        return resolveProperty(propertyValue, propertyType, resolvedDepth);
     }
 
-    static Object resolveProperty(Object value) {
-        return resolveProperty(value, value == null ? null : value.getClass());
+    static Object resolveProperty(Object value, MutableInteger resolvedDepth) {
+        return resolveProperty(value, value == null ? null : value.getClass(), resolvedDepth);
     }
 
-    static Object resolveProperty(Object value, Class<?> valueType) {
+    static Object resolveProperty(Object value, Class<?> valueType, MutableInteger resolvedDepth) {
         if (value == null) {
             return value;
         }
@@ -107,7 +238,7 @@ public abstract class BeanUtils implements Utils {
         ) {
             // do nothing, just return the propertyValue
         } else if (valueType.isArray()) {
-            int length = resolvedValue == null ? 0 : getLength(resolvedValue);
+            int length = getLength(resolvedValue);
             List<Object> values = newArrayList(length);
             for (int i = 0; i < length; i++) {
                 Object element = get(resolvedValue, i);
@@ -119,29 +250,28 @@ public abstract class BeanUtils implements Utils {
             List<Object> newList = newArrayList(size);
             for (int i = 0; i < size; i++) {
                 Object element = list.get(i);
-                newList.add(i, resolveProperty(element));
+                newList.add(i, resolveProperty(element, resolvedDepth));
             }
         } else if (isSet(valueType)) {
             Set<?> set = (Set<?>) resolvedValue;
             Set<Object> newSet = newFixedLinkedHashSet(size(set));
             for (Object element : set) {
-                newSet.add(resolveProperty(element));
+                newSet.add(resolveProperty(element, resolvedDepth));
             }
         } else if (isMap(valueType)) {
             Map<?, ?> map = (Map<?, ?>) resolvedValue;
             Map<Object, Object> newMap = newFixedLinkedHashMap(MapUtils.size(map));
             for (Map.Entry<?, ?> entry : map.entrySet()) {
-                newMap.put(entry.getKey(), resolveProperty(entry.getValue()));
+                newMap.put(entry.getKey(), resolveProperty(entry.getValue(), resolvedDepth));
             }
             resolvedValue = newMap;
         } else { // as the POJO
-            resolvedValue = resolvePropertiesAsMap(resolvedValue);
+            resolvedValue = resolvePropertiesAsMap(resolvedValue, resolvedDepth);
         }
 
         return resolvedValue;
     }
 
     private BeanUtils() {
-
     }
 }
