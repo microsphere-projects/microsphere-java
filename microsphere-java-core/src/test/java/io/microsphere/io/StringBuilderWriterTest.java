@@ -41,7 +41,7 @@ class StringBuilderWriterTest extends AbstractTestCase {
     }
 
     @Test
-    public void testConstructorWithCapacity() {
+    void testConstructorWithCapacity() {
         int size = random.nextInt(1024);
         StringBuilderWriter writer = new StringBuilderWriter(size);
         assertEquals(size, writer.getBuilder().capacity());
