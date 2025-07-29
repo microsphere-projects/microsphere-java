@@ -16,6 +16,7 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.lang.Prioritized;
 
 import java.util.Collection;
@@ -119,6 +120,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     @Override
+    @Immutable
     public List<EventListener<?>> getAllEventListeners() {
         List<EventListener<?>> listeners = new LinkedList<>();
 
