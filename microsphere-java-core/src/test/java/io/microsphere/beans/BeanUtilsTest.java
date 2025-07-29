@@ -70,11 +70,13 @@ class BeanUtilsTest extends AbstractTestCase {
         assertEquals("value", propertiesMap.get("value"));
         assertEquals("defaultValue", propertiesMap.get("defaultValue"));
         assertEquals(Boolean.TRUE, propertiesMap.get("required"));
+        assertEquals("description", propertiesMap.get("description"));
 
         Map<String, Object> metadataMap = (Map<String, Object>) propertiesMap.get("metadata");
-        assertEquals("description", metadataMap.get("description"));
         assertEquals(newLinkedHashSet("source-1"), metadataMap.get("sources"));
         assertEquals(newLinkedHashSet("target-1"), metadataMap.get("targets"));
+        assertEquals("declaredClass", metadataMap.get("declaredClass"));
+        assertEquals("declaredField", metadataMap.get("declaredField"));
     }
 
     @Test
