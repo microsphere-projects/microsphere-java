@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AssertTest extends AbstractTestCase {
 
     @Test
-    public void testAssertTrue() {
+    void testAssertTrue() {
         assertTrue(true, "True");
         assertTrue(true, () -> "True");
         assertTrue(true, (Supplier<String>) null);
