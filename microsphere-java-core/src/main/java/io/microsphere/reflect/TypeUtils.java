@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
-import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
@@ -104,7 +104,7 @@ public abstract class TypeUtils implements Utils {
             name = RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME,
             defaultValue = DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE,
             description = "The size of resolved generic types cache",
-            source = SYSTEM_PROPERTIES
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final int RESOLVED_GENERIC_TYPES_CACHE_SIZE = getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE);
 
