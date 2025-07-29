@@ -20,7 +20,7 @@ public class TypeArgumentTest {
     private TypeArgument typeArgument;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         typeArgument = create(String.class, 0);
     }
 
