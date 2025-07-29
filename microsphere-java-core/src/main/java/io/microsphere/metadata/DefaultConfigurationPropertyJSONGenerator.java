@@ -127,24 +127,31 @@ public class DefaultConfigurationPropertyJSONGenerator implements ConfigurationP
         Set<String> sources = metadata.getSources();
         if (isNotEmpty(sources)) {
             append(jsonBuilder, "sources", sources);
+            jsonBuilder.append(COMMA_CHAR);
         }
 
         Set<String> targets = metadata.getTargets();
         if (isNotEmpty(targets)) {
-            jsonBuilder.append(COMMA_CHAR);
             append(jsonBuilder, "targets", targets);
+            jsonBuilder.append(COMMA_CHAR);
         }
 
         String declaredClass = metadata.getDeclaredClass();
         if (declaredClass != null) {
-            jsonBuilder.append(COMMA_CHAR);
             append(jsonBuilder, "declaredClass", declaredClass);
+            jsonBuilder.append(COMMA_CHAR);
         }
 
         String declaredField = metadata.getDeclaredField();
         if (declaredField != null) {
-            jsonBuilder.append(COMMA_CHAR);
             append(jsonBuilder, "declaredField", declaredField);
+            jsonBuilder.append(COMMA_CHAR);
+        }
+
+        int lastIndex = jsonBuilder.length() - 1;
+
+        if (jsonBuilder.charAt(lastIndex) == COMMA_CHAR) {
+            jsonBuilder.deleteCharAt(lastIndex);
         }
 
         jsonBuilder.append(RIGHT_CURLY_BRACE_CHAR);
