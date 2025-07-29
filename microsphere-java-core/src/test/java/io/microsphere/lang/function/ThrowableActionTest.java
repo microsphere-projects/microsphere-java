@@ -44,18 +44,18 @@ class ThrowableActionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExecuteWithThrowableAction() {
+    void testExecuteWithThrowableAction() {
         execute(action);
         assertThrows(RuntimeException.class, () -> execute(exceptionalAction));
     }
 
     @Test
-    public void testExecuteWithThrowableActionOnNull() {
+    void testExecuteWithThrowableActionOnNull() {
         assertThrows(NullPointerException.class, () -> execute(null));
     }
 
     @Test
-    public void testExecuteWithThrowableActionAndConsumer() {
+    void testExecuteWithThrowableActionAndConsumer() {
         execute(action, e -> {
         });
 
@@ -65,7 +65,7 @@ class ThrowableActionTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExecuteWithThrowableActionAndConsumerOnNull() {
+    void testExecuteWithThrowableActionAndConsumerOnNull() {
         assertThrows(IllegalArgumentException.class, () -> execute(null, e -> {
         }));
     }
