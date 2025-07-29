@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ProxyUtilsTest {
 
     @Test
-    public void testIsProxyable() {
+    void testIsProxyable() {
         assertTrue(isProxyable(getClass()));
         assertFalse(isProxyable(int.class));
         assertFalse(isProxyable(int[].class));
