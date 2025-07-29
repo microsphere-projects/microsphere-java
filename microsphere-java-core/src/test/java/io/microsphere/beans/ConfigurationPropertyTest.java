@@ -53,46 +53,46 @@ public class ConfigurationPropertyTest {
     }
 
     @Test
-    public void testNull() {
+    void testNull() {
         assertThrows(IllegalArgumentException.class, () -> new ConfigurationProperty(null));
         assertThrows(IllegalArgumentException.class, () -> new ConfigurationProperty("test").setType((String) null));
     }
 
     @Test
-    public void testName() {
+    void testName() {
         assertEquals(name, this.property.getName());
     }
 
     @Test
-    public void testType() {
+    void testType() {
         assertEquals(String.class.getName(), this.property.getType());
         this.property.setType(type);
         assertEquals(type.getName(), this.property.getType());
     }
 
     @Test
-    public void testValue() {
+    void testValue() {
         assertNull(this.property.getValue());
         this.property.setValue(value);
         assertEquals(value, this.property.getValue());
     }
 
     @Test
-    public void testDefaultValue() {
+    void testDefaultValue() {
         assertNull(this.property.getDefaultValue());
         this.property.setDefaultValue(defaultValue);
         assertEquals(defaultValue, this.property.getDefaultValue());
     }
 
     @Test
-    public void testRequired() {
+    void testRequired() {
         assertFalse(this.property.isRequired());
         this.property.setRequired(true);
         assertTrue(this.property.isRequired());
     }
 
     @Test
-    public void testMetadata() {
+    void testMetadata() {
         Metadata metadata = this.property.getMetadata();
         assertNotNull(metadata);
         assertNotNull(metadata.getSources());
@@ -131,7 +131,7 @@ public class ConfigurationPropertyTest {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         ConfigurationProperty property = new ConfigurationProperty(name);
         assertEquals(this.property.hashCode(), property.hashCode());
 
@@ -161,7 +161,7 @@ public class ConfigurationPropertyTest {
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         ConfigurationProperty property = new ConfigurationProperty(name);
         assertEquals(this.property, property);
         assertNotEquals(this.property, new ConfigurationProperty("_" + name));
@@ -199,7 +199,7 @@ public class ConfigurationPropertyTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         ConfigurationProperty property = new ConfigurationProperty(name);
         assertEquals(this.property.toString(), property.toString());
 
