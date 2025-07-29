@@ -32,7 +32,7 @@ class ConditionalEventListenerTest {
     private final EventDispatcher eventDispatcher = EventDispatcher.newDefault();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         eventDispatcher.removeAllEventListeners();
     }
 
