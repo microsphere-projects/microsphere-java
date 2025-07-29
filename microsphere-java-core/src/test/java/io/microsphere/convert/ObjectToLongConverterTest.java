@@ -48,7 +48,7 @@ public class ObjectToLongConverterTest extends BaseConverterTest<Object, Long> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert("1"));
     }
 }
