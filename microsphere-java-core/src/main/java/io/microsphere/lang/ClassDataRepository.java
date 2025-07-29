@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassPathUtils;
@@ -134,12 +135,13 @@ public class ClassDataRepository {
      * @return non-null {@link Set}
      */
     @Nonnull
+    @Immutable
     public Set<String> getClassNamesInClassPath(String classPath, boolean recursive) {
         Set<String> classNames = classPathToClassNamesMap.get(classPath);
         if (isEmpty(classNames)) {
             classNames = findClassNamesInClassPath(classPath, recursive);
         }
-        return classNames;
+        return unmodifiableSet(classNames);
     }
 
     /**
@@ -149,6 +151,7 @@ public class ClassDataRepository {
      * @return non-null {@link Set}
      */
     @Nonnull
+    @Immutable
     public Set<String> getClassNamesInPackage(Package onePackage) {
         return getClassNamesInPackage(onePackage.getName());
     }
@@ -160,9 +163,10 @@ public class ClassDataRepository {
      * @return non-null {@link Set}
      */
     @Nonnull
+    @Immutable
     public Set<String> getClassNamesInPackage(String packageName) {
         Set<String> classNames = packageNameToClassNamesMap.get(packageName);
-        return classNames == null ? emptySet() : classNames;
+        return classNames == null ? emptySet() : unmodifiableSet(classNames);
     }
 
     /**
@@ -172,6 +176,7 @@ public class ClassDataRepository {
      * @return Read-only
      */
     @Nonnull
+    @Immutable
     public Map<String, Set<String>> getClassPathToClassNamesMap() {
         return classPathToClassNamesMap;
     }
@@ -182,6 +187,7 @@ public class ClassDataRepository {
      * @return Read-only
      */
     @Nonnull
+    @Immutable
     public Set<String> getAllClassNamesInClassPaths() {
         Set<String> allClassNames = new LinkedHashSet();
         for (Set<String> classNames : classPathToClassNamesMap.values()) {
