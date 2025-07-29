@@ -27,7 +27,7 @@ import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.function.Predicate;
 
-import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.QueueUtils.unmodifiableQueue;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
@@ -101,7 +101,7 @@ public abstract class ShutdownHookUtils implements Utils {
             name = SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME,
             defaultValue = DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_VALUE,
             description = "The capacity of ShutdownHook callbacks",
-            source = SYSTEM_PROPERTIES
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final int SHUTDOWN_HOOK_CALLBACKS_CAPACITY = getInteger(SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME, DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY);
 
