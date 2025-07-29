@@ -18,6 +18,8 @@
 package io.microsphere.beans;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.collection.MapUtils;
 import io.microsphere.lang.MutableInteger;
 import io.microsphere.util.Utils;
@@ -148,6 +150,8 @@ public abstract class BeanUtils implements Utils {
      * @see #resolvePropertiesAsMap(Object, int)
      * @see #BEAN_PROPERTIES_MAX_RESOLVED_DEPTH
      */
+    @Nonnull
+    @Immutable
     public static Map<String, Object> resolvePropertiesAsMap(Object bean) {
         return resolvePropertiesAsMap(bean, BEAN_PROPERTIES_MAX_RESOLVED_DEPTH);
     }
@@ -215,6 +219,8 @@ public abstract class BeanUtils implements Utils {
      * @see #resolvePropertiesAsMap(Object)
      * @see #resolvePropertiesAsMap(Object, MutableInteger, int)
      */
+    @Nonnull
+    @Immutable
     public static Map<String, Object> resolvePropertiesAsMap(Object bean, int maxResolvedDepth) {
         return resolvePropertiesAsMap(bean, of(0), maxResolvedDepth);
     }
@@ -289,6 +295,8 @@ public abstract class BeanUtils implements Utils {
      * @see #resolvePropertiesAsMap(Object)
      * @see #resolvePropertiesAsMap(Object, int)
      */
+    @Nonnull
+    @Immutable
     protected static Map<String, Object> resolvePropertiesAsMap(Object bean, MutableInteger resolvedDepth, int maxResolvedDepth) {
         if (bean == null) {
             return emptyMap();
