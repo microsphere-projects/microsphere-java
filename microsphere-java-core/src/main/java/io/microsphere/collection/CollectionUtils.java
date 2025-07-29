@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
@@ -141,8 +142,7 @@ public abstract class CollectionUtils implements Utils {
     public static <E> Iterator<E> toIterator(@Nullable Enumeration<E> enumeration) {
         return new EnumerationIteratorAdapter(enumeration);
     }
-
-
+    
     /**
      * Converts a nullable {@link Enumeration} into an {@link Iterable}.
      * If the provided enumeration is null, it returns an empty iterable.
@@ -166,7 +166,6 @@ public abstract class CollectionUtils implements Utils {
         return toIterable(toIterator(enumeration));
     }
 
-    @Nonnull
     /**
      * Creates a singleton {@link Iterable} that contains only the specified element.
      * If the provided element is null, returns an empty iterable.
@@ -184,6 +183,8 @@ public abstract class CollectionUtils implements Utils {
      * Iterable<String> iterable2 = CollectionUtils.singletonIterable(null);
      * }</pre>
      */
+    @Nonnull
+    @Immutable
     public static <E> Iterable<E> singletonIterable(@Nullable E element) {
         return toIterable(singletonIterator(element));
     }
@@ -210,6 +211,7 @@ public abstract class CollectionUtils implements Utils {
      * }</pre>
      */
     @Nonnull
+    @Immutable
     public static <E> Iterator<E> singletonIterator(@Nullable E element) {
         return new SingletonIterator<>(element);
     }
@@ -236,6 +238,7 @@ public abstract class CollectionUtils implements Utils {
      * }</pre>
      */
     @Nonnull
+    @Immutable
     public static <E> Enumeration<E> singletonEnumeration(@Nullable E element) {
         return new SingletonEnumeration<>(element);
     }
@@ -271,6 +274,7 @@ public abstract class CollectionUtils implements Utils {
      * }</pre>
      */
     @Nonnull
+    @Immutable
     public static <E> Iterator<E> unmodifiableIterator(@Nullable Iterator<E> iterator) {
         return new UnmodifiableIterator(iterator);
     }
@@ -293,6 +297,7 @@ public abstract class CollectionUtils implements Utils {
      * }</pre>
      */
     @Nonnull
+    @Immutable
     public static <E> Iterator<E> emptyIterator() {
         return Collections.emptyIterator();
     }
@@ -318,6 +323,7 @@ public abstract class CollectionUtils implements Utils {
      * }</pre>
      */
     @Nonnull
+    @Immutable
     public static <E> Iterable<E> emptyIterable() {
         return EmptyIterable.INSTANCE;
     }
@@ -594,6 +600,8 @@ public abstract class CollectionUtils implements Utils {
      * @return an empty and immutable queue instance
      * @see EmptyDeque
      */
+    @Nonnull
+    @Immutable
     public static <T> Queue<T> emptyQueue() {
         return QueueUtils.emptyQueue();
     }
@@ -626,6 +634,8 @@ public abstract class CollectionUtils implements Utils {
      * @return an empty and immutable deque instance
      * @see EmptyDeque
      */
+    @Nonnull
+    @Immutable
     public static <T> Deque<T> emptyDeque() {
         return QueueUtils.emptyDeque();
     }
