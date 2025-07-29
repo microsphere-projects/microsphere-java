@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ValueHolderTest {
 
     @Test
-    public void testValueHolder() {
+    void testValueHolder() {
         // Test empty constructor
         ValueHolder valueHolder = new ValueHolder();
         // Assert that the value is null
