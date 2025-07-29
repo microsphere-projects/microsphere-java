@@ -38,14 +38,14 @@ public class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<
     }
 
     @Test
-    public void testGetConstructor() {
+    void testGetConstructor() {
         for (ConstructorDefinition definition : definitions) {
             assertNotNull(definition.getConstructor());
         }
     }
 
     @Test
-    public void testNewInstance() {
+    void testNewInstance() {
         for (ConstructorDefinition definition : definitions) {
             TestData testData = definition.newInstance("test");
             assertEquals("test", testData.name);
