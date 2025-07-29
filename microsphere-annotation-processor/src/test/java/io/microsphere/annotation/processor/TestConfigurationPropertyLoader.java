@@ -46,7 +46,7 @@ public class TestConfigurationPropertyLoader implements ConfigurationPropertyLoa
 
         int i = 1;
         for (Class<?> simpleType : SIMPLE_TYPES) {
-            String name = "test-name-" + ++i;
+            String name = "test-name-" + i;
             ConfigurationProperty configurationProperty = new ConfigurationProperty(name);
             configurationProperty.setType(simpleType);
             configurationProperty.setValue("test-value-" + i);
@@ -64,6 +64,7 @@ public class TestConfigurationPropertyLoader implements ConfigurationPropertyLoa
             metadata.setDeclaredClass("io.microsphere.annotation.processor.TestConfigurationPropertyLoader");
             metadata.setDeclaredField("configurationProperties");
             configurationProperties.add(configurationProperty);
+            i++;
         }
         return configurationProperties;
     }
