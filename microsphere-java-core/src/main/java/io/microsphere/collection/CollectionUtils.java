@@ -142,7 +142,7 @@ public abstract class CollectionUtils implements Utils {
     public static <E> Iterator<E> toIterator(@Nullable Enumeration<E> enumeration) {
         return new EnumerationIteratorAdapter(enumeration);
     }
-    
+
     /**
      * Converts a nullable {@link Enumeration} into an {@link Iterable}.
      * If the provided enumeration is null, it returns an empty iterable.
