@@ -16,6 +16,7 @@
  */
 package io.microsphere.io.event;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.event.Event;
 
 import java.io.File;
@@ -27,6 +28,7 @@ import java.io.File;
  * @see File
  * @since 1.0.0
  */
+@Immutable
 public class FileChangedEvent extends Event {
 
     private final Kind kind;
