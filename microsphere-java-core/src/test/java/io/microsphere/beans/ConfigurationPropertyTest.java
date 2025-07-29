@@ -49,11 +49,11 @@ class ConfigurationPropertyTest {
 
     private static final String TEST_TARGET = "target";
     
-    private ConfigurationProperty property;
+    private ConfigurationProperty configurationProperty;
 
     @BeforeEach
     void setUp() {
-        this.property = new ConfigurationProperty(TEST_NAME);
+        this.configurationProperty = new ConfigurationProperty(TEST_NAME);
     }
 
     @Test
@@ -64,40 +64,40 @@ class ConfigurationPropertyTest {
 
     @Test
     void testName() {
-        assertEquals(TEST_NAME, this.property.getName());
+        assertEquals(TEST_NAME, this.configurationProperty.getName());
     }
 
     @Test
     void testType() {
-        assertEquals(String.class.getName(), this.property.getType());
-        this.property.setType(TEST_TYPE);
-        assertEquals(TEST_TYPE.getName(), this.property.getType());
+        assertEquals(String.class.getName(), this.configurationProperty.getType());
+        this.configurationProperty.setType(TEST_TYPE);
+        assertEquals(TEST_TYPE.getName(), this.configurationProperty.getType());
     }
 
     @Test
     void testValue() {
-        assertNull(this.property.getValue());
-        this.property.setValue(TEST_VALUE);
-        assertEquals(TEST_VALUE, this.property.getValue());
+        assertNull(this.configurationProperty.getValue());
+        this.configurationProperty.setValue(TEST_VALUE);
+        assertEquals(TEST_VALUE, this.configurationProperty.getValue());
     }
 
     @Test
     void testDefaultValue() {
-        assertNull(this.property.getDefaultValue());
-        this.property.setDefaultValue(TEST_DEFAULT_VALUE);
-        assertEquals(TEST_DEFAULT_VALUE, this.property.getDefaultValue());
+        assertNull(this.configurationProperty.getDefaultValue());
+        this.configurationProperty.setDefaultValue(TEST_DEFAULT_VALUE);
+        assertEquals(TEST_DEFAULT_VALUE, this.configurationProperty.getDefaultValue());
     }
 
     @Test
     void testRequired() {
-        assertFalse(this.property.isRequired());
-        this.property.setRequired(true);
-        assertTrue(this.property.isRequired());
+        assertFalse(this.configurationProperty.isRequired());
+        this.configurationProperty.setRequired(true);
+        assertTrue(this.configurationProperty.isRequired());
     }
 
     @Test
     void testMetadata() {
-        Metadata metadata = this.property.getMetadata();
+        Metadata metadata = this.configurationProperty.getMetadata();
         assertNotNull(metadata);
         assertNotNull(metadata.getSources());
         assertNotNull(metadata.getTargets());
@@ -137,98 +137,98 @@ class ConfigurationPropertyTest {
     @Test
     void testHashCode() {
         ConfigurationProperty property = new ConfigurationProperty(TEST_NAME);
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
 
-        this.property.setType(TEST_TYPE);
+        this.configurationProperty.setType(TEST_TYPE);
         property.setType(TEST_TYPE);
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
 
-        this.property.setValue(TEST_VALUE);
+        this.configurationProperty.setValue(TEST_VALUE);
         property.setValue(TEST_VALUE);
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
 
-        this.property.setDefaultValue(TEST_DEFAULT_VALUE);
+        this.configurationProperty.setDefaultValue(TEST_DEFAULT_VALUE);
         property.setDefaultValue(TEST_DEFAULT_VALUE);
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
 
-        this.property.setRequired(true);
+        this.configurationProperty.setRequired(true);
         property.setRequired(true);
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
 
-        this.property.setDescription(TEST_DESCRIPTION);
+        this.configurationProperty.setDescription(TEST_DESCRIPTION);
         property.setDescription(TEST_DESCRIPTION);
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
 
-        this.property.getMetadata().getTargets().add("target");
+        this.configurationProperty.getMetadata().getTargets().add("target");
         property.getMetadata().getTargets().add("target");
-        assertEquals(this.property.hashCode(), property.hashCode());
+        assertEquals(this.configurationProperty.hashCode(), property.hashCode());
     }
 
     @Test
     void testEquals() {
-        ConfigurationProperty property = new ConfigurationProperty(TEST_NAME);
-        assertEquals(this.property, property);
-        assertNotEquals(this.property, new ConfigurationProperty("_" + TEST_NAME));
-        assertNotEquals(this.property, new Object());
+        ConfigurationProperty configurationProperty = new ConfigurationProperty(TEST_NAME);
+        assertEquals(this.configurationProperty, configurationProperty);
+        assertNotEquals(this.configurationProperty, new ConfigurationProperty("_" + TEST_NAME));
+        assertNotEquals(this.configurationProperty, new Object());
 
-        this.property.setType(TEST_TYPE);
-        assertNotEquals(this.property, property);
-        property.setType(TEST_TYPE);
-        assertEquals(this.property, property);
+        this.configurationProperty.setType(TEST_TYPE);
+        assertNotEquals(this.configurationProperty, configurationProperty);
+        configurationProperty.setType(TEST_TYPE);
+        assertEquals(this.configurationProperty, configurationProperty);
 
-        this.property.setValue(TEST_VALUE);
-        assertNotEquals(this.property, property);
-        property.setValue(TEST_VALUE);
-        assertEquals(this.property, property);
+        this.configurationProperty.setValue(TEST_VALUE);
+        assertNotEquals(this.configurationProperty, configurationProperty);
+        configurationProperty.setValue(TEST_VALUE);
+        assertEquals(this.configurationProperty, configurationProperty);
 
-        this.property.setDefaultValue(TEST_DEFAULT_VALUE);
-        assertNotEquals(this.property, property);
-        property.setDefaultValue(TEST_DEFAULT_VALUE);
-        assertEquals(this.property, property);
+        this.configurationProperty.setDefaultValue(TEST_DEFAULT_VALUE);
+        assertNotEquals(this.configurationProperty, configurationProperty);
+        configurationProperty.setDefaultValue(TEST_DEFAULT_VALUE);
+        assertEquals(this.configurationProperty, configurationProperty);
 
-        this.property.setRequired(true);
-        assertNotEquals(this.property, property);
-        property.setRequired(true);
-        assertEquals(this.property, property);
+        this.configurationProperty.setRequired(true);
+        assertNotEquals(this.configurationProperty, configurationProperty);
+        configurationProperty.setRequired(true);
+        assertEquals(this.configurationProperty, configurationProperty);
 
-        this.property.setDescription(TEST_DESCRIPTION);
-        assertNotEquals(this.property, property);
-        property.setDescription(TEST_DESCRIPTION);
-        assertEquals(this.property, property);
+        this.configurationProperty.setDescription(TEST_DESCRIPTION);
+        assertNotEquals(this.configurationProperty, configurationProperty);
+        configurationProperty.setDescription(TEST_DESCRIPTION);
+        assertEquals(this.configurationProperty, configurationProperty);
 
-        this.property.getMetadata().getTargets().add("target");
-        assertNotEquals(this.property, property);
-        property.getMetadata().getTargets().add("target");
-        assertEquals(this.property, property);
+        this.configurationProperty.getMetadata().getTargets().add("target");
+        assertNotEquals(this.configurationProperty, configurationProperty);
+        configurationProperty.getMetadata().getTargets().add("target");
+        assertEquals(this.configurationProperty, configurationProperty);
     }
 
     @Test
     void testToString() {
         ConfigurationProperty property = new ConfigurationProperty(TEST_NAME);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
 
-        this.property.setType(TEST_TYPE);
+        this.configurationProperty.setType(TEST_TYPE);
         property.setType(TEST_TYPE);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
 
-        this.property.setValue(TEST_VALUE);
+        this.configurationProperty.setValue(TEST_VALUE);
         property.setValue(TEST_VALUE);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
 
-        this.property.setDefaultValue(TEST_DEFAULT_VALUE);
+        this.configurationProperty.setDefaultValue(TEST_DEFAULT_VALUE);
         property.setDefaultValue(TEST_DEFAULT_VALUE);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
 
-        this.property.setRequired(true);
+        this.configurationProperty.setRequired(true);
         property.setRequired(true);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
 
-        this.property.setDescription(TEST_DESCRIPTION);
+        this.configurationProperty.setDescription(TEST_DESCRIPTION);
         property.setDescription(TEST_DESCRIPTION);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
 
-        this.property.getMetadata().getTargets().add(TEST_TARGET);
+        this.configurationProperty.getMetadata().getTargets().add(TEST_TARGET);
         property.getMetadata().getTargets().add(TEST_TARGET);
-        assertEquals(this.property.toString(), property.toString());
+        assertEquals(this.configurationProperty.toString(), property.toString());
     }
 }
