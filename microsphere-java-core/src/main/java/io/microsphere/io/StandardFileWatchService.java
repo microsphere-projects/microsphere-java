@@ -38,7 +38,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
@@ -120,7 +120,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
             name = THREAD_NAME_PREFIX_PROPERTY_NAME,
             defaultValue = DEFAULT_THREAD_NAME_PREFIX,
             description = "The thread name prefix for FileWatchService",
-            source = SYSTEM_PROPERTIES
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final String THREAD_NAME_PREFIX = getProperty(THREAD_NAME_PREFIX_PROPERTY_NAME, DEFAULT_THREAD_NAME_PREFIX);
 
