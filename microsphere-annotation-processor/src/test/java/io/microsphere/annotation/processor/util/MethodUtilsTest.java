@@ -384,35 +384,35 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetMethodNameOnNull() {
+    void testGetMethodNameOnNull() {
         assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
-    public void testReturnTypeName() {
+    void testReturnTypeName() {
         ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertEquals("java.lang.String", getReturnTypeName(method));
     }
 
     @Test
-    public void testReturnTypeNameOnNull() {
+    void testReturnTypeNameOnNull() {
         assertNull(getReturnTypeName(NULL_METHOD));
     }
 
     @Test
-    public void testMatchParameterTypeNames() {
+    void testMatchParameterTypeNames() {
         String[] parameterTypeNames = ofArray("java.lang.String");
         ExecutableElement method = findMethod(testTypeElement, "echo", parameterTypeNames);
         assertArrayEquals(parameterTypeNames, getMethodParameterTypeNames(method));
     }
 
     @Test
-    public void testMatchParameterTypeNamesOnNull() {
+    void testMatchParameterTypeNamesOnNull() {
         assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(NULL_METHOD));
     }
 
     @Test
-    public void testMatchParameterTypes() {
+    void testMatchParameterTypes() {
         ExecutableElement method = findMethod(testTypeElement, "toString");
         assertEmptyList(getMethodParameterTypeMirrors(method));
 
@@ -422,17 +422,17 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchParameterTypesOnNull() {
+    void testMatchParameterTypesOnNull() {
         assertEmptyList(getMethodParameterTypeMirrors(NULL_METHOD));
     }
 
     @Test
-    public void testMatches() {
+    void testMatches() {
         assertFindMethod(testClass, "echo", String.class);
     }
 
     @Test
-    public void tstMatchesOnFalse() {
+    void tstMatchesOnFalse() {
         ExecutableElement method = findMethod(testTypeElement, "echo", String.class);
 
         Type[] parameterTypes = ofArray(String.class, String.class);
@@ -447,7 +447,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchesOnNull() {
+    void testMatchesOnNull() {
         String methodName = "echo";
         Type[] parameterTypes = ofArray(String.class);
         String[] parameterTypeNames = getTypeNames(parameterTypes);
@@ -463,7 +463,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetEnclosingElement() {
+    void testGetEnclosingElement() {
         String methodName = "echo";
         Type[] parameterTypes = ofArray(String.class);
         ExecutableElement method = findMethod(testTypeElement, methodName, parameterTypes);
@@ -471,7 +471,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetEnclosingElementOnNull() {
+    void testGetEnclosingElementOnNull() {
         assertNull(getEnclosingElement(NULL_METHOD));
     }
 
