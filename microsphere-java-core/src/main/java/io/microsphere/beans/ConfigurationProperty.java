@@ -19,7 +19,6 @@ package io.microsphere.beans;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Set;
 
@@ -61,9 +60,7 @@ import static io.microsphere.util.ClassUtils.getTypeName;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ConfigurationProperty implements Serializable {
-
-    private static final long serialVersionUID = 2959491970141947471L;
+public class ConfigurationProperty {
 
     /**
      * The name of the property
@@ -219,9 +216,7 @@ public class ConfigurationProperty implements Serializable {
     /**
      * The metadata class of the Spring Configuration Property
      */
-    public static class Metadata implements Serializable {
-
-        private static final long serialVersionUID = 2777274495621491888L;
+    public static class Metadata {
 
         /**
          * The sources of the property
