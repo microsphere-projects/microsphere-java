@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,5 +166,6 @@ public interface Listenable<E extends EventListener<?>> {
      * @return non-null read-only ordered {@link EventListener event listeners}
      * @see EventListener#getPriority()
      */
+    @Nonnull
     List<E> getAllEventListeners();
 }
