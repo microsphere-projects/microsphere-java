@@ -40,7 +40,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     protected List<D> definitions;
 
     @BeforeEach
-    public void setUp() throws Throwable {
+    void setUp() throws Throwable {
         ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
         Class<?> defintionClass = (Class) parameterizedType.getActualTypeArguments()[0];
         int length = headConstructorArgumentsArray.length;
