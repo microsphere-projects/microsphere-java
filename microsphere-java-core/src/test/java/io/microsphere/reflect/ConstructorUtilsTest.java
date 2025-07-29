@@ -49,7 +49,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testIsNonPrivateConstructorWithoutParameters() {
+    void testIsNonPrivateConstructorWithoutParameters() {
         // null
         assertFalse(isNonPrivateConstructorWithoutParameters(null));
 
@@ -69,7 +69,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testHasNonPrivateConstructorWithoutParameters() {
+    void testHasNonPrivateConstructorWithoutParameters() {
         assertTrue(hasNonPrivateConstructorWithoutParameters(PublicConstructorClass.class));
         assertTrue(hasNonPrivateConstructorWithoutParameters(ProtectedConstructorClass.class));
         assertTrue(hasNonPrivateConstructorWithoutParameters(PackagePrivateConstructorClass.class));
@@ -77,7 +77,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testFindConstructors() {
+    void testFindConstructors() {
         assertEquals(2, findConstructors(PublicConstructorClass.class).size());
         assertEquals(0, findConstructors(ProtectedConstructorClass.class).size());
         assertEquals(0, findConstructors(PackagePrivateConstructorClass.class).size());
@@ -85,7 +85,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testFindDeclaredConstructors() {
+    void testFindDeclaredConstructors() {
         assertEquals(2, findDeclaredConstructors(PublicConstructorClass.class).size());
         assertEquals(1, findDeclaredConstructors(ProtectedConstructorClass.class).size());
         assertEquals(1, findDeclaredConstructors(PackagePrivateConstructorClass.class).size());
@@ -93,7 +93,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testGetConstructor() {
+    void testGetConstructor() {
         assertNotNull(getConstructor(PublicConstructorClass.class));
         assertThrows(RuntimeException.class, () -> getConstructor(ProtectedConstructorClass.class));
         assertThrows(RuntimeException.class, () -> getConstructor(PackagePrivateConstructorClass.class));
@@ -101,7 +101,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testGetDeclaredConstructor() {
+    void testGetDeclaredConstructor() {
         assertNotNull(getDeclaredConstructor(PublicConstructorClass.class));
         assertNotNull(getDeclaredConstructor(ProtectedConstructorClass.class));
         assertNotNull(getDeclaredConstructor(PackagePrivateConstructorClass.class));
@@ -109,7 +109,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testFindConstructor() {
+    void testFindConstructor() {
         assertNotNull(findConstructor(PublicConstructorClass.class));
         assertNotNull(findConstructor(ProtectedConstructorClass.class));
         assertNotNull(findConstructor(PackagePrivateConstructorClass.class));
@@ -117,7 +117,7 @@ public class ConstructorUtilsTest {
     }
 
     @Test
-    public void testNewInstance() {
+    void testNewInstance() {
         assertNotNull(newInstance(getConstructor(PublicConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(ProtectedConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(PackagePrivateConstructorClass.class)));
