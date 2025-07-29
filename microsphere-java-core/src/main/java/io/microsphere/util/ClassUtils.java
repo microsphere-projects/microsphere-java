@@ -10,6 +10,7 @@ import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.io.scanner.SimpleJarEntryScanner;
 import io.microsphere.logging.Logger;
+import io.microsphere.reflect.ConstructorUtils;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -45,7 +46,6 @@ import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.io.filter.FileExtensionFilter.of;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
@@ -897,7 +897,7 @@ public abstract class ClassUtils implements Utils {
         }
 
         Constructor<T> constructor = (Constructor<T>) constructors.get(0);
-        return execute(() -> constructor.newInstance(args));
+        return ConstructorUtils.newInstance(constructor, args);
     }
 
     public static Class<?> getTopComponentType(Object array) {

@@ -34,6 +34,7 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.ExecutableUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 
@@ -257,7 +258,7 @@ public abstract class ConstructorUtils implements Utils {
      */
     @Nullable
     public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
-        return execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
+        return ThrowableSupplier.execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
             if (logger.isTraceEnabled()) {
                 logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, arrayToString(parameterTypes));
             }
@@ -299,7 +300,7 @@ public abstract class ConstructorUtils implements Utils {
     @Nonnull
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         trySetAccessible(constructor);
-        return ExecutableUtils.execute(constructor, () -> constructor.newInstance(args));
+        return execute(constructor, () -> constructor.newInstance(args));
     }
 
     private ConstructorUtils() {
