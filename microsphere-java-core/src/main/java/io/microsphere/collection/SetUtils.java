@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
@@ -145,6 +146,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided array
      */
     @Nonnull
+    @Immutable
     public static <E> Set<E> ofSet(E... elements) {
         int size = length(elements);
         if (size < 1) {
@@ -187,6 +189,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided enumeration
      */
     @Nonnull
+    @Immutable
     public static <E> Set<E> ofSet(Enumeration<E> elements) {
         if (elements == null || !elements.hasMoreElements()) {
             return emptySet();
@@ -222,6 +225,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided iterable
      */
     @Nonnull
+    @Immutable
     public static <E> Set<E> ofSet(Iterable<E> elements) {
         if (elements == null) {
             return emptySet();
@@ -253,6 +257,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided collection
      */
     @Nonnull
+    @Immutable
     public static <T> Set<T> ofSet(Collection<T> elements) {
         return ofSet(elements, (T[]) null);
     }
@@ -283,6 +288,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided collection and varargs
      */
     @Nonnull
+    @Immutable
     public static <T> Set<T> ofSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
