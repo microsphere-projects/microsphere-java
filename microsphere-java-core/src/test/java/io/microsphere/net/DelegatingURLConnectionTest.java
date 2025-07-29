@@ -295,7 +295,7 @@ class DelegatingURLConnectionTest {
     }
 
     @Test
-    public void testGetRequestProperties() {
+    void testGetRequestProperties() {
         Map<String, List<String>> requestProperties = urlConnection.getRequestProperties();
         assertNotNull(requestProperties);
     }
