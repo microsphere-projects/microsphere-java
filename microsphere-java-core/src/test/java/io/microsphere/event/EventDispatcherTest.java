@@ -36,18 +36,18 @@ class EventDispatcherTest {
     private EventDispatcher defaultInstance = EventDispatcher.newDefault();
 
     @Test
-    public void testDefaultInstance() {
+    void testDefaultInstance() {
         assertEquals(DirectEventDispatcher.class, defaultInstance.getClass());
     }
 
     @Test
-    public void testDefaultMethods() {
+    void testDefaultMethods() {
         assertEquals(DIRECT_EXECUTOR, defaultInstance.getExecutor());
         assertEquals(2, defaultInstance.getAllEventListeners().size());
     }
 
     @Test
-    public void testGetExecutor() throws Throwable {
+    void testGetExecutor() throws Throwable {
         assertSame(DIRECT_EXECUTOR, defaultInstance.getExecutor());
 
 
