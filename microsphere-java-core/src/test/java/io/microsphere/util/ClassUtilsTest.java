@@ -82,12 +82,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ClassUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals("[]", ARRAY_SUFFIX);
     }
 
     @Test
-    public void testIsArray() {
+    void testIsArray() {
 
         // Primitive-Type array
         assertTrue(isArray(int[].class));
@@ -109,7 +109,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsConcreteClass() {
+    void testIsConcreteClass() {
         assertFalse(isConcreteClass(null));
         assertTrue(isConcreteClass(Object.class));
         assertTrue(isConcreteClass(Object.class));
@@ -127,7 +127,7 @@ class ClassUtilsTest extends AbstractTestCase {
 
 
     @Test
-    public void testIsAbstractClass() {
+    void testIsAbstractClass() {
         // test null
         assertFalse(isAbstractClass(null));
         // test interface
@@ -147,7 +147,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsGeneralClass() {
+    void testIsGeneralClass() {
         // test null
         assertFalse(isGeneralClass(null));
         // test interface
@@ -169,7 +169,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsTopLevelClass() {
+    void testIsTopLevelClass() {
         assertFalse(isTopLevelClass(null));
         assertTrue(isTopLevelClass(Object.class));
         assertTrue(isTopLevelClass(String.class));
@@ -183,7 +183,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsPrimitive() {
+    void testIsPrimitive() {
         assertTrue(isPrimitive(void.class));
         assertTrue(isPrimitive(Void.TYPE));
 
@@ -216,7 +216,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsFinal() {
+    void testIsFinal() {
         assertTrue(isFinal(Boolean.TYPE));
         assertTrue(isFinal(Boolean.class));
         assertFalse(isFinal(null));
@@ -224,7 +224,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsSimpleType() {
+    void testIsSimpleType() {
         assertTrue(isSimpleType(Void.class));
         assertTrue(isSimpleType(Boolean.class));
         assertTrue(isSimpleType(Character.class));
@@ -245,7 +245,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsCharSequence() {
+    void testIsCharSequence() {
         assertTrue(isCharSequence(CharSequence.class));
         assertTrue(isCharSequence(String.class));
         assertTrue(isCharSequence(StringBuilder.class));
@@ -257,7 +257,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsNumber() {
+    void testIsNumber() {
         assertTrue(isNumber(Number.class));
         assertTrue(isNumber(Byte.class));
         assertTrue(isNumber(Short.class));
@@ -273,14 +273,14 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsClass() {
+    void testIsClass() {
         assertTrue(isClass(String.class));
         assertFalse(isClass("Hello"));
         assertFalse(isClass(null));
     }
 
     @Test
-    public void testResolvePrimitiveType() {
+    void testResolvePrimitiveType() {
         assertEquals(Boolean.TYPE, resolvePrimitiveType(Boolean.TYPE));
         assertEquals(Boolean.TYPE, resolvePrimitiveType(Boolean.class));
 
@@ -307,7 +307,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveWrapperType() {
+    void testResolveWrapperType() {
         assertEquals(Boolean.class, resolveWrapperType(Boolean.TYPE));
         assertEquals(Boolean.class, resolveWrapperType(Boolean.class));
 
@@ -334,7 +334,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsWrapperType() {
+    void testIsWrapperType() {
         assertFalse(isWrapperType(Boolean.TYPE));
         assertTrue(isWrapperType(Boolean.class));
 
@@ -363,7 +363,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayTypeEquals() {
+    void testArrayTypeEquals() {
         assertFalse(arrayTypeEquals(null, null));
         assertFalse(arrayTypeEquals(Object.class, Object.class));
         assertFalse(arrayTypeEquals(Object[].class, Object.class));
@@ -387,7 +387,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolvePrimitiveClassForName() {
+    void testResolvePrimitiveClassForName() {
         assertNull(resolvePrimitiveClassForName(null));
         assertNull(resolvePrimitiveClassForName(""));
         assertNull(resolvePrimitiveClassForName(SPACE));
@@ -403,38 +403,38 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolvePackageName() {
+    void testResolvePackageName() {
         assertEquals("java.lang", resolvePackageName(Object.class));
     }
 
     @Test
-    public void testResolvePackageNameOnPrimitiveType() {
+    void testResolvePackageNameOnPrimitiveType() {
         PRIMITIVE_TYPES.forEach(t -> assertNull(resolvePackageName(t)));
     }
 
     @Test
-    public void testFindClassNamesInClassPath() {
+    void testFindClassNamesInClassPath() {
         assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInClassPath);
         assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInClassPath);
     }
 
     @Test
-    public void testFindClassNamesInDirectory() {
+    void testFindClassNamesInDirectory() {
         assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInDirectory);
     }
 
     @Test
-    public void testFindClassNamesInJarFile() {
+    void testFindClassNamesInJarFile() {
         assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInJarFile);
     }
 
     @Test
-    public void testResolveClassName() {
+    void testResolveClassName() {
         assertEquals("java.lang.String", resolveClassName("java/lang/String.class"));
     }
 
     @Test
-    public void testGetAllSuperClasses() {
+    void testGetAllSuperClasses() {
         List<Class<?>> allSuperClasses = getAllSuperClasses(Object.class);
         assertSame(emptyList(), allSuperClasses);
 
@@ -444,23 +444,23 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllSuperClassesOnNull() {
+    void testGetAllSuperClassesOnNull() {
 
     }
 
     @Test
-    public void testGetAllSuperClassesOnPrimitiveType() {
+    void testGetAllSuperClassesOnPrimitiveType() {
 
     }
 
     @Test
-    public void testGetAllInterfaces() {
+    void testGetAllInterfaces() {
         assertSame(emptyList(), getAllInterfaces(null));
         assertSame(emptyList(), getAllInterfaces(int.class));
     }
 
     @Test
-    public void testGetAllClasses() {
+    void testGetAllClasses() {
         List<Class<?>> allClasses = getAllClasses(Object.class);
         assertEquals(1, allClasses.size());
         assertTrue(allClasses.contains(Object.class));
@@ -486,17 +486,17 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllClassesOnNull() {
+    void testGetAllClassesOnNull() {
         assertSame(emptyList(), getAllClasses(null));
     }
 
     @Test
-    public void testGetAllClassesOnPrimitiveType() {
+    void testGetAllClassesOnPrimitiveType() {
         PRIMITIVE_TYPES.forEach(t -> assertSame(emptyList(), getAllClasses(t)));
     }
 
     @Test
-    public void testFindAllClasses() {
+    void testFindAllClasses() {
         List<Class<?>> allClasses = findAllClasses(TreeMap.class, klass -> isAssignableFrom(Map.class, klass));
         assertTrue(allClasses.size() >= 5);
         assertTrue(allClasses.contains(Map.class));
@@ -507,18 +507,18 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindAllClassesOnNull() {
+    void testFindAllClassesOnNull() {
         assertSame(emptyList(), findAllClasses(null, t -> true));
     }
 
     @Test
-    public void testFindAllClassesOnPrimitiveType() {
+    void testFindAllClassesOnPrimitiveType() {
         PRIMITIVE_TYPES.forEach(t -> assertSame(emptyList(), findAllClasses(t, a -> true)));
     }
 
 
     @Test
-    public void testGetTypeName() {
+    void testGetTypeName() {
         // a) Top level classes
         assertEquals("java.lang.String", getTypeName(String.class));
 
@@ -549,7 +549,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetSimpleName() {
+    void testGetSimpleName() {
         // a) Top level classes
         assertEquals("String", getSimpleName(String.class));
 
@@ -580,7 +580,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetTopComponentType() {
+    void testGetTopComponentType() {
         assertNull(getTopComponentType((Object) null));
         assertNull(getTopComponentType(null));
         assertNull(getTopComponentType(int.class));
@@ -594,7 +594,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsAssignableFrom() {
+    void testIsAssignableFrom() {
         assertFalse(isAssignableFrom(null, null));
         assertFalse(isAssignableFrom(String.class, null));
         assertFalse(isAssignableFrom(null, String.class));
@@ -603,7 +603,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetTypes() {
+    void testGetTypes() {
         assertSame(EMPTY_CLASS_ARRAY, getTypes(null));
         assertSame(EMPTY_CLASS_ARRAY, getTypes());
         assertSame(EMPTY_CLASS_ARRAY, getTypes(new Object[0]));
@@ -612,7 +612,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsDerived() {
+    void testIsDerived() {
         assertFalse(isDerived(null, null));
         assertFalse(isDerived(String.class, null));
         assertFalse(isDerived(null, String.class));
@@ -622,13 +622,13 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewInstance() {
+    void testNewInstance() {
         assertEquals("test", newInstance(String.class, "test"));
         assertThrows(IllegalArgumentException.class, () -> newInstance(String.class, 1));
     }
 
     @Test
-    public void testCast() {
+    void testCast() {
         assertNull(cast(null, Integer.class));
         assertNull(cast("test", null));
         assertNull(cast("test", Integer.class));
