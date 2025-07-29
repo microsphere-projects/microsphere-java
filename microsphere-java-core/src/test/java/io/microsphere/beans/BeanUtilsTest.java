@@ -22,6 +22,7 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.io.event.FileChangedEvent;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,13 +31,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
+import static io.microsphere.beans.BeanUtils.resolveProperty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
+import static io.microsphere.lang.MutableInteger.of;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -230,6 +234,9 @@ class BeanUtilsTest extends AbstractTestCase {
 
     @Test
     void testResolveProperty() {
-
+        File file = newRandomTempFile();
+        Object property = resolveProperty(file, of(0), 10);
+        Map<String, Object> properties = (Map<String, Object>) property;
+        assertFalse(properties.isEmpty());
     }
 }
