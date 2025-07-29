@@ -229,7 +229,7 @@ class BeanUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveProperty() {
+    void testResolveProperty() {
 
     }
 }
