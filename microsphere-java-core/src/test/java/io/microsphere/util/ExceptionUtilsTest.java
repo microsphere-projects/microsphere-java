@@ -69,28 +69,28 @@ class ExceptionUtilsTest {
     }
 
     @Test
-    public void testCreateWithTypeAndMessage() {
+    void testCreateWithTypeAndMessage() {
         assertCreate(RuntimeException.class, "Hello,World");
     }
 
 
     @Test
-    public void testCreateWithTypeAndCause() {
+    void testCreateWithTypeAndCause() {
         assertCreate(RuntimeException.class, new NullPointerException());
     }
 
     @Test
-    public void testCreateWithTypeAndMessageAndCause() {
+    void testCreateWithTypeAndMessageAndCause() {
         assertCreate(RuntimeException.class, "Hello,World", new NullPointerException());
     }
 
     @Test
-    public void testCreateWithTypeAndCauseAndMessagePatternAndArgs() {
+    void testCreateWithTypeAndCauseAndMessagePatternAndArgs() {
         assertCreate(RuntimeException.class, new NullPointerException(), "Hello,{}", "World");
     }
 
     @Test
-    public void testCreateWithArgs() {
+    void testCreateWithArgs() {
         SQLException e = create(SQLException.class, "Hello,World", "SQL", 101);
         assertEquals("Hello,World", e.getMessage());
         assertEquals("SQL", e.getSQLState());
@@ -98,7 +98,7 @@ class ExceptionUtilsTest {
     }
 
     @Test
-    public void testThrowTarget() {
+    void testThrowTarget() {
         assertThrows(RuntimeException.class, () -> throwTarget(new Exception("Hello,World"), RuntimeException.class));
     }
 
