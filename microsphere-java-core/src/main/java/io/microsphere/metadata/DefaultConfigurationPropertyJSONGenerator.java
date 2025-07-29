@@ -22,6 +22,7 @@ import io.microsphere.beans.ConfigurationProperty.Metadata;
 
 import java.util.Set;
 
+import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
@@ -124,11 +125,15 @@ public class DefaultConfigurationPropertyJSONGenerator implements ConfigurationP
         jsonBuilder.append(LEFT_CURLY_BRACE_CHAR);
 
         Set<String> sources = metadata.getSources();
-        append(jsonBuilder, "sources", sources);
+        if (isNotEmpty(sources)) {
+            append(jsonBuilder, "sources", sources);
+        }
 
         Set<String> targets = metadata.getTargets();
-        jsonBuilder.append(COMMA_CHAR);
-        append(jsonBuilder, "targets", targets);
+        if (isNotEmpty(targets)) {
+            jsonBuilder.append(COMMA_CHAR);
+            append(jsonBuilder, "targets", targets);
+        }
 
         String declaredClass = metadata.getDeclaredClass();
         if (declaredClass != null) {
