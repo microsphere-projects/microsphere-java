@@ -60,7 +60,7 @@ public class AbstractConverterTest extends BaseConverterTest<Object, Object> {
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(NORMAL_PRIORITY, converter.getPriority());
     }
 
