@@ -36,12 +36,12 @@ class CompatibleTest {
             .on(">=", "4.13.2", version -> ">=");
 
     @Test
-    public void testGet() {
+    void testGet() {
         assertEquals(">=", compatible.get());
     }
 
     @Test
-    public void testAccept() {
+    void testAccept() {
         compatible.accept(r -> assertEquals(">=", r));
     }
 }
