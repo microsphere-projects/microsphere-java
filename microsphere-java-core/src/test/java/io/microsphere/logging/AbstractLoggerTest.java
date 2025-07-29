@@ -41,17 +41,17 @@ public abstract class AbstractLoggerTest {
     protected abstract Logger createLogger();
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         assertNotNull(logger.getName());
     }
 
     @Test
-    public void testIsTraceEnabled() {
+    void testIsTraceEnabled() {
         assertTrue(logger.isTraceEnabled());
     }
 
     @Test
-    public void testTrace() {
+    void testTrace() {
         logger.trace("test");
         logger.trace("test", new Object[0]);
         logger.trace("test : {}", "a");
@@ -60,12 +60,12 @@ public abstract class AbstractLoggerTest {
     }
 
     @Test
-    public void testIsDebugEnabled() {
+    void testIsDebugEnabled() {
         assertTrue(logger.isDebugEnabled());
     }
 
     @Test
-    public void testDebug() {
+    void testDebug() {
         logger.debug("test");
         logger.debug("test", new Object[0]);
         logger.debug("test : {}", "a");
@@ -74,12 +74,12 @@ public abstract class AbstractLoggerTest {
     }
 
     @Test
-    public void testIsInfoEnabled() {
+    void testIsInfoEnabled() {
         assertTrue(logger.isInfoEnabled());
     }
 
     @Test
-    public void testInfo() {
+    void testInfo() {
         logger.info("test");
         logger.info("test", new Object[0]);
         logger.info("test : {}", "a");
@@ -88,12 +88,12 @@ public abstract class AbstractLoggerTest {
     }
 
     @Test
-    public void testIsWarnEnabled() {
+    void testIsWarnEnabled() {
         assertTrue(logger.isWarnEnabled());
     }
 
     @Test
-    public void testWarn() {
+    void testWarn() {
         logger.warn("test");
         logger.warn("test", new Object[0]);
         logger.warn("test : {}", "a");
@@ -102,12 +102,12 @@ public abstract class AbstractLoggerTest {
     }
 
     @Test
-    public void testIsErrorEnabled() {
+    void testIsErrorEnabled() {
         assertTrue(logger.isErrorEnabled());
     }
 
     @Test
-    public void testError() {
+    void testError() {
         logger.error("test");
         logger.error("test", new Object[0]);
         logger.error("test : {}", "a");
@@ -116,10 +116,10 @@ public abstract class AbstractLoggerTest {
     }
 
     @Test
-    public void testLog() {
+    void testLog() {
     }
 
     @Test
-    public void testResolveMessage() {
+    void testResolveMessage() {
     }
 }
