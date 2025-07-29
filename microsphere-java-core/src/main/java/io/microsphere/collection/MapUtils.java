@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
@@ -201,6 +202,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pair
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key, V value) {
         return ofMap(key, value);
     }
@@ -227,6 +229,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2) {
         return ofMap(key1, value1, key2, value2);
     }
@@ -256,6 +259,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3) {
         return ofMap(key1, value1, key2, value2, key3, value3);
     }
@@ -288,6 +292,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
         return ofMap(key1, value1, key2, value2, key3, value3, key4, value4);
     }
@@ -323,6 +328,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
         return ofMap(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5);
     }
@@ -349,6 +355,7 @@ public abstract class MapUtils implements Utils {
      * @throws IllegalArgumentException if the number of arguments is not even (indicating incomplete key-value pairs)
      */
     @Nonnull
+    @Immutable
     public static Map of(Object... values) {
         return ofMap(values);
     }
@@ -376,6 +383,7 @@ public abstract class MapUtils implements Utils {
      * @throws NullPointerException if the entries array is null
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(Map.Entry<? extends K, ? extends V>... entries) {
         int length = length(entries);
         if (length < 1) {
@@ -408,6 +416,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pair
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K key, V value) {
         return singletonMap(key, value);
     }
@@ -434,6 +443,7 @@ public abstract class MapUtils implements Utils {
      * @throws IllegalArgumentException if the number of arguments is not even (indicating incomplete key-value pairs)
      */
     @Nonnull
+    @Immutable
     public static Map ofMap(Object... keyValuePairs) {
         int length = length(keyValuePairs);
         if (length < 1) {
@@ -1094,6 +1104,7 @@ public abstract class MapUtils implements Utils {
      * @see ImmutableEntry
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map.Entry<K, V> immutableEntry(K key, V value) {
         return ImmutableEntry.of(key, value);
     }
