@@ -219,18 +219,18 @@ class ExtendableProtocolURLStreamHandlerTest {
     }
 
     @Test
-    public void testResolvePath() throws IOException {
+    void testResolvePath() throws IOException {
         assertEquals("/abc", handler.resolvePath(new URL(TEST_URL)));
         assertEquals("/abc", handler.resolvePath(new URL(TEST_URL_WITH_SP)));
     }
 
     @Test
-    public void testGetProtocol() {
+    void testGetProtocol() {
         assertEquals("test", handler.getProtocol());
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals("io.microsphere.net.test.Handler {defaultPort = -1 , protocol = 'test'}", handler.toString());
     }
 
