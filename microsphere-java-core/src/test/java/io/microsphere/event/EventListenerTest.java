@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class EventListenerTest {
 
     @Test
-    public void testFindEventHierarchicalTypes() {
+    void testFindEventHierarchicalTypes() {
         assertEquals(EchoEvent.class, findEventType(new EchoEventListener()));
         assertEquals(Event.class, findEventType(new EchoEventListener2()));
 
@@ -39,7 +39,7 @@ class EventListenerTest {
     }
 
     @Test
-    public void testOnEvent() {
+    void testOnEvent() {
     }
 
 }
