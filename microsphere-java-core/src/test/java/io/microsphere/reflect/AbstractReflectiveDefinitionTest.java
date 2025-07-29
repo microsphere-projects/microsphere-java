@@ -73,14 +73,14 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     protected abstract List<Object> getTailConstructorArguments();
 
     @Test
-    public void testGetSince() {
+    void testGetSince() {
         for (D definition : definitions) {
             assertNotNull(definition.getSince());
         }
     }
 
     @Test
-    public void testGetDeprecation() {
+    void testGetDeprecation() {
         assertNull(definitions.get(0).getDeprecation());
         assertNull(definitions.get(1).getDeprecation());
         assertNotNull(definitions.get(2).getDeprecation());
@@ -88,21 +88,21 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    public void testGetClassName() {
+    void testGetClassName() {
         for (D definition : definitions) {
             assertNotNull(definition.getClassName());
         }
     }
 
     @Test
-    public void testGetResolvedClass() {
+    void testGetResolvedClass() {
         for (D definition : definitions) {
             assertNotNull(definition.getResolvedClass());
         }
     }
 
     @Test
-    public void testIsDeprecated() {
+    void testIsDeprecated() {
         assertFalse(definitions.get(0).isDeprecated());
         assertFalse(definitions.get(1).isDeprecated());
         assertTrue(definitions.get(2).isDeprecated());
@@ -110,28 +110,28 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    public void testIsPresent() {
+    void testIsPresent() {
         for (D definition : definitions) {
             assertNotNull(definition.isPresent());
         }
     }
 
     @Test
-    public void testTestEquals() {
+    void testTestEquals() {
         assertEquals(definitions.get(0), definitions.get(1));
         assertEquals(definitions.get(2), definitions.get(3));
         assertNotEquals(definitions.get(0), definitions.get(2));
     }
 
     @Test
-    public void testTestHashCode() {
+    void testTestHashCode() {
         assertEquals(definitions.get(0).hashCode(), definitions.get(1).hashCode());
         assertEquals(definitions.get(2).hashCode(), definitions.get(3).hashCode());
         assertNotEquals(definitions.get(0).hashCode(), definitions.get(2).hashCode());
     }
 
     @Test
-    public void testTestToString() {
+    void testTestToString() {
         assertEquals(definitions.get(0).toString(), definitions.get(1).toString());
         assertEquals(definitions.get(2).toString(), definitions.get(3).toString());
         assertNotEquals(definitions.get(0).toString(), definitions.get(2).toString());
