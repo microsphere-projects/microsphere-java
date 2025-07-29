@@ -52,12 +52,13 @@ import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
  */
 public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
 
-    public static final String ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
+    public static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
-    private static final ConfigurationPropertyJSONGenerator generator = loadFirstService(ConfigurationPropertyJSONGenerator.class);
+    private final ConfigurationPropertyJSONGenerator generator;
 
     public ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
-        super(processingEnv, ANNOTATION_CLASS_NAME);
+        super(processingEnv, CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
+        this.generator = loadFirstService(ConfigurationPropertyJSONGenerator.class);
     }
 
     @Override
@@ -98,6 +99,10 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
             return true;
         }
         return false;
+    }
+
+    public ConfigurationPropertyJSONGenerator getGenerator() {
+        return generator;
     }
 
     private String resolveName(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
