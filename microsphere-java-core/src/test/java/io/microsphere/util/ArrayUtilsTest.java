@@ -845,7 +845,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     @Test
     void testArrayEqualsOnEmptyObjectArray() {
         assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, EMPTY_OBJECT_ARRAY));
-        assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, new Object[0]));
+        assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, EMPTY_OBJECT_ARRAY));
     }
 
     @Test

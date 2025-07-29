@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -98,7 +99,7 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     @Test
     void testToArrayWithArray() {
-        Object[] array = instance.toArray(new Object[0]);
+        Object[] array = instance.toArray(EMPTY_OBJECT_ARRAY);
         assertEquals(3, array.length);
         assertArray("A", "B", "C");
     }

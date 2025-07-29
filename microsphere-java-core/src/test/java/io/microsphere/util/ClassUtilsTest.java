@@ -29,6 +29,7 @@ import java.util.function.BiFunction;
 
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
@@ -606,7 +607,7 @@ class ClassUtilsTest extends AbstractTestCase {
     void testGetTypes() {
         assertSame(EMPTY_CLASS_ARRAY, getTypes(null));
         assertSame(EMPTY_CLASS_ARRAY, getTypes());
-        assertSame(EMPTY_CLASS_ARRAY, getTypes(new Object[0]));
+        assertSame(EMPTY_CLASS_ARRAY, getTypes(EMPTY_OBJECT_ARRAY));
 
         assertArrayEquals(new Object[]{String.class, Integer.class}, getTypes("", Integer.valueOf((1))));
     }
