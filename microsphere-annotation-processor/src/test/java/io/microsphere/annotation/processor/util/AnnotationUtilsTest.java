@@ -158,20 +158,20 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationClassName() {
+    void testGetAnnotationsWithAnnotationClassName() {
         assertGetAnnotations("org.springframework.stereotype.Service");
         assertGetAnnotations("javax.xml.ws.ServiceMode");
     }
 
     @Test
-    public void testGetAnnotationsWithAnnotationClassNameOnNull() {
+    void testGetAnnotationsWithAnnotationClassNameOnNull() {
         assertTrue(getAnnotations(NULL_ANNOTATED_CONSTRUCT, NULL_STRING).isEmpty());
         assertTrue(getAnnotations(testTypeElement, NULL_STRING).isEmpty());
         assertTrue(getAnnotations(NULL_ANNOTATED_CONSTRUCT, "org.springframework.stereotype.Service").isEmpty());
     }
 
     @Test
-    public void testGetAllAnnotations() {
+    void testGetAllAnnotations() {
         List<AnnotationMirror> annotations = getAllAnnotations(testTypeElement);
         assertEquals(5, annotations.size());
 
@@ -180,13 +180,13 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotationsOnNull() {
+    void testGetAllAnnotationsOnNull() {
         assertEmptyList(getAllAnnotations(NULL_ELEMENT));
         assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetAllAnnotationsWithAnnotationClass() {
+    void testGetAllAnnotationsWithAnnotationClass() {
         List<AnnotationMirror> annotations = getAllAnnotations(testTypeElement, Override.class);
         assertEquals(0, annotations.size());
 
@@ -204,7 +204,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotationsWithAnnotationClassOnNull() {
+    void testGetAllAnnotationsWithAnnotationClassOnNull() {
         assertEmptyList(getAllAnnotations(NULL_ELEMENT, NULL_CLASS));
         assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR, NULL_CLASS));
         assertEmptyList(getAllAnnotations(NULL_PROCESSING_ENVIRONMENT, NULL_CLASS));
@@ -219,7 +219,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotationsWithAnnotationClassName() {
+    void testGetAllAnnotationsWithAnnotationClassName() {
         List<AnnotationMirror> annotations = getAllAnnotations(testTypeElement, "java.lang.Override");
         assertEquals(0, annotations.size());
 
@@ -228,7 +228,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllAnnotationsWithAnnotationClassNameOnNull() {
+    void testGetAllAnnotationsWithAnnotationClassNameOnNull() {
         assertEmptyList(getAllAnnotations(NULL_ELEMENT, NULL_STRING));
         assertEmptyList(getAllAnnotations(NULL_TYPE_MIRROR, NULL_STRING));
 
@@ -240,13 +240,13 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAnnotation() {
+    void testFindAnnotation() {
         assertFindAnnotation(Service.class);
         assertFindAnnotation(Path.class);
     }
 
     @Test
-    public void testFindAnnotationOnNotFound() {
+    void testFindAnnotationOnNotFound() {
         assertNull(findAnnotation(testTypeMirror, Target.class));
         assertNull(findAnnotation(testTypeElement, Target.class));
         assertNull(findAnnotation(testTypeMirror, Override.class));
@@ -254,7 +254,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAnnotationOnNull() {
+    void testFindAnnotationOnNull() {
         assertNull(findAnnotation(NULL_ELEMENT, NULL_CLASS));
         assertNull(findAnnotation(NULL_TYPE_MIRROR, NULL_CLASS));
         assertNull(findAnnotation(testTypeMirror, NULL_CLASS));
@@ -267,45 +267,45 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindMetaAnnotationWithAnnotationClass() {
+    void testFindMetaAnnotationWithAnnotationClass() {
         getAllDeclaredMethods(getTypeElement(TestService.class)).forEach(method -> {
             assertFindMetaAnnotation(method, HttpMethod.class);
         });
     }
 
     @Test
-    public void testFindMetaAnnotationWithAnnotationClassOnNotFound() {
+    void testFindMetaAnnotationWithAnnotationClassOnNotFound() {
         assertNull(findMetaAnnotation(testTypeElement, Service.class));
     }
 
     @Test
-    public void testFindMetaAnnotationWithAnnotationClassNameOnNotFound() {
+    void testFindMetaAnnotationWithAnnotationClassNameOnNotFound() {
         assertNull(findMetaAnnotation(testTypeElement, "org.springframework.stereotype.Service"));
     }
 
     @Test
-    public void testFindMetaAnnotationWithAnnotationClassOnNull() {
+    void testFindMetaAnnotationWithAnnotationClassOnNull() {
         assertNull(findMetaAnnotation(NULL_ELEMENT, NULL_CLASS));
         assertNull(findMetaAnnotation(NULL_ELEMENT, Service.class));
         assertNull(findMetaAnnotation(testTypeElement, NULL_CLASS));
     }
 
     @Test
-    public void testFindMetaAnnotationWithAnnotationClassName() {
+    void testFindMetaAnnotationWithAnnotationClassName() {
         getAllDeclaredMethods(getTypeElement(TestService.class)).forEach(method -> {
             assertFindMetaAnnotation(method, "javax.ws.rs.HttpMethod");
         });
     }
 
     @Test
-    public void testFindMetaAnnotationWithAnnotationClassNameOnNull() {
+    void testFindMetaAnnotationWithAnnotationClassNameOnNull() {
         assertNull(findMetaAnnotation(NULL_ELEMENT, NULL_STRING));
         assertNull(findMetaAnnotation(NULL_ELEMENT, "test"));
         assertNull(findMetaAnnotation(testTypeElement, NULL_STRING));
     }
 
     @Test
-    public void testFindAllAnnotationsWithTypeMirror() {
+    void testFindAllAnnotationsWithTypeMirror() {
         List<AnnotationMirror> annotations = findAllAnnotations(testTypeMirror, alwaysTrue());
         assertEquals(5, annotations.size());
 
@@ -314,7 +314,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllAnnotationsWithTypeElement() {
+    void testFindAllAnnotationsWithTypeElement() {
         List<AnnotationMirror> annotations = findAllAnnotations(testTypeElement, alwaysTrue());
         assertEquals(5, annotations.size());
 
@@ -323,7 +323,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllAnnotationsWithMethod() {
+    void testFindAllAnnotationsWithMethod() {
         ExecutableElement method = findMethod(testTypeElement, "echo", String.class);
 
         List<AnnotationMirror> annotations = findAllAnnotations(method, alwaysTrue());
@@ -338,7 +338,7 @@ class AnnotationUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllAnnotationsWithMethodParameters() {
+    void testFindAllAnnotationsWithMethodParameters() {
         ExecutableElement method = findMethod(getTypeElement(TestService.class), "echo", String.class);
         List<? extends VariableElement> parameters = method.getParameters();
         assertEquals(1, parameters.size());
