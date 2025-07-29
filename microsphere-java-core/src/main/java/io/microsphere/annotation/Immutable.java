@@ -23,7 +23,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
 /**
- * Marker annotation to indicate that a class is immutable, this means that its state cannot be seen to
+ * Marker annotation to indicate that the annotated element is immutable, this means that its state cannot be seen to
  * change by callers.
  *
  * @since 1.0
