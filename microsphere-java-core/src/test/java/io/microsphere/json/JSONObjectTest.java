@@ -169,7 +169,7 @@ class JSONObjectTest {
     }
 
     @Test
-    public void testCheckNameOnJSONException() {
+    void testCheckNameOnJSONException() {
         assertThrows(JSONException.class, () -> jsonObject.checkName(null));
     }
 
