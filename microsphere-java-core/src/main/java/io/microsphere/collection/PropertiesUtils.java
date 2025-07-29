@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import java.util.LinkedHashMap;
@@ -63,6 +65,8 @@ public abstract class PropertiesUtils implements Utils {
      * @param properties The map containing potentially nested properties to be flattened.
      * @return A new unmodifiable map with all properties flattened to a single level.
      */
+    @Nonnull
+    @Immutable
     public static Map<String, Object> flatProperties(Map<String, Object> properties) {
         if (isEmpty(properties)) {
             return properties;
