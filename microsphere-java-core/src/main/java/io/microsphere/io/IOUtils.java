@@ -31,7 +31,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
@@ -83,7 +83,7 @@ public abstract class IOUtils implements Utils {
             name = BUFFER_SIZE_PROPERTY_NAME,
             defaultValue = DEFAULT_BUFFER_SIZE_PROPERTY_VALUE,
             description = "The buffer size for I/O",
-            source = SYSTEM_PROPERTIES
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final int BUFFER_SIZE = getInteger(BUFFER_SIZE_PROPERTY_NAME, DEFAULT_BUFFER_SIZE);
 
