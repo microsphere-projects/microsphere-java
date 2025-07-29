@@ -44,21 +44,21 @@ public class MethodDefinitionTest extends AbstractExecutableDefinitionTest<Metho
     }
 
     @Test
-    public void testGetMethodName() {
+    void testGetMethodName() {
         for (MethodDefinition definition : definitions) {
             assertEquals(definition.getName(), definition.getMethodName());
         }
     }
 
     @Test
-    public void testGetMethod() {
+    void testGetMethod() {
         for (MethodDefinition definition : definitions) {
             assertEquals(definition.getMember(), definition.getMethod());
         }
     }
 
     @Test
-    public void testInvoke() {
+    void testInvoke() {
         for (MethodDefinition definition : definitions) {
             assertNull(definition.invoke(this, definition.toString()));
         }
