@@ -115,12 +115,4 @@ public abstract class AbstractLoggerTest {
         logger.error("test : {}", "a", new Throwable());
         logger.error("test", new Throwable());
     }
-
-    @Test
-    void testLog() {
-    }
-
-    @Test
-    void testResolveMessage() {
-    }
 }
