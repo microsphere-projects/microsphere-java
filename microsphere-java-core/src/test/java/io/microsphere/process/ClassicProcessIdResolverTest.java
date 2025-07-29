@@ -19,7 +19,7 @@ class ClassicProcessIdResolverTest {
     private ClassicProcessIdResolver resolver;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         resolver = new ClassicProcessIdResolver();
     }
 
