@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
@@ -33,6 +35,7 @@ import static java.util.Objects.requireNonNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@Immutable
 public class SingletonIterator<E> extends ReadOnlyIterator<E> {
 
     private final E element;
