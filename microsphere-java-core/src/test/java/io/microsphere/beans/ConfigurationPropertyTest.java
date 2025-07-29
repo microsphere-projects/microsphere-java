@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConfigurationProperty
  * @since 1.0.0
  */
-public class ConfigurationPropertyTest {
+class ConfigurationPropertyTest {
 
     private static final String name = "test-name";
 
