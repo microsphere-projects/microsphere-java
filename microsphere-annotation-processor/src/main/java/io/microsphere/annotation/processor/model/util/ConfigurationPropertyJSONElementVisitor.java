@@ -50,13 +50,13 @@ import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
  * @see io.microsphere.beans.ConfigurationProperty
  * @since 1.0.0
  */
-public class ConfigurationPropertyAnnotationJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
+public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
 
     public static final String ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
     private static final ConfigurationPropertyJSONGenerator generator = loadFirstService(ConfigurationPropertyJSONGenerator.class);
 
-    public ConfigurationPropertyAnnotationJSONElementVisitor(ProcessingEnvironment processingEnv) {
+    public ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
         super(processingEnv, ANNOTATION_CLASS_NAME);
     }
 

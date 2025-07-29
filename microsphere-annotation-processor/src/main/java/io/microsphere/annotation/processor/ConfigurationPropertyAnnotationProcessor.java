@@ -18,7 +18,7 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.ConfigurationProperty;
-import io.microsphere.annotation.processor.model.util.ConfigurationPropertyAnnotationJSONElementVisitor;
+import io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor;
 import io.microsphere.json.JSONArray;
 import io.microsphere.metadata.ConfigurationPropertyJSONGenerator;
 
@@ -111,7 +111,7 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
     private void resolveMetadata(RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getRootElements();
         if (!elements.isEmpty()) {
-            ConfigurationPropertyAnnotationJSONElementVisitor visitor = new ConfigurationPropertyAnnotationJSONElementVisitor(processingEnv);
+            ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor(processingEnv);
 
             Iterator<? extends Element> iterator = elements.iterator();
             jsonBuilder.append(LEFT_SQUARE_BRACKET_CHAR);
