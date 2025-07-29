@@ -19,7 +19,7 @@ public class MultipleTypeTest {
     private MultipleType multipleType;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.multipleType = of(String.class, Object.class);
     }
 
