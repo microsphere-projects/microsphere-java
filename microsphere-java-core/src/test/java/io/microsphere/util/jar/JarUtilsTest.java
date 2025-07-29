@@ -57,31 +57,31 @@ class JarUtilsTest {
     }
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertSame("META-INF/MANIFEST.MF", MANIFEST_RESOURCE_PATH);
     }
 
     @Test
-    public void testAssertJarURLProtocol() {
+    void testAssertJarURLProtocol() {
         URL url = ofURL("http://localhost");
         assertThrows(IllegalArgumentException.class, () -> assertJarURLProtocol(url));
     }
 
     @Test
-    public void testResolveRelativePath() {
+    void testResolveRelativePath() {
         String relativePath = resolveRelativePath(resourceURL);
         String expectedPath = "javax/annotation/Nonnull.class";
         assertEquals(expectedPath, relativePath);
     }
 
     @Test
-    public void testResolveJarAbsolutePath() throws Exception {
+    void testResolveJarAbsolutePath() throws Exception {
         String jarAbsolutePath = resolveJarAbsolutePath(resourceURL);
         assertNotNull(jarAbsolutePath);
     }
 
     @Test
-    public void testToJarFile() throws Exception {
+    void testToJarFile() throws Exception {
         JarFile jarFile = toJarFile(resourceURL);
         assertNotNull(jarFile);
     }
@@ -94,20 +94,20 @@ class JarUtilsTest {
     }
 
     @Test
-    public void testFindJarEntry() throws Exception {
+    void testFindJarEntry() throws Exception {
         URL resourceURL = getClassResource(classLoader, Nonnull.class);
         JarEntry jarEntry = findJarEntry(resourceURL);
         assertNotNull(jarEntry);
     }
 
     @Test
-    public void testExtract() throws IOException {
+    void testExtract() throws IOException {
         String jarAbsolutePath = resolveJarAbsolutePath(resourceURL);
         extract(new File(jarAbsolutePath), targetDirectory);
     }
 
     @Test
-    public void testExtractWithURL() throws IOException {
+    void testExtractWithURL() throws IOException {
         URL resourceURL = ClassLoaderUtils.getResource(classLoader, ClassLoaderUtils.ResourceType.PACKAGE, "javax.annotation");
         extract(resourceURL, targetDirectory, new JarEntryFilter() {
             @Override
