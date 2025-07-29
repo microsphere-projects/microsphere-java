@@ -19,12 +19,17 @@ package io.microsphere.metadata;
 
 
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.beans.ConfigurationProperty.Metadata;
+import io.microsphere.json.JSONArray;
 import io.microsphere.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link DefaultConfigurationPropertyJSONGenerator} Test
@@ -46,7 +51,89 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
     void testGenerate() throws Throwable {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = generator.generate(configurationProperty);
-        assertJSON(json);
+        assertConfigurationPropertyJSON(json);
+    }
+
+    @Test
+    void testGenerateWithConfigurationProperty() throws Throwable {
+        ConfigurationProperty configurationProperty = new ConfigurationProperty("server.port", Integer.class);
+        String json = generator.generate(configurationProperty);
+        JSONObject jsonObject = new JSONObject(json);
+        assertEquals("server.port", jsonObject.getString("name"));
+        assertEquals("java.lang.Integer", jsonObject.getString("type"));
+
+        configurationProperty.setValue(8080);
+        json = generator.generate(configurationProperty);
+        jsonObject = new JSONObject(json);
+        assertEquals("server.port", jsonObject.getString("name"));
+        assertEquals("java.lang.Integer", jsonObject.getString("type"));
+        assertEquals(8080, jsonObject.getInt("value"));
+
+        configurationProperty.setDefaultValue(8080);
+        json = generator.generate(configurationProperty);
+        jsonObject = new JSONObject(json);
+        assertEquals("server.port", jsonObject.getString("name"));
+        assertEquals("java.lang.Integer", jsonObject.getString("type"));
+        assertEquals(8080, jsonObject.getInt("value"));
+        assertEquals(8080, jsonObject.getInt("defaultValue"));
+
+        configurationProperty.setRequired(true);
+        json = generator.generate(configurationProperty);
+        jsonObject = new JSONObject(json);
+        assertEquals("server.port", jsonObject.getString("name"));
+        assertEquals("java.lang.Integer", jsonObject.getString("type"));
+        assertEquals(8080, jsonObject.getInt("value"));
+        assertEquals(8080, jsonObject.getInt("defaultValue"));
+        assertTrue(jsonObject.getBoolean("required"));
+
+        configurationProperty.setDescription("The server port to listen on");
+        json = generator.generate(configurationProperty);
+        jsonObject = new JSONObject(json);
+        assertEquals("server.port", jsonObject.getString("name"));
+        assertEquals("java.lang.Integer", jsonObject.getString("type"));
+        assertEquals(8080, jsonObject.getInt("value"));
+        assertEquals(8080, jsonObject.getInt("defaultValue"));
+        assertTrue(jsonObject.getBoolean("required"));
+        assertEquals("The server port to listen on", jsonObject.getString("description"));
+    }
+
+    @Test
+    void testGenerateWithMetadata() throws Throwable {
+        Metadata metadata = new Metadata();
+        String json = generator.generate(metadata);
+        JSONObject jsonObject = new JSONObject(json);
+        assertEquals("{}", json);
+        assertNull(jsonObject.opt("sources"));
+        assertNull(jsonObject.opt("targets"));
+        assertNull(jsonObject.opt("declaredClass"));
+        assertNull(jsonObject.opt("declaredField"));
+
+        metadata.getSources().add("application.properties");
+        json = generator.generate(metadata);
+        jsonObject = new JSONObject(json);
+        assertEquals(new JSONArray(ofArray("application.properties")), jsonObject.getJSONArray("sources"));
+
+        metadata.getTargets().add("server-1");
+        metadata.getTargets().add("server-2");
+        json = generator.generate(metadata);
+        jsonObject = new JSONObject(json);
+        assertEquals(new JSONArray(ofArray("application.properties")), jsonObject.getJSONArray("sources"));
+        assertEquals(new JSONArray(ofArray("server-1", "server-2")), jsonObject.getJSONArray("targets"));
+
+        metadata.setDeclaredClass("io.microsphere.ConfigurationProperty");
+        json = generator.generate(metadata);
+        jsonObject = new JSONObject(json);
+        assertEquals(new JSONArray(ofArray("application.properties")), jsonObject.getJSONArray("sources"));
+        assertEquals(new JSONArray(ofArray("server-1", "server-2")), jsonObject.getJSONArray("targets"));
+        assertEquals("io.microsphere.ConfigurationProperty", jsonObject.getString("declaredClass"));
+
+        metadata.setDeclaredField("configurationProperties");
+        json = generator.generate(metadata);
+        jsonObject = new JSONObject(json);
+        assertEquals(new JSONArray(ofArray("application.properties")), jsonObject.getJSONArray("sources"));
+        assertEquals(new JSONArray(ofArray("server-1", "server-2")), jsonObject.getJSONArray("targets"));
+        assertEquals("io.microsphere.ConfigurationProperty", jsonObject.getString("declaredClass"));
+        assertEquals("configurationProperties", jsonObject.getString("declaredField"));
     }
 
     @Test
@@ -55,7 +142,7 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
         assertEquals(MIN_PRIORITY, priority);
     }
 
-    static void assertJSON(String json) throws Throwable {
+    static void assertConfigurationPropertyJSON(String json) throws Throwable {
         JSONObject jsonObject = new JSONObject(json);
         assertEquals("server.port", jsonObject.getString("name"));
         assertEquals("java.lang.Integer", jsonObject.getString("type"));
@@ -72,6 +159,10 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
         assertEquals("port", metadata.getString("declaredField"));
     }
 
+    static void assertMetadataJSON(String json) throws Throwable {
+        JSONObject jsonObject = new JSONObject(json);
+    }
+
     static ConfigurationProperty newConfigurationProperty() {
         ConfigurationProperty configurationProperty = new ConfigurationProperty("server.port", Integer.class);
         configurationProperty.setValue(8080);
@@ -79,7 +170,7 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
         configurationProperty.setRequired(true);
         configurationProperty.setDescription("The port number for the server");
 
-        ConfigurationProperty.Metadata metadata = configurationProperty.getMetadata();
+        Metadata metadata = configurationProperty.getMetadata();
         metadata.getSources().add("application.properties");
         metadata.getTargets().add("server");
         metadata.setDeclaredClass("com.example.ServerConfig");
