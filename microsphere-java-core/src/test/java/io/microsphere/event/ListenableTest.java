@@ -15,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ListenableTest {
 
     @Test
-    public void testAssertListenerNoNull() {
+    void testAssertListenerNoNull() {
         assertThrows(IllegalArgumentException.class, () -> assertListener(null));
     }
 
     @Test
-    public void testAssertListenerOnInterface() {
+    void testAssertListenerOnInterface() {
         assertThrows(IllegalArgumentException.class, () -> assertListener(new FinalEventListener()));
     }
 
