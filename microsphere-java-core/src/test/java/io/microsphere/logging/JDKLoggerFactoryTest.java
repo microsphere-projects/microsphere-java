@@ -17,7 +17,7 @@ import java.util.logging.LogManager;
 class JDKLoggerFactoryTest extends AbstractLoggerTest {
 
     @BeforeAll
-    public static void beforeAll() throws IOException {
+    static void beforeAll() throws IOException {
         URL resource = LoggerFactoryTest.class.getResource("/META-INF/logging.properties");
         try (InputStream inputStream = resource.openStream()) {
             LogManager.getLogManager().readConfiguration(inputStream);
