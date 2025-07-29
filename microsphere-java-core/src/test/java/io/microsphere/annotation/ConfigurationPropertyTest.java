@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ConfigurationPropertyTest {
 
     @Test
-    public void testSources() {
+    void testSources() {
         assertEquals("system-properties", SYSTEM_PROPERTIES);
         assertEquals("environment-variables", ENVIRONMENT_VARIABLES);
         assertEquals("application", APPLICATION);
