@@ -52,6 +52,6 @@ public class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnota
     }
 
     @Test
-    public void test() {
+    void test() {
     }
 }
