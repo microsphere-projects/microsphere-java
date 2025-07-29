@@ -19,7 +19,7 @@ class VirtualMachineProcessIdResolverTest {
     private VirtualMachineProcessIdResolver resolver;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.resolver = new VirtualMachineProcessIdResolver();
     }
 
