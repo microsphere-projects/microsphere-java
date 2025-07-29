@@ -21,7 +21,6 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-
 /**
  * Marker annotation to indicate that the annotated element is immutable, this means that its state cannot be seen to
  * change by callers.
