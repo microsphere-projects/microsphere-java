@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentMap;
 
-import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
@@ -99,7 +99,7 @@ public abstract class ServiceLoaderUtils implements Utils {
             name = SERVICE_LOADER_CACHED_PROPERTY_NAME,
             defaultValue = DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE,
             description = "Whether to cache the loaded services",
-            source = SYSTEM_PROPERTIES
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final boolean SERVICE_LOADER_CACHED = parseBoolean(getProperty(SERVICE_LOADER_CACHED_PROPERTY_NAME, DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE));
 
