@@ -34,7 +34,7 @@ public abstract class AbstractLoggerTest {
     protected Logger logger;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.logger = createLogger();
     }
 
