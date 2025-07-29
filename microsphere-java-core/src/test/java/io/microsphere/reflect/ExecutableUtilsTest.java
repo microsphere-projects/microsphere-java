@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ReflectionTest
  * @since 1.0.0
  */
-public class ExecutableUtilsTest {
+class ExecutableUtilsTest {
 
     private static final Class<ReflectionTest> testClass = ReflectionTest.class;
 

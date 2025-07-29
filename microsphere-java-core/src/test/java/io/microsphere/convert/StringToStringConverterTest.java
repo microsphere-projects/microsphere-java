@@ -23,7 +23,7 @@ import static io.microsphere.convert.StringToStringConverter.INSTANCE;
  *
  * @since 1.0.0
  */
-public class StringToStringConverterTest extends BaseConverterTest<String, String> {
+class StringToStringConverterTest extends BaseConverterTest<String, String> {
 
     @Override
     protected AbstractConverter<String, String> createConverter() {

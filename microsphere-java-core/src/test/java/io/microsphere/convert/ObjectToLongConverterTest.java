@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ObjectToLongConverter
  * @since 1.0.0
  */
-public class ObjectToLongConverterTest extends BaseConverterTest<Object, Long> {
+class ObjectToLongConverterTest extends BaseConverterTest<Object, Long> {
 
     @Override
     protected AbstractConverter<Object, Long> createConverter() {

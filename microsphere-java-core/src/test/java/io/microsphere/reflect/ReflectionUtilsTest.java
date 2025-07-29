@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @see ReflectionUtilsTest
  * @since 1.0.0
  */
-public class ReflectionUtilsTest extends AbstractTestCase {
+class ReflectionUtilsTest extends AbstractTestCase {
 
     @Test
     void testGetCallerClassX() throws Exception {

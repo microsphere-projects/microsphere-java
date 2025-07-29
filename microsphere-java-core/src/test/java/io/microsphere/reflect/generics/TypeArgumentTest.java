@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see TypeArgument
  * @since 1.0.0
  */
-public class TypeArgumentTest {
+class TypeArgumentTest {
 
     private TypeArgument typeArgument;
 

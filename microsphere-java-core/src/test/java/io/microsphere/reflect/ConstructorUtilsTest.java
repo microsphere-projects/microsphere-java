@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConstructorUtils
  * @since 1.0.0
  */
-public class ConstructorUtilsTest {
+class ConstructorUtilsTest {
 
     static class PublicConstructorClass {
         public PublicConstructorClass() {

@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ManagementUtils
  * @since 1.0.0
  */
-public class ManagementUtilsTest extends AbstractTestCase {
+class ManagementUtilsTest extends AbstractTestCase {
 
     @Test
     void testGetCurrentProcessId() {

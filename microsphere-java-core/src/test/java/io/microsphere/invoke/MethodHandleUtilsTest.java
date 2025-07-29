@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class MethodHandleUtilsTest {
+class MethodHandleUtilsTest {
 
     @Test
     void testLookup() {

@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ParameterizedTypeImpl
  * @since 1.0.0
  */
-public class ParameterizedTypeImplTest {
+class ParameterizedTypeImplTest {
 
     private static Type[] actualTypeArguments = new Type[]{String.class, Integer.class};
 

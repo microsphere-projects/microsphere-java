@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ObjectToStringConverter
  * @since 1.0.0
  */
-public class ObjectToStringConverterTest extends BaseConverterTest<Object, String> {
+class ObjectToStringConverterTest extends BaseConverterTest<Object, String> {
 
     @Override
     protected AbstractConverter<Object, String> createConverter() {

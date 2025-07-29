@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class MultipleTypeTest {
+class MultipleTypeTest {
 
     private MultipleType multipleType;
 

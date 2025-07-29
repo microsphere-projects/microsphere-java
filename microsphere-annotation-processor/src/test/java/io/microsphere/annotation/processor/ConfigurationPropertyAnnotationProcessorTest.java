@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ConfigurationPropertyAnnotationProcessor
  * @since 1.0.0
  */
-public class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationProcessingTest {
+class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationProcessingTest {
 
     @Override
     protected void beforeTest() {

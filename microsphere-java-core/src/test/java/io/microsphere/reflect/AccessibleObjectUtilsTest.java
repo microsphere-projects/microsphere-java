@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see AccessibleObjectUtils
  * @since 1.0.0
  */
-public class AccessibleObjectUtilsTest {
+class AccessibleObjectUtilsTest {
 
     private static final String test = "test";
 

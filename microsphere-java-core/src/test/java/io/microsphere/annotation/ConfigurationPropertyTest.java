@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ConfigurationProperty
  * @since 1.0.0
  */
-public class ConfigurationPropertyTest {
+class ConfigurationPropertyTest {
 
     @Test
     void testSources() {

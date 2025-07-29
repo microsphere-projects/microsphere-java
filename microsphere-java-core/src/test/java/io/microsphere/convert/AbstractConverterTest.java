@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  * @see AbstractConverter
  * @since 1.0.0
  */
-public class AbstractConverterTest extends BaseConverterTest<Object, Object> {
+class AbstractConverterTest extends BaseConverterTest<Object, Object> {
 
     @Override
     protected AbstractConverter<Object, Object> createConverter() {

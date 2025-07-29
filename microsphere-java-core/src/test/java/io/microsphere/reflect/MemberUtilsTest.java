@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MemberUtils
  * @since 1.0.0
  */
-public class MemberUtilsTest {
+class MemberUtilsTest {
 
     @Test
     void testSTATIC_METHOD_PREDICATE() {

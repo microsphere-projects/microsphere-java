@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see FieldDefinition
  * @since 1.0.0
  */
-public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> {
+class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> {
 
     private String name = "test-name";
 

@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see MBeanAttribute
  * @since 1.0.0
  */
-public class MBeanAttributeTest {
+class MBeanAttributeTest {
 
     private static MBeanServer mBeanServer;
 

@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see MethodDefinition
  * @since 1.0.0
  */
-public class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
+class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodDefinitionTest.class);
 
