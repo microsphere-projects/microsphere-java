@@ -31,7 +31,7 @@ class CharSequenceUtilsTest {
     static final String TEST_STRING = "testing";
 
     @Test
-    public void testLength() {
+    void testLength() {
         assertEquals(0, length(null));
         assertEquals(0, length(TEST_EMPTY_STRING));
         assertEquals(1, length(TEST_BLANK_STRING));
@@ -40,7 +40,7 @@ class CharSequenceUtilsTest {
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertTrue(isEmpty(null));
         assertTrue(isEmpty(TEST_EMPTY_STRING));
         assertFalse(isEmpty(TEST_BLANK_STRING));
@@ -49,7 +49,7 @@ class CharSequenceUtilsTest {
     }
 
     @Test
-    public void testIsNotEmpty() {
+    void testIsNotEmpty() {
         assertFalse(isNotEmpty(null));
         assertFalse(isNotEmpty(TEST_EMPTY_STRING));
         assertTrue(isNotEmpty(TEST_BLANK_STRING));
@@ -58,7 +58,7 @@ class CharSequenceUtilsTest {
     }
 
     @Test
-    public void testContainsWhitespace() {
+    void testContainsWhitespace() {
         assertFalse(containsWhitespace(null));
         assertFalse(containsWhitespace(TEST_EMPTY_STRING));
         assertTrue(containsWhitespace(TEST_BLANK_STRING));
@@ -68,7 +68,7 @@ class CharSequenceUtilsTest {
     }
 
     @Test
-    public void testTrimAllWhitespace() {
+    void testTrimAllWhitespace() {
         assertNull(trimAllWhitespace(null));
         assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_EMPTY_STRING));
         assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_BLANK_STRING).toString());
