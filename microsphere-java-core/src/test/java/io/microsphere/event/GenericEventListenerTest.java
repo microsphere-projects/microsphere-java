@@ -41,12 +41,12 @@ class GenericEventListenerTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         this.eventDispatcher.removeAllEventListeners();
     }
 
     @Test
-    public void testOnEvent() {
+    void testOnEvent() {
         String value = "Hello,World";
         EchoEvent echoEvent = new EchoEvent(value);
         eventDispatcher.dispatch(echoEvent);
