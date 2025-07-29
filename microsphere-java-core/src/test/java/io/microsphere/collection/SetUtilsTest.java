@@ -141,7 +141,7 @@ class SetUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewFixedHashSet() {
+    void testNewFixedHashSet() {
         Set<String> set = newFixedHashSet(3);
         set.add("a");
         set.add("b");
@@ -150,7 +150,7 @@ class SetUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewFixedLinkedHashSet() {
+    void testNewFixedLinkedHashSet() {
         Set<String> set = newFixedLinkedHashSet(3);
         set.add("a");
         set.add("b");
