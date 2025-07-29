@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see TypeVariable
  * @since 1.0.0
  */
-class JavaTypeKindTestForTypeVariable extends AbstractJavaTypeKindTest {
+public class JavaTypeKindTestForTypeVariable extends AbstractJavaTypeKindTest {
 
     @Test
     void testGetSuperType() {

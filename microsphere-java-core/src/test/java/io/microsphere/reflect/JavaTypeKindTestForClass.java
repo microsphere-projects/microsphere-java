@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see Class
  * @since 1.0.0
  */
-class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
+public class JavaTypeKindTestForClass extends AbstractJavaTypeKindTest {
 
     @Test
     @Override

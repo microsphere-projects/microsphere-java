@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see JavaTypeTestForClass
  * @since 1.0.0
  */
-class JavaTypeTestForObjectClass extends AbstractJavaTypeTest<Object> {
+public class JavaTypeTestForObjectClass extends AbstractJavaTypeTest<Object> {
 
     @Override
     protected void testGetSuperType(JavaType superType) {

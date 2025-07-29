@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see WildcardType
  * @since 1.0.0
  */
-class JavaTypeTestForWildcardType extends AbstractJavaTypeTest {
+public class JavaTypeTestForWildcardType extends AbstractJavaTypeTest {
 
     @Override
     protected Type resolveType() {

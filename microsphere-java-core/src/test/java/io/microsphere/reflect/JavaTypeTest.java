@@ -37,6 +37,7 @@ import static io.microsphere.reflect.JavaType.fromMethodParameter;
 import static io.microsphere.reflect.JavaType.fromMethodParameters;
 import static io.microsphere.reflect.JavaType.fromMethodReturnType;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.util.ClassUtils.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -49,7 +50,7 @@ import static org.springframework.core.ResolvableType.forType;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class JavaTypeTest {
+public class JavaTypeTest {
 
     /**
      * Type -> ParameterizedType
@@ -215,7 +216,7 @@ class JavaTypeTest {
     }
 
     private void testAbstractJavaTypeKindTest(Class<? extends AbstractJavaTypeKindTest> testClass) throws Throwable {
-        AbstractJavaTypeKindTest test = testClass.getConstructor().newInstance();
+        AbstractJavaTypeKindTest test = newInstance(testClass);
         test.testGetSuperType();
         test.testGetRawType();
         test.testGetInterfaces();
@@ -224,7 +225,7 @@ class JavaTypeTest {
 
     private void testAbstractJavaTypeTest(Class<? extends AbstractJavaTypeTest> testClass) throws Throwable {
         AbstractJavaTypeTest.beforeAll();
-        AbstractJavaTypeTest test = testClass.getConstructor().newInstance();
+        AbstractJavaTypeTest test = newInstance(testClass);
         test.setUp();
         test.test();
     }
