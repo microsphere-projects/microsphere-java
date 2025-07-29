@@ -25,56 +25,56 @@ public class TypeArgumentTest {
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals("TypeArgument{type=class java.lang.String, index=0}", typeArgument.toString());
     }
 
     @Test
-    public void testGetType() {
+    void testGetType() {
         assertEquals(String.class, typeArgument.getType());
     }
 
     @Test
-    public void testGetIndex() {
+    void testGetIndex() {
         assertEquals(0, typeArgument.getIndex());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(typeArgument, typeArgument);
     }
 
     @Test
-    public void testEqualsOnSameType() {
+    void testEqualsOnSameType() {
         assertEquals(typeArgument, create(String.class, 0));
         assertNotEquals(typeArgument, create(String.class, 1));
         assertNotEquals(typeArgument, create(Object.class, 2));
     }
 
     @Test
-    public void testEqualsOnDifferentType() {
+    void testEqualsOnDifferentType() {
         assertNotEquals(typeArgument, Object.class);
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(typeArgument.hashCode(), typeArgument.hashCode());
     }
 
     @Test
-    public void testHashCodeOnSameType() {
+    void testHashCodeOnSameType() {
         assertEquals(typeArgument.hashCode(), create(String.class, 0).hashCode());
         assertNotEquals(typeArgument.hashCode(), create(String.class, 1).hashCode());
         assertNotEquals(typeArgument.hashCode(), create(Object.class, 2).hashCode());
     }
 
     @Test
-    public void testHashCodeOnDifferentType() {
+    void testHashCodeOnDifferentType() {
         assertNotEquals(typeArgument.hashCode(), Object.class.hashCode());
     }
 
     @Test
-    public void testCreateOnIllegalArgumentException() {
+    void testCreateOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> create(null, 0));
         assertThrows(IllegalArgumentException.class, () -> create(String.class, -1));
     }
