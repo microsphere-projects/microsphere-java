@@ -73,7 +73,7 @@ public class JmxUtilsTest extends AbstractTestCase {
     private static String notFoundAttributeName;
 
     @BeforeAll
-    public static void beforeAll() throws Throwable {
+    static void beforeAll() throws Throwable {
         mBeanServer = getPlatformMBeanServer();
         objectName = getInstance("java.lang:type=ClassLoading");
         notFoundObjectName = getInstance("java.lang:type=NotFound");
@@ -81,73 +81,73 @@ public class JmxUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassLoadingMXBean() throws Throwable {
+    void testGetClassLoadingMXBean() throws Throwable {
         assertPlatformMXBean(getClassLoadingMXBean(), CLASS_LOADING_MXBEAN_NAME);
         assertPlatformMXBean(getClassLoadingMXBean(), CLASS_LOADING_MXBEAN_NAME);
     }
 
     @Test
-    public void testGetMemoryMXBean() throws Throwable {
+    void testGetMemoryMXBean() throws Throwable {
         assertPlatformMXBean(getMemoryMXBean(), MEMORY_MXBEAN_NAME);
         assertPlatformMXBean(getMemoryMXBean(), MEMORY_MXBEAN_NAME);
     }
 
     @Test
-    public void testGetThreadMXBean() throws Throwable {
+    void testGetThreadMXBean() throws Throwable {
         assertPlatformMXBean(getThreadMXBean(), THREAD_MXBEAN_NAME);
         assertPlatformMXBean(getThreadMXBean(), THREAD_MXBEAN_NAME);
     }
 
     @Test
-    public void testGetRuntimeMXBean() throws Throwable {
+    void testGetRuntimeMXBean() throws Throwable {
         assertPlatformMXBean(getRuntimeMXBean(), RUNTIME_MXBEAN_NAME);
         assertPlatformMXBean(getRuntimeMXBean(), RUNTIME_MXBEAN_NAME);
     }
 
     @Test
-    public void testGetCompilationMXBean() throws Throwable {
+    void testGetCompilationMXBean() throws Throwable {
         assertPlatformMXBean(getCompilationMXBean(), COMPILATION_MXBEAN_NAME);
         assertPlatformMXBean(getCompilationMXBean(), COMPILATION_MXBEAN_NAME);
     }
 
     @Test
-    public void testGetOperatingSystemMXBean() throws Throwable {
+    void testGetOperatingSystemMXBean() throws Throwable {
         assertPlatformMXBean(getOperatingSystemMXBean(), OPERATING_SYSTEM_MXBEAN_NAME);
         assertPlatformMXBean(getOperatingSystemMXBean(), OPERATING_SYSTEM_MXBEAN_NAME);
     }
 
     @Test
-    public void testGetMemoryPoolMXBeans() throws Throwable {
+    void testGetMemoryPoolMXBeans() throws Throwable {
         assertPlatformMXBeans(getMemoryPoolMXBeans(), MEMORY_POOL_MXBEAN_DOMAIN_TYPE);
         assertPlatformMXBeans(getMemoryPoolMXBeans(), MEMORY_POOL_MXBEAN_DOMAIN_TYPE);
     }
 
     @Test
-    public void testGetMemoryManagerMXBeans() throws Throwable {
+    void testGetMemoryManagerMXBeans() throws Throwable {
         assertTrue(getMemoryManagerMXBeans().size() > 0);
         assertTrue(getMemoryManagerMXBeans().size() > 0);
     }
 
     @Test
-    public void testGetGarbageCollectorMXBeans() throws Throwable {
+    void testGetGarbageCollectorMXBeans() throws Throwable {
         assertPlatformMXBeans(getGarbageCollectorMXBeans(), GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE);
         assertPlatformMXBeans(getGarbageCollectorMXBeans(), GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE);
     }
 
     @Test
-    public void testGetMBeanAttributes() {
+    void testGetMBeanAttributes() {
         MBeanAttribute[] mBeanAttributes = getMBeanAttributes(mBeanServer, objectName);
         assertEquals(5, mBeanAttributes.length);
     }
 
     @Test
-    public void testGetMBeanAttributesNotFound() {
+    void testGetMBeanAttributesNotFound() {
         MBeanAttribute[] mBeanAttributes = getMBeanAttributes(mBeanServer, notFoundObjectName);
         assertSame(EMPTY_MBEAN_ATTRIBUTE_ARRAY, mBeanAttributes);
     }
 
     @Test
-    public void testGetMBeanAttributesMap() {
+    void testGetMBeanAttributesMap() {
         Map<String, MBeanAttribute> mBeanAttributesMap = getMBeanAttributesMap(mBeanServer, objectName);
         assertEquals(5, mBeanAttributesMap.size());
         assertTrue(mBeanAttributesMap.containsKey("Verbose"));
@@ -158,13 +158,13 @@ public class JmxUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetMBeanAttributesMapOnMBeanNotFound() throws Throwable {
+    void testGetMBeanAttributesMapOnMBeanNotFound() throws Throwable {
         Map<String, MBeanAttribute> mBeanAttributesMap = getMBeanAttributesMap(mBeanServer, notFoundObjectName);
         assertSame(emptyMap(), mBeanAttributesMap);
     }
 
     @Test
-    public void testGetAttribute() {
+    void testGetAttribute() {
         Object value = getAttribute(mBeanServer, objectName, "Verbose");
         assertNotNull(value);
         value = getAttribute(mBeanServer, objectName, "ObjectName");
@@ -172,13 +172,13 @@ public class JmxUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAttributeOnMBeanNotFound() {
+    void testGetAttributeOnMBeanNotFound() {
         Object value = getAttribute(mBeanServer, notFoundObjectName, "Verbose");
         assertNull(value);
     }
 
     @Test
-    public void testGetAttributeOnAttributeNotFound() {
+    void testGetAttributeOnAttributeNotFound() {
         Object value = getAttribute(mBeanServer, objectName, notFoundAttributeName);
         assertNull(value);
     }
