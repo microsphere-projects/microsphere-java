@@ -39,6 +39,7 @@ import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.MutableInteger.of;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassUtils.isCharSequence;
@@ -299,17 +300,13 @@ public abstract class BeanUtils implements Utils {
 
         Class<?> beanClass = bean.getClass();
         Map<String, Object> propertiesMap = newHashMap();
-        try {
-            BeanInfo beanInfo = getBeanInfo(beanClass, Object.class);
-            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            for (int i = 0; i < propertyDescriptors.length; i++) {
-                PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-                String propertyName = uncapitalize(propertyDescriptor.getName());
-                Object propertyValue = resolveProperty(bean, propertyDescriptor, resolvedDepth, maxResolvedDepth);
-                propertiesMap.put(propertyName, propertyValue);
-            }
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+        BeanInfo beanInfo = execute(() -> getBeanInfo(beanClass, Object.class));
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (int i = 0; i < propertyDescriptors.length; i++) {
+            PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
+            String propertyName = uncapitalize(propertyDescriptor.getName());
+            Object propertyValue = resolveProperty(bean, propertyDescriptor, resolvedDepth, maxResolvedDepth);
+            propertiesMap.put(propertyName, propertyValue);
         }
         return unmodifiableMap(propertiesMap);
     }
