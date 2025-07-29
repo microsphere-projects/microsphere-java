@@ -40,13 +40,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ExceptionUtilsTest {
 
     @Test
-    public void testGetStackTrace() {
+    void testGetStackTrace() {
         String stackTrace = getStackTrace(new RuntimeException("Hello,World"));
         assertNotNull(stackTrace);
     }
 
     @Test
-    public void testWrap() {
+    void testWrap() {
         // Same type : NullPointerException -> NullPointerException
         assertWrap(create(NullPointerException.class), NullPointerException.class, NullPointerException.class);
 
@@ -64,7 +64,7 @@ class ExceptionUtilsTest {
     }
 
     @Test
-    public void testCreateWithType() {
+    void testCreateWithType() {
         assertCreate(RuntimeException.class);
     }
 
