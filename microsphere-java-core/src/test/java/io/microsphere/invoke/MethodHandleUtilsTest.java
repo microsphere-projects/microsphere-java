@@ -38,60 +38,60 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 public class MethodHandleUtilsTest {
 
     @Test
-    public void testLookup() {
+    void testLookup() {
         MethodHandles.Lookup lookup = lookup(String.class);
         MethodHandles.Lookup lookup2 = lookup(String.class);
         assertSame(lookup, lookup2);
     }
 
     @Test
-    public void testFindVirtualOnPublicMethod() throws Throwable {
+    void testFindVirtualOnPublicMethod() throws Throwable {
         testFindVirtual("publicMethod");
     }
 
     @Test
-    public void testFindVirtualOnProtectedMethod() throws Throwable {
+    void testFindVirtualOnProtectedMethod() throws Throwable {
         testFindVirtual("protectedMethod");
     }
 
     @Test
-    public void testFindVirtualOnDefaultMethod() throws Throwable {
+    void testFindVirtualOnDefaultMethod() throws Throwable {
         testFindVirtual("defaultMethod");
     }
 
     @Test
-    public void testFindVirtualOnPrivateMethod() throws Throwable {
+    void testFindVirtualOnPrivateMethod() throws Throwable {
         testFindVirtual("privateMethod");
     }
 
     @Test
-    public void testFindVirtualOnNotFoundMethod() throws Throwable {
+    void testFindVirtualOnNotFoundMethod() throws Throwable {
         assertSame(NOT_FOUND_METHOD_HANDLE, findVirtual(MethodHandleUtilsTest.class, "notFound"));
     }
 
     @Test
-    public void testFindStaticOnPublicStaticMethod() throws Throwable {
+    void testFindStaticOnPublicStaticMethod() throws Throwable {
         testFindStatic("publicStaticMethod");
     }
 
     @Test
-    public void testFindStaticOnProtectedStaticMethod() throws Throwable {
+    void testFindStaticOnProtectedStaticMethod() throws Throwable {
         testFindStatic("protectedStaticMethod");
     }
 
     @Test
-    public void testFindStaticOnDefaultStaticMethod() throws Throwable {
+    void testFindStaticOnDefaultStaticMethod() throws Throwable {
         testFindStatic("defaultStaticMethod");
     }
 
 
     @Test
-    public void testFindStaticOnPrivateStaticMethod() throws Throwable {
+    void testFindStaticOnPrivateStaticMethod() throws Throwable {
         testFindStatic("privateStaticMethod");
     }
 
     @Test
-    public void testHandleInvokeExactFailure() {
+    void testHandleInvokeExactFailure() {
         MethodHandle methodHandle = findVirtual(MethodHandleUtilsTest.class, "privateMethod");
         handleInvokeExactFailure(new Throwable("testing"), methodHandle);
     }
