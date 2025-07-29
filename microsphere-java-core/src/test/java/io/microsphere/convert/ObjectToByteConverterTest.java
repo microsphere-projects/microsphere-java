@@ -48,7 +48,7 @@ class ObjectToByteConverterTest extends BaseConverterTest<Object, Byte> {
     }
 
     @Test
-    public void testCovertMore() {
+    void testCovertMore() {
         assertEquals(getTarget(), this.converter.convert("1"));
     }
 }
