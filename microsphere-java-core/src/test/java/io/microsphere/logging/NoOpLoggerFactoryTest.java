@@ -23,7 +23,7 @@ class NoOpLoggerFactoryTest {
     private static NoOpLoggerFactory factory;
 
     @BeforeAll
-    public static void beforeAll() {
+    static void beforeAll() {
         List<LoggerFactory> factories = loadAvailableFactories();
         for (LoggerFactory f : factories) {
             if (f instanceof NoOpLoggerFactory) {
@@ -33,17 +33,17 @@ class NoOpLoggerFactoryTest {
     }
 
     @Test
-    public void testGetDelegateLoggerClassName() {
+    void testGetDelegateLoggerClassName() {
         assertThrows(UnsupportedOperationException.class, factory::getDelegateLoggerClassName);
     }
 
     @Test
-    public void testIsAvailable() {
+    void testIsAvailable() {
         assertTrue(factory.isAvailable());
     }
 
     @Test
-    public void testCreateLogger() {
+    void testCreateLogger() {
         Logger logger = factory.createLogger("test");
         assertEquals("test", logger.getName());
 
