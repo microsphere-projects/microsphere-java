@@ -352,8 +352,8 @@ public class ConfigurationProperty implements Serializable {
         @Override
         public String toString() {
             return "Metadata{" +
-                    "sources=" + sources +
-                    ", targets=" + targets +
+                    "sources=" + getSources() +
+                    ", targets=" + getTargets() +
                     ", declaredClass='" + declaredClass + '\'' +
                     ", declaredField='" + declaredField + '\'' +
                     '}';
