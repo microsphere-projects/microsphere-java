@@ -41,7 +41,7 @@ public class ExecutableUtilsTest {
     private static final ReflectionTest test = new ReflectionTest();
 
     @Test
-    public void testExecuteWithThrowableConsumerOnPublicMethod() {
+    void testExecuteWithThrowableConsumerOnPublicMethod() {
         Method method = findMethod(ReflectionTest.class, "publicMethod", int.class);
         execute(method, m -> {
             assertEquals("1", method.invoke(test, 1));
@@ -49,7 +49,7 @@ public class ExecutableUtilsTest {
     }
 
     @Test
-    public void testExecuteWithThrowableConsumerOnProtectedMethod() {
+    void testExecuteWithThrowableConsumerOnProtectedMethod() {
         Method method = findMethod(ReflectionTest.class, "protectedMethod", Object[].class);
         execute(method, m -> {
             Object[] args = new Object[]{1};
@@ -59,7 +59,7 @@ public class ExecutableUtilsTest {
     }
 
     @Test
-    public void testExecuteWithThrowableConsumerOnPackagePrivateMethod() {
+    void testExecuteWithThrowableConsumerOnPackagePrivateMethod() {
         Method method = findMethod(ReflectionTest.class, "packagePrivateMethod", String.class);
         execute(method, m -> {
             assertEquals("1", method.invoke(test, "1"));
@@ -67,7 +67,7 @@ public class ExecutableUtilsTest {
     }
 
     @Test
-    public void testExecuteWithThrowableConsumerOnIllegalAccessException() {
+    void testExecuteWithThrowableConsumerOnIllegalAccessException() {
         Method method = findMethod(ReflectionTest.class, "privateMethod");
         assertThrows(IllegalStateException.class, () -> execute(method, m -> {
             assertEquals("test", method.invoke(test));
@@ -75,7 +75,7 @@ public class ExecutableUtilsTest {
     }
 
     @Test
-    public void testExecuteWithThrowableConsumerOnInvocationTargetException() {
+    void testExecuteWithThrowableConsumerOnInvocationTargetException() {
         Method method = findMethod(ReflectionTest.class, "errorMethod");
         assertThrows(RuntimeException.class, () -> execute(method, m -> {
             method.invoke(test);
@@ -83,7 +83,7 @@ public class ExecutableUtilsTest {
     }
 
     @Test
-    public void testExecuteWithThrowableConsumerOnIllegalArgumentException() {
+    void testExecuteWithThrowableConsumerOnIllegalArgumentException() {
         Method method = findMethod(ReflectionTest.class, "protectedMethod", Object[].class);
         assertThrows(IllegalArgumentException.class, () -> execute(method, m -> {
             method.invoke(test);
@@ -91,7 +91,7 @@ public class ExecutableUtilsTest {
     }
 
     @Test
-    public void testExecuteWithThrowableConsumerOnClassCastException() {
+    void testExecuteWithThrowableConsumerOnClassCastException() {
         Method method = findMethod(ReflectionTest.class, "publicMethod", int.class);
         assertThrows(RuntimeException.class, () -> execute(method, m -> {
             assertEquals(1, (int) method.invoke(test, 1));
