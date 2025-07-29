@@ -282,7 +282,7 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchesElementTypeWithArrayOnNull() {
+    void testMatchesElementTypeWithArrayOnNull() {
         assertFalse(matchesElementType(NULL_ELEMENT_KIND));
         assertFalse(matchesElementType(NULL_ELEMENT));
 
@@ -296,44 +296,44 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFilterElements() {
+    void testFilterElements() {
         assertEmptyList(filterElements(ofList(testTypeElement), alwaysFalse()));
     }
 
     @Test
-    public void testFilterElementsOnNull() {
+    void testFilterElementsOnNull() {
         assertEmptyList(filterElements(NULL_LIST, alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
         assertSame(emptyList(), filterElements(methods, NULL_PREDICATE_ARRAY));
     }
 
     @Test
-    public void testFilterElementsOnEmpty() {
+    void testFilterElementsOnEmpty() {
         assertEmptyList(filterElements(emptyList(), alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
         assertSame(methods, filterElements(methods));
     }
 
     @Test
-    public void testMatchParameterTypes() {
+    void testMatchParameterTypes() {
         assertTrue(matchParameterTypes(echoMethod.getParameters(), String.class));
         assertFalse(matchParameterTypes(echoMethod.getParameters(), Object.class));
     }
 
     @Test
-    public void testMatchParameterTypesOnNull() {
+    void testMatchParameterTypesOnNull() {
         assertFalse(matchParameterTypes(NULL_LIST, String.class));
         assertFalse(matchParameterTypes(emptyList(), NULL_CLASS_ARRAY));
     }
 
     @Test
-    public void testMatchParameterTypeNames() {
+    void testMatchParameterTypeNames() {
         assertTrue(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.String"));
         assertFalse(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.Object"));
     }
 
     @Test
-    public void testMatchParameterTypeNamesOnNull() {
+    void testMatchParameterTypeNamesOnNull() {
         assertFalse(matchParameterTypeNames(NULL_LIST, "java.lang.String"));
         assertFalse(matchParameterTypeNames(emptyList(), NULL_STRING_ARRAY));
     }
