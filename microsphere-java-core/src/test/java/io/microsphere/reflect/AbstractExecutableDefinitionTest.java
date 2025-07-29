@@ -30,14 +30,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public abstract class AbstractExecutableDefinitionTest<D extends ExecutableDefinition> extends AbstractMemberDefinitionTest<D> {
 
     @Test
-    public void testGetParameterClassNames() {
+    void testGetParameterClassNames() {
         for (D definition : definitions) {
             assertNotNull(definition.getParameterClassNames());
         }
     }
 
     @Test
-    public void testGetParameterTypes() {
+    void testGetParameterTypes() {
         for (D definition : definitions) {
             assertNotNull(definition.getParameterTypes());
         }
