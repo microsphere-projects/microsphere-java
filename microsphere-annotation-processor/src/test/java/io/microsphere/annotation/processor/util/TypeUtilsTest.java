@@ -409,69 +409,69 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testOfDeclaredTypeOnNull() {
+    void testOfDeclaredTypeOnNull() {
         assertNull(ofDeclaredType(NULL_ELEMENT));
         assertNull(ofDeclaredType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testOfTypeMirrors() {
+    void testOfTypeMirrors() {
         assertOfTypeMirrors(String.class, SELF_TYPE, Color.class);
     }
 
     @Test
-    public void testOfTypeMirrorsOnNull() {
+    void testOfTypeMirrorsOnNull() {
         assertEmptyList(ofTypeMirrors(EMPTY_ELEMENT_ARRAY));
         assertEmptyList(ofTypeMirrors(NULL_COLLECTION));
     }
 
     @Test
-    public void testOfTypeMirrorsOnEmpty() {
+    void testOfTypeMirrorsOnEmpty() {
         assertEmptyList(ofTypeMirrors(EMPTY_ELEMENT_ARRAY));
         assertEmptyList(ofTypeMirrors(emptyList()));
     }
 
     @Test
-    public void testOfTypeElements() {
+    void testOfTypeElements() {
         assertOfTypeElements(String.class, SELF_TYPE, Color.class);
     }
 
     @Test
-    public void testOfTypeElementsOnNull() {
+    void testOfTypeElementsOnNull() {
         assertEmptyList(ofTypeElements(NULL_TYPE_MIRROR_ARRAY));
         assertEmptyList(ofTypeElements(NULL_COLLECTION));
     }
 
     @Test
-    public void testOfTypeElementsOnEmpty() {
+    void testOfTypeElementsOnEmpty() {
         assertEmptyList(ofTypeElements(EMPTY_TYPE_MIRROR_ARRAY));
         assertEmptyList(ofTypeElements(emptyList()));
     }
 
     @Test
-    public void testOfDeclaredTypes() {
+    void testOfDeclaredTypes() {
         assertOfDeclaredTypes(String.class, SELF_TYPE, Color.class);
     }
 
     @Test
-    public void testOfDeclaredTypesWithFilter() {
+    void testOfDeclaredTypesWithFilter() {
         List<DeclaredType> declaredTypes = ofDeclaredTypes(ofList(getTypeElement(String.class), getTypeElement(TestServiceImpl.class), getTypeElement(Color.class)), t -> true);
         assertDeclaredTypes(declaredTypes, String.class, SELF_TYPE, Color.class);
     }
 
     @Test
-    public void testOfDeclaredTypesOnNull() {
+    void testOfDeclaredTypesOnNull() {
         assertEmptyList(ofDeclaredTypes(NULL_ELEMENT_ARRAY));
         assertEmptyList(ofDeclaredTypes(NULL_COLLECTION));
     }
 
     @Test
-    public void testOfDeclaredTypesOnEmpty() {
+    void testOfDeclaredTypesOnEmpty() {
         assertEmptyList(ofDeclaredTypes(emptyList()));
     }
 
     @Test
-    public void testGetTypeElementOfSuperclass() {
+    void testGetTypeElementOfSuperclass() {
         TypeElement superTypeElement = getTypeElementOfSuperclass(testTypeElement);
         assertEquals(getTypeElement(GenericTestService.class), superTypeElement);
 
@@ -485,62 +485,62 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeElementOfSuperclassOnNull() {
+    void testGetTypeElementOfSuperclassOnNull() {
         assertNull(getTypeElementOfSuperclass(NULL_TYPE_ELEMENT));
     }
 
     @Test
-    public void testGetAllTypeElementsOfSuperclasses() {
+    void testGetAllTypeElementsOfSuperclasses() {
         List<TypeElement> allSuperTypes = getAllTypeElementsOfSuperclasses(testTypeElement);
         assertTypeElements(allSuperTypes, ALL_SUPER_CLASSES);
     }
 
     @Test
-    public void testGetAllTypeElementsOfSuperclassesOnNull() {
+    void testGetAllTypeElementsOfSuperclassesOnNull() {
         assertEmptyList(getAllTypeElementsOfSuperclasses(NULL_TYPE_ELEMENT));
     }
 
     @Test
-    public void testGetTypeElementsOfInterfaces() {
+    void testGetTypeElementsOfInterfaces() {
         List<TypeElement> typeElements = getTypeElementsOfInterfaces(testTypeElement);
         assertTypeElements(typeElements, SUPER_INTERFACES);
     }
 
     @Test
-    public void testGetTypeElementsOfInterfacesOnNull() {
+    void testGetTypeElementsOfInterfacesOnNull() {
         assertEmptyList(getTypeElementsOfInterfaces(NULL_TYPE_ELEMENT));
     }
 
     @Test
-    public void testGetAllTypeElementsOfInterfaces() {
+    void testGetAllTypeElementsOfInterfaces() {
         List<TypeElement> typeElements = getAllTypeElementsOfInterfaces(testTypeElement);
         assertTypeElements(typeElements, ALL_SUPER_INTERFACES);
     }
 
     @Test
-    public void testGetAllTypeElementsOfInterfacesOnNull() {
+    void testGetAllTypeElementsOfInterfacesOnNull() {
         assertEmptyList(getAllTypeElementsOfInterfaces(NULL_TYPE_ELEMENT));
     }
 
     @Test
-    public void testGetAllTypeElements() {
+    void testGetAllTypeElements() {
         List<TypeElement> allTypeElements = getAllTypeElements(testTypeElement);
         assertTypeElements(allTypeElements, ALL_TYPES);
     }
 
     @Test
-    public void testGetAllTypeElementsOnNull() {
+    void testGetAllTypeElementsOnNull() {
         assertEmptyList(getAllTypeElements(NULL_TYPE_ELEMENT));
     }
 
     @Test
-    public void testGetTypeElementsWithNoArgument() {
+    void testGetTypeElementsWithNoArgument() {
         List<TypeElement> typeElements = TypeUtils.getTypeElements(testTypeElement);
         assertTypeElements(typeElements, SELF_TYPE_PLUS_SUPER_CLASS_PLUS_SUPER_INTERFACES);
     }
 
     @Test
-    public void testGetTypeElements() {
+    void testGetTypeElements() {
         // true true true true : all types
         List<TypeElement> typeElements = TypeUtils.getTypeElements(testTypeElement, true, true, true, true);
         assertTypeElements(typeElements, ALL_TYPES);
@@ -615,7 +615,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeElementsOnNull() {
+    void testGetTypeElementsOnNull() {
         assertEmptyList(TypeUtils.getTypeElements(NULL_TYPE_ELEMENT, true, true, true, true));
         assertEmptyList(TypeUtils.getTypeElements(NULL_TYPE_ELEMENT, true, true, true, false));
         assertEmptyList(TypeUtils.getTypeElements(NULL_TYPE_ELEMENT, true, true, false, true));
@@ -638,7 +638,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllTypeElementsOfSuperclasses() {
+    void testFindAllTypeElementsOfSuperclasses() {
         List<TypeElement> typeElements = findAllTypeElementsOfSuperclasses(testTypeElement, alwaysTrue());
         assertTypeElements(typeElements, ALL_SUPER_CLASSES);
         assertEquals(getAllTypeElementsOfSuperclasses(testTypeElement), typeElements);
@@ -647,13 +647,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllTypeElementsOfSuperclassesOnNull() {
+    void testFindAllTypeElementsOfSuperclassesOnNull() {
         assertEmptyList(findAllTypeElementsOfSuperclasses(NULL_TYPE_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllTypeElementsOfSuperclasses(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
-    public void testFindAllTypeElementsOfInterfaces() {
+    void testFindAllTypeElementsOfInterfaces() {
         List<TypeElement> typeElements = findAllTypeElementsOfInterfaces(testTypeElement, alwaysTrue());
         assertTypeElements(typeElements, ALL_SUPER_INTERFACES);
         assertEquals(getAllTypeElementsOfInterfaces(testTypeElement), typeElements);
@@ -662,13 +662,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllTypeElementsOfInterfacesOnNull() {
+    void testFindAllTypeElementsOfInterfacesOnNull() {
         assertEmptyList(findAllTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
-    public void testFindTypeElementsOfInterfaces() {
+    void testFindTypeElementsOfInterfaces() {
         List<TypeElement> typeElements = findTypeElementsOfInterfaces(testTypeElement, alwaysTrue());
         assertTypeElements(typeElements, SUPER_INTERFACES);
         assertEquals(getTypeElementsOfInterfaces(testTypeElement), typeElements);
@@ -677,13 +677,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindTypeElementsOfInterfacesOnNull() {
+    void testFindTypeElementsOfInterfacesOnNull() {
         assertEmptyList(findTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysTrue()));
         assertEmptyList(findTypeElementsOfInterfaces(NULL_TYPE_ELEMENT, alwaysFalse()));
     }
 
     @Test
-    public void testFindTypeElements() {
+    void testFindTypeElements() {
         // true true true true : all types
         List<TypeElement> typeElements = findTypeElements(testTypeElement, true, true, true, true, alwaysTrue());
         assertTypeElements(typeElements, ALL_TYPES);
@@ -758,14 +758,14 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindTypeElementsOnNullFilterElement() {
+    void testFindTypeElementsOnNullFilterElement() {
         assertThrows(IllegalArgumentException.class,
                 () -> findTypeElements(testTypeElement, true, true, true, true, new Predicate[]{null}));
     }
 
 
     @Test
-    public void testGetDeclaredTypeOfSuperclass() {
+    void testGetDeclaredTypeOfSuperclass() {
         DeclaredType superDeclaredType = getDeclaredTypeOfSuperclass(testTypeMirror);
         assertEquals(superDeclaredType, getTypeElement(GenericTestService.class).asType());
 
@@ -779,73 +779,73 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredTypeOfSuperclassOnNull() {
+    void testGetDeclaredTypeOfSuperclassOnNull() {
         assertNull(getDeclaredTypeOfSuperclass(NULL_ELEMENT));
         assertNull(getDeclaredTypeOfSuperclass(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetDeclaredTypesOfInterfaces() {
+    void testGetDeclaredTypesOfInterfaces() {
         List<DeclaredType> declaredTypes = getDeclaredTypesOfInterfaces(testTypeMirror);
         assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
     }
 
     @Test
-    public void testGetDeclaredTypesOfInterfacesOnNull() {
+    void testGetDeclaredTypesOfInterfacesOnNull() {
         assertEmptyList(getDeclaredTypesOfInterfaces(NULL_ELEMENT));
         assertEmptyList(getDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetAllDeclaredTypesOfSuperclasses() {
+    void testGetAllDeclaredTypesOfSuperclasses() {
         List<DeclaredType> declaredTypes = getAllDeclaredTypesOfSuperclasses(testTypeMirror);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_CLASSES);
     }
 
     @Test
-    public void testGetAllDeclaredTypesOfSuperclassesOnNull() {
+    void testGetAllDeclaredTypesOfSuperclassesOnNull() {
         assertEmptyList(getAllDeclaredTypesOfSuperclasses(NULL_ELEMENT));
         assertEmptyList(getAllDeclaredTypesOfSuperclasses(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetAllDeclaredTypesOfInterfaces() {
+    void testGetAllDeclaredTypesOfInterfaces() {
         List<DeclaredType> declaredTypes = getAllDeclaredTypesOfInterfaces(testTypeMirror);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_INTERFACES);
     }
 
     @Test
-    public void testGetAllDeclaredTypesOfInterfacesOnNull() {
+    void testGetAllDeclaredTypesOfInterfacesOnNull() {
         assertEmptyList(getAllDeclaredTypesOfInterfaces(NULL_ELEMENT));
         assertEmptyList(getAllDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetAllDeclaredTypesOfSuperTypes() {
+    void testGetAllDeclaredTypesOfSuperTypes() {
         List<DeclaredType> declaredTypes = getAllDeclaredTypesOfSuperTypes(testTypeMirror);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
     }
 
     @Test
-    public void testGetAllDeclaredTypesOfSuperTypesOnNull() {
+    void testGetAllDeclaredTypesOfSuperTypesOnNull() {
         assertEmptyList(getAllDeclaredTypesOfSuperTypes(NULL_ELEMENT));
         assertEmptyList(getAllDeclaredTypesOfSuperTypes(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetAllDeclaredTypes() {
+    void testGetAllDeclaredTypes() {
         List<DeclaredType> declaredTypes = getAllDeclaredTypes(testTypeMirror);
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
     }
 
     @Test
-    public void testGetAllDeclaredTypesOnNull() {
+    void testGetAllDeclaredTypesOnNull() {
         assertEmptyList(getAllDeclaredTypes(NULL_ELEMENT));
         assertEmptyList(getAllDeclaredTypes(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testGetDeclaredTypes() {
+    void testGetDeclaredTypes() {
         // true true true true : all types
         List<DeclaredType> declaredTypes = getDeclaredTypes(testTypeElement, true, true, true, true);
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
@@ -920,7 +920,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypesWithExcludedTypes() {
+    void testFindDeclaredTypesWithExcludedTypes() {
         List<DeclaredType> declaredTypes = findDeclaredTypes(testTypeElement, SUPER_CLASS);
         assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
 
@@ -947,7 +947,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypesWithExcludedTypesOnNull() {
+    void testFindDeclaredTypesWithExcludedTypesOnNull() {
         assertEmptyList(findDeclaredTypes(NULL_ELEMENT, NULL_TYPE_ARRAY));
         assertEmptyList(findDeclaredTypes(NULL_ELEMENT, EMPTY_TYPE_ARRAY));
         assertEmptyList(findDeclaredTypes(NULL_ELEMENT, ALL_TYPES));
@@ -957,7 +957,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypesWithExcludedTypeNamesOnNull() {
+    void testFindDeclaredTypesWithExcludedTypeNamesOnNull() {
         assertEmptyList(findDeclaredTypes(NULL_ELEMENT, NULL_STRING_ARRAY));
         assertEmptyList(findDeclaredTypes(NULL_ELEMENT, EMPTY_STRING_ARRAY));
         assertEmptyList(findDeclaredTypes(NULL_TYPE_MIRROR, NULL_STRING_ARRAY));
@@ -965,7 +965,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypesOfInterfaces() {
+    void testFindDeclaredTypesOfInterfaces() {
         List<DeclaredType> declaredTypes = findDeclaredTypesOfInterfaces(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, SUPER_INTERFACES);
 
@@ -980,7 +980,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypesOfInterfacesOnNull() {
+    void testFindDeclaredTypesOfInterfacesOnNull() {
         assertEmptyList(findDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysTrue()));
         assertEmptyList(findDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysFalse()));
         assertEmptyList(findDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -988,7 +988,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOfSuperclasses() {
+    void testFindAllDeclaredTypesOfSuperclasses() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperclasses(testTypeElement, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_CLASSES);
 
@@ -997,7 +997,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOfSuperclassesOnNull() {
+    void testFindAllDeclaredTypesOfSuperclassesOnNull() {
         assertEmptyList(findAllDeclaredTypesOfSuperclasses(NULL_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllDeclaredTypesOfSuperclasses(NULL_ELEMENT, alwaysFalse()));
         assertEmptyList(findAllDeclaredTypesOfSuperclasses(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -1005,7 +1005,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOfInterfaces() {
+    void testFindAllDeclaredTypesOfInterfaces() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypesOfInterfaces(testTypeElement, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_INTERFACES);
 
@@ -1014,7 +1014,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOfInterfacesOnNull() {
+    void testFindAllDeclaredTypesOfInterfacesOnNull() {
         assertEmptyList(findAllDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllDeclaredTypesOfInterfaces(NULL_ELEMENT, alwaysFalse()));
         assertEmptyList(findAllDeclaredTypesOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -1022,7 +1022,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOfSuperTypes() {
+    void testFindAllDeclaredTypesOfSuperTypes() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypesOfSuperTypes(testTypeMirror, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
@@ -1037,13 +1037,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOfSuperTypesOnNull() {
+    void testFindAllDeclaredTypesOfSuperTypesOnNull() {
         assertEmptyList(findAllDeclaredTypesOfSuperTypes(NULL_ELEMENT));
         assertEmptyList(findAllDeclaredTypesOfSuperTypes(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testFindAllDeclaredTypes() {
+    void testFindAllDeclaredTypes() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
 
@@ -1052,7 +1052,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesOnNull() {
+    void testFindAllDeclaredTypesOnNull() {
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, alwaysFalse()));
         assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -1060,7 +1060,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesWithExcludedTypes() {
+    void testFindAllDeclaredTypesWithExcludedTypes() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, testClass);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
@@ -1070,7 +1070,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesWithExcludedTypeNames() {
+    void testFindAllDeclaredTypesWithExcludedTypeNames() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, testClassName);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
 
@@ -1079,7 +1079,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesWithExcludedTypesOnNull() {
+    void testFindAllDeclaredTypesWithExcludedTypesOnNull() {
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, NULL_TYPE_ARRAY));
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, EMPTY_TYPE_ARRAY));
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, ALL_TYPES));
@@ -1089,7 +1089,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredTypesWithExcludedTypeNamesOnNull() {
+    void testFindAllDeclaredTypesWithExcludedTypeNamesOnNull() {
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, NULL_STRING_ARRAY));
         assertEmptyList(findAllDeclaredTypes(NULL_ELEMENT, EMPTY_STRING_ARRAY));
         assertEmptyList(findAllDeclaredTypes(NULL_TYPE_MIRROR, NULL_STRING_ARRAY));
@@ -1097,7 +1097,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypes() {
+    void testFindDeclaredTypes() {
         // true true true true : all types
         List<DeclaredType> declaredTypes = findDeclaredTypes(testTypeElement, true, true, true, true, alwaysTrue());
         assertDeclaredTypes(declaredTypes, ALL_TYPES);
@@ -1172,7 +1172,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredTypesOnNull() {
+    void testFindDeclaredTypesOnNull() {
         assertEmptyList(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, true, true, alwaysTrue()));
         assertEmptyList(findDeclaredTypes(NULL_TYPE_ELEMENT, true, true, true, true, alwaysFalse()));
         assertEmptyList(findDeclaredTypes(NULL_TYPE_MIRROR, true, true, true, true, alwaysTrue()));
@@ -1255,7 +1255,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeMirrorsOfInterfaces() {
+    void testGetTypeMirrorsOfInterfaces() {
         List<TypeMirror> typeMirrors = getTypeMirrorsOfInterfaces(testTypeMirror);
         assertTypeMirrors(typeMirrors, SUPER_INTERFACES);
 
@@ -1270,7 +1270,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeMirrorsOfInterfacesOnNull() {
+    void testGetTypeMirrorsOfInterfacesOnNull() {
         List<TypeMirror> typeMirrors = getTypeMirrorsOfInterfaces(NULL_TYPE_MIRROR);
         assertEmptyList(typeMirrors);
 
@@ -1279,7 +1279,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindTypeMirrorsOfInterfaces() {
+    void testFindTypeMirrorsOfInterfaces() {
         List<TypeMirror> typeMirrors = findTypeMirrorsOfInterfaces(testTypeMirror, alwaysTrue());
         assertTypeMirrors(typeMirrors, SUPER_INTERFACES);
 
@@ -1306,7 +1306,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindTypeMirrorsOfInterfacesOnNull() {
+    void testFindTypeMirrorsOfInterfacesOnNull() {
         List<TypeMirror> typeMirrors = findTypeMirrorsOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue());
         assertEmptyList(typeMirrors);
 
@@ -1321,7 +1321,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllTypeMirrorsOfInterfaces() {
+    void testGetAllTypeMirrorsOfInterfaces() {
         List<TypeMirror> typeMirrors = getAllTypeMirrorsOfInterfaces(testTypeMirror);
         assertTypeMirrors(typeMirrors, ALL_SUPER_INTERFACES);
 
@@ -1336,7 +1336,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetAllTypeMirrorsOfInterfacesOnNull() {
+    void testGetAllTypeMirrorsOfInterfacesOnNull() {
         List<TypeMirror> typeMirrors = getAllTypeMirrorsOfInterfaces(NULL_TYPE_MIRROR);
         assertEmptyList(typeMirrors);
 
@@ -1345,7 +1345,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllTypeMirrorsOfInterfaces() {
+    void testFindAllTypeMirrorsOfInterfaces() {
         List<TypeMirror> typeMirrors = findAllTypeMirrorsOfInterfaces(testTypeMirror, alwaysTrue());
         assertTypeMirrors(typeMirrors, ALL_SUPER_INTERFACES);
 
@@ -1372,7 +1372,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllTypeMirrorsOfInterfacesOnNull() {
+    void testFindAllTypeMirrorsOfInterfacesOnNull() {
         List<TypeMirror> typeMirrors = findAllTypeMirrorsOfInterfaces(NULL_TYPE_MIRROR, alwaysTrue());
         assertEmptyList(typeMirrors);
 
@@ -1387,7 +1387,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindInterfaceTypeMirror() {
+    void testFindInterfaceTypeMirror() {
         for (Type interfaceType : ALL_SUPER_INTERFACES) {
             assertInterfaceTypeMirror(testTypeElement, interfaceType);
         }
@@ -1399,7 +1399,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindInterfaceTypeMirrorOnNull() {
+    void testFindInterfaceTypeMirrorOnNull() {
         for (Type type : ALL_TYPES) {
             assertNull(findInterfaceTypeMirror(NULL_ELEMENT, type));
             assertNull(findInterfaceTypeMirror(NULL_TYPE_MIRROR, type));
@@ -1407,7 +1407,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeMirrors() {
+    void testGetTypeMirrors() {
         assertGetTypeMirrors(NULL_TYPE);
         assertGetTypeMirrors(SELF_TYPE);
         assertGetTypeMirrors(SUPER_CLASS);
@@ -1427,7 +1427,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeMirrorsOnNull() {
+    void testGetTypeMirrorsOnNull() {
         assertGetTypeMirrors(NULL_TYPE);
         assertGetTypeMirrors(NULL_TYPE_ARRAY);
         assertGetTypeMirrors(EMPTY_TYPE_ARRAY);
@@ -1450,7 +1450,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeMirror() {
+    void testGetTypeMirror() {
         assertGetTypeMirror(NULL_TYPE);
         assertGetTypeMirror(SELF_TYPE);
         assertGetTypeMirror(SUPER_CLASS);
@@ -1470,7 +1470,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeMirrorOnNull() {
+    void testGetTypeMirrorOnNull() {
         assertNull(TypeUtils.getTypeMirror(this.processingEnv, NULL_TYPE));
         assertNull(getTypeMirror(NULL_TYPE));
 
@@ -1492,7 +1492,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeElementsWithProcessingEnvironment() {
+    void testGetTypeElementsWithProcessingEnvironment() {
         assertGetTypeElementsWithProcessingEnvironment(SELF_TYPE);
         assertGetTypeElementsWithProcessingEnvironment(SUPER_CLASS);
         assertGetTypeElementsWithProcessingEnvironment(ALL_TYPES);
@@ -1511,7 +1511,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeElementsWithProcessingEnvironmentOnNull() {
+    void testGetTypeElementsWithProcessingEnvironmentOnNull() {
         assertEmptyList(TypeUtils.getTypeElements(this.processingEnv, NULL_TYPE));
         assertEmptyList(TypeUtils.getTypeElements(this.processingEnv, NULL_TYPE_ARRAY));
         assertEmptyList(TypeUtils.getTypeElements(this.processingEnv, EMPTY_TYPE_ARRAY));
@@ -1534,22 +1534,22 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetTypeElement() {
+    void testGetTypeElement() {
         assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, testClassName));
     }
 
     @Test
-    public void testGetTypeElementOnTypeMirror() {
+    void testGetTypeElementOnTypeMirror() {
         assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, testTypeMirror));
     }
 
     @Test
-    public void testGetTypeElementOnType() {
+    void testGetTypeElementOnType() {
         assertEquals(testTypeElement, TypeUtils.getTypeElement(processingEnv, SELF_TYPE));
     }
 
     @Test
-    public void testGetTypeElementOnNull() {
+    void testGetTypeElementOnNull() {
         assertNull(TypeUtils.getTypeElement(processingEnv, NULL_TYPE));
         assertNull(TypeUtils.getTypeElement(processingEnv, NULL_TYPE_MIRROR));
         assertNull(TypeUtils.getTypeElement(processingEnv, NULL_STRING));
@@ -1557,7 +1557,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredType() {
+    void testGetDeclaredType() {
         assertGetDeclaredType(NULL_TYPE);
         assertGetDeclaredType(SELF_TYPE);
         assertGetDeclaredType(SUPER_CLASS);
@@ -1577,7 +1577,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredTypeOnNull() {
+    void testGetDeclaredTypeOnNull() {
         assertNull(TypeUtils.getDeclaredType(this.processingEnv, NULL_TYPE));
         assertNull(TypeUtils.getDeclaredType(this.processingEnv, NULL_TYPE_MIRROR));
         assertNull(TypeUtils.getDeclaredType(this.processingEnv, NULL_STRING));
@@ -1602,32 +1602,32 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testToStringOnClasses() {
+    void testToStringOnClasses() {
         assertToStringOnClasses();
     }
 
     @Test
-    public void testToStringOnArrayTypes() {
+    void testToStringOnArrayTypes() {
         assertToStringOnArrayTypes();
     }
 
     @Test
-    public void testToStringOnCollectionTypes() {
+    void testToStringOnCollectionTypes() {
         assertToStringOnCollectionTypes();
     }
 
     @Test
-    public void testToStringMapTypes() {
+    void testToStringMapTypes() {
         assertToStringOnMapTypes();
     }
 
     @Test
-    public void testToStringOnNull() {
+    void testToStringOnNull() {
         assertNull(TypeUtils.toString(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testTypeElementFinderOnNull() {
+    void testTypeElementFinderOnNull() {
         assertThrows(IllegalArgumentException.class, () -> typeElementFinder(NULL_TYPE_ELEMENT, true, true, true, true));
 
         assertThrows(IllegalArgumentException.class, () -> typeElementFinder(NULL_TYPE_ELEMENT, true, true, true, false));
