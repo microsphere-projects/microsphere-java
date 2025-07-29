@@ -54,7 +54,7 @@ class ShutdownHookUtilsTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         clearShutdownHookCallbacks();
     }
 
@@ -71,17 +71,17 @@ class ShutdownHookUtilsTest {
     }
 
     @Test
-    public void testFilterShutdownHookThreads() {
+    void testFilterShutdownHookThreads() {
         assertTrue(filterShutdownHookThreads(t -> false).isEmpty());
     }
 
     @Test
-    public void testFilterShutdownHookThreadsWithRemoved() {
+    void testFilterShutdownHookThreadsWithRemoved() {
         assertFalse(filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER, true).isEmpty());
     }
 
     @Test
-    public void testAddShutdownHookCallback() {
+    void testAddShutdownHookCallback() {
         int times = 3;
         for (int i = 0; i < times; i++) {
             addShutdownHookCallback(new ShutdownHookCallback(i));
@@ -94,7 +94,7 @@ class ShutdownHookUtilsTest {
     }
 
     @Test
-    public void testRemoveShutdownHookCallback() {
+    void testRemoveShutdownHookCallback() {
         int times = 3;
         for (int i = 0; i < times; i++) {
             addShutdownHookCallback(new ShutdownHookCallback(i));
@@ -112,12 +112,12 @@ class ShutdownHookUtilsTest {
     }
 
     @Test
-    public void testRemoveShutdownHookCallbackOnNull() {
+    void testRemoveShutdownHookCallbackOnNull() {
         assertFalse(removeShutdownHookCallback(null));
     }
 
     @Test
-    public void testShutdownHookCallback() throws InterruptedException {
+    void testShutdownHookCallback() throws InterruptedException {
 
         final Runnable callback = new Runnable() {
             @Override
