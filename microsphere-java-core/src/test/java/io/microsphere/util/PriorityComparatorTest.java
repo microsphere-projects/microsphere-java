@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PriorityComparatorTest {
 
     @Test
-    public void test() {
+    void test() {
         PriorityComparator comparator = PriorityComparator.INSTANCE;
         assertEquals(0, comparator.compare(new NoPriority(), new NoPriority()));
         assertEquals(0, comparator.compare(new PriorityOneType(), new PriorityOneType()));
