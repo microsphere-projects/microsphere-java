@@ -113,7 +113,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFields() throws Exception {
+    void testFields() throws Exception {
 
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
@@ -131,31 +131,31 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetLoadedClassCount() {
+    void testGetLoadedClassCount() {
         long count = getLoadedClassCount();
         assertTrue(count > 0);
     }
 
     @Test
-    public void testGetUnloadedClassCount() {
+    void testGetUnloadedClassCount() {
         long count = getUnloadedClassCount();
         assertTrue(count > -1);
     }
 
     @Test
-    public void testGetTotalLoadedClassCount() {
+    void testGetTotalLoadedClassCount() {
         long count = getTotalLoadedClassCount();
         assertTrue(count > 0);
     }
 
     @Test
-    public void testIsVerbose() {
+    void testIsVerbose() {
         boolean verbose = isVerbose();
         assertFalse(verbose);
     }
 
     @Test
-    public void testSetVerbose() {
+    void testSetVerbose() {
         boolean verbose = isVerbose();
         setVerbose(true);
         assertTrue(isVerbose());
@@ -165,7 +165,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testClassLoadingMXBean() {
+    void testClassLoadingMXBean() {
         ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
         assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), getTotalLoadedClassCount());
         assertEquals(classLoadingMXBean.getLoadedClassCount(), getLoadedClassCount());
@@ -177,7 +177,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetDefaultClassLoader() {
+    void testGetDefaultClassLoader() {
         Thread currentThread = currentThread();
         ClassLoader classLoader = currentThread.getContextClassLoader();
         try {
@@ -192,7 +192,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassLoader() {
+    void testGetClassLoader() {
         ClassLoader classLoader = currentClass.getClassLoader();
         // ClassLoaderUtilsTest -> classLoader
         assertSame(classLoader, getClassLoader(currentClass));
@@ -201,18 +201,18 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassLoaderOnNull() {
+    void testGetClassLoaderOnNull() {
         ClassLoader classLoader = currentClass.getClassLoader();
         assertSame(classLoader, getClassLoader(null));
     }
 
     @Test
-    public void testGetCallerClassLoader() {
+    void testGetCallerClassLoader() {
         assertSame(currentClass.getClassLoader(), getCallerClassLoader());
     }
 
     @Test
-    public void testFindLoadedClasses() {
+    void testFindLoadedClasses() {
         Set<Class<?>> classes = findLoadedClasses(classLoader, currentClass.getName());
         assertEquals(1, classes.size());
         assertTrue(classes.contains(currentClass));
@@ -223,14 +223,14 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindLoadedClassesOnNullClassLoader() {
+    void testFindLoadedClassesOnNullClassLoader() {
         Set<Class<?>> classes = findLoadedClasses(null, currentClass.getName());
         assertEquals(1, classes.size());
         assertTrue(classes.contains(currentClass));
     }
 
     @Test
-    public void testFindLoadedClassesOnNullClassNames() {
+    void testFindLoadedClassesOnNullClassNames() {
         Set<Class<?>> classes = findLoadedClasses(classLoader, TEST_NULL_STRING_ARRAY);
         assertSame(emptySet(), classes);
 
