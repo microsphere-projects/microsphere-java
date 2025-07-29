@@ -159,10 +159,6 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
         assertEquals("port", metadata.getString("declaredField"));
     }
 
-    static void assertMetadataJSON(String json) throws Throwable {
-        JSONObject jsonObject = new JSONObject(json);
-    }
-
     static ConfigurationProperty newConfigurationProperty() {
         ConfigurationProperty configurationProperty = new ConfigurationProperty("server.port", Integer.class);
         configurationProperty.setValue(8080);
