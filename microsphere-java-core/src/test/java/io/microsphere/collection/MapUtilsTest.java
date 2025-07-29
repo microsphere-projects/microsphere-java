@@ -78,7 +78,7 @@ class MapUtilsTest {
     }
 
     @Test
-    public void testIsMapWithInstance() {
+    void testIsMapWithInstance() {
         assertTrue(isMap(new HashMap()));
         assertTrue(isMap(emptyMap()));
         assertFalse(isMap("Hello,World"));
@@ -86,7 +86,7 @@ class MapUtilsTest {
     }
 
     @Test
-    public void testIsMapWithClass() {
+    void testIsMapWithClass() {
         assertTrue(isMap(Map.class));
         assertTrue(isMap(HashMap.class));
         assertTrue(isMap(LinkedHashMap.class));
@@ -415,7 +415,7 @@ class MapUtilsTest {
     }
 
     @Test
-    public void testExtraProperties() {
+    void testExtraProperties() {
         assertEquals(emptyMap(), extraProperties(null));
         assertEquals(emptyMap(), extraProperties(emptyMap()));
         assertEquals(emptyMap(), extraProperties(newHashMap()));
