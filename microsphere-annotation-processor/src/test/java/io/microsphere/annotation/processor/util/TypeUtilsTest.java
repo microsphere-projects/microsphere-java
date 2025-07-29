@@ -281,7 +281,7 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsClassType() {
+    void testIsClassType() {
         // class
         assertTrue(isClassType(getTypeElement(ArrayTypeModel.class)));
         assertTrue(isClassType(getDeclaredType(ArrayTypeModel.class)));
@@ -299,13 +299,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsClassTypeOnNull() {
+    void testIsClassTypeOnNull() {
         assertFalse(isClassType(NULL_ELEMENT));
         assertFalse(isClassType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsPrimitiveType() {
+    void testIsPrimitiveType() {
         TypeElement type = getTypeElement(PrimitiveTypeModel.class);
 
         getDeclaredFields(type).forEach(t -> {
@@ -317,13 +317,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsPrimitiveTypeOnNull() {
+    void testIsPrimitiveTypeOnNull() {
         assertFalse(isPrimitiveType(NULL_ELEMENT));
         assertFalse(isPrimitiveType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsInterfaceType() {
+    void testIsInterfaceType() {
         assertTrue(isInterfaceType(getTypeElement(CharSequence.class)));
         assertTrue(isInterfaceType(getDeclaredType(CharSequence.class)));
 
@@ -332,13 +332,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsInterfaceTypeOnNull() {
+    void testIsInterfaceTypeOnNull() {
         assertFalse(isInterfaceType(NULL_ELEMENT));
         assertFalse(isInterfaceType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsAnnotationType() {
+    void testIsAnnotationType() {
         assertTrue(isAnnotationType(getTypeElement(Override.class)));
         assertTrue(isAnnotationType(getDeclaredType(Override.class)));
 
@@ -347,13 +347,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsAnnotationTypeOnNull() {
+    void testIsAnnotationTypeOnNull() {
         assertFalse(isAnnotationType(NULL_ELEMENT));
         assertFalse(isAnnotationType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsTypeElement() {
+    void testIsTypeElement() {
         assertTrue(isTypeElement(testTypeElement));
         assertTrue(isTypeElement(testTypeMirror));
         assertTrue(isTypeElement(getFieldType(testTypeElement, "context")));
@@ -363,13 +363,13 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsTypeElementOnNull() {
+    void testIsTypeElementOnNull() {
         assertFalse(isTypeElement(NULL_ELEMENT));
         assertFalse(isTypeElement(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testIsDeclaredType() {
+    void testIsDeclaredType() {
         assertTrue(isDeclaredType(testTypeElement));
         assertTrue(isDeclaredType(testTypeMirror));
         assertFalse(isDeclaredType(types.getNullType()));
@@ -384,25 +384,25 @@ class TypeUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsDeclaredTypeOnNull() {
+    void testIsDeclaredTypeOnNull() {
         assertFalse(isDeclaredType(NULL_ELEMENT));
         assertFalse(isDeclaredType(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testOfTypeElement() {
+    void testOfTypeElement() {
         assertEquals(testTypeElement, ofTypeElement(testTypeElement));
         assertEquals(testTypeElement, ofTypeElement(testTypeMirror));
     }
 
     @Test
-    public void testOfTypeElementOnNull() {
+    void testOfTypeElementOnNull() {
         assertNull(ofTypeElement(NULL_ELEMENT));
         assertNull(ofTypeElement(NULL_TYPE_MIRROR));
     }
 
     @Test
-    public void testOfDeclaredType() {
+    void testOfDeclaredType() {
         assertEquals(testTypeMirror, testDeclaredType);
         assertEquals(testTypeMirror, ofDeclaredType(testTypeMirror));
         assertEquals(testDeclaredType, ofDeclaredType(testTypeMirror));
