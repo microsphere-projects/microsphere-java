@@ -32,31 +32,31 @@ class PropertyResourceBundleUtilsTest {
     private static final String TEST_ENCODING = DEFAULT_ENCODING;
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals("java.util.PropertyResourceBundle.encoding", DEFAULT_ENCODING_PROPERTY_NAME);
         assertEquals(FILE_ENCODING, DEFAULT_ENCODING);
     }
 
     @Test
-    public void testGetBundleWithBaseName() {
+    void testGetBundleWithBaseName() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME);
         assertResourceBundle(resourceBundle);
     }
 
     @Test
-    public void testGetBundleWithBaseNameAndEncoding() {
+    void testGetBundleWithBaseNameAndEncoding() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME, TEST_ENCODING);
         assertResourceBundle(resourceBundle);
     }
 
     @Test
-    public void testGetBundleWithBaseNameAndLocaleAndEncoding() {
+    void testGetBundleWithBaseNameAndLocaleAndEncoding() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME, TEST_LOCALE, TEST_ENCODING);
         assertResourceBundle(resourceBundle);
     }
 
     @Test
-    public void testGetBundleWithBaseNameAndLocaleAndEncodingAndClassLoader() {
+    void testGetBundleWithBaseNameAndLocaleAndEncodingAndClassLoader() {
         ResourceBundle resourceBundle = getBundle(BASE_NAME, TEST_LOCALE, TEST_CLASS_LOADER, TEST_ENCODING);
         assertResourceBundle(resourceBundle);
     }
