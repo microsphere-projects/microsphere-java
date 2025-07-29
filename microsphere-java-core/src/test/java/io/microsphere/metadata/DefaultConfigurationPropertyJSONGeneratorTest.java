@@ -43,7 +43,7 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
     private DefaultConfigurationPropertyJSONGenerator generator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.generator = new DefaultConfigurationPropertyJSONGenerator();
     }
 
