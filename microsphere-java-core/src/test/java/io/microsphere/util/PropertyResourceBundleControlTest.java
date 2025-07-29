@@ -36,46 +36,46 @@ class PropertyResourceBundleControlTest {
     private static final String TEST_FORMAT = FORMAT_PROPERTIES.get(0);
 
     @Test
-    public void testDefaultConstructor() {
+    void testDefaultConstructor() {
         PropertyResourceBundleControl control = new PropertyResourceBundleControl();
         assertEquals(FILE_ENCODING, control.getEncoding());
         assertEquals(FILE_ENCODING, DEFAULT_CONTROL.getEncoding());
     }
 
     @Test
-    public void testNewControl() {
+    void testNewControl() {
         for (String encoding : availableCharsets().keySet()) {
             assertNotNull(newControl(encoding));
         }
     }
 
     @Test
-    public void testNewControlOnException() {
+    void testNewControlOnException() {
         assertThrows(UnsupportedCharsetException.class, () -> newControl("NON-SUPPORTED-ENCODING"));
     }
 
     @Test
-    public void testGetFormats() {
+    void testGetFormats() {
         assertSame(FORMAT_PROPERTIES, DEFAULT_CONTROL.getFormats("basename"));
     }
 
     @Test
-    public void testGetFormatsOnNull() {
+    void testGetFormatsOnNull() {
         assertThrows(NullPointerException.class, () -> DEFAULT_CONTROL.getFormats(null));
     }
 
     @Test
-    public void testNewBundle() throws IOException {
+    void testNewBundle() throws IOException {
         assertNewBundle(false);
     }
 
     @Test
-    public void testNewBundleOnReload() throws IOException {
+    void testNewBundleOnReload() throws IOException {
         assertNewBundle(true);
     }
 
     @Test
-    public void testNewBundleOnNotFound() {
+    void testNewBundleOnNotFound() {
         assertThrows(IOException.class, () -> newBundle("Not-Found-Bundle", true));
         assertThrows(IOException.class, () -> newBundle("Not-Found-Bundle", false));
     }
