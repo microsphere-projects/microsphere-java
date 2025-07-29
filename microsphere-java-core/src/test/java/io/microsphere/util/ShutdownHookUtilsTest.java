@@ -49,7 +49,7 @@ class ShutdownHookUtilsTest {
     private static final Logger logger = getLogger(ShutdownHookUtilsTest.class);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         registerShutdownHook();
     }
 
@@ -59,14 +59,14 @@ class ShutdownHookUtilsTest {
     }
 
     @Test
-    public void testRegisterShutdownHook() {
+    void testRegisterShutdownHook() {
         testFilterShutdownHookThreadsWithRemoved();
         registerShutdownHook();
         assertFalse(filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER).isEmpty());
     }
 
     @Test
-    public void testGetShutdownHookThreads() {
+    void testGetShutdownHookThreads() {
         assertFalse(getShutdownHookThreads().isEmpty());
     }
 
