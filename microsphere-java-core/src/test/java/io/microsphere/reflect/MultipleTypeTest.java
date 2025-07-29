@@ -24,19 +24,19 @@ public class MultipleTypeTest {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(hash(String.class, Object.class), multipleType.hashCode());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         assertEquals(of(String.class, Object.class), multipleType);
         assertEquals(of(String.class, Object.class, Integer.class), of(String.class, Object.class, Integer.class));
         assertNotEquals(of(String.class, Object.class, Integer.class), multipleType);
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         assertEquals("MultipleType : [class java.lang.String, class java.lang.Object]", multipleType.toString());
     }
 }
