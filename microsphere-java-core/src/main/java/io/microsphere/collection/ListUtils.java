@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
@@ -156,6 +157,7 @@ public abstract class ListUtils implements Utils {
      * @see #ofList(Object[]) for more details on behavior and immutability
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> of(E... elements) {
         return ofList(elements);
     }
@@ -183,6 +185,7 @@ public abstract class ListUtils implements Utils {
      * @return an immutable list containing the specified elements
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E... elements) {
         if (isEmpty(elements)) {
             return emptyList();
@@ -216,6 +219,7 @@ public abstract class ListUtils implements Utils {
      * @return An immutable list containing all elements from the iterable.
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(Iterable<E> iterable) {
         if (iterable == null) {
             return emptyList();
@@ -248,6 +252,7 @@ public abstract class ListUtils implements Utils {
      * @return An immutable list containing all elements from the enumeration.
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(Enumeration<E> enumeration) {
         return ofList(toIterator(enumeration));
     }
@@ -273,6 +278,7 @@ public abstract class ListUtils implements Utils {
      * @return An immutable list containing all elements from the iterator.
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(Iterator<E> iterator) {
         if (iterator == null) {
             return emptyList();
@@ -303,6 +309,7 @@ public abstract class ListUtils implements Utils {
      * @return a new, empty {@link ArrayList} with default initial capacity
      */
     @Nonnull
+    @Immutable
     public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
     }
