@@ -44,7 +44,7 @@ class ParallelEventDispatcherTest {
     }
 
     @Test
-    public void testDispatchEvent() throws InterruptedException {
+    void testDispatchEvent() throws InterruptedException {
         eventDispatcher.dispatch(new EchoEvent("Hello,World"));
         ForkJoinPool.commonPool().awaitTermination(1, SECONDS);
         // event has been handled
@@ -52,7 +52,7 @@ class ParallelEventDispatcherTest {
     }
 
     @AfterAll
-    public static void afterAll() {
+    static void afterAll() {
         ForkJoinPool.commonPool().shutdown();
     }
 
