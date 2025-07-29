@@ -59,21 +59,21 @@ public class AccessibleObjectUtilsTest {
     private static final Constructor abstractProcessorConstructor = findConstructor(AbstractProcessor.class);
 
     @Test
-    public void testSetAccessible() {
+    void testSetAccessible() {
         for (Method method : methods) {
             assertEquals(method.isAccessible(), setAccessible(method));
         }
     }
 
     @Test
-    public void testSetAccessibleOnNonPublicMembers() {
+    void testSetAccessibleOnNonPublicMembers() {
         assertEquals(setAccessible(tryCanAccessMethod), tryCanAccessMethod.isAccessible());
 
         assertEquals(setAccessible(abstractProcessorConstructor), abstractProcessorConstructor.isAccessible());
     }
 
     @Test
-    public void testCanAccess() {
+    void testCanAccess() {
         for (Method method : methods) {
             if (!isStatic(method)) {
                 assertTrue(canAccess(null, method));
@@ -82,19 +82,19 @@ public class AccessibleObjectUtilsTest {
     }
 
     @Test
-    public void testCanAccessOnNonPublicMembers() {
+    void testCanAccessOnNonPublicMembers() {
         assertFalse(canAccess(null, tryCanAccessMethod));
     }
 
     @Test
-    public void testTrySetAccessible() {
+    void testTrySetAccessible() {
         for (Method method : methods) {
             assertTrue(trySetAccessible(method));
         }
     }
 
     @Test
-    public void testTrySetAccessibleOnNonPublicMembers() {
+    void testTrySetAccessibleOnNonPublicMembers() {
         assertTrue(trySetAccessible(tryCanAccessMethod));
         assertTrue(trySetAccessible(abstractProcessorConstructor));
     }
