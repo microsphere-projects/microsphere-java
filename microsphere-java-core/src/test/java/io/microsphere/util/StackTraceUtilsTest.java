@@ -25,12 +25,12 @@ class StackTraceUtilsTest {
     private static final String CALLER_CLASS_NAME = StackTraceUtilsTest.class.getName();
 
     @Test
-    public void testGetCallerClassName() {
+    void testGetCallerClassName() {
         assertEquals(CALLER_CLASS_NAME, getCallerClassName());
     }
 
     @Test
-    public void testGetCallerClassNameOnStackWalkerSupportedForTesting() {
+    void testGetCallerClassNameOnStackWalkerSupportedForTesting() {
         StackTraceUtils.stackWalkerSupportedForTesting = false;
         assertEquals(getCallerClassNameInGeneralJVM(), getCallerClassName());
         assertEquals(CALLER_CLASS_NAME, getCallerClassName());
@@ -38,7 +38,7 @@ class StackTraceUtilsTest {
     }
 
     @Test
-    public void testGetCallerClassNames() {
+    void testGetCallerClassNames() {
         if (testCurrentJavaVersion("<", JAVA_VERSION_9)) {
             assertThrows(NullPointerException.class, () -> getCallerClassNames());
         } else {
@@ -47,13 +47,13 @@ class StackTraceUtilsTest {
     }
 
     @Test
-    public void testGetCallerClassNameInGeneralJVM() {
+    void testGetCallerClassNameInGeneralJVM() {
         String callerClassName = getCallerClassNameInGeneralJVM();
         assertEquals(CALLER_CLASS_NAME, callerClassName);
     }
 
     @Test
-    public void testGetCallerClassNameInGeneralJVMOnOverStack() {
+    void testGetCallerClassNameInGeneralJVMOnOverStack() {
         assertNull(getCallerClassNameInGeneralJVM(MAX_VALUE));
     }
 
