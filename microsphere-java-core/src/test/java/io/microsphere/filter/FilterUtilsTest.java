@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class FilterUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testFilter() {
+    void testFilter() {
         List<Integer> integerList = asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 
         List<Integer> result = FilterUtils.filter(integerList, FilterOperator.AND, new Filter<Integer>() {
