@@ -389,7 +389,6 @@ class MapUtilsTest {
         map.put("d.e.f.2", "2");
         map.put("d.e.f.3", "3");
 
-        // {a={b={1=1, 2=2}}, d={e={f={1=1, 2=2, 3=3}}}}
         Map<String, Object> nestedMap = nestedMap(map);
         assertEquals(2, nestedMap.size());
         Map<String, Object> aMap = (Map<String, Object>) nestedMap.get("a");
