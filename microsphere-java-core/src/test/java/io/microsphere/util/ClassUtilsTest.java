@@ -445,12 +445,12 @@ class ClassUtilsTest extends AbstractTestCase {
 
     @Test
     void testGetAllSuperClassesOnNull() {
-
+        assertSame(emptyList(), getAllSuperClasses(null));
     }
 
     @Test
     void testGetAllSuperClassesOnPrimitiveType() {
-
+        assertSame(emptyList(), getAllSuperClasses(int.class));
     }
 
     @Test
