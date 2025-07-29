@@ -292,7 +292,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsFieldOnMethod() {
+    void testIsFieldOnMethod() {
         TypeElement type = getTypeElement(Model.class);
         ExecutableElement method = findMethod(type, "getF");
         for (VariableElement parameter : method.getParameters()) {
@@ -301,7 +301,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsFieldOnNull() {
+    void testIsFieldOnNull() {
         assertFalse(isField(NULL_FIELD));
         assertFalse(isField(NULL_FIELD, PUBLIC, STATIC, FINAL));
 
@@ -310,7 +310,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetNonStaticFields() {
+    void testGetNonStaticFields() {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getNonStaticFields(type);
@@ -324,20 +324,20 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetNonStaticFieldsOnNull() {
+    void testGetNonStaticFieldsOnNull() {
         assertTrue(getNonStaticFields(NULL_TYPE_MIRROR).isEmpty());
         assertTrue(getNonStaticFields(NULL_ELEMENT).isEmpty());
     }
 
     @Test
-    public void testGetNonStaticFieldsOnEnum() {
+    void testGetNonStaticFieldsOnEnum() {
         TypeElement type = getTypeElement(ElementType.class);
         List<VariableElement> fields = getNonStaticFields(type);
         assertEmptyList(fields);
     }
 
     @Test
-    public void testGetAllNonStaticFields() {
+    void testGetAllNonStaticFields() {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getAllNonStaticFields(type);
@@ -351,7 +351,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testEqualsFieldName() {
+    void testEqualsFieldName() {
         TypeElement type = getTypeElement(Model.class);
         String fieldName = "f";
         VariableElement field = findField(type, fieldName);
@@ -360,7 +360,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testEqualsFieldNameOnNull() {
+    void testEqualsFieldNameOnNull() {
         TypeElement type = getTypeElement(Model.class);
         String fieldName = "f";
         VariableElement field = findField(type, fieldName);
