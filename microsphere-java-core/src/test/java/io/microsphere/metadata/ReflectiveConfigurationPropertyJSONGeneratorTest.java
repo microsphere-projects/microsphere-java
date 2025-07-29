@@ -23,7 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
-import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.assertJSON;
+import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.assertConfigurationPropertyJSON;
 import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.newConfigurationProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -47,7 +47,7 @@ class ReflectiveConfigurationPropertyJSONGeneratorTest {
     void testGenerate() throws Throwable {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = generator.generate(configurationProperty);
-        assertJSON(json);
+        assertConfigurationPropertyJSON(json);
     }
 
     @Test
