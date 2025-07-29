@@ -19,9 +19,9 @@ package io.microsphere.annotation;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.annotation.ConfigurationProperty.Sources.APPLICATION;
-import static io.microsphere.annotation.ConfigurationProperty.Sources.ENVIRONMENT_VARIABLES;
-import static io.microsphere.annotation.ConfigurationProperty.Sources.SYSTEM_PROPERTIES;
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.annotation.ConfigurationProperty.ENVIRONMENT_VARIABLES_SOURCE;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -35,8 +35,8 @@ public class ConfigurationPropertyTest {
 
     @Test
     void testSources() {
-        assertEquals("system-properties", SYSTEM_PROPERTIES);
-        assertEquals("environment-variables", ENVIRONMENT_VARIABLES);
-        assertEquals("application", APPLICATION);
+        assertEquals("system-properties", SYSTEM_PROPERTIES_SOURCE);
+        assertEquals("environment-variables", ENVIRONMENT_VARIABLES_SOURCE);
+        assertEquals("application", APPLICATION_SOURCE);
     }
 }
