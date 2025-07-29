@@ -50,47 +50,47 @@ public class ParameterizedTypeImplTest {
     }
 
     @Test
-    public void testOfOnMalformedParameterizedTypeException() {
+    void testOfOnMalformedParameterizedTypeException() {
         assertThrows(MalformedParameterizedTypeException.class, () -> of(Map.class, new Type[]{String.class}));
     }
 
     @Test
-    public void testGetActualTypeArguments() {
+    void testGetActualTypeArguments() {
         assertArrayEquals(actualTypeArguments, topLevelType.getActualTypeArguments());
         assertArrayEquals(actualTypeArguments, nestedType.getActualTypeArguments());
         assertArrayEquals(actualTypeArguments, complexType.getActualTypeArguments());
     }
 
     @Test
-    public void testGetRawType() {
+    void testGetRawType() {
         assertEquals(Map.class, topLevelType.getRawType());
         assertEquals(Map.Entry.class, nestedType.getRawType());
         assertEquals(Map.Entry.class, complexType.getRawType());
     }
 
     @Test
-    public void testGetOwnerType() {
+    void testGetOwnerType() {
         assertNull(topLevelType.getOwnerType());
         assertEquals(Map.class, nestedType.getOwnerType());
         assertEquals(topLevelType, complexType.getOwnerType());
     }
 
     @Test
-    public void testEqualsOnSame() {
+    void testEqualsOnSame() {
         assertEquals(topLevelType, topLevelType);
         assertEquals(nestedType, nestedType);
         assertEquals(complexType, complexType);
     }
 
     @Test
-    public void testEqualsOnSameType() {
+    void testEqualsOnSameType() {
         assertEquals(topLevelType, of(Map.class, actualTypeArguments, null));
         assertEquals(nestedType, of(Map.Entry.class, actualTypeArguments, Map.class));
         assertEquals(complexType, of(Map.Entry.class, actualTypeArguments, topLevelType));
     }
 
     @Test
-    public void testEqualsOnDifferentType() {
+    void testEqualsOnDifferentType() {
         assertNotEquals(topLevelType, of(Map.class, actualTypeArguments, String.class));
         assertNotEquals(topLevelType, nestedType);
         assertNotEquals(topLevelType, complexType);
@@ -98,42 +98,42 @@ public class ParameterizedTypeImplTest {
     }
 
     @Test
-    public void testHashCodeOnSame() {
+    void testHashCodeOnSame() {
         assertEquals(topLevelType.hashCode(), topLevelType.hashCode());
         assertEquals(nestedType.hashCode(), nestedType.hashCode());
         assertEquals(complexType.hashCode(), complexType.hashCode());
     }
 
     @Test
-    public void testHashCodeOnSameType() {
+    void testHashCodeOnSameType() {
         assertEquals(topLevelType.hashCode(), of(Map.class, actualTypeArguments, null).hashCode());
         assertEquals(nestedType.hashCode(), of(Map.Entry.class, actualTypeArguments, Map.class).hashCode());
         assertEquals(complexType.hashCode(), of(Map.Entry.class, actualTypeArguments, topLevelType).hashCode());
     }
 
     @Test
-    public void testHashCodeOnDifferentType() {
+    void testHashCodeOnDifferentType() {
         assertNotEquals(topLevelType.hashCode(), of(Map.class, actualTypeArguments, String.class).hashCode());
         assertNotEquals(topLevelType.hashCode(), nestedType.hashCode());
         assertNotEquals(topLevelType.hashCode(), complexType.hashCode());
     }
 
     @Test
-    public void testToStringOnSame() {
+    void testToStringOnSame() {
         assertEquals(topLevelType.toString(), topLevelType.toString());
         assertEquals(nestedType.toString(), nestedType.toString());
         assertEquals(complexType.toString(), complexType.toString());
     }
 
     @Test
-    public void testToStringOnSameType() {
+    void testToStringOnSameType() {
         assertEquals(topLevelType.toString(), of(Map.class, actualTypeArguments, null).toString());
         assertEquals(nestedType.toString(), of(Map.Entry.class, actualTypeArguments, Map.class).toString());
         assertEquals(complexType.toString(), of(Map.Entry.class, actualTypeArguments, topLevelType).toString());
     }
 
     @Test
-    public void testToStringOnDifferentType() {
+    void testToStringOnDifferentType() {
         assertNotEquals(topLevelType.toString(), of(Map.class, actualTypeArguments, String.class).toString());
         assertNotEquals(topLevelType.toString(), nestedType.toString());
         assertNotEquals(topLevelType.toString(), complexType.toString());
