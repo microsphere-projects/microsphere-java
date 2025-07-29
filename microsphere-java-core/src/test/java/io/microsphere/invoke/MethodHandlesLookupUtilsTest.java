@@ -36,24 +36,24 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class MethodHandlesLookupUtilsTest {
 
     @Test
-    public void testFindPublicVirtual() throws Throwable {
+    void testFindPublicVirtual() throws Throwable {
         MethodHandle methodHandle = findPublicVirtual(String.class, "length");
         assertEquals(1, (int) methodHandle.invokeExact("A"));
     }
 
     @Test
-    public void testFindPublicVirtualOnNonPublicMethod() throws Throwable {
+    void testFindPublicVirtualOnNonPublicMethod() throws Throwable {
         MethodHandle methodHandle = findPublicVirtual(Object.class, "clone");
         assertNull(methodHandle);
     }
 
     @Test
-    public void testFindPublicOnAbsentMethod() {
+    void testFindPublicOnAbsentMethod() {
         assertNull(findPublic(Object.class, "x", EMPTY_CLASS_ARRAY, (lookup, methodType) -> null));
     }
 
     @Test
-    public void testFindPublicStatic() throws Throwable {
+    void testFindPublicStatic() throws Throwable {
         MethodHandle methodHandle = findPublicStatic(String.class, "valueOf", int.class);
         assertEquals("1", (String) methodHandle.invokeExact(1));
     }
