@@ -441,6 +441,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IllegalArgumentException if either {@code type} or {@code baseType} is null or invalid
      */
     @Nonnull
+    @Immutable
     public static List<Type> resolveActualTypeArguments(Type type, Type baseType) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseType));
     }
@@ -496,6 +497,7 @@ public abstract class TypeUtils implements Utils {
      * returns an empty list if no arguments can be resolved (e.g., raw type usage or unresolved type parameters)
      */
     @Nonnull
+    @Immutable
     public static List<Class> resolveActualTypeArgumentClasses(Type type, Type baseType) {
         return unmodifiableList(doResolveActualTypeArgumentClasses(type, baseType));
     }
@@ -567,6 +569,7 @@ public abstract class TypeUtils implements Utils {
      * returns an empty list if no arguments can be resolved (e.g., raw type usage)
      * @throws IllegalArgumentException if either {@code type} or {@code baseClass} is null or invalid
      */
+    @Immutable
     public static List<Type> resolveActualTypeArguments(Type type, Class baseClass) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseClass));
     }
@@ -828,6 +831,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of parameterized types from the given type and its hierarchy
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> getAllParameterizedTypes(Type type) {
         return findAllParameterizedTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -856,6 +860,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all hierarchical generic types associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<Type> getHierarchicalTypes(Type type) {
         return findHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
     }
