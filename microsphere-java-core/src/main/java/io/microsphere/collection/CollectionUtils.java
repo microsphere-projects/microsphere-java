@@ -40,6 +40,9 @@ import static io.microsphere.util.ArrayUtils.length;
  */
 public abstract class CollectionUtils implements Utils {
 
+    private CollectionUtils() {
+    }
+
     /**
      * Checks if the provided collection is null or empty.
      *
@@ -385,7 +388,6 @@ public abstract class CollectionUtils implements Utils {
         return size;
     }
 
-
     /**
      * Compares two collections for equality, considering {@code null} and empty collections as equal.
      *
@@ -638,8 +640,5 @@ public abstract class CollectionUtils implements Utils {
     @Immutable
     public static <T> Deque<T> emptyDeque() {
         return QueueUtils.emptyDeque();
-    }
-
-    private CollectionUtils() {
     }
 }
