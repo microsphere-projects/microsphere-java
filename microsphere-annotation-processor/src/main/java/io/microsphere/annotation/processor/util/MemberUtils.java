@@ -16,6 +16,8 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
@@ -91,6 +93,8 @@ public interface MemberUtils extends Utils {
      * @param type the type mirror to retrieve declared members from
      * @return a list of directly declared members, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<? extends Element> getDeclaredMembers(TypeMirror type) {
         return type == null ? emptyList() : getDeclaredMembers(ofTypeElement(type));
     }
@@ -113,6 +117,8 @@ public interface MemberUtils extends Utils {
      * @param type the type element to retrieve declared members from
      * @return a list of directly declared members, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<? extends Element> getDeclaredMembers(TypeElement type) {
         return type == null ? emptyList() : findDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -135,6 +141,8 @@ public interface MemberUtils extends Utils {
      * @param type the type mirror to retrieve all declared members from
      * @return a list of all declared members, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<? extends Element> getAllDeclaredMembers(TypeMirror type) {
         return type == null ? emptyList() : findAllDeclaredMembers(ofTypeElement(type), EMPTY_PREDICATE_ARRAY);
     }
@@ -157,6 +165,8 @@ public interface MemberUtils extends Utils {
      * @param type the type element to retrieve all declared members from
      * @return a list of all declared members, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<? extends Element> getAllDeclaredMembers(TypeElement type) {
         return type == null ? emptyList() : findAllDeclaredMembers(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -181,6 +191,8 @@ public interface MemberUtils extends Utils {
      * @param includeHierarchicalTypes whether to include members from superclasses and interfaces
      * @return a list of declared members, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<? extends Element> getDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes) {
         return includeHierarchicalTypes ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
     }
@@ -205,6 +217,8 @@ public interface MemberUtils extends Utils {
      * @param includeHierarchicalTypes whether to include members from superclasses and interfaces
      * @return a list of declared members, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<? extends Element> getDeclaredMembers(TypeElement type, boolean includeHierarchicalTypes) {
         return includeHierarchicalTypes ? getAllDeclaredMembers(type) : getDeclaredMembers(type);
     }
@@ -231,6 +245,8 @@ public interface MemberUtils extends Utils {
      * @param memberFilters the predicates used to filter members
      * @return a list of declared members matching the filters, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
         return type == null ? emptyList() : findDeclaredMembers(ofTypeElement(type), memberFilters);
     }
@@ -257,6 +273,8 @@ public interface MemberUtils extends Utils {
      * @param memberFilters the predicates used to filter members
      * @return a list of declared members matching the filters, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static <T extends Element> List<T> findDeclaredMembers(TypeElement type, Predicate<? super T>... memberFilters) {
         if (type == null) {
             return emptyList();
@@ -287,6 +305,8 @@ public interface MemberUtils extends Utils {
      * @param memberFilters the predicates used to filter members
      * @return a list of all declared members matching the filters, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static <T extends Element> List<T> findAllDeclaredMembers(TypeMirror type, Predicate<? super T>... memberFilters) {
         return type == null ? emptyList() : findAllDeclaredMembers(ofTypeElement(type), memberFilters);
     }
@@ -324,6 +344,8 @@ public interface MemberUtils extends Utils {
      * @param memberFilters the predicates used to filter members
      * @return a list of all declared members matching the filters, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static <T extends Element> List<T> findAllDeclaredMembers(TypeElement type, Predicate<? super T>... memberFilters) {
         if (type == null) {
             return emptyList();
@@ -361,6 +383,8 @@ public interface MemberUtils extends Utils {
      * @param memberFilters            the predicates used to filter members
      * @return a list of declared members matching the filters, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static <T extends Element> List<T> findDeclaredMembers(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super T>... memberFilters) {
         return includeHierarchicalTypes ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
@@ -390,6 +414,8 @@ public interface MemberUtils extends Utils {
      * @param memberFilters the predicates used to filter members
      * @return a list of declared members matching the filters, or an empty list if the type is {@code null}
      */
+    @Nonnull
+    @Immutable
     static <T extends Element> List<T> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super T>... memberFilters) {
         return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
