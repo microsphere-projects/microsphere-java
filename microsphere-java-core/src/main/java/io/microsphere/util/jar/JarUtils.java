@@ -3,6 +3,7 @@
  */
 package io.microsphere.util.jar;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.ProtocolConstants;
@@ -171,6 +172,7 @@ public abstract class JarUtils implements Utils {
      * @return A read-only list of filtered JAR entries. Never null.
      */
     @Nonnull
+    @Immutable
     public static List<JarEntry> filter(JarFile jarFile, JarEntryFilter jarEntryFilter) {
         if (jarFile == null) {
             return emptyList();
