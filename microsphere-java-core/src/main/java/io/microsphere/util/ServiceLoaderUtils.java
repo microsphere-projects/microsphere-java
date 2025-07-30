@@ -1,6 +1,7 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -126,6 +127,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType));
     }
@@ -153,6 +155,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
         return loadServicesList(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
@@ -180,6 +183,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType), cached);
     }
@@ -209,6 +213,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return unmodifiableList(loadServicesAsList(serviceType, classLoader, cached));
     }
