@@ -252,15 +252,6 @@ class FieldUtilsTest {
         assertThrows(IllegalStateException.class, () -> handleIllegalAccessException(new IllegalAccessException(), test, field, field.isAccessible()));
     }
 
-
-    static class ReflectionTestExt extends ReflectionTest {
-
-        private Integer integerField;
-
-        private String stringField;
-
-    }
-
     private void assertFindField(Object object, String fieldName) {
         assertNotNull(findField(object, fieldName));
     }
@@ -299,5 +290,13 @@ class FieldUtilsTest {
 
     private void assertGetDeclaredField(Class<?> klass, String fieldName) {
         assertNotNull(getDeclaredField(klass, fieldName));
+    }
+
+    static class ReflectionTestExt extends ReflectionTest {
+
+        private Integer integerField;
+
+        private String stringField;
+
     }
 }
