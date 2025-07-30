@@ -154,7 +154,6 @@ public abstract class MapUtils implements Utils {
         return !isEmpty(map);
     }
 
-
     /**
      * Returns the size of the specified map, or {@code 0} if the map is {@code null}.
      *
@@ -1139,6 +1138,8 @@ public abstract class MapUtils implements Utils {
      * @param map The map containing potentially nested properties to be flattened.
      * @return A new unmodifiable map with all properties flattened to a single level.
      */
+    @Nonnull
+    @Immutable
     public static Map<String, Object> flattenMap(Map<String, Object> map) {
         return flatProperties(map);
     }
@@ -1176,6 +1177,8 @@ public abstract class MapUtils implements Utils {
      * @param map the flat map to be converted into a nested structure, may be {@code null}
      * @return a new map with nested structure, or an empty map if input is {@code null} or empty
      */
+    @Nonnull
+    @Immutable
     public static Map<String, Object> nestedMap(Map<String, Object> map) {
         Map<String, Object> nestedMap = newLinkedHashMap();
 
@@ -1203,7 +1206,7 @@ public abstract class MapUtils implements Utils {
                 nestedMap.put(propertyName, propertyValue);
             }
         }
-        return nestedMap;
+        return unmodifiableMap(nestedMap);
     }
 
     /**
@@ -1228,6 +1231,7 @@ public abstract class MapUtils implements Utils {
      * @param map the map from which to extract properties, may be {@code null}
      * @return a new map containing flattened properties, or an empty map if input is {@code null} or empty
      */
+    @Nonnull
     static Map<String, Object> extraProperties(Map<String, Object> map) {
         int size = size(map);
         Map<String, Object> properties = newLinkedHashMap(size);
@@ -1249,7 +1253,7 @@ public abstract class MapUtils implements Utils {
         }
         return properties;
     }
-
+    
     private MapUtils() {
     }
 }
