@@ -204,6 +204,8 @@ public abstract class ShutdownHookUtils implements Utils {
      *                         Only threads for which the predicate returns {@code true} will be included.
      * @return A non-null, unmodifiable set containing the filtered shutdown hook threads.
      */
+    @Nonnull
+    @Immutable
     public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter) {
         return filterShutdownHookThreads(hookThreadFilter, false);
     }
