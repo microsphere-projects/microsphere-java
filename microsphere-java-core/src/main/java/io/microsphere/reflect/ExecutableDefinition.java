@@ -77,7 +77,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the class names of parameters
      */
-    public ExecutableDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name,
+    protected ExecutableDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name,
                                 @Nonnull String... parameterClassNames) {
         this(since, null, declaredClassName, name, parameterClassNames);
     }
@@ -89,7 +89,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the parameter class names
      */
-    public ExecutableDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+    protected ExecutableDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
                                 @Nonnull String name, @Nonnull String... parameterClassNames) {
         this(Version.of(since), deprecation, declaredClassName, name, parameterClassNames);
     }
@@ -100,7 +100,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the class names of parameters
      */
-    public ExecutableDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name,
+    protected ExecutableDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name,
                                 @Nonnull String... parameterClassNames) {
         this(since, null, declaredClassName, name, parameterClassNames);
     }
@@ -112,7 +112,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the parameter class names
      */
-    public ExecutableDefinition(@Nonnull Version since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+    protected ExecutableDefinition(@Nonnull Version since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
                                 @Nonnull String name, @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, name);
         assertNotNull(parameterClassNames, () -> "the class names of parameters of method must not be null.");
