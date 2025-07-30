@@ -1,5 +1,6 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
@@ -35,6 +36,7 @@ import static java.util.Objects.hash;
  * @see ArtifactResourceResolver
  * @since 1.0.0
  */
+@Immutable
 public class MavenArtifact extends Artifact {
 
     @Nonnull
