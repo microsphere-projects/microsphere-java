@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Version;
@@ -66,6 +67,7 @@ import static java.util.Objects.hash;
  * @see Version
  * @since 1.0.0
  */
+@Immutable
 public final class Deprecation implements Serializable {
 
     private static final long serialVersionUID = 6380988834632455932L;
