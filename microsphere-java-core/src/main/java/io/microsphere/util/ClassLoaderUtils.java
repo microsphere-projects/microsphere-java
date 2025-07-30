@@ -1589,7 +1589,7 @@ public abstract class ClassLoaderUtils implements Utils {
     public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls) {
         return newURLClassLoader(urls, null);
     }
-    
+
     /**
      * Creates a new instance of {@link URLClassLoader} using the URLs provided in an {@link Iterable}.
      *
