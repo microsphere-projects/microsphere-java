@@ -17,6 +17,7 @@
 package io.microsphere.reflect;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
@@ -58,6 +59,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Math.min;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.of;
@@ -744,6 +746,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic superclasses
      */
     @Nonnull
+    @Immutable
     public static List<Type> getAllGenericSuperclasses(Type type) {
         return findAllGenericSuperclasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -769,6 +772,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic interfaces
      */
     @Nonnull
+    @Immutable
     public static List<Type> getAllGenericInterfaces(Type type) {
         return findAllGenericInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -797,6 +801,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of parameterized types directly associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> getParameterizedTypes(Type type) {
         return findParameterizedTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -883,6 +888,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all associated generic types
      */
     @Nonnull
+    @Immutable
     public static List<Type> getAllTypes(Type type) {
         return findAllTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -910,6 +916,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic superclasses
      */
     @Nonnull
+    @Immutable
     public static List<Type> findAllGenericSuperclasses(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, false, typeFilters);
     }
@@ -936,6 +943,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic interfaces
      */
     @Nonnull
+    @Immutable
     public static List<Type> findAllGenericInterfaces(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, false, true, typeFilters);
     }
@@ -964,6 +972,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of immediate parameterized types associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> findParameterizedTypes(Type type, Predicate<? super ParameterizedType>... typeFilters) {
         return findTypes(type, true, false, true, true, parameterizedTypePredicate(typeFilters));
     }
@@ -991,6 +1000,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of parameterized types from the given type and its hierarchy
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> findAllParameterizedTypes(Type type, Predicate<? super ParameterizedType>... typeFilters) {
         return findAllTypes(type, parameterizedTypePredicate(typeFilters));
     }
@@ -1020,6 +1030,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all hierarchical generic types associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<Type> findHierarchicalTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, true, typeFilters);
     }
@@ -1053,6 +1064,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all associated types
      */
     @Nonnull
+    @Immutable
     public static List<Type> findAllTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, true, true, true, true, typeFilters);
     }
@@ -1128,14 +1140,15 @@ public abstract class TypeUtils implements Utils {
      * }</pre>
      *
      * @param types an iterable collection of types to extract class names from
-     * @return a set containing the fully qualified class names of all types in the input
+     * @return a read-only set containing the fully qualified class names of all types in the input
      * @throws IllegalArgumentException if any element in the input is null
      */
     @Nonnull
+    @Immutable
     public static Set<String> getClassNames(Iterable<? extends Type> types) {
-        return stream(types.spliterator(), false)
+        return unmodifiableSet(stream(types.spliterator(), false)
                 .map(TypeUtils::getClassName)
-                .collect(toSet());
+                .collect(toSet()));
     }
 
     /**
@@ -1164,6 +1177,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IllegalArgumentException if the targetClass is null or represents a primitive/array type
      */
     @Nonnull
+    @Immutable
     public static List<Type> resolveTypeArguments(Class<?> targetClass) {
         if (targetClass == null || targetClass.isPrimitive() || targetClass.isArray()) {
             return emptyList();
@@ -1224,6 +1238,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IllegalArgumentException if the targetClass is null or represents a primitive/array type
      */
     @Nonnull
+    @Immutable
     public static List<Class<?>> resolveTypeArgumentClasses(Class<?> targetClass) {
         List<Type> typeArguments = resolveTypeArguments(targetClass);
         return unmodifiableList(typeArguments.stream()
