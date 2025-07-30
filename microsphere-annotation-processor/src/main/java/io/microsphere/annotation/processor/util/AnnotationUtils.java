@@ -16,6 +16,9 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.annotation.processor.model.util.ResolvableAnnotationValueVisitor;
 import io.microsphere.util.Utils;
 
@@ -58,6 +61,8 @@ import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.StringUtils.isBlank;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableMap;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -107,6 +112,7 @@ public interface AnnotationUtils extends Utils {
     /**
      * The empty {@link ElementType} array
      */
+    @Immutable
     ElementType[] EMPTY_ELEMENT_TYPE_ARRAY = new ElementType[0];
 
     boolean WITH_DEFAULT = true;
@@ -185,6 +191,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotatedConstruct the annotated construct to search for annotations, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct) {
         if (annotatedConstruct == null) {
             return emptyList();
@@ -212,6 +220,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationClass    the annotation class to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
         if (annotatedConstruct == null || annotationClass == null) {
             return emptyList();
@@ -240,6 +250,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAnnotations(AnnotatedConstruct annotatedConstruct, CharSequence annotationClassName) {
         if (annotatedConstruct == null || annotationClassName == null) {
             return emptyList();
@@ -264,6 +276,8 @@ public interface AnnotationUtils extends Utils {
      * @param type the type mirror to search for annotations, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(TypeMirror type) {
         if (type == null) {
             return emptyList();
@@ -295,6 +309,8 @@ public interface AnnotationUtils extends Utils {
      * @param element the annotated element to search for annotations, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(Element element) {
         if (element == null) {
             return emptyList();
@@ -323,6 +339,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationClass the annotation class to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(TypeMirror type, Class<? extends Annotation> annotationClass) {
         if (type == null || annotationClass == null) {
             return emptyList();
@@ -356,6 +374,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationClass the annotation class to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(Element element, Class<? extends Annotation> annotationClass) {
         if (element == null || annotationClass == null) {
             return emptyList();
@@ -386,6 +406,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(TypeMirror type, CharSequence annotationClassName) {
         if (type == null || annotationClassName == null) {
             return emptyList();
@@ -420,6 +442,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationClassName the fully qualified class name of the annotation to look for, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(Element element, CharSequence annotationClassName) {
         if (element == null || annotationClassName == null) {
             return emptyList();
@@ -450,6 +474,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotatedType the annotated type to search for annotations, may be {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> getAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType) {
         if (processingEnv == null || annotatedType == null) {
             return emptyList();
@@ -760,6 +786,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationFilters  a varargs array of predicates used to filter annotations; may be empty or {@code null}
      * @return a non-null immutable list of matching {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> findAnnotations(AnnotatedConstruct annotatedConstruct, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (annotatedConstruct == null) {
             return emptyList();
@@ -774,7 +802,7 @@ public interface AnnotationUtils extends Utils {
             annotations = filterAll(annotations, annotationFilters);
         }
 
-        return annotations.isEmpty() ? emptyList() : annotations;
+        return annotations.isEmpty() ? emptyList() : unmodifiableList(annotations);
     }
 
     /**
@@ -788,6 +816,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationFilters a varargs array of predicates used to filter annotations; may be empty or {@code null}
      * @return a non-null immutable list of matching {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> findAllAnnotations(TypeMirror type, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (type == null) {
             return emptyList();
@@ -795,6 +825,8 @@ public interface AnnotationUtils extends Utils {
         return findAllAnnotations(ofTypeElement(type), annotationFilters);
     }
 
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> findAllAnnotations(TypeElement element, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (element == null) {
             return emptyList();
@@ -810,7 +842,7 @@ public interface AnnotationUtils extends Utils {
             annotations = filterAll(annotations, annotationFilters);
         }
 
-        return isEmpty(annotations) ? emptyList() : annotations;
+        return isEmpty(annotations) ? emptyList() : unmodifiableList(annotations);
     }
 
     /**
@@ -825,6 +857,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationFilters a varargs array of predicates used to filter annotations; may be empty or {@code null}
      * @return a non-null immutable list of matching {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> findAllAnnotations(Element element, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (element == null) {
             return emptyList();
@@ -852,6 +886,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationFilters a varargs array of predicates used to filter annotations; may be empty or {@code null}
      * @return a non-null immutable list of {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, Type annotatedType, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (processingEnv == null || annotatedType == null) {
             return emptyList();
@@ -872,6 +908,8 @@ public interface AnnotationUtils extends Utils {
      * @param annotationFilters a varargs array of predicates used to filter annotations; may be empty or {@code null}
      * @return a non-null immutable list of matching {@link AnnotationMirror} instances; never {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<AnnotationMirror> findAllAnnotations(ProcessingEnvironment processingEnv, CharSequence annotatedTypeName, Predicate<? super AnnotationMirror>... annotationFilters) {
         if (processingEnv == null || annotatedTypeName == null) {
             return emptyList();
@@ -1143,6 +1181,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of attribute names to their corresponding values; never {@code null},
      * returns an empty map if no annotation is found, the construct is {@code null}, or the annotation class is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<String, Object> getAttributesMap(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
         return getAttributesMap(annotatedConstruct, annotationClass, WITH_DEFAULT);
     }
@@ -1186,6 +1226,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of attribute names to their corresponding values; never {@code null},
      * returns an empty map if no annotation is found, the construct is {@code null}, or the annotation class is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<String, Object> getAttributesMap(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass, boolean withDefault) {
         return getAttributesMap(getAnnotation(annotatedConstruct, annotationClass), withDefault);
     }
@@ -1221,6 +1263,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of attribute names to their corresponding values; never {@code null},
      * returns an empty map if the annotation is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<String, Object> getAttributesMap(AnnotationMirror annotation) {
         return getAttributesMap(annotation, WITH_DEFAULT);
     }
@@ -1262,6 +1306,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of attribute names to their corresponding values; never {@code null},
      * returns an empty map if the annotation is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<String, Object> getAttributesMap(AnnotationMirror annotation, boolean withDefault) {
         Map<ExecutableElement, AnnotationValue> attributes = getElementValues(annotation, withDefault);
         int size = attributes.size();
@@ -1275,7 +1321,7 @@ public interface AnnotationUtils extends Utils {
             Object attributeValue = getAttribute(entry);
             attributesMap.put(attributeName, attributeValue);
         }
-        return attributesMap;
+        return unmodifiableMap(attributesMap);
     }
 
     /**
@@ -1318,6 +1364,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of executable elements (attribute methods) to their annotation values; never {@code null},
      * returns an empty map if no annotation is found or if the construct is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass) {
         return getElementValues(annotatedConstruct, annotationClass, WITH_DEFAULT);
     }
@@ -1368,6 +1416,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of executable elements (attribute methods) to their annotation values; never {@code null},
      * returns an empty map if no annotation is found or if the construct is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotatedConstruct annotatedConstruct, Class<? extends Annotation> annotationClass, boolean withDefault) {
         return getElementValues(getAnnotation(annotatedConstruct, annotationClass), withDefault);
     }
@@ -1405,6 +1455,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of executable elements (attribute methods) to their annotation values;
      * never {@code null}, returns an empty map if the annotation is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotationMirror annotation) {
         return getElementValues(annotation, WITH_DEFAULT);
     }
@@ -1448,6 +1500,8 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable map of executable elements (attribute methods) to their annotation values;
      * never {@code null}, returns an empty map if the annotation is {@code null}
      */
+    @Nonnull
+    @Immutable
     static Map<ExecutableElement, AnnotationValue> getElementValues(AnnotationMirror annotation, boolean withDefault) {
         if (annotation == null) {
             return emptyMap();
@@ -1467,7 +1521,7 @@ public interface AnnotationUtils extends Utils {
                 attributes.put(attributeMethod, annotationValue);
             }
         }
-        return attributes;
+        return unmodifiableMap(attributes);
     }
 
     /**
@@ -1508,6 +1562,8 @@ public interface AnnotationUtils extends Utils {
      * @return an entry containing the executable element (attribute method) and its corresponding annotation value;
      * returns null if the annotation is null, the attribute name is blank, or the attribute method cannot be found
      */
+    @Nullable
+    @Immutable
     static Entry<ExecutableElement, AnnotationValue> getElementValue(AnnotationMirror annotation, String attributeName, boolean withDefault) {
         if (annotation == null || isBlank(attributeName)) {
             return null;
@@ -1581,6 +1637,7 @@ public interface AnnotationUtils extends Utils {
      * returns {@code null} if the element values map is empty, the attribute name is blank, or no matching
      * attribute is found
      */
+    @Nullable
     static Entry<ExecutableElement, AnnotationValue> getElementValue(Map<ExecutableElement, AnnotationValue> elementValues, String attributeName) {
         if (isEmpty(elementValues)) {
             return null;
@@ -1629,6 +1686,7 @@ public interface AnnotationUtils extends Utils {
      * returns {@code null} if the annotation is {@code null}, the attribute name is blank,
      * or the attribute cannot be resolved
      */
+    @Nullable
     static <T> T getAttribute(AnnotationMirror annotation, String attributeName) {
         return getAttribute(annotation, attributeName, WITH_DEFAULT);
     }
@@ -1671,6 +1729,7 @@ public interface AnnotationUtils extends Utils {
      * returns {@code null} if the annotation is {@code null}, the attribute name is blank,
      * or the attribute cannot be resolved
      */
+    @Nullable
     static <T> T getAttribute(AnnotationMirror annotation, String attributeName, boolean withDefault) {
         Entry<ExecutableElement, AnnotationValue> attributeEntry = getElementValue(annotation, attributeName, withDefault);
         return getAttribute(attributeEntry);
@@ -1705,6 +1764,7 @@ public interface AnnotationUtils extends Utils {
      * @return the resolved value of the attribute if found; returns {@code null} if the entry is null,
      * or if either the attribute method or annotation value is unresolved
      */
+    @Nullable
     static <T> T getAttribute(Entry<ExecutableElement, AnnotationValue> elementValue) {
         if (elementValue == null) {
             return null;
@@ -1742,6 +1802,7 @@ public interface AnnotationUtils extends Utils {
      * @return the resolved value of the annotation's {@code value()} method if found;
      * returns {@code null} if the annotation is {@code null} or the value cannot be resolved
      */
+    @Nullable
     static <T> T getValue(AnnotationMirror annotation) {
         return getAttribute(annotation, VALUE_ATTRIBUTE_NAME);
     }
@@ -1771,6 +1832,7 @@ public interface AnnotationUtils extends Utils {
      * @param annotation the specified annotation, may be {@code null}
      * @return a non-null array of {@link ElementType}; never {@code null}, returns an empty array if the annotation is {@code null}
      */
+    @Nonnull
     static ElementType[] getElementTypes(AnnotationMirror annotation) {
         return annotation == null ? EMPTY_ELEMENT_TYPE_ARRAY : getElementTypes(annotation.getAnnotationType());
     }
@@ -1800,6 +1862,7 @@ public interface AnnotationUtils extends Utils {
      * @return a non-null immutable array of {@link ElementType}; never {@code null},
      * returns an empty array if no {@link Target} annotation is present
      */
+    @Nonnull
     static ElementType[] getElementTypes(DeclaredType annotationType) {
         AnnotationMirror targetAnnotation = findAnnotation(annotationType, Target.class);
         ElementType[] elementTypes = getValue(targetAnnotation);
