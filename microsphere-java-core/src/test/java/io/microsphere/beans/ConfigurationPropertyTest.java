@@ -40,7 +40,7 @@ class ConfigurationPropertyTest {
     private static final String TEST_NAME = "test-name";
 
     private static final Class<?> TEST_TYPE = Integer.class;
-    
+
     private static final String TEST_VALUE = "test-value";
 
     private static final String TEST_DEFAULT_VALUE = "default-value";
@@ -48,7 +48,7 @@ class ConfigurationPropertyTest {
     private static final String TEST_DESCRIPTION = "test-description";
 
     private static final String TEST_TARGET = "target";
-    
+
     private ConfigurationProperty configurationProperty;
 
     @BeforeEach
