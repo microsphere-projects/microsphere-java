@@ -1256,5 +1256,5 @@ public abstract class MapUtils implements Utils {
 
     private MapUtils() {
     }
-    
+
 }
