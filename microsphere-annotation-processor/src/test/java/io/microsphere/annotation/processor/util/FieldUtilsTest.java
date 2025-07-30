@@ -105,26 +105,26 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredFieldsOnNull() {
+    void testGetDeclaredFieldsOnNull() {
         assertTrue(getDeclaredFields(NULL_ELEMENT).isEmpty());
         assertTrue(getDeclaredFields(NULL_TYPE_MIRROR).isEmpty());
     }
 
     @Test
-    public void testGetAllDeclaredFields() {
+    void testGetAllDeclaredFields() {
         TypeElement type = getTypeElement(Model.class);
         List<VariableElement> fields = getAllDeclaredFields(type);
         assertModelAllFields(fields);
     }
 
     @Test
-    public void testGetAllDeclaredFieldsOnNull() {
+    void testGetAllDeclaredFieldsOnNull() {
         assertTrue(getAllDeclaredFields(NULL_ELEMENT).isEmpty());
         assertTrue(getAllDeclaredFields(NULL_TYPE_MIRROR).isEmpty());
     }
 
     @Test
-    public void testFindField() {
+    void testFindField() {
         TypeElement type = getTypeElement(Model.class);
         testFindField(type, "f", float.class);
         testFindField(type, "d", double.class);
@@ -140,7 +140,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindFieldOnNull() {
+    void testFindFieldOnNull() {
         TypeElement type = getTypeElement(Model.class);
         assertNull(findField(NULL_ELEMENT, "f"));
         assertNull(findField(NULL_ELEMENT, NULL_STRING));
@@ -153,7 +153,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredFields() {
+    void testFindDeclaredFields() {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = findAllDeclaredFields(type, alwaysTrue());
@@ -168,13 +168,13 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindDeclaredFieldsOnNull() {
+    void testFindDeclaredFieldsOnNull() {
         assertEmptyList(findDeclaredFields(NULL_ELEMENT, alwaysTrue()));
         assertEmptyList(findDeclaredFields(NULL_TYPE_MIRROR, alwaysTrue()));
     }
 
     @Test
-    public void testFindAllDeclaredFields() {
+    void testFindAllDeclaredFields() {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = findAllDeclaredFields(type, alwaysTrue());
@@ -189,18 +189,18 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredFieldsOnNull() {
+    void testFindAllDeclaredFieldsOnNull() {
         assertEmptyList(findAllDeclaredFields(NULL_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllDeclaredFields(NULL_TYPE_MIRROR, alwaysTrue()));
     }
 
     @Test
-    public void testFilterDeclaredFieldsOnNull() {
+    void testFilterDeclaredFieldsOnNull() {
         assertFilterDeclaredFieldsReturningEmptyList(NULL_TYPE_MIRROR);
     }
 
     @Test
-    public void testFilterDeclaredFields() {
+    void testFilterDeclaredFields() {
         TypeMirror type = getTypeMirror(Model.class);
         List<VariableElement> fields = filterDeclaredFields(type, true, alwaysTrue());
         assertModelAllFields(fields);
@@ -216,13 +216,13 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFilterDeclaredFieldsOnNoDeclaredMembers() {
+    void testFilterDeclaredFieldsOnNoDeclaredMembers() {
         TypeMirror type = getTypeMirror(Serializable.class);
         assertFilterDeclaredFieldsReturningEmptyList(type);
     }
 
     @Test
-    public void testFilterDeclaredFieldsOnNoDeclaredFields() {
+    void testFilterDeclaredFieldsOnNoDeclaredFields() {
         TypeMirror type = getTypeMirror(Object.class);
         assertFilterDeclaredFieldsReturningEmptyList(type);
     }
@@ -239,7 +239,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsEnumField() {
+    void testIsEnumField() {
         TypeElement type = getTypeElement(Color.class);
 
         VariableElement field = findField(type, "RED");
@@ -259,13 +259,13 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsNonStaticField() {
+    void testIsNonStaticField() {
         TypeElement type = getTypeElement(Model.class);
         assertTrue(isNonStaticField(findField(type, "f")));
     }
 
     @Test
-    public void testIsNonStaticFieldOnStaticField() {
+    void testIsNonStaticFieldOnStaticField() {
         TypeElement type = getTypeElement(Color.class);
         for (Color color : Color.values()) {
             assertFalse(isNonStaticField(findField(type, color.name())));
@@ -273,7 +273,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsNonStaticFieldOnMethod() {
+    void testIsNonStaticFieldOnMethod() {
         TypeElement type = getTypeElement(Model.class);
         ExecutableElement method = findMethod(type, "setF", float.class);
         for (VariableElement parameter : method.getParameters()) {
@@ -282,7 +282,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsField() {
+    void testIsField() {
         TypeElement type = getTypeElement(Model.class);
         assertTrue(isField(findField(type, "f")));
         assertTrue(isField(findField(type, "f"), PRIVATE));
@@ -292,7 +292,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsFieldOnMethod() {
+    void testIsFieldOnMethod() {
         TypeElement type = getTypeElement(Model.class);
         ExecutableElement method = findMethod(type, "getF");
         for (VariableElement parameter : method.getParameters()) {
@@ -301,7 +301,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsFieldOnNull() {
+    void testIsFieldOnNull() {
         assertFalse(isField(NULL_FIELD));
         assertFalse(isField(NULL_FIELD, PUBLIC, STATIC, FINAL));
 
@@ -310,7 +310,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetNonStaticFields() {
+    void testGetNonStaticFields() {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getNonStaticFields(type);
@@ -324,20 +324,20 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetNonStaticFieldsOnNull() {
+    void testGetNonStaticFieldsOnNull() {
         assertTrue(getNonStaticFields(NULL_TYPE_MIRROR).isEmpty());
         assertTrue(getNonStaticFields(NULL_ELEMENT).isEmpty());
     }
 
     @Test
-    public void testGetNonStaticFieldsOnEnum() {
+    void testGetNonStaticFieldsOnEnum() {
         TypeElement type = getTypeElement(ElementType.class);
         List<VariableElement> fields = getNonStaticFields(type);
         assertEmptyList(fields);
     }
 
     @Test
-    public void testGetAllNonStaticFields() {
+    void testGetAllNonStaticFields() {
         TypeElement type = getTypeElement(Model.class);
 
         List<VariableElement> fields = getAllNonStaticFields(type);
@@ -351,7 +351,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testEqualsFieldName() {
+    void testEqualsFieldName() {
         TypeElement type = getTypeElement(Model.class);
         String fieldName = "f";
         VariableElement field = findField(type, fieldName);
@@ -360,7 +360,7 @@ class FieldUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testEqualsFieldNameOnNull() {
+    void testEqualsFieldNameOnNull() {
         TypeElement type = getTypeElement(Model.class);
         String fieldName = "f";
         VariableElement field = findField(type, fieldName);

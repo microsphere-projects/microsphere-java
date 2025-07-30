@@ -17,6 +17,8 @@
 
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
@@ -57,6 +59,7 @@ import static io.microsphere.collection.CollectionUtils.emptyIterator;
  * @see AbstractDeque
  * @since 1.0.0
  */
+@Immutable
 public class EmptyDeque<E> extends AbstractDeque<E> implements Serializable {
 
     private static final long serialVersionUID = -1L;

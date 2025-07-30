@@ -19,6 +19,8 @@ package io.microsphere.util;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ShutdownHookUtils.clearShutdownHookCallbacks;
+import static io.microsphere.util.ShutdownHookUtils.shutdownHookCallbacks;
 
 /**
  * The Thread for executing the {@link Runnable} callbacks
@@ -43,11 +45,11 @@ class ShutdownHookCallbacksThread extends Thread {
     @Override
     public void run() {
         executeShutdownHookCallbacks();
-        ShutdownHookUtils.clearShutdownHookCallbacks();
+        clearShutdownHookCallbacks();
     }
 
     private void executeShutdownHookCallbacks() {
-        for (Runnable callback : ShutdownHookUtils.shutdownHookCallbacks) {
+        for (Runnable callback : shutdownHookCallbacks) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The ShutdownHook Callback is about to run : {}", callback);
             }

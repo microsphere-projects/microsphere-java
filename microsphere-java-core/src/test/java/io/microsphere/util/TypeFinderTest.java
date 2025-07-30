@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class TypeFinderTest extends AbstractTestCase {
 
     @Test
-    public void testConstructorOnNullType() {
+    void testConstructorOnNullType() {
         assertThrows(IllegalArgumentException.class, () -> classFinder(null, true, true, true, true));
         assertThrows(IllegalArgumentException.class, () -> classFinder(null, Include.values()));
         assertThrows(IllegalArgumentException.class, () -> classFinder(null, true, true, true, true));
@@ -47,88 +47,88 @@ class TypeFinderTest extends AbstractTestCase {
     }
 
     @Test
-    public void testConstructorOnNullIncludes() {
+    void testConstructorOnNullIncludes() {
         assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, null));
         assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, null));
     }
 
     @Test
-    public void testConstructorOnEmptyIncludes() {
+    void testConstructorOnEmptyIncludes() {
         assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, new Include[0]));
         assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, new Include[0]));
     }
 
     @Test
-    public void testConstructorOnNullTypeAndIncludes() {
+    void testConstructorOnNullTypeAndIncludes() {
         assertThrows(IllegalArgumentException.class, () -> classFinder(StringIntegerToBoolean.class, new Include[]{null}));
         assertThrows(IllegalArgumentException.class, () -> genericTypeFinder(StringIntegerToBoolean.class, new Include[]{null}));
     }
 
     @Test
-    public void testGetAllSuperClasses() {
+    void testGetAllSuperClasses() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS);
         List<Class<?>> types = classFinder.getTypes();
         assertValues(types, Object.class);
     }
 
     @Test
-    public void testGetAllInterfaces() {
+    void testGetAllInterfaces() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, INTERFACES);
         List<Class<?>> types = classFinder.getTypes();
         assertValues(types, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
 
     @Test
-    public void testGetAllInheritedClasses() {
+    void testGetAllInheritedClasses() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS, INTERFACES);
         List<Class<?>> types = classFinder.getTypes();
         assertValues(types, Object.class, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
 
     @Test
-    public void testGetAllClasses() {
+    void testGetAllClasses() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Class<?>> types = classFinder.getTypes();
         assertValues(types, StringIntegerToBooleanClass.class, Object.class, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
 
     @Test
-    public void testFindAllSuperClasses() {
+    void testFindAllSuperClasses() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS);
         List<Class<?>> types = classFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertSame(emptyList(), types);
     }
 
     @Test
-    public void testFindAllInterfaces() {
+    void testFindAllInterfaces() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, INTERFACES);
         List<Class<?>> types = classFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertValues(types, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
 
     @Test
-    public void testFindAllInheritedClasses() {
+    void testFindAllInheritedClasses() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS, INTERFACES);
         List<Class<?>> types = classFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertValues(types, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
 
     @Test
-    public void testFindAllClasses() {
+    void testFindAllClasses() {
         TypeFinder<Class<?>> classFinder = classFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Class<?>> types = classFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertValues(types, StringIntegerToBooleanClass.class, StringIntegerToBoolean.class, StringIntegerF1.class, StringBF2.class, BF3.class, BiFunction.class);
     }
 
     @Test
-    public void testGetAllGenericSuperClasses() {
+    void testGetAllGenericSuperClasses() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS);
         List<Type> types = genericTypeFinder.getTypes();
         assertValues(types, Object.class);
     }
 
     @Test
-    public void testGetAllGenericInterfaces() {
+    void testGetAllGenericInterfaces() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, INTERFACES);
         List<Type> types = genericTypeFinder.getTypes();
         assertEquals(5, types.size());
@@ -136,7 +136,7 @@ class TypeFinderTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllGenericInheritedClasses() {
+    void testGetAllGenericInheritedClasses() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS, INTERFACES);
         List<Type> types = genericTypeFinder.getTypes();
         assertEquals(6, types.size());
@@ -145,7 +145,7 @@ class TypeFinderTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllGenericClasses() {
+    void testGetAllGenericClasses() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Type> types = genericTypeFinder.getTypes();
         assertEquals(7, types.size());
@@ -155,14 +155,14 @@ class TypeFinderTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindAllGenericSuperClasses() {
+    void testFindAllGenericSuperClasses() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS);
         List<Type> types = genericTypeFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertSame(emptyList(), types);
     }
 
     @Test
-    public void testFindAllGenericInterfaces() {
+    void testFindAllGenericInterfaces() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, INTERFACES);
         List<Type> types = genericTypeFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertEquals(5, types.size());
@@ -170,7 +170,7 @@ class TypeFinderTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindAllGenericInheritedClasses() {
+    void testFindAllGenericInheritedClasses() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, HIERARCHICAL, SUPER_CLASS, INTERFACES);
         List<Type> types = genericTypeFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertEquals(5, types.size());
@@ -178,7 +178,7 @@ class TypeFinderTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindAllGenericClasses() {
+    void testFindAllGenericClasses() {
         TypeFinder<Type> genericTypeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, Include.values());
         List<Type> types = genericTypeFinder.findTypes(NON_OBJECT_TYPE_FILTER);
         assertEquals(6, types.size());

@@ -3,6 +3,7 @@
  */
 package io.microsphere.util.jar;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.ProtocolConstants;
@@ -97,7 +98,6 @@ public abstract class JarUtils implements Utils {
         }
     }
 
-
     /**
      * Resolves the relative path from the given JAR URL.
      *
@@ -171,6 +171,7 @@ public abstract class JarUtils implements Utils {
      * @return A read-only list of filtered JAR entries. Never null.
      */
     @Nonnull
+    @Immutable
     public static List<JarEntry> filter(JarFile jarFile, JarEntryFilter jarEntryFilter) {
         if (jarFile == null) {
             return emptyList();
@@ -180,6 +181,8 @@ public abstract class JarUtils implements Utils {
         return doFilter(jarEntriesList, jarEntryFilter);
     }
 
+    @Nonnull
+    @Immutable
     protected static List<JarEntry> doFilter(Iterable<JarEntry> jarEntries, JarEntryFilter jarEntryFilter) {
         List<JarEntry> jarEntriesList = new LinkedList<>();
         for (JarEntry jarEntry : jarEntries) {
@@ -384,4 +387,5 @@ public abstract class JarUtils implements Utils {
 
     private JarUtils() {
     }
+
 }

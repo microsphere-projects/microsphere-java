@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see ClassUtils
  * @since 1.0.0
  */
-public class ClassUtilsTest extends AbstractAnnotationProcessingTest {
+class ClassUtilsTest extends AbstractAnnotationProcessingTest {
 
     @Test
     void testGetClassName() {

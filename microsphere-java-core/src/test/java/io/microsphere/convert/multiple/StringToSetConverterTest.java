@@ -54,7 +54,7 @@ class StringToSetConverterTest {
     private StringToSetConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToSetConverter();
     }
 

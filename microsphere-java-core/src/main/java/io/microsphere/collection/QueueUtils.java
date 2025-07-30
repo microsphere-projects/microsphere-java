@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
@@ -89,6 +90,7 @@ public abstract class QueueUtils implements Utils {
      * @return an empty immutable queue instance
      */
     @Nonnull
+    @Immutable
     public static <E> Queue<E> emptyQueue() {
         return (Queue<E>) EMPTY_DEQUE;
     }
@@ -106,6 +108,8 @@ public abstract class QueueUtils implements Utils {
      * @param <E> the type of elements held in the deque
      * @return an empty immutable deque instance
      */
+    @Nonnull
+    @Immutable
     public static <E> Deque<E> emptyDeque() {
         return (Deque<E>) EMPTY_DEQUE;
     }
@@ -159,6 +163,8 @@ public abstract class QueueUtils implements Utils {
      * @return an unmodifiable view of the specified deque
      * @throws NullPointerException if the provided deque is null
      */
+    @Nonnull
+    @Immutable
     public static <E> Deque<E> unmodifiableDeque(Deque<E> deque) {
         return new UnmodifiableDeque(deque);
     }
@@ -183,6 +189,8 @@ public abstract class QueueUtils implements Utils {
      * @param element the sole element to be stored in the returned queue
      * @return a singleton immutable queue containing the specified element
      */
+    @Nonnull
+    @Immutable
     public static <E> Queue<E> singletonQueue(E element) {
         return new SingletonDeque<>(element);
     }
@@ -207,6 +215,8 @@ public abstract class QueueUtils implements Utils {
      * @param element the sole element to be stored in the returned deque
      * @return a singleton immutable deque containing the specified element
      */
+    @Nonnull
+    @Immutable
     public static <E> Deque<E> singletonDeque(E element) {
         return new SingletonDeque<>(element);
     }

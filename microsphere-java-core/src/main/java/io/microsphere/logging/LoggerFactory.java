@@ -63,10 +63,10 @@ public abstract class LoggerFactory implements Prioritized {
 
     private static final ClassLoader classLoader = LoggerFactory.class.getClassLoader();
 
-    @Nullable
+    @Nonnull
     private static final LoggerFactory factory = loadFactory();
 
-    @Nullable
+    @Nonnull
     private static LoggerFactory loadFactory() {
         List<LoggerFactory> availableFactories = loadAvailableFactories();
         return availableFactories.get(0);
@@ -120,6 +120,7 @@ public abstract class LoggerFactory implements Prioritized {
      *
      * @return <code>null</code> if not found
      */
+    @Nullable
     private Class<?> getDelegateLoggerClass() {
         String className = getDelegateLoggerClassName();
         Class<?> delegateLoggerClass = null;
@@ -135,6 +136,7 @@ public abstract class LoggerFactory implements Prioritized {
      *
      * @return non-null
      */
+    @Nonnull
     protected abstract String getDelegateLoggerClassName();
 
     /**

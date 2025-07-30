@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class ProcessManagerTest extends AbstractTestCase {
 
     @Test
-    public void test() throws Throwable {
+    void test() throws Throwable {
         ProcessManager processManager = INSTANCE;
         ProcessExecutor processExecutor = new ProcessExecutor("java", "-version");
         ExecutorService executorService = newFixedThreadPool(1);

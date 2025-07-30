@@ -57,7 +57,7 @@ class ConstructorUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetDeclaredConstructorsOnNull() {
+    void testGetDeclaredConstructorsOnNull() {
         assertSame(emptyList(), getDeclaredConstructors(NULL_TYPE_ELEMENT));
         assertSame(emptyList(), getDeclaredConstructors(NULL_TYPE_MIRROR));
     }

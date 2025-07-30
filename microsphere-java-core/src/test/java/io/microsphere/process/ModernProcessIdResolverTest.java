@@ -24,17 +24,17 @@ class ModernProcessIdResolverTest {
     private static final boolean isGEJava9 = testCurrentJavaVersion(GE, JAVA_VERSION_9);
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         resolver = new ModernProcessIdResolver();
     }
 
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertEquals(isGEJava9, resolver.supports());
     }
 
     @Test
-    public void testCurrent() {
+    void testCurrent() {
         if (isGEJava9) {
             assertNotNull(resolver.current());
         } else {
@@ -43,7 +43,7 @@ class ModernProcessIdResolverTest {
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(1, resolver.getPriority());
     }
 }

@@ -27,7 +27,7 @@ class AbstractDequeTest {
     private AbstractDeque<String> deque;
 
     @BeforeEach
-    void init() {
+    void setUp() {
 
         deque = new AbstractDeque<String>() {
 

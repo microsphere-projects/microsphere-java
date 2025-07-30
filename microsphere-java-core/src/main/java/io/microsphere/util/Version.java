@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.ClassDataRepository;
 
@@ -72,6 +73,7 @@ import static java.lang.Integer.parseInt;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@Immutable
 public class Version implements Comparable<Version>, Serializable {
 
     private static final long serialVersionUID = -6434504483466016691L;

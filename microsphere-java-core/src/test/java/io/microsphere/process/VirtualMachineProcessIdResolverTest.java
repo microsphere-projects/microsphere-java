@@ -19,22 +19,22 @@ class VirtualMachineProcessIdResolverTest {
     private VirtualMachineProcessIdResolver resolver;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         this.resolver = new VirtualMachineProcessIdResolver();
     }
 
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertTrue(resolver.supports());
     }
 
     @Test
-    public void testCurrent() {
+    void testCurrent() {
         assertNotNull(resolver.current());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(5, resolver.getPriority());
     }
 }

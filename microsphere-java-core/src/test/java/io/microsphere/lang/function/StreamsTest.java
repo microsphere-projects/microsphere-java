@@ -98,19 +98,19 @@ class StreamsTest {
     }
 
     @Test
-    public void testFilterSetOnArray() {
+    void testFilterSetOnArray() {
         Set<Integer> set = filterSet(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_SET, set);
     }
 
     @Test
-    public void testFilterSetOnIterable() {
+    void testFilterSetOnIterable() {
         Set<Integer> set = filterSet(INTEGERS_LIST, EVEN_PREDICATE);
         assertEquals(EVEN_SET, set);
     }
 
     @Test
-    public void testFilter() {
+    void testFilter() {
         List<Integer> list = filter(INTEGERS_LIST, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
 
@@ -119,7 +119,7 @@ class StreamsTest {
     }
 
     @Test
-    public void testFilterAll() {
+    void testFilterAll() {
         List<Integer> list = filterAll(INTEGERS_LIST, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
 
@@ -128,19 +128,19 @@ class StreamsTest {
     }
 
     @Test
-    public void testFilterAllList() {
+    void testFilterAllList() {
         List<Integer> list = filterAllList(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
     }
 
     @Test
-    public void testFilterAllSet() {
+    void testFilterAllSet() {
         Set<Integer> set = filterAllSet(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_SET, set);
     }
 
     @Test
-    public void testFilterAny() {
+    void testFilterAny() {
         List<Integer> list = filterAny(INTEGERS_LIST, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
 
@@ -149,19 +149,19 @@ class StreamsTest {
     }
 
     @Test
-    public void testFilterAnyList() {
+    void testFilterAnyList() {
         List<Integer> list = filterAnyList(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_LIST, list);
     }
 
     @Test
-    public void testFilterAnySet() {
+    void testFilterAnySet() {
         Set<Integer> set = filterAnySet(INTEGERS, EVEN_PREDICATE);
         assertEquals(EVEN_SET, set);
     }
 
     @Test
-    public void testFilterFirst() {
+    void testFilterFirst() {
         assertEquals(2, filterFirst(INTEGERS_LIST, EVEN_PREDICATE));
         assertEquals(2, filterFirst(INTEGERS_SET, EVEN_PREDICATE));
     }

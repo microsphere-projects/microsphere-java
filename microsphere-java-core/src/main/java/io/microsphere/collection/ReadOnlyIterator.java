@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.util.Iterator;
 
 /**
@@ -44,6 +46,7 @@ import java.util.Iterator;
  *
  * @param <E> the type of elements returned by this iterator
  */
+@Immutable
 public abstract class ReadOnlyIterator<E> implements Iterator<E> {
 
     @Override

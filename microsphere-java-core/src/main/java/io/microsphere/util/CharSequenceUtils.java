@@ -1,5 +1,9 @@
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nullable;
+
+import static java.lang.Character.isWhitespace;
+
 /**
  * The utilities class for {@link CharSequence}
  *
@@ -8,7 +12,6 @@ package io.microsphere.util;
  * @since 1.0.0
  */
 public abstract class CharSequenceUtils implements Utils {
-
 
     /**
      * Returns the length of the provided {@link CharSequence}.
@@ -27,7 +30,7 @@ public abstract class CharSequenceUtils implements Utils {
      * @param value the {@link CharSequence} to get the length from
      * @return the length of the provided value, or {@code 0} if it is {@code null}
      */
-    public static int length(CharSequence value) {
+    public static int length(@Nullable CharSequence value) {
         return value == null ? 0 : value.length();
     }
 
@@ -49,7 +52,7 @@ public abstract class CharSequenceUtils implements Utils {
      * @param value the {@link CharSequence} to check
      * @return {@code true} if the provided {@link CharSequence} is empty or null, otherwise {@code false}
      */
-    public static boolean isEmpty(CharSequence value) {
+    public static boolean isEmpty(@Nullable CharSequence value) {
         return length(value) == 0;
     }
 
@@ -70,8 +73,75 @@ public abstract class CharSequenceUtils implements Utils {
      * @param value the {@link CharSequence} to check
      * @return {@code true} if the provided {@link CharSequence} is not empty, otherwise {@code false}
      */
-    public static boolean isNotEmpty(CharSequence value) {
+    public static boolean isNotEmpty(@Nullable CharSequence value) {
         return length(value) > 0;
+    }
+
+
+    /**
+     * Checks whether the given {@code CharSequence} contains any whitespace characters.
+     *
+     * <p>
+     * A whitespace character is defined as any character that returns {@code true} when passed to
+     * {@link Character#isWhitespace(char)}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code containsWhitespace(null)} returns {@code false}</li>
+     *     <li>{@code containsWhitespace("")} returns {@code false}</li>
+     *     <li>{@code containsWhitespace("hello world")} returns {@code true}</li>
+     *     <li>{@code containsWhitespace("hello\tworld")} returns {@code true}</li>
+     *     <li>{@code containsWhitespace("helloworld")} returns {@code false}</li>
+     * </ul>
+     *
+     * @param str the {@code CharSequence} to check (may be {@code null})
+     * @return {@code true} if the provided sequence is not empty and contains at least one whitespace character;
+     * otherwise, {@code false}
+     */
+    public static boolean containsWhitespace(@Nullable CharSequence str) {
+        int strLen = length(str);
+        for (int i = 0; i < strLen; i++) {
+            if (isWhitespace(str.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Trims all whitespace characters from the given {@link CharSequence}.
+     *
+     * <p>
+     * This method removes all whitespace characters (as defined by {@link Character#isWhitespace(char)})
+     * from the beginning, end, and middle of the input sequence. If the input is {@code null} or empty,
+     * it will be returned as-is.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <ul>
+     *     <li>{@code trimAllWhitespace(null)} returns {@code null}</li>
+     *     <li>{@code trimAllWhitespace("")} returns {@code ""}</li>
+     *     <li>{@code trimAllWhitespace("  hello  world  ")} returns {@code "helloworld"}</li>
+     *     <li>{@code trimAllWhitespace("  \t\n  h e l l o  \r\n\f")} returns {@code "hello"}</li>
+     * </ul>
+     *
+     * @param str the {@link CharSequence} to trim (may be {@code null})
+     * @return a new {@link CharSequence} with all whitespace characters removed, or the original if none exist
+     */
+    public static CharSequence trimAllWhitespace(CharSequence str) {
+        int len = length(str);
+        if (len < 1) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++) {
+            char c = str.charAt(i);
+            if (!isWhitespace(c)) {
+                sb.append(c);
+            }
+        }
+        return sb;
     }
 
     private CharSequenceUtils() {

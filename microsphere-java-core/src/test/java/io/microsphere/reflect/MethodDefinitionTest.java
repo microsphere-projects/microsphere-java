@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see MethodDefinition
  * @since 1.0.0
  */
-public class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
+class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
 
     private static final Logger logger = LoggerFactory.getLogger(MethodDefinitionTest.class);
 
@@ -44,21 +44,21 @@ public class MethodDefinitionTest extends AbstractExecutableDefinitionTest<Metho
     }
 
     @Test
-    public void testGetMethodName() {
+    void testGetMethodName() {
         for (MethodDefinition definition : definitions) {
             assertEquals(definition.getName(), definition.getMethodName());
         }
     }
 
     @Test
-    public void testGetMethod() {
+    void testGetMethod() {
         for (MethodDefinition definition : definitions) {
             assertEquals(definition.getMember(), definition.getMethod());
         }
     }
 
     @Test
-    public void testInvoke() {
+    void testInvoke() {
         for (MethodDefinition definition : definitions) {
             assertNull(definition.invoke(this, definition.toString()));
         }

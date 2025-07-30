@@ -23,7 +23,7 @@ class FilterOperatorTest {
     PackageNameClassFilter filter2 = new PackageNameClassFilter("io.microsphere", true);
 
     @Test
-    public void testAND() {
+    void testAND() {
         Filter filter = AND.createFilter(filter1, filter2);
         assertFalse(filter.accept(null));
 
@@ -32,19 +32,19 @@ class FilterOperatorTest {
     }
 
     @Test
-    public void testANDOnNullFilters() {
+    void testANDOnNullFilters() {
         Filter filter = AND.createFilter(null);
         assertTrue(filter.accept(null));
     }
 
     @Test
-    public void testANDOnEmptyFilters() {
+    void testANDOnEmptyFilters() {
         Filter filter = AND.createFilter(new Filter[0]);
         assertTrue(filter.accept(null));
     }
 
     @Test
-    public void testOR() {
+    void testOR() {
         Filter filter = OR.createFilter(filter1, filter2);
         assertTrue(filter.accept(null));
 
@@ -53,19 +53,19 @@ class FilterOperatorTest {
     }
 
     @Test
-    public void testOROnNullFilters() {
+    void testOROnNullFilters() {
         Filter filter = OR.createFilter(null);
         assertTrue(filter.accept(null));
     }
 
     @Test
-    public void testOROnEmptyFilters() {
+    void testOROnEmptyFilters() {
         Filter filter = OR.createFilter(new Filter[0]);
         assertTrue(filter.accept(null));
     }
 
     @Test
-    public void testXOR() {
+    void testXOR() {
         Filter filter = XOR.createFilter(filter1, filter2);
         assertFalse(filter.accept(null));
 
@@ -74,13 +74,13 @@ class FilterOperatorTest {
     }
 
     @Test
-    public void testXOROnNullFilters() {
+    void testXOROnNullFilters() {
         Filter filter = XOR.createFilter(null);
         assertTrue(filter.accept(null));
     }
 
     @Test
-    public void testXOROnEmptyFilters() {
+    void testXOROnEmptyFilters() {
         Filter filter = XOR.createFilter(new Filter[0]);
         assertTrue(filter.accept(null));
     }

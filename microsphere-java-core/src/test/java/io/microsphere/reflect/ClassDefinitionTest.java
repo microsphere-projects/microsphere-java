@@ -27,7 +27,7 @@ import static java.util.Collections.emptyList;
  * @see ClassDefinition
  * @since 1.0.0
  */
-public class ClassDefinitionTest extends AbstractReflectiveDefinitionTest<ClassDefinition> {
+class ClassDefinitionTest extends AbstractReflectiveDefinitionTest<ClassDefinition> {
 
     @Override
     protected List<Object> getTailConstructorArguments() {

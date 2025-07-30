@@ -26,7 +26,7 @@ class ExecutorUtilsTest extends AbstractTestCase {
     private ExecutorService executorService;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         executorService = newSingleThreadExecutor(newThreadFactory("ExecutorUtilsTest-", true));
         executorService.execute(() -> log("Running..."));
     }

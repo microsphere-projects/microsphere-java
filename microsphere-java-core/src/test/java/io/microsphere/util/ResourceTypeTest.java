@@ -48,7 +48,7 @@ class ResourceTypeTest {
 
 
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertTrue(DEFAULT.supports(null));
         assertTrue(DEFAULT.supports(""));
         assertTrue(DEFAULT.supports("a"));
@@ -65,7 +65,7 @@ class ResourceTypeTest {
     }
 
     @Test
-    public void testNormalize() {
+    void testNormalize() {
         assertNull(DEFAULT.normalize(null));
         assertEquals("test", DEFAULT.normalize("test"));
 
@@ -84,7 +84,7 @@ class ResourceTypeTest {
     }
 
     @Test
-    public void testResolve() {
+    void testResolve() {
         for (Map.Entry<ClassLoaderUtils.ResourceType, String[]> entry : resourceNamesMap.entrySet()) {
             ClassLoaderUtils.ResourceType resourceType = entry.getKey();
             String[] resourceNames = entry.getValue();

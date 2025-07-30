@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
@@ -34,8 +35,10 @@ import java.util.concurrent.ConcurrentNavigableMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
 
-import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.PropertiesUtils.flatProperties;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.lang.Float.MIN_VALUE;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
@@ -59,6 +62,48 @@ public abstract class MapUtils implements Utils {
      * The fixed load factor for {@link HashMap} or {@link Hashtable} = 1.00
      */
     public static final float FIXED_LOAD_FACTOR = 1.00f;
+
+    /**
+     * Checks if the specified object is an instance of {@link Map}.
+     *
+     * <p>This method provides a convenient way to determine whether a given object
+     * is a map. It returns {@code true} if the object is an instance of {@link Map},
+     * otherwise {@code false}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * System.out.println(MapUtils.isMap(new HashMap<>())); // true
+     * System.out.println(MapUtils.isMap(new ArrayList<>())); // false
+     * System.out.println(MapUtils.isMap(null)); // false
+     * }</pre>
+     *
+     * @param instance the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link Map}, otherwise {@code false}
+     */
+    public static boolean isMap(Object instance) {
+        return instance instanceof Map;
+    }
+
+    /**
+     * Checks if the specified class type is an implementation of {@link Map}.
+     *
+     * <p>This method provides a convenient way to determine whether a given class
+     * implements the {@link Map} interface. It returns {@code true} if the class
+     * is assignable from {@link Map}, indicating that it is a map type.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * System.out.println(MapUtils.isMap(HashMap.class)); // true
+     * System.out.println(MapUtils.isMap(List.class));    // false
+     * System.out.println(MapUtils.isMap(null));         // false
+     * }</pre>
+     *
+     * @param type the class type to check, may be {@code null}
+     * @return {@code true} if the type is a {@link Map} implementation, otherwise {@code false}
+     */
+    public static boolean isMap(Class<?> type) {
+        return isAssignableFrom(Map.class, type);
+    }
 
     /**
      * Checks if the specified map is either {@code null} or empty.
@@ -110,6 +155,33 @@ public abstract class MapUtils implements Utils {
     }
 
     /**
+     * Returns the size of the specified map, or {@code 0} if the map is {@code null}.
+     *
+     * <p>This method provides a null-safe way to obtain the size of a map. It avoids
+     * {@link NullPointerException} by returning zero when the input map is {@code null}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Integer> map1 = new HashMap<>();
+     * map1.put("one", 1);
+     * map1.put("two", 2);
+     * System.out.println(size(map1)); // Output: 2
+     *
+     * Map<String, Integer> map2 = null;
+     * System.out.println(size(map2)); // Output: 0
+     *
+     * Map<String, Integer> map3 = new HashMap<>();
+     * System.out.println(size(map3)); // Output: 0
+     * }</pre>
+     *
+     * @param map the map whose size is to be returned, may be {@code null}
+     * @return the size of the map, or {@code 0} if the map is {@code null}
+     */
+    public static int size(Map<?, ?> map) {
+        return map == null ? 0 : map.size();
+    }
+
+    /**
      * Creates an immutable map containing a single key-value pair.
      *
      * <p>This method provides a convenient way to create a small, read-only map
@@ -129,6 +201,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pair
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key, V value) {
         return ofMap(key, value);
     }
@@ -155,6 +228,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2) {
         return ofMap(key1, value1, key2, value2);
     }
@@ -184,6 +258,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3) {
         return ofMap(key1, value1, key2, value2, key3, value3);
     }
@@ -216,6 +291,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4) {
         return ofMap(key1, value1, key2, value2, key3, value3, key4, value4);
     }
@@ -251,6 +327,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pairs
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(K key1, V value1, K key2, V value2, K key3, V value3, K key4, V value4, K key5, V value5) {
         return ofMap(key1, value1, key2, value2, key3, value3, key4, value4, key5, value5);
     }
@@ -277,6 +354,7 @@ public abstract class MapUtils implements Utils {
      * @throws IllegalArgumentException if the number of arguments is not even (indicating incomplete key-value pairs)
      */
     @Nonnull
+    @Immutable
     public static Map of(Object... values) {
         return ofMap(values);
     }
@@ -304,6 +382,7 @@ public abstract class MapUtils implements Utils {
      * @throws NullPointerException if the entries array is null
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> of(Map.Entry<? extends K, ? extends V>... entries) {
         int length = length(entries);
         if (length < 1) {
@@ -336,6 +415,7 @@ public abstract class MapUtils implements Utils {
      * @return a new immutable map containing the specified key-value pair
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K key, V value) {
         return singletonMap(key, value);
     }
@@ -362,6 +442,7 @@ public abstract class MapUtils implements Utils {
      * @throws IllegalArgumentException if the number of arguments is not even (indicating incomplete key-value pairs)
      */
     @Nonnull
+    @Immutable
     public static Map ofMap(Object... keyValuePairs) {
         int length = length(keyValuePairs);
         if (length < 1) {
@@ -949,9 +1030,10 @@ public abstract class MapUtils implements Utils {
      * @throws NullPointerException if values or entryMapper is null
      */
     @Nonnull
+    @Immutable
     public static <K, V, E> Map<K, V> toFixedMap(Collection<E> values,
                                                  Function<E, Map.Entry<K, V>> entryMapper) {
-        int size = size(values);
+        int size = CollectionUtils.size(values);
         if (size < 1) {
             return emptyMap();
         }
@@ -1022,10 +1104,157 @@ public abstract class MapUtils implements Utils {
      * @see ImmutableEntry
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map.Entry<K, V> immutableEntry(K key, V value) {
         return ImmutableEntry.of(key, value);
     }
 
+    /**
+     * Flattens a nested map of properties into a single-level map.
+     *
+     * <p>If the input map is empty or null, the same map instance is returned.</p>
+     *
+     * <p>For example, given the following input:
+     * <pre>{@code
+     * {
+     *   "a": "1",
+     *   "b": {
+     *     "c": "2",
+     *     "d": {
+     *       "e": "3"
+     *     }
+     *   }
+     * }
+     * }</pre>
+     * The resulting flattened map would be:
+     * <pre>{@code
+     * {
+     *   "a": "1",
+     *   "b.c": "2",
+     *   "b.d.e": "3"
+     * }
+     * }</pre>
+     *
+     * @param map The map containing potentially nested properties to be flattened.
+     * @return A new unmodifiable map with all properties flattened to a single level.
+     */
+    @Nonnull
+    @Immutable
+    public static Map<String, Object> flattenMap(Map<String, Object> map) {
+        return flatProperties(map);
+    }
+
+    /**
+     * Converts a flat map with dot-separated keys into a nested map structure.
+     *
+     * <p>This method takes a map where keys represent hierarchical paths (e.g., "a.b.c") and
+     * transforms it into a nested map structure where each level of the hierarchy becomes
+     * a separate map. This is particularly useful for configuration properties or data
+     * that needs to be organized in a tree-like structure.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Object> flatMap = new LinkedHashMap<>();
+     * flatMap.put("a.b.1", "value1");
+     * flatMap.put("a.b.2", "value2");
+     * flatMap.put("a.c", "value3");
+     * flatMap.put("d", "value4");
+     *
+     * Map<String, Object> nested = MapUtils.nestedMap(flatMap);
+     * // Result:
+     * // {
+     * //   "a": {
+     * //     "b": {
+     * //       "1": "value1",
+     * //       "2": "value2"
+     * //     },
+     * //     "c": "value3"
+     * //   },
+     * //   "d": "value4"
+     * // }
+     * }</pre>
+     *
+     * @param map the flat map to be converted into a nested structure, may be {@code null}
+     * @return a new map with nested structure, or an empty map if input is {@code null} or empty
+     */
+    @Nonnull
+    @Immutable
+    public static Map<String, Object> nestedMap(Map<String, Object> map) {
+        Map<String, Object> nestedMap = newLinkedHashMap();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            String propertyName = entry.getKey();
+            String propertyValue = String.valueOf(entry.getValue());
+            int index = propertyName.indexOf(DOT_CHAR);
+            if (index > 0) {
+                String actualPropertyName = propertyName.substring(0, index);
+                String subPropertyName = propertyName.substring(index + 1, propertyName.length());
+                Object actualPropertyValue = nestedMap.get(actualPropertyName);
+                if (actualPropertyValue == null) {
+                    actualPropertyValue = newLinkedHashMap();
+                    nestedMap.put(actualPropertyName, actualPropertyValue);
+                }
+
+                if (actualPropertyValue instanceof Map) {
+                    Map<String, Object> nestedProperties = (Map<String, Object>) actualPropertyValue;
+                    Map<String, Object> subProperties = extraProperties(nestedProperties);
+                    subProperties.put(subPropertyName, propertyValue);
+                    Map<String, Object> subNestedMap = nestedMap(subProperties);
+                    nestedProperties.putAll(subNestedMap);
+                }
+            } else {
+                nestedMap.put(propertyName, propertyValue);
+            }
+        }
+        return unmodifiableMap(nestedMap);
+    }
+
+    /**
+     * Extracts and flattens properties from a nested map structure into a single-level map.
+     *
+     * <p>This method recursively processes the input map, converting any nested maps into
+     * dot-separated key paths in the resulting map. Non-map values are converted to strings.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Map<String, Object> nested = new LinkedHashMap<>();
+     * Map<String, Object> inner = new LinkedHashMap<>();
+     * inner.put("x", "10");
+     * inner.put("y", "20");
+     * nested.put("a", inner);
+     * nested.put("b", "value");
+     *
+     * Map<String, Object> result = MapUtils.extraProperties(nested);
+     * // Result: {"a.x"="10", "a.y"="20", "b"="value"}
+     * }</pre>
+     *
+     * @param map the map from which to extract properties, may be {@code null}
+     * @return a new map containing flattened properties, or an empty map if input is {@code null} or empty
+     */
+    @Nonnull
+    static Map<String, Object> extraProperties(Map<String, Object> map) {
+        int size = size(map);
+        Map<String, Object> properties = newLinkedHashMap(size);
+        if (size > 0) {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof Map) {
+                    Map<String, String> subProperties = extraProperties((Map) value);
+                    for (Map.Entry<String, String> e : subProperties.entrySet()) {
+                        String subKey = e.getKey();
+                        String subValue = e.getValue();
+                        properties.put(key + DOT_CHAR + subKey, subValue);
+                    }
+                } else if (value instanceof String) {
+                    properties.put(key, value.toString());
+                }
+            }
+        }
+        return properties;
+    }
+
     private MapUtils() {
     }
+
 }

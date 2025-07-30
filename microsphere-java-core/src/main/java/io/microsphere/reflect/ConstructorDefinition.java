@@ -16,6 +16,9 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
@@ -45,14 +48,16 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
  * @see ExecutableDefinition
  * @since 1.0.0
  */
-public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
+@Immutable
+public final class ConstructorDefinition extends ExecutableDefinition<Constructor> {
 
     /**
      * @param since               the 'since' version
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the class names of parameters
      */
-    public ConstructorDefinition(String since, String declaredClassName, String... parameterClassNames) {
+    public ConstructorDefinition(@Nonnull String since, @Nonnull String declaredClassName,
+                                 @Nonnull String... parameterClassNames) {
         super(since, declaredClassName, declaredClassName, parameterClassNames);
     }
 
@@ -62,7 +67,8 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the parameter class names
      */
-    public ConstructorDefinition(String since, Deprecation deprecation, String declaredClassName, String... parameterClassNames) {
+    public ConstructorDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+                                 @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, declaredClassName, parameterClassNames);
     }
 
@@ -71,7 +77,8 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the class names of parameters
      */
-    public ConstructorDefinition(Version since, String declaredClassName, String... parameterClassNames) {
+    public ConstructorDefinition(@Nonnull Version since, @Nonnull String declaredClassName,
+                                 @Nonnull String... parameterClassNames) {
         super(since, declaredClassName, declaredClassName, parameterClassNames);
     }
 
@@ -81,7 +88,8 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      * @param declaredClassName   The declared class name of the method
      * @param parameterClassNames the parameter class names
      */
-    public ConstructorDefinition(Version since, Deprecation deprecation, String declaredClassName, String... parameterClassNames) {
+    public ConstructorDefinition(@Nonnull Version since, @Nonnull Deprecation deprecation,
+                                 @Nonnull String declaredClassName, @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, declaredClassName, parameterClassNames);
     }
 
@@ -95,6 +103,7 @@ public class ConstructorDefinition extends ExecutableDefinition<Constructor> {
      *
      * @return <code>null</code> if the {@link Constructor} can't be resolved.
      */
+    @Nullable
     public Constructor<?> getConstructor() {
         return getMember();
     }

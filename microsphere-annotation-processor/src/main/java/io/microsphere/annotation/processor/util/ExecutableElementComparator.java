@@ -32,6 +32,23 @@ import java.util.List;
  *     <li>Comparing to the type names of parameters {@link String#compareTo(String) lexicographically}</li>
  * </ol>
  *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * class Example {
+ *     void methodA() {}
+ *     void methodB() {}
+ *     void methodB(String param1) {}
+ *     void methodB(String param1, int param2) {}
+ * }
+ * </pre>
+ *
+ * <p>When comparing methods:</p>
+ * <ul>
+ *     <li>{@code methodA} vs {@code methodB}: the names are compared lexicographically.</li>
+ *     <li>{@code methodB()} vs {@code methodB(String)}: the number of parameters is compared.</li>
+ *     <li>{@code methodB(String)} vs {@code methodB(String, int)}: the parameter type names are compared lexicographically.</li>
+ * </ul>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */

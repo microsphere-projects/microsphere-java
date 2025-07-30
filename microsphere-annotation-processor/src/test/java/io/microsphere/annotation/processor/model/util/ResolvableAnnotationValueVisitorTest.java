@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ResolvableAnnotationValueVisitor
  * @since 1.0.0
  */
-public class ResolvableAnnotationValueVisitorTest extends AbstractAnnotationProcessingTest {
+class ResolvableAnnotationValueVisitorTest extends AbstractAnnotationProcessingTest {
 
     private ResolvableAnnotationValueVisitor visitor;
 

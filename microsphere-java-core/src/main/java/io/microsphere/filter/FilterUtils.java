@@ -3,6 +3,7 @@
  */
 package io.microsphere.filter;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
@@ -56,6 +57,7 @@ public abstract class FilterUtils implements Utils {
      * @return
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> filter(Iterable<E> iterable, Filter<E> filter) {
         return filter(iterable, FilterOperator.AND, filter);
     }
@@ -70,6 +72,7 @@ public abstract class FilterUtils implements Utils {
      * @return
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> filter(Iterable<E> iterable, FilterOperator filterOperator, Filter<E>... filters) {
         List<E> list = new ArrayList<E>();
         Iterator<E> iterator = iterable.iterator();

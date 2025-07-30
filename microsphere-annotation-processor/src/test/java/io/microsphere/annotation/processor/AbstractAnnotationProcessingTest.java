@@ -133,12 +133,12 @@ public abstract class AbstractAnnotationProcessingTest {
     protected DeclaredType testDeclaredType;
 
     @BeforeEach
-    final void init() {
+    final void setUp() {
         testInstanceHolder.set(this);
     }
 
     @AfterEach
-    final void destroy() {
+    final void tearDown() {
         testInstanceHolder.remove();
     }
 

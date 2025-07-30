@@ -3,13 +3,14 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
-import io.microsphere.io.scanner.SimpleJarEntryScanner;
 import io.microsphere.logging.Logger;
+import io.microsphere.reflect.ConstructorUtils;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -28,8 +29,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
-import static io.microsphere.collection.MapUtils.newFixedHashMap;
-import static io.microsphere.collection.MapUtils.ofMap;
+import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
+import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.FileConstants.CLASS;
@@ -43,8 +44,9 @@ import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
+import static io.microsphere.io.filter.FileExtensionFilter.of;
+import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
@@ -56,6 +58,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.startsWith;
@@ -68,6 +71,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.reflect.Modifier.isAbstract;
 import static java.lang.reflect.Modifier.isInterface;
+import static java.util.Collections.addAll;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.synchronizedMap;
@@ -90,6 +94,51 @@ public abstract class ClassUtils implements Utils {
      */
     public static final String ARRAY_SUFFIX = "[]";
 
+    private static final Class<?>[] PRIMITIVE_TYPES_ARRAY = ofArray(
+            Void.TYPE,
+            Boolean.TYPE,
+            Byte.TYPE,
+            Character.TYPE,
+            Short.TYPE,
+            Integer.TYPE,
+            Long.TYPE,
+            Float.TYPE,
+            Double.TYPE
+    );
+
+    private static final Class<?>[] WRAPPER_TYPES_ARRAY = ofArray(
+            Void.class,
+            Boolean.class,
+            Byte.class,
+            Character.class,
+            Short.class,
+            Integer.class,
+            Long.class,
+            Float.class,
+            Double.class
+    );
+
+    @Nonnull
+    @Immutable
+    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(PRIMITIVE_TYPES_ARRAY);
+
+    @Nonnull
+    @Immutable
+    public static final Set<Class<?>> WRAPPER_TYPES = ofSet(WRAPPER_TYPES_ARRAY);
+
+    @Nonnull
+    @Immutable
+    public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
+            boolean[].class,
+            char[].class,
+            byte[].class,
+            short[].class,
+            int[].class,
+            long[].class,
+            float[].class,
+            double[].class
+    );
+
     /**
      * Simple Types including:
      * <ul>
@@ -109,98 +158,73 @@ public abstract class ClassUtils implements Utils {
      *
      * @see javax.management.openmbean.SimpleType
      */
-    public static final Set<Class<?>> SIMPLE_TYPES = ofSet(
-            Void.class,
-            Boolean.class,
-            Character.class,
-            Byte.class,
-            Short.class,
-            Integer.class,
-            Long.class,
-            Float.class,
-            Double.class,
-            String.class,
-            BigDecimal.class,
-            BigInteger.class,
-            Date.class,
-            Object.class);
+    @Immutable
+    public static final Set<Class<?>> SIMPLE_TYPES;
 
-    public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(
-            Void.TYPE,
-            Boolean.TYPE,
-            Character.TYPE,
-            Byte.TYPE,
-            Short.TYPE,
-            Integer.TYPE,
-            Long.TYPE,
-            Float.TYPE,
-            Double.TYPE
-    );
+    static {
+        Class<?>[] otherSimpleTypes = ofArray(
+                String.class,
+                BigDecimal.class,
+                BigInteger.class,
+                Date.class,
+                Object.class);
 
-    public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
-            boolean[].class,
-            char[].class,
-            byte[].class,
-            short[].class,
-            int[].class,
-            long[].class,
-            float[].class,
-            double[].class
-    );
+        Set<Class<?>> simpleTypes = newFixedLinkedHashSet(WRAPPER_TYPES_ARRAY.length + otherSimpleTypes.length);
+        addAll(simpleTypes, WRAPPER_TYPES_ARRAY);
+        addAll(simpleTypes, otherSimpleTypes);
 
-    /**
-     * A map with primitive type name as key and corresponding primitive type as
-     * value, for example: "int" -> "int.class".
-     */
-    private static final Map<String, Class<?>> PRIMITIVE_TYPE_NAME_MAP;
+        SIMPLE_TYPES = unmodifiableSet(simpleTypes);
+    }
 
     /**
      * A map with primitive wrapper type as key and corresponding primitive type
      * as value, for example: Integer.class -> int.class.
      */
-    private static final Map<Class<?>, Class<?>> PRIMITIVE_WRAPPER_TYPE_MAP;
+    @Immutable
+    private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPES_MAP;
+
+    static {
+        int size = WRAPPER_TYPES_ARRAY.length;
+        Map<Class<?>, Class<?>> wrapperToPrimitiveTypesMap = newFixedLinkedHashMap(size);
+
+        for (int i = 0; i < size; i++) {
+            Class<?> wrapperType = WRAPPER_TYPES_ARRAY[i];
+            Class<?> primitiveType = PRIMITIVE_TYPES_ARRAY[i];
+            wrapperToPrimitiveTypesMap.put(wrapperType, primitiveType);
+        }
+
+        WRAPPER_TO_PRIMITIVE_TYPES_MAP = unmodifiableMap(wrapperToPrimitiveTypesMap);
+    }
 
     /**
      * A map with primitive type as key and its wrapper type
      * as value, for example: int.class -> Integer.class.
      */
-    private static final Map<Class<?>, Class<?>> WRAPPER_PRIMITIVE_TYPE_MAP;
-
-    static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
-
-    private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = FileExtensionFilter.of(JAR_EXTENSION);
+    @Immutable
+    private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPES_MAP;
 
     static {
-        PRIMITIVE_WRAPPER_TYPE_MAP = ofMap(
-                Void.class, Void.TYPE,
-                Boolean.class, Boolean.TYPE,
-                Byte.class, Byte.TYPE,
-                Character.class, Character.TYPE,
-                Short.class, Short.TYPE,
-                Integer.class, Integer.TYPE,
-                Long.class, Long.TYPE,
-                Float.class, Float.TYPE,
-                Double.class, Double.TYPE
-        );
+        int size = PRIMITIVE_TYPES_ARRAY.length;
+        Map<Class<?>, Class<?>> primitiveToWrapperTypesMap = newFixedLinkedHashMap(size);
+
+        for (int i = 0; i < size; i++) {
+            Class<?> primitiveType = PRIMITIVE_TYPES_ARRAY[i];
+            Class<?> wrapperType = WRAPPER_TYPES_ARRAY[i];
+            primitiveToWrapperTypesMap.put(primitiveType, wrapperType);
+        }
+
+        PRIMITIVE_TO_WRAPPER_TYPES_MAP = unmodifiableMap(primitiveToWrapperTypesMap);
     }
 
-    static {
-        WRAPPER_PRIMITIVE_TYPE_MAP = ofMap(
-                Void.TYPE, Void.class,
-                Boolean.TYPE, Boolean.class,
-                Byte.TYPE, Byte.class,
-                Character.TYPE, Character.class,
-                Short.TYPE, Short.class,
-                Boolean.TYPE, Boolean.class,
-                Integer.TYPE, Integer.class,
-                Long.TYPE, Long.class,
-                Float.TYPE, Float.class,
-                Double.TYPE, Double.class
-        );
-    }
+    /**
+     * A map with primitive type name as key and corresponding primitive type as
+     * value, for example: "int" -> "int.class".
+     */
+    @Immutable
+    private static final Map<String, Class<?>> NAME_TO_TYPE_PRIMITIVE_MAP;
 
     static {
-        Map<String, Class<?>> primitiveTypeNameMap = newFixedHashMap(17);
+        Map<String, Class<?>> primitiveTypeNameMap = newFixedLinkedHashMap(PRIMITIVE_TYPES.size() + PRIMITIVE_ARRAY_TYPES.size());
 
         PRIMITIVE_TYPES.forEach(type -> {
             primitiveTypeNameMap.put(type.getName(), type);
@@ -210,8 +234,12 @@ public abstract class ClassUtils implements Utils {
             primitiveTypeNameMap.put(type.getName(), type);
         });
 
-        PRIMITIVE_TYPE_NAME_MAP = unmodifiableMap(primitiveTypeNameMap);
+        NAME_TO_TYPE_PRIMITIVE_MAP = unmodifiableMap(primitiveTypeNameMap);
     }
+
+    static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
+
+    private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = of(JAR_EXTENSION);
 
     /**
      * The specified type is array or not?*
@@ -338,6 +366,55 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
+     * Checks if the given type is a subtype of {@link CharSequence}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     boolean result = ClassUtils.isCharSequence(String.class); // returns true
+     *     boolean result2 = ClassUtils.isCharSequence(Integer.class); // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the type is a subtype of {@link CharSequence}, {@code false} otherwise
+     */
+    public static boolean isCharSequence(Class<?> type) {
+        return isAssignableFrom(CharSequence.class, type);
+    }
+
+    /**
+     * Checks if the given type is a subtype of {@link Number}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     boolean result = ClassUtils.isNumber(Integer.class); // returns true
+     *     boolean result2 = ClassUtils.isNumber(String.class); // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the type is a subtype of {@link Number}, {@code false} otherwise
+     */
+    public static boolean isNumber(Class<?> type) {
+        return isAssignableFrom(Number.class, type);
+    }
+
+    /**
+     * Checks if the given object is an instance of {@link Class}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isClass(String.class); // returns true
+     * boolean result2 = ClassUtils.isClass("Hello");      // returns false
+     * boolean result3 = ClassUtils.isClass(null);         // returns false
+     * }</pre>
+     *
+     * @param object the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link Class}, {@code false} otherwise
+     */
+    public static boolean isClass(Object object) {
+        return object instanceof Class;
+    }
+
+    /**
      * Resolve the primitive class from the specified type
      *
      * @param type the specified type
@@ -347,7 +424,7 @@ public abstract class ClassUtils implements Utils {
         if (isPrimitive(type)) {
             return type;
         }
-        return PRIMITIVE_WRAPPER_TYPE_MAP.get(type);
+        return WRAPPER_TO_PRIMITIVE_TYPES_MAP.get(type);
     }
 
     /**
@@ -357,14 +434,14 @@ public abstract class ClassUtils implements Utils {
      * @return <code>null</code> if not found
      */
     public static Class<?> resolveWrapperType(Class<?> primitiveType) {
-        if (PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(primitiveType)) {
+        if (isWrapperType(primitiveType)) {
             return primitiveType;
         }
-        return WRAPPER_PRIMITIVE_TYPE_MAP.get(primitiveType);
+        return PRIMITIVE_TO_WRAPPER_TYPES_MAP.get(primitiveType);
     }
 
     public static boolean isWrapperType(Class<?> type) {
-        return PRIMITIVE_WRAPPER_TYPE_MAP.containsKey(type);
+        return WRAPPER_TYPES.contains(type);
     }
 
     public static boolean arrayTypeEquals(Class<?> oneArrayType, Class<?> anotherArrayType) {
@@ -392,13 +469,13 @@ public abstract class ClassUtils implements Utils {
      * @return the primitive class, or <code>null</code> if the name does not
      * denote a primitive class or primitive array class
      */
-    public static Class<?> resolvePrimitiveClassName(String name) {
+    public static Class<?> resolvePrimitiveClassForName(String name) {
         Class<?> result = null;
         // Most class names will be quite long, considering that they
         // SHOULD sit in a package, so a length check is worthwhile.
         if (name != null && name.length() <= 8) {
             // Could be a primitive - likely.
-            result = PRIMITIVE_TYPE_NAME_MAP.get(name);
+            result = NAME_TO_TYPE_PRIMITIVE_MAP.get(name);
         }
         return result;
     }
@@ -433,6 +510,7 @@ public abstract class ClassUtils implements Utils {
      * @return all class names in class path
      */
     @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInClassPath(String classPath, boolean recursive) {
         String protocol = resolveProtocol(classPath);
         final String resolvedClassPath;
@@ -452,6 +530,8 @@ public abstract class ClassUtils implements Utils {
      * @param recursive is recursive on sub directories
      * @return all class names in class path
      */
+    @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInClassPath(File classPath, boolean recursive) {
         if (classPath == null || !classPath.exists()) {
             return emptySet();
@@ -481,12 +561,14 @@ public abstract class ClassUtils implements Utils {
      * @param recursive        is recursive on sub directories
      * @return all class names in directory
      */
+    @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
         if (classesDirectory == null || !classesDirectory.exists()) {
             return emptySet();
         }
 
-        Set<File> classFiles = SimpleFileScanner.INSTANCE.scan(classesDirectory, recursive, FileExtensionFilter.of(CLASS));
+        Set<File> classFiles = SimpleFileScanner.INSTANCE.scan(classesDirectory, recursive, of(CLASS));
         if (isEmpty(classFiles)) {
             return emptySet();
         }
@@ -508,6 +590,8 @@ public abstract class ClassUtils implements Utils {
      * @param recursive is recursive on sub directories
      * @return all class names in jar file
      */
+    @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
         if (jarFile == null || !jarFile.exists()) {
             return emptySet();
@@ -515,7 +599,7 @@ public abstract class ClassUtils implements Utils {
         Set<String> classNames;
         try {
             JarFile jarFile_ = new JarFile(jarFile);
-            Set<JarEntry> jarEntries = SimpleJarEntryScanner.INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
+            Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
             if (isEmpty(jarEntries)) {
                 classNames = emptySet();
             } else {
@@ -527,6 +611,7 @@ public abstract class ClassUtils implements Utils {
                         classNames.add(className);
                     }
                 }
+                classNames = unmodifiableSet(classNames);
             }
         } catch (Exception e) {
             classNames = emptySet();
@@ -564,6 +649,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllSuperClasses(Class<?> type) {
         return findAllSuperClasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -574,6 +661,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllInterfaces(Class<?> type) {
         return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -584,6 +673,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllInheritedTypes(Class<?> type) {
         return getAllInheritedClasses(type);
     }
@@ -594,6 +685,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllInheritedClasses(Class<?> type) {
         return findAllInheritedClasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -604,6 +697,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllClasses(Class<?> type) {
         return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -615,6 +710,8 @@ public abstract class ClassUtils implements Utils {
      * @param classFilters the filters for classes
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, false, classFilters);
     }
@@ -626,6 +723,8 @@ public abstract class ClassUtils implements Utils {
      * @param interfaceFilters the filters for interfaces
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
         return findTypes(type, false, true, false, true, interfaceFilters);
     }
@@ -637,6 +736,8 @@ public abstract class ClassUtils implements Utils {
      * @param classFilters the filters for types
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, true, classFilters);
     }
@@ -648,10 +749,14 @@ public abstract class ClassUtils implements Utils {
      * @param classFilters class filters
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, true, true, true, true, classFilters);
     }
 
+    @Nonnull
+    @Immutable
     protected static List<Class<?>> findTypes(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes,
                                               boolean includeGenericSuperclass, boolean includeGenericInterfaces,
                                               Predicate<? super Class<?>>... typeFilters) {
@@ -830,7 +935,7 @@ public abstract class ClassUtils implements Utils {
         }
 
         Constructor<T> constructor = (Constructor<T>) constructors.get(0);
-        return execute(() -> constructor.newInstance(args));
+        return ConstructorUtils.newInstance(constructor, args);
     }
 
     public static Class<?> getTopComponentType(Object array) {

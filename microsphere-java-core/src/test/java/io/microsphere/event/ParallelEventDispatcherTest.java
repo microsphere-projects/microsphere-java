@@ -37,14 +37,14 @@ class ParallelEventDispatcherTest {
     private AbstractEventListener listener;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         eventDispatcher = new ParallelEventDispatcher();
         listener = new EchoEventListener();
         eventDispatcher.addEventListener(listener);
     }
 
     @Test
-    public void testDispatchEvent() throws InterruptedException {
+    void testDispatchEvent() throws InterruptedException {
         eventDispatcher.dispatch(new EchoEvent("Hello,World"));
         ForkJoinPool.commonPool().awaitTermination(1, SECONDS);
         // event has been handled
@@ -52,7 +52,7 @@ class ParallelEventDispatcherTest {
     }
 
     @AfterAll
-    public static void destroy() {
+    static void afterAll() {
         ForkJoinPool.commonPool().shutdown();
     }
 

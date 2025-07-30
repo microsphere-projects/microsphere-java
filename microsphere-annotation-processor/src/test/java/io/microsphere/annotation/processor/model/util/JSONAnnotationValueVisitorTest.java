@@ -115,11 +115,7 @@ class JSONAnnotationValueVisitorTest extends AbstractAnnotationProcessingTest {
 
     @Test
     void testVisitArray() {
-        testVisit("properties", "\"properties\":[" +
-                "{\"name\":\"key\",\"type\":\"java.lang.String\",\"defaultValue\":\"default-value\",\"required\":true,\"description\":\"description\"}," +
-                "{\"name\":\"key2\",\"type\":\"java.lang.Integer\",\"defaultValue\":\"default-value2\",\"required\":true,\"description\":\"description2\"}," +
-                "{\"name\":\"key3\",\"type\":\"java.lang.Class\",\"defaultValue\":\"default-value3\",\"required\":true,\"description\":\"description3\"}" +
-                "]");
+        testVisit("properties", "\"properties\":[{\"name\":\"key\",\"type\":\"java.lang.String\",\"defaultValue\":\"default-value\",\"required\":true,\"description\":\"description\",\"source\":[]},{\"name\":\"key2\",\"type\":\"java.lang.Integer\",\"defaultValue\":\"default-value2\",\"required\":true,\"description\":\"description2\",\"source\":[]},{\"name\":\"key3\",\"type\":\"java.lang.Class\",\"defaultValue\":\"default-value3\",\"required\":true,\"description\":\"description3\",\"source\":[]}]");
     }
 
     @Test

@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ValueHolderTest {
 
     @Test
-    public void testValueHolder() {
+    void testValueHolder() {
         // Test empty constructor
         ValueHolder valueHolder = new ValueHolder();
         // Assert that the value is null
@@ -47,7 +47,7 @@ class ValueHolderTest {
     }
 
     @Test
-    public void testSetValue() {
+    void testSetValue() {
         ValueHolder valueHolder = new ValueHolder();
         String newValue = "new value";
         valueHolder.setValue(newValue);
@@ -56,14 +56,14 @@ class ValueHolderTest {
     }
 
     @Test
-    public void testGetValue() {
+    void testGetValue() {
         ValueHolder valueHolder = of("initial value");
         // Assert that the value is equal to the initial value
         assertEquals("initial value", valueHolder.getValue());
     }
 
     @Test
-    public void testReset() {
+    void testReset() {
         ValueHolder valueHolder = of(1);
         valueHolder.reset();
         assertNull(valueHolder.getValue());
@@ -71,13 +71,13 @@ class ValueHolderTest {
 
 
     @Test
-    public void testToString() {
+    void testToString() {
         ValueHolder valueHolder = of(1);
         assertEquals("ValueHolder{value=1}", valueHolder.toString());
     }
 
     @Test
-    public void testEquals() {
+    void testEquals() {
         ValueHolder valueHolder = of(1);
         assertEquals(valueHolder, valueHolder);
         assertNotEquals(1, valueHolder);
@@ -87,7 +87,7 @@ class ValueHolderTest {
     }
 
     @Test
-    public void testHashCode() {
+    void testHashCode() {
         assertEquals(1, of(1).hashCode());
         assertEquals("A".hashCode(), of("A").hashCode());
         assertEquals(0, of(null).hashCode());

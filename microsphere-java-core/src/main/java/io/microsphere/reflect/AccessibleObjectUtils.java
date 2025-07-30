@@ -113,7 +113,6 @@ public abstract class AccessibleObjectUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Testing Access to an Instance Field</h4>
      * <pre>{@code
      * MyClass instance = new MyClass();

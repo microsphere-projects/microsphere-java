@@ -53,7 +53,7 @@ class MavenArtifactTest {
     private MavenArtifact artifact;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         this.artifact = create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION);
     }
 

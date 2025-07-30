@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  * @see ThrowableBiConsumer
  * @since 1.0.0
  */
-public class ThrowableBiConsumerTest extends AbstractTestCase {
+class ThrowableBiConsumerTest extends AbstractTestCase {
 
     @Test
     void testAccept() throws Throwable {

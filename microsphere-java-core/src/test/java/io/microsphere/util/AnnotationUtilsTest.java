@@ -111,7 +111,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
 
 
     @Test
-    public void testNATIVE_ANNOTATION_TYPES() {
+    void testNATIVE_ANNOTATION_TYPES() {
         assertEquals(6, NATIVE_ANNOTATION_TYPES.size());
         assertTrue(NATIVE_ANNOTATION_TYPES.contains(Target.class));
         assertTrue(NATIVE_ANNOTATION_TYPES.contains(Retention.class));
@@ -122,7 +122,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNON_OBJECT_METHOD_PREDICATE() {
+    void testNON_OBJECT_METHOD_PREDICATE() {
         assertTrue(NON_OBJECT_METHOD_PREDICATE.test(findMethod(Target.class, "value")));
         assertTrue(NON_OBJECT_METHOD_PREDICATE.test(findMethod(Retention.class, "value")));
         assertTrue(NON_OBJECT_METHOD_PREDICATE.test(stringEqualsMethod));
@@ -131,103 +131,103 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNON_OBJECT_METHOD_PREDICATE_OnNull() {
+    void testNON_OBJECT_METHOD_PREDICATE_OnNull() {
         assertFalse(NON_OBJECT_METHOD_PREDICATE.test(null));
     }
 
     @Test
-    public void testANNOTATION_INTERFACE_METHOD_PREDICATE() {
+    void testANNOTATION_INTERFACE_METHOD_PREDICATE() {
         assertTrue(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(annotationTypeMethod));
         assertFalse(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(retentionValueMethod));
         assertFalse(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(targetValueMethod));
     }
 
     @Test
-    public void testANNOTATION_INTERFACE_METHOD_PREDICATE_OnNull() {
+    void testANNOTATION_INTERFACE_METHOD_PREDICATE_OnNull() {
         assertFalse(ANNOTATION_INTERFACE_METHOD_PREDICATE.test(null));
     }
 
     @Test
-    public void testNON_ANNOTATION_INTERFACE_METHOD_PREDICATE() {
+    void testNON_ANNOTATION_INTERFACE_METHOD_PREDICATE() {
         assertTrue(NON_ANNOTATION_INTERFACE_METHOD_PREDICATE.test(null));
     }
 
     @Test
-    public void testIsType() {
+    void testIsType() {
         assertTrue(isType(A.class));
     }
 
     @Test
-    public void testIsType_OnNull() {
+    void testIsType_OnNull() {
         assertFalse(isType(null));
     }
 
     @Test
-    public void testIsSameType() {
+    void testIsSameType() {
         assertTrue(isSameType(dataAccessOfA, DataAccess.class));
         assertTrue(isSameType(dataAccessOfB, DataAccess.class));
     }
 
     @Test
-    public void testIsSameTypeOnNull() {
+    void testIsSameTypeOnNull() {
         assertFalse(isSameType(null, DataAccess.class));
         assertFalse(isSameType(dataAccessOfA, null));
     }
 
     @Test
-    public void testFindAnnotation() {
+    void testFindAnnotation() {
         assertSame(dataAccessOfA, findAnnotation(A.class, DataAccess.class));
         assertSame(dataAccessOfB, findAnnotation(B.class, DataAccess.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationType() {
+    void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationType() {
         assertTrue(isMetaAnnotation(dataAccessOfA, Monitored.class));
         assertTrue(isMetaAnnotation(dataAccessOfA, ServiceMode.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypeOnNull() {
+    void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypeOnNull() {
         assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION, ServiceMode.class));
         assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypes() {
+    void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypes() {
         assertTrue(isMetaAnnotation(dataAccessOfA, Monitored.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(dataAccessOfA, ServiceMode.class, Target.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypesOnNull() {
+    void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypesOnNull() {
         assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION, Monitored.class, ServiceMode.class));
         assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_ANNOTATION_CLASSES));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypesOnEmpty() {
+    void testIsMetaAnnotationWithAnnotationObjectAndMetadataAnnotationTypesOnEmpty() {
         assertFalse(isMetaAnnotation(dataAccessOfA, TEST_EMPTY_ANNOTATION_CLASSES));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypes() {
+    void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypes() {
         assertTrue(isMetaAnnotation(dataAccessOfA, ofList(Monitored.class, ServiceMode.class)));
         assertTrue(isMetaAnnotation(dataAccessOfA, ofList(ServiceMode.class, Target.class)));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypesOnNull() {
+    void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypesOnNull() {
         assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION, ofList(Monitored.class, ServiceMode.class)));
         assertFalse(isMetaAnnotation(dataAccessOfA, TEST_NULL_LIST));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypesOnEmpty() {
+    void testIsMetaAnnotationWithAnnotationObjectAndIterableOfMetadataAnnotationTypesOnEmpty() {
         assertFalse(isMetaAnnotation(dataAccessOfA, TEST_EMPTY_LIST));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationType() {
+    void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationType() {
         assertTrue(isMetaAnnotation(Monitored.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, Monitored.class));
@@ -235,13 +235,13 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypeOnNull() {
+    void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypeOnNull() {
         assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION_CLASS, ServiceMode.class));
         assertFalse(isMetaAnnotation(DataAccess.class, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypes() {
+    void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypes() {
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class, Monitored.class));
         assertTrue(isMetaAnnotation(DataAccess.class, Monitored.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class, Target.class));
@@ -250,37 +250,37 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypesOnNull() {
+    void testIsMetaAnnotationWithAnnotationTypeAndMetadataAnnotationTypesOnNull() {
         assertFalse(isMetaAnnotation(DataAccess.class, TEST_NULL_ANNOTATION_CLASSES));
         assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION_CLASS, ServiceMode.class, Target.class));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypes() {
+    void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypes() {
         assertTrue(isMetaAnnotation(DataAccess.class, ofList(Monitored.class, ServiceMode.class)));
         assertTrue(isMetaAnnotation(DataAccess.class, ofList(ServiceMode.class, Target.class)));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnNull() {
+    void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnNull() {
         assertFalse(isMetaAnnotation(TEST_NULL_ANNOTATION_CLASS, ofList(Monitored.class, ServiceMode.class)));
         assertFalse(isMetaAnnotation(DataAccess.class, TEST_NULL_LIST));
     }
 
     @Test
-    public void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnEmpty() {
+    void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnEmpty() {
         assertFalse(isMetaAnnotation(DataAccess.class, TEST_EMPTY_LIST));
     }
 
     @Test
-    public void testGetAllDeclaredAnnotations() {
+    void testGetAllDeclaredAnnotations() {
         List<Annotation> annotations = getAllDeclaredAnnotations(A.class);
         assertEquals(1, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
     }
 
     @Test
-    public void testGetAllDeclaredAnnotationsOnInheritedClass() {
+    void testGetAllDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = getAllDeclaredAnnotations(B.class);
         assertEquals(3, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
@@ -290,7 +290,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllDeclaredAnnotationsOnAnnotation() {
+    void testGetAllDeclaredAnnotationsOnAnnotation() {
         List<Annotation> annotations = getAllDeclaredAnnotations(DataAccess.class);
         assertEquals(4, annotations.size());
         assertEquals(Inherited.class, annotations.get(0).annotationType());
@@ -300,19 +300,19 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllDeclaredAnnotationsNoNull() {
+    void testGetAllDeclaredAnnotationsNoNull() {
         assertSame(emptyList(), getAllDeclaredAnnotations(null));
     }
 
     @Test
-    public void testGetDeclaredAnnotations() {
+    void testGetDeclaredAnnotations() {
         List<Annotation> annotations = getDeclaredAnnotations(A.class);
         assertEquals(1, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
     }
 
     @Test
-    public void testGetDeclaredAnnotationsOnInheritedClass() {
+    void testGetDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = getDeclaredAnnotations(B.class);
         assertEquals(2, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
@@ -320,7 +320,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetDeclaredAnnotationsOnAnnotation() {
+    void testGetDeclaredAnnotationsOnAnnotation() {
         List<Annotation> annotations = getDeclaredAnnotations(DataAccess.class);
         assertEquals(4, annotations.size());
         assertEquals(Inherited.class, annotations.get(0).annotationType());
@@ -330,19 +330,19 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetDeclaredAnnotationsNoNull() {
+    void testGetDeclaredAnnotationsNoNull() {
         assertSame(emptyList(), getDeclaredAnnotations(null));
     }
 
     @Test
-    public void testFindAllDeclaredAnnotations() {
+    void testFindAllDeclaredAnnotations() {
         List<Annotation> annotations = findAllDeclaredAnnotations(A.class, annotation -> true);
         assertEquals(1, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
     }
 
     @Test
-    public void testFindAllDeclaredAnnotationsOnInheritedClass() {
+    void testFindAllDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = findAllDeclaredAnnotations(B.class, annotation -> true);
         assertEquals(3, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
@@ -352,7 +352,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindAllDeclaredAnnotationsOnAnnotation() {
+    void testFindAllDeclaredAnnotationsOnAnnotation() {
         List<Annotation> annotations = findAllDeclaredAnnotations(DataAccess.class, annotation -> true);
         assertEquals(4, annotations.size());
         assertEquals(Inherited.class, annotations.get(0).annotationType());
@@ -362,19 +362,19 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindAllDeclaredAnnotationsNoNull() {
+    void testFindAllDeclaredAnnotationsNoNull() {
         assertSame(emptyList(), findAllDeclaredAnnotations(null, annotation -> true));
     }
 
     @Test
-    public void testFindDeclaredAnnotations() {
+    void testFindDeclaredAnnotations() {
         List<Annotation> annotations = findDeclaredAnnotations(A.class, annotation -> true);
         assertEquals(1, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
     }
 
     @Test
-    public void testFindDeclaredAnnotationsOnInheritedClass() {
+    void testFindDeclaredAnnotationsOnInheritedClass() {
         List<Annotation> annotations = findDeclaredAnnotations(B.class, annotation -> true);
         assertEquals(2, annotations.size());
         assertEquals(DataAccess.class, annotations.get(0).annotationType());
@@ -382,7 +382,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindDeclaredAnnotationsOnAnnotation() {
+    void testFindDeclaredAnnotationsOnAnnotation() {
         List<Annotation> annotations = findDeclaredAnnotations(DataAccess.class, annotation -> true);
         assertEquals(4, annotations.size());
         assertEquals(Inherited.class, annotations.get(0).annotationType());
@@ -392,40 +392,40 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindDeclaredAnnotationsNoNull() {
+    void testFindDeclaredAnnotationsNoNull() {
         assertSame(emptyList(), findDeclaredAnnotations(null, annotation -> true));
     }
 
     @Test
-    public void testFilterAnnotations() {
+    void testFilterAnnotations() {
         assertFilterAnnotations(annotationsOfA);
         assertFilterAnnotations(annotationsOfB);
     }
 
     @Test
-    public void testFilterAnnotationsOnEmpty() {
+    void testFilterAnnotationsOnEmpty() {
         assertSame(emptyList(), filterAnnotations(EMPTY_ANNOTATION_ARRAY, annotation -> true));
         assertSame(emptyList(), filterAnnotations(emptyList(), annotation -> true));
     }
 
     @Test
-    public void testFilterAnnotationsOnNull() {
+    void testFilterAnnotationsOnNull() {
         assertSame(emptyList(), filterAnnotations((Annotation[]) null, annotation -> true));
         assertSame(emptyList(), filterAnnotations(TEST_NULL_LIST, annotation -> true));
     }
 
     @Test
-    public void testFindAttributeValue() {
+    void testFindAttributeValue() {
         assertNotNull(findAttributeValue(DataAccess.class.getAnnotations(), "value"));
     }
 
     @Test
-    public void testFindAttributeValueOnAttributeNotFound() {
+    void testFindAttributeValueOnAttributeNotFound() {
         assertNull(findAttributeValue(annotationsOfA, "value"));
     }
 
     @Test
-    public void testGetAttributeValue() {
+    void testGetAttributeValue() {
         ElementType[] elementTypes = getAttributeValue(DataAccess.class.getAnnotation(Target.class), "value");
         assertEquals(1, elementTypes.length);
         assertEquals(TYPE, elementTypes[0]);
@@ -435,12 +435,12 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAttributeValueOnAttributeNotFound() {
+    void testGetAttributeValueOnAttributeNotFound() {
         assertNull(getAttributeValue(DataAccess.class.getAnnotation(Target.class), "notFound"));
     }
 
     @Test
-    public void testGetAttributesMap() {
+    void testGetAttributesMap() {
         Map<String, Object> attributesMap = getAttributesMap(B.class.getAnnotation(Since.class));
         assertEquals(2, attributesMap.size());
         assertEquals(ofMap("module", "microsphere-java-core", "value", "1.0.0"), attributesMap);
@@ -451,17 +451,17 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAttributesMapOnNull() {
+    void testGetAttributesMapOnNull() {
         assertSame(emptyMap(), getAttributesMap(null));
     }
 
     @Test
-    public void testGetAttributesMapOnNoNoAttribute() {
+    void testGetAttributesMapOnNoNoAttribute() {
         assertSame(emptyMap(), getAttributesMap(Target.class.getAnnotation(Documented.class)));
     }
 
     @Test
-    public void testFindAttributesMapWithAttributesNames() {
+    void testFindAttributesMapWithAttributesNames() {
         Map<String, Object> attributesMap = findAttributesMap(B.class.getAnnotation(Since.class), "module", "value");
         assertEquals(2, attributesMap.size());
         assertEquals(ofMap("module", "microsphere-java-core", "value", "1.0.0"), attributesMap);
@@ -475,7 +475,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExistsOnArray() {
+    void testExistsOnArray() {
         assertTrue(exists(annotationsOfA, DataAccess.class));
         assertTrue(exists(annotationsOfB, DataAccess.class));
 
@@ -483,7 +483,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExistsWithCollection() {
+    void testExistsWithCollection() {
         assertTrue(exists(ofList(annotationsOfA), DataAccess.class));
         assertTrue(exists(ofList(annotationsOfA), DataAccess.class));
 
@@ -491,7 +491,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testExistsOnNull() {
+    void testExistsOnNull() {
         assertFalse(exists((Annotation[]) null, DataAccess.class));
         assertFalse(exists(TEST_NULL_COLLECTION, DataAccess.class));
         assertFalse(exists(TEST_NULL_ITERABLE, DataAccess.class));
@@ -500,7 +500,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsAnnotatedPresentWithArray() {
+    void testIsAnnotatedPresentWithArray() {
         assertTrue(isAnnotationPresent(ofArray(A.class), DataAccess.class));
         assertTrue(isAnnotationPresent(ofArray(B.class), DataAccess.class));
         assertFalse(isAnnotationPresent(ofArray(A.class, B.class), Monitored.class));
@@ -508,68 +508,68 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsAnnotatedPresentWithArrayOnNull() {
+    void testIsAnnotatedPresentWithArrayOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement[]) null, DataAccess.class));
         assertFalse(isAnnotationPresent(ofArray(A.class), null));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithArrayOnEmptyArray() {
+    void testIsAnnotatedPresentWithArrayOnEmptyArray() {
         assertFalse(isAnnotationPresent(ofArray(), DataAccess.class));
         assertFalse(isAnnotationPresent(ofArray(), Monitored.class));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotatedElement() {
+    void testIsAnnotatedPresentWithAnnotatedElement() {
         assertTrue(isAnnotationPresent(B.class, DataAccess.class));
         assertTrue(isAnnotationPresent(A.class, DataAccess.class));
         assertFalse(isAnnotationPresent(A.class, Monitored.class));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotatedElementOnNull() {
+    void testIsAnnotatedPresentWithAnnotatedElementOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement) null, DataAccess.class));
         assertFalse(isAnnotationPresent(A.class, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotation() {
+    void testIsAnnotatedPresentWithAnnotation() {
         assertFalse(isAnnotationPresent(dataAccessOfB, DataAccess.class));
         assertFalse(isAnnotationPresent(dataAccessOfA, DataAccess.class));
         assertTrue(isAnnotationPresent(dataAccessOfA, Monitored.class));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotationElementOnNull() {
+    void testIsAnnotatedPresentWithAnnotationElementOnNull() {
         assertFalse(isAnnotationPresent(TEST_NULL_ANNOTATION, DataAccess.class));
         assertFalse(isAnnotationPresent(dataAccessOfA, TEST_NULL_ANNOTATION_CLASS));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypes() {
+    void testIsAnnotatedPresentWithAnnotationAndAnnotationTypes() {
         assertTrue(isAnnotationPresent(dataAccessOfB, ofList(Inherited.class, Monitored.class)));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotationAndAnnotationTypesOnNull() {
+    void testIsAnnotatedPresentWithAnnotationAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent(TEST_NULL_ANNOTATION, ofList(DataAccess.class, Monitored.class)));
         assertFalse(isAnnotationPresent(dataAccessOfB, TEST_NULL_ITERABLE));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypes() {
+    void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypes() {
         assertTrue(isAnnotationPresent(B.class, ofList(DataAccess.class, Since.class)));
         assertFalse(isAnnotationPresent(B.class, ofList()));
     }
 
     @Test
-    public void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNull() {
+    void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement) null, ofList(DataAccess.class, Since.class)));
         assertFalse(isAnnotationPresent(B.class, TEST_NULL_ITERABLE));
     }
 
     @Test
-    public void testIsAnnotationInterfaceMethod() {
+    void testIsAnnotationInterfaceMethod() {
         assertTrue(isAnnotationInterfaceMethod(annotationTypeMethod));
         assertFalse(isAnnotationInterfaceMethod(retentionValueMethod));
         assertFalse(isAnnotationInterfaceMethod(targetValueMethod));
@@ -577,7 +577,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
 
 
     @Test
-    public void testIsCallerSensitivePresent() {
+    void testIsCallerSensitivePresent() {
         assertEquals(isPresent(CALLER_SENSITIVE_ANNOTATION_CLASS_NAME), isCallerSensitivePresent());
         assertEquals(CALLER_SENSITIVE_ANNOTATION_CLASS != null, isCallerSensitivePresent());
     }

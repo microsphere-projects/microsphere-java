@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class FormatUtilsTest {
 
     @Test
-    public void testFormat() {
+    void testFormat() {
         assertNull(format(null));
 
         assertEquals("", format(""));

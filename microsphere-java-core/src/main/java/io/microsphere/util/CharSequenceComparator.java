@@ -25,7 +25,7 @@ import java.util.Comparator;
  * primarily designed to be used in sorting and ordering operations.
  * </p>
  *
- * <h2>Example Usage</h2>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * List<CharSequence> sequences = Arrays.asList("apple", "banana", "apple", null);
  * Collections.sort(sequences, CharSequenceComparator.INSTANCE);

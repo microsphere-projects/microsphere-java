@@ -42,7 +42,29 @@ import static java.lang.Enum.valueOf;
 import static java.lang.reflect.Array.set;
 
 /**
- * {@link AnnotationValueVisitor} to resolve the object value
+ * A visitor for resolving annotation values into their corresponding runtime representations.
+ *
+ * <p>This class extends {@link SimpleAnnotationValueVisitor6} to process annotation values and convert
+ * them into appropriate Java objects such as primitives, strings, enums, classes, annotations, and arrays.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create an instance with default settings
+ * ResolvableAnnotationValueVisitor visitor = new ResolvableAnnotationValueVisitor();
+ *
+ * // Visit an annotation value
+ * AnnotationValue annotationValue = ...; // Obtain from an annotation mirror
+ * Object resolvedValue = annotationValue.accept(visitor, executableElement);
+ * }</pre>
+ *
+ * <h4>Custom behavior examples</h4>
+ * <pre>{@code
+ * // Create an instance that represents Class values as strings
+ * ResolvableAnnotationValueVisitor visitor = new ResolvableAnnotationValueVisitor(true);
+ *
+ * // Create an instance that handles nested annotations as maps
+ * ResolvableAnnotationValueVisitor visitor = new ResolvableAnnotationValueVisitor(false, true);
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see AnnotationValueVisitor

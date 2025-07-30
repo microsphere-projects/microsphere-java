@@ -73,6 +73,7 @@ public abstract class EnumerationUtils implements Utils {
      * @param <E>      the type of the elements
      * @return a non-null {@link Enumeration} instance containing the specified elements
      */
+    @Nonnull
     public static <E> Enumeration<E> ofEnumeration(E... elements) {
         return new ArrayEnumeration<>(elements);
     }

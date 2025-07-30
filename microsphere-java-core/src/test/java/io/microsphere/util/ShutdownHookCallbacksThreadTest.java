@@ -15,7 +15,7 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 class ShutdownHookCallbacksThreadTest {
 
     @Test
-    public void testRun() {
+    void testRun() {
         ShutdownHookCallbacksThread thread = INSTANCE;
 
         int times = 3;

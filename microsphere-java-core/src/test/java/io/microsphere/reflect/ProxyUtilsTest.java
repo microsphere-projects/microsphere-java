@@ -28,10 +28,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ProxyUtilsTest {
+class ProxyUtilsTest {
 
     @Test
-    public void testIsProxyable() {
+    void testIsProxyable() {
         assertTrue(isProxyable(getClass()));
         assertFalse(isProxyable(int.class));
         assertFalse(isProxyable(int[].class));

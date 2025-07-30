@@ -53,7 +53,6 @@ public abstract class ExecutableUtils implements Utils {
      * {@link IllegalArgumentException} depending on the cause.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * Method method = MyClass.class.getMethod("myMethod");
      * ExecutableUtils.execute(method, executable -> {
@@ -110,7 +109,6 @@ public abstract class ExecutableUtils implements Utils {
      * if successful, or an appropriate runtime exception will be thrown if an error occurs.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * Method method = MyClass.class.getMethod("myMethod");
      * String result = ExecutableUtils.execute(method, () -> {
@@ -164,7 +162,6 @@ public abstract class ExecutableUtils implements Utils {
      * It is suitable for executing operations that return a result, allowing custom handling of the executable member.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * Method method = MyClass.class.getMethod("myMethod", String.class);
      * String result = ExecutableUtils.execute(method, m -> {

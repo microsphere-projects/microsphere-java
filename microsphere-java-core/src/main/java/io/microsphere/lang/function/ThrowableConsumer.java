@@ -121,7 +121,6 @@ public interface ThrowableConsumer<T> {
      * {@link #handleException(Object, Throwable)} method of the consumer.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage without any exception
      * ThrowableConsumer<String> printConsumer = System.out::println;
@@ -160,7 +159,6 @@ public interface ThrowableConsumer<T> {
      * {@code exceptionHandler} along with the input value that caused the exception.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage without any exception
      * ThrowableConsumer<String> printConsumer = System.out::println;

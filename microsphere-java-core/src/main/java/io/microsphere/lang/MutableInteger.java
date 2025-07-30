@@ -38,6 +38,10 @@ package io.microsphere.lang;
  * // Get current value
  * int currentValue = i.get(); // Returns 16
  * }</pre>
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see java.util.concurrent.atomic.AtomicInteger
+ * @since 1.0.0
  */
 public class MutableInteger extends Number {
 

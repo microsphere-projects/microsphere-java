@@ -26,7 +26,7 @@ class FileExtensionFilterTest {
     private FileExtensionFilter instance;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         instance = of("txt");
     }
 

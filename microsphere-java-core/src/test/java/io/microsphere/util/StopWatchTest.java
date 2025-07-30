@@ -45,12 +45,12 @@ class StopWatchTest {
     private StopWatch stopWatch;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         stopWatch = new StopWatch("test");
     }
 
     @Test
-    public void test() throws InterruptedException {
+    void test() throws InterruptedException {
         stopWatch.start("1");
         Thread.sleep(100);
         stopWatch.start("2");
@@ -73,7 +73,7 @@ class StopWatchTest {
     }
 
     @Test
-    public void testTask() {
+    void testTask() {
         String testName = "test";
         StopWatch.Task task = start(testName);
         task.stop();
@@ -88,22 +88,22 @@ class StopWatchTest {
 
 
     @Test
-    public void testStartOnNullTaskName() {
+    void testStartOnNullTaskName() {
         assertThrows(IllegalArgumentException.class, () -> stopWatch.start(null));
     }
 
     @Test
-    public void testStartOnEmptyTaskName() {
+    void testStartOnEmptyTaskName() {
         assertThrows(IllegalArgumentException.class, () -> stopWatch.start(""));
     }
 
     @Test
-    public void testStartOnBlankTaskName() {
+    void testStartOnBlankTaskName() {
         assertThrows(IllegalArgumentException.class, () -> stopWatch.start(SPACE));
     }
 
     @Test
-    public void testStartOnAlreadyRunning() {
+    void testStartOnAlreadyRunning() {
         assertThrows(IllegalStateException.class, () -> {
             stopWatch.start("1");
             stopWatch.start("1");
@@ -111,13 +111,13 @@ class StopWatchTest {
     }
 
     @Test
-    public void testStartOnReentrant() {
+    void testStartOnReentrant() {
         stopWatch.start("1", true);
         stopWatch.start("1");
     }
 
     @Test
-    public void testStopOnNoTaskRunning() {
+    void testStopOnNoTaskRunning() {
         assertThrows(IllegalStateException.class, stopWatch::stop);
     }
 }

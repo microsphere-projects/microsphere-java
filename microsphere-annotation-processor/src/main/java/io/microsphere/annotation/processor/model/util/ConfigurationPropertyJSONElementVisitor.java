@@ -17,83 +17,128 @@
 
 package io.microsphere.annotation.processor.model.util;
 
-import io.microsphere.annotation.processor.model.element.StringAnnotationValue;
+import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.beans.ConfigurationProperty.Metadata;
+import io.microsphere.metadata.ConfigurationPropertyJSONGenerator;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.ElementVisitor;
+import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributeName;
 import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValues;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeMethod;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesAttributeValue;
+import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesDefaultAttributeValue;
+import static io.microsphere.annotation.processor.util.ClassUtils.getClassName;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeName;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
-import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
-import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
-import static io.microsphere.json.JSONUtils.append;
+import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 
 /**
- * The {@link ElementVisitor} for {@link io.microsphere.annotation.ConfigurationProperty} JSON
+ * {@link ConfigurationProperty @ConfigurationProperty}'s {@link AnnotatedElementJSONElementVisitor} based on
+ * {@link ConfigurationPropertyJSONGenerator} generating the JSON representation of the configuration property metadata.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see io.microsphere.annotation.ConfigurationProperty
- * @see ElementVisitor
+ * @see AnnotatedElementJSONElementVisitor
+ * @see ConfigurationProperty
+ * @see io.microsphere.beans.ConfigurationProperty
  * @since 1.0.0
  */
 public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
 
-    public static final String ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
+    public static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
-    private static final String SOURCE_TYPE_PROPERTY_NAME = "sourceType";
-
-    private static final String SOURCE_FILED_PROPERTY_NAME = "sourceField";
+    private final ConfigurationPropertyJSONGenerator generator;
 
     public ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
-        super(processingEnv, ANNOTATION_CLASS_NAME);
+        super(processingEnv, CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
+        this.generator = loadFirstService(ConfigurationPropertyJSONGenerator.class);
     }
 
-    /**
-     * Processes the {@link VariableElement} annotated with
-     * {@link io.microsphere.annotation.ConfigurationProperty}, converting its annotation values into
-     * a JSON structure within the provided {@link StringBuilder}.
-     *
-     * <p>This method extracts the annotation attributes and appends them as key-value pairs in JSON format.
-     * If the "name" attribute is empty, it uses the variable's constant value as the name. Additionally,
-     * it appends metadata such as the source type and field name.</p>
-     *
-     * @param field       the variable element being visited
-     * @param jsonBuilder the string builder used to accumulate JSON content
-     * @return always returns {@code null} as no result needs to be propagated up the visitor chain
-     */
     @Override
     public Boolean visitVariableAsField(VariableElement field, StringBuilder jsonBuilder) {
         AnnotationMirror annotation = getAnnotation(field, getAnnotationClassName());
         if (annotation != null) {
-            JSONAnnotationValueVisitor visitor = new JSONAnnotationValueVisitor(jsonBuilder);
-            jsonBuilder.append(LEFT_CURLY_BRACE_CHAR);
+            io.microsphere.beans.ConfigurationProperty configurationProperty = null;
             Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(annotation);
-            for (Entry<ExecutableElement, AnnotationValue> elementValue : elementValues.entrySet()) {
+            for (Map.Entry<ExecutableElement, AnnotationValue> elementValue : elementValues.entrySet()) {
                 ExecutableElement attributeMethod = elementValue.getKey();
+                String attributeName = getAttributeName(attributeMethod);
                 AnnotationValue annotationValue = elementValue.getValue();
-                if (matchesAttributeMethod(attributeMethod, "name") && matchesAttributeValue(annotationValue, "")) {
-                    annotationValue = new StringAnnotationValue((String) field.getConstantValue());
+                if ("name".equals(attributeName)) {
+                    String name = resolveName(field, attributeMethod, annotationValue);
+                    configurationProperty = new io.microsphere.beans.ConfigurationProperty(name);
+                } else if ("type".equals(attributeName)) {
+                    String type = resolveType(field, attributeMethod, annotationValue);
+                    configurationProperty.setType(type);
+                } else if ("defaultValue".equals(attributeName)) {
+                    String defaultValue = resolveStringValue(attributeMethod, annotationValue);
+                    configurationProperty.setDefaultValue(defaultValue);
+                } else if ("required".equals(attributeName)) {
+                    boolean required = (boolean) annotationValue.getValue();
+                    configurationProperty.setRequired(required);
+                } else if ("description".equals(attributeName)) {
+                    String description = resolveStringValue(attributeMethod, annotationValue);
+                    configurationProperty.setDescription(description);
+                } else if ("source".equals(attributeName)) {
+                    setSources(configurationProperty, annotationValue);
                 }
-                visitor.visit(annotationValue, attributeMethod);
-                jsonBuilder.append(COMMA_CHAR);
             }
-            append(jsonBuilder, SOURCE_TYPE_PROPERTY_NAME, getTypeName(field.getEnclosingElement().asType()));
-            jsonBuilder.append(COMMA_CHAR);
-            append(jsonBuilder, SOURCE_FILED_PROPERTY_NAME, field.toString());
-            jsonBuilder.append(RIGHT_CURLY_BRACE_CHAR);
+            setDeclaredClass(configurationProperty, field);
+            setDeclaredField(configurationProperty, field);
+
+            String json = generator.generate(configurationProperty);
+            jsonBuilder.append(json);
             jsonBuilder.append(COMMA_CHAR);
             return true;
         }
         return false;
     }
+
+    public ConfigurationPropertyJSONGenerator getGenerator() {
+        return generator;
+    }
+
+    private String resolveName(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+        Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? field.getConstantValue() : annotationValue.getValue();
+        return (String) value;
+    }
+
+    private String resolveType(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+        Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? field.asType() : annotationValue.getValue();
+        TypeMirror type = (TypeMirror) value;
+        return getTypeName(type);
+    }
+
+    private String resolveStringValue(ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+        Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? null : annotationValue.getValue();
+        return (String) value;
+    }
+
+    private void setSources(io.microsphere.beans.ConfigurationProperty configurationProperty, AnnotationValue annotationValue) {
+        List<? extends AnnotationValue> sources = (List<? extends AnnotationValue>) annotationValue.getValue();
+        Metadata metadata = configurationProperty.getMetadata();
+        for (AnnotationValue source : sources) {
+            String sourceValue = (String) source.getValue();
+            metadata.getSources().add(sourceValue);
+        }
+    }
+
+    private void setDeclaredClass(io.microsphere.beans.ConfigurationProperty configurationProperty, VariableElement field) {
+        Element element = field.getEnclosingElement();
+        String declaredClassName = getClassName(element.asType());
+        configurationProperty.getMetadata().setDeclaredClass(declaredClassName);
+    }
+
+    private void setDeclaredField(io.microsphere.beans.ConfigurationProperty configurationProperty, VariableElement field) {
+        String declaredFieldName = field.getSimpleName().toString();
+        configurationProperty.getMetadata().setDeclaredField(declaredFieldName);
+    }
+
 }

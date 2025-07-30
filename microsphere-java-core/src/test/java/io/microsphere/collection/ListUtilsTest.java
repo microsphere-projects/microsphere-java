@@ -17,12 +17,13 @@
 package io.microsphere.collection;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.logging.Logger;
 import io.microsphere.lang.MutableInteger;
+import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -64,11 +65,20 @@ class ListUtilsTest extends AbstractTestCase {
     private static final List<String> TEST_LIST = asList("A", "B", "C");
 
     @Test
-    void testIsList() {
+    void testIsListWithObject() {
         assertTrue(isList(new ArrayList()));
         assertTrue(isList(emptyList()));
         assertFalse(isList(emptyEnumeration()));
         assertFalse(isList("A"));
+        assertFalse(isList((Object) null));
+    }
+
+    @Test
+    void testIsListWithClass() {
+        assertTrue(isList(List.class));
+        assertTrue(isList(ArrayList.class));
+        assertTrue(isList(LinkedList.class));
+        assertFalse(isList(String.class));
         assertFalse(isList(null));
     }
 

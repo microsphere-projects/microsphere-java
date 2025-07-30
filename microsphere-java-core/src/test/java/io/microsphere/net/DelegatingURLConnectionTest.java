@@ -56,7 +56,7 @@ class DelegatingURLConnectionTest {
     private DelegatingURLConnection urlConnection;
 
     @BeforeEach
-    void init() throws Exception {
+    void setUp() throws Exception {
         URL baseURL = getClass().getProtectionDomain().getCodeSource().getLocation();
         this.url = new URL(baseURL.toString() + "META-INF/test.properties");
         this.delegate = url.openConnection();
@@ -64,7 +64,7 @@ class DelegatingURLConnectionTest {
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
     }
 
     @Test
@@ -295,7 +295,7 @@ class DelegatingURLConnectionTest {
     }
 
     @Test
-    public void testGetRequestProperties() {
+    void testGetRequestProperties() {
         Map<String, List<String>> requestProperties = urlConnection.getRequestProperties();
         assertNotNull(requestProperties);
     }

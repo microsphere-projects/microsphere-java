@@ -3,6 +3,7 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
@@ -66,6 +67,7 @@ import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -89,6 +91,7 @@ public abstract class URLUtils implements Utils {
     /**
      * The empty array of {@link URL}
      */
+    @Immutable
     public static final URL[] EMPTY_URL_ARRAY = ArrayUtils.EMPTY_URL_ARRAY;
 
     /**
@@ -218,7 +221,6 @@ public abstract class URLUtils implements Utils {
      * <p>This method extracts the main path part of the URL, excluding any archive entry path if present.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: File URL without archive entry path
      * URL fileURL = new URL("file:/path/to/resource.txt");
@@ -328,7 +330,6 @@ public abstract class URLUtils implements Utils {
      * it calls {@link #doResolveArchiveFile(URL)} to handle other protocols like "jar".</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: File URL pointing directly to a JAR file
      * URL fileURL = new URL("file:/path/to/archive.jar");
@@ -378,7 +379,6 @@ public abstract class URLUtils implements Utils {
      * Resolve the query parameters {@link Map} from specified URL. The parameter name is used as the key, and the list of parameter values is used as the value.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example URL with query parameters
      * String url = "https://www.example.com?param1=value1&param2=value2&param1=value3";
@@ -395,6 +395,7 @@ public abstract class URLUtils implements Utils {
      * @return Non-null and Read-only {@link Map} where each key is a unique parameter name and the value is a list of values associated with that key.
      */
     @Nonnull
+    @Immutable
     public static Map<String, List<String>> resolveQueryParameters(String url) {
         String queryString = substringAfterLast(url, QUERY_STRING);
         return resolveParameters(queryString, AND_CHAR);
@@ -408,7 +409,6 @@ public abstract class URLUtils implements Utils {
      * is a unique parameter name and the corresponding value is a list of values associated with that key.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: URL with matrix parameters
      * String urlWithMatrix = "/path;key1=valueA;key2=valueB;key1=valueC";
@@ -435,6 +435,7 @@ public abstract class URLUtils implements Utils {
      * @return A non-null and unmodifiable {@link Map} where each key is a unique parameter name and the value is a list of parameter values.
      */
     @Nonnull
+    @Immutable
     public static Map<String, List<String>> resolveMatrixParameters(String url) {
         int startIndex = url.indexOf(SEMICOLON_CHAR);
         if (startIndex == -1) { // The matrix separator ";" was not found
@@ -500,7 +501,6 @@ public abstract class URLUtils implements Utils {
      * typically "UTF-8". It is suitable for scenarios where uniform encoding behavior is desired without explicitly specifying it.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Encoding a simple string
      * String input = "Hello World!";
@@ -587,7 +587,6 @@ public abstract class URLUtils implements Utils {
      * typically "UTF-8". It is useful for scenarios where uniform decoding behavior is desired without explicitly specifying it.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Decoding a simple URL-encoded string
      * String encoded = "Hello+World%21";
@@ -626,7 +625,6 @@ public abstract class URLUtils implements Utils {
      * "<code>%<i>xy</i></code>".
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Decoding with UTF-8
      * String encoded = "Hello%20World%21";
@@ -730,7 +728,6 @@ public abstract class URLUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Valid JAR URL using "file" protocol
      * URL fileJarURL = new URL("file:/path/to/archive.jar");
@@ -773,7 +770,6 @@ public abstract class URLUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Valid JAR file URL
      * URL jarFileURL = new URL("file:/path/to/archive.jar");
@@ -824,7 +820,6 @@ public abstract class URLUtils implements Utils {
      * it tries to extract and open the underlying JAR file.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Valid JAR file URL
      * URL jarURL = new URL("file:/path/to/archive.jar");
@@ -879,7 +874,6 @@ public abstract class URLUtils implements Utils {
      * and standardizing separators to forward slashes regardless of the operating system.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage with multiple path segments
      * String result = URLUtils.buildURI("users", "profile", "settings");
@@ -932,7 +926,6 @@ public abstract class URLUtils implements Utils {
      * The special parameter named {@link #SUB_PROTOCOL_MATRIX_NAME} is excluded from the output.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage with multiple parameters
      * Map<String, List<String>> matrixParams = new LinkedHashMap<>();
@@ -979,7 +972,6 @@ public abstract class URLUtils implements Utils {
      * Each value results in a separate key-value pair using the same parameter name.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage with multiple values
      * String result = URLUtils.buildMatrixString("key", "valueA", "valueB");
@@ -1015,7 +1007,6 @@ public abstract class URLUtils implements Utils {
      * original URL structure.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic URL with no special components
      * URL url = new URL("http://example.com/path/to/resource");
@@ -1142,7 +1133,6 @@ public abstract class URLUtils implements Utils {
      * parameter exists, it returns null.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: URL with a single sub-protocol
      * String urlWithSingleSubProtocol = "/path;_sp=subproto1/resource";
@@ -1177,7 +1167,6 @@ public abstract class URLUtils implements Utils {
      * If no such parameter is present, an empty list is returned.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: URL with multiple sub-protocols
      * URL urlWithMultipleSubProtocols = new URL("http://example.com/path;_sp=subproto1;_sp=subproto2/resource");
@@ -1204,6 +1193,7 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is null.
      */
     @Nonnull
+    @Immutable
     public static List<String> resolveSubProtocols(URL url) {
         return resolveSubProtocols(url.toString());
     }
@@ -1216,7 +1206,6 @@ public abstract class URLUtils implements Utils {
      * multiple protocols separated by colons. If no sub-protocols are found, an empty list is returned.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: URL with multiple sub-protocols via matrix parameters
      * String urlWithMatrixSubProtocols = "/path;_sp=subproto1;_sp=subproto2/resource";
@@ -1250,6 +1239,7 @@ public abstract class URLUtils implements Utils {
      * @return A non-null list of sub-protocol strings. If no sub-protocols are found, returns an empty list.
      */
     @Nonnull
+    @Immutable
     public static List<String> resolveSubProtocols(String url) {
         String subProtocolsString = findSubProtocolsString(url);
         final List<String> subProtocols;
@@ -1260,7 +1250,7 @@ public abstract class URLUtils implements Utils {
             String[] values = split(subProtocolsString, COLON_CHAR);
             subProtocols = ofList(values);
         }
-        return subProtocols == null ? emptyList() : subProtocols;
+        return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
     }
 
     /**
@@ -1271,7 +1261,6 @@ public abstract class URLUtils implements Utils {
      * characters, logging a trace message and returning {@code null} if such a condition is found.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage with a standard HTTP URL
      * String url = "http://example.com";
@@ -1340,7 +1329,6 @@ public abstract class URLUtils implements Utils {
      * This method delegates to {@link #resolveAuthority(String)} for processing the actual authority string.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Basic usage with a simple URL
      * URL url = new URL("http://example.com/path/to/resource");
@@ -1379,7 +1367,6 @@ public abstract class URLUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Authority with matrix parameters
      * String authorityWithMatrix = "example.com;param=value";
@@ -1414,7 +1401,6 @@ public abstract class URLUtils implements Utils {
      * ensuring that the returned path includes the archive entry path if present.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: File URL without matrix parameters
      * URL fileURL = new URL("file:/path/to/resource.txt");
@@ -1450,7 +1436,6 @@ public abstract class URLUtils implements Utils {
      * a new composite factory will be created to encapsulate both the existing and new factories.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Setting up a custom URLStreamHandlerFactory for "myproto" protocol
      * public class MyProtoURLStreamHandlerFactory implements URLStreamHandlerFactory {
@@ -1521,7 +1506,6 @@ public abstract class URLUtils implements Utils {
      * custom protocol handlers.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Get the current global URLStreamHandlerFactory
      * URLStreamHandlerFactory currentFactory = URLUtils.getURLStreamHandlerFactory();
@@ -1559,7 +1543,6 @@ public abstract class URLUtils implements Utils {
      * the given handler via {@link ExtendableProtocolURLStreamHandler#getProtocol()}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example: Registering a custom URLStreamHandler for the "myproto" protocol
      * public class MyProtoURLStreamHandler extends ExtendableProtocolURLStreamHandler {
@@ -1598,7 +1581,6 @@ public abstract class URLUtils implements Utils {
      * structure to include the new handler while preserving existing ones.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example 1: Registering a custom URLStreamHandler for "myproto" protocol
      * public class MyProtoURLStreamHandler extends URLStreamHandler {
@@ -1641,7 +1623,6 @@ public abstract class URLUtils implements Utils {
      * proper resource cleanup for HTTP connections.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * URL url = new URL("https://example.com");
      * URLConnection conn = url.openConnection();

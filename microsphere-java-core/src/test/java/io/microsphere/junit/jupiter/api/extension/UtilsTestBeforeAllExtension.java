@@ -16,7 +16,6 @@
  */
 package io.microsphere.junit.jupiter.api.extension;
 
-import io.microsphere.util.BaseUtils;
 import io.microsphere.util.Utils;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -36,7 +35,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link BeforeAllCallback} for the utilities class test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see BaseUtils
  * @see BeforeAllCallback
  * @since 1.0.0
  */

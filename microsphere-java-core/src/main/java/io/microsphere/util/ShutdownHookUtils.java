@@ -16,6 +16,8 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -26,7 +28,9 @@ import java.util.Set;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.QueueUtils.unmodifiableQueue;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
@@ -34,6 +38,7 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ShutdownHookCallbacksThread.INSTANCE;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.lang.Integer.getInteger;
+import static java.lang.Integer.parseInt;
 import static java.lang.Runtime.getRuntime;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableSet;
@@ -76,14 +81,30 @@ public abstract class ShutdownHookUtils implements Utils {
     private static final Logger logger = getLogger(ShutdownHookUtils.class);
 
     /**
-     * The System property name of the capacity of ShutdownHook callbacks
+     * The System property name of the capacity of ShutdownHook callbacks : {@code "microsphere.shutdown-hook.callbacks-capacity"}
      */
-    public static final String SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME = "microsphere.shutdown-hook.callbacks-capacity";
+    public static final String SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "shutdown-hook.callbacks-capacity";
 
     /**
-     * The System property value of the capacity of ShutdownHook callbacks, the default value is 512
+     * The default property value of the capacity of ShutdownHook callbacks: {@code "512"}
      */
-    public static final int SHUTDOWN_HOOK_CALLBACKS_CAPACITY = getInteger(SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME, 512);
+    public static final String DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_VALUE = "512";
+
+    /**
+     * The default value of the capacity of ShutdownHook callbacks: {@code 512}
+     */
+    public static final int DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY = parseInt(DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_VALUE);
+
+    /**
+     * The capacity of ShutdownHook callbacks, the default value is 512
+     */
+    @ConfigurationProperty(
+            name = SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME,
+            defaultValue = DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_VALUE,
+            description = "The capacity of ShutdownHook callbacks",
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
+    public static final int SHUTDOWN_HOOK_CALLBACKS_CAPACITY = getInteger(SHUTDOWN_HOOK_CALLBACKS_CAPACITY_PROPERTY_NAME, DEFAULT_SHUTDOWN_HOOK_CALLBACKS_CAPACITY);
 
     /**
      * The {@link Predicate} to filter the type that is {@link ShutdownHookCallbacksThread}
@@ -108,7 +129,6 @@ public abstract class ShutdownHookUtils implements Utils {
      * {@link Runtime#addShutdownHook(Thread)}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Ensure the shutdown hook is registered
      * ShutdownHookUtils.registerShutdownHook();
@@ -151,6 +171,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return A non-null, unmodifiable set containing all currently registered shutdown hook threads.
      */
     @Nonnull
+    @Immutable
     public static Set<Thread> getShutdownHookThreads() {
         return filterShutdownHookThreads(t -> true);
     }
@@ -183,6 +204,8 @@ public abstract class ShutdownHookUtils implements Utils {
      *                         Only threads for which the predicate returns {@code true} will be included.
      * @return A non-null, unmodifiable set containing the filtered shutdown hook threads.
      */
+    @Nonnull
+    @Immutable
     public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter) {
         return filterShutdownHookThreads(hookThreadFilter, false);
     }
@@ -218,6 +241,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return A non-null, unmodifiable set containing the filtered shutdown hook threads.
      */
     @Nonnull
+    @Immutable
     public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter, boolean removed) {
         Map<Thread, Thread> shutdownHookThreadsMap = shutdownHookThreadsMap();
 
@@ -343,6 +367,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return A non-null, unmodifiable queue containing all currently registered shutdown hook callbacks.
      */
     @Nonnull
+    @Immutable
     public static Queue<Runnable> getShutdownHookCallbacks() {
         return unmodifiableQueue(shutdownHookCallbacks);
     }
@@ -351,6 +376,7 @@ public abstract class ShutdownHookUtils implements Utils {
         shutdownHookCallbacks.clear();
     }
 
+    @Nonnull
     private static Map<Thread, Thread> shutdownHookThreadsMap() {
         Class<?> applicationShutdownHooksClass = resolveClass(TARGET_CLASS_NAME, getSystemClassLoader());
         return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);

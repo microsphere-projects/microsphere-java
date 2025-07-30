@@ -43,6 +43,19 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
         this.value = value;
     }
 
+    /**
+     * Create a new instance of {@link DefaultEntry} with the specified key and value.
+     *
+     * @param key   the key
+     * @param value the value
+     * @param <K>   the type of the key
+     * @param <V>   the type of the value
+     * @return a new instance of {@link DefaultEntry}
+     */
+    public static <K, V> DefaultEntry<K, V> of(K key, V value) {
+        return new DefaultEntry<>(key, value);
+    }
+
     @Override
     public final K getKey() {
         return key;
@@ -78,18 +91,5 @@ public class DefaultEntry<K, V> implements Map.Entry<K, V> {
     @Override
     public String toString() {
         return key + "=" + value;
-    }
-
-    /**
-     * Create a new instance of {@link DefaultEntry} with the specified key and value.
-     *
-     * @param key   the key
-     * @param value the value
-     * @param <K>   the type of the key
-     * @param <V>   the type of the value
-     * @return a new instance of {@link DefaultEntry}
-     */
-    public static <K, V> DefaultEntry<K, V> of(K key, V value) {
-        return new DefaultEntry<>(key, value);
     }
 }
