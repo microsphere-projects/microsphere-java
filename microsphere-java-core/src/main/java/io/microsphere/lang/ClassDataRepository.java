@@ -103,8 +103,9 @@ public class ClassDataRepository {
      * @return all package names in class paths
      */
     @Nonnull
+    @Immutable
     public Set<String> getAllPackageNamesInClassPaths() {
-        return packageNameToClassNamesMap.keySet();
+        return unmodifiableSet(packageNameToClassNamesMap.keySet());
     }
 
     /**
@@ -227,6 +228,8 @@ public class ClassDataRepository {
         return codeSourceLocation;
     }
 
+    @Nonnull
+    @Immutable
     private Map<String, Set<String>> initClassPathToClassNamesMap() {
         Map<String, Set<String>> classPathToClassNamesMap = new LinkedHashMap<>();
         Set<String> classPaths = new LinkedHashSet<>();
@@ -239,6 +242,8 @@ public class ClassDataRepository {
         return unmodifiableMap(classPathToClassNamesMap);
     }
 
+    @Nonnull
+    @Immutable
     private Map<String, String> initClassNameToClassPathsMap() {
         Map<String, String> classNameToClassPathsMap = new LinkedHashMap<>();
 
@@ -253,6 +258,8 @@ public class ClassDataRepository {
         return unmodifiableMap(classNameToClassPathsMap);
     }
 
+    @Nonnull
+    @Immutable
     private Map<String, Set<String>> initPackageNameToClassNamesMap() {
         Map<String, Set<String>> packageNameToClassNamesMap = new LinkedHashMap();
         for (Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
