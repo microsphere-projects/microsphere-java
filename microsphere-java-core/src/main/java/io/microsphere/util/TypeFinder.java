@@ -16,6 +16,9 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.function.Function;
@@ -122,10 +125,14 @@ public class TypeFinder<T> {
         this.includeInterfaces = includeInterfaces;
     }
 
+    @Nonnull
+    @Immutable
     public List<T> getTypes() {
         return findTypes(EMPTY_PREDICATE_ARRAY);
     }
 
+    @Nonnull
+    @Immutable
     public List<T> findTypes(Predicate<? super T>... typeFilters) {
         List<T> types = doFindTypes(typeFilters);
         return types.isEmpty() ? emptyList() : unmodifiableList(types);
