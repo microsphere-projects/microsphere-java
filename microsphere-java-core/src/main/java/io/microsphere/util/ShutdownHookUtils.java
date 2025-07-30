@@ -17,6 +17,7 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -170,6 +171,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return A non-null, unmodifiable set containing all currently registered shutdown hook threads.
      */
     @Nonnull
+    @Immutable
     public static Set<Thread> getShutdownHookThreads() {
         return filterShutdownHookThreads(t -> true);
     }
@@ -237,6 +239,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return A non-null, unmodifiable set containing the filtered shutdown hook threads.
      */
     @Nonnull
+    @Immutable
     public static Set<Thread> filterShutdownHookThreads(Predicate<? super Thread> hookThreadFilter, boolean removed) {
         Map<Thread, Thread> shutdownHookThreadsMap = shutdownHookThreadsMap();
 
@@ -362,6 +365,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return A non-null, unmodifiable queue containing all currently registered shutdown hook callbacks.
      */
     @Nonnull
+    @Immutable
     public static Queue<Runnable> getShutdownHookCallbacks() {
         return unmodifiableQueue(shutdownHookCallbacks);
     }
