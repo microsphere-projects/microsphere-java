@@ -309,5 +309,5 @@ public abstract class ConstructorUtils implements Utils {
 
     private ConstructorUtils() {
     }
-    
+
 }
