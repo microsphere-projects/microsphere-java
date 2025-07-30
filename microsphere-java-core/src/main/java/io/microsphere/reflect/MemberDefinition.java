@@ -88,7 +88,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
         this(since, null, declaredClassName, name);
     }
 
@@ -98,7 +98,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
         this(ofVersion(since), deprecation, declaredClassName, name);
     }
 
@@ -107,7 +107,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
         this(since, null, declaredClassName, name);
     }
 
@@ -117,7 +117,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
         super(since, deprecation, declaredClassName);
         this.name = name;
     }
