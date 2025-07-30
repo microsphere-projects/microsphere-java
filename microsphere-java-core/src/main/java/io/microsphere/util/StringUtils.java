@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nullable;
 
 import java.util.StringTokenizer;
@@ -50,6 +51,7 @@ public abstract class StringUtils implements Utils {
     /**
      * An empty array of String.
      */
+    @Immutable
     public static final String[] EMPTY_STRING_ARRAY = ArrayUtils.EMPTY_STRING_ARRAY;
 
     /**
