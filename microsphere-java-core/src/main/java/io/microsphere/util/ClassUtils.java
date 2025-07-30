@@ -3,12 +3,12 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
-import io.microsphere.io.scanner.SimpleJarEntryScanner;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ConstructorUtils;
 
@@ -45,6 +45,7 @@ import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.io.filter.FileExtensionFilter.of;
+import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
@@ -117,10 +118,16 @@ public abstract class ClassUtils implements Utils {
             Double.class
     );
 
+    @Nonnull
+    @Immutable
     public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(PRIMITIVE_TYPES_ARRAY);
 
+    @Nonnull
+    @Immutable
     public static final Set<Class<?>> WRAPPER_TYPES = ofSet(WRAPPER_TYPES_ARRAY);
 
+    @Nonnull
+    @Immutable
     public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
             boolean[].class,
             char[].class,
@@ -151,6 +158,7 @@ public abstract class ClassUtils implements Utils {
      *
      * @see javax.management.openmbean.SimpleType
      */
+    @Immutable
     public static final Set<Class<?>> SIMPLE_TYPES;
 
     static {
@@ -172,6 +180,7 @@ public abstract class ClassUtils implements Utils {
      * A map with primitive wrapper type as key and corresponding primitive type
      * as value, for example: Integer.class -> int.class.
      */
+    @Immutable
     private static final Map<Class<?>, Class<?>> WRAPPER_TO_PRIMITIVE_TYPES_MAP;
 
     static {
@@ -191,6 +200,7 @@ public abstract class ClassUtils implements Utils {
      * A map with primitive type as key and its wrapper type
      * as value, for example: int.class -> Integer.class.
      */
+    @Immutable
     private static final Map<Class<?>, Class<?>> PRIMITIVE_TO_WRAPPER_TYPES_MAP;
 
     static {
@@ -210,6 +220,7 @@ public abstract class ClassUtils implements Utils {
      * A map with primitive type name as key and corresponding primitive type as
      * value, for example: "int" -> "int.class".
      */
+    @Immutable
     private static final Map<String, Class<?>> NAME_TO_TYPE_PRIMITIVE_MAP;
 
     static {
@@ -386,7 +397,6 @@ public abstract class ClassUtils implements Utils {
         return isAssignableFrom(Number.class, type);
     }
 
-
     /**
      * Checks if the given object is an instance of {@link Class}.
      *
@@ -500,6 +510,7 @@ public abstract class ClassUtils implements Utils {
      * @return all class names in class path
      */
     @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInClassPath(String classPath, boolean recursive) {
         String protocol = resolveProtocol(classPath);
         final String resolvedClassPath;
@@ -519,6 +530,8 @@ public abstract class ClassUtils implements Utils {
      * @param recursive is recursive on sub directories
      * @return all class names in class path
      */
+    @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInClassPath(File classPath, boolean recursive) {
         if (classPath == null || !classPath.exists()) {
             return emptySet();
@@ -548,6 +561,8 @@ public abstract class ClassUtils implements Utils {
      * @param recursive        is recursive on sub directories
      * @return all class names in directory
      */
+    @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
         if (classesDirectory == null || !classesDirectory.exists()) {
             return emptySet();
@@ -575,6 +590,8 @@ public abstract class ClassUtils implements Utils {
      * @param recursive is recursive on sub directories
      * @return all class names in jar file
      */
+    @Nonnull
+    @Immutable
     public static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
         if (jarFile == null || !jarFile.exists()) {
             return emptySet();
@@ -582,7 +599,7 @@ public abstract class ClassUtils implements Utils {
         Set<String> classNames;
         try {
             JarFile jarFile_ = new JarFile(jarFile);
-            Set<JarEntry> jarEntries = SimpleJarEntryScanner.INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
+            Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
             if (isEmpty(jarEntries)) {
                 classNames = emptySet();
             } else {
@@ -594,6 +611,7 @@ public abstract class ClassUtils implements Utils {
                         classNames.add(className);
                     }
                 }
+                classNames = unmodifiableSet(classNames);
             }
         } catch (Exception e) {
             classNames = emptySet();
@@ -631,6 +649,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllSuperClasses(Class<?> type) {
         return findAllSuperClasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -641,6 +661,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllInterfaces(Class<?> type) {
         return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -651,6 +673,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllInheritedTypes(Class<?> type) {
         return getAllInheritedClasses(type);
     }
@@ -661,6 +685,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllInheritedClasses(Class<?> type) {
         return findAllInheritedClasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -671,6 +697,8 @@ public abstract class ClassUtils implements Utils {
      * @param type the specified type
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> getAllClasses(Class<?> type) {
         return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -682,6 +710,8 @@ public abstract class ClassUtils implements Utils {
      * @param classFilters the filters for classes
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, false, classFilters);
     }
@@ -693,6 +723,8 @@ public abstract class ClassUtils implements Utils {
      * @param interfaceFilters the filters for interfaces
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
         return findTypes(type, false, true, false, true, interfaceFilters);
     }
@@ -704,6 +736,8 @@ public abstract class ClassUtils implements Utils {
      * @param classFilters the filters for types
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, true, classFilters);
     }
@@ -715,10 +749,14 @@ public abstract class ClassUtils implements Utils {
      * @param classFilters class filters
      * @return non-null read-only {@link List}
      */
+    @Nonnull
+    @Immutable
     public static List<Class<?>> findAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, true, true, true, true, classFilters);
     }
 
+    @Nonnull
+    @Immutable
     protected static List<Class<?>> findTypes(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes,
                                               boolean includeGenericSuperclass, boolean includeGenericInterfaces,
                                               Predicate<? super Class<?>>... typeFilters) {
