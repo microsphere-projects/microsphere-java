@@ -25,29 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ConstructorUtilsTest {
 
-    static class PublicConstructorClass {
-        public PublicConstructorClass() {
-        }
-
-        public PublicConstructorClass(String name) {
-        }
-    }
-
-    static class ProtectedConstructorClass {
-        protected ProtectedConstructorClass() {
-        }
-    }
-
-    static class PackagePrivateConstructorClass {
-        PackagePrivateConstructorClass() {
-        }
-    }
-
-    static class PrivateConstructorClass {
-        private PrivateConstructorClass() {
-        }
-    }
-
     @Test
     void testIsNonPrivateConstructorWithoutParameters() {
         // null
@@ -123,5 +100,28 @@ class ConstructorUtilsTest {
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(PackagePrivateConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(ProtectedConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(ProtectedConstructorClass.class)));
+    }
+
+    static class PublicConstructorClass {
+        public PublicConstructorClass() {
+        }
+
+        public PublicConstructorClass(String name) {
+        }
+    }
+
+    static class ProtectedConstructorClass {
+        protected ProtectedConstructorClass() {
+        }
+    }
+
+    static class PackagePrivateConstructorClass {
+        PackagePrivateConstructorClass() {
+        }
+    }
+
+    static class PrivateConstructorClass {
+        private PrivateConstructorClass() {
+        }
     }
 }
