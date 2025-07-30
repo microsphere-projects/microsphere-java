@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableSupplier;
@@ -37,6 +38,7 @@ import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.ExecutableUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * The utilities class of {@link Constructor}
@@ -132,13 +134,14 @@ public abstract class ConstructorUtils implements Utils {
      *
      * @param type               the class to find constructors from
      * @param constructorFilters one or more predicates used to filter constructors
-     * @return a list of constructors that match the filter conditions
+     * @return an immutable list of constructors that match the filter conditions
      */
     @Nonnull
+    @Immutable
     public static List<Constructor<?>> findConstructors(Class<?> type,
                                                         Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = ofList(type.getConstructors());
-        return filterAll(constructors, constructorFilters);
+        return unmodifiableList(filterAll(constructors, constructorFilters));
     }
 
     /**
@@ -170,13 +173,14 @@ public abstract class ConstructorUtils implements Utils {
      *
      * @param type               the class to find declared constructors from
      * @param constructorFilters one or more predicates used to filter constructors
-     * @return a list of declared constructors that match the filter conditions
+     * @return an immutable list of declared constructors that match the filter conditions
      */
     @Nonnull
+    @Immutable
     public static List<Constructor<?>> findDeclaredConstructors(Class<?> type,
                                                                 Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = ofList(type.getDeclaredConstructors());
-        return filterAll(constructors, constructorFilters);
+        return unmodifiableList(filterAll(constructors, constructorFilters));
     }
 
     /**
@@ -305,4 +309,5 @@ public abstract class ConstructorUtils implements Utils {
 
     private ConstructorUtils() {
     }
+    
 }
