@@ -1245,12 +1245,12 @@ public abstract class URLUtils implements Utils {
         final List<String> subProtocols;
         if (subProtocolsString == null) {
             Map<String, List<String>> parameters = resolveMatrixParameters(url);
-            subProtocols = unmodifiableList(parameters.get(SUB_PROTOCOL_MATRIX_NAME));
+            subProtocols = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
         } else {
             String[] values = split(subProtocolsString, COLON_CHAR);
             subProtocols = ofList(values);
         }
-        return subProtocols == null ? emptyList() : subProtocols;
+        return subProtocols == null ? emptyList() : unmodifiableList(subProtocols);
     }
 
     /**
