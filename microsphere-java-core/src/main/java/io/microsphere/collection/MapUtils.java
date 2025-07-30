@@ -1253,7 +1253,8 @@ public abstract class MapUtils implements Utils {
         }
         return properties;
     }
-    
+
     private MapUtils() {
     }
+    
 }
