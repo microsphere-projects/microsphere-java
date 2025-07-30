@@ -161,6 +161,18 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
 
     private static final String[] VERSION_ATTRIBUTE_NAMES = getVersionAttributeNames();
 
+    public ManifestArtifactResourceResolver() {
+        this(DEFAULT_PRIORITY);
+    }
+
+    public ManifestArtifactResourceResolver(int priority) {
+        super(priority);
+    }
+
+    public ManifestArtifactResourceResolver(ClassLoader classLoader, int priority) {
+        super(classLoader, priority);
+    }
+
     private static String[] getArtifactIdAttributeNames() {
         return getPropertyValues(ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE);
     }
@@ -172,19 +184,6 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     private static String[] getPropertyValues(String propertyName, String defaultValue) {
         String propertyValue = getProperty(propertyName, defaultValue);
         return split(propertyValue, COMMA);
-    }
-
-
-    public ManifestArtifactResourceResolver() {
-        this(DEFAULT_PRIORITY);
-    }
-
-    public ManifestArtifactResourceResolver(int priority) {
-        super(priority);
-    }
-
-    public ManifestArtifactResourceResolver(ClassLoader classLoader, int priority) {
-        super(classLoader, priority);
     }
 
     @Override
