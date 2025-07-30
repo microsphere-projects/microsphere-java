@@ -17,6 +17,9 @@
 package io.microsphere.annotation.processor.util;
 
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -46,6 +49,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.ElementKind.METHOD;
 import static javax.lang.model.util.ElementFilter.methodsIn;
@@ -77,6 +81,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> getDeclaredMethods(TypeElement type) {
         return findDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -100,6 +106,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> getDeclaredMethods(TypeMirror type) {
         return findDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -123,6 +131,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * including those inherited from superclasses and interfaces, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> getAllDeclaredMethods(TypeElement type) {
         return findAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -146,6 +156,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * including those inherited from superclasses and interfaces, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> getAllDeclaredMethods(TypeMirror type) {
         return findAllDeclaredMethods(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -179,6 +191,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findDeclaredMethods(TypeElement type, Predicate<? super ExecutableElement>... methodFilters) {
         return type == null ? emptyList() : findDeclaredMethods(type.asType(), methodFilters);
     }
@@ -212,6 +226,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
         return filterDeclaredMethods(type, false, methodFilters);
     }
@@ -243,6 +259,8 @@ public interface MethodUtils extends Utils {
      * including those inherited from superclasses and interfaces, but excluding those declared
      * in the excluded types, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findAllDeclaredMethods(TypeElement type, Type... excludedTypes) {
         return type == null ? emptyList() : findAllDeclaredMethods(type.asType(), excludedTypes);
     }
@@ -277,6 +295,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * excluding those declared in the excluded types, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Type... excludedTypes) {
         if (type == null) {
             return emptyList();
@@ -313,6 +333,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all public non-static methods declared in the specified type,
      * or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findPublicNonStaticMethods(TypeElement type, Type... excludedTypes) {
         return type == null ? emptyList() : findPublicNonStaticMethods(ofDeclaredType(type), excludedTypes);
     }
@@ -346,6 +368,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all public non-static methods declared in the specified type,
      * excluding those declared in the excluded types, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findPublicNonStaticMethods(TypeMirror type, Type... excludedTypes) {
         if (type == null) {
             return emptyList();
@@ -386,6 +410,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * including those inherited from superclasses and interfaces, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findAllDeclaredMethods(TypeElement type, Predicate<? super ExecutableElement>... methodFilters) {
         return type == null ? emptyList() : findAllDeclaredMethods(type.asType(), methodFilters);
     }
@@ -420,6 +446,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing all declared methods of the specified type,
      * including those inherited from superclasses and interfaces, or an empty list if the input type is null
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findAllDeclaredMethods(TypeMirror type, Predicate<? super ExecutableElement>... methodFilters) {
         return filterDeclaredMethods(type, true, methodFilters);
     }
@@ -454,6 +482,8 @@ public interface MethodUtils extends Utils {
      * @return a list of executable elements representing the filtered methods,
      * or an empty list if the input type is null or no methods match the filters
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> filterDeclaredMethods(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super ExecutableElement>... methodFilters) {
         if (type == null) {
             return emptyList();
@@ -541,6 +571,7 @@ public interface MethodUtils extends Utils {
      * @param methodName the name of the method to find
      * @return the first matching executable element representing the method, or null if none is found
      */
+    @Nullable
     static ExecutableElement findMethod(TypeElement type, String methodName) {
         return findMethod(type, methodName, EMPTY_TYPE_ARRAY);
     }
@@ -569,6 +600,7 @@ public interface MethodUtils extends Utils {
      * @param methodName the name of the method to find
      * @return the first matching executable element representing the method, or null if none is found
      */
+    @Nullable
     static ExecutableElement findMethod(TypeMirror type, String methodName) {
         return findMethod(type, methodName, EMPTY_TYPE_ARRAY);
     }
@@ -599,6 +631,7 @@ public interface MethodUtils extends Utils {
      * @param parameterTypes the parameter types of the method to match, must not be null
      * @return the first matching executable element representing the method, or null if none is found
      */
+    @Nullable
     static ExecutableElement findMethod(TypeElement type, String methodName, Type... parameterTypes) {
         return type == null ? null : findMethod(type.asType(), methodName, parameterTypes);
     }
@@ -627,6 +660,7 @@ public interface MethodUtils extends Utils {
      * @param parameterTypes the parameter types of the method to match, must not be null
      * @return the first matching executable element representing the method, or null if none is found
      */
+    @Nullable
     static ExecutableElement findMethod(TypeMirror type, String methodName, Type... parameterTypes) {
         if (type == null || methodName == null || parameterTypes == null) {
             return null;
@@ -661,6 +695,7 @@ public interface MethodUtils extends Utils {
      * @param parameterTypeNames the names of the parameter types of the method to match, must not be null
      * @return the first matching executable element representing the method, or null if none is found
      */
+    @Nullable
     static ExecutableElement findMethod(TypeElement type, String methodName, CharSequence... parameterTypeNames) {
         return type == null ? null : findMethod(type.asType(), methodName, parameterTypeNames);
     }
@@ -689,6 +724,7 @@ public interface MethodUtils extends Utils {
      * @param parameterTypeNames the names of the parameter types of the method to match, must not be null
      * @return the first matching executable element representing the method, or null if none is found
      */
+    @Nullable
     static ExecutableElement findMethod(TypeMirror type, String methodName, CharSequence... parameterTypeNames) {
         if (type == null || methodName == null || parameterTypeNames == null) {
             return null;
@@ -724,6 +760,7 @@ public interface MethodUtils extends Utils {
      * @param declaringMethod the method element whose override is to be found
      * @return the overridden method in the specified type, or null if no such method exists
      */
+    @Nullable
     static ExecutableElement getOverrideMethod(ProcessingEnvironment processingEnv, TypeElement type, ExecutableElement declaringMethod) {
         Elements elements = processingEnv.getElementUtils();
         return filterFirst(getAllDeclaredMethods(type), method -> elements.overrides(method, declaringMethod, type));
@@ -762,6 +799,8 @@ public interface MethodUtils extends Utils {
      * @return a filtered list of executable elements matching all the provided predicates,
      * or an empty list if the input list is null or empty, or no methods match the filters
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> filterMethods(List<ExecutableElement> methods, Predicate<? super ExecutableElement>... methodFilters) {
         if (isEmpty(methods)) {
             return emptyList();
@@ -775,7 +814,7 @@ public interface MethodUtils extends Utils {
                     .collect(toList());
         }
 
-        return filteredMethods.isEmpty() ? emptyList() : filteredMethods;
+        return filteredMethods.isEmpty() ? emptyList() : unmodifiableList(filteredMethods);
     }
 
     /**
@@ -798,6 +837,7 @@ public interface MethodUtils extends Utils {
      * @param method the executable element representing the method, may be null
      * @return the simple name of the method as a string, or null if the method is null
      */
+    @Nullable
     static String getMethodName(ExecutableElement method) {
         return method == null ? null : method.getSimpleName().toString();
     }
@@ -822,6 +862,7 @@ public interface MethodUtils extends Utils {
      * @param method the executable element representing the method, may be null
      * @return the fully qualified name of the method's return type as a string, or null if the method is null
      */
+    @Nullable
     static String getReturnTypeName(ExecutableElement method) {
         return method == null ? null : TypeUtils.toString(method.getReturnType());
     }
@@ -850,6 +891,8 @@ public interface MethodUtils extends Utils {
      * @return a list of type mirrors representing the parameter types of the method,
      * or an empty list if the method is null or has no parameters
      */
+    @Nonnull
+    @Immutable
     static List<TypeMirror> getMethodParameterTypeMirrors(ExecutableElement method) {
         if (method == null) {
             return emptyList();
@@ -864,7 +907,7 @@ public interface MethodUtils extends Utils {
                 .map(VariableElement::asType)
                 .collect(toList());
 
-        return parameterTypes;
+        return unmodifiableList(parameterTypes);
     }
 
     /**
@@ -894,7 +937,8 @@ public interface MethodUtils extends Utils {
      */
     static String[] getMethodParameterTypeNames(ExecutableElement method) {
         List<TypeMirror> parameterTypes = getMethodParameterTypeMirrors(method);
-        return parameterTypes.isEmpty() ? EMPTY_STRING_ARRAY : parameterTypes.stream().map(TypeUtils::toString).toArray(String[]::new);
+        return parameterTypes.isEmpty() ? EMPTY_STRING_ARRAY :
+                parameterTypes.stream().map(TypeUtils::toString).toArray(String[]::new);
     }
 
     /**
@@ -1079,6 +1123,7 @@ public interface MethodUtils extends Utils {
      * @param method the executable element representing the method, may be null
      * @return the enclosing element of the method, or null if the method is null
      */
+    @Nullable
     static Element getEnclosingElement(ExecutableElement method) {
         return method == null ? null : method.getEnclosingElement();
     }
@@ -1103,6 +1148,7 @@ public interface MethodUtils extends Utils {
      * @param excludedTypes the types whose methods should be excluded from the result, optional
      * @return a predicate that returns {@code true} for methods not declared in any of the excluded types
      */
+    @Nonnull
     static Predicate<? super ExecutableElement> methodPredicateForExcludedTypes(Type... excludedTypes) {
         return method -> {
             boolean excluded = true;
