@@ -17,6 +17,9 @@
 
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
@@ -79,6 +82,8 @@ public interface ConstructorUtils extends Utils {
      * @return a {@link List} of {@link ExecutableElement} objects representing the declared constructors;
      * never {@code null}, but may be empty if no constructors are found or if the input is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> getDeclaredConstructors(TypeElement type) {
         return type == null ? emptyList() : getDeclaredConstructors(type.asType());
     }
@@ -113,6 +118,8 @@ public interface ConstructorUtils extends Utils {
      * @return a {@link List} of {@link ExecutableElement} objects representing the declared constructors;
      * never {@code null}, but may be empty if no constructors are found or if the input is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> getDeclaredConstructors(TypeMirror type) {
         return type == null ? emptyList() : findDeclaredConstructors(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -140,6 +147,7 @@ public interface ConstructorUtils extends Utils {
      * @param parameterTypes the array of {@link Type} objects representing the parameter types to match
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
      */
+    @Nullable
     static ExecutableElement findConstructor(TypeElement type, Type... parameterTypes) {
         return type == null ? null : findConstructor(type.asType(), parameterTypes);
     }
@@ -167,6 +175,7 @@ public interface ConstructorUtils extends Utils {
      * @param parameterTypes the array of {@link Type} objects representing the parameter types to match
      * @return the matched {@link ExecutableElement} representing the constructor; may be {@code null}
      */
+    @Nullable
     static ExecutableElement findConstructor(TypeMirror type, Type... parameterTypes) {
         if (type == null) {
             return null;
@@ -206,6 +215,8 @@ public interface ConstructorUtils extends Utils {
      * @return a {@link List} of {@link ExecutableElement} objects representing the filtered declared constructors;
      * never {@code null}, but may be empty if no matching constructors are found or if the input is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findDeclaredConstructors(TypeElement type, Predicate<? super ExecutableElement>... constructorFilters) {
         return type == null ? emptyList() : findDeclaredConstructors(type.asType(), constructorFilters);
     }
@@ -223,6 +234,8 @@ public interface ConstructorUtils extends Utils {
      * @return a {@link List} of {@link ExecutableElement} objects representing the filtered declared constructors;
      * never {@code null}, but may be empty if no matching constructors are found or if the input is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> findDeclaredConstructors(TypeMirror type, Predicate<? super ExecutableElement>... constructorFilters) {
         return filterDeclaredConstructors(type, constructorFilters);
     }
@@ -260,6 +273,8 @@ public interface ConstructorUtils extends Utils {
      * @return a {@link List} of {@link ExecutableElement} objects representing the filtered declared constructors;
      * never {@code null}, but may be empty if no matching constructors are found or if the input is {@code null}
      */
+    @Nonnull
+    @Immutable
     static List<ExecutableElement> filterDeclaredConstructors(TypeMirror type, Predicate<? super ExecutableElement>... constructorFilters) {
         if (type == null) {
             return emptyList();
