@@ -17,10 +17,12 @@
 
 package io.microsphere.metadata;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.ServiceLoaderUtils;
 
 import java.util.List;
 
@@ -80,9 +82,10 @@ public interface ConfigurationPropertyLoader {
      * @return a list of loaded {@link ConfigurationProperty} instances, or an empty list if no loaders are found
      * @throws Throwable if any error occurs during generation
      * @see #load()
-     * @see io.microsphere.util.ServiceLoaderUtils#loadServicesList(Class)
+     * @see ServiceLoaderUtils#loadServicesList(Class)
      */
     @Nonnull
+    @Immutable
     static List<ConfigurationProperty> loadAll() {
         Logger logger = getLogger(ConfigurationPropertyLoader.class);
         List<ConfigurationPropertyLoader> loaders = loadServicesList(ConfigurationPropertyLoader.class);
