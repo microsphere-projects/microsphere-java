@@ -30,8 +30,7 @@ import java.util.List;
  * and for creating the appropriate connection if possible.
  * </p>
  *
- * <h3>Example Implementation</h3>
- *
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class MySubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
  *     @Override

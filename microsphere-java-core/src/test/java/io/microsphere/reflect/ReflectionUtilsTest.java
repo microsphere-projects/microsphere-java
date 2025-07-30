@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @see ReflectionUtilsTest
  * @since 1.0.0
  */
-public class ReflectionUtilsTest extends AbstractTestCase {
+class ReflectionUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testGetCallerClassX() throws Exception {
+    void testGetCallerClassX() throws Exception {
         Class<?> expectedClass = ReflectionUtilsTest.class;
 
         Class<?> callerClass = getCallerClass();
@@ -47,7 +47,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetCallerClassName() {
+    void testGetCallerClassName() {
         String expectedClassName = ReflectionUtilsTest.class.getName();
 
         String callerClassName = getCallerClassName();
@@ -63,7 +63,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testToList() {
+    void testToList() {
         int[] intArray = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
         List<Integer> list = toList(intArray);
         Object expectedList = asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
@@ -77,7 +77,7 @@ public class ReflectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testReadFieldsAsMap() {
+    void testReadFieldsAsMap() {
         Map<String, Object> map = readFieldsAsMap(new String("abc"));
         assertFalse(map.isEmpty());
 

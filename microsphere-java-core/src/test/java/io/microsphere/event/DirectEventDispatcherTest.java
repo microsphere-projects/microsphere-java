@@ -39,7 +39,7 @@ class DirectEventDispatcherTest {
     private EchoEventListener2 echoEventListener2;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         dispatcher = new DirectEventDispatcher();
         dispatcher.removeAllEventListeners();
         echoEventListener = new EchoEventListener();
@@ -47,17 +47,17 @@ class DirectEventDispatcherTest {
     }
 
     @Test
-    public void testGetExecutor() {
+    void testGetExecutor() {
         assertNotNull(dispatcher.getExecutor());
     }
 
     @Test
-    public void testGetAllListeners() {
+    void testGetAllListeners() {
         assertTrue(dispatcher.getAllEventListeners().isEmpty());
     }
 
     @Test
-    public void testSingleListener() {
+    void testSingleListener() {
         // add two listeners
         dispatcher.addEventListener(echoEventListener);
         dispatcher.addEventListener(echoEventListener2);
@@ -76,7 +76,7 @@ class DirectEventDispatcherTest {
     }
 
     @Test
-    public void testMultipleListeners() {
+    void testMultipleListeners() {
 
         // add two listeners
         dispatcher.addEventListeners(echoEventListener, echoEventListener2);
@@ -102,7 +102,7 @@ class DirectEventDispatcherTest {
     }
 
     @Test
-    public void testDispatchEvent() {
+    void testDispatchEvent() {
 
         dispatcher.addEventListener(echoEventListener);
 
@@ -122,7 +122,7 @@ class DirectEventDispatcherTest {
         dispatcher.addEventListener(echoEventListener2);
 
         // reset the listeners
-        init();
+        setUp();
         dispatcher.addEventListeners(echoEventListener, echoEventListener2);
 
         // dispatch a Event

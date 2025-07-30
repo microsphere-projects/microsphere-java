@@ -48,7 +48,7 @@ abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactRe
     protected A resolver;
 
     @BeforeEach
-    void init() throws Throwable {
+    void setUp() throws Throwable {
         this.resolver = createResolver();
     }
 

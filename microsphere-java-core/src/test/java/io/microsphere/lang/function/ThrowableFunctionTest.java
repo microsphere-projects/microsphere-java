@@ -38,44 +38,44 @@ class ThrowableFunctionTest {
     private static final ThrowableFunction<String, Integer> stringToInteger = Integer::valueOf;
 
     @Test
-    public void testExecute1() {
+    void testExecute1() {
         assertEquals("Hello,World", function.execute("Hello,World"));
     }
 
     @Test
-    public void testExecute1OnException() {
+    void testExecute1OnException() {
         assertThrows(RuntimeException.class, () -> throwableFunction.execute("For testing"));
     }
 
     @Test
-    public void testExecute2() {
+    void testExecute2() {
         assertEquals("Hello,World", execute("Hello,World", function));
     }
 
     @Test
-    public void testExecute2OnException() {
+    void testExecute2OnException() {
         assertThrows(RuntimeException.class, () -> execute("For testing", throwableFunction));
     }
 
     @Test
-    public void testExecute3() {
+    void testExecute3() {
         assertEquals("Hello,World", execute("Hello,World", function, (t, e) -> t));
     }
 
     @Test
-    public void testExecute3OnException() {
+    void testExecute3OnException() {
         assertThrows(RuntimeException.class, () -> execute("For testing", throwableFunction, (t, e) -> {
             throw new RuntimeException(t, e);
         }));
     }
 
     @Test
-    public void testCompose() throws Throwable {
+    void testCompose() throws Throwable {
         assertEquals(1, stringToInteger.compose(function).apply("1"));
     }
 
     @Test
-    public void testAndThen() throws Throwable {
+    void testAndThen() throws Throwable {
         assertEquals(1, function.andThen(stringToInteger).apply("1"));
     }
 

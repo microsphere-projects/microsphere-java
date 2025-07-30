@@ -31,155 +31,155 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MemberUtils
  * @since 1.0.0
  */
-public class MemberUtilsTest {
+class MemberUtilsTest {
 
     @Test
-    public void testSTATIC_METHOD_PREDICATE() {
+    void testSTATIC_METHOD_PREDICATE() {
         assertTrue(STATIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "staticMethod")));
     }
 
     @Test
-    public void testNON_STATIC_METHOD_PREDICATE() {
+    void testNON_STATIC_METHOD_PREDICATE() {
         assertTrue(NON_STATIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "privateMethod")));
     }
 
     @Test
-    public void testFINAL_METHOD_PREDICATE() {
+    void testFINAL_METHOD_PREDICATE() {
         assertTrue(FINAL_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "errorMethod")));
     }
 
     @Test
-    public void testPUBLIC_METHOD_PREDICATE() {
+    void testPUBLIC_METHOD_PREDICATE() {
         assertTrue(PUBLIC_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
     }
 
     @Test
-    public void testNON_PRIVATE_METHOD_PREDICATE() {
+    void testNON_PRIVATE_METHOD_PREDICATE() {
         assertTrue(NON_PRIVATE_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
         assertTrue(NON_PRIVATE_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "protectedMethod", Object[].class)));
         assertTrue(NON_PRIVATE_MEMBER_PREDICATE.test(findMethod(ReflectionTest.class, "packagePrivateMethod", String.class)));
     }
 
     @Test
-    public void testIsStatic() {
+    void testIsStatic() {
         assertTrue(isStatic(findField(ReflectionTest.class, "staticField")));
     }
 
     @Test
-    public void testIsStaticOnNonStaticField() {
+    void testIsStaticOnNonStaticField() {
         assertFalse(isStatic(findField(ReflectionTest.class, "field")));
     }
 
     @Test
-    public void testIsStaticOnNull() {
+    void testIsStaticOnNull() {
         assertFalse(isStatic(null));
     }
 
 
     @Test
-    public void testIsAbstract() {
+    void testIsAbstract() {
         assertTrue(isAbstract(findMethod(Map.class, "size")));
     }
 
     @Test
-    public void testIsAbstractOnNonAbstract() {
+    void testIsAbstractOnNonAbstract() {
         assertFalse(isStatic(findMethod(ReflectionTest.class, "privateMethod")));
     }
 
     @Test
-    public void testIsAbstractOnNull() {
+    void testIsAbstractOnNull() {
         assertFalse(isStatic(null));
     }
 
     @Test
-    public void testIsNonStatic() {
+    void testIsNonStatic() {
         assertTrue(isNonStatic(findField(ReflectionTest.class, "privateField")));
     }
 
     @Test
-    public void testIsNonStaticOnStaticField() {
+    void testIsNonStaticOnStaticField() {
         assertFalse(isNonStatic(findField(ReflectionTest.class, "staticField")));
     }
 
     @Test
-    public void testIsNonStaticOnNull() {
+    void testIsNonStaticOnNull() {
         assertFalse(isNonStatic(null));
     }
 
     @Test
-    public void testIsFinal() {
+    void testIsFinal() {
         assertTrue(isFinal(findField(ReflectionTest.class, "privateField")));
     }
 
     @Test
-    public void testIsFinalOnNonFinalField() {
+    void testIsFinalOnNonFinalField() {
         assertFalse(isFinal(findField(ReflectionTest.class, "packagePrivateField")));
     }
 
     @Test
-    public void testIsFinalOnNull() {
+    void testIsFinalOnNull() {
         assertFalse(isFinal(null));
     }
 
     @Test
-    public void testIsPrivate() {
+    void testIsPrivate() {
         assertTrue(isPrivate(findField(ReflectionTest.class, "privateField")));
     }
 
     @Test
-    public void testIsPrivateOnNonPrivateField() {
+    void testIsPrivateOnNonPrivateField() {
         assertFalse(isPrivate(findField(ReflectionTest.class, "packagePrivateField")));
     }
 
     @Test
-    public void testIsPrivateOnNull() {
+    void testIsPrivateOnNull() {
         assertFalse(isPrivate(null));
     }
 
     @Test
-    public void testIsPublic() {
+    void testIsPublic() {
         assertTrue(isPublic(findField(ReflectionTest.class, "publicField")));
     }
 
     @Test
-    public void testIsPublicOnNonPublicField() {
+    void testIsPublicOnNonPublicField() {
         assertFalse(isPublic(findField(ReflectionTest.class, "packagePrivateField")));
     }
 
     @Test
-    public void testIsPublicOnNull() {
+    void testIsPublicOnNull() {
         assertFalse(isPublic(null));
     }
 
     @Test
-    public void testIsNonPrivate() {
+    void testIsNonPrivate() {
         assertTrue(isNonPrivate(findField(ReflectionTest.class, "publicField")));
         assertTrue(isNonPrivate(findField(ReflectionTest.class, "packagePrivateField")));
         assertTrue(isNonPrivate(findField(ReflectionTest.class, "protectedField")));
     }
 
     @Test
-    public void testIsNonPrivateOnPrivateField() {
+    void testIsNonPrivateOnPrivateField() {
         assertFalse(isNonPrivate(findField(ReflectionTest.class, "privateField")));
     }
 
     @Test
-    public void testIsNonPrivateOnNull() {
+    void testIsNonPrivateOnNull() {
         assertFalse(isNonPrivate(null));
     }
 
     @Test
-    public void testAsMember() {
+    void testAsMember() {
         assertNotNull(asMember(findField(ReflectionTest.class, "publicField")));
     }
 
     @Test
-    public void testAsMemberOnNotMember() {
+    void testAsMemberOnNotMember() {
         assertNull(asMember(new Object()));
     }
 
     @Test
-    public void testAsMemberOnNull() {
+    void testAsMemberOnNull() {
         assertNull(asMember(null));
     }
 }

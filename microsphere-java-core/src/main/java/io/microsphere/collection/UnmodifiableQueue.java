@@ -17,6 +17,8 @@
 
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -59,6 +61,7 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
  * @see CollectionUtils#unmodifiableIterator(Iterator)
  * @since 1.0.0
  */
+@Immutable
 public class UnmodifiableQueue<E> implements Queue<E>, Serializable {
 
     private static final long serialVersionUID = -1L;

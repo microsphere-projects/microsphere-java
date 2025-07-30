@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
@@ -111,6 +112,7 @@ public abstract class Maps implements Utils {
      * @apiNote This method is designed as a convenient alternative to {@link java.util.Collections#emptyMap()} with support for JDK 9+ Map features.
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap() {
         if (of0MethodHandle == null) {
             return emptyMap();
@@ -140,6 +142,7 @@ public abstract class Maps implements Utils {
      * especially useful for initializing maps in a concise manner.
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1) {
         if (of1MethodHandle == null) {
             return singletonMap(k1, v1);
@@ -170,6 +173,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2) {
         if (of2MethodHandle == null) {
             return of(k1, v1, k2, v2);
@@ -202,6 +206,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3) {
         if (of3MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3);
@@ -236,6 +241,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
         if (of4MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4);
@@ -272,6 +278,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
         if (of5MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
@@ -310,6 +317,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
         if (of6MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
@@ -351,6 +359,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
         if (of7MethodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
@@ -394,6 +403,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8) {
         if (of8MethodHandle == null) {
@@ -440,6 +450,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8, K k9, V v9) {
         if (of9MethodHandle == null) {
@@ -489,6 +500,7 @@ public abstract class Maps implements Utils {
      * @throws NullPointerException     if any key or value is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8, K k9, V v9, K k10, V v10) {
         if (of10MethodHandle == null) {
@@ -500,7 +512,6 @@ public abstract class Maps implements Utils {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
         }
     }
-
 
     /**
      * Returns an unmodifiable map containing the provided entries.
@@ -522,6 +533,8 @@ public abstract class Maps implements Utils {
      * especially useful for test data setup or static initialization.
      */
     @SuppressWarnings("varargs")
+    @Nonnull
+    @Immutable
     public static <K, V> Map<K, V> ofMap(Map.Entry<? extends K, ? extends V>... entries) {
         if (length(entries) < 1) {
             return emptyMap();

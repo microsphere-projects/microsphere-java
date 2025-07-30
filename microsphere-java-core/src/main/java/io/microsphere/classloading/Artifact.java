@@ -1,5 +1,6 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
@@ -31,6 +32,7 @@ import static java.util.Objects.hash;
  * boolean isMatch = artifact1.matches(artifact2); // returns false
  * }</pre>
  */
+@Immutable
 public class Artifact {
 
     public static final String WILDCARD = SymbolConstants.WILDCARD;

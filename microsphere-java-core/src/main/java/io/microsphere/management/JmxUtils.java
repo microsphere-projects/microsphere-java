@@ -16,6 +16,7 @@
  */
 package io.microsphere.management;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -245,6 +246,7 @@ public abstract class JmxUtils implements Utils {
      * @return a non-null, unmodifiable list of {@link MemoryPoolMXBean} objects.
      */
     @Nonnull
+    @Immutable
     public static List<MemoryPoolMXBean> getMemoryPoolMXBeans() {
         if (memoryPoolMXBeans == null) {
             memoryPoolMXBeans = unmodifiableList(ManagementFactory.getMemoryPoolMXBeans());
@@ -275,6 +277,7 @@ public abstract class JmxUtils implements Utils {
      * @see ManagementFactory#getMemoryManagerMXBeans()
      */
     @Nonnull
+    @Immutable
     public static List<MemoryManagerMXBean> getMemoryManagerMXBeans() {
         if (memoryManagerMXBeans == null) {
             memoryManagerMXBeans = unmodifiableList(ManagementFactory.getMemoryManagerMXBeans());
@@ -305,6 +308,7 @@ public abstract class JmxUtils implements Utils {
      * @see ManagementFactory#getGarbageCollectorMXBeans()
      */
     @Nonnull
+    @Immutable
     public static List<GarbageCollectorMXBean> getGarbageCollectorMXBeans() {
         if (garbageCollectorMXBeans == null) {
             garbageCollectorMXBeans = unmodifiableList(ManagementFactory.getGarbageCollectorMXBeans());
@@ -337,6 +341,7 @@ public abstract class JmxUtils implements Utils {
      * @return a non-null, unmodifiable map where the keys are attribute names and the values are MBeanAttribute instances
      */
     @Nonnull
+    @Immutable
     public static Map<String, MBeanAttribute> getMBeanAttributesMap(MBeanServer mBeanServer, ObjectName objectName) {
         MBeanAttribute[] mBeanAttributes = getMBeanAttributes(mBeanServer, objectName);
         int length = mBeanAttributes.length;

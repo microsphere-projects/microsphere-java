@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.util.Collections;
 import java.util.Iterator;
 
@@ -52,6 +54,7 @@ import static java.util.Collections.emptyIterator;
  * @see Iterator
  * @see Collections#emptyIterator()
  */
+@Immutable
 public class EmptyIterator<E> implements Iterator<E> {
 
     /**

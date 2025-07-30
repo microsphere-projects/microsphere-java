@@ -49,39 +49,39 @@ class ShutdownHookUtilsTest {
     private static final Logger logger = getLogger(ShutdownHookUtilsTest.class);
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         registerShutdownHook();
     }
 
     @AfterEach
-    public void destroy() {
+    void tearDown() {
         clearShutdownHookCallbacks();
     }
 
     @Test
-    public void testRegisterShutdownHook() {
+    void testRegisterShutdownHook() {
         testFilterShutdownHookThreadsWithRemoved();
         registerShutdownHook();
         assertFalse(filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER).isEmpty());
     }
 
     @Test
-    public void testGetShutdownHookThreads() {
+    void testGetShutdownHookThreads() {
         assertFalse(getShutdownHookThreads().isEmpty());
     }
 
     @Test
-    public void testFilterShutdownHookThreads() {
+    void testFilterShutdownHookThreads() {
         assertTrue(filterShutdownHookThreads(t -> false).isEmpty());
     }
 
     @Test
-    public void testFilterShutdownHookThreadsWithRemoved() {
+    void testFilterShutdownHookThreadsWithRemoved() {
         assertFalse(filterShutdownHookThreads(SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER, true).isEmpty());
     }
 
     @Test
-    public void testAddShutdownHookCallback() {
+    void testAddShutdownHookCallback() {
         int times = 3;
         for (int i = 0; i < times; i++) {
             addShutdownHookCallback(new ShutdownHookCallback(i));
@@ -94,7 +94,7 @@ class ShutdownHookUtilsTest {
     }
 
     @Test
-    public void testRemoveShutdownHookCallback() {
+    void testRemoveShutdownHookCallback() {
         int times = 3;
         for (int i = 0; i < times; i++) {
             addShutdownHookCallback(new ShutdownHookCallback(i));
@@ -112,12 +112,12 @@ class ShutdownHookUtilsTest {
     }
 
     @Test
-    public void testRemoveShutdownHookCallbackOnNull() {
+    void testRemoveShutdownHookCallbackOnNull() {
         assertFalse(removeShutdownHookCallback(null));
     }
 
     @Test
-    public void testShutdownHookCallback() throws InterruptedException {
+    void testShutdownHookCallback() throws InterruptedException {
 
         final Runnable callback = new Runnable() {
             @Override

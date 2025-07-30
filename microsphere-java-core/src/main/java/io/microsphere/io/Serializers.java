@@ -17,6 +17,8 @@
 package io.microsphere.io;
 
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -123,6 +125,7 @@ public class Serializers {
      * @param <S>            the type to be serialized
      * @return non-null {@link List}
      */
+    @Nonnull
     public <S> List<Serializer<S>> get(Class<S> serializedType) {
         return (List) typedSerializers.getOrDefault(serializedType, emptyList());
     }

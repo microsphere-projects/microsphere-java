@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
+
 import java.lang.reflect.Type;
 
 import static io.microsphere.util.ArrayUtils.arrayEquals;
@@ -43,6 +45,7 @@ import static java.util.Objects.hash;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@Immutable
 public class MultipleType {
 
     private final Type[] types;

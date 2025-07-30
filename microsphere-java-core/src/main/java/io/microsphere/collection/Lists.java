@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
@@ -114,6 +115,7 @@ public abstract class Lists implements Utils {
      * @return an empty unmodifiable list
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList() {
         if (of0MethodHandle == null) {
             return emptyList();
@@ -142,6 +144,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if the element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1) {
         if (of1MethodHandle == null) {
             return singletonList(e1);
@@ -171,6 +174,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2) {
         if (of2MethodHandle == null) {
             return of(e1, e2);
@@ -201,6 +205,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3) {
         if (of3MethodHandle == null) {
             return of(e1, e2, e3);
@@ -232,6 +237,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4) {
         if (of4MethodHandle == null) {
             return of(e1, e2, e3, e4);
@@ -264,6 +270,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5) {
         if (of5MethodHandle == null) {
             return of(e1, e2, e3, e4, e5);
@@ -289,6 +296,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6) {
         if (of6MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6);
@@ -323,6 +331,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
         if (of7MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7);
@@ -358,6 +367,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
         if (of8MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
@@ -394,6 +404,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
         if (of9MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
@@ -423,6 +434,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if an element is {@code null}
      */
     @Nonnull
+    @Immutable
     static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
         if (of10MethodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
@@ -433,7 +445,6 @@ public abstract class Lists implements Utils {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         }
     }
-
 
     /**
      * Returns an unmodifiable list containing the specified elements.
@@ -454,6 +465,7 @@ public abstract class Lists implements Utils {
      * @throws NullPointerException if any element is {@code null}
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E... elements) {
         if (length(elements) < 1) {
             return ofList();

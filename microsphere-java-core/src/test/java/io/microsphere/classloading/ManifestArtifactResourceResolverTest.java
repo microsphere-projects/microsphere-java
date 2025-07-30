@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see ManifestArtifactResourceResolver
  * @since 1.0.0
  */
-public class ManifestArtifactResourceResolverTest extends StreamArtifactResourceResolverTest<ManifestArtifactResourceResolver> {
+class ManifestArtifactResourceResolverTest extends StreamArtifactResourceResolverTest<ManifestArtifactResourceResolver> {
 
     @Override
     void assertArtifact(Artifact artifact) {

@@ -57,7 +57,7 @@ class BeanPropertyTest {
     }
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         beanProperty = of(this, "value");
     }
 

@@ -26,12 +26,12 @@ class FastByteArrayOutputStreamTest {
     private FastByteArrayOutputStream outputStream;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         outputStream = new FastByteArrayOutputStream(2);
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         outputStream.close();
     }
 
@@ -109,6 +109,6 @@ class FastByteArrayOutputStreamTest {
 
     @Test
     void testClose() {
-        destroy();
+        tearDown();
     }
 }

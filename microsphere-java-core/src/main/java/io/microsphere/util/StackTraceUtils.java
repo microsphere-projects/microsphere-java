@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
@@ -213,6 +214,7 @@ public abstract class StackTraceUtils implements Utils {
      *
      * @return a non-null array of {@link StackTraceElement} representing the current thread's stack trace
      */
+    @Nonnull
     public static StackTraceElement[] getStackTrace() {
         return currentThread().getStackTrace();
     }

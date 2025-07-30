@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassPathUtils;
@@ -28,6 +29,7 @@ import java.security.ProtectionDomain;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarFile;
 
@@ -78,6 +80,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ClassPathUtils
  * @since 1.0.0
  */
+@Immutable
 public class ClassDataRepository {
 
     /**
@@ -100,8 +103,9 @@ public class ClassDataRepository {
      * @return all package names in class paths
      */
     @Nonnull
+    @Immutable
     public Set<String> getAllPackageNamesInClassPaths() {
-        return packageNameToClassNamesMap.keySet();
+        return unmodifiableSet(packageNameToClassNamesMap.keySet());
     }
 
     /**
@@ -134,6 +138,7 @@ public class ClassDataRepository {
      * @return non-null {@link Set}
      */
     @Nonnull
+    @Immutable
     public Set<String> getClassNamesInClassPath(String classPath, boolean recursive) {
         Set<String> classNames = classPathToClassNamesMap.get(classPath);
         if (isEmpty(classNames)) {
@@ -149,6 +154,7 @@ public class ClassDataRepository {
      * @return non-null {@link Set}
      */
     @Nonnull
+    @Immutable
     public Set<String> getClassNamesInPackage(Package onePackage) {
         return getClassNamesInPackage(onePackage.getName());
     }
@@ -160,9 +166,10 @@ public class ClassDataRepository {
      * @return non-null {@link Set}
      */
     @Nonnull
+    @Immutable
     public Set<String> getClassNamesInPackage(String packageName) {
         Set<String> classNames = packageNameToClassNamesMap.get(packageName);
-        return classNames == null ? emptySet() : classNames;
+        return classNames == null ? emptySet() : unmodifiableSet(classNames);
     }
 
     /**
@@ -172,6 +179,7 @@ public class ClassDataRepository {
      * @return Read-only
      */
     @Nonnull
+    @Immutable
     public Map<String, Set<String>> getClassPathToClassNamesMap() {
         return classPathToClassNamesMap;
     }
@@ -182,6 +190,7 @@ public class ClassDataRepository {
      * @return Read-only
      */
     @Nonnull
+    @Immutable
     public Set<String> getAllClassNamesInClassPaths() {
         Set<String> allClassNames = new LinkedHashSet();
         for (Set<String> classNames : classPathToClassNamesMap.values()) {
@@ -219,6 +228,8 @@ public class ClassDataRepository {
         return codeSourceLocation;
     }
 
+    @Nonnull
+    @Immutable
     private Map<String, Set<String>> initClassPathToClassNamesMap() {
         Map<String, Set<String>> classPathToClassNamesMap = new LinkedHashMap<>();
         Set<String> classPaths = new LinkedHashSet<>();
@@ -231,10 +242,12 @@ public class ClassDataRepository {
         return unmodifiableMap(classPathToClassNamesMap);
     }
 
+    @Nonnull
+    @Immutable
     private Map<String, String> initClassNameToClassPathsMap() {
         Map<String, String> classNameToClassPathsMap = new LinkedHashMap<>();
 
-        for (Map.Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
+        for (Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
             String classPath = entry.getKey();
             Set<String> classNames = entry.getValue();
             for (String className : classNames) {
@@ -245,9 +258,11 @@ public class ClassDataRepository {
         return unmodifiableMap(classNameToClassPathsMap);
     }
 
+    @Nonnull
+    @Immutable
     private Map<String, Set<String>> initPackageNameToClassNamesMap() {
         Map<String, Set<String>> packageNameToClassNamesMap = new LinkedHashMap();
-        for (Map.Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
+        for (Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
             String className = entry.getKey();
             String packageName = resolvePackageName(className);
             Set<String> classNamesInPackage = packageNameToClassNamesMap.get(packageName);
@@ -256,6 +271,11 @@ public class ClassDataRepository {
                 packageNameToClassNamesMap.put(packageName, classNamesInPackage);
             }
             classNamesInPackage.add(className);
+        }
+
+        for (Entry<String, Set<String>> entry : packageNameToClassNamesMap.entrySet()) {
+            Set<String> classNames = entry.getValue();
+            entry.setValue(unmodifiableSet(classNames));
         }
 
         return unmodifiableMap(packageNameToClassNamesMap);

@@ -17,6 +17,8 @@
 
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.util.Map;
 
 /**
@@ -41,6 +43,7 @@ import java.util.Map;
  * @see MapUtils#ofEntry(Object, Object)
  * @see MapUtils#immutableEntry(Object, Object)
  */
+@Immutable
 public class ImmutableEntry<K, V> extends DefaultEntry<K, V> {
 
     public ImmutableEntry(K key, V value) {

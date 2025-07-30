@@ -73,6 +73,7 @@ import static javax.lang.model.element.ElementKind.STATIC_INIT;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.methodsIn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -96,19 +97,19 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchesElementTypeElementKind() {
+    void testMatchesElementTypeElementKind() {
         assertTrue(matchesElementKind(echoMethod, METHOD));
         assertFalse(matchesElementKind(echoMethod, FIELD));
     }
 
     @Test
-    public void testMatchesElementTypeElementKindOnNull() {
+    void testMatchesElementTypeElementKindOnNull() {
         assertFalse(matchesElementKind(NULL_ELEMENT, FIELD));
         assertFalse(matchesElementKind(echoMethod, NULL_ELEMENT_KIND));
     }
 
     @Test
-    public void testIsPublicNonStatic() {
+    void testIsPublicNonStatic() {
         methodsIn(getDeclaredMembers(testTypeElement)).forEach(method -> assertTrue(isPublicNonStatic(method)));
 
         // Integer#valueOf(String) is a public static method
@@ -116,49 +117,49 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsPublicNonStaticOnNull() {
+    void testIsPublicNonStaticOnNull() {
         assertFalse(isPublicNonStatic(NULL_ELEMENT));
     }
 
     @Test
-    public void testHasModifiers() {
+    void testHasModifiers() {
         List<? extends Element> members = getAllDeclaredMembers(testTypeElement.asType());
         List<VariableElement> fields = fieldsIn(members);
         assertTrue(hasModifiers(fields.get(0), PRIVATE));
     }
 
     @Test
-    public void testHasModifiersOnNull() {
+    void testHasModifiersOnNull() {
         assertFalse(hasModifiers(NULL_ELEMENT));
         assertFalse(hasModifiers(testTypeElement, null));
     }
 
     @Test
-    public void testIsClass() {
+    void testIsClass() {
         assertTrue(isClass(CLASS));
         assertTrue(isClass(ENUM));
         assertFalse(isClass(INTERFACE));
     }
 
     @Test
-    public void testIsClassOnNull() {
+    void testIsClassOnNull() {
         assertFalse(isClass(null));
     }
 
     @Test
-    public void testIsInterface() {
+    void testIsInterface() {
         assertTrue(isInterface(INTERFACE));
         assertTrue(isInterface(ANNOTATION_TYPE));
         assertFalse(isInterface(CLASS));
     }
 
     @Test
-    public void testIsInterfaceOnNull() {
+    void testIsInterfaceOnNull() {
         assertFalse(isInterface(null));
     }
 
     @Test
-    public void testIsDeclaredType() {
+    void testIsDeclaredType() {
         assertTrue(isDeclaredType(CLASS));
         assertTrue(isDeclaredType(ENUM));
         assertTrue(isDeclaredType(INTERFACE));
@@ -167,24 +168,24 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsDeclaredTypeOnNull() {
+    void testIsDeclaredTypeOnNull() {
         assertFalse(isDeclaredType(null));
     }
 
     @Test
-    public void testIsField() {
+    void testIsField() {
         assertTrue(isField(FIELD));
         assertTrue(isField(ENUM_CONSTANT));
         assertFalse(isField(LOCAL_VARIABLE));
     }
 
     @Test
-    public void testIsFieldOnNull() {
+    void testIsFieldOnNull() {
         assertFalse(isField(null));
     }
 
     @Test
-    public void testIsExecutable() {
+    void testIsExecutable() {
         assertTrue(isExecutable(METHOD));
         assertTrue(isExecutable(CONSTRUCTOR));
         assertTrue(isExecutable(STATIC_INIT));
@@ -193,12 +194,12 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsExecutableOnNull() {
+    void testIsExecutableOnNull() {
         assertFalse(isExecutable(null));
     }
 
     @Test
-    public void testIsMember() {
+    void testIsMember() {
         assertTrue(isMember(METHOD));
         assertTrue(isMember(CONSTRUCTOR));
         assertTrue(isMember(STATIC_INIT));
@@ -209,12 +210,12 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsMemberOnNull() {
+    void testIsMemberOnNull() {
         assertFalse(isMember(null));
     }
 
     @Test
-    public void testIsInitializer() {
+    void testIsInitializer() {
         assertTrue(isInitializer(STATIC_INIT));
         assertTrue(isInitializer(INSTANCE_INIT));
         assertFalse(isInitializer(METHOD));
@@ -223,12 +224,12 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsInitializerOnNull() {
+    void testIsInitializerOnNull() {
         assertFalse(isInitializer(null));
     }
 
     @Test
-    public void testIsVariable() {
+    void testIsVariable() {
         assertTrue(isVariable(ENUM_CONSTANT));
         assertTrue(isVariable(FIELD));
         assertTrue(isVariable(PARAMETER));
@@ -239,7 +240,7 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsVariableOnNull() {
+    void testIsVariableOnNull() {
         assertFalse(isVariable(null));
     }
 
@@ -256,33 +257,33 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchesElementType() {
+    void testMatchesElementType() {
         for (ElementType elementType : values()) {
             assertMatchesElementType(elementType);
         }
     }
 
     @Test
-    public void testMatchesElementTypeOnNull() {
+    void testMatchesElementTypeOnNull() {
         assertFalse(matchesElementType(null, (ElementType) null));
         assertFalse(matchesElementType(null, TYPE_USE));
         assertFalse(matchesElementType(toElementKind(TYPE_USE), (ElementType) null));
     }
 
     @Test
-    public void testMatchesElementTypeWithArray() {
+    void testMatchesElementTypeWithArray() {
         for (ElementType elementType : values()) {
             assertTrue(matchesElementType(toElementKind(elementType), values()));
         }
     }
 
     @Test
-    public void testMatchesElementTypeWithElement() {
+    void testMatchesElementTypeWithElement() {
         matchesElementType(this.testTypeElement, TYPE);
     }
 
     @Test
-    public void testMatchesElementTypeWithArrayOnNull() {
+    void testMatchesElementTypeWithArrayOnNull() {
         assertFalse(matchesElementType(NULL_ELEMENT_KIND));
         assertFalse(matchesElementType(NULL_ELEMENT));
 
@@ -296,44 +297,44 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFilterElements() {
+    void testFilterElements() {
         assertEmptyList(filterElements(ofList(testTypeElement), alwaysFalse()));
     }
 
     @Test
-    public void testFilterElementsOnNull() {
+    void testFilterElementsOnNull() {
         assertEmptyList(filterElements(NULL_LIST, alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
         assertSame(emptyList(), filterElements(methods, NULL_PREDICATE_ARRAY));
     }
 
     @Test
-    public void testFilterElementsOnEmpty() {
+    void testFilterElementsOnEmpty() {
         assertEmptyList(filterElements(emptyList(), alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
-        assertSame(methods, filterElements(methods));
+        assertEquals(methods, filterElements(methods));
     }
 
     @Test
-    public void testMatchParameterTypes() {
+    void testMatchParameterTypes() {
         assertTrue(matchParameterTypes(echoMethod.getParameters(), String.class));
         assertFalse(matchParameterTypes(echoMethod.getParameters(), Object.class));
     }
 
     @Test
-    public void testMatchParameterTypesOnNull() {
+    void testMatchParameterTypesOnNull() {
         assertFalse(matchParameterTypes(NULL_LIST, String.class));
         assertFalse(matchParameterTypes(emptyList(), NULL_CLASS_ARRAY));
     }
 
     @Test
-    public void testMatchParameterTypeNames() {
+    void testMatchParameterTypeNames() {
         assertTrue(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.String"));
         assertFalse(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.Object"));
     }
 
     @Test
-    public void testMatchParameterTypeNamesOnNull() {
+    void testMatchParameterTypeNamesOnNull() {
         assertFalse(matchParameterTypeNames(NULL_LIST, "java.lang.String"));
         assertFalse(matchParameterTypeNames(emptyList(), NULL_STRING_ARRAY));
     }

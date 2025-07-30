@@ -1,6 +1,7 @@
 package io.microsphere.reflect;
 
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -23,6 +24,7 @@ import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.Class.forName;
 import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * Reflection Utility class , generic methods are defined from {@link FieldUtils} , {@link MethodUtils} , {@link
@@ -147,7 +149,7 @@ public abstract class ReflectionUtils implements Utils {
      * can be used to retrieve caller class information. This class and its methods are specific
      * to the Sun/HotSpot JVM and may not be present or functional on other JVM implementations.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * if (ReflectionUtils.isSupportedSunReflectReflection()) {
      *     System.out.println("sun.reflect.Reflection is supported.");
@@ -171,7 +173,7 @@ public abstract class ReflectionUtils implements Utils {
      * available. If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
      * the {@link StackTraceElement} approach.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * public class Example {
      *     public void exampleMethod() {
@@ -317,7 +319,7 @@ public abstract class ReflectionUtils implements Utils {
      * available and supported. If not supported (e.g., non-Sun/HotSpot JVM), it falls back to using
      * the {@link StackTraceElement} approach.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * public class Example {
      *     public void exampleMethod() {
@@ -359,7 +361,7 @@ public abstract class ReflectionUtils implements Utils {
      * <p>This method is useful for converting any array type (including nested arrays) into a list structure.
      * If the array contains nested arrays, they will be recursively converted into lists as well.</p>
      *
-     * <h3>Usage Example</h3>
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * String[] stringArray = {"apple", "banana", "cherry"};
      * List<String> stringList = ReflectionUtils.toList(stringArray);
@@ -441,6 +443,7 @@ public abstract class ReflectionUtils implements Utils {
      * @throws IllegalStateException if any field cannot be accessed due to security restrictions.
      */
     @Nonnull
+    @Immutable
     public static Map<String, Object> readFieldsAsMap(Object object) {
         Map<String, Object> fieldsAsMap = new LinkedHashMap();
         Class<?> type = object.getClass();
@@ -469,7 +472,7 @@ public abstract class ReflectionUtils implements Utils {
                 throw new IllegalStateException(e);
             }
         }
-        return fieldsAsMap;
+        return unmodifiableMap(fieldsAsMap);
     }
 
     /**

@@ -57,14 +57,14 @@ public abstract class AbstractExtendableProtocolURLStreamHandlerTest {
     protected URL testURLWithSP;
 
     @BeforeEach
-    final void init() throws IOException {
+    final void setUp() throws IOException {
         handler = createHandler();
         this.testURL = new URL(getTestURL());
         this.testURLWithSP = new URL(getTestURLWithSP());
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         System.getProperties().remove(HANDLER_PACKAGES_PROPERTY_NAME);
     }
 

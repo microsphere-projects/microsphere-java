@@ -29,7 +29,7 @@ import io.microsphere.lang.Prioritized;
  * a priority value to influence the order in which they are considered when multiple resolvers
  * are available.
  *
- * <h3>Example Implementation</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class MyProcessIdResolver implements ProcessIdResolver {
  *     public int getPriority() {

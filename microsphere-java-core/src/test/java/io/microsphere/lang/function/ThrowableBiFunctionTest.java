@@ -36,28 +36,28 @@ class ThrowableBiFunctionTest {
     private static final ThrowableBiFunction<String, String, Integer> stringHashCode = (t, u) -> t.hashCode() + u.hashCode();
 
     @Test
-    public void testApply() throws Throwable {
+    void testApply() throws Throwable {
         assertEquals("mercyblitz", stringConcat.apply("mercy", "blitz"));
         assertEquals("1".hashCode() + "2".hashCode(), stringHashCode.apply("1", "2"));
     }
 
     @Test
-    public void testExecute3() {
+    void testExecute3() {
         assertEquals("1".hashCode() + "2".hashCode(), execute("1", "2", stringHashCode));
     }
 
     @Test
-    public void testExecute3OnException() {
+    void testExecute3OnException() {
         assertThrows(RuntimeException.class, () -> execute(null, null, stringHashCode));
     }
 
     @Test
-    public void testExecute4() {
+    void testExecute4() {
         assertEquals(1, execute(null, null, stringHashCode, (t, u, e) -> 1));
     }
 
     @Test
-    public void testExecute4OnException() {
+    void testExecute4OnException() {
         assertThrows(IllegalStateException.class, () -> execute(null, null, stringHashCode, (t, u, e) -> {
             throw new IllegalStateException(e);
         }));

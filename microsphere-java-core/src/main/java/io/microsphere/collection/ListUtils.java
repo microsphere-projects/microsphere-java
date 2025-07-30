@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
@@ -34,6 +35,7 @@ import static io.microsphere.collection.CollectionUtils.toIterator;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.Assert.assertTrue;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -48,8 +50,43 @@ import static java.util.Collections.unmodifiableList;
  */
 public abstract class ListUtils implements Utils {
 
-    public static boolean isList(Object values) {
+    /**
+     * Checks if the specified object is an instance of {@link List}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     List<String> list = Arrays.asList("a", "b", "c");
+     *     boolean result1 = ListUtils.isList(list);  // returns true
+     *
+     *     String notAList = "not a list";
+     *     boolean result2 = ListUtils.isList(notAList);  // returns false
+     *
+     *     Object nullObject = null;
+     *     boolean result3 = ListUtils.isList(nullObject);  // returns false
+     * }</pre>
+     *
+     * @param values the object to check
+     * @return {@code true} if the specified object is an instance of {@link List}, otherwise {@code false}
+     */
+    public static boolean isList(@Nullable Object values) {
         return values instanceof List;
+    }
+
+    /**
+     * Checks if the specified type is assignable from {@link List}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     boolean result1 = ListUtils.isList(ArrayList.class);  // returns true
+     *     boolean result2 = ListUtils.isList(String.class);     // returns false
+     *     boolean result3 = ListUtils.isList(List.class);       // returns true
+     * }</pre>
+     *
+     * @param type the type to check
+     * @return {@code true} if the specified type is assignable from {@link List}, otherwise {@code false}
+     */
+    public static boolean isList(@Nullable Class<?> type) {
+        return isAssignableFrom(List.class, type);
     }
 
     /**
@@ -120,6 +157,7 @@ public abstract class ListUtils implements Utils {
      * @see #ofList(Object[]) for more details on behavior and immutability
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> of(E... elements) {
         return ofList(elements);
     }
@@ -147,6 +185,7 @@ public abstract class ListUtils implements Utils {
      * @return an immutable list containing the specified elements
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(E... elements) {
         if (isEmpty(elements)) {
             return emptyList();
@@ -180,6 +219,7 @@ public abstract class ListUtils implements Utils {
      * @return An immutable list containing all elements from the iterable.
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(Iterable<E> iterable) {
         if (iterable == null) {
             return emptyList();
@@ -212,6 +252,7 @@ public abstract class ListUtils implements Utils {
      * @return An immutable list containing all elements from the enumeration.
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(Enumeration<E> enumeration) {
         return ofList(toIterator(enumeration));
     }
@@ -237,6 +278,7 @@ public abstract class ListUtils implements Utils {
      * @return An immutable list containing all elements from the iterator.
      */
     @Nonnull
+    @Immutable
     public static <E> List<E> ofList(Iterator<E> iterator) {
         if (iterator == null) {
             return emptyList();

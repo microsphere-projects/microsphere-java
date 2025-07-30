@@ -48,7 +48,7 @@ class JSONUtilsTest {
     private StringBuilder jsonBuilder;
 
     @BeforeEach
-    public void before() {
+    void setUp() {
         this.jsonBuilder = new StringBuilder();
     }
 
@@ -83,194 +83,194 @@ class JSONUtilsTest {
     }
 
     @Test
-    public void testAppendOnFloat() {
+    void testAppendOnFloat() {
         append(jsonBuilder, "name", 1.0f);
         assertEquals("\"name\":1.0", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnDouble() {
+    void testAppendOnDouble() {
         append(jsonBuilder, "name", 1.0);
         assertEquals("\"name\":1.0", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnChar() {
+    void testAppendOnChar() {
         append(jsonBuilder, "name", 'a');
         assertEquals("\"name\":\"a\"", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnBooleanObject() {
+    void testAppendOnBooleanObject() {
         append(jsonBuilder, "name", TRUE);
         assertEquals("\"name\":true", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnByteObject() {
+    void testAppendOnByteObject() {
         append(jsonBuilder, "name", valueOf((byte) 1));
         assertEquals("\"name\":1", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnShortObject() {
+    void testAppendOnShortObject() {
         append(jsonBuilder, "name", Short.valueOf((short) 1));
         assertEquals("\"name\":1", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnIntegerObject() {
+    void testAppendOnIntegerObject() {
         append(jsonBuilder, "name", Integer.valueOf(1));
         assertEquals("\"name\":1", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnLongObject() {
+    void testAppendOnLongObject() {
         append(jsonBuilder, "name", Long.valueOf(1L));
         assertEquals("\"name\":1", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnFloatObject() {
+    void testAppendOnFloatObject() {
         append(jsonBuilder, "name", Float.valueOf(1.0f));
         assertEquals("\"name\":1.0", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnDoubleObject() {
+    void testAppendOnDoubleObject() {
         append(jsonBuilder, "name", Double.valueOf(1.0));
         assertEquals("\"name\":1.0", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnCharacterObject() {
+    void testAppendOnCharacterObject() {
         append(jsonBuilder, "name", valueOf('a'));
         assertEquals("\"name\":\"a\"", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnString() {
+    void testAppendOnString() {
         append(jsonBuilder, "name", "a");
         assertEquals("\"name\":\"a\"", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnType() {
+    void testAppendOnType() {
         append(jsonBuilder, "name", String.class);
         assertEquals("\"name\":\"java.lang.String\"", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnBooleanObjectArray() {
+    void testAppendOnBooleanObjectArray() {
         append(jsonBuilder, "name", new Boolean[]{TRUE, FALSE});
         assertEquals("\"name\":[true,false]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnByteObjectArray() {
+    void testAppendOnByteObjectArray() {
         append(jsonBuilder, "name", new Byte[]{(byte) 1, (byte) 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnShortObjectArray() {
+    void testAppendOnShortObjectArray() {
         append(jsonBuilder, "name", new Short[]{(short) 1, (short) 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnIntegerObjectArray() {
+    void testAppendOnIntegerObjectArray() {
         append(jsonBuilder, "name", new Integer[]{1, 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnLongObjectArray() {
+    void testAppendOnLongObjectArray() {
         append(jsonBuilder, "name", new Long[]{1L, 2L});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnFloatObjectArray() {
+    void testAppendOnFloatObjectArray() {
         append(jsonBuilder, "name", new Float[]{1.0f, 2.0f});
         assertEquals("\"name\":[1.0,2.0]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnDoubleObjectArray() {
+    void testAppendOnDoubleObjectArray() {
         append(jsonBuilder, "name", new Double[]{1.0, 2.0});
         assertEquals("\"name\":[1.0,2.0]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnCharacterObjectArray() {
+    void testAppendOnCharacterObjectArray() {
         append(jsonBuilder, "name", new Character[]{'a', 'b'});
         assertEquals("\"name\":[\"a\",\"b\"]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnBooleanArray() {
+    void testAppendOnBooleanArray() {
         append(jsonBuilder, "name", new boolean[]{true, false});
         assertEquals("\"name\":[true,false]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnByteArray() {
+    void testAppendOnByteArray() {
         append(jsonBuilder, "name", new byte[]{1, 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnShortArray() {
+    void testAppendOnShortArray() {
         append(jsonBuilder, "name", new short[]{1, 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnIntegerArray() {
+    void testAppendOnIntegerArray() {
         append(jsonBuilder, "name", new int[]{1, 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnLongArray() {
+    void testAppendOnLongArray() {
         append(jsonBuilder, "name", new long[]{1, 2});
         assertEquals("\"name\":[1,2]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnFloatArray() {
+    void testAppendOnFloatArray() {
         append(jsonBuilder, "name", new float[]{1.0f, 2.0f});
         assertEquals("\"name\":[1.0,2.0]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnDoubleArray() {
+    void testAppendOnDoubleArray() {
         append(jsonBuilder, "name", new double[]{1.0, 2.0});
         assertEquals("\"name\":[1.0,2.0]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnCharArray() {
+    void testAppendOnCharArray() {
         append(jsonBuilder, "name", new char[]{'a', 'b'});
         assertEquals("\"name\":[\"a\",\"b\"]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnStringArray() {
+    void testAppendOnStringArray() {
         append(jsonBuilder, "name", new String[]{"a", "b"});
         assertEquals("\"name\":[\"a\",\"b\"]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnObjectAsArray() {
+    void testAppendOnObjectAsArray() {
         Object value = new boolean[]{TRUE, FALSE};
         append(jsonBuilder, "name", value);
         assertEquals("\"name\":[true,false]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnObjectAsMap() {
+    void testAppendOnObjectAsMap() {
         Object value = ofMap(
                 "z", true,
                 "b", (byte) 1,
@@ -287,35 +287,35 @@ class JSONUtilsTest {
     }
 
     @Test
-    public void testAppendOnObjectAsIterable() {
+    void testAppendOnObjectAsIterable() {
         Object value = ofList(true, (byte) 1, '2', 3.0, 4.0f, 5L, 6, (short) 7, "8", ofArray("9", "10"));
         append(jsonBuilder, "name", value);
         assertEquals("\"name\":[true,1,\"2\",3.0,4.0,5,6,7,\"8\",[\"9\",\"10\"]]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnObjectAsString() {
+    void testAppendOnObjectAsString() {
         Object value = "s";
         append(jsonBuilder, "name", value);
         assertEquals("\"name\":\"s\"", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnObjectAsInteger() {
+    void testAppendOnObjectAsInteger() {
         Object value = 1;
         append(jsonBuilder, "name", value);
         assertEquals("\"name\":1", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnGenericArray() {
+    void testAppendOnGenericArray() {
         TimeUnit[] values = ofArray(DAYS, HOURS, MINUTES);
         append(jsonBuilder, "name", values);
         assertEquals("\"name\":[\"DAYS\",\"HOURS\",\"MINUTES\"]", jsonBuilder.toString());
     }
 
     @Test
-    public void testAppendOnTypeArray() {
+    void testAppendOnTypeArray() {
         Class<?>[] classes = ofArray(String.class, Integer.class);
         append(jsonBuilder, "name", classes);
         assertEquals("\"name\":[\"java.lang.String\",\"java.lang.Integer\"]", jsonBuilder.toString());

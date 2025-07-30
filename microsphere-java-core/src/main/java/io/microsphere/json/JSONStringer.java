@@ -21,6 +21,7 @@ import java.util.List;
 
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONObject.numberToString;
+import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.util.Arrays.fill;
 
 /**
@@ -268,10 +269,10 @@ public class JSONStringer {
 
         if (value == null || value instanceof Boolean || value == NULL) {
             this.out.append(value);
-
         } else if (value instanceof Number) {
             this.out.append(numberToString((Number) value));
-
+        } else if (value instanceof Class) {
+            string(getTypeName(((Class) value)));
         } else {
             string(value.toString());
         }

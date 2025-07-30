@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -34,7 +35,6 @@ import static io.microsphere.util.Version.ofVersion;
  * actual reflection object.
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * public class FieldDefinition extends MemberDefinition<Field> {
  *
@@ -72,6 +72,7 @@ import static io.microsphere.util.Version.ofVersion;
  * @see MethodDefinition
  * @since 1.0.0
  */
+@Immutable
 public abstract class MemberDefinition<M extends Member> extends ReflectiveDefinition {
 
     @Nonnull
@@ -87,7 +88,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name) {
         this(since, null, declaredClassName, name);
     }
 
@@ -97,7 +98,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
         this(ofVersion(since), deprecation, declaredClassName, name);
     }
 
@@ -106,7 +107,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name) {
         this(since, null, declaredClassName, name);
     }
 
@@ -116,7 +117,7 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      * @param declaredClassName the name of declared class
      * @param name              the member name
      */
-    public MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
+    protected MemberDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String declaredClassName, @Nonnull String name) {
         super(since, deprecation, declaredClassName);
         this.name = name;
     }

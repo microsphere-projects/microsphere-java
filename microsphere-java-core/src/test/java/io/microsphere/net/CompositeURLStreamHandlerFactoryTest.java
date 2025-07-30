@@ -28,7 +28,7 @@ class CompositeURLStreamHandlerFactoryTest {
     private CompositeURLStreamHandlerFactory compositeFactory;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         factory = new StandardURLStreamHandlerFactory();
         compositeFactory = new CompositeURLStreamHandlerFactory();
         compositeFactory.addURLStreamHandlerFactory(factory);

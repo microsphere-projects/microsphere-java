@@ -31,6 +31,7 @@ import static io.microsphere.json.JSON.toInteger;
 import static io.microsphere.json.JSON.toLong;
 import static io.microsphere.json.JSON.typeMismatch;
 import static io.microsphere.lang.function.ThrowableAction.execute;
+import static io.microsphere.util.ClassUtils.getTypeName;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
@@ -860,16 +861,15 @@ public class JSONObject {
                 return new JSONArray((Collection) o);
             } else if (o.getClass().isArray()) {
                 return new JSONArray(o);
-            }
-            if (o instanceof Map) {
+            } else if (o instanceof Map) {
                 return new JSONObject((Map) o);
-            }
-            if (o instanceof Boolean || o instanceof Byte || o instanceof Character || o instanceof Double
+            } else if (o instanceof Boolean || o instanceof Byte || o instanceof Character || o instanceof Double
                     || o instanceof Float || o instanceof Integer || o instanceof Long || o instanceof Short
                     || o instanceof String) {
                 return o;
-            }
-            if (o.getClass().getPackage().getName().startsWith("java.")) {
+            } else if (o instanceof Class) {
+                return getTypeName((Class) o);
+            } else if (o.getClass().getPackage().getName().startsWith("java.")) {
                 return o.toString();
             }
         } catch (Exception ignored) {

@@ -54,7 +54,7 @@ class StringToQueueConverterTest {
     private StringToQueueConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToQueueConverter();
     }
 

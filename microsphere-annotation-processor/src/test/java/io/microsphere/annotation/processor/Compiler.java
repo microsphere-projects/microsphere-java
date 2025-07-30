@@ -84,26 +84,6 @@ public class Compiler {
         this.javaFileManager.setLocation(SOURCE_OUTPUT, singleton(targetDirectory));
     }
 
-    public Compiler sourcePaths(File... sourcePaths) {
-        addAll(this.sourcePaths, sourcePaths);
-        return this;
-    }
-
-    public Compiler sourcePaths(Iterable<Class<?>> sourceClasses) {
-        for (Class<?> sourceClass : sourceClasses) {
-            sourcePath(sourceClass);
-        }
-        return this;
-    }
-
-    public Compiler sourcePath(Class<?> sourceClass) {
-        File sourcePath = detectSourcePath(sourceClass);
-        if (sourcePath != null) {
-            return sourcePaths(sourcePath);
-        }
-        return this;
-    }
-
     static File defaultSourceDirectory() {
         return detectSourcePath(Compiler.class);
     }
@@ -165,6 +145,30 @@ public class Compiler {
         }
     }
 
+    static String resolveJavaSourceFileRelativePath(Class<?> sourceClass) {
+        return sourceClass.getName().replace(DOT_CHAR, separatorChar).concat(JAVA_EXTENSION);
+    }
+
+    public Compiler sourcePaths(File... sourcePaths) {
+        addAll(this.sourcePaths, sourcePaths);
+        return this;
+    }
+
+    public Compiler sourcePaths(Iterable<Class<?>> sourceClasses) {
+        for (Class<?> sourceClass : sourceClasses) {
+            sourcePath(sourceClass);
+        }
+        return this;
+    }
+
+    public Compiler sourcePath(Class<?> sourceClass) {
+        File sourcePath = detectSourcePath(sourceClass);
+        if (sourcePath != null) {
+            return sourcePaths(sourcePath);
+        }
+        return this;
+    }
+
     public Compiler processors(Processor... processors) {
         addAll(this.processors, processors);
         return this;
@@ -191,10 +195,6 @@ public class Compiler {
             }
         }
         return null;
-    }
-
-    static String resolveJavaSourceFileRelativePath(Class<?> sourceClass) {
-        return sourceClass.getName().replace(DOT_CHAR, separatorChar).concat(JAVA_EXTENSION);
     }
 
     public boolean compile(Class<?>... sourceClasses) {

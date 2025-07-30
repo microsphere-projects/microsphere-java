@@ -119,7 +119,7 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @AfterEach
-    void after() {
+    void tearDown() {
         clearURLStreamHandlerFactory();
     }
 

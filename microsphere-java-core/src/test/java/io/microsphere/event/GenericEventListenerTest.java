@@ -34,19 +34,19 @@ class GenericEventListenerTest {
     private MyGenericEventListener listener;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         this.listener = new MyGenericEventListener();
         this.eventDispatcher = EventDispatcher.newDefault();
         this.eventDispatcher.addEventListener(listener);
     }
 
     @AfterEach
-    public void destroy() {
+    void tearDown() {
         this.eventDispatcher.removeAllEventListeners();
     }
 
     @Test
-    public void testOnEvent() {
+    void testOnEvent() {
         String value = "Hello,World";
         EchoEvent echoEvent = new EchoEvent(value);
         eventDispatcher.dispatch(echoEvent);

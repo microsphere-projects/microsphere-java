@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang.function;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 
 import java.util.function.Predicate;
@@ -41,6 +42,7 @@ public interface Predicates {
      * Predicate<String>[] emptyPredicates = Predicates.EMPTY_PREDICATE_ARRAY;
      * }</pre>
      */
+    @Immutable
     Predicate[] EMPTY_PREDICATE_ARRAY = new Predicate[0];
 
     /**
@@ -59,6 +61,7 @@ public interface Predicates {
      * @return a shared, empty array of {@link Predicate} instances
      */
     @Nonnull
+    @Immutable
     static <T> Predicate<T>[] emptyArray() {
         return (Predicate<T>[]) EMPTY_PREDICATE_ARRAY;
     }
@@ -80,6 +83,7 @@ public interface Predicates {
      * @return a {@link Predicate} that always returns <code>true</code>
      */
     @Nonnull
+    @Immutable
     static <T> Predicate<T> alwaysTrue() {
         return e -> true;
     }
@@ -101,6 +105,7 @@ public interface Predicates {
      * @return a {@link Predicate} that always returns <code>false</code>
      */
     @Nonnull
+    @Immutable
     static <T> Predicate<T> alwaysFalse() {
         return e -> false;
     }

@@ -108,12 +108,12 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     );
 
     @AfterAll
-    public static void afterAll() {
+    static void afterAll() {
         setVerbose(verbose);
     }
 
     @Test
-    public void testFields() throws Exception {
+    void testFields() throws Exception {
 
         Set<Field> allFields = findAllDeclaredFields(ClassLoader.class);
 
@@ -131,31 +131,31 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetLoadedClassCount() {
+    void testGetLoadedClassCount() {
         long count = getLoadedClassCount();
         assertTrue(count > 0);
     }
 
     @Test
-    public void testGetUnloadedClassCount() {
+    void testGetUnloadedClassCount() {
         long count = getUnloadedClassCount();
         assertTrue(count > -1);
     }
 
     @Test
-    public void testGetTotalLoadedClassCount() {
+    void testGetTotalLoadedClassCount() {
         long count = getTotalLoadedClassCount();
         assertTrue(count > 0);
     }
 
     @Test
-    public void testIsVerbose() {
+    void testIsVerbose() {
         boolean verbose = isVerbose();
         assertFalse(verbose);
     }
 
     @Test
-    public void testSetVerbose() {
+    void testSetVerbose() {
         boolean verbose = isVerbose();
         setVerbose(true);
         assertTrue(isVerbose());
@@ -165,7 +165,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testClassLoadingMXBean() {
+    void testClassLoadingMXBean() {
         ClassLoadingMXBean classLoadingMXBean = getClassLoadingMXBean();
         assertEquals(classLoadingMXBean.getTotalLoadedClassCount(), getTotalLoadedClassCount());
         assertEquals(classLoadingMXBean.getLoadedClassCount(), getLoadedClassCount());
@@ -177,7 +177,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetDefaultClassLoader() {
+    void testGetDefaultClassLoader() {
         Thread currentThread = currentThread();
         ClassLoader classLoader = currentThread.getContextClassLoader();
         try {
@@ -192,7 +192,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassLoader() {
+    void testGetClassLoader() {
         ClassLoader classLoader = currentClass.getClassLoader();
         // ClassLoaderUtilsTest -> classLoader
         assertSame(classLoader, getClassLoader(currentClass));
@@ -201,18 +201,18 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassLoaderOnNull() {
+    void testGetClassLoaderOnNull() {
         ClassLoader classLoader = currentClass.getClassLoader();
         assertSame(classLoader, getClassLoader(null));
     }
 
     @Test
-    public void testGetCallerClassLoader() {
+    void testGetCallerClassLoader() {
         assertSame(currentClass.getClassLoader(), getCallerClassLoader());
     }
 
     @Test
-    public void testFindLoadedClasses() {
+    void testFindLoadedClasses() {
         Set<Class<?>> classes = findLoadedClasses(classLoader, currentClass.getName());
         assertEquals(1, classes.size());
         assertTrue(classes.contains(currentClass));
@@ -223,14 +223,14 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindLoadedClassesOnNullClassLoader() {
+    void testFindLoadedClassesOnNullClassLoader() {
         Set<Class<?>> classes = findLoadedClasses(null, currentClass.getName());
         assertEquals(1, classes.size());
         assertTrue(classes.contains(currentClass));
     }
 
     @Test
-    public void testFindLoadedClassesOnNullClassNames() {
+    void testFindLoadedClassesOnNullClassNames() {
         Set<Class<?>> classes = findLoadedClasses(classLoader, TEST_NULL_STRING_ARRAY);
         assertSame(emptySet(), classes);
 
@@ -239,7 +239,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindLoadedClassesOnEmptyClassNames() {
+    void testFindLoadedClassesOnEmptyClassNames() {
         Set<Class<?>> classes = findLoadedClasses(classLoader, TEST_EMPTY_LIST);
         assertSame(emptySet(), classes);
 
@@ -251,17 +251,17 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsLoadedClassOnClass() {
+    void testIsLoadedClassOnClass() {
         assertIsLoadedClass(classLoader, false);
     }
 
     @Test
-    public void testIsLoadedClassOnClassName() {
+    void testIsLoadedClassOnClassName() {
         assertIsLoadedClass(classLoader, true);
     }
 
     @Test
-    public void testIsLoadedClassOnNull() {
+    void testIsLoadedClassOnNull() {
         assertIsLoadedClass(null, true);
         assertIsLoadedClass(null, false);
     }
@@ -271,7 +271,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindLoadedClass() {
+    void testFindLoadedClass() {
         Class<?> type = null;
         if (isLessThanJava12) {
             for (Class<?> class_ : getAllLoadedClasses(classLoader)) {
@@ -291,24 +291,24 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testLoadClass() {
+    void testLoadClass() {
         assertLoadClass(classLoader);
     }
 
     @Test
-    public void testLoadClassOnNullClassLoader() {
+    void testLoadClassOnNullClassLoader() {
         assertLoadClass(null);
     }
 
     @Test
-    public void testLoadClassOnNullClassName() {
+    void testLoadClassOnNullClassName() {
         assertNull(loadClass(this.classLoader, null));
 
         assertNull(loadClass(this.classLoader, null, true));
     }
 
     @Test
-    public void testLoadClassOnBlankClassName() {
+    void testLoadClassOnBlankClassName() {
         assertNull(loadClass(this.classLoader, ""));
         assertNull(loadClass(this.classLoader, SPACE));
 
@@ -317,7 +317,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testDoLoadClassOnNull() {
+    void testDoLoadClassOnNull() {
         assertNull(doLoadClass(null, ClassLoaderUtilsTest.class.getName()));
         assertNull(doLoadClass(null, Nonnull.class.getName()));
         assertNull(doLoadClass(null, String.class.getName()));
@@ -325,17 +325,17 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testLoadClassOnNotFound() {
+    void testLoadClassOnNotFound() {
         assertNull(loadClass(classLoader, "io.microsphere.not.found.class"));
     }
 
     @Test
-    public void testLoadClassOnNull() {
+    void testLoadClassOnNull() {
         assertLoadClass(null);
     }
 
     @Test
-    public void testLoadClassWithCached() {
+    void testLoadClassWithCached() {
         assertLoadClass(classLoader, false);
         assertLoadClass(classLoader, true);
     }
@@ -349,12 +349,12 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetResources() throws IOException {
+    void testGetResources() throws IOException {
         assertGetResources(classLoader);
     }
 
     @Test
-    public void testGetResourcesOnNullClassLoader() throws IOException {
+    void testGetResourcesOnNullClassLoader() throws IOException {
         assertGetResources(null);
     }
 
@@ -368,18 +368,18 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetResource() {
+    void testGetResource() {
         assertGetResource(classLoader);
     }
 
     @Test
-    public void testGetResourceOnNullClassLoader() {
+    void testGetResourceOnNullClassLoader() {
         assertGetResource();
         assertGetResource(null);
     }
 
     @Test
-    public void testGetResourceAsString() throws IOException {
+    void testGetResourceAsString() throws IOException {
         for (String testResource : testResources) {
             String resource = getResourceAsString(testResource);
             assertNotNull(resource);
@@ -387,7 +387,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetResourceAsStringOnNull() throws IOException {
+    void testGetResourceAsStringOnNull() throws IOException {
         assertNull(getResourceAsString("not-exists"));
     }
 
@@ -408,12 +408,12 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassResource() {
+    void testGetClassResource() {
         assertGetClassResource(this.classLoader);
     }
 
     @Test
-    public void testGetClassResourceOnNullClassLoader() {
+    void testGetClassResourceOnNullClassLoader() {
         assertGetClassResource(null);
     }
 
@@ -422,7 +422,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetInheritableClassLoaders() {
+    void testGetInheritableClassLoaders() {
         Set<ClassLoader> classLoaders = getInheritableClassLoaders(classLoader);
         assertNotNull(classLoaders);
         assertTrue(classLoaders.size() > 1);
@@ -430,7 +430,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllLoadedClassesMap() {
+    void testGetAllLoadedClassesMap() {
         if (isLessThanJava12) {
             Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
             assertNotNull(allLoadedClassesMap);
@@ -439,7 +439,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetAllLoadedClasses() {
+    void testGetAllLoadedClasses() {
         if (isLessThanJava12) {
             Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
             assertNotNull(classesSet);
@@ -453,7 +453,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetLoadedClasses() {
+    void testGetLoadedClasses() {
         if (isLessThanJava12) {
             Set<Class<?>> classesSet = getLoadedClasses(classLoader);
             assertNotNull(classesSet);
@@ -467,7 +467,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindLoadedClassesInClassPath() {
+    void testFindLoadedClassesInClassPath() {
         Double d = null;
         Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPath(classLoader);
 
@@ -491,13 +491,13 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindLoadedClassesInClassPaths() {
+    void testFindLoadedClassesInClassPaths() {
         Set<Class<?>> allLoadedClasses = findLoadedClassesInClassPaths(classLoader, getClassPaths());
         assertFalse(allLoadedClasses.isEmpty());
     }
 
     @Test
-    public void testRemoveClassPathURL() {
+    void testRemoveClassPathURL() {
         assertFalse(removeClassPathURL(new TestClassLoader(), null));
         Set<URL> urls = findAllClassPathURLs(classLoader);
         for (URL url : urls) {
@@ -509,7 +509,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testIsPresent() {
+    void testIsPresent() {
         assertFalse(isPresent(null));
         assertFalse(isPresent(""));
         assertFalse(isPresent(SPACE));
@@ -525,7 +525,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testFindURLClassLoader() {
+    void testFindURLClassLoader() {
         URLClassLoader parent = newInstance(EMPTY_URL_ARRAY);
         assertFindURLClassLoader(parent, parent);
 
@@ -542,14 +542,14 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewURLClassLoaderWithURLIterable() {
+    void testNewURLClassLoaderWithURLIterable() {
         Set<URL> urls = findAllClassPathURLs(this.classLoader);
         URLClassLoader urlClassLoader = newURLClassLoader(urls, classLoader);
         assertArrayEquals(asArray(urls, URL.class), urlClassLoader.getURLs());
     }
 
     @Test
-    public void testNewURLClassLoaderWithURLIterableOnEmpty() {
+    void testNewURLClassLoaderWithURLIterableOnEmpty() {
         URLClassLoader urlClassLoader = newURLClassLoader(emptyList(), classLoader);
         assertArrayEquals(EMPTY_URL_ARRAY, urlClassLoader.getURLs());
 
@@ -558,7 +558,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewURLClassLoaderWithURLIterableOnNull() {
+    void testNewURLClassLoaderWithURLIterableOnNull() {
         assertThrows(IllegalArgumentException.class, () -> newURLClassLoader((Iterable<URL>) null, classLoader));
         assertThrows(IllegalArgumentException.class, () -> newURLClassLoader((Iterable<URL>) null, null));
         assertThrows(IllegalArgumentException.class, () -> newURLClassLoader((Iterable<URL>) null));
@@ -569,7 +569,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewURLClassLoaderWithURLArray() {
+    void testNewURLClassLoaderWithURLArray() {
         Set<URL> urls = findAllClassPathURLs(this.classLoader);
         URL[] urlsArray = asArray(urls, URL.class);
 
@@ -587,7 +587,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewURLClassLoaderWithURLArrayOnEmpty() {
+    void testNewURLClassLoaderWithURLArrayOnEmpty() {
         URLClassLoader urlClassLoader = newURLClassLoader(EMPTY_URL_ARRAY, classLoader);
         assertArrayEquals(EMPTY_URL_ARRAY, urlClassLoader.getURLs());
 
@@ -602,7 +602,7 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testNewURLClassLoaderWithURLArrayOnNull() {
+    void testNewURLClassLoaderWithURLArrayOnNull() {
         assertThrows(IllegalArgumentException.class, () -> newURLClassLoader((URL[]) null, classLoader));
         assertThrows(IllegalArgumentException.class, () -> newURLClassLoader((URL[]) null, null));
         assertThrows(IllegalArgumentException.class, () -> newURLClassLoader((URL[]) null));
@@ -613,33 +613,33 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testResolveURLClassLoader() {
+    void testResolveURLClassLoader() {
         URLClassLoader urlClassLoader = resolveURLClassLoader(this.classLoader);
         assertNotNull(urlClassLoader.getURLs());
         assertSame(urlClassLoader, resolveURLClassLoader(urlClassLoader));
     }
 
     @Test
-    public void testResolveURLClassLoaderOnNull() {
+    void testResolveURLClassLoaderOnNull() {
         Set<URL> urls = findAllClassPathURLs(getDefaultClassLoader());
         URLClassLoader urlClassLoader = resolveURLClassLoader(null);
         assertArrayEquals(asArray(urls, URL.class), urlClassLoader.getURLs());
     }
 
     @Test
-    public void testInvokeFindLoadedClassMethod() {
+    void testInvokeFindLoadedClassMethod() {
         assertInvokeFindLoadedClassMethod(ClassLoaderUtilsTest.class);
         assertInvokeFindLoadedClassMethod(Nonnull.class);
         assertInvokeFindLoadedClassMethod(String.class);
     }
 
     @Test
-    public void testInvokeFindLoadedClassMethodOnFailed() {
+    void testInvokeFindLoadedClassMethodOnFailed() {
         assertNull(invokeFindLoadedClassMethod(null, ClassLoaderUtilsTest.class.getName()));
     }
 
     @Test
-    public void testLogOnFindLoadedClassInvocationFailed() {
+    void testLogOnFindLoadedClassInvocationFailed() {
         logOnFindLoadedClassInvocationFailed(this.classLoader, "NotFound", new Exception("For testing"));
         logOnFindLoadedClassInvocationFailed(null, "NotFound", new Exception("For testing"));
         logOnFindLoadedClassInvocationFailed(null, null, new Exception("For testing"));

@@ -182,7 +182,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredMethodsOnNull() {
+    void testFindAllDeclaredMethodsOnNull() {
         assertEmptyList(findAllDeclaredMethods(NULL_TYPE_ELEMENT, alwaysTrue()));
         assertEmptyList(findAllDeclaredMethods(NULL_TYPE_ELEMENT, alwaysFalse()));
         assertEmptyList(findAllDeclaredMethods(NULL_TYPE_MIRROR, alwaysTrue()));
@@ -190,19 +190,19 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindAllDeclaredMethodsWithExcludedTypes() {
+    void testFindAllDeclaredMethodsWithExcludedTypes() {
         List<? extends ExecutableElement> methods = findAllDeclaredMethodsWithoutObjectType();
         assertEquals(14, methods.size());
     }
 
     @Test
-    public void testFindAllDeclaredMethodsWithExcludedTypesOnNull() {
+    void testFindAllDeclaredMethodsWithExcludedTypesOnNull() {
         assertEmptyList(findAllDeclaredMethods(NULL_TYPE_ELEMENT, Object.class));
         assertEmptyList(findAllDeclaredMethods(NULL_TYPE_MIRROR, Object.class));
     }
 
     @Test
-    public void testFindPublicNonStaticMethods() {
+    void testFindPublicNonStaticMethods() {
         List<? extends ExecutableElement> methods = findPublicNonStaticMethods(testTypeElement, Object.class);
         assertEquals(14, methods.size());
 
@@ -211,13 +211,13 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindPublicNonStaticMethodsOnNull() {
+    void testFindPublicNonStaticMethodsOnNull() {
         assertEmptyList(findPublicNonStaticMethods(NULL_TYPE_ELEMENT, Object.class));
         assertEmptyList(findPublicNonStaticMethods(NULL_TYPE_MIRROR, Object.class));
     }
 
     @Test
-    public void testIsMethod() {
+    void testIsMethod() {
         List<? extends Element> members = getDeclaredMembers(testTypeElement);
         for (Element member : members) {
             if (member instanceof ExecutableElement) {
@@ -228,12 +228,12 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsMethodOnNull() {
+    void testIsMethodOnNull() {
         assertFalse(isMethod(NULL_METHOD));
     }
 
     @Test
-    public void testIsPublicNonStaticMethod() {
+    void testIsPublicNonStaticMethod() {
         List<? extends Element> members = getDeclaredMembers(testTypeElement);
         for (Element member : members) {
             if (member instanceof ExecutableElement) {
@@ -255,12 +255,12 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testIsPublicNonStaticMethodOnNull() {
+    void testIsPublicNonStaticMethodOnNull() {
         assertFalse(isPublicNonStaticMethod(NULL_METHOD));
     }
 
     @Test
-    public void testFindMethod() {
+    void testFindMethod() {
         // Test methods from java.lang.Object
         // Object#toString()
         Type type = Model.class;
@@ -295,7 +295,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindMethodOnNotFound() {
+    void testFindMethodOnNotFound() {
         assertNull(findMethod(testTypeElement, "notFound"));
         assertNull(findMethod(testTypeElement, "notFound", String.class));
         assertNull(findMethod(testTypeElement, "notFound", "java.lang.String"));
@@ -306,7 +306,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFindMethodOnNull() {
+    void testFindMethodOnNull() {
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString"));
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", String.class));
         assertNull(findMethod(NULL_TYPE_ELEMENT, "toString", "java.lang.String"));
@@ -340,7 +340,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetOverrideMethod() {
+    void testGetOverrideMethod() {
         List<? extends ExecutableElement> methods = findAllDeclaredMethodsWithoutObjectType();
 
         ExecutableElement overrideMethod = getOverrideMethod(processingEnv, testTypeElement, methods.get(0));
@@ -353,66 +353,66 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testFilterMethods() {
+    void testFilterMethods() {
 
     }
 
     @Test
-    public void testFilterMethodsOnNull() {
+    void testFilterMethodsOnNull() {
         assertEmptyList(filterMethods(NULL_LIST, alwaysTrue()));
         assertEmptyList(filterMethods(NULL_LIST, NULL_PREDICATE_ARRAY));
     }
 
     @Test
-    public void testFilterMethodsOnEmpty() {
+    void testFilterMethodsOnEmpty() {
         assertEmptyList(filterMethods(emptyList(), alwaysTrue()));
         assertEmptyList(filterMethods(emptyList(), NULL_PREDICATE_ARRAY));
     }
 
     @Test
-    public void testFilterMethodsOnReturningEmptyList() {
+    void testFilterMethodsOnReturningEmptyList() {
         List<ExecutableElement> methods = getDeclaredMethods(testTypeElement);
         assertEmptyList(filterMethods(methods, alwaysFalse()));
-        assertSame(methods, filterMethods(methods));
+        assertEquals(methods, filterMethods(methods));
     }
 
     @Test
-    public void testGetMethodName() {
+    void testGetMethodName() {
         ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertEquals("echo", getMethodName(method));
         assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
-    public void testGetMethodNameOnNull() {
+    void testGetMethodNameOnNull() {
         assertNull(getMethodName(NULL_METHOD));
     }
 
     @Test
-    public void testReturnTypeName() {
+    void testReturnTypeName() {
         ExecutableElement method = findMethod(testTypeElement, "echo", "java.lang.String");
         assertEquals("java.lang.String", getReturnTypeName(method));
     }
 
     @Test
-    public void testReturnTypeNameOnNull() {
+    void testReturnTypeNameOnNull() {
         assertNull(getReturnTypeName(NULL_METHOD));
     }
 
     @Test
-    public void testMatchParameterTypeNames() {
+    void testMatchParameterTypeNames() {
         String[] parameterTypeNames = ofArray("java.lang.String");
         ExecutableElement method = findMethod(testTypeElement, "echo", parameterTypeNames);
         assertArrayEquals(parameterTypeNames, getMethodParameterTypeNames(method));
     }
 
     @Test
-    public void testMatchParameterTypeNamesOnNull() {
+    void testMatchParameterTypeNamesOnNull() {
         assertSame(EMPTY_STRING_ARRAY, getMethodParameterTypeNames(NULL_METHOD));
     }
 
     @Test
-    public void testMatchParameterTypes() {
+    void testMatchParameterTypes() {
         ExecutableElement method = findMethod(testTypeElement, "toString");
         assertEmptyList(getMethodParameterTypeMirrors(method));
 
@@ -422,17 +422,17 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchParameterTypesOnNull() {
+    void testMatchParameterTypesOnNull() {
         assertEmptyList(getMethodParameterTypeMirrors(NULL_METHOD));
     }
 
     @Test
-    public void testMatches() {
+    void testMatches() {
         assertFindMethod(testClass, "echo", String.class);
     }
 
     @Test
-    public void tstMatchesOnFalse() {
+    void tstMatchesOnFalse() {
         ExecutableElement method = findMethod(testTypeElement, "echo", String.class);
 
         Type[] parameterTypes = ofArray(String.class, String.class);
@@ -447,7 +447,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testMatchesOnNull() {
+    void testMatchesOnNull() {
         String methodName = "echo";
         Type[] parameterTypes = ofArray(String.class);
         String[] parameterTypeNames = getTypeNames(parameterTypes);
@@ -463,7 +463,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetEnclosingElement() {
+    void testGetEnclosingElement() {
         String methodName = "echo";
         Type[] parameterTypes = ofArray(String.class);
         ExecutableElement method = findMethod(testTypeElement, methodName, parameterTypes);
@@ -471,7 +471,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
-    public void testGetEnclosingElementOnNull() {
+    void testGetEnclosingElementOnNull() {
         assertNull(getEnclosingElement(NULL_METHOD));
     }
 

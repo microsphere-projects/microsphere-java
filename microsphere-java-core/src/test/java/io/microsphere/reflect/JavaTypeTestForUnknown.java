@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see JavaType.Kind#UNKNOWN
  * @since 1.0.0
  */
-public class JavaTypeTestForUnknown extends AbstractJavaTypeTest {
+class JavaTypeTestForUnknown extends AbstractJavaTypeTest {
 
     @Override
     protected Type resolveType() {

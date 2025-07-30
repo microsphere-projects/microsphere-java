@@ -35,7 +35,48 @@ import static io.microsphere.annotation.processor.util.TypeUtils.getDeclaredType
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link ElementVisitor} to assemble JSON on the annotated elements based on the specified {@link Annotation annotation}.
+ * An abstract implementation of {@link ElementVisitor} that generates JSON content for elements
+ * annotated with a specific annotation.
+ *
+ * <p>This class extends {@link JSONElementVisitor}, providing functionality to filter and process
+ * only those elements that are annotated with the specified annotation. It leverages the annotation
+ * processing environment to gather information about the annotated elements and constructs JSON
+ * representations accordingly.</p>
+ *
+ * <h3>Example Usage</h3>
+ *
+ * <p>Suppose you have a custom annotation:</p>
+ *
+ * <pre>{@code
+ * @Retention(RetentionPolicy.SOURCE)
+ * @Target(ElementType.TYPE)
+ * public @interface MyAnnotation {
+ * }
+ * }</pre>
+ *
+ * <p>You can create a concrete implementation of this class to process elements annotated with
+ * {@code MyAnnotation}:</p>
+ *
+ * <pre>{@code
+ * public class MyAnnotatedElementVisitor extends AnnotatedElementJSONElementVisitor {
+ *
+ *     public MyAnnotatedElementVisitor(ProcessingEnvironment processingEnv, String annotationClassName) {
+ *         super(processingEnv, annotationClassName);
+ *     }
+ *
+ *     @Override
+ *     protected boolean doVisitType(TypeElement e, StringBuilder jsonBuilder) {
+ *         // Custom logic to generate JSON for the type element
+ *         jsonBuilder.append("{");
+ *         jsonBuilder.append("\"name\":").append("\"").append(e.getSimpleName()).append("\"");
+ *         jsonBuilder.append("}");
+ *         return true;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>The above example demonstrates how to extend this class to create a visitor that processes
+ * type elements annotated with a custom annotation and generates JSON output for them.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see JSONElementVisitor

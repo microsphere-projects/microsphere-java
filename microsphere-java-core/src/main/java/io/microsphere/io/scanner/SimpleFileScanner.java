@@ -1,6 +1,7 @@
 package io.microsphere.io.scanner;
 
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.filter.TrueFileFilter;
@@ -67,6 +68,7 @@ public class SimpleFileScanner {
      * @see IOFileFilter
      */
     @Nonnull
+    @Immutable
     public Set<File> scan(File rootDirectory, boolean recursive) {
         return scan(rootDirectory, recursive, TrueFileFilter.INSTANCE);
     }
@@ -81,6 +83,7 @@ public class SimpleFileScanner {
      * @see IOFileFilter
      */
     @Nonnull
+    @Immutable
     public Set<File> scan(File rootDirectory, boolean recursive, IOFileFilter ioFileFilter) {
 
         final Set<File> filesSet = new LinkedHashSet<>();

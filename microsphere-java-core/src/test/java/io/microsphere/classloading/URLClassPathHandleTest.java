@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see URLClassPathHandle
  * @since 1.0.0
  */
-public class URLClassPathHandleTest extends BaseURLClassPathHandleTest {
+class URLClassPathHandleTest extends BaseURLClassPathHandleTest {
 
     @Override
     protected URLClassPathHandle createHandle() {

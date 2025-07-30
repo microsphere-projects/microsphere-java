@@ -25,7 +25,7 @@ class ProcessExecutorTest extends AbstractTestCase {
     private ProcessExecutor executor;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         this.executor = new ProcessExecutor("java", "-version");
     }
 

@@ -53,7 +53,7 @@ class StringToNavigableSetConverterTest {
     private MultiValueConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToNavigableSetConverter();
     }
 

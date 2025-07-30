@@ -37,7 +37,7 @@ import static io.microsphere.util.ClassLoaderUtils.findURLClassLoader;
  * {@link Prioritized#MIN_PRIORITY}, making it the lowest priority unless overridden.
  * </p>
  *
- * <h3>Example Implementation</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class ClassicURLClassPathHandle implements URLClassPathHandle {
  *

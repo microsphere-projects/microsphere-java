@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class BaseUtilsTest {
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         assertThrows(IllegalStateException.class, () -> new BaseUtils() {
         });
     }

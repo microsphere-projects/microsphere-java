@@ -24,7 +24,6 @@ package io.microsphere.event;
  * <code>true</code>, the event will be processed by this listener; otherwise, it will be skipped.
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * ConditionalEventListener<MyEvent> listener = new ConditionalEventListener<>() {
  *     public boolean accept(MyEvent event) {

@@ -32,12 +32,12 @@ class FileChangedListenerTest extends AbstractTestCase {
     private FileChangedListener listener;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         listener = new DefaultFileChangedListener();
     }
 
     @AfterEach
-    void destroy() {
+    void tearDown() {
         listener = null;
     }
 

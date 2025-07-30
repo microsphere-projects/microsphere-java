@@ -51,7 +51,7 @@ abstract class BaseConverterTest<S, T> extends AbstractTestCase {
     protected abstract T getTarget() throws Throwable;
 
     @BeforeEach
-    void setUp() {
+    final void setUp() {
         this.converter = createConverter();
         this.sourceType = resolveActualTypeArgumentClass(getClass(), BaseConverterTest.class, 0);
         this.targetType = resolveActualTypeArgumentClass(getClass(), BaseConverterTest.class, 1);

@@ -13,7 +13,7 @@ import static io.microsphere.util.Configurer.configure;
 class ConfigurerTest {
 
     @Test
-    public void test() {
+    void test() {
 
         configure("test", 1)
                 .compare(() -> 2)

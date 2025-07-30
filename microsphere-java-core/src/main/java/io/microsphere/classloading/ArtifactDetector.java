@@ -1,5 +1,7 @@
 package io.microsphere.classloading;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
@@ -91,15 +93,21 @@ public class ArtifactDetector {
         }
     }
 
+    @Nonnull
+    @Immutable
     public List<Artifact> detect() {
         return detect(true);
     }
 
+    @Nonnull
+    @Immutable
     public List<Artifact> detect(boolean includedJdkLibraries) {
         Set<URL> classPathURLs = getClassPathURLs(includedJdkLibraries);
         return detect(classPathURLs);
     }
 
+    @Nonnull
+    @Immutable
     protected List<Artifact> detect(Set<URL> classPathURLs) {
         if (isEmpty(classPathURLs)) {
             return emptyList();

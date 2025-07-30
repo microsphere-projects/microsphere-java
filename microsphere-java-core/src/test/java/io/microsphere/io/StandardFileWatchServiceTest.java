@@ -64,13 +64,13 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
     private ExecutorService executor;
 
     @BeforeEach
-    void init() throws Exception {
+    void setUp() throws Exception {
         this.testDir = createRandomTempDirectory();
         this.executor = newSingleThreadExecutor();
     }
 
     @AfterEach
-    void destroy() throws Exception {
+    void tearDown() throws Exception {
         shutdown(this.executor);
         deleteDirectory(this.testDir);
     }

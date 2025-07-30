@@ -33,7 +33,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * converters are available.
  * </p>
  *
- * <h3>Example Implementation</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * public class StringToIntegerConverter implements Converter<String, Integer> {
  *     public boolean accept(Class<?> sourceType, Class<?> targetType) {

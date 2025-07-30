@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -37,6 +38,7 @@ import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * The Java Reflection {@link Field} Utility class
@@ -52,7 +54,6 @@ public abstract class FieldUtils implements Utils {
      * Find the specified object's declared {@link Field} by its name.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String testField;
@@ -83,7 +84,6 @@ public abstract class FieldUtils implements Utils {
      * or reaches the top of the class hierarchy (i.e., the {@code Object} class).</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String testField;
@@ -130,7 +130,6 @@ public abstract class FieldUtils implements Utils {
      * it recursively checks the superclasses until it finds a matching field or reaches the top of the class hierarchy.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String testField;
@@ -162,7 +161,6 @@ public abstract class FieldUtils implements Utils {
      * {@code null}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String testField;
@@ -195,7 +193,6 @@ public abstract class FieldUtils implements Utils {
      * If the field is not found or is not accessible, an appropriate exception may be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private static String testField = "Hello, World!";
@@ -223,7 +220,6 @@ public abstract class FieldUtils implements Utils {
      * an attempt will be made to make it accessible.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private static String testField = "Static Value";
@@ -250,7 +246,6 @@ public abstract class FieldUtils implements Utils {
      * If the field is not found or cannot be accessed, an appropriate exception may be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private static String testField = "Original Value";
@@ -283,7 +278,6 @@ public abstract class FieldUtils implements Utils {
      * and applies optional filtering conditions to select only the desired fields.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     public int publicField;
@@ -307,13 +301,14 @@ public abstract class FieldUtils implements Utils {
      * @return A set of fields that match the given criteria, preserving insertion order
      */
     @Nonnull
+    @Immutable
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
         Set<Field> allFields = new LinkedHashSet<>();
         addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allFields, superType.getFields());
         }
-        return filter(allFields, and(fieldFilters));
+        return unmodifiableSet(filter(allFields, and(fieldFilters)));
     }
 
     /**
@@ -323,7 +318,6 @@ public abstract class FieldUtils implements Utils {
      * and applies optional filtering conditions to select only the desired fields.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String privateField;
@@ -348,13 +342,14 @@ public abstract class FieldUtils implements Utils {
      * @return A set of declared fields that match the given criteria, preserving insertion order
      */
     @Nonnull
+    @Immutable
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
         Set<Field> allDeclaredFields = new LinkedHashSet<>();
         addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());
         }
-        return filter(allDeclaredFields, and(fieldFilters));
+        return unmodifiableSet(filter(allDeclaredFields, and(fieldFilters)));
     }
 
     /**
@@ -364,7 +359,6 @@ public abstract class FieldUtils implements Utils {
      * thrown during execution in an unchecked exception.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField;
@@ -396,7 +390,6 @@ public abstract class FieldUtils implements Utils {
      * If the field is not found or cannot be accessed, an appropriate exception will be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField = "Hello, Reflection!";
@@ -429,7 +422,6 @@ public abstract class FieldUtils implements Utils {
      * If the field is not found or cannot be accessed, an appropriate exception will be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField;
@@ -463,7 +455,6 @@ public abstract class FieldUtils implements Utils {
      * If the field is not found or its type does not match, {@code null} is returned.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField = "Typed Value";
@@ -497,7 +488,6 @@ public abstract class FieldUtils implements Utils {
      * an attempt will be made to make it accessible. If access fails, an exception will be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField = "Reflection Value";
@@ -553,7 +543,6 @@ public abstract class FieldUtils implements Utils {
      * to the provided value. If the field is not found or cannot be accessed, an appropriate exception will be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField = "Original Value";
@@ -594,7 +583,6 @@ public abstract class FieldUtils implements Utils {
      * an attempt will be made to make it accessible. If access fails, an exception will be thrown.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String exampleField = "Initial Value";
@@ -659,7 +647,6 @@ public abstract class FieldUtils implements Utils {
      * such as injection frameworks, dynamic proxies, or generic utilities.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Example {
      *     private String testField;

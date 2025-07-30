@@ -35,7 +35,7 @@ class FunctionalTest {
     private ValueHolder<Object> valueHolder = new ValueHolder();
 
     @Test
-    public void testValueAndOn() {
+    void testValueAndOn() {
 
         assertValue(value(1).on(v -> v > 0), 1);
 
@@ -46,7 +46,7 @@ class FunctionalTest {
     }
 
     @Test
-    public void testValueAndOnAndAs() {
+    void testValueAndOnAndAs() {
 
         assertValue(value(1).on(v -> v < 0).as(String::valueOf), null);
 
@@ -54,17 +54,17 @@ class FunctionalTest {
     }
 
     @Test
-    public void testValueSupplier() {
+    void testValueSupplier() {
         assertValue(value(() -> 1).on(v -> v > 0), 1);
     }
 
     @Test
-    public void testOfWithNameAndValue() {
+    void testOfWithNameAndValue() {
         assertValue(of("test", 1).on(v -> v > 0).as(String::valueOf), "1");
     }
 
     @Test
-    public void testOfWithNameAndValueSupplier() {
+    void testOfWithNameAndValueSupplier() {
         assertValue(of("test", () -> 1).on(v -> v > 0).as(String::valueOf), "1");
     }
 

@@ -41,14 +41,18 @@ class JSONStringerTest {
 
     private JSONStringer jsonStringer;
 
+    private JSONStringer nonIndentJsonStringer;
+
     @BeforeEach
-    void before() {
+    void setUp() {
         this.jsonStringer = new JSONStringer(1);
+        this.nonIndentJsonStringer = new JSONStringer();
     }
 
     @Test
     void testArray() throws Throwable {
         assertEquals("[", jsonStringer.array().toString());
+        assertEquals("[", nonIndentJsonStringer.array().toString());
     }
 
     @Test
@@ -133,14 +137,28 @@ class JSONStringerTest {
         jsonStringer.array()
                 .value(null)
                 .value(TRUE)
-                .value(NULL)
+                .value(JSONObject.NULL)
                 .value(Integer.valueOf(1))
                 .value(Double.valueOf(2.0))
                 .value(Long.valueOf(3L))
                 .value(Float.valueOf(4.0f))
                 .value(new StringBuilder("5"))
+                .value(String.class)
                 .endArray();
-        assertEquals("[\n null,\n true,\n \"NULL\",\n 1,\n 2,\n 3,\n 4,\n \"5\"\n]", jsonStringer.toString());
+        assertEquals("[\n null,\n true,\n null,\n 1,\n 2,\n 3,\n 4,\n \"5\",\n \"java.lang.String\"\n]", jsonStringer.toString());
+
+        nonIndentJsonStringer.array()
+                .value(null)
+                .value(TRUE)
+                .value(JSONObject.NULL)
+                .value(Integer.valueOf(1))
+                .value(Double.valueOf(2.0))
+                .value(Long.valueOf(3L))
+                .value(Float.valueOf(4.0f))
+                .value(new StringBuilder("5"))
+                .value(String.class)
+                .endArray();
+        assertEquals("[null,true,null,1,2,3,4,\"5\",\"java.lang.String\"]", nonIndentJsonStringer.toString());
 
     }
 

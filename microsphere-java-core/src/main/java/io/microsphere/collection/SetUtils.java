@@ -16,6 +16,7 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
@@ -30,6 +31,7 @@ import java.util.Set;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableSet;
@@ -61,11 +63,33 @@ public abstract class SetUtils implements Utils {
      * boolean result2 = SetUtils.isSet(list); // returns false
      * }</pre>
      *
-     * @param elements the {@link Iterable} to check, may be null
+     * @param values the values to check, may be null
      * @return {@code true} if the given iterable is a {@link Set}; otherwise, {@code false}
      */
-    public static boolean isSet(@Nullable Iterable<?> elements) {
-        return elements instanceof Set;
+    public static boolean isSet(@Nullable Object values) {
+        return values instanceof Set;
+    }
+
+    /**
+     * Checks whether the specified {@link Class type} is assignable from {@link Set} interface.
+     *
+     * <p>This method returns {@code true} if the provided type is a {@link Set} interface or its sub-interface,
+     * or the implementation class of {@link Set} interface.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = SetUtils.isSet(Set.class);        // returns true
+     * boolean result2 = SetUtils.isSet(HashSet.class);    // returns true
+     * boolean result3 = SetUtils.isSet(List.class);       // returns false
+     * boolean result4 = SetUtils.isSet(String.class);     // returns false
+     * }</pre>
+     *
+     * @param type the {@link Class type} to check, may be null
+     * @return {@code true} if the given type is a {@link Set} interface or its sub-interface,
+     * or the implementation class of {@link Set} interface.
+     */
+    public static boolean isSet(@Nullable Class<?> type) {
+        return isAssignableFrom(Set.class, type);
     }
 
     /**
@@ -122,6 +146,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided array
      */
     @Nonnull
+    @Immutable
     public static <E> Set<E> ofSet(E... elements) {
         int size = length(elements);
         if (size < 1) {
@@ -130,7 +155,7 @@ public abstract class SetUtils implements Utils {
             return singleton(elements[0]);
         }
 
-        Set<E> set = new LinkedHashSet<>(size, FIXED_LOAD_FACTOR);
+        Set<E> set = newFixedLinkedHashSet(size);
 
         for (int i = 0; i < size; i++) {
             set.add(elements[i]);
@@ -164,6 +189,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided enumeration
      */
     @Nonnull
+    @Immutable
     public static <E> Set<E> ofSet(Enumeration<E> elements) {
         if (elements == null || !elements.hasMoreElements()) {
             return emptySet();
@@ -199,6 +225,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided iterable
      */
     @Nonnull
+    @Immutable
     public static <E> Set<E> ofSet(Iterable<E> elements) {
         if (elements == null) {
             return emptySet();
@@ -230,6 +257,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided collection
      */
     @Nonnull
+    @Immutable
     public static <T> Set<T> ofSet(Collection<T> elements) {
         return ofSet(elements, (T[]) null);
     }
@@ -260,6 +288,7 @@ public abstract class SetUtils implements Utils {
      * @return an unmodifiable {@link Set} containing all unique elements from the provided collection and varargs
      */
     @Nonnull
+    @Immutable
     public static <T> Set<T> ofSet(Collection<T> elements, T... others) {
         int valuesSize = size(elements);
 
@@ -271,7 +300,7 @@ public abstract class SetUtils implements Utils {
 
         int size = valuesSize + othersSize;
 
-        Set<T> set = newLinkedHashSet(size, FIXED_LOAD_FACTOR);
+        Set<T> set = newFixedLinkedHashSet(size);
         // add elements
         set.addAll(elements);
 
@@ -601,6 +630,52 @@ public abstract class SetUtils implements Utils {
     @Nonnull
     public static <E> Set<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
+    }
+
+    /**
+     * Creates a new, empty {@link HashSet} with the specified initial capacity and fixed load factor.
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link HashSet} instance
+     * with the given initial capacity and a fixed load factor defined by {@link MapUtils#FIXED_LOAD_FACTOR}.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newFixedHashSet(32);
+     * // returns a new empty hash set with initial capacity of 32 and fixed load factor
+     * }</pre>
+     *
+     * @param size the initial capacity of the returned set
+     * @param <E>  the type of elements in the set
+     * @return a new empty {@link HashSet} with the specified initial capacity and fixed load factor
+     * @see MapUtils#FIXED_LOAD_FACTOR
+     */
+    @Nonnull
+    public static <E> Set<E> newFixedHashSet(int size) {
+        return newHashSet(size, FIXED_LOAD_FACTOR);
+    }
+
+    /**
+     * Creates a new, empty {@link LinkedHashSet} with the specified initial capacity and fixed load factor.
+     *
+     * <p>This method provides a convenient way to instantiate an empty {@link LinkedHashSet} instance
+     * with the given initial capacity and a fixed load factor defined by {@link MapUtils#FIXED_LOAD_FACTOR}.
+     * The returned set is not thread-safe and allows null elements.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> set = SetUtils.newFixedLinkedHashSet(32);
+     * // returns a new empty linked hash set with initial capacity of 32 and fixed load factor
+     * }</pre>
+     *
+     * @param size the initial capacity of the returned set
+     * @param <E>  the type of elements in the set
+     * @return a new empty {@link LinkedHashSet} with the specified initial capacity and fixed load factor
+     * @see MapUtils#FIXED_LOAD_FACTOR
+     */
+    @Nonnull
+    public static <E> Set<E> newFixedLinkedHashSet(int size) {
+        return newLinkedHashSet(size, FIXED_LOAD_FACTOR);
     }
 
     private SetUtils() {

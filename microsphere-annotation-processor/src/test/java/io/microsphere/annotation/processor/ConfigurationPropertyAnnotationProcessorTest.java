@@ -17,11 +17,19 @@
 
 package io.microsphere.annotation.processor;
 
-import io.microsphere.annotation.processor.model.ConfigurationPropertyModel;
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.classloading.ManifestArtifactResourceResolver;
+import io.microsphere.io.IOUtils;
+import io.microsphere.io.StandardFileWatchService;
+import io.microsphere.reflect.TypeUtils;
+import io.microsphere.util.ServiceLoaderUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
+
+import static io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor.CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME;
+import static io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * {@link ConfigurationPropertyAnnotationProcessor} Test
@@ -30,7 +38,7 @@ import java.util.Set;
  * @see ConfigurationPropertyAnnotationProcessor
  * @since 1.0.0
  */
-public class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationProcessingTest {
+class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationProcessingTest {
 
     @Override
     protected void beforeTest() {
@@ -39,11 +47,17 @@ public class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnota
 
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-        compiledClasses.add(ConfigurationPropertyModel.class);
         compiledClasses.add(ManifestArtifactResourceResolver.class);
+        compiledClasses.add(IOUtils.class);
+        compiledClasses.add(StandardFileWatchService.class);
+        compiledClasses.add(TypeUtils.class);
+        compiledClasses.add(ServiceLoaderUtils.class);
+        compiledClasses.add(ConfigurationProperty.class);
     }
 
     @Test
-    public void test() {
+    void testConstants() {
+        assertEquals("META-INF/microsphere/configuration-properties.json", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME);
+        assertEquals("io.microsphere.annotation.ConfigurationProperty", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
     }
 }
