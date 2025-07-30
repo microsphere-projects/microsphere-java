@@ -104,6 +104,7 @@ public abstract class ClassPathUtils implements Utils {
      * returns an empty set.
      */
     @Nonnull
+    @Immutable
     public static Set<String> getBootstrapClassPaths() {
         return bootstrapClassPaths;
     }
@@ -125,6 +126,7 @@ public abstract class ClassPathUtils implements Utils {
      * @see RuntimeMXBean#getClassPath()
      */
     @Nonnull
+    @Immutable
     public static Set<String> getClassPaths() {
         return classPaths;
     }
@@ -203,4 +205,5 @@ public abstract class ClassPathUtils implements Utils {
 
     private ClassPathUtils() {
     }
+
 }
