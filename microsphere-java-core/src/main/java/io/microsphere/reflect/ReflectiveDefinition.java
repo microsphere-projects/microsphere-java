@@ -110,7 +110,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * @param since     the 'since' version
      * @param className the name of class
      */
-    public ReflectiveDefinition(@Nonnull String since, @Nonnull String className) {
+    protected ReflectiveDefinition(@Nonnull String since, @Nonnull String className) {
         this(since, null, className);
     }
 
@@ -119,7 +119,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * @param deprecation the deprecation
      * @param className   the name of class
      */
-    public ReflectiveDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String className) {
+    protected ReflectiveDefinition(@Nonnull String since, @Nullable Deprecation deprecation, @Nonnull String className) {
         this(ofVersion(since), deprecation, className);
     }
 
@@ -127,7 +127,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * @param since     the 'since' version
      * @param className the name of class
      */
-    public ReflectiveDefinition(@Nonnull Version since, @Nonnull String className) {
+    protected ReflectiveDefinition(@Nonnull Version since, @Nonnull String className) {
         this(since, null, className);
     }
 
@@ -136,7 +136,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * @param deprecation the deprecation
      * @param className   the name of class
      */
-    public ReflectiveDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String className) {
+    protected ReflectiveDefinition(@Nonnull Version since, @Nullable Deprecation deprecation, @Nonnull String className) {
         assertNotNull(since, () -> "The 'since' version must not be null.");
         assertNotBlank(className, () -> "The class name must not be null.");
         this.since = since;
