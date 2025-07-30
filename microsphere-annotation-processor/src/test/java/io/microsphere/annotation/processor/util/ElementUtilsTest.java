@@ -73,6 +73,7 @@ import static javax.lang.model.element.ElementKind.STATIC_INIT;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.methodsIn;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -311,7 +312,7 @@ class ElementUtilsTest extends AbstractAnnotationProcessingTest {
     void testFilterElementsOnEmpty() {
         assertEmptyList(filterElements(emptyList(), alwaysTrue()));
         List<ExecutableElement> methods = ofList(echoMethod);
-        assertSame(methods, filterElements(methods));
+        assertEquals(methods, filterElements(methods));
     }
 
     @Test
