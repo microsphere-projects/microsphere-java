@@ -52,7 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @param <T> the type to be tested
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since JavaType
+ * @since 1.0.0
  */
 public abstract class AbstractJavaTypeTest<T> {
 
