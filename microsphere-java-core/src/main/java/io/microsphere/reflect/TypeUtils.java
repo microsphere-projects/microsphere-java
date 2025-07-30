@@ -569,6 +569,7 @@ public abstract class TypeUtils implements Utils {
      * returns an empty list if no arguments can be resolved (e.g., raw type usage)
      * @throws IllegalArgumentException if either {@code type} or {@code baseClass} is null or invalid
      */
+    @Nonnull
     @Immutable
     public static List<Type> resolveActualTypeArguments(Type type, Class baseClass) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseClass));
@@ -644,6 +645,7 @@ public abstract class TypeUtils implements Utils {
         return emptyList();
     }
 
+    @Nonnull
     private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int hierarchicalTypesSize, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
 
         int size = hierarchicalTypesSize + 1;
@@ -1079,6 +1081,8 @@ public abstract class TypeUtils implements Utils {
         return PARAMETERIZED_TYPE_FILTER.and(predicate);
     }
 
+    @Nonnull
+    @Immutable
     protected static List<Type> findTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                           boolean includeGenericSuperclass, boolean includeGenericInterfaces,
                                           Predicate<? super Type>... typeFilters) {
@@ -1563,4 +1567,5 @@ public abstract class TypeUtils implements Utils {
 
     private TypeUtils() {
     }
+
 }
