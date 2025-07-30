@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -72,11 +73,15 @@ public abstract class MethodUtils implements Utils {
     /**
      * The public methods of {@link Object}
      */
+    @Nonnull
+    @Immutable
     public final static List<Method> OBJECT_PUBLIC_METHODS = of(Object.class.getMethods());
 
     /**
      * The declared methods of {@link Object}
      */
+    @Nonnull
+    @Immutable
     public final static List<Method> OBJECT_DECLARED_METHODS = of(Object.class.getDeclaredMethods());
 
     /**
@@ -151,6 +156,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findDeclaredMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getDeclaredMethods(Class<?> targetClass) {
         return findDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -172,6 +178,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getMethods(Class<?> targetClass) {
         return findMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -193,6 +200,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findAllDeclaredMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getAllDeclaredMethods(Class<?> targetClass) {
         return findAllDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -217,6 +225,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findAllMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getAllMethods(Class<?> targetClass) {
         return findAllMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -246,6 +255,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findMethods(Class, boolean, boolean, Predicate[])
      */
     @Nonnull
+    @Immutable
     public static List<Method> findDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, false, methodsToFilter);
     }
@@ -275,6 +285,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null read-only list of public methods declared in the specified class
      */
     @Nonnull
+    @Immutable
     public static List<Method> findMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, true, methodsToFilter);
     }
@@ -304,6 +315,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null read-only list of declared methods in the specified class
      */
     @Nonnull
+    @Immutable
     public static List<Method> findAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, false, methodsToFilter);
     }
@@ -333,6 +345,7 @@ public abstract class MethodUtils implements Utils {
      * @return non-null read-only {@link List}
      */
     @Nonnull
+    @Immutable
     public static List<Method> findAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, true, methodsToFilter);
     }
@@ -372,6 +385,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null read-only list of methods matching the criteria
      */
     @Nonnull
+    @Immutable
     public static List<Method> findMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
                                            Predicate<? super Method>... methodsToFilter) {
 
