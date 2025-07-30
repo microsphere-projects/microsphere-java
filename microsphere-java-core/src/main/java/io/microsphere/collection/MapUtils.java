@@ -1031,6 +1031,7 @@ public abstract class MapUtils implements Utils {
      * @throws NullPointerException if values or entryMapper is null
      */
     @Nonnull
+    @Immutable
     public static <K, V, E> Map<K, V> toFixedMap(Collection<E> values,
                                                  Function<E, Map.Entry<K, V>> entryMapper) {
         int size = CollectionUtils.size(values);
