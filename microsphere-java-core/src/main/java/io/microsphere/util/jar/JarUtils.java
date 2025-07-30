@@ -98,7 +98,6 @@ public abstract class JarUtils implements Utils {
         }
     }
 
-
     /**
      * Resolves the relative path from the given JAR URL.
      *
@@ -182,6 +181,8 @@ public abstract class JarUtils implements Utils {
         return doFilter(jarEntriesList, jarEntryFilter);
     }
 
+    @Nonnull
+    @Immutable
     protected static List<JarEntry> doFilter(Iterable<JarEntry> jarEntries, JarEntryFilter jarEntryFilter) {
         List<JarEntry> jarEntriesList = new LinkedList<>();
         for (JarEntry jarEntry : jarEntries) {
@@ -386,4 +387,5 @@ public abstract class JarUtils implements Utils {
 
     private JarUtils() {
     }
+    
 }
