@@ -309,7 +309,6 @@ public abstract class ListUtils implements Utils {
      * @return a new, empty {@link ArrayList} with default initial capacity
      */
     @Nonnull
-    @Immutable
     public static <E> ArrayList<E> newArrayList() {
         return new ArrayList<>();
     }
