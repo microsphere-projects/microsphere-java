@@ -33,6 +33,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
+@Documented
 @Retention(SOURCE)
 @Target({
         ANNOTATION_TYPE,
@@ -41,7 +42,6 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
         METHOD,
         TYPE
 })
-@Documented
 public @interface Experimental {
 
     /**

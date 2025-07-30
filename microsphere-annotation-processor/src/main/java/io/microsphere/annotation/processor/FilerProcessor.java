@@ -36,6 +36,36 @@ import static io.microsphere.reflect.FieldUtils.getFieldValue;
  * <p>It supports executing operations on the {@link Filer} using a callback model, allowing custom logic to be
  * applied while handling exceptions gracefully using provided handlers.</p>
  *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * // Creating an instance of FilerProcessor
+ * FilerProcessor filerProcessor = new FilerProcessor(processingEnv);
+ *
+ * // Using processInFiler to create a source file
+ * filerProcessor.processInFiler(filer -> {
+ *     JavaFileObject file = filer.createSourceFile("com.example.GeneratedClass");
+ *     try (Writer writer = file.openWriter()) {
+ *         writer.write("// Auto-generated class\npublic class GeneratedClass {}");
+ *     }
+ *     return null;
+ * });
+ *
+ * // Using processInFiler with a custom exception handler
+ * filerProcessor.processInFiler(
+ *     filer -> {
+ *         JavaFileObject file = filer.createSourceFile("com.example.AnotherGeneratedClass");
+ *         try (Writer writer = file.openWriter()) {
+ *             writer.write("// Auto-generated class\npublic class AnotherGeneratedClass {}");
+ *         }
+ *         return null;
+ *     },
+ *     (filer, e) -> {
+ *         System.err.println("Failed to generate file: " + e.getMessage());
+ *         return null;
+ *     }
+ * );
+ * </pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see #processInFiler(ThrowableFunction)
  * @see #processInFiler(ThrowableFunction, BiFunction)

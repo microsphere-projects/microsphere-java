@@ -38,6 +38,21 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ConfigurationProperty {
 
     /**
+     * JDK System Properties
+     */
+    String SYSTEM_PROPERTIES_SOURCE = "system-properties";
+
+    /**
+     * OS Environment Variables
+     */
+    String ENVIRONMENT_VARIABLES_SOURCE = "environment-variables";
+
+    /**
+     * Application
+     */
+    String APPLICATION_SOURCE = "application";
+
+    /**
      * The name of the configuration property.
      *
      * @return empty content as default
@@ -71,5 +86,12 @@ public @interface ConfigurationProperty {
      * @return empty content as default
      */
     String description() default "";
+
+    /**
+     * The source of the configuration property.
+     *
+     * @return empty array as default
+     */
+    String[] source() default {};
 
 }

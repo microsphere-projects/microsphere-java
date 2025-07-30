@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -72,11 +73,15 @@ public abstract class MethodUtils implements Utils {
     /**
      * The public methods of {@link Object}
      */
+    @Nonnull
+    @Immutable
     public final static List<Method> OBJECT_PUBLIC_METHODS = of(Object.class.getMethods());
 
     /**
      * The declared methods of {@link Object}
      */
+    @Nonnull
+    @Immutable
     public final static List<Method> OBJECT_DECLARED_METHODS = of(Object.class.getDeclaredMethods());
 
     /**
@@ -151,6 +156,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findDeclaredMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getDeclaredMethods(Class<?> targetClass) {
         return findDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -172,6 +178,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getMethods(Class<?> targetClass) {
         return findMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -183,7 +190,6 @@ public abstract class MethodUtils implements Utils {
      * including those from interfaces implemented by the class and its ancestors.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Get all declared methods in MyClass, including inherited ones
      * List<Method> allDeclaredMethods = MethodUtils.getAllDeclaredMethods(MyClass.class);
@@ -194,6 +200,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findAllDeclaredMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getAllDeclaredMethods(Class<?> targetClass) {
         return findAllDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -205,7 +212,6 @@ public abstract class MethodUtils implements Utils {
      * including those from interfaces implemented by the class and its ancestors.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Get all public methods of MyClass, including inherited ones
      * List<Method> allPublicMethods = MethodUtils.getAllMethods(MyClass.class);
@@ -219,6 +225,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findAllMethods(Class, Predicate...)
      */
     @Nonnull
+    @Immutable
     public static List<Method> getAllMethods(Class<?> targetClass) {
         return findAllMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
@@ -248,6 +255,7 @@ public abstract class MethodUtils implements Utils {
      * @see #findMethods(Class, boolean, boolean, Predicate[])
      */
     @Nonnull
+    @Immutable
     public static List<Method> findDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, false, methodsToFilter);
     }
@@ -259,7 +267,6 @@ public abstract class MethodUtils implements Utils {
      * excluding any methods from its superclasses or interfaces.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Get all public methods declared in MyClass
      * List<Method> publicMethods = MethodUtils.findMethods(MyClass.class);
@@ -278,6 +285,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null read-only list of public methods declared in the specified class
      */
     @Nonnull
+    @Immutable
     public static List<Method> findMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, true, methodsToFilter);
     }
@@ -289,7 +297,6 @@ public abstract class MethodUtils implements Utils {
      * and does not include any methods from superclasses or interfaces.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Get all declared methods in MyClass
      * List<Method> declaredMethods = MethodUtils.findAllDeclaredMethods(MyClass.class);
@@ -308,6 +315,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null read-only list of declared methods in the specified class
      */
     @Nonnull
+    @Immutable
     public static List<Method> findAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, false, methodsToFilter);
     }
@@ -319,7 +327,6 @@ public abstract class MethodUtils implements Utils {
      * including those from interfaces implemented by the class and its ancestors.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Get all public methods of MyClass, including inherited ones
      * List<Method> allPublicMethods = MethodUtils.findAllMethods(MyClass.class);
@@ -338,6 +345,7 @@ public abstract class MethodUtils implements Utils {
      * @return non-null read-only {@link List}
      */
     @Nonnull
+    @Immutable
     public static List<Method> findAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, true, methodsToFilter);
     }
@@ -350,7 +358,6 @@ public abstract class MethodUtils implements Utils {
      * and optional filtering predicates.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Usage</h4>
      * <pre>{@code
      * // Get all public methods of MyClass including inherited ones
@@ -378,6 +385,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null read-only list of methods matching the criteria
      */
     @Nonnull
+    @Immutable
     public static List<Method> findMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
                                            Predicate<? super Method>... methodsToFilter) {
 
@@ -421,7 +429,6 @@ public abstract class MethodUtils implements Utils {
      * returning the first match found. If no method is found, this method returns {@code null}.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Find a method named "toString" in the MyClass class
      * Method method = MethodUtils.findMethod(MyClass.class, "toString");
@@ -449,7 +456,6 @@ public abstract class MethodUtils implements Utils {
      * If no matching method is found, this method returns {@code null}.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Find a method named "toString" with no parameters in MyClass
      * Method method = MethodUtils.findMethod(MyClass.class, "toString");
@@ -487,7 +493,6 @@ public abstract class MethodUtils implements Utils {
      * first matching method found.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Find a method named "exampleMethod" with no parameters
      * Method method1 = MethodUtils.findDeclaredMethod(MyClass.class, "exampleMethod");
@@ -544,7 +549,6 @@ public abstract class MethodUtils implements Utils {
      * to invoke based on the method name and argument types. It supports both instance and static methods.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * // Example class with an instance method
      * public class MyClass {
@@ -588,7 +592,6 @@ public abstract class MethodUtils implements Utils {
      * the method is static.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * public class ExampleClass {
      *     public static int add(int a, int b) {
@@ -623,7 +626,6 @@ public abstract class MethodUtils implements Utils {
      * it may result in an exception during invocation.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * public class ExampleClass {
      *     public static int multiply(int a, int b) {
@@ -659,7 +661,6 @@ public abstract class MethodUtils implements Utils {
      * and argument types, and then invokes it. It supports both instance and static methods.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * public class ExampleClass {
      *     public String greet(String name) {
@@ -733,7 +734,6 @@ public abstract class MethodUtils implements Utils {
      * null.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * public class ExampleClass {
      *     public String greet(String name) {
@@ -819,7 +819,6 @@ public abstract class MethodUtils implements Utils {
      * not being private or static, and having a return type that is a subtype of the overridden method's return type.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * class Parent {
      *     public void sayHello() {
@@ -918,7 +917,6 @@ public abstract class MethodUtils implements Utils {
      * both superclasses and interfaces.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * public class Parent {
      *     public void exampleMethod() {}
@@ -963,7 +961,6 @@ public abstract class MethodUtils implements Utils {
      * If a matching overridden method is found, it is returned; otherwise, this method returns {@code null}.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * public class Parent {
      *     public void exampleMethod(String arg) {
@@ -1008,7 +1005,6 @@ public abstract class MethodUtils implements Utils {
      * the method name, and the parameter types in parentheses.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * Method method = String.class.getMethod("substring", int.class, int.class);
      * String signature = MethodUtils.getSignature(method);
@@ -1065,7 +1061,6 @@ public abstract class MethodUtils implements Utils {
      * which is useful when filtering out methods that are common to all Java objects and not specific to a subclass.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * Method toStringMethod = String.class.getMethod("toString");
      * boolean isObjectMethod = MethodUtils.isObjectMethod(toStringMethod);
@@ -1095,7 +1090,6 @@ public abstract class MethodUtils implements Utils {
      * This is typically used in internal Java APIs to restrict or alter behavior based on the calling class.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * Method defineClassMethod = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
      * boolean isCallerSensitive = MethodUtils.isCallerSensitiveMethod(defineClassMethod);

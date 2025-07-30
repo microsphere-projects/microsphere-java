@@ -26,7 +26,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * {@link URLClassPathHandle} implementation based on the Service Loading mechanism
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @since URLClassPathHandle
+ * @since 1.0.0
  */
 public class ServiceLoadingURLClassPathHandle implements URLClassPathHandle {
 

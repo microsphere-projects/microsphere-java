@@ -31,9 +31,26 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 
 /**
- * {@link ElementVisitor} to assemble the JSON content
+ * A specialized {@link ElementVisitor} implementation that traverses Java elements and generates JSON
+ * representations of the elements' metadata.
+ *
+ * <p>This abstract class extends {@link ElementKindVisitor6} to provide a foundation for creating
+ * JSON-based representations of various Java language elements such as packages, types, methods,
+ * fields, and type parameters.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class CustomJSONElementVisitor extends JSONElementVisitor {
+ *     // Implement specific visit methods to customize JSON generation
+ * }
+ * }</pre>
+ *
+ * <p>Subclasses should implement or override the appropriate visit methods to customize how
+ * different Java elements are represented in JSON.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ElementVisitor
+ * @see ElementKindVisitor6
  * @see AbstractElementVisitor6
  * @since 1.0.0
  */

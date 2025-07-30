@@ -54,7 +54,7 @@ class StringToBlockingQueueConverterTest {
     private MultiValueConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToBlockingQueueConverter();
     }
 

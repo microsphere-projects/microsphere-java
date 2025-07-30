@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -51,7 +52,8 @@ import static io.microsphere.reflect.FieldUtils.setFieldValue;
  * @see Field
  * @since 1.0.0
  */
-public class FieldDefinition extends MemberDefinition<Field> {
+@Immutable
+public final class FieldDefinition extends MemberDefinition<Field> {
 
     /**
      * @param since             the 'since' version

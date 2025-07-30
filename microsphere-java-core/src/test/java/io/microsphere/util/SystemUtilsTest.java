@@ -139,7 +139,7 @@ class SystemUtilsTest {
     }
 
     @Test
-    public void testSystemPropertyKeys() {
+    void testSystemPropertyKeys() {
         assertEquals("java.version", JAVA_VERSION_PROPERTY_KEY);
         assertEquals("java.vendor", JAVA_VENDOR_PROPERTY_KEY);
         assertEquals("java.vendor.url", JAVA_VENDOR_URL_PROPERTY_KEY);
@@ -173,7 +173,7 @@ class SystemUtilsTest {
     }
 
     @Test
-    public void testSystemProperties() {
+    void testSystemProperties() {
         assertEquals(getProperty("java.version"), JAVA_VERSION);
         assertEquals(getProperty("java.vendor"), JAVA_VENDOR);
         assertEquals(getProperty("java.vendor.url"), JAVA_VENDOR_URL);
@@ -204,7 +204,7 @@ class SystemUtilsTest {
     }
 
     @Test
-    public void testJavaVersion() throws Throwable {
+    void testJavaVersion() throws Throwable {
         assertEquals(IS_LTS_JAVA_VERSION, IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21);
         assertJavaVersion();
     }

@@ -17,6 +17,8 @@
 
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
@@ -54,6 +56,7 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
  * @see CollectionUtils#unmodifiableIterator(Iterator)
  * @since 1.0.0
  */
+@Immutable
 public class UnmodifiableDeque<E> extends UnmodifiableQueue<E> implements Deque<E>, Serializable {
 
     private final Deque<E> delegate;

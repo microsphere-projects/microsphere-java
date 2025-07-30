@@ -1,0 +1,92 @@
+[
+  {
+    "name": "microsphere.artifact-id.manifest-attribute-names",
+    "type": "java.lang.String[]",
+    "defaultValue": "Bundle-Name,Automatic-Module-Name,Implementation-Title",
+    "required": false,
+    "description": "The attribute names in the 'META-INF\/MANIFEST' resource are retrieved as the artifact id",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.classloading.ManifestArtifactResourceResolver",
+      "declaredField": "ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME"
+    }
+  },
+  {
+    "name": "microsphere.artifact-version.manifest-attribute-names",
+    "type": "java.lang.String[]",
+    "defaultValue": "Bundle-Version,Implementation-Version",
+    "required": false,
+    "description": "The attribute names in the 'META-INF\/MANIFEST' resource are retrieved as the artifact version",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.classloading.ManifestArtifactResourceResolver",
+      "declaredField": "VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME"
+    }
+  },
+  {
+    "name": "microsphere.io.buffer.size",
+    "type": "int",
+    "defaultValue": "2048",
+    "required": false,
+    "description": "The buffer size for I\/O",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.io.IOUtils",
+      "declaredField": "BUFFER_SIZE"
+    }
+  },
+  {
+    "name": "microsphere.file-watch-service.thread-name-prefix",
+    "type": "java.lang.String",
+    "defaultValue": "microsphere-file-watch-service",
+    "required": false,
+    "description": "The thread name prefix for FileWatchService",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.io.StandardFileWatchService",
+      "declaredField": "THREAD_NAME_PREFIX"
+    }
+  },
+  {
+    "name": "microsphere.reflect.resolved-generic-types.cache.size",
+    "type": "int",
+    "defaultValue": "256",
+    "required": false,
+    "description": "The size of resolved generic types cache",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.reflect.TypeUtils",
+      "declaredField": "RESOLVED_GENERIC_TYPES_CACHE_SIZE"
+    }
+  },
+  {
+    "name": "microsphere.service-loader.cached",
+    "type": "boolean",
+    "defaultValue": "false",
+    "required": false,
+    "description": "Whether to cache the loaded services",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.util.ServiceLoaderUtils",
+      "declaredField": "SERVICE_LOADER_CACHED"
+    }
+  }
+]

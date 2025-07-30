@@ -19,7 +19,7 @@ class StringToMultiValueConverterTest {
     private StringToMultiValueConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToMultiValueConverter() {
             @Override
             public boolean accept(Class<String> sourceType, Class<?> multiValueType) {

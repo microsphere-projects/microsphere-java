@@ -51,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AssertTest extends AbstractTestCase {
 
     @Test
-    public void testAssertTrue() {
+    void testAssertTrue() {
         assertTrue(true, "True");
         assertTrue(true, () -> "True");
         assertTrue(true, (Supplier<String>) null);
@@ -61,7 +61,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertNull() {
+    void testAssertNull() {
         assertNull(null, "null");
         assertNull(null, () -> "null");
         assertNull(null, (Supplier<String>) null);
@@ -71,7 +71,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertNotNull() {
+    void testAssertNotNull() {
         assertNotNull(false, "false");
         assertNotNull(false, () -> "false");
         assertNotNull(false, (Supplier<String>) null);
@@ -81,7 +81,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertNotEmpty() {
+    void testAssertNotEmpty() {
         assertNotEmpty("abc", "abc");
         assertNotEmpty("abc", () -> "abc");
         assertNotEmpty("abc", TEST_NULL_STRING);
@@ -92,7 +92,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertNotBlank() {
+    void testAssertNotBlank() {
         assertNotBlank("abc", "abc");
         assertNotBlank("abc", () -> "abc");
         assertNotBlank("abc", TEST_NULL_STRING);
@@ -104,7 +104,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertArrayNotEmpty() {
+    void testAssertArrayNotEmpty() {
         Object[] array = {"a", "b", "c"};
         assertNotEmpty(array, "array");
         assertNotEmpty(array, () -> "array");
@@ -122,7 +122,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertCollectionNotEmpty() {
+    void testAssertCollectionNotEmpty() {
         Collection<String> collection = asList("a", "b", "c");
         assertNotEmpty(collection, "collection");
         assertNotEmpty(collection, () -> "collection");
@@ -140,7 +140,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertMapNotEmpty() {
+    void testAssertMapNotEmpty() {
         Map<String, String> map = ofMap("A", "1");
         assertNotEmpty(map, "map");
         assertNotEmpty(map, () -> "map");
@@ -158,7 +158,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertArrayNoNullElements() {
+    void testAssertArrayNoNullElements() {
         Object[] array = {"a", "b", "c"};
         assertNoNullElements(array, "array");
         assertNoNullElements(array, () -> "array");
@@ -183,7 +183,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertIterableNoNullElements() {
+    void testAssertIterableNoNullElements() {
         Collection<String> collection = asList("a", "b", "c");
         assertNoNullElements(collection, "collection");
         assertNoNullElements(collection, () -> "collection");
@@ -209,7 +209,7 @@ class AssertTest extends AbstractTestCase {
 
 
     @Test
-    public void testAssertArrayIndex() {
+    void testAssertArrayIndex() {
         int size = 10;
         Object array = newInstance(int.class, size);
         for (int i = 0; i < size; i++) {
@@ -223,7 +223,7 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertArrayIndexOnArrayIndexOutOfBoundsException() {
+    void testAssertArrayIndexOnArrayIndexOutOfBoundsException() {
         int size = 10;
         Object array = newInstance(int.class, size);
 
@@ -237,7 +237,7 @@ class AssertTest extends AbstractTestCase {
 
 
     @Test
-    public void testAssertArrayType() {
+    void testAssertArrayType() {
         testAssertArrayType(long.class);
         testAssertArrayType(int.class);
         testAssertArrayType(short.class);
@@ -251,27 +251,27 @@ class AssertTest extends AbstractTestCase {
     }
 
     @Test
-    public void testAssertArrayTypeOnIllegalArgumentException() {
+    void testAssertArrayTypeOnIllegalArgumentException() {
         assertThrows(IllegalArgumentException.class, () -> assertArrayType(new Object()));
     }
 
     @Test
-    public void testAssertArrayTypeOnNullPointerException() {
+    void testAssertArrayTypeOnNullPointerException() {
         assertThrows(NullPointerException.class, () -> assertArrayType(null));
     }
 
     @Test
-    public void testAssertFieldMatchType() {
+    void testAssertFieldMatchType() {
         assertFieldMatchType("test", "hash", int.class);
     }
 
     @Test
-    public void testAssertFieldMatchTypeOnFieldNotFound() {
+    void testAssertFieldMatchTypeOnFieldNotFound() {
         assertThrows(NullPointerException.class, () -> assertFieldMatchType("test", "hashCode", int.class));
     }
 
     @Test
-    public void testAssertFieldMatchTypeOnFieldTypeNotMatch() {
+    void testAssertFieldMatchTypeOnFieldTypeNotMatch() {
         assertThrows(IllegalArgumentException.class, () -> assertFieldMatchType("test", "hash", Integer.class));
     }
 

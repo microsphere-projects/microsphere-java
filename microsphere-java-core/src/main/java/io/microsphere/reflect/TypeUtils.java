@@ -16,6 +16,8 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
@@ -35,11 +37,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterList;
@@ -51,9 +55,11 @@ import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.lang.Integer.getInteger;
+import static java.lang.Integer.parseInt;
 import static java.lang.Math.min;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.of;
@@ -78,9 +84,33 @@ public abstract class TypeUtils implements Utils {
 
     public static final Predicate<? super Type> GENERIC_ARRAY_TYPE_FILTER = TypeUtils::isGenericArrayType;
 
-    public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = "microsphere.reflect.resolved-generic-types.cache.size";
+    /**
+     * The property name for resolved generic types cache size : {@code "microsphere.reflect.resolved-generic-types.cache.size"}
+     */
+    public static final String RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "reflect.resolved-generic-types.cache.size";
 
-    private static final ConcurrentMap<MultipleType, List<Type>> resolvedGenericTypesCache = newConcurrentHashMap(getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, 256));
+    /**
+     * The default value of resolved generic types cache size : {@code "256"}
+     */
+    public static final String DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE = "256";
+
+    /**
+     * The default size of resolved generic types cache
+     */
+    public static final int DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE = parseInt(DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE);
+
+    /**
+     * The size of resolved generic types cache
+     */
+    @ConfigurationProperty(
+            name = RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME,
+            defaultValue = DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_VALUE,
+            description = "The size of resolved generic types cache",
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
+    public static final int RESOLVED_GENERIC_TYPES_CACHE_SIZE = getInteger(RESOLVED_GENERIC_TYPES_CACHE_SIZE_PROPERTY_NAME, DEFAULT_RESOLVED_GENERIC_TYPES_CACHE_SIZE);
+
+    private static final ConcurrentMap<MultipleType, List<Type>> resolvedGenericTypesCache = newConcurrentHashMap(RESOLVED_GENERIC_TYPES_CACHE_SIZE);
 
     /**
      * Checks if the given object is an instance of {@link Class}.
@@ -411,6 +441,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IllegalArgumentException if either {@code type} or {@code baseType} is null or invalid
      */
     @Nonnull
+    @Immutable
     public static List<Type> resolveActualTypeArguments(Type type, Type baseType) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseType));
     }
@@ -466,6 +497,7 @@ public abstract class TypeUtils implements Utils {
      * returns an empty list if no arguments can be resolved (e.g., raw type usage or unresolved type parameters)
      */
     @Nonnull
+    @Immutable
     public static List<Class> resolveActualTypeArgumentClasses(Type type, Type baseType) {
         return unmodifiableList(doResolveActualTypeArgumentClasses(type, baseType));
     }
@@ -537,6 +569,8 @@ public abstract class TypeUtils implements Utils {
      * returns an empty list if no arguments can be resolved (e.g., raw type usage)
      * @throws IllegalArgumentException if either {@code type} or {@code baseClass} is null or invalid
      */
+    @Nonnull
+    @Immutable
     public static List<Type> resolveActualTypeArguments(Type type, Class baseClass) {
         return unmodifiableList(doResolveActualTypeArguments(type, baseClass));
     }
@@ -611,6 +645,7 @@ public abstract class TypeUtils implements Utils {
         return emptyList();
     }
 
+    @Nonnull
     private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int hierarchicalTypesSize, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
 
         int size = hierarchicalTypesSize + 1;
@@ -716,6 +751,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic superclasses
      */
     @Nonnull
+    @Immutable
     public static List<Type> getAllGenericSuperclasses(Type type) {
         return findAllGenericSuperclasses(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -741,6 +777,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic interfaces
      */
     @Nonnull
+    @Immutable
     public static List<Type> getAllGenericInterfaces(Type type) {
         return findAllGenericInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -769,6 +806,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of parameterized types directly associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> getParameterizedTypes(Type type) {
         return findParameterizedTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -795,6 +833,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of parameterized types from the given type and its hierarchy
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> getAllParameterizedTypes(Type type) {
         return findAllParameterizedTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -823,6 +862,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all hierarchical generic types associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<Type> getHierarchicalTypes(Type type) {
         return findHierarchicalTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -855,6 +895,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all associated generic types
      */
     @Nonnull
+    @Immutable
     public static List<Type> getAllTypes(Type type) {
         return findAllTypes(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -882,6 +923,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic superclasses
      */
     @Nonnull
+    @Immutable
     public static List<Type> findAllGenericSuperclasses(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, false, typeFilters);
     }
@@ -908,6 +950,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of generic interfaces
      */
     @Nonnull
+    @Immutable
     public static List<Type> findAllGenericInterfaces(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, false, true, typeFilters);
     }
@@ -936,6 +979,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of immediate parameterized types associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> findParameterizedTypes(Type type, Predicate<? super ParameterizedType>... typeFilters) {
         return findTypes(type, true, false, true, true, parameterizedTypePredicate(typeFilters));
     }
@@ -963,6 +1007,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list of parameterized types from the given type and its hierarchy
      */
     @Nonnull
+    @Immutable
     public static List<ParameterizedType> findAllParameterizedTypes(Type type, Predicate<? super ParameterizedType>... typeFilters) {
         return findAllTypes(type, parameterizedTypePredicate(typeFilters));
     }
@@ -992,6 +1037,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all hierarchical generic types associated with the given type
      */
     @Nonnull
+    @Immutable
     public static List<Type> findHierarchicalTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, false, true, true, true, typeFilters);
     }
@@ -1025,6 +1071,7 @@ public abstract class TypeUtils implements Utils {
      * @return a non-null read-only list containing all associated types
      */
     @Nonnull
+    @Immutable
     public static List<Type> findAllTypes(Type type, Predicate<? super Type>... typeFilters) {
         return findTypes(type, true, true, true, true, typeFilters);
     }
@@ -1034,6 +1081,8 @@ public abstract class TypeUtils implements Utils {
         return PARAMETERIZED_TYPE_FILTER.and(predicate);
     }
 
+    @Nonnull
+    @Immutable
     protected static List<Type> findTypes(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                           boolean includeGenericSuperclass, boolean includeGenericInterfaces,
                                           Predicate<? super Type>... typeFilters) {
@@ -1100,14 +1149,15 @@ public abstract class TypeUtils implements Utils {
      * }</pre>
      *
      * @param types an iterable collection of types to extract class names from
-     * @return a set containing the fully qualified class names of all types in the input
+     * @return a read-only set containing the fully qualified class names of all types in the input
      * @throws IllegalArgumentException if any element in the input is null
      */
     @Nonnull
+    @Immutable
     public static Set<String> getClassNames(Iterable<? extends Type> types) {
-        return stream(types.spliterator(), false)
+        return unmodifiableSet(stream(types.spliterator(), false)
                 .map(TypeUtils::getClassName)
-                .collect(toSet());
+                .collect(toSet()));
     }
 
     /**
@@ -1136,6 +1186,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IllegalArgumentException if the targetClass is null or represents a primitive/array type
      */
     @Nonnull
+    @Immutable
     public static List<Type> resolveTypeArguments(Class<?> targetClass) {
         if (targetClass == null || targetClass.isPrimitive() || targetClass.isArray()) {
             return emptyList();
@@ -1196,6 +1247,7 @@ public abstract class TypeUtils implements Utils {
      * @throws IllegalArgumentException if the targetClass is null or represents a primitive/array type
      */
     @Nonnull
+    @Immutable
     public static List<Class<?>> resolveTypeArgumentClasses(Class<?> targetClass) {
         List<Type> typeArguments = resolveTypeArguments(targetClass);
         return unmodifiableList(typeArguments.stream()
@@ -1515,4 +1567,5 @@ public abstract class TypeUtils implements Utils {
 
     private TypeUtils() {
     }
+
 }

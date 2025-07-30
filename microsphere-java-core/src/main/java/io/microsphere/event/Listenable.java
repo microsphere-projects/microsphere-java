@@ -16,6 +16,8 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ import static java.util.stream.StreamSupport.stream;
  * Implementations of this interface provide methods to add, remove, and retrieve event listeners,
  * and may support additional features such as ordering based on listener priority.
  *
- * <p><strong>Example:</strong>
+ * <h3>Example Usage</h3>
  * <pre>
  * public class MyListenable implements Listenable<MyEventListener> {
  *     // Implementation details...
@@ -164,5 +166,6 @@ public interface Listenable<E extends EventListener<?>> {
      * @return non-null read-only ordered {@link EventListener event listeners}
      * @see EventListener#getPriority()
      */
+    @Nonnull
     List<E> getAllEventListeners();
 }

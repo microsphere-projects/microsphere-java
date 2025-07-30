@@ -32,7 +32,7 @@ class CharSequenceComparatorTest {
     private final CharSequenceComparator comparator = CharSequenceComparator.INSTANCE;
 
     @Test
-    public void test() {
+    void test() {
         assertEquals(0, comparator.compare(null, null));
         assertEquals(-1, comparator.compare(null, "a"));
         assertEquals(1, comparator.compare("a", null));

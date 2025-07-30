@@ -32,7 +32,6 @@ import io.microsphere.lang.Prioritized;
  * </ul>
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * // Create an instance of DirectEventDispatcher
  * DirectEventDispatcher dispatcher = new DirectEventDispatcher();

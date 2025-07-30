@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see FieldDefinition
  * @since 1.0.0
  */
-public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> {
+class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> {
 
     private String name = "test-name";
 
@@ -41,7 +41,7 @@ public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefin
     }
 
     @Test
-    public void testFieldName() {
+    void testFieldName() {
         for (FieldDefinition definition : definitions) {
             assertEquals("name", definition.getFieldName());
             assertEquals(definition.getName(), definition.getFieldName());
@@ -49,21 +49,21 @@ public class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefin
     }
 
     @Test
-    public void testGetResolvedField() {
+    void testGetResolvedField() {
         for (FieldDefinition definition : definitions) {
             assertSame(definition.getMember(), definition.getResolvedField());
         }
     }
 
     @Test
-    public void testGet() {
+    void testGet() {
         for (FieldDefinition definition : definitions) {
             assertSame("test-name", definition.get(this));
         }
     }
 
     @Test
-    public void testSet() {
+    void testSet() {
         for (FieldDefinition definition : definitions) {
             definition.set(this, definition.toString());
             assertEquals(definition.toString(), this.name);

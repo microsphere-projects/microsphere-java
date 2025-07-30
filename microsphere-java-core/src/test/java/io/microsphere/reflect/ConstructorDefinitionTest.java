@@ -16,16 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see ConstructorDefinition
  * @since 1.0.0
  */
-public class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<ConstructorDefinition> {
-
-    public static class TestData {
-
-        private String name;
-
-        public TestData(String name) {
-            this.name = name;
-        }
-    }
+class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<ConstructorDefinition> {
 
     @Override
     protected String getClassName() {
@@ -38,17 +29,26 @@ public class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<
     }
 
     @Test
-    public void testGetConstructor() {
+    void testGetConstructor() {
         for (ConstructorDefinition definition : definitions) {
             assertNotNull(definition.getConstructor());
         }
     }
 
     @Test
-    public void testNewInstance() {
+    void testNewInstance() {
         for (ConstructorDefinition definition : definitions) {
             TestData testData = definition.newInstance("test");
             assertEquals("test", testData.name);
+        }
+    }
+
+    public static class TestData {
+
+        private String name;
+
+        public TestData(String name) {
+            this.name = name;
         }
     }
 

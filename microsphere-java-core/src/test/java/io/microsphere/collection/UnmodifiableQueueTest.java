@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -70,7 +71,7 @@ class UnmodifiableQueueTest {
     @Test
     void testToArray() {
         assertArrayEquals(ofArray(TEST_ELEMENT), queue.toArray());
-        assertArrayEquals(ofArray(TEST_ELEMENT), queue.toArray(new String[0]));
+        assertArrayEquals(ofArray(TEST_ELEMENT), queue.toArray(EMPTY_STRING_ARRAY));
     }
 
     @Test

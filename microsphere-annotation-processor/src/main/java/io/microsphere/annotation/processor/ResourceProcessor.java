@@ -55,6 +55,26 @@ import static java.util.Optional.of;
  * - Manipulating resources via OutputStream or Writer
  * - Reading or modifying the content directly as CharSequence</p>
  *
+ * <h3>Example Usage</h3>
+ * <pre>
+ * // Creating an instance of ResourceProcessor
+ * ResourceProcessor resourceProcessor = new ResourceProcessor(processingEnv, StandardLocation.SOURCE_OUTPUT);
+ *
+ * // Reading content from a resource
+ * Optional<String> content = resourceProcessor.processInResourceContent("example.txt", CharBuffer::toString);
+ *
+ * // Writing to a resource
+ * resourceProcessor.processInResourceWriter("output.txt", writer -> {
+ *     writer.write("Hello, World!");
+ * });
+ *
+ * // Processing an InputStream
+ * resourceProcessor.processInResourceInputStream("data.bin", inputStream -> {
+ *     // Process binary data
+ *     return null;
+ * });
+ * </pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see FilerProcessor
  * @since 1.0.0

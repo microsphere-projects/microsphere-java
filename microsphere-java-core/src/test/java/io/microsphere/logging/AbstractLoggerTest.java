@@ -19,6 +19,7 @@ package io.microsphere.logging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,92 +35,84 @@ public abstract class AbstractLoggerTest {
     protected Logger logger;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         this.logger = createLogger();
     }
 
     protected abstract Logger createLogger();
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         assertNotNull(logger.getName());
     }
 
     @Test
-    public void testIsTraceEnabled() {
+    void testIsTraceEnabled() {
         assertTrue(logger.isTraceEnabled());
     }
 
     @Test
-    public void testTrace() {
+    void testTrace() {
         logger.trace("test");
-        logger.trace("test", new Object[0]);
+        logger.trace("test", EMPTY_OBJECT_ARRAY);
         logger.trace("test : {}", "a");
         logger.trace("test : {}", "a", new Throwable());
         logger.trace("test", new Throwable());
     }
 
     @Test
-    public void testIsDebugEnabled() {
+    void testIsDebugEnabled() {
         assertTrue(logger.isDebugEnabled());
     }
 
     @Test
-    public void testDebug() {
+    void testDebug() {
         logger.debug("test");
-        logger.debug("test", new Object[0]);
+        logger.debug("test", EMPTY_OBJECT_ARRAY);
         logger.debug("test : {}", "a");
         logger.debug("test : {}", "a", new Throwable());
         logger.debug("test", new Throwable());
     }
 
     @Test
-    public void testIsInfoEnabled() {
+    void testIsInfoEnabled() {
         assertTrue(logger.isInfoEnabled());
     }
 
     @Test
-    public void testInfo() {
+    void testInfo() {
         logger.info("test");
-        logger.info("test", new Object[0]);
+        logger.info("test", EMPTY_OBJECT_ARRAY);
         logger.info("test : {}", "a");
         logger.info("test : {}", "a", new Throwable());
         logger.info("test", new Throwable());
     }
 
     @Test
-    public void testIsWarnEnabled() {
+    void testIsWarnEnabled() {
         assertTrue(logger.isWarnEnabled());
     }
 
     @Test
-    public void testWarn() {
+    void testWarn() {
         logger.warn("test");
-        logger.warn("test", new Object[0]);
+        logger.warn("test", EMPTY_OBJECT_ARRAY);
         logger.warn("test : {}", "a");
         logger.warn("test : {}", "a", new Throwable());
         logger.warn("test", new Throwable());
     }
 
     @Test
-    public void testIsErrorEnabled() {
+    void testIsErrorEnabled() {
         assertTrue(logger.isErrorEnabled());
     }
 
     @Test
-    public void testError() {
+    void testError() {
         logger.error("test");
-        logger.error("test", new Object[0]);
+        logger.error("test", EMPTY_OBJECT_ARRAY);
         logger.error("test : {}", "a");
         logger.error("test : {}", "a", new Throwable());
         logger.error("test", new Throwable());
-    }
-
-    @Test
-    public void testLog() {
-    }
-
-    @Test
-    public void testResolveMessage() {
     }
 }

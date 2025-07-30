@@ -16,6 +16,7 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.event.EventDispatcher;
 import io.microsphere.io.event.FileChangedEvent;
@@ -37,10 +38,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
@@ -108,11 +111,17 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     /**
      * The thread name prefix property name : "microsphere.file-watch-service.thread-name-prefix
      */
-    public static final String THREAD_NAME_PREFIX_PROPERTY_NAME = "microsphere.file-watch-service.thread-name-prefix";
+    public static final String THREAD_NAME_PREFIX_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "file-watch-service.thread-name-prefix";
 
     /**
      * The thread name prefix , default value : "microsphere-file-watch-service-"
      */
+    @ConfigurationProperty(
+            name = THREAD_NAME_PREFIX_PROPERTY_NAME,
+            defaultValue = DEFAULT_THREAD_NAME_PREFIX,
+            description = "The thread name prefix for FileWatchService",
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
     public static final String THREAD_NAME_PREFIX = getProperty(THREAD_NAME_PREFIX_PROPERTY_NAME, DEFAULT_THREAD_NAME_PREFIX);
 
     private static final WatchEvent.Kind<?>[] ALL_WATCH_EVENT_KINDS = {

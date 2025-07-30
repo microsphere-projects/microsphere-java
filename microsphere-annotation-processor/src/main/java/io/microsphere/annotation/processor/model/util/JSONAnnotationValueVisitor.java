@@ -19,7 +19,6 @@ package io.microsphere.annotation.processor.model.util;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.AnnotationValueVisitor;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
@@ -41,9 +40,33 @@ import static io.microsphere.json.JSONUtils.append;
 import static io.microsphere.json.JSONUtils.appendName;
 
 /**
- * {@link AnnotationValueVisitor} to assemble JSON content
+ * A visitor implementation for converting {@link AnnotationValue} objects into JSON-formatted strings.
+ * This class extends {@link SimpleAnnotationValueVisitor6} and is designed to work with Java annotation
+ * processing tools to generate JSON representations of annotation values.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Example 1: Visiting a simple annotation value
+ * AnnotationValue value = ...; // e.g., a String, int, or boolean value
+ * ExecutableElement method = ...; // the method corresponding to the annotation attribute
+ * StringBuilder jsonBuilder = new StringBuilder();
+ * JSONAnnotationValueVisitor visitor = new JSONAnnotationValueVisitor(jsonBuilder);
+ * visitor.visit(value, method); // Result: appends JSON key-value pair to jsonBuilder
+ *
+ * // Example 2: Visiting an array annotation value
+ * List<? extends AnnotationValue> arrayValues = ...; // list of annotation values
+ * visitor.visitArray(arrayValues, method); // Result: appends JSON array to jsonBuilder
+ *
+ * // Example 3: Visiting a nested annotation
+ * AnnotationMirror annotationMirror = ...;
+ * visitor.visitAnnotation(annotationMirror, method); // Result: appends JSON object to jsonBuilder
+ * }</pre>
+ *
+ * <p>This visitor is typically used during annotation processing to serialize annotation values
+ * into a structured JSON format, useful for configuration or metadata generation purposes.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see SimpleAnnotationValueVisitor6
  * @since 1.0.0
  */
 public class JSONAnnotationValueVisitor extends SimpleAnnotationValueVisitor6<StringBuilder, ExecutableElement> {

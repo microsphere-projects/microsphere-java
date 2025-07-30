@@ -1,5 +1,7 @@
 package io.microsphere.util;
 
+import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -9,14 +11,17 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentMap;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
-import static java.lang.Boolean.getBoolean;
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.System.getProperty;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
 import static java.util.ServiceLoader.load;
@@ -78,7 +83,26 @@ public abstract class ServiceLoaderUtils implements Utils {
 
     private static final Logger logger = getLogger(ServiceLoaderUtils.class);
 
-    static final boolean serviceLoaderCached = getBoolean("microsphere.service-loader.cached");
+    /**
+     * The default value of the {@link #SERVICE_LOADER_CACHED} property : {@code "false"}
+     */
+    public static final String DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE = "false";
+
+    /**
+     * The name of the {@link #SERVICE_LOADER_CACHED} property : {@code "microsphere.service-loader.cached"}
+     */
+    public static final String SERVICE_LOADER_CACHED_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "service-loader.cached";
+
+    /**
+     * Whether to cache the loaded services
+     */
+    @ConfigurationProperty(
+            name = SERVICE_LOADER_CACHED_PROPERTY_NAME,
+            defaultValue = DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE,
+            description = "Whether to cache the loaded services",
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
+    public static final boolean SERVICE_LOADER_CACHED = parseBoolean(getProperty(SERVICE_LOADER_CACHED_PROPERTY_NAME, DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE));
 
     private static final ConcurrentMap<Class<?>, List<?>> servicesCache = newConcurrentHashMap();
 
@@ -103,6 +127,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType));
     }
@@ -130,8 +155,9 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadServicesList(serviceType, classLoader, serviceLoaderCached);
+        return loadServicesList(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -157,6 +183,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType, boolean cached) throws IllegalArgumentException {
         return loadServicesList(serviceType, getClassLoader(serviceType), cached);
     }
@@ -186,6 +213,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @throws IllegalArgumentException if no implementation is defined for the service type in the configuration file
      */
     @Nonnull
+    @Immutable
     public static <S> List<S> loadServicesList(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached) throws IllegalArgumentException {
         return unmodifiableList(loadServicesAsList(serviceType, classLoader, cached));
     }
@@ -239,7 +267,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> S[] loadServices(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadServices(serviceType, classLoader, serviceLoaderCached);
+        return loadServices(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -307,7 +335,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class);
      * if (service != null) {
@@ -340,7 +367,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * thereby providing a mechanism for overriding the implementation class.
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, true);
      * if (service != null) {
@@ -368,7 +394,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, classLoader);
@@ -385,7 +410,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> S loadFirstService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadFirstService(serviceType, classLoader, serviceLoaderCached);
+        return loadFirstService(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -398,7 +423,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadFirstService(MyService.class, classLoader, true);
@@ -428,7 +452,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class);
      * if (service != null) {
@@ -456,7 +479,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, true);
      * if (service != null) {
@@ -484,7 +506,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, classLoader);
@@ -501,7 +522,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     @Nonnull
     public static <S> S loadLastService(Class<S> serviceType, @Nullable ClassLoader classLoader) throws IllegalArgumentException {
-        return loadLastService(serviceType, classLoader, serviceLoaderCached);
+        return loadLastService(serviceType, classLoader, SERVICE_LOADER_CACHED);
     }
 
     /**
@@ -514,7 +535,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * and services implementing the {@link io.microsphere.lang.Prioritized} interface are sorted by priority.</p>
      *
      * <h3>Example Usage</h3>
-     *
      * <pre>{@code
      * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
      * MyService service = ServiceLoaderUtils.loadLastService(MyService.class, classLoader, true);

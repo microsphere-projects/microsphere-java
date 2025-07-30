@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see MBeanAttribute
  * @since 1.0.0
  */
-public class MBeanAttributeTest {
+class MBeanAttributeTest {
 
     private static MBeanServer mBeanServer;
 
@@ -37,7 +37,7 @@ public class MBeanAttributeTest {
     private static Map<String, MBeanAttribute> mBeanAttributesMap;
 
     @BeforeAll
-    public static void init() throws Throwable {
+    static void beforeAll() throws Throwable {
         mBeanServer = getPlatformMBeanServer();
         objectName = getInstance("java.lang:type=ClassLoading");
         notFoundObjectName = getInstance("java.lang:type=NotFound");
@@ -46,45 +46,45 @@ public class MBeanAttributeTest {
     }
 
     @Test
-    public void testGetDeclaringMBeanInfo() {
+    void testGetDeclaringMBeanInfo() {
         MBeanInfo mbeanInfo = getMBeanInfo(mBeanServer, objectName);
         forEach(mBeanAttribute -> assertSame(mbeanInfo, mBeanAttribute.getDeclaringMBeanInfo()));
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         forEach(mBeanAttribute -> assertEquals(mBeanAttribute.getAttributeInfo().getName(), mBeanAttribute.getName()));
     }
 
     @Test
-    public void testGetType() {
+    void testGetType() {
         forEach(mBeanAttribute -> assertEquals(mBeanAttribute.getAttributeInfo().getType(), mBeanAttribute.getType()));
     }
 
     @Test
-    public void testIsReadable() {
+    void testIsReadable() {
         forEach(mBeanAttribute -> assertEquals(mBeanAttribute.getAttributeInfo().isReadable(), mBeanAttribute.isReadable()));
     }
 
     @Test
-    public void testIsWritable() {
+    void testIsWritable() {
         forEach(mBeanAttribute -> assertEquals(mBeanAttribute.getAttributeInfo().isWritable(), mBeanAttribute.isWritable()));
 
     }
 
     @Test
-    public void testIsIs() {
+    void testIsIs() {
         forEach(mBeanAttribute -> assertEquals(mBeanAttribute.getAttributeInfo().isIs(), mBeanAttribute.isIs()));
 
     }
 
     @Test
-    public void testGetAttributeInfo() {
+    void testGetAttributeInfo() {
         forEach(mBeanAttribute -> assertNotNull(mBeanAttribute.getAttributeInfo()));
     }
 
     @Test
-    public void testGetValue() {
+    void testGetValue() {
         forEach(mBeanAttribute -> assertNotNull(mBeanAttribute.getValue()));
     }
 

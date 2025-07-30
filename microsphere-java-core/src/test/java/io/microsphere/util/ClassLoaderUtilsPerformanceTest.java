@@ -17,7 +17,7 @@ import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
 class ClassLoaderUtilsPerformanceTest extends AbstractPerformanceTest {
 
     @Test
-    public void testFind() {
+    void testFind() {
         super.execute(() -> findLoadedClassesInClassPath(TEST_CLASS_LOADER));
     }
 }

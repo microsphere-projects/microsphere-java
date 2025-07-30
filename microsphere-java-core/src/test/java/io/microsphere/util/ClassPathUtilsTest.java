@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class ClassPathUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testGetBootstrapClassPaths() {
+    void testGetBootstrapClassPaths() {
         Set<String> bootstrapClassPaths = getBootstrapClassPaths();
         assertNotNull(bootstrapClassPaths);
         RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
@@ -40,7 +40,7 @@ class ClassPathUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetClassPaths() {
+    void testGetClassPaths() {
         Set<String> classPaths = getClassPaths();
         assertNotNull(classPaths);
         assertFalse(classPaths.isEmpty());
@@ -48,7 +48,7 @@ class ClassPathUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetRuntimeClassLocation() {
+    void testGetRuntimeClassLocation() {
         URL location = getRuntimeClassLocation(String.class);
         assertNotNull(location);
         log(location);
@@ -77,7 +77,7 @@ class ClassPathUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testGetRuntimeClassLocationWithClassName() {
+    void testGetRuntimeClassLocationWithClassName() {
         URL location = getRuntimeClassLocation(String.class.getName());
         assertNotNull(location);
         log(location);

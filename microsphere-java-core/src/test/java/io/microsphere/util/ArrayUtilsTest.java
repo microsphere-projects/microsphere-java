@@ -95,7 +95,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     private static final Logger logger = getLogger(ArrayUtilsTest.class);
 
     @Test
-    public void testConstants() {
+    void testConstants() {
 
         assertEmptyArray(EMPTY_BOOLEAN_ARRAY, boolean.class);
         assertEmptyArray(EMPTY_CHAR_ARRAY, char.class);
@@ -124,70 +124,70 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void tesOf() {
+    void tesOf() {
         assertArrayEquals(of("A"), ofArray("A"));
         assertArrayEquals(of("A", "B"), ofArray("A", "B"));
         assertArrayEquals(of("A", "B", "C"), ofArray("A", "B", "C"));
     }
 
     @Test
-    public void testOfBooleans() {
+    void testOfBooleans() {
         assertArrayEquals(new boolean[]{true}, ofBooleans(true));
         assertArrayEquals(new boolean[]{true, false}, ofBooleans(true, false));
         assertArrayEquals(new boolean[]{true, false, true}, ofBooleans(true, false, true));
     }
 
     @Test
-    public void testOfBytes() {
+    void testOfBytes() {
         assertArrayEquals(new byte[]{1}, ofBytes((byte) 1));
         assertArrayEquals(new byte[]{1, 2}, ofBytes((byte) 1, (byte) 2));
         assertArrayEquals(new byte[]{1, 2, 3}, ofBytes((byte) 1, (byte) 2, (byte) 3));
     }
 
     @Test
-    public void testOfChars() {
+    void testOfChars() {
         assertArrayEquals(new char[]{1}, ofChars((char) 1));
         assertArrayEquals(new char[]{1, 2}, ofChars((char) 1, (char) 2));
         assertArrayEquals(new char[]{1, 2, 3}, ofChars((char) 1, (char) 2, (char) 3));
     }
 
     @Test
-    public void testOfShorts() {
+    void testOfShorts() {
         assertArrayEquals(new short[]{1}, ofShorts((short) 1));
         assertArrayEquals(new short[]{1, 2}, ofShorts((short) 1, (short) 2));
         assertArrayEquals(new short[]{1, 2, 3}, ofShorts((short) 1, (short) 2, (short) 3));
     }
 
     @Test
-    public void testOfInts() {
+    void testOfInts() {
         assertArrayEquals(new int[]{1}, ofInts(1));
         assertArrayEquals(new int[]{1, 2}, ofInts(1, 2));
         assertArrayEquals(new int[]{1, 2, 3}, ofInts(1, 2, 3));
     }
 
     @Test
-    public void testOfLongs() {
+    void testOfLongs() {
         assertArrayEquals(new long[]{1}, ofLongs(1L));
         assertArrayEquals(new long[]{1, 2}, ofLongs(1L, 2L));
         assertArrayEquals(new long[]{1, 2, 3}, ofLongs(1L, 2L, 3L));
     }
 
     @Test
-    public void testOfFloats() {
+    void testOfFloats() {
         assertArrayEquals(new float[]{1f}, ofFloats(1f));
         assertArrayEquals(new float[]{1f, 2f}, ofFloats(1f, 2f));
         assertArrayEquals(new float[]{1f, 2f, 3f}, ofFloats(1f, 2f, 3f));
     }
 
     @Test
-    public void testOfDoubles() {
+    void testOfDoubles() {
         assertArrayEquals(new double[]{1d}, ofDoubles(1d));
         assertArrayEquals(new double[]{1d, 2d}, ofDoubles(1d, 2d));
         assertArrayEquals(new double[]{1d, 2d, 3d}, ofDoubles(1d, 2d, 3d));
     }
 
     @Test
-    public void testOfArray() {
+    void testOfArray() {
         assertArrayEquals(of("A"), ofArray("A"));
         assertArrayEquals(of("A", "B"), ofArray("A", "B"));
         assertArrayEquals(of("A", "B", "C"), ofArray("A", "B", "C"));
@@ -196,485 +196,485 @@ class ArrayUtilsTest extends AbstractTestCase {
     // Test size(...) methods
 
     @Test
-    public void testSize() {
+    void testSize() {
         assertEquals(1, size(ofArray("A")));
         assertEquals(2, size(ofArray("A", "B")));
     }
 
     @Test
-    public void testSizeOnNull() {
+    void testSizeOnNull() {
         assertEquals(0, size(ofArray(TEST_NULL_OBJECT_ARRAY)));
     }
 
     @Test
-    public void testSizeOnEmptyArray() {
+    void testSizeOnEmptyArray() {
         assertEquals(0, size(ofArray(EMPTY_OBJECT_ARRAY)));
     }
 
     // Test length(...) methods
 
     @Test
-    public void testLengthOnBooleanArray() {
+    void testLengthOnBooleanArray() {
         assertEquals(1, length(ofBooleans(true)));
         assertEquals(2, length(ofBooleans(true, false)));
         assertEquals(3, length(ofBooleans(true, false, true)));
     }
 
     @Test
-    public void testLengthOnEmptyBooleanArray() {
+    void testLengthOnEmptyBooleanArray() {
         assertEquals(0, length(EMPTY_BOOLEAN_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullBooleanArray() {
+    void testLengthOnNullBooleanArray() {
         assertEquals(0, length((boolean[]) null));
     }
 
     @Test
-    public void testLengthOnByteArray() {
+    void testLengthOnByteArray() {
         assertEquals(1, length(ofBytes((byte) 1)));
         assertEquals(2, length(ofBytes((byte) 1, (byte) 2)));
         assertEquals(3, length(ofBytes((byte) 1, (byte) 2, (byte) 3)));
     }
 
     @Test
-    public void testLengthOnEmptyByteArray() {
+    void testLengthOnEmptyByteArray() {
         assertEquals(0, length(EMPTY_BYTE_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullByteArray() {
+    void testLengthOnNullByteArray() {
         assertEquals(0, length((byte[]) null));
     }
 
     @Test
-    public void testLengthOnCharArray() {
+    void testLengthOnCharArray() {
         assertEquals(1, length(ofChars((char) 1)));
         assertEquals(2, length(ofChars((char) 1, (char) 2)));
         assertEquals(3, length(ofChars((char) 1, (char) 2, (char) 3)));
     }
 
     @Test
-    public void testLengthOnEmptyCharArray() {
+    void testLengthOnEmptyCharArray() {
         assertEquals(0, length(EMPTY_CHAR_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullCharArray() {
+    void testLengthOnNullCharArray() {
         assertEquals(0, length((char[]) null));
     }
 
     @Test
-    public void testLengthOnShortArray() {
+    void testLengthOnShortArray() {
         assertEquals(1, length(ofShorts((short) 1)));
         assertEquals(2, length(ofShorts((short) 1, (short) 2)));
         assertEquals(3, length(ofShorts((short) 1, (short) 2, (short) 3)));
     }
 
     @Test
-    public void testLengthOnEmptyShortArray() {
+    void testLengthOnEmptyShortArray() {
         assertEquals(0, length(EMPTY_SHORT_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullShortArray() {
+    void testLengthOnNullShortArray() {
         assertEquals(0, length((short[]) null));
     }
 
     @Test
-    public void testLengthOnIntArray() {
+    void testLengthOnIntArray() {
         assertEquals(1, length(ofInts(1)));
         assertEquals(2, length(ofInts(1, 2)));
         assertEquals(3, length(ofInts(1, 2, 3)));
     }
 
     @Test
-    public void testLengthOnEmptyIntArray() {
+    void testLengthOnEmptyIntArray() {
         assertEquals(0, length(EMPTY_INT_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullIntArray() {
+    void testLengthOnNullIntArray() {
         assertEquals(0, length((int[]) null));
     }
 
     @Test
-    public void testLengthOnLongArray() {
+    void testLengthOnLongArray() {
         assertEquals(1, length(ofLongs(1L)));
         assertEquals(2, length(ofLongs(1L, 2L)));
         assertEquals(3, length(ofLongs(1L, 2L, 3L)));
     }
 
     @Test
-    public void testLengthOnEmptyLongArray() {
+    void testLengthOnEmptyLongArray() {
         assertEquals(0, length(EMPTY_LONG_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullLongArray() {
+    void testLengthOnNullLongArray() {
         assertEquals(0, length((long[]) null));
     }
 
     @Test
-    public void testLengthOnFloatArray() {
+    void testLengthOnFloatArray() {
         assertEquals(1, length(ofFloats(1L)));
         assertEquals(2, length(ofFloats(1L, 2L)));
         assertEquals(3, length(ofFloats(1L, 2L, 3L)));
     }
 
     @Test
-    public void testLengthOnEmptyFloatArray() {
+    void testLengthOnEmptyFloatArray() {
         assertEquals(0, length(EMPTY_FLOAT_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullFloatArray() {
+    void testLengthOnNullFloatArray() {
         assertEquals(0, length((float[]) null));
     }
 
     @Test
-    public void testLengthOnDoubleArray() {
+    void testLengthOnDoubleArray() {
         assertEquals(1, length(ofDoubles(1L)));
         assertEquals(2, length(ofDoubles(1L, 2L)));
         assertEquals(3, length(ofDoubles(1L, 2L, 3L)));
     }
 
     @Test
-    public void testLengthOnEmptyDoubleArray() {
+    void testLengthOnEmptyDoubleArray() {
         assertEquals(0, length(EMPTY_DOUBLE_ARRAY));
     }
 
     @Test
-    public void testLengthOnNullDoubleArray() {
+    void testLengthOnNullDoubleArray() {
         assertEquals(0, length((double[]) null));
     }
 
     @Test
-    public void testLength() {
+    void testLength() {
         assertEquals(1, length(ofArray("A")));
         assertEquals(2, length(ofArray("A", "B")));
     }
 
     @Test
-    public void testLengthOnNull() {
+    void testLengthOnNull() {
         assertEquals(0, length(ofArray(TEST_NULL_OBJECT_ARRAY)));
     }
 
     @Test
-    public void testLengthOnEmptyArray() {
+    void testLengthOnEmptyArray() {
         assertEquals(0, length(ofArray(EMPTY_OBJECT_ARRAY)));
     }
 
     // Test isEmpty(...) methods
 
     @Test
-    public void testIsEmptyOnBooleanArray() {
+    void testIsEmptyOnBooleanArray() {
         assertFalse(isEmpty(ofBooleans(true)));
         assertFalse(isEmpty(ofBooleans(true, false)));
         assertFalse(isEmpty(ofBooleans(true, false, true)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyBooleanArray() {
+    void testIsEmptyOnEmptyBooleanArray() {
         assertTrue(isEmpty(EMPTY_BOOLEAN_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullBooleanArray() {
+    void testIsEmptyOnNullBooleanArray() {
         assertTrue(isEmpty((boolean[]) null));
     }
 
     @Test
-    public void testIsEmptyOnByteArray() {
+    void testIsEmptyOnByteArray() {
         assertFalse(isEmpty(ofBytes((byte) 1)));
         assertFalse(isEmpty(ofBytes((byte) 1, (byte) 2)));
         assertFalse(isEmpty(ofBytes((byte) 1, (byte) 2, (byte) 3)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyByteArray() {
+    void testIsEmptyOnEmptyByteArray() {
         assertTrue(isEmpty(EMPTY_BYTE_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullByteArray() {
+    void testIsEmptyOnNullByteArray() {
         assertTrue(isEmpty((byte[]) null));
     }
 
     @Test
-    public void testIsEmptyOnCharArray() {
+    void testIsEmptyOnCharArray() {
         assertFalse(isEmpty(ofChars((char) 1)));
         assertFalse(isEmpty(ofChars((char) 1, (char) 2)));
         assertFalse(isEmpty(ofChars((char) 1, (char) 2, (char) 3)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyCharArray() {
+    void testIsEmptyOnEmptyCharArray() {
         assertTrue(isEmpty(EMPTY_CHAR_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullCharArray() {
+    void testIsEmptyOnNullCharArray() {
         assertTrue(isEmpty((char[]) null));
     }
 
     @Test
-    public void testIsEmptyOnShortArray() {
+    void testIsEmptyOnShortArray() {
         assertFalse(isEmpty(ofShorts((short) 1)));
         assertFalse(isEmpty(ofShorts((short) 1, (short) 2)));
         assertFalse(isEmpty(ofShorts((short) 1, (short) 2, (short) 3)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyShortArray() {
+    void testIsEmptyOnEmptyShortArray() {
         assertTrue(isEmpty(EMPTY_SHORT_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullShortArray() {
+    void testIsEmptyOnNullShortArray() {
         assertTrue(isEmpty((short[]) null));
     }
 
     @Test
-    public void testIsEmptyOnIntArray() {
+    void testIsEmptyOnIntArray() {
         assertFalse(isEmpty(ofInts(1)));
         assertFalse(isEmpty(ofInts(1, 2)));
         assertFalse(isEmpty(ofInts(1, 2, 3)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyIntArray() {
+    void testIsEmptyOnEmptyIntArray() {
         assertTrue(isEmpty(EMPTY_INT_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullIntArray() {
+    void testIsEmptyOnNullIntArray() {
         assertTrue(isEmpty((int[]) null));
     }
 
     @Test
-    public void testIsEmptyOnLongArray() {
+    void testIsEmptyOnLongArray() {
         assertFalse(isEmpty(ofLongs(1L)));
         assertFalse(isEmpty(ofLongs(1L, 2L)));
         assertFalse(isEmpty(ofLongs(1L, 2L, 3L)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyLongArray() {
+    void testIsEmptyOnEmptyLongArray() {
         assertTrue(isEmpty(EMPTY_LONG_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullLongArray() {
+    void testIsEmptyOnNullLongArray() {
         assertTrue(isEmpty((long[]) null));
     }
 
     @Test
-    public void testIsEmptyOnFloatArray() {
+    void testIsEmptyOnFloatArray() {
         assertFalse(isEmpty(ofFloats(1L)));
         assertFalse(isEmpty(ofFloats(1L, 2L)));
         assertFalse(isEmpty(ofFloats(1L, 2L, 3L)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyFloatArray() {
+    void testIsEmptyOnEmptyFloatArray() {
         assertTrue(isEmpty(EMPTY_FLOAT_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullFloatArray() {
+    void testIsEmptyOnNullFloatArray() {
         assertTrue(isEmpty((float[]) null));
     }
 
     @Test
-    public void testIsEmptyOnDoubleArray() {
+    void testIsEmptyOnDoubleArray() {
         assertFalse(isEmpty(ofDoubles(1L)));
         assertFalse(isEmpty(ofDoubles(1L, 2L)));
         assertFalse(isEmpty(ofDoubles(1L, 2L, 3L)));
     }
 
     @Test
-    public void testIsEmptyOnEmptyDoubleArray() {
+    void testIsEmptyOnEmptyDoubleArray() {
         assertTrue(isEmpty(EMPTY_DOUBLE_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNullDoubleArray() {
+    void testIsEmptyOnNullDoubleArray() {
         assertTrue(isEmpty((double[]) null));
     }
 
     @Test
-    public void testIsEmpty() {
+    void testIsEmpty() {
         assertFalse(isEmpty(ofArray("A")));
     }
 
     @Test
-    public void testIsEmptyOnEmptyArray() {
+    void testIsEmptyOnEmptyArray() {
         assertTrue(isEmpty(EMPTY_OBJECT_ARRAY));
     }
 
     @Test
-    public void testIsEmptyOnNull() {
+    void testIsEmptyOnNull() {
         assertTrue(isEmpty(TEST_NULL_OBJECT_ARRAY));
     }
 
     // Test isNotEmpty(...) methods
 
     @Test
-    public void testIsNotEmptyOnBooleanArray() {
+    void testIsNotEmptyOnBooleanArray() {
         assertTrue(isNotEmpty(ofBooleans(true)));
         assertTrue(isNotEmpty(ofBooleans(true, false)));
         assertTrue(isNotEmpty(ofBooleans(true, false, true)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyBooleanArray() {
+    void testIsNotEmptyOnEmptyBooleanArray() {
         assertFalse(isNotEmpty(EMPTY_BOOLEAN_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullBooleanArray() {
+    void testIsNotEmptyOnNullBooleanArray() {
         assertFalse(isNotEmpty((boolean[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnByteArray() {
+    void testIsNotEmptyOnByteArray() {
         assertTrue(isNotEmpty(ofBytes((byte) 1)));
         assertTrue(isNotEmpty(ofBytes((byte) 1, (byte) 2)));
         assertTrue(isNotEmpty(ofBytes((byte) 1, (byte) 2, (byte) 3)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyByteArray() {
+    void testIsNotEmptyOnEmptyByteArray() {
         assertFalse(isNotEmpty(EMPTY_BYTE_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullByteArray() {
+    void testIsNotEmptyOnNullByteArray() {
         assertFalse(isNotEmpty((byte[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnCharArray() {
+    void testIsNotEmptyOnCharArray() {
         assertTrue(isNotEmpty(ofChars((char) 1)));
         assertTrue(isNotEmpty(ofChars((char) 1, (char) 2)));
         assertTrue(isNotEmpty(ofChars((char) 1, (char) 2, (char) 3)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyCharArray() {
+    void testIsNotEmptyOnEmptyCharArray() {
         assertFalse(isNotEmpty(EMPTY_CHAR_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullCharArray() {
+    void testIsNotEmptyOnNullCharArray() {
         assertFalse(isNotEmpty((char[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnShortArray() {
+    void testIsNotEmptyOnShortArray() {
         assertTrue(isNotEmpty(ofShorts((short) 1)));
         assertTrue(isNotEmpty(ofShorts((short) 1, (short) 2)));
         assertTrue(isNotEmpty(ofShorts((short) 1, (short) 2, (short) 3)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyShortArray() {
+    void testIsNotEmptyOnEmptyShortArray() {
         assertFalse(isNotEmpty(EMPTY_SHORT_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullShortArray() {
+    void testIsNotEmptyOnNullShortArray() {
         assertFalse(isNotEmpty((short[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnIntArray() {
+    void testIsNotEmptyOnIntArray() {
         assertTrue(isNotEmpty(ofInts(1)));
         assertTrue(isNotEmpty(ofInts(1, 2)));
         assertTrue(isNotEmpty(ofInts(1, 2, 3)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyIntArray() {
+    void testIsNotEmptyOnEmptyIntArray() {
         assertFalse(isNotEmpty(EMPTY_INT_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullIntArray() {
+    void testIsNotEmptyOnNullIntArray() {
         assertFalse(isNotEmpty((int[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnLongArray() {
+    void testIsNotEmptyOnLongArray() {
         assertTrue(isNotEmpty(ofLongs(1L)));
         assertTrue(isNotEmpty(ofLongs(1L, 2L)));
         assertTrue(isNotEmpty(ofLongs(1L, 2L, 3L)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyLongArray() {
+    void testIsNotEmptyOnEmptyLongArray() {
         assertFalse(isNotEmpty(EMPTY_LONG_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullLongArray() {
+    void testIsNotEmptyOnNullLongArray() {
         assertFalse(isNotEmpty((long[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnFloatArray() {
+    void testIsNotEmptyOnFloatArray() {
         assertTrue(isNotEmpty(ofFloats(1L)));
         assertTrue(isNotEmpty(ofFloats(1L, 2L)));
         assertTrue(isNotEmpty(ofFloats(1L, 2L, 3L)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyFloatArray() {
+    void testIsNotEmptyOnEmptyFloatArray() {
         assertFalse(isNotEmpty(EMPTY_FLOAT_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullFloatArray() {
+    void testIsNotEmptyOnNullFloatArray() {
         assertFalse(isNotEmpty((float[]) null));
     }
 
     @Test
-    public void testIsNotEmptyOnDoubleArray() {
+    void testIsNotEmptyOnDoubleArray() {
         assertTrue(isNotEmpty(ofDoubles(1L)));
         assertTrue(isNotEmpty(ofDoubles(1L, 2L)));
         assertTrue(isNotEmpty(ofDoubles(1L, 2L, 3L)));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyDoubleArray() {
+    void testIsNotEmptyOnEmptyDoubleArray() {
         assertFalse(isNotEmpty(EMPTY_DOUBLE_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNullDoubleArray() {
+    void testIsNotEmptyOnNullDoubleArray() {
         assertFalse(isNotEmpty((double[]) null));
     }
 
     @Test
-    public void testIsNotEmpty() {
+    void testIsNotEmpty() {
         assertTrue(isNotEmpty(ofArray("A")));
     }
 
     @Test
-    public void testIsNotEmptyOnEmptyArray() {
+    void testIsNotEmptyOnEmptyArray() {
         assertFalse(isNotEmpty(EMPTY_OBJECT_ARRAY));
     }
 
     @Test
-    public void testIsNotEmptyOnNull() {
+    void testIsNotEmptyOnNull() {
         assertFalse(isNotEmpty(TEST_NULL_OBJECT_ARRAY));
     }
 
     // Test arrayEquals(...) methods;
 
     @Test
-    public void testArrayEqualsOnBooleanArray() {
+    void testArrayEqualsOnBooleanArray() {
         assertTrue(arrayEquals(ofBooleans(true), ofBooleans(true)));
         assertTrue(arrayEquals(ofBooleans(true), new boolean[]{true}));
 
@@ -683,18 +683,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyBooleanArray() {
+    void testArrayEqualsOnEmptyBooleanArray() {
         assertTrue(arrayEquals(EMPTY_BOOLEAN_ARRAY, EMPTY_BOOLEAN_ARRAY));
         assertTrue(arrayEquals(EMPTY_BOOLEAN_ARRAY, new boolean[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullBooleanArray() {
+    void testArrayEqualsOnNullBooleanArray() {
         assertTrue(arrayEquals((boolean[]) null, (boolean[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnByteArray() {
+    void testArrayEqualsOnByteArray() {
         assertTrue(arrayEquals(ofBytes((byte) 1), ofBytes((byte) 1)));
         assertTrue(arrayEquals(ofBytes((byte) 1), new byte[]{1}));
 
@@ -703,18 +703,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyByteArray() {
+    void testArrayEqualsOnEmptyByteArray() {
         assertTrue(arrayEquals(EMPTY_BYTE_ARRAY, EMPTY_BYTE_ARRAY));
         assertTrue(arrayEquals(EMPTY_BYTE_ARRAY, new byte[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullByteArray() {
+    void testArrayEqualsOnNullByteArray() {
         assertTrue(arrayEquals((byte[]) null, (byte[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnCharArray() {
+    void testArrayEqualsOnCharArray() {
         assertTrue(arrayEquals(ofChars((char) 1), ofChars((char) 1)));
         assertTrue(arrayEquals(ofChars((char) 1), new char[]{1}));
 
@@ -723,18 +723,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyCharArray() {
+    void testArrayEqualsOnEmptyCharArray() {
         assertTrue(arrayEquals(EMPTY_CHAR_ARRAY, EMPTY_CHAR_ARRAY));
         assertTrue(arrayEquals(EMPTY_CHAR_ARRAY, new char[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullCharArray() {
+    void testArrayEqualsOnNullCharArray() {
         assertTrue(arrayEquals((char[]) null, (char[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnShortArray() {
+    void testArrayEqualsOnShortArray() {
         assertTrue(arrayEquals(ofShorts((short) 1), ofShorts((short) 1)));
         assertTrue(arrayEquals(ofShorts((short) 1), new short[]{1}));
 
@@ -743,18 +743,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyShortArray() {
+    void testArrayEqualsOnEmptyShortArray() {
         assertTrue(arrayEquals(EMPTY_SHORT_ARRAY, EMPTY_SHORT_ARRAY));
         assertTrue(arrayEquals(EMPTY_SHORT_ARRAY, new short[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullShortArray() {
+    void testArrayEqualsOnNullShortArray() {
         assertTrue(arrayEquals((short[]) null, (short[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnIntArray() {
+    void testArrayEqualsOnIntArray() {
         assertTrue(arrayEquals(ofInts(1), ofInts(1)));
         assertTrue(arrayEquals(ofInts(1), new int[]{1}));
 
@@ -763,18 +763,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyIntArray() {
+    void testArrayEqualsOnEmptyIntArray() {
         assertTrue(arrayEquals(EMPTY_INT_ARRAY, EMPTY_INT_ARRAY));
         assertTrue(arrayEquals(EMPTY_INT_ARRAY, new int[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullIntArray() {
+    void testArrayEqualsOnNullIntArray() {
         assertTrue(arrayEquals((int[]) null, (int[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnLongArray() {
+    void testArrayEqualsOnLongArray() {
         assertTrue(arrayEquals(ofLongs(1L), ofLongs(1L)));
         assertTrue(arrayEquals(ofLongs(1L), new long[]{1L}));
 
@@ -783,18 +783,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyLongArray() {
+    void testArrayEqualsOnEmptyLongArray() {
         assertTrue(arrayEquals(EMPTY_LONG_ARRAY, EMPTY_LONG_ARRAY));
         assertTrue(arrayEquals(EMPTY_LONG_ARRAY, new long[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullLongArray() {
+    void testArrayEqualsOnNullLongArray() {
         assertTrue(arrayEquals((long[]) null, (long[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnFloatArray() {
+    void testArrayEqualsOnFloatArray() {
         assertTrue(arrayEquals(ofFloats(1F), ofFloats(1F)));
         assertTrue(arrayEquals(ofFloats(1F), new float[]{1F}));
 
@@ -803,18 +803,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyFloatArray() {
+    void testArrayEqualsOnEmptyFloatArray() {
         assertTrue(arrayEquals(EMPTY_FLOAT_ARRAY, EMPTY_FLOAT_ARRAY));
         assertTrue(arrayEquals(EMPTY_FLOAT_ARRAY, new float[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullFloatArray() {
+    void testArrayEqualsOnNullFloatArray() {
         assertTrue(arrayEquals((float[]) null, (float[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnDoubleArray() {
+    void testArrayEqualsOnDoubleArray() {
         assertTrue(arrayEquals(ofDoubles(1D), ofDoubles(1D)));
         assertTrue(arrayEquals(ofDoubles(1D), new double[]{1D}));
 
@@ -823,18 +823,18 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyDoubleArray() {
+    void testArrayEqualsOnEmptyDoubleArray() {
         assertTrue(arrayEquals(EMPTY_DOUBLE_ARRAY, EMPTY_DOUBLE_ARRAY));
         assertTrue(arrayEquals(EMPTY_DOUBLE_ARRAY, new double[0]));
     }
 
     @Test
-    public void testArrayEqualsOnNullDoubleArray() {
+    void testArrayEqualsOnNullDoubleArray() {
         assertTrue(arrayEquals((double[]) null, (double[]) null));
     }
 
     @Test
-    public void testArrayEqualsOnObjectArray() {
+    void testArrayEqualsOnObjectArray() {
         assertTrue(arrayEquals(of("A", "B"), of("A", "B")));
         assertTrue(arrayEquals(of("A", "B"), new String[]{"A", "B"}));
 
@@ -843,39 +843,39 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testArrayEqualsOnEmptyObjectArray() {
+    void testArrayEqualsOnEmptyObjectArray() {
         assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, EMPTY_OBJECT_ARRAY));
-        assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, new Object[0]));
+        assertTrue(arrayEquals(EMPTY_OBJECT_ARRAY, EMPTY_OBJECT_ARRAY));
     }
 
     @Test
-    public void testArrayEqualsOnNullObjectArray() {
+    void testArrayEqualsOnNullObjectArray() {
         assertTrue(arrayEquals(TEST_NULL_OBJECT_ARRAY, TEST_NULL_OBJECT_ARRAY));
     }
 
     // Test asArray methods
 
     @Test
-    public void testAsArrayOnEnumeration() {
+    void testAsArrayOnEnumeration() {
         Enumeration<String> enums = ofEnumeration("A", "B");
         assertArrayEquals(ofArray("A", "B"), asArray(enums, String.class));
     }
 
     @Test
-    public void testAsArrayOnIterable() {
+    void testAsArrayOnIterable() {
         Iterable<String> iterable = ofList("A", "B");
         assertArrayEquals(ofArray("A", "B"), asArray(iterable, String.class));
     }
 
     @Test
-    public void testAsArrayOnCollection() {
+    void testAsArrayOnCollection() {
         Collection<String> collection = ofList("A", "B");
         assertArrayEquals(ofArray("A", "B"), asArray(collection, String.class));
     }
 
     // Test newArray
     @Test
-    public void testNewArray() {
+    void testNewArray() {
         Integer[] values = newArray(Integer.class, 3);
         assertEquals(3, values.length);
     }
@@ -883,7 +883,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     // Test combine
 
     @Test
-    public void testCombine() {
+    void testCombine() {
         assertArrayEquals(of("A", "B"), combine("A", of("B")));
         assertArrayEquals(of("A", "B", "C"), combine("A", of("B", "C")));
         assertArrayEquals(of("A", "B", "C"), combine(of("A"), of("B", "C")));
@@ -906,7 +906,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     // Test forEach(...) methods
 
     @Test
-    public void testForEachWithConsumerOnBooleanArray() {
+    void testForEachWithConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -916,7 +916,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnByteArray() {
+    void testForEachWithConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -926,7 +926,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnCharArray() {
+    void testForEachWithConsumerOnCharArray() {
         char[] values = ofChars('A');
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -936,7 +936,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnShortArray() {
+    void testForEachWithConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -946,7 +946,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnIntArray() {
+    void testForEachWithConsumerOnIntArray() {
         int[] values = ofInts(1);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -956,7 +956,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnLongArray() {
+    void testForEachWithConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -966,7 +966,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnFloatArray() {
+    void testForEachWithConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -976,7 +976,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnDoubleArray() {
+    void testForEachWithConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -986,7 +986,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithConsumerOnObjectArray() {
+    void testForEachWithConsumerOnObjectArray() {
         Object[] values = of("A");
         forEach(values, (value) -> {
             if (logger.isTraceEnabled()) {
@@ -996,7 +996,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnBooleanArray() {
+    void testForEachWithBiConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1006,7 +1006,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnByteArray() {
+    void testForEachWithBiConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1016,7 +1016,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnCharArray() {
+    void testForEachWithBiConsumerOnCharArray() {
         char[] values = ofChars('A');
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1026,7 +1026,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnShortArray() {
+    void testForEachWithBiConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1036,7 +1036,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnIntArray() {
+    void testForEachWithBiConsumerOnIntArray() {
         int[] values = ofInts(1);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1046,7 +1046,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnLongArray() {
+    void testForEachWithBiConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1056,7 +1056,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnFloatArray() {
+    void testForEachWithBiConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1066,7 +1066,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnDoubleArray() {
+    void testForEachWithBiConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1076,7 +1076,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testForEachWithBiConsumerOnObjectArray() {
+    void testForEachWithBiConsumerOnObjectArray() {
         Object[] values = of("A");
         forEach(values, (index, value) -> {
             if (logger.isTraceEnabled()) {
@@ -1086,77 +1086,77 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testContainsOnBooleanArray() {
+    void testContainsOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         assertTrue(contains(values, true));
         assertFalse(contains(values, false));
     }
 
     @Test
-    public void testContainsOnByteArray() {
+    void testContainsOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         assertTrue(contains(values, (byte) 1));
         assertFalse(contains(values, (byte) 2));
     }
 
     @Test
-    public void testContainsOnCharArray() {
+    void testContainsOnCharArray() {
         char[] values = ofChars('A');
         assertTrue(contains(values, 'A'));
         assertFalse(contains(values, 'B'));
     }
 
     @Test
-    public void testContainsOnShortArray() {
+    void testContainsOnShortArray() {
         short[] values = ofShorts((short) 1);
         assertTrue(contains(values, (short) 1));
         assertFalse(contains(values, (short) 2));
     }
 
     @Test
-    public void testContainsOnIntArray() {
+    void testContainsOnIntArray() {
         int[] values = ofInts(1);
         assertTrue(contains(values, 1));
         assertFalse(contains(values, 2));
     }
 
     @Test
-    public void testContainsOnLongArray() {
+    void testContainsOnLongArray() {
         long[] values = ofLongs(1L);
         assertTrue(contains(values, 1L));
         assertFalse(contains(values, 2L));
     }
 
     @Test
-    public void testContainsOnFloatArray() {
+    void testContainsOnFloatArray() {
         float[] values = ofFloats(1F);
         assertTrue(contains(values, 1F));
         assertFalse(contains(values, 2F));
     }
 
     @Test
-    public void testContainsOnDoubleArray() {
+    void testContainsOnDoubleArray() {
         double[] values = ofDoubles(1D);
         assertTrue(contains(values, 1D));
         assertFalse(contains(values, 2D));
     }
 
     @Test
-    public void testContainsOnComparableArray() {
+    void testContainsOnComparableArray() {
         Object[] values = of("A");
         assertTrue(contains(values, "A"));
         assertFalse(contains(values, "B"));
     }
 
     @Test
-    public void testContainsOnObjectArray() {
+    void testContainsOnObjectArray() {
         Object[] values = of(ofList("A"));
         assertTrue(contains(values, ofList("A")));
         assertFalse(contains(values, ofList("B")));
     }
 
     @Test
-    public void testReverse() {
+    void testReverse() {
         String[] array = ofArray("A", "B", "C");
         String[] reversed = reverse(array);
         assertSame(reversed, array);
@@ -1164,7 +1164,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    public void testToArrayReversed() {
+    void testToArrayReversed() {
         List<String> list = ofList("A", "B", "C");
         String[] strings = new String[2];
         String[] reversed = toArrayReversed(list, strings);

@@ -18,16 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ManagementUtils
  * @since 1.0.0
  */
-public class ManagementUtilsTest extends AbstractTestCase {
+class ManagementUtilsTest extends AbstractTestCase {
 
     @Test
-    public void testGetCurrentProcessId() {
+    void testGetCurrentProcessId() {
         long currentProcessId = getCurrentProcessId();
         assertTrue(currentProcessId > 0);
     }
 
     @Test
-    public void testLog() {
+    void testLog() {
         List<ProcessIdResolver> resolvers = loadServicesList(ProcessIdResolver.class);
         for (ProcessIdResolver resolver : resolvers) {
             ManagementUtils.log(resolver, UNKNOWN_PROCESS_ID);

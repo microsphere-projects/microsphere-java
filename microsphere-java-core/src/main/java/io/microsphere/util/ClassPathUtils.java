@@ -4,6 +4,7 @@
 package io.microsphere.util;
 
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
@@ -57,10 +58,14 @@ public abstract class ClassPathUtils implements Utils {
 
     protected static final RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
 
+    @Immutable
     private static final Set<String> bootstrapClassPaths = initBootstrapClassPaths();
 
+    @Immutable
     private static final Set<String> classPaths = initClassPaths();
 
+    @Nonnull
+    @Immutable
     private static Set<String> initBootstrapClassPaths() {
         if (runtimeMXBean.isBootClassPathSupported()) {
             return resolveClassPaths(runtimeMXBean.getBootClassPath());
@@ -68,10 +73,14 @@ public abstract class ClassPathUtils implements Utils {
         return emptySet();
     }
 
+    @Nonnull
+    @Immutable
     private static Set<String> initClassPaths() {
         return resolveClassPaths(runtimeMXBean.getClassPath());
     }
 
+    @Nonnull
+    @Immutable
     private static Set<String> resolveClassPaths(String classPath) {
         String[] classPathsArray = split(classPath, PATH_SEPARATOR);
         return ofSet(classPathsArray);
@@ -95,6 +104,7 @@ public abstract class ClassPathUtils implements Utils {
      * returns an empty set.
      */
     @Nonnull
+    @Immutable
     public static Set<String> getBootstrapClassPaths() {
         return bootstrapClassPaths;
     }
@@ -116,6 +126,7 @@ public abstract class ClassPathUtils implements Utils {
      * @see RuntimeMXBean#getClassPath()
      */
     @Nonnull
+    @Immutable
     public static Set<String> getClassPaths() {
         return classPaths;
     }
@@ -194,4 +205,5 @@ public abstract class ClassPathUtils implements Utils {
 
     private ClassPathUtils() {
     }
+
 }

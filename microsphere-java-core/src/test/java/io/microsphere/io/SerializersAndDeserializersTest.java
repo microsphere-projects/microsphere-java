@@ -38,7 +38,7 @@ class SerializersAndDeserializersTest {
     private Deserializers deserializers;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         serializers = new Serializers();
         deserializers = new Deserializers();
         serializers.loadSPI();

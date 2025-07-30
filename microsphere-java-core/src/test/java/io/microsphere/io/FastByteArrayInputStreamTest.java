@@ -31,13 +31,13 @@ class FastByteArrayInputStreamTest {
     private FastByteArrayInputStream inputStream2;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         inputStream = new FastByteArrayInputStream(TEST_BYTES);
         inputStream2 = new FastByteArrayInputStream(TEST_BYTES, TEST_OFFSET, TEST_VALUE.length());
     }
 
     @AfterEach
-    void destroy() throws IOException {
+    void tearDown() throws IOException {
         inputStream.close();
         inputStream2.close();
     }

@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -29,7 +30,6 @@ import io.microsphere.util.Version;
  * environment.</p>
  *
  * <h3>Example Usage</h3>
- *
  * <pre>{@code
  * // Create a ClassDefinition for a class introduced in version "1.0.0"
  * ClassDefinition definition = new ClassDefinition("1.0.0", "java.util.ArrayList");
@@ -51,7 +51,8 @@ import io.microsphere.util.Version;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public class ClassDefinition extends ReflectiveDefinition {
+@Immutable
+public final class ClassDefinition extends ReflectiveDefinition {
 
     /**
      * @param since     the 'since' version

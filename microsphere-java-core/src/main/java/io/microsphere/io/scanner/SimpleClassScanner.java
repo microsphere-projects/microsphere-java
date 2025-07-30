@@ -3,6 +3,8 @@
  */
 package io.microsphere.io.scanner;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.lang.ClassDataRepository;
 
@@ -79,6 +81,8 @@ public class SimpleClassScanner {
      * @throws IllegalArgumentException scanned source is not legal
      * @throws IllegalStateException    scanned source's state is not valid
      */
+    @Nonnull
+    @Immutable
     public Set<Class<?>> scan(ClassLoader classLoader, String packageName) throws IllegalArgumentException, IllegalStateException {
         return scan(classLoader, packageName, false);
     }
@@ -94,6 +98,8 @@ public class SimpleClassScanner {
      * @throws IllegalArgumentException scanned source is not legal
      * @throws IllegalStateException    scanned source's state is not valid
      */
+    @Nonnull
+    @Immutable
     public Set<Class<?>> scan(ClassLoader classLoader, String packageName, boolean recursive) throws IllegalArgumentException, IllegalStateException {
         return scan(classLoader, packageName, recursive, false);
     }
@@ -111,6 +117,8 @@ public class SimpleClassScanner {
      * @throws IllegalArgumentException
      * @throws IllegalStateException
      */
+    @Nonnull
+    @Immutable
     public Set<Class<?>> scan(ClassLoader classLoader, String packageName, final boolean recursive, boolean requiredLoad) throws IllegalArgumentException, IllegalStateException {
         Set<Class<?>> classesSet = new LinkedHashSet();
 
@@ -154,12 +162,14 @@ public class SimpleClassScanner {
         return unmodifiableSet(classesSet);
     }
 
+    @Nonnull
     public Set<Class<?>> scan(ClassLoader classLoader, URL resourceInArchive, boolean requiredLoad,
                               Predicate<? super Class<?>>... classFilters) {
         File archiveFile = resolveArchiveFile(resourceInArchive);
         return scan(classLoader, archiveFile, requiredLoad, classFilters);
     }
 
+    @Nonnull
     public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
                               Predicate<? super Class<?>>... classFilters) {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);

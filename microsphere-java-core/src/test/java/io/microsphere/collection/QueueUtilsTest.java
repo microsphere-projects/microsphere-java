@@ -22,6 +22,7 @@ import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.QueueUtils.unmodifiableDeque;
 import static io.microsphere.collection.QueueUtils.unmodifiableQueue;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -174,7 +175,7 @@ class QueueUtilsTest {
         Object[] array = queue.toArray();
         assertEquals(0, array.length);
 
-        String[] values = queue.toArray(new String[0]);
+        String[] values = queue.toArray(EMPTY_STRING_ARRAY);
         assertEquals(0, values.length);
 
         assertThrows(UnsupportedOperationException.class, () -> queue.add("a"));

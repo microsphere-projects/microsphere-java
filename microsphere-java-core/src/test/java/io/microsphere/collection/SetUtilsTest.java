@@ -6,12 +6,15 @@ import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.SetUtils.isSet;
+import static io.microsphere.collection.SetUtils.newFixedHashSet;
+import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.SetUtils.of;
@@ -36,9 +39,19 @@ class SetUtilsTest extends AbstractTestCase {
     private static final String[] ELEMENTS = new String[]{"a", "b", "c"};
 
     @Test
-    void testIsSet() {
+    void testIsSetWithInstance() {
         assertTrue(isSet(emptySet()));
         assertFalse(isSet(emptyList()));
+        assertFalse(isSet("Hello,World"));
+        assertFalse(isSet((Object) null));
+    }
+
+    @Test
+    void testIsSetWithType() {
+        assertTrue(isSet(Set.class));
+        assertFalse(isSet(Collection.class));
+        assertFalse(isSet(Map.class));
+        assertFalse(isSet(null));
     }
 
     @Test
@@ -125,6 +138,24 @@ class SetUtilsTest extends AbstractTestCase {
         assertEquals(iterable, newLinkedHashSet(iterable));
         assertEquals(iterable, newLinkedHashSet(elements));
         assertSet((Set<String>) iterable);
+    }
+
+    @Test
+    void testNewFixedHashSet() {
+        Set<String> set = newFixedHashSet(3);
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        assertSet(set);
+    }
+
+    @Test
+    void testNewFixedLinkedHashSet() {
+        Set<String> set = newFixedLinkedHashSet(3);
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        assertSet(set);
     }
 
     private void assertSet(Set<String> set) {

@@ -16,7 +16,9 @@ import static io.microsphere.util.CharSequenceUtilsTest.TEST_STRING;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.StringUtils.capitalize;
 import static io.microsphere.util.StringUtils.contains;
+import static io.microsphere.util.StringUtils.containsWhitespace;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.isNotBlank;
@@ -29,6 +31,11 @@ import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
+import static io.microsphere.util.StringUtils.trimAllWhitespace;
+import static io.microsphere.util.StringUtils.trimLeadingWhitespace;
+import static io.microsphere.util.StringUtils.trimTrailingWhitespace;
+import static io.microsphere.util.StringUtils.trimWhitespace;
+import static io.microsphere.util.StringUtils.uncapitalize;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -46,7 +53,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class StringUtilsTest {
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertSame(TEST_EMPTY_STRING, EMPTY);
         assertSame(TEST_EMPTY_STRING, EMPTY_STRING);
         assertSame(ArrayUtils.EMPTY_STRING_ARRAY, EMPTY_STRING_ARRAY);
@@ -55,7 +62,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testIsBlank() {
+    void testIsBlank() {
         assertTrue(isBlank(null));
         assertTrue(isBlank(TEST_EMPTY_STRING));
         assertTrue(isBlank(TEST_BLANK_STRING));
@@ -64,7 +71,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testIsNotBlank() {
+    void testIsNotBlank() {
         assertFalse(isNotBlank(null));
         assertFalse(isNotBlank(TEST_EMPTY_STRING));
         assertFalse(isNotBlank(TEST_BLANK_STRING));
@@ -73,7 +80,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testSplit() {
+    void testSplit() {
         String[] values = split(null, SPACE_CHAR);
         assertSame(EMPTY_STRING_ARRAY, values);
 
@@ -97,7 +104,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testContains() {
+    void testContains() {
         assertFalse(contains(null, null));
         assertFalse(contains(TEST_EMPTY_STRING, null));
         assertTrue(contains(TEST_EMPTY_STRING, TEST_EMPTY_STRING));
@@ -111,7 +118,7 @@ class StringUtilsTest {
 
 
     @Test
-    public void testStartsWith() {
+    void testStartsWith() {
         assertFalse(startsWith(null, null));
         assertFalse(startsWith(TEST_EMPTY_STRING, null));
         assertTrue(startsWith(TEST_EMPTY_STRING, TEST_EMPTY_STRING));
@@ -130,7 +137,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testEndsWith() {
+    void testEndsWith() {
         assertFalse(endsWith(null, null));
         assertFalse(endsWith(TEST_EMPTY_STRING, null));
         assertTrue(endsWith(TEST_EMPTY_STRING, TEST_EMPTY_STRING));
@@ -152,7 +159,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testReplace() {
+    void testReplace() {
         assertNull(replace(null, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
@@ -169,7 +176,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testSubstringBetween() {
+    void testSubstringBetween() {
         assertNull(substringBetween(null, null));
         assertNull(substringBetween(TEST_EMPTY_STRING, null));
         assertNull(substringBetween(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
@@ -183,7 +190,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testSubstringBefore() {
+    void testSubstringBefore() {
         assertNull(substringBefore(null, null));
         assertSame(TEST_EMPTY_STRING, substringBefore(TEST_EMPTY_STRING, null));
         assertSame(TEST_CSV_STRING, substringBefore(TEST_CSV_STRING, null));
@@ -197,7 +204,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testSubstringAfter() {
+    void testSubstringAfter() {
         assertNull(substringAfter(null, null));
         assertSame(TEST_EMPTY_STRING, substringAfter(TEST_EMPTY_STRING, null));
         assertSame(TEST_EMPTY_STRING, substringAfter(TEST_CSV_STRING, null));
@@ -215,7 +222,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testSubstringBeforeLast() {
+    void testSubstringBeforeLast() {
         assertNull(substringBeforeLast(null, null));
         assertSame(TEST_EMPTY_STRING, substringBeforeLast(TEST_EMPTY_STRING, null));
         assertSame(TEST_CSV_STRING, substringBeforeLast(TEST_CSV_STRING, null));
@@ -229,7 +236,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testSubstringAfterLast() {
+    void testSubstringAfterLast() {
         assertNull(substringAfterLast(null, null));
         assertSame(TEST_EMPTY_STRING, substringAfterLast(TEST_EMPTY_STRING, null));
         assertSame(TEST_EMPTY_STRING, substringAfterLast(TEST_CSV_STRING, null));
@@ -242,7 +249,7 @@ class StringUtilsTest {
     }
 
     @Test
-    public void testIsNumeric() {
+    void testIsNumeric() {
         assertFalse(isNumeric(null));
         assertFalse(isNumeric(TEST_EMPTY_STRING));
         assertFalse(isNumeric(TEST_CSV_STRING));
@@ -252,4 +259,71 @@ class StringUtilsTest {
         assertTrue(isNumeric("123"));
         assertFalse(isNumeric("12a"));
     }
+
+    @Test
+    void testContainsWhitespace() {
+        assertFalse(containsWhitespace(null));
+        assertFalse(containsWhitespace(TEST_EMPTY_STRING));
+        assertTrue(containsWhitespace(TEST_BLANK_STRING));
+        assertTrue(containsWhitespace("hello world"));
+        assertTrue(containsWhitespace("hello\tworld"));
+        assertFalse(containsWhitespace("helloworld"));
+    }
+
+    @Test
+    void testTrimWhitespace() {
+        assertNull(trimWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimWhitespace(TEST_EMPTY_STRING));
+        assertEquals(TEST_EMPTY_STRING, trimWhitespace(TEST_BLANK_STRING));
+        assertEquals("a", trimWhitespace(" a "));
+        assertEquals("a", trimWhitespace(" a"));
+        assertEquals("a", trimWhitespace("a "));
+    }
+
+    @Test
+    void testTrimLeadingWhitespace() {
+        assertNull(trimLeadingWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimLeadingWhitespace(TEST_EMPTY_STRING));
+        assertEquals(TEST_EMPTY_STRING, trimLeadingWhitespace(TEST_BLANK_STRING));
+        assertEquals("a ", trimLeadingWhitespace(" a "));
+        assertEquals("a", trimLeadingWhitespace(" a"));
+        assertEquals("a ", trimLeadingWhitespace("a "));
+    }
+
+    @Test
+    void testTrimTrailingWhitespace() {
+        assertNull(trimTrailingWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimTrailingWhitespace(TEST_EMPTY_STRING));
+        assertEquals(" a", trimTrailingWhitespace(" a "));
+        assertEquals(" a", trimTrailingWhitespace(" a"));
+        assertEquals("a", trimTrailingWhitespace("a "));
+    }
+
+    @Test
+    void testTrimAllWhitespace() {
+        assertNull(trimAllWhitespace(null));
+        assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_EMPTY_STRING));
+        assertEquals(TEST_EMPTY_STRING, trimAllWhitespace(TEST_BLANK_STRING));
+        assertEquals("helloworld", trimAllWhitespace("  hello  world  "));
+        assertEquals("hello", trimAllWhitespace("  \t\n  h e l l o  \r\n\f"));
+    }
+
+    @Test
+    void testCapitalize() {
+        assertNull(capitalize(null));
+        assertSame(TEST_EMPTY_STRING, capitalize(TEST_EMPTY_STRING));
+        assertSame(TEST_BLANK_STRING, capitalize(TEST_BLANK_STRING));
+        assertEquals("Hello world", capitalize("hello world"));
+        assertSame("Hello world", capitalize("Hello world"));
+    }
+
+    @Test
+    void testUncapitalize() {
+        assertNull(uncapitalize(null));
+        assertSame(TEST_EMPTY_STRING, uncapitalize(TEST_EMPTY_STRING));
+        assertSame(TEST_BLANK_STRING, uncapitalize(TEST_BLANK_STRING));
+        assertEquals("hello world", uncapitalize("Hello world"));
+        assertSame("hello world", uncapitalize("hello world"));
+    }
+
 }

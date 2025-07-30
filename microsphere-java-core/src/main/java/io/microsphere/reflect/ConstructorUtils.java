@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.function.ThrowableSupplier;
@@ -34,8 +35,10 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.ExecutableUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * The utilities class of {@link Constructor}
@@ -112,7 +115,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Filtering</h4>
      * <pre>{@code
      * List<Constructor<?>> constructors = findConstructors(MyClass.class);
@@ -132,13 +134,14 @@ public abstract class ConstructorUtils implements Utils {
      *
      * @param type               the class to find constructors from
      * @param constructorFilters one or more predicates used to filter constructors
-     * @return a list of constructors that match the filter conditions
+     * @return an immutable list of constructors that match the filter conditions
      */
     @Nonnull
+    @Immutable
     public static List<Constructor<?>> findConstructors(Class<?> type,
                                                         Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = ofList(type.getConstructors());
-        return filterAll(constructors, constructorFilters);
+        return unmodifiableList(filterAll(constructors, constructorFilters));
     }
 
     /**
@@ -151,7 +154,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Filtering</h4>
      * <pre>{@code
      * List<Constructor<?>> constructors = findDeclaredConstructors(MyClass.class);
@@ -171,13 +173,14 @@ public abstract class ConstructorUtils implements Utils {
      *
      * @param type               the class to find declared constructors from
      * @param constructorFilters one or more predicates used to filter constructors
-     * @return a list of declared constructors that match the filter conditions
+     * @return an immutable list of declared constructors that match the filter conditions
      */
     @Nonnull
+    @Immutable
     public static List<Constructor<?>> findDeclaredConstructors(Class<?> type,
                                                                 Predicate<? super Constructor<?>>... constructorFilters) {
         List<Constructor<?>> constructors = ofList(type.getDeclaredConstructors());
-        return filterAll(constructors, constructorFilters);
+        return unmodifiableList(filterAll(constructors, constructorFilters));
     }
 
     /**
@@ -236,7 +239,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Finding a Constructor</h4>
      * <pre>{@code
      * Constructor<MyClass> constructor = findConstructor(MyClass.class, String.class, int.class);
@@ -260,7 +262,7 @@ public abstract class ConstructorUtils implements Utils {
      */
     @Nullable
     public static <T> Constructor<T> findConstructor(Class<T> type, Class<?>... parameterTypes) {
-        return execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
+        return ThrowableSupplier.execute(() -> type.getDeclaredConstructor(parameterTypes), e -> {
             if (logger.isTraceEnabled()) {
                 logger.trace("The declared constructor of '{}' can't be found by parameter types : {}", type, arrayToString(parameterTypes));
             }
@@ -278,7 +280,6 @@ public abstract class ConstructorUtils implements Utils {
      * </p>
      *
      * <h3>Example Usage</h3>
-     *
      * <h4>Basic Instantiation</h4>
      * <pre>{@code
      * Constructor<MyClass> constructor = MyClass.class.getConstructor(String.class, int.class);
@@ -303,9 +304,10 @@ public abstract class ConstructorUtils implements Utils {
     @Nonnull
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
         trySetAccessible(constructor);
-        return ExecutableUtils.execute(constructor, () -> constructor.newInstance(args));
+        return execute(constructor, () -> constructor.newInstance(args));
     }
 
     private ConstructorUtils() {
     }
+
 }

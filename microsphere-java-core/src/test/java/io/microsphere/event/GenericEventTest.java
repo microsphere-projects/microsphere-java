@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class GenericEventTest {
 
     @Test
-    public void test() {
+    void test() {
 
         long timestamp = System.currentTimeMillis();
         GenericEvent<String> event = new GenericEvent("Hello,World");

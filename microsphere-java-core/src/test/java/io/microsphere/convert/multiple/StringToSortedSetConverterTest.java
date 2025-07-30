@@ -53,7 +53,7 @@ class StringToSortedSetConverterTest {
     private MultiValueConverter converter;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         converter = new StringToSortedSetConverter();
     }
 

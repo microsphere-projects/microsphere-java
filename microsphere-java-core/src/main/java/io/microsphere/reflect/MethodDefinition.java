@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -52,7 +53,8 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
  * @see Version
  * @since 1.0.0
  */
-public class MethodDefinition extends ExecutableDefinition<Method> {
+@Immutable
+public final class MethodDefinition extends ExecutableDefinition<Method> {
 
     /**
      * @param since               the 'since' version

@@ -3,6 +3,8 @@
  */
 package io.microsphere.io;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
@@ -33,6 +35,7 @@ public abstract class FileUtils implements Utils {
     /**
      * An empty immutable {@code File} array.
      */
+    @Immutable
     public static final File[] EMPTY_FILE_ARRAY = ArrayUtils.EMPTY_FILE_ARRAY;
 
     /**
@@ -306,6 +309,7 @@ public abstract class FileUtils implements Utils {
      * @return an array of {@link File} objects representing the files in the specified directory,
      * or {@link #EMPTY_FILE_ARRAY} if the directory is not valid
      */
+    @Nonnull
     public static File[] listFiles(File directory) {
         if (directory == null || !directory.exists() || !directory.isDirectory()) {
             return EMPTY_FILE_ARRAY;
@@ -352,7 +356,8 @@ public abstract class FileUtils implements Utils {
      * @throws NullPointerException if the provided file is {@code null}
      * @throws RuntimeException     if an I/O error occurs while retrieving the canonical file
      */
-    public static final File getCanonicalFile(File file) {
+    @Nonnull
+    public static File getCanonicalFile(File file) {
         return execute(file::getCanonicalFile);
     }
 

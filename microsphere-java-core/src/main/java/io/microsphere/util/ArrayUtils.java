@@ -17,6 +17,8 @@
 package io.microsphere.util;
 
 
+import io.microsphere.annotation.Immutable;
+
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -49,121 +51,145 @@ public abstract class ArrayUtils implements Utils {
     /**
      * An empty immutable {@code boolean} array.
      */
+    @Immutable
     public static final boolean[] EMPTY_BOOLEAN_ARRAY = new boolean[0];
 
     /**
      * An empty immutable {@code char} array.
      */
+    @Immutable
     public static final char[] EMPTY_CHAR_ARRAY = new char[0];
 
     /**
      * An empty immutable {@code byte} array.
      */
+    @Immutable
     public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
     /**
      * An empty immutable {@code short} array.
      */
+    @Immutable
     public static final short[] EMPTY_SHORT_ARRAY = new short[0];
 
     /**
      * An empty immutable {@code int} array.
      */
+    @Immutable
     public static final int[] EMPTY_INT_ARRAY = new int[0];
 
     /**
      * An empty immutable {@code long} array.
      */
+    @Immutable
     public static final long[] EMPTY_LONG_ARRAY = new long[0];
 
     /**
      * An empty immutable {@code float} array.
      */
+    @Immutable
     public static final float[] EMPTY_FLOAT_ARRAY = new float[0];
 
     /**
      * An empty immutable {@code double} array.
      */
+    @Immutable
     public static final double[] EMPTY_DOUBLE_ARRAY = new double[0];
 
     /**
      * An empty immutable {@code Object} array.
      */
+    @Immutable
     public static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
 
     /**
      * An empty immutable {@code Boolean} array.
      */
+    @Immutable
     public static final Boolean[] EMPTY_BOOLEAN_OBJECT_ARRAY = new Boolean[0];
 
     /**
      * An empty immutable {@code Byte} array.
      */
+    @Immutable
     public static final Byte[] EMPTY_BYTE_OBJECT_ARRAY = new Byte[0];
 
     /**
      * An empty immutable {@code Character} array.
      */
+    @Immutable
     public static final Character[] EMPTY_CHARACTER_OBJECT_ARRAY = new Character[0];
 
     /**
      * An empty immutable {@code Short} array.
      */
+    @Immutable
     public static final Short[] EMPTY_SHORT_OBJECT_ARRAY = new Short[0];
 
     /**
      * An empty immutable {@code Integer} array.
      */
+    @Immutable
     public static final Integer[] EMPTY_INTEGER_OBJECT_ARRAY = new Integer[0];
 
     /**
      * An empty immutable {@code Long} array.
      */
+    @Immutable
     public static final Long[] EMPTY_LONG_OBJECT_ARRAY = new Long[0];
 
     /**
      * An empty immutable {@code Float} array.
      */
+    @Immutable
     public static final Float[] EMPTY_FLOAT_OBJECT_ARRAY = new Float[0];
 
     /**
      * An empty immutable {@code Double} array.
      */
+    @Immutable
     public static final Double[] EMPTY_DOUBLE_OBJECT_ARRAY = new Double[0];
 
     /**
      * An empty immutable {@code Class} array.
      */
+    @Immutable
     public static final Class<?>[] EMPTY_CLASS_ARRAY = new Class[0];
 
     /**
      * An empty immutable {@code String} array.
      */
+    @Immutable
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
 
     /**
      * An empty immutable {@code File} array.
      */
+    @Immutable
     public static final File[] EMPTY_FILE_ARRAY = new File[0];
 
     /**
      * An empty immutable {@code URL} array.
      */
+    @Immutable
     public static final URL[] EMPTY_URL_ARRAY = new URL[0];
 
     /**
      * An empty immutable {@code Parameter} array.
      */
+    @Immutable
     public static final Parameter[] EMPTY_PARAMETER_ARRAY = new Parameter[0];
 
     /**
      * An empty immutable {@code Type} array
      */
+    @Immutable
     public static final Type[] EMPTY_TYPE_ARRAY = new Type[0];
 
     /**
      * An empty immutable {@code Annotation} array
      */
+    @Immutable
     public static final Annotation[] EMPTY_ANNOTATION_ARRAY = new Annotation[0];
 
     /**

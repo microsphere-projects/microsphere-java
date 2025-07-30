@@ -19,22 +19,22 @@ class ClassicProcessIdResolverTest {
     private ClassicProcessIdResolver resolver;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         resolver = new ClassicProcessIdResolver();
     }
 
     @Test
-    public void testSupports() {
+    void testSupports() {
         assertTrue(resolver.supports());
     }
 
     @Test
-    public void testCurrent() {
+    void testCurrent() {
         assertNotNull(resolver.current());
     }
 
     @Test
-    public void testGetPriority() {
+    void testGetPriority() {
         assertEquals(9, resolver.getPriority());
     }
 }

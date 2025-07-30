@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import io.microsphere.annotation.Immutable;
+
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -46,6 +48,7 @@ import java.util.NoSuchElementException;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
+@Immutable
 public class SingletonEnumeration<E> implements Enumeration<E> {
 
     private final E element;

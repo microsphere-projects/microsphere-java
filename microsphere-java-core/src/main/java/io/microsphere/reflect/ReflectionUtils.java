@@ -1,6 +1,7 @@
 package io.microsphere.reflect;
 
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -23,6 +24,7 @@ import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.Class.forName;
 import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Collections.unmodifiableMap;
 
 /**
  * Reflection Utility class , generic methods are defined from {@link FieldUtils} , {@link MethodUtils} , {@link
@@ -441,6 +443,7 @@ public abstract class ReflectionUtils implements Utils {
      * @throws IllegalStateException if any field cannot be accessed due to security restrictions.
      */
     @Nonnull
+    @Immutable
     public static Map<String, Object> readFieldsAsMap(Object object) {
         Map<String, Object> fieldsAsMap = new LinkedHashMap();
         Class<?> type = object.getClass();
@@ -469,7 +472,7 @@ public abstract class ReflectionUtils implements Utils {
                 throw new IllegalStateException(e);
             }
         }
-        return fieldsAsMap;
+        return unmodifiableMap(fieldsAsMap);
     }
 
     /**

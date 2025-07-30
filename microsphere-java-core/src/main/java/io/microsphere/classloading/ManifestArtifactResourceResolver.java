@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.classloading.Artifact.create;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA;
@@ -125,7 +126,8 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     @ConfigurationProperty(
             type = String[].class,
             defaultValue = DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE,
-            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id"
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact id",
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final String ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-id.manifest-attribute-names";
 
@@ -143,7 +145,8 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     @ConfigurationProperty(
             type = String[].class,
             defaultValue = DEFAULT_VERSION_ATTRIBUTE_NAMES_PROPERTY_VALUE,
-            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version"
+            description = "The attribute names in the 'META-INF/MANIFEST' resource are retrieved as the artifact version",
+            source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final String VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "artifact-version.manifest-attribute-names";
 
@@ -158,6 +161,18 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
 
     private static final String[] VERSION_ATTRIBUTE_NAMES = getVersionAttributeNames();
 
+    public ManifestArtifactResourceResolver() {
+        this(DEFAULT_PRIORITY);
+    }
+
+    public ManifestArtifactResourceResolver(int priority) {
+        super(priority);
+    }
+
+    public ManifestArtifactResourceResolver(ClassLoader classLoader, int priority) {
+        super(classLoader, priority);
+    }
+
     private static String[] getArtifactIdAttributeNames() {
         return getPropertyValues(ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME, DEFAULT_ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_VALUE);
     }
@@ -169,19 +184,6 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
     private static String[] getPropertyValues(String propertyName, String defaultValue) {
         String propertyValue = getProperty(propertyName, defaultValue);
         return split(propertyValue, COMMA);
-    }
-
-
-    public ManifestArtifactResourceResolver() {
-        this(DEFAULT_PRIORITY);
-    }
-
-    public ManifestArtifactResourceResolver(int priority) {
-        super(priority);
-    }
-
-    public ManifestArtifactResourceResolver(ClassLoader classLoader, int priority) {
-        super(classLoader, priority);
     }
 
     @Override

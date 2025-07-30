@@ -22,7 +22,7 @@ class DelegatingURLStreamHandlerFactoryTest {
     private DelegatingURLStreamHandlerFactory factory;
 
     @BeforeEach
-    void init() {
+    void setUp() {
         this.delegate = new StandardURLStreamHandlerFactory();
         this.factory = new DelegatingURLStreamHandlerFactory(this.delegate);
     }
