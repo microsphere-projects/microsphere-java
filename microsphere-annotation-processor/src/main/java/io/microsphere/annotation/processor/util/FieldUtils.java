@@ -16,6 +16,9 @@
  */
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
@@ -100,6 +103,7 @@ public interface FieldUtils extends Utils {
      * @param fieldName the name of the field to find
      * @return the VariableElement representing the declared field, or null if not found
      */
+    @Nullable
     static VariableElement getDeclaredField(Element element, String fieldName) {
         return element == null ? null : getDeclaredField(element.asType(), fieldName);
     }
@@ -127,6 +131,7 @@ public interface FieldUtils extends Utils {
      * @param fieldName the name of the field to find
      * @return the VariableElement representing the declared field, or null if not found
      */
+    @Nullable
     static VariableElement getDeclaredField(TypeMirror type, String fieldName) {
         return filterFirst(findDeclaredFields(type, field -> fieldName.equals(field.getSimpleName().toString())));
     }
@@ -151,6 +156,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing the declared fields,
      * or an empty list if the element is null or no fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getDeclaredFields(Element element) {
         return findDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
     }
@@ -175,6 +182,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing the declared fields,
      * or an empty list if the type is null or no fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getDeclaredFields(TypeMirror type) {
         return findDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -199,6 +208,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing all declared fields,
      * or an empty list if the element is null or no fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getAllDeclaredFields(Element element) {
         return findAllDeclaredFields(element, EMPTY_PREDICATE_ARRAY);
     }
@@ -223,6 +234,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing all declared fields,
      * or an empty list if the type is null or no fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getAllDeclaredFields(TypeMirror type) {
         return findAllDeclaredFields(type, EMPTY_PREDICATE_ARRAY);
     }
@@ -250,6 +263,7 @@ public interface FieldUtils extends Utils {
      * @param fieldName the name of the field to find
      * @return the VariableElement representing the first matching field, or null if not found
      */
+    @Nullable
     static VariableElement findField(Element element, String fieldName) {
         return element == null ? null : findField(element.asType(), fieldName);
     }
@@ -276,6 +290,7 @@ public interface FieldUtils extends Utils {
      * @param fieldName the name of the field to find
      * @return the VariableElement representing the first matching field, or null if not found
      */
+    @Nullable
     static VariableElement findField(TypeMirror type, String fieldName) {
         return filterFirst(findAllDeclaredFields(type, field -> equalsFieldName(field, fieldName)));
     }
@@ -310,6 +325,8 @@ public interface FieldUtils extends Utils {
      * @param fieldFilters the predicates used to filter the fields; optional
      * @return a list of VariableElement objects representing the filtered declared fields
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> findDeclaredFields(Element element, Predicate<? super VariableElement>... fieldFilters) {
         return element == null ? emptyList() : findDeclaredFields(element.asType(), fieldFilters);
     }
@@ -346,6 +363,8 @@ public interface FieldUtils extends Utils {
      * @param fieldFilters the predicates used to filter the fields
      * @return a list of VariableElement objects representing the filtered declared fields
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> findDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
         return filterDeclaredFields(type, false, fieldFilters);
     }
@@ -383,6 +402,8 @@ public interface FieldUtils extends Utils {
      * @param fieldFilters the predicates used to filter the fields; optional
      * @return a list of VariableElement objects representing the filtered declared fields
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> findAllDeclaredFields(Element element, Predicate<? super VariableElement>... fieldFilters) {
         return element == null ? emptyList() : findAllDeclaredFields(element.asType(), fieldFilters);
     }
@@ -419,6 +440,8 @@ public interface FieldUtils extends Utils {
      * @param fieldFilters the predicates used to filter the fields
      * @return a list of VariableElement objects representing the filtered declared fields
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> findAllDeclaredFields(TypeMirror type, Predicate<? super VariableElement>... fieldFilters) {
         return filterDeclaredFields(type, true, fieldFilters);
     }
@@ -460,6 +483,8 @@ public interface FieldUtils extends Utils {
      * @param fieldFilters             the predicates used to filter the fields; optional
      * @return a list of VariableElement objects representing the filtered declared fields
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> filterDeclaredFields(TypeMirror type, boolean includeHierarchicalTypes, Predicate<? super VariableElement>... fieldFilters) {
         if (type == null) {
             return emptyList();
@@ -614,6 +639,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing the non-static fields,
      * or an empty list if the type is null or no non-static fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getNonStaticFields(TypeMirror type) {
         return findDeclaredFields(type, FieldUtils::isNonStaticField);
     }
@@ -642,6 +669,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing the non-static fields,
      * or an empty list if the element is null or no non-static fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getNonStaticFields(Element element) {
         return element == null ? emptyList() : getNonStaticFields(element.asType());
     }
@@ -670,6 +699,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing all non-static fields,
      * or an empty list if the type is null or no non-static fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getAllNonStaticFields(TypeMirror type) {
         return findAllDeclaredFields(type, FieldUtils::isNonStaticField);
     }
@@ -698,6 +729,8 @@ public interface FieldUtils extends Utils {
      * @return a list of VariableElement objects representing all non-static fields,
      * or an empty list if the element is null or no non-static fields are found
      */
+    @Nonnull
+    @Immutable
     static List<VariableElement> getAllNonStaticFields(Element element) {
         return element == null ? emptyList() : getAllNonStaticFields(element.asType());
     }
