@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -50,7 +51,8 @@ import io.microsphere.util.Version;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public class ClassDefinition extends ReflectiveDefinition {
+@Immutable
+public final class ClassDefinition extends ReflectiveDefinition {
 
     /**
      * @param since     the 'since' version
