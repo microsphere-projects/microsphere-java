@@ -17,6 +17,8 @@
 
 package io.microsphere.annotation.processor.model.element;
 
+import io.microsphere.annotation.Immutable;
+
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
 
@@ -27,6 +29,7 @@ import javax.lang.model.element.AnnotationValueVisitor;
  * @see AnnotationValue
  * @since 1.0.0
  */
+@Immutable
 public class StringAnnotationValue implements AnnotationValue {
 
     private final String value;
