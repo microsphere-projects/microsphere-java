@@ -17,6 +17,8 @@
 
 package io.microsphere.annotation.processor.util;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import javax.lang.model.element.Element;
@@ -37,6 +39,7 @@ import static io.microsphere.reflect.TypeUtils.getTypeNames;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.OTHER;
@@ -616,6 +619,8 @@ public interface ElementUtils extends Utils {
      * @return A filtered list of elements that match all the provided predicates. Returns an empty list if no elements match,
      * or if the input list or predicate array is invalid.
      */
+    @Nonnull
+    @Immutable
     static <E extends Element> List<E> filterElements(List<E> elements, Predicate<? super E>... elementPredicates) {
         if (isEmpty(elements) || elementPredicates == null) {
             return emptyList();
@@ -624,7 +629,7 @@ public interface ElementUtils extends Utils {
             Predicate predicate = and(elementPredicates);
             elements = (List) elements.stream().filter(predicate).collect(toList());
         }
-        return elements.isEmpty() ? emptyList() : elements;
+        return elements.isEmpty() ? emptyList() : unmodifiableList(elements);
     }
 
     /**
