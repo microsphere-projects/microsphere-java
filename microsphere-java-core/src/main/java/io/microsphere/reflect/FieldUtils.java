@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
@@ -37,6 +38,7 @@ import static io.microsphere.reflect.TypeUtils.isObjectClass;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static java.util.Collections.unmodifiableSet;
 
 /**
  * The Java Reflection {@link Field} Utility class
@@ -299,13 +301,14 @@ public abstract class FieldUtils implements Utils {
      * @return A set of fields that match the given criteria, preserving insertion order
      */
     @Nonnull
+    @Immutable
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
         Set<Field> allFields = new LinkedHashSet<>();
         addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allFields, superType.getFields());
         }
-        return filter(allFields, and(fieldFilters));
+        return unmodifiableSet(filter(allFields, and(fieldFilters)));
     }
 
     /**
@@ -339,13 +342,14 @@ public abstract class FieldUtils implements Utils {
      * @return A set of declared fields that match the given criteria, preserving insertion order
      */
     @Nonnull
+    @Immutable
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
         Set<Field> allDeclaredFields = new LinkedHashSet<>();
         addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());
         }
-        return filter(allDeclaredFields, and(fieldFilters));
+        return unmodifiableSet(filter(allDeclaredFields, and(fieldFilters)));
     }
 
     /**
