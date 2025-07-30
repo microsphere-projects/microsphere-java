@@ -29,10 +29,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @since 1.0.0
  */
 @Immutable
-public class ImmutableTest {
+class ImmutableTest {
 
     @Test
-    public void test() {
+    void test() {
         assertNotNull(ImmutableTest.class.getAnnotation(Immutable.class));
     }
 }
