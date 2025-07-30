@@ -18,15 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<ConstructorDefinition> {
 
-    public static class TestData {
-
-        private String name;
-
-        public TestData(String name) {
-            this.name = name;
-        }
-    }
-
     @Override
     protected String getClassName() {
         return TestData.class.getName();
@@ -49,6 +40,15 @@ class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<Constru
         for (ConstructorDefinition definition : definitions) {
             TestData testData = definition.newInstance("test");
             assertEquals("test", testData.name);
+        }
+    }
+
+    public static class TestData {
+
+        private String name;
+
+        public TestData(String name) {
+            this.name = name;
         }
     }
 
