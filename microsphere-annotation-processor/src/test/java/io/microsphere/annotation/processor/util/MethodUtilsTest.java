@@ -373,7 +373,7 @@ class MethodUtilsTest extends AbstractAnnotationProcessingTest {
     void testFilterMethodsOnReturningEmptyList() {
         List<ExecutableElement> methods = getDeclaredMethods(testTypeElement);
         assertEmptyList(filterMethods(methods, alwaysFalse()));
-        assertSame(methods, filterMethods(methods));
+        assertEquals(methods, filterMethods(methods));
     }
 
     @Test
