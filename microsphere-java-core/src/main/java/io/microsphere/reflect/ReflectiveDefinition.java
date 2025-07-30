@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -86,6 +87,7 @@ import static java.util.Objects.hash;
  * @see MemberDefinition
  * @since 1.0.0
  */
+@Immutable
 public abstract class ReflectiveDefinition implements Serializable {
 
     private static final long serialVersionUID = 3266384797780485350L;
