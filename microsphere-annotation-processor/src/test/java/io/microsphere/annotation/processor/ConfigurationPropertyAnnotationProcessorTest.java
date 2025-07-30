@@ -58,6 +58,6 @@ class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationPro
     @Test
     void testConstants() {
         assertEquals("META-INF/microsphere/configuration-properties.json", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME);
-        assertEquals("io.microsphere.annotation.ConfigurationProperty",CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
+        assertEquals("io.microsphere.annotation.ConfigurationProperty", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
     }
 }
