@@ -1,5 +1,6 @@
 package io.microsphere.process;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 
 import java.util.Map;
@@ -65,6 +66,7 @@ public class ProcessManager {
      * @return non-null
      */
     @Nonnull
+    @Immutable
     public Map<Process, String> unfinishedProcessesMap() {
         return unmodifiableMap(unfinishedProcessesCache);
     }
