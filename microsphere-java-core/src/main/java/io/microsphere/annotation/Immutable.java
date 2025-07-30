@@ -25,7 +25,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * Marker annotation to indicate that the annotated element is immutable, this means that its state cannot be seen to
  * change by callers.
  *
- * @since 1.0
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
  */
 @Documented
 @Retention(RUNTIME)
