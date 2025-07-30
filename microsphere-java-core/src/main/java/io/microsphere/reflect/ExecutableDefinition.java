@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
@@ -59,6 +60,7 @@ import static java.util.Objects.hash;
  * @see Constructor
  * @since 1.0.0
  */
+@Immutable
 public abstract class ExecutableDefinition<E extends Executable> extends MemberDefinition<E> {
 
     @Nonnull
@@ -75,7 +77,8 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the class names of parameters
      */
-    public ExecutableDefinition(String since, String declaredClassName, String name, String... parameterClassNames) {
+    public ExecutableDefinition(@Nonnull String since, @Nonnull String declaredClassName, @Nonnull String name,
+                                @Nonnull String... parameterClassNames) {
         this(since, null, declaredClassName, name, parameterClassNames);
     }
 
@@ -86,7 +89,8 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the parameter class names
      */
-    public ExecutableDefinition(String since, Deprecation deprecation, String declaredClassName, String name, String... parameterClassNames) {
+    public ExecutableDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+                                @Nonnull String name, @Nonnull String... parameterClassNames) {
         this(Version.of(since), deprecation, declaredClassName, name, parameterClassNames);
     }
 
@@ -96,7 +100,8 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the class names of parameters
      */
-    public ExecutableDefinition(Version since, String declaredClassName, String name, String... parameterClassNames) {
+    public ExecutableDefinition(@Nonnull Version since, @Nonnull String declaredClassName, @Nonnull String name,
+                                @Nonnull String... parameterClassNames) {
         this(since, null, declaredClassName, name, parameterClassNames);
     }
 
@@ -107,7 +112,8 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      * @param name                the {@link Executable} name
      * @param parameterClassNames the parameter class names
      */
-    public ExecutableDefinition(Version since, Deprecation deprecation, String declaredClassName, String name, String... parameterClassNames) {
+    public ExecutableDefinition(@Nonnull Version since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
+                                @Nonnull String name, @Nonnull String... parameterClassNames) {
         super(since, deprecation, declaredClassName, name);
         assertNotNull(parameterClassNames, () -> "the class names of parameters of method must not be null.");
         assertNoNullElements(parameterClassNames, () -> "The parameter class names must not contain any null element.");
