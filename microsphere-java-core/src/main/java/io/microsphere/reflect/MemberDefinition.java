@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
@@ -71,6 +72,7 @@ import static io.microsphere.util.Version.ofVersion;
  * @see MethodDefinition
  * @since 1.0.0
  */
+@Immutable
 public abstract class MemberDefinition<M extends Member> extends ReflectiveDefinition {
 
     @Nonnull
