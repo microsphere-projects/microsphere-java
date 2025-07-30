@@ -29,6 +29,7 @@ import java.security.ProtectionDomain;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.jar.JarFile;
 
@@ -79,6 +80,7 @@ import static java.util.Collections.unmodifiableSet;
  * @see ClassPathUtils
  * @since 1.0.0
  */
+@Immutable
 public class ClassDataRepository {
 
     /**
@@ -141,7 +143,7 @@ public class ClassDataRepository {
         if (isEmpty(classNames)) {
             classNames = findClassNamesInClassPath(classPath, recursive);
         }
-        return unmodifiableSet(classNames);
+        return classNames;
     }
 
     /**
@@ -240,7 +242,7 @@ public class ClassDataRepository {
     private Map<String, String> initClassNameToClassPathsMap() {
         Map<String, String> classNameToClassPathsMap = new LinkedHashMap<>();
 
-        for (Map.Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
+        for (Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
             String classPath = entry.getKey();
             Set<String> classNames = entry.getValue();
             for (String className : classNames) {
@@ -253,7 +255,7 @@ public class ClassDataRepository {
 
     private Map<String, Set<String>> initPackageNameToClassNamesMap() {
         Map<String, Set<String>> packageNameToClassNamesMap = new LinkedHashMap();
-        for (Map.Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
+        for (Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
             String className = entry.getKey();
             String packageName = resolvePackageName(className);
             Set<String> classNamesInPackage = packageNameToClassNamesMap.get(packageName);
@@ -262,6 +264,11 @@ public class ClassDataRepository {
                 packageNameToClassNamesMap.put(packageName, classNamesInPackage);
             }
             classNamesInPackage.add(className);
+        }
+
+        for (Entry<String, Set<String>> entry : packageNameToClassNamesMap.entrySet()) {
+            Set<String> classNames = entry.getValue();
+            entry.setValue(unmodifiableSet(classNames));
         }
 
         return unmodifiableMap(packageNameToClassNamesMap);
