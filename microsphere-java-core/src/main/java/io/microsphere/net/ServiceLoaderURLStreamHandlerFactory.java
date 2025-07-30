@@ -16,6 +16,9 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
+
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -58,6 +61,10 @@ import static java.util.Collections.emptyMap;
  */
 public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHandlerFactory {
 
+    public ServiceLoaderURLStreamHandlerFactory() {
+        super(createDelegate());
+    }
+
     /**
      * Attach {@link ServiceLoaderURLStreamHandlerFactory} into {@link URL}
      * {@link URLUtils#attachURLStreamHandlerFactory(URLStreamHandlerFactory)}
@@ -65,10 +72,6 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
     public static void attach() {
         ServiceLoaderURLStreamHandlerFactory factory = new ServiceLoaderURLStreamHandlerFactory();
         attachURLStreamHandlerFactory(factory);
-    }
-
-    public ServiceLoaderURLStreamHandlerFactory() {
-        super(createDelegate());
     }
 
     private static URLStreamHandlerFactory createDelegate() {
@@ -79,6 +82,8 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
         return compositeFactory;
     }
 
+    @Nonnull
+    @Immutable
     private static Map<String, ExtendableProtocolURLStreamHandler> loadHandlers() {
         List<ExtendableProtocolURLStreamHandler> handlers = loadServicesList(ExtendableProtocolURLStreamHandler.class);
 
