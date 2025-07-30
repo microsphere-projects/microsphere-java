@@ -3,6 +3,7 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
@@ -66,6 +67,7 @@ import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -89,6 +91,7 @@ public abstract class URLUtils implements Utils {
     /**
      * The empty array of {@link URL}
      */
+    @Immutable
     public static final URL[] EMPTY_URL_ARRAY = ArrayUtils.EMPTY_URL_ARRAY;
 
     /**
@@ -392,6 +395,7 @@ public abstract class URLUtils implements Utils {
      * @return Non-null and Read-only {@link Map} where each key is a unique parameter name and the value is a list of values associated with that key.
      */
     @Nonnull
+    @Immutable
     public static Map<String, List<String>> resolveQueryParameters(String url) {
         String queryString = substringAfterLast(url, QUERY_STRING);
         return resolveParameters(queryString, AND_CHAR);
@@ -431,6 +435,7 @@ public abstract class URLUtils implements Utils {
      * @return A non-null and unmodifiable {@link Map} where each key is a unique parameter name and the value is a list of parameter values.
      */
     @Nonnull
+    @Immutable
     public static Map<String, List<String>> resolveMatrixParameters(String url) {
         int startIndex = url.indexOf(SEMICOLON_CHAR);
         if (startIndex == -1) { // The matrix separator ";" was not found
@@ -1188,6 +1193,7 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is null.
      */
     @Nonnull
+    @Immutable
     public static List<String> resolveSubProtocols(URL url) {
         return resolveSubProtocols(url.toString());
     }
@@ -1233,12 +1239,13 @@ public abstract class URLUtils implements Utils {
      * @return A non-null list of sub-protocol strings. If no sub-protocols are found, returns an empty list.
      */
     @Nonnull
+    @Immutable
     public static List<String> resolveSubProtocols(String url) {
         String subProtocolsString = findSubProtocolsString(url);
         final List<String> subProtocols;
         if (subProtocolsString == null) {
             Map<String, List<String>> parameters = resolveMatrixParameters(url);
-            subProtocols = parameters.get(SUB_PROTOCOL_MATRIX_NAME);
+            subProtocols = unmodifiableList(parameters.get(SUB_PROTOCOL_MATRIX_NAME));
         } else {
             String[] values = split(subProtocolsString, COLON_CHAR);
             subProtocols = ofList(values);
