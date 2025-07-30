@@ -143,6 +143,14 @@ class BeanUtilsTest extends AbstractTestCase {
         assertTrue(propertiesMap.containsKey("source"));
     }
 
+    @Test
+    void testResolveProperty() {
+        File file = newRandomTempFile();
+        Object property = resolveProperty(file, of(0), 10);
+        Map<String, Object> properties = (Map<String, Object>) property;
+        assertFalse(properties.isEmpty());
+    }
+
     static class TestBean {
 
         boolean booleanValue;
@@ -230,13 +238,5 @@ class BeanUtilsTest extends AbstractTestCase {
         public Object getObject() {
             return object;
         }
-    }
-
-    @Test
-    void testResolveProperty() {
-        File file = newRandomTempFile();
-        Object property = resolveProperty(file, of(0), 10);
-        Map<String, Object> properties = (Map<String, Object>) property;
-        assertFalse(properties.isEmpty());
     }
 }
