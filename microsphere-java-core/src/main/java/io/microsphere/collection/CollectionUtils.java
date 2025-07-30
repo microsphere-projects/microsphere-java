@@ -642,5 +642,5 @@ public abstract class CollectionUtils implements Utils {
 
     private CollectionUtils() {
     }
-    
+
 }
