@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
@@ -81,6 +82,7 @@ public abstract class AnnotationUtils implements Utils {
      * </ul>
      */
     @Nonnull
+    @Immutable
     public final static List<Class<? extends Annotation>> NATIVE_ANNOTATION_TYPES = ofList(
             Target.class,
             Retention.class,
@@ -111,6 +113,7 @@ public abstract class AnnotationUtils implements Utils {
     /**
      * An empty immutable {@code Annotation} array
      */
+    @Immutable
     public static final Annotation[] EMPTY_ANNOTATION_ARRAY = ArrayUtils.EMPTY_ANNOTATION_ARRAY;
 
     /**
@@ -680,6 +683,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of all declared annotations, not including meta-annotations
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> getAllDeclaredAnnotations(AnnotatedElement annotatedElement) {
         return findAllDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
@@ -728,6 +732,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of annotations directly declared on the element
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> getDeclaredAnnotations(AnnotatedElement annotatedElement) {
         return findDeclaredAnnotations(annotatedElement, EMPTY_PREDICATE_ARRAY);
     }
@@ -791,6 +796,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of annotations matching the criteria
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> findAllDeclaredAnnotations(AnnotatedElement annotatedElement,
                                                               Predicate<? super Annotation>... annotationsToFilter) {
         if (isType(annotatedElement)) {
@@ -846,6 +852,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of annotations matching the criteria
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> findAllDeclaredAnnotations(Class<?> type, Predicate<? super Annotation>... annotationsToFilter) {
 
         if (type == null) {
@@ -916,6 +923,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of annotations directly declared on the element
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> findDeclaredAnnotations(AnnotatedElement annotatedElement,
                                                            Predicate<? super Annotation>... annotationsToFilter) {
         if (annotatedElement == null) {
@@ -981,6 +989,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of annotations matching the criteria
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> filterAnnotations(Annotation[] annotations,
                                                      Predicate<? super Annotation>... annotationsToFilter) {
         return isEmpty(annotations) ? emptyList() : filterAnnotations(ofList(annotations), annotationsToFilter);
@@ -1041,6 +1050,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a read-only list of annotations matching the criteria
      */
     @Nonnull
+    @Immutable
     public static List<Annotation> filterAnnotations(List<Annotation> annotations,
                                                      Predicate<? super Annotation>... annotationsToFilter) {
         if (isEmpty(annotations)) {
@@ -1050,7 +1060,7 @@ public abstract class AnnotationUtils implements Utils {
             return unmodifiableList(annotations);
         }
         List<Annotation> filteredAnnotations = filterAll(annotations, annotationsToFilter);
-        return isEmpty(filteredAnnotations) ? emptyList() : filteredAnnotations;
+        return isEmpty(filteredAnnotations) ? emptyList() : unmodifiableList(filteredAnnotations);
     }
 
     /**
@@ -1162,6 +1172,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a non-null read-only map containing attribute names as keys and their corresponding values
      */
     @Nonnull
+    @Immutable
     public static Map<String, Object> getAttributesMap(Annotation annotation) {
         return findAttributesMap(annotation, EMPTY_PREDICATE_ARRAY);
     }
@@ -1201,6 +1212,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return a non-null read-only map containing filtered attribute names and their corresponding values
      */
     @Nonnull
+    @Immutable
     public static Map<String, Object> findAttributesMap(Annotation annotation, String... attributeNamesToFilter) {
         return findAttributesMap(annotation, method -> contains(attributeNamesToFilter, method.getName()));
     }
@@ -1213,6 +1225,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return non-null read-only {@link Map}
      */
     @Nonnull
+    @Immutable
     public static Map<String, Object> findAttributesMap(Annotation annotation, Predicate<? super Method>... attributesToFilter) {
         if (annotation == null) {
             return emptyMap();
