@@ -3,6 +3,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.classloading.ServiceLoadingURLClassPathHandle;
@@ -314,6 +315,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return a set of loaded classes corresponding to the provided class names; the set will be empty if none of the classes are loaded
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, String... classNames) {
         return findLoadedClasses(classLoader, ofSet(classNames));
     }
@@ -345,6 +347,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return a set of loaded classes corresponding to the provided class names; the set will be empty if none of the classes are loaded
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> findLoadedClasses(@Nullable ClassLoader classLoader, Iterable<String> classNames) {
         int size = size(classNames);
         if (size < 1) {
@@ -600,6 +603,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws IOException          if I/O errors occur while searching for resources
      */
     @Nonnull
+    @Immutable
     public static Set<URL> getResources(@Nullable ClassLoader classLoader, @Nonnull ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         String normalizedResourceName = resourceType.resolve(resourceName);
@@ -637,6 +641,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws IOException          if I/O errors occur while searching for resources
      */
     @Nonnull
+    @Immutable
     public static Set<URL> getResources(@Nullable ClassLoader classLoader, String resourceName) throws NullPointerException, IOException {
         Set<URL> resourceURLs = emptySet();
         for (ResourceType resourceType : ResourceType.values()) {
@@ -998,6 +1003,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException if the resolved ClassLoader (from parameter or default) is null
      */
     @Nonnull
+    @Immutable
     public static Set<ClassLoader> getInheritableClassLoaders(@Nullable ClassLoader classLoader) throws NullPointerException {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         return unmodifiableSet(doGetInheritableClassLoaders(actualClassLoader));
@@ -1049,6 +1055,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException          if the resolved ClassLoader (from parameter or default) is null
      */
     @Nonnull
+    @Immutable
     public static Map<ClassLoader, Set<Class<?>>> getAllLoadedClassesMap(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = new LinkedHashMap();
@@ -1088,6 +1095,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @see #getAllLoadedClassesMap(ClassLoader)
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> getAllLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
         Set<Class<?>> allLoadedClassesSet = newLinkedHashSet();
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
@@ -1125,6 +1133,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws NullPointerException          if the resolved ClassLoader (from parameter or default) is null
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> getLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         Field field = findField(classLoaderClass, classesFieldName);
@@ -1166,6 +1175,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws UnsupportedOperationException if the JVM does not support introspection of loaded classes
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> findLoadedClassesInClassPath(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
         Set<String> classNames = INSTANCE.getAllClassNamesInClassPaths();
         return findLoadedClasses(classLoader, classNames);
@@ -1207,6 +1217,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws UnsupportedOperationException if the JVM does not support introspection of loaded classes
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> findLoadedClassesInClassPaths(@Nullable ClassLoader classLoader, Set<String> classPaths) throws UnsupportedOperationException {
         Set<Class<?>> loadedClasses = newLinkedHashSet();
         for (String classPath : classPaths) {
@@ -1252,6 +1263,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @throws UnsupportedOperationException if the JVM does not support introspection of loaded classes
      */
     @Nonnull
+    @Immutable
     public static Set<Class<?>> findLoadedClassesInClassPath(@Nullable ClassLoader classLoader, String classPath) throws UnsupportedOperationException {
         Set<String> classNames = INSTANCE.getClassNamesInClassPath(classPath, true);
         return findLoadedClasses(classLoader, classNames);
@@ -1456,6 +1468,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return a set of URLs representing the class paths in the inheritance hierarchy of the ClassLoader
      */
     @Nonnull
+    @Immutable
     public static Set<URL> findAllClassPathURLs(@Nullable ClassLoader classLoader) {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
 
@@ -1469,7 +1482,7 @@ public abstract class ClassLoaderUtils implements Utils {
         if (parentClassLoader != null) {
             allClassPathURLs.addAll(findAllClassPathURLs(parentClassLoader));
         }
-        return allClassPathURLs;
+        return unmodifiableSet(allClassPathURLs);
     }
 
     /**
@@ -1576,8 +1589,7 @@ public abstract class ClassLoaderUtils implements Utils {
     public static URLClassLoader newURLClassLoader(@Nonnull Iterable<URL> urls) {
         return newURLClassLoader(urls, null);
     }
-
-
+    
     /**
      * Creates a new instance of {@link URLClassLoader} using the URLs provided in an {@link Iterable}.
      *
