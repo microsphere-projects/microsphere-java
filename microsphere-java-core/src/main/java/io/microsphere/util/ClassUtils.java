@@ -787,22 +787,56 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Resolve the types of the specified values
+     * Alias of {@link #getClass(Object)}
      *
-     * @param values the values
-     * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
+     * @see #getClass(Object)
      */
-    public static Class[] getTypes(Object... values) {
-        return resolveTypes(values);
+    public static Class<?> getType(@Nullable Object value) {
+        return getClass(value);
     }
 
     /**
-     * Resolve the types of the specified values
+     * Gets the {@link Class} of the given object.
+     * <p>
+     * This method returns the Class object that represents the runtime class of the specified object.
+     * If the object is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String str = "Hello";
+     * Class<?> clazz = ClassUtils.getClass(str);
+     * System.out.println(clazz); // prints: class java.lang.String
+     *
+     * Object obj = null;
+     * Class<?> nullClazz = ClassUtils.getClass(obj);
+     * System.out.println(nullClazz); // prints: null
+     * }</pre>
+     *
+     * @param object the object to get the class from, may be {@code null}
+     * @return the Class of the given object, or {@code null} if the object is {@code null}
+     * @see Object#getClass()
+     */
+    public static Class<?> getClass(@Nullable Object object) {
+        return object == null ? null : object.getClass();
+    }
+
+    /**
+     * Alias of {@link #getTypes(Object...)}
+     *
+     * @see #getTypes(Object...)
+     */
+    public static Class[] getTypes(Object... values) {
+        return getClasses(values);
+    }
+
+    /**
+     * Get the types of the specified values
      *
      * @param values the values
      * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
      */
-    public static Class[] resolveTypes(Object... values) {
+    public static Class<?>[] getClasses(Object... values) {
 
         if (isEmpty(values)) {
             return EMPTY_CLASS_ARRAY;
@@ -810,11 +844,10 @@ public abstract class ClassUtils implements Utils {
 
         int size = values.length;
 
-        Class[] types = new Class[size];
+        Class<?>[] types = new Class[size];
 
         for (int i = 0; i < size; i++) {
-            Object value = values[i];
-            types[i] = value == null ? null : value.getClass();
+            types[i] = getClass(values[i]);
         }
 
         return types;
