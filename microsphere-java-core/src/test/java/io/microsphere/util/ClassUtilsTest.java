@@ -30,6 +30,7 @@ import java.util.function.BiFunction;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
@@ -39,8 +40,10 @@ import static io.microsphere.util.ClassUtils.findAllClasses;
 import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
+import static io.microsphere.util.ClassUtils.getClasses;
 import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
@@ -604,12 +607,35 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testGetType() {
+        assertNull(getType(null));
+        assertSame(String.class, getType(""));
+        assertSame(Class.class, getType(String.class));
+    }
+
+    @Test
+    void testGetClass() {
+        assertNull(ClassUtils.getClass(null));
+        assertSame(String.class, ClassUtils.getClass(""));
+        assertSame(Class.class, ClassUtils.getClass(String.class));
+    }
+
+    @Test
     void testGetTypes() {
         assertSame(EMPTY_CLASS_ARRAY, getTypes(null));
         assertSame(EMPTY_CLASS_ARRAY, getTypes());
         assertSame(EMPTY_CLASS_ARRAY, getTypes(EMPTY_OBJECT_ARRAY));
 
-        assertArrayEquals(new Object[]{String.class, Integer.class}, getTypes("", Integer.valueOf((1))));
+        assertArrayEquals(ofArray(String.class, Integer.class), getTypes("", Integer.valueOf((1))));
+    }
+
+    @Test
+    void testGetClasses() {
+        assertSame(EMPTY_CLASS_ARRAY, getClasses(null));
+        assertSame(EMPTY_CLASS_ARRAY, getClasses());
+        assertSame(EMPTY_CLASS_ARRAY, getClasses(EMPTY_OBJECT_ARRAY));
+
+        assertArrayEquals(ofArray(String.class, Integer.class), getClasses("", Integer.valueOf((1))));
     }
 
     @Test
