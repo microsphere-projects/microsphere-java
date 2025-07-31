@@ -22,9 +22,9 @@ import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
+import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
-import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.assertConfigurationPropertyJSON;
-import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.newConfigurationProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
