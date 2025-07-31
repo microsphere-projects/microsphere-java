@@ -18,14 +18,18 @@
 package io.microsphere.json;
 
 
+import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.TimeUnit;
 
+import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
+import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.json.JSONUtils.append;
+import static io.microsphere.json.JSONUtils.writeJavaBeanAsString;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -319,6 +323,13 @@ class JSONUtilsTest {
         Class<?>[] classes = ofArray(String.class, Integer.class);
         append(jsonBuilder, "name", classes);
         assertEquals("\"name\":[\"java.lang.String\",\"java.lang.Integer\"]", jsonBuilder.toString());
+    }
+
+    @Test
+    void testWriteJavaBeanAsString() throws Throwable {
+        ConfigurationProperty configurationProperty = newConfigurationProperty();
+        String json = writeJavaBeanAsString(configurationProperty);
+        assertConfigurationPropertyJSON(json);
     }
 
 }
