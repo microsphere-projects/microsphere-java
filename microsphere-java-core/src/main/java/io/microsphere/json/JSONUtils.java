@@ -17,6 +17,7 @@
 
 package io.microsphere.json;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
 import java.lang.reflect.Type;
@@ -25,6 +26,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
 import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
@@ -87,12 +89,10 @@ public abstract class JSONUtils implements Utils {
                 .append(value);
     }
 
-
     public static void append(StringBuilder jsonBuilder, String name, int value) {
         appendName(jsonBuilder, name)
                 .append(value);
     }
-
 
     public static void append(StringBuilder jsonBuilder, String name, long value) {
         appendName(jsonBuilder, name)
@@ -257,7 +257,6 @@ public abstract class JSONUtils implements Utils {
         }
         jsonBuilder.append(RIGHT_SQUARE_BRACKET_CHAR);
     }
-
 
     public static void append(StringBuilder jsonBuilder, String name, char[] values) {
         appendName(jsonBuilder, name);
@@ -439,6 +438,42 @@ public abstract class JSONUtils implements Utils {
         return jsonBuilder;
     }
 
+    /**
+     * Converts a JavaBean object into its JSON string representation.
+     * <p>
+     * This method takes a JavaBean object, resolves its properties into a map,
+     * and then constructs a {@link JSONObject} from that map. The resulting
+     * JSON object is then converted to a string.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class Person {
+     *     private String name;
+     *     private int age;
+     *
+     *     // Getters and setters...
+     * }
+     *
+     * Person person = new Person();
+     * person.setName("John Doe");
+     * person.setAge(30);
+     *
+     * String jsonString = JSONUtils.writeJavaBeanAsString(person);
+     * // Result: {"name":"John Doe","age":30}
+     * }</pre>
+     *
+     * @param javaBean the JavaBean object to be converted to a JSON string.
+     * @return a JSON string representation of the given JavaBean.
+     * @throws IllegalArgumentException if the input object is null.
+     */
+    @Nonnull
+    public static String writeJavaBeanAsString(Object javaBean) {
+        Map<String, Object> properties = resolvePropertiesAsMap(javaBean);
+        JSONObject jsonObject = new JSONObject(properties);
+        return jsonObject.toString();
+    }
+
     static void appendMap(StringBuilder jsonBuilder, Map<String, Object> map) {
         jsonBuilder.append(LEFT_CURLY_BRACE_CHAR);
         Set<Entry<String, Object>> entrySet = map.entrySet();
@@ -478,6 +513,8 @@ public abstract class JSONUtils implements Utils {
         appendString(jsonBuilder, value.getTypeName());
     }
 
+
     private JSONUtils() {
     }
+
 }
