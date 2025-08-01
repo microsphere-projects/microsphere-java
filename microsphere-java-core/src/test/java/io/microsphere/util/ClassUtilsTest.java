@@ -27,9 +27,17 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
+import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_CHAR_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_DOUBLE_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_FLOAT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_INT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_LONG_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
@@ -520,9 +528,39 @@ class ClassUtilsTest extends AbstractTestCase {
         PRIMITIVE_TYPES.forEach(t -> assertSame(emptyList(), findAllClasses(t, a -> true)));
     }
 
+    @Test
+    void testGetTypeNameWithObject() {
+        // a) Top level classes
+        assertEquals("java.lang.String", getTypeName("Hello,World"));
+
+        // b) Nested classes (static member classes)
+        assertEquals("io.microsphere.collection.DefaultEntry", getTypeName(ofEntry("Key", "Value")));
+
+        // c) Inner classes (non-static member classes)
+        assertEquals("java.lang.Thread$State", getTypeName(Thread.State.NEW));
+
+        // d) Local classes (named classes declared within a method)
+        class LocalClass {
+        }
+        assertEquals("io.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(new LocalClass()));
+
+        // e) Anonymous classes
+        Serializable instance = new Serializable() {
+        };
+        assertEquals("io.microsphere.util.ClassUtilsTest$1", getTypeName(instance));
+
+        // f) Array classes
+        assertEquals("byte[]", getTypeName(EMPTY_BYTE_ARRAY));
+        assertEquals("char[]", getTypeName(EMPTY_CHAR_ARRAY));
+        assertEquals("short[]", getTypeName(EMPTY_SHORT_ARRAY));
+        assertEquals("int[]", getTypeName(EMPTY_INT_ARRAY));
+        assertEquals("long[]", getTypeName(EMPTY_LONG_ARRAY));
+        assertEquals("float[]", getTypeName(EMPTY_FLOAT_ARRAY));
+        assertEquals("double[]", getTypeName(EMPTY_DOUBLE_ARRAY));
+    }
 
     @Test
-    void testGetTypeName() {
+    void testGetTypeNameWithClass() {
         // a) Top level classes
         assertEquals("java.lang.String", getTypeName(String.class));
 
@@ -535,12 +573,12 @@ class ClassUtilsTest extends AbstractTestCase {
         // d) Local classes (named classes declared within a method)
         class LocalClass {
         }
-        assertEquals("io.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(LocalClass.class));
+        assertEquals("io.microsphere.util.ClassUtilsTest$2LocalClass", getTypeName(LocalClass.class));
 
         // e) Anonymous classes
         Serializable instance = new Serializable() {
         };
-        assertEquals("io.microsphere.util.ClassUtilsTest$1", getTypeName(instance.getClass()));
+        assertEquals("io.microsphere.util.ClassUtilsTest$2", getTypeName(instance.getClass()));
 
         // f) Array classes
         assertEquals("byte[]", getTypeName(byte[].class));
@@ -550,6 +588,16 @@ class ClassUtilsTest extends AbstractTestCase {
         assertEquals("long[]", getTypeName(long[].class));
         assertEquals("float[]", getTypeName(float[].class));
         assertEquals("double[]", getTypeName(double[].class));
+    }
+
+    @Test
+    void testGetTypeNameWithNullClass() {
+        assertNull(getTypeName(null));
+    }
+
+    @Test
+    void testGetTypeNameWithNullObject() {
+        assertNull(getTypeName((Object) null));
     }
 
     @Test
