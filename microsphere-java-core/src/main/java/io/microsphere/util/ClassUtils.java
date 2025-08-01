@@ -251,6 +251,25 @@ public abstract class ClassUtils implements Utils {
     private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = of(JAR_EXTENSION);
 
     /**
+     * Checks if the specified object is an array.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isArray(new int[]{1, 2, 3});  // returns true
+     * boolean result2 = ClassUtils.isArray("Hello");             // returns false
+     * boolean result3 = ClassUtils.isArray(null);                // returns false
+     * }</pre>
+     *
+     * @param object the object to check, may be {@code null}
+     * @return {@code true} if the specified object is an array, {@code false} otherwise
+     * @see #isArray(Class)
+     * @see Class#isArray()
+     */
+    public static boolean isArray(Object object) {
+        return isArray(getClass(object));
+    }
+
+    /**
      * Checks if the specified type is an array.
      *
      * <h3>Example Usage</h3>
