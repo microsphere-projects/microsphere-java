@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
 import static io.microsphere.json.JSON.checkDouble;
 import static io.microsphere.json.JSON.toBoolean;
 import static io.microsphere.json.JSON.toDouble;
@@ -869,8 +870,10 @@ public class JSONObject {
                 return o;
             } else if (o instanceof Class) {
                 return getTypeName((Class) o);
-            } else if (o.getClass().getPackage().getName().startsWith("java.")) {
+            } else if (getTypeName(o).startsWith("java.")) {
                 return o.toString();
+            } else { // Java Bean
+                return resolvePropertiesAsMap(o);
             }
         } catch (Exception ignored) {
         }
