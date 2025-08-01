@@ -121,4 +121,36 @@ public enum Modifier {
     public boolean matches(int mod) {
         return (mod & value) != 0;
     }
+
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an annotation type; false otherwise
+     * @see Class#isAnnotation()
+     * @see io.microsphere.reflect.Modifier#ANNOTATION
+     */
+    public static boolean isAnnotation(int modifiers) {
+        return ANNOTATION.matches(modifiers);
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents an enumeration type; false otherwise
+     * @see Class#isEnum()
+     * @see io.microsphere.reflect.Modifier#ENUM
+     */
+    public static boolean isEnum(int modifiers) {
+        return ENUM.matches(modifiers);
+    }
+
+    /**
+     * @param modifiers {@link Class#getModifiers()}
+     * @return true if this class's modifiers represents a synthetic type; false otherwise
+     * @see Class#isSynthetic()
+     * @see io.microsphere.reflect.Modifier#SYNTHETIC
+     */
+    public static boolean isSynthetic(int modifiers) {
+        return SYNTHETIC.matches(modifiers);
+    }
+
 }
