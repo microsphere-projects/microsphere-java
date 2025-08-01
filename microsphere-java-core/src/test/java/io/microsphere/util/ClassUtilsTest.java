@@ -29,6 +29,7 @@ import java.util.function.BiFunction;
 
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CHAR_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -99,7 +100,14 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsArray() {
+    void testIsArrayWithObject() {
+        assertTrue(isArray(EMPTY_OBJECT_ARRAY));
+        assertTrue(isArray(EMPTY_BOOLEAN_ARRAY));
+        assertFalse(isArray((Object) null));
+    }
+
+    @Test
+    void testIsArrayWithClass() {
 
         // Primitive-Type array
         assertTrue(isArray(int[].class));
