@@ -39,6 +39,7 @@ import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
 import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -491,7 +492,7 @@ class JSONObjectTest {
         assertWrap("Hello");
         assertEquals("1.0", wrap(new StringBuilder("1.0")));
         assertEquals("java.lang.String", wrap(String.class));
-        assertNull(wrap(this));
+        assertEquals(emptyMap(), wrap(this));
     }
 
     @Test
