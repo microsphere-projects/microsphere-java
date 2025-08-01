@@ -8,6 +8,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
 import io.microsphere.io.filter.FileExtensionFilter;
+import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ConstructorUtils;
@@ -50,9 +51,9 @@ import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
-import static io.microsphere.reflect.Modifier.ANNOTATION;
-import static io.microsphere.reflect.Modifier.ENUM;
-import static io.microsphere.reflect.Modifier.SYNTHETIC;
+import static io.microsphere.reflect.Modifier.isAnnotation;
+import static io.microsphere.reflect.Modifier.isEnum;
+import static io.microsphere.reflect.Modifier.isSynthetic;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayToString;
@@ -82,7 +83,9 @@ import static java.util.Collections.unmodifiableSet;
  * {@link Class} utility class
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @see ClassUtils
+ * @see Class
+ * @see ClassLoaderUtils
+ * @see ConstructorUtils
  * @since 1.0.0
  */
 public abstract class ClassUtils implements Utils {
@@ -92,8 +95,12 @@ public abstract class ClassUtils implements Utils {
     /**
      * Suffix for array class names: "[]"
      */
+    @Nonnull
+    @Immutable
     public static final String ARRAY_SUFFIX = "[]";
 
+    @Nonnull
+    @Immutable
     private static final Class<?>[] PRIMITIVE_TYPES_ARRAY = ofArray(
             Void.TYPE,
             Boolean.TYPE,
@@ -106,6 +113,8 @@ public abstract class ClassUtils implements Utils {
             Double.TYPE
     );
 
+    @Nonnull
+    @Immutable
     private static final Class<?>[] WRAPPER_TYPES_ARRAY = ofArray(
             Void.class,
             Boolean.class,
@@ -242,60 +251,127 @@ public abstract class ClassUtils implements Utils {
     private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = of(JAR_EXTENSION);
 
     /**
-     * The specified type is array or not?*
+     * Checks if the specified type is an array.
      *
-     * @param type the type to test
-     * @return <code>true</code> if the specified type is an array class,
-     * <code>false</code> otherwise
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isArray(int[].class);     // returns true
+     * boolean result2 = ClassUtils.isArray(String.class);    // returns false
+     * boolean result3 = ClassUtils.isArray(null);           // returns false
+     * }</pre>
+     *
+     * @param type the type to check, may be {@code null}
+     * @return {@code true} if the specified type is an array class, {@code false} otherwise
      * @see Class#isArray()
      */
-    public static boolean isArray(Class<?> type) {
+    public static boolean isArray(@Nullable Class<?> type) {
         return type != null && type.isArray();
     }
 
     /**
-     * Is the specified type a concrete class or not?
+     * Checks if the specified type is a concrete class.
+     * <p>
+     * A concrete class is a class that:
+     * <ul>
+     *   <li>Is not an interface</li>
+     *   <li>Is not an annotation</li>
+     *   <li>Is not an enum</li>
+     *   <li>Is not a synthetic class</li>
+     *   <li>Is not a primitive type</li>
+     *   <li>Is not an array</li>
+     *   <li>Is not abstract</li>
+     * </ul>
+     * </p>
      *
-     * @param type type to check
-     * @return <code>true</code> if concrete class, <code>false</code> otherwise.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isConcreteClass(String.class);  // returns true
+     * boolean result2 = ClassUtils.isConcreteClass(List.class);    // returns false (interface)
+     * boolean result3 = ClassUtils.isConcreteClass(null);         // returns false
+     * }</pre>
+     *
+     * @param type the type to check, may be {@code null}
+     * @return {@code true} if the specified type is a concrete class, {@code false} otherwise
+     * @see #isGeneralClass(Class, Boolean)
      */
-    public static boolean isConcreteClass(Class<?> type) {
-
+    public static boolean isConcreteClass(@Nullable Class<?> type) {
         if (type == null) {
             return false;
         }
-
         if (concreteClassCache.containsKey(type)) {
             return true;
-        }
-
-        if (isGeneralClass(type, FALSE)) {
+        } else if (isGeneralClass(type, FALSE)) {
             concreteClassCache.put(type, TRUE);
             return true;
         }
-
         return false;
     }
 
     /**
-     * Is the specified type a abstract class or not?
+     * Checks if the specified type is an abstract class.
      * <p>
+     * An abstract class is a class that:
+     * <ul>
+     *   <li>Is not an interface</li>
+     *   <li>Is not an annotation</li>
+     *   <li>Is not an enum</li>
+     *   <li>Is not a synthetic class</li>
+     *   <li>Is not a primitive type</li>
+     *   <li>Is not an array</li>
+     *   <li>Is abstract</li>
+     * </ul>
+     * </p>
      *
-     * @param type the type
-     * @return true if type is a abstract class, false otherwise.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * abstract class AbstractExample { }
+     * class ConcreteExample { }
+     *
+     * boolean result1 = ClassUtils.isAbstractClass(AbstractExample.class); // returns true
+     * boolean result2 = ClassUtils.isAbstractClass(ConcreteExample.class); // returns false
+     * boolean result3 = ClassUtils.isAbstractClass(null);                  // returns false
+     * }</pre>
+     *
+     * @param type the type to check, may be {@code null}
+     * @return {@code true} if the specified type is an abstract class, {@code false} otherwise
+     * @see #isGeneralClass(Class, Boolean)
      */
-    public static boolean isAbstractClass(Class<?> type) {
+    public static boolean isAbstractClass(@Nullable Class<?> type) {
         return isGeneralClass(type, TRUE);
     }
 
     /**
-     * Is the specified type a general class or not?
+     * Checks if the specified type is a general class.
      * <p>
+     * A general class is a class that:
+     * <ul>
+     *   <li>Is not an interface</li>
+     *   <li>Is not an annotation</li>
+     *   <li>Is not an enum</li>
+     *   <li>Is not a synthetic class</li>
+     *   <li>Is not a primitive type</li>
+     *   <li>Is not an array</li>
+     *   <li>Is not abstract (by default)</li>
+     * </ul>
+     * </p>
      *
-     * @param type the type
-     * @return true if type is a general class, false otherwise.
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class ExampleClass {}
+     * abstract class AbstractExample {}
+     * interface ExampleInterface {}
+     *
+     * boolean result1 = ClassUtils.isGeneralClass(ExampleClass.class);      // returns true
+     * boolean result2 = ClassUtils.isGeneralClass(AbstractExample.class);   // returns false (abstract)
+     * boolean result3 = ClassUtils.isGeneralClass(ExampleInterface.class);  // returns false (interface)
+     * boolean result4 = ClassUtils.isGeneralClass(null);                   // returns false
+     * }</pre>
+     *
+     * @param type the type to check, may be {@code null}
+     * @return {@code true} if the specified type is a general class, {@code false} otherwise
+     * @see #isGeneralClass(Class, Boolean)
      */
-    public static boolean isGeneralClass(Class<?> type) {
+    public static boolean isGeneralClass(@Nullable Class<?> type) {
         return isGeneralClass(type, FALSE);
     }
 
@@ -308,14 +384,12 @@ public abstract class ClassUtils implements Utils {
      * @param isAbstract optional abstract flag
      * @return true if type is a general (abstract) class, false otherwise.
      */
-    protected static boolean isGeneralClass(Class<?> type, Boolean isAbstract) {
-
+    protected static boolean isGeneralClass(@Nullable Class<?> type, @Nullable Boolean isAbstract) {
         if (type == null) {
             return false;
         }
 
         int mod = type.getModifiers();
-
         if (isAnnotation(mod)
                 || isEnum(mod)
                 || isInterface(mod)
@@ -328,40 +402,129 @@ public abstract class ClassUtils implements Utils {
         if (isAbstract != null) {
             return isAbstract(mod) == isAbstract.booleanValue();
         }
-
         return true;
     }
 
-    public static boolean isTopLevelClass(Class<?> type) {
+    /**
+     * Checks if the specified class is a top-level class.
+     * <p>
+     * A top-level class is a class that is not a local class and not a member class.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class TopLevelClass {}
+     *
+     * class OuterClass {
+     *     static class StaticNestedClass {}
+     *     class InnerClass {}
+     *
+     *     void method() {
+     *         class LocalClass {}
+     *     }
+     * }
+     *
+     * boolean result1 = ClassUtils.isTopLevelClass(TopLevelClass.class);     // returns true
+     * boolean result2 = ClassUtils.isTopLevelClass(OuterClass.InnerClass.class); // returns false
+     * boolean result3 = ClassUtils.isTopLevelClass(OuterClass.StaticNestedClass.class); // returns true
+     * boolean result4 = ClassUtils.isTopLevelClass(null);                    // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the specified class is a top-level class, {@code false} otherwise
+     * @see Class#isLocalClass()
+     * @see Class#isMemberClass()
+     */
+    public static boolean isTopLevelClass(@Nullable Class<?> type) {
         return type != null && !type.isLocalClass() && !type.isMemberClass();
     }
 
-
     /**
-     * The specified type is primitive type or simple type
+     * Checks if the specified class is a primitive type.
      * <p>
-     * It's an optimized implementation for {@link Class#isPrimitive()}.
+     * This method returns {@code true} if the given class is one of the eight primitive types
+     * ({@code boolean}, {@code byte}, {@code char}, {@code short}, {@code int}, {@code long}, {@code float}, {@code double})
+     * or their corresponding array types. It returns {@code false} otherwise, including for wrapper classes.
+     * </p>
      *
-     * @param type the type to test
-     * @return
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isPrimitive(int.class);        // returns true
+     * boolean result2 = ClassUtils.isPrimitive(Integer.class);    // returns false (wrapper class)
+     * boolean result3 = ClassUtils.isPrimitive(int[].class);      // returns true (primitive array)
+     * boolean result4 = ClassUtils.isPrimitive(String.class);     // returns false
+     * boolean result5 = ClassUtils.isPrimitive(null);            // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the specified class is a primitive type or primitive array type, {@code false} otherwise
+     * @see #PRIMITIVE_TYPES
      * @see Class#isPrimitive()
      */
-    public static boolean isPrimitive(Class<?> type) {
+    public static boolean isPrimitive(@Nullable Class<?> type) {
         return PRIMITIVE_TYPES.contains(type);
     }
 
-    public static boolean isFinal(Class<?> type) {
+    /**
+     * Checks if the specified class is a final class.
+     * <p>
+     * A final class is a class that cannot be extended by other classes.
+     * This method returns {@code true} if the given class is marked with the {@code final} modifier,
+     * and {@code false} otherwise. It also returns {@code false} if the class is {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * final class FinalExample {}
+     * class NonFinalExample {}
+     *
+     * boolean result1 = ClassUtils.isFinal(FinalExample.class);   // returns true
+     * boolean result2 = ClassUtils.isFinal(NonFinalExample.class); // returns false
+     * boolean result3 = ClassUtils.isFinal(null);                 // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the specified class is a final class, {@code false} otherwise
+     * @see java.lang.reflect.Modifier#isFinal(int)
+     */
+    public static boolean isFinal(@Nullable Class<?> type) {
         return type != null && Modifier.isFinal(type.getModifiers());
     }
 
     /**
-     * The specified type is simple type or not
+     * Checks if the specified type is a simple type.
+     * <p>
+     * A simple type is defined as one of the following:
+     * <ul>
+     *   <li>{@link Void}</li>
+     *   <li>{@link Boolean}</li>
+     *   <li>{@link Character}</li>
+     *   <li>{@link Byte}</li>
+     *   <li>{@link Short}</li>
+     *   <li>{@link Integer}</li>
+     *   <li>{@link Long}</li>
+     *   <li>{@link Float}</li>
+     *   <li>{@link Double}</li>
+     *   <li>{@link String}</li>
+     *   <li>{@link BigDecimal}</li>
+     *   <li>{@link BigInteger}</li>
+     *   <li>{@link Date}</li>
+     *   <li>{@link Object}</li>
+     * </ul>
+     * </p>
      *
-     * @param type the type to test
-     * @return if <code>type</code> is one element of {@link #SIMPLE_TYPES}, return <code>true</code>, or <code>false</code>
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isSimpleType(String.class);  // returns true
+     * boolean result2 = ClassUtils.isSimpleType(List.class);    // returns false
+     * boolean result3 = ClassUtils.isSimpleType(null);         // returns false
+     * }</pre>
+     *
+     * @param type the type to check, may be {@code null}
+     * @return {@code true} if the specified type is a simple type, {@code false} otherwise
      * @see #SIMPLE_TYPES
      */
-    public static boolean isSimpleType(Class<?> type) {
+    public static boolean isSimpleType(@Nullable Class<?> type) {
         return SIMPLE_TYPES.contains(type);
     }
 
@@ -377,7 +540,7 @@ public abstract class ClassUtils implements Utils {
      * @param type the class to check, may be {@code null}
      * @return {@code true} if the type is a subtype of {@link CharSequence}, {@code false} otherwise
      */
-    public static boolean isCharSequence(Class<?> type) {
+    public static boolean isCharSequence(@Nullable Class<?> type) {
         return isAssignableFrom(CharSequence.class, type);
     }
 
@@ -393,7 +556,7 @@ public abstract class ClassUtils implements Utils {
      * @param type the class to check, may be {@code null}
      * @return {@code true} if the type is a subtype of {@link Number}, {@code false} otherwise
      */
-    public static boolean isNumber(Class<?> type) {
+    public static boolean isNumber(@Nullable Class<?> type) {
         return isAssignableFrom(Number.class, type);
     }
 
@@ -410,17 +573,35 @@ public abstract class ClassUtils implements Utils {
      * @param object the object to check, may be {@code null}
      * @return {@code true} if the object is an instance of {@link Class}, {@code false} otherwise
      */
-    public static boolean isClass(Object object) {
+    public static boolean isClass(@Nullable Object object) {
         return object instanceof Class;
     }
 
     /**
-     * Resolve the primitive class from the specified type
+     * Resolves the primitive type corresponding to the given type.
+     * <p>
+     * If the provided type is already a primitive type, it is returned as-is.
+     * If the provided type is a wrapper type (e.g., {@link Integer}, {@link Boolean}),
+     * the corresponding primitive type (e.g., {@code int}, {@code boolean}) is returned.
+     * If the provided type is neither a primitive nor a wrapper type, {@code null} is returned.
+     * </p>
      *
-     * @param type the specified type
-     * @return <code>null</code> if not found
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> result1 = ClassUtils.resolvePrimitiveType(int.class);      // returns int.class
+     * Class<?> result2 = ClassUtils.resolvePrimitiveType(Integer.class);  // returns int.class
+     * Class<?> result3 = ClassUtils.resolvePrimitiveType(String.class);   // returns null
+     * Class<?> result4 = ClassUtils.resolvePrimitiveType(null);          // returns null
+     * }</pre>
+     *
+     * @param type the type to resolve, may be {@code null}
+     * @return the corresponding primitive type if the input is a wrapper or primitive type,
+     * otherwise {@code null}
+     * @see #isPrimitive(Class)
+     * @see #WRAPPER_TO_PRIMITIVE_TYPES_MAP
      */
-    public static Class<?> resolvePrimitiveType(Class<?> type) {
+    @Nullable
+    public static Class<?> resolvePrimitiveType(@Nullable Class<?> type) {
         if (isPrimitive(type)) {
             return type;
         }
@@ -428,23 +609,93 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Resolve the wrapper class from the primitive type
+     * Resolve the wrapper class from the primitive type.
+     * <p>
+     * If the provided type is already a wrapper type, it is returned as-is.
+     * If the provided type is a primitive type (e.g., {@code int}, {@code boolean}),
+     * the corresponding wrapper type (e.g., {@link Integer}, {@link Boolean}) is returned.
+     * If the provided type is neither a primitive nor a wrapper type, {@code null} is returned.
+     * </p>
      *
-     * @param primitiveType the primitive type
-     * @return <code>null</code> if not found
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> result1 = ClassUtils.resolveWrapperType(int.class);      // returns Integer.class
+     * Class<?> result2 = ClassUtils.resolveWrapperType(Integer.class);  // returns Integer.class
+     * Class<?> result3 = ClassUtils.resolveWrapperType(String.class);   // returns null
+     * Class<?> result4 = ClassUtils.resolveWrapperType(null);          // returns null
+     * }</pre>
+     *
+     * @param primitiveType the primitive type to resolve, may be {@code null}
+     * @return the corresponding wrapper type if the input is a primitive or wrapper type,
+     * otherwise {@code null}
+     * @see #isWrapperType(Class)
+     * @see #PRIMITIVE_TO_WRAPPER_TYPES_MAP
      */
-    public static Class<?> resolveWrapperType(Class<?> primitiveType) {
+    @Nullable
+    public static Class<?> resolveWrapperType(@Nullable Class<?> primitiveType) {
         if (isWrapperType(primitiveType)) {
             return primitiveType;
         }
         return PRIMITIVE_TO_WRAPPER_TYPES_MAP.get(primitiveType);
     }
 
-    public static boolean isWrapperType(Class<?> type) {
+    /**
+     * Checks if the specified class is a wrapper type.
+     * <p>
+     * A wrapper type is one of the following:
+     * <ul>
+     *   <li>{@link Boolean}</li>
+     *   <li>{@link Character}</li>
+     *   <li>{@link Byte}</li>
+     *   <li>{@link Short}</li>
+     *   <li>{@link Integer}</li>
+     *   <li>{@link Long}</li>
+     *   <li>{@link Float}</li>
+     *   <li>{@link Double}</li>
+     * </ul>
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isWrapperType(Integer.class);  // returns true
+     * boolean result2 = ClassUtils.isWrapperType(int.class);      // returns false (primitive type)
+     * boolean result3 = ClassUtils.isWrapperType(String.class);   // returns false
+     * boolean result4 = ClassUtils.isWrapperType(null);          // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the specified class is a wrapper type, {@code false} otherwise
+     * @see #WRAPPER_TYPES
+     */
+    public static boolean isWrapperType(@Nullable Class<?> type) {
         return WRAPPER_TYPES.contains(type);
     }
 
-    public static boolean arrayTypeEquals(Class<?> oneArrayType, Class<?> anotherArrayType) {
+    /**
+     * Checks if two array types are equivalent, including nested arrays.
+     * <p>
+     * This method compares the component types of two array classes recursively.
+     * It returns {@code true} if both classes are arrays and their component types
+     * are equal (considering nested arrays), {@code false} otherwise.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.arrayTypeEquals(int[].class, int[].class);           // returns true
+     * boolean result2 = ClassUtils.arrayTypeEquals(int[][].class, int[][].class);       // returns true
+     * boolean result3 = ClassUtils.arrayTypeEquals(int[].class, long[].class);          // returns false
+     * boolean result4 = ClassUtils.arrayTypeEquals(int[].class, int.class);             // returns false
+     * boolean result5 = ClassUtils.arrayTypeEquals(null, int[].class);                  // returns false
+     * }</pre>
+     *
+     * @param oneArrayType     the first array type to compare, may be {@code null}
+     * @param anotherArrayType the second array type to compare, may be {@code null}
+     * @return {@code true} if both types are arrays with equivalent component types,
+     * {@code false} otherwise
+     * @see Class#getComponentType()
+     * @see Objects#equals(Object, Object)
+     */
+    public static boolean arrayTypeEquals(@Nullable Class<?> oneArrayType, @Nullable Class<?> anotherArrayType) {
         if (!isArray(oneArrayType) || !isArray(anotherArrayType)) {
             return false;
         }
@@ -458,18 +709,34 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Resolve the given class name as primitive class, if appropriate,
+     * Resolve the given class name as a primitive class, if appropriate,
      * according to the JVM's naming rules for primitive classes.
      * <p>
-     * Also supports the JVM's internal class names for primitive arrays. Does
-     * <i>not</i> support the "[]" suffix notation for primitive arrays; this is
-     * only supported by {@link #forName}.
+     * This method checks if the provided name corresponds to a primitive type
+     * (e.g., "int", "boolean") or a primitive array type (e.g., "[I", "[Z").
+     * It returns the corresponding {@link Class} object if a match is found,
+     * or {@code null} otherwise.
+     * </p>
+     * <p>
+     * Note: This method does <i>not</i> support the "[]" suffix notation for
+     * primitive arrays; this is only supported by {@link #forName(String)}.
+     * </p>
      *
-     * @param name the name of the potentially primitive class
-     * @return the primitive class, or <code>null</code> if the name does not
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> intClass = ClassUtils.resolvePrimitiveClassForName("int");     // returns int.class
+     * Class<?> boolArrayClass = ClassUtils.resolvePrimitiveClassForName("[Z"); // returns boolean[].class
+     * Class<?> stringClass = ClassUtils.resolvePrimitiveClassForName("String"); // returns null
+     * Class<?> nullResult = ClassUtils.resolvePrimitiveClassForName(null);    // returns null
+     * }</pre>
+     *
+     * @param name the name of the potentially primitive class, may be {@code null}
+     * @return the primitive class, or {@code null} if the name does not
      * denote a primitive class or primitive array class
+     * @see #NAME_TO_TYPE_PRIMITIVE_MAP
      */
-    public static Class<?> resolvePrimitiveClassForName(String name) {
+    @Nullable
+    public static Class<?> resolvePrimitiveClassForName(@Nullable String name) {
         Class<?> result = null;
         // Most class names will be quite long, considering that they
         // SHOULD sit in a package, so a length check is worthwhile.
@@ -481,37 +748,91 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Resolve package name under specified class
+     * Resolve the package name of the given class.
+     * <p>
+     * This method returns the package name of the specified class. If the class is a primitive type,
+     * or if the class is {@code null}, this method returns {@code null}.
+     * </p>
      *
-     * @param targetClass target class
-     * @return package name
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String packageName1 = ClassUtils.resolvePackageName(String.class);
+     * // returns "java.lang"
+     *
+     * String packageName2 = ClassUtils.resolvePackageName(int.class);
+     * // returns null (primitive type)
+     *
+     * String packageName3 = ClassUtils.resolvePackageName((Class<?>) null);
+     * // returns null
+     * }</pre>
+     *
+     * @param targetClass the class to resolve the package name for, may be {@code null}
+     * @return the package name of the given class, or {@code null} if the class is primitive or {@code null}
+     * @see #resolvePackageName(String)
+     * @see #isPrimitive(Class)
+     * @see #getTypeName(Class)
      */
     @Nullable
-    public static String resolvePackageName(Class<?> targetClass) {
+    public static String resolvePackageName(@Nullable Class<?> targetClass) {
         return isPrimitive(targetClass) ? null : resolvePackageName(getTypeName(targetClass));
     }
 
     /**
-     * Resolve package name under specified class name
+     * Resolve the package name from the given class name.
+     * <p>
+     * This method extracts the package name from a fully qualified class name.
+     * If the class name does not contain a package (i.e., it's a default package),
+     * this method returns an empty string. If the input is {@code null}, this method
+     * returns {@code null}.
+     * </p>
      *
-     * @param className class name
-     * @return package name
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String packageName1 = ClassUtils.resolvePackageName("java.lang.String");
+     * // returns "java.lang"
+     *
+     * String packageName2 = ClassUtils.resolvePackageName("String");
+     * // returns "" (empty string for default package)
+     *
+     * String packageName3 = ClassUtils.resolvePackageName(null);
+     * // returns null
+     * }</pre>
+     *
+     * @param className the fully qualified class name, may be {@code null}
+     * @return the package name, or an empty string if the class is in the default package,
+     * or {@code null} if the input is {@code null}
+     * @see StringUtils#substringBeforeLast(String, String)
      */
-    @Nullable
-    public static String resolvePackageName(String className) {
+    @Nonnull
+    public static String resolvePackageName(@Nullable String className) {
         return substringBeforeLast(className, DOT);
     }
 
     /**
-     * Find all class names in class path
+     * Finds all class names in the specified class path.
+     * <p>
+     * This method scans the given class path for class files and returns their fully qualified names.
+     * The class path can be a directory or a JAR file. If the class path is a directory, the method
+     * will recursively scan subdirectories if the {@code recursive} parameter is set to {@code true}.
+     * </p>
      *
-     * @param classPath class path
-     * @param recursive is recursive on sub directories
-     * @return all class names in class path
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all class names in a directory, recursively
+     * Set<String> classNames = ClassUtils.findClassNamesInClassPath("/path/to/classes", true);
+     *
+     * // Find all class names in a JAR file
+     * Set<String> jarClassNames = ClassUtils.findClassNamesInClassPath("file:/path/to/library.jar", false);
+     * }</pre>
+     *
+     * @param classPath the class path to scan, may be {@code null}
+     * @param recursive whether to scan subdirectories recursively
+     * @return a set of fully qualified class names found in the class path, or an empty set if none found
+     * @see #findClassNamesInClassPath(File, boolean)
      */
     @Nonnull
     @Immutable
-    public static Set<String> findClassNamesInClassPath(String classPath, boolean recursive) {
+    public static Set<String> findClassNamesInClassPath(@Nullable String classPath, boolean recursive) {
         String protocol = resolveProtocol(classPath);
         final String resolvedClassPath;
         if (FILE_PROTOCOL.equals(protocol)) {
@@ -524,15 +845,31 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Find all class names in class path
+     * Finds all class names in the specified class path.
+     * <p>
+     * This method scans the given class path for class files and returns their fully qualified names.
+     * The class path can be a directory or a JAR file. If the class path is a directory, the method
+     * will recursively scan subdirectories if the {@code recursive} parameter is set to {@code true}.
+     * </p>
      *
-     * @param classPath JarFile or class patch directory
-     * @param recursive is recursive on sub directories
-     * @return all class names in class path
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all class names in a directory, recursively
+     * Set<String> classNames = ClassUtils.findClassNamesInClassPath(new File("/path/to/classes"), true);
+     *
+     * // Find all class names in a JAR file
+     * Set<String> jarClassNames = ClassUtils.findClassNamesInClassPath(new File("/path/to/library.jar"), false);
+     * }</pre>
+     *
+     * @param classPath the class path to scan, may be {@code null}
+     * @param recursive whether to scan subdirectories recursively
+     * @return a set of fully qualified class names found in the class path, or an empty set if none found
+     * @see #findClassNamesInDirectory(File, boolean)
+     * @see #findClassNamesInJarFile(File, boolean)
      */
     @Nonnull
     @Immutable
-    public static Set<String> findClassNamesInClassPath(File classPath, boolean recursive) {
+    public static Set<String> findClassNamesInClassPath(@Nullable File classPath, boolean recursive) {
         if (classPath == null || !classPath.exists()) {
             return emptySet();
         }
@@ -555,15 +892,31 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Find all class names in directory
+     * Finds all class names in the specified directory.
+     * <p>
+     * This method scans the given directory for class files and returns their fully qualified names.
+     * If the {@code recursive} parameter is set to {@code true}, the method will recursively scan
+     * subdirectories. Only files with the ".class" extension are considered.
+     * </p>
      *
-     * @param classesDirectory a directory to be found
-     * @param recursive        is recursive on sub directories
-     * @return all class names in directory
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all class names in a directory, recursively
+     * Set<String> classNames = ClassUtils.findClassNamesInDirectory(new File("/path/to/classes"), true);
+     *
+     * // Find all class names in a directory, non-recursively
+     * Set<String> nonRecursiveClassNames = ClassUtils.findClassNamesInDirectory(new File("/path/to/classes"), false);
+     * }</pre>
+     *
+     * @param classesDirectory the directory to scan for class files, may be {@code null}
+     * @param recursive        whether to scan subdirectories recursively
+     * @return a set of fully qualified class names found in the directory, or an empty set if none found
+     * @see SimpleFileScanner#scan(File, boolean, IOFileFilter)
+     * @see FileExtensionFilter#of(String)
      */
     @Nonnull
     @Immutable
-    public static Set<String> findClassNamesInDirectory(File classesDirectory, boolean recursive) {
+    public static Set<String> findClassNamesInDirectory(@Nullable File classesDirectory, boolean recursive) {
         if (classesDirectory == null || !classesDirectory.exists()) {
             return emptySet();
         }
@@ -584,15 +937,31 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Find all class names in jar file
+     * Finds all class names in the specified JAR file.
+     * <p>
+     * This method scans the given JAR file for class files and returns their fully qualified names.
+     * If the {@code recursive} parameter is set to {@code true}, the method will recursively scan
+     * subdirectories within the JAR file. Only entries with the ".class" extension are considered.
+     * </p>
      *
-     * @param jarFile   jar file
-     * @param recursive is recursive on sub directories
-     * @return all class names in jar file
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all class names in a JAR file, recursively
+     * Set<String> classNames = ClassUtils.findClassNamesInJarFile(new File("/path/to/library.jar"), true);
+     *
+     * // Find all class names in a JAR file, non-recursively
+     * Set<String> nonRecursiveClassNames = ClassUtils.findClassNamesInJarFile(new File("/path/to/library.jar"), false);
+     * }</pre>
+     *
+     * @param jarFile   the JAR file to scan for class files, may be {@code null}
+     * @param recursive whether to scan subdirectories recursively
+     * @return a set of fully qualified class names found in the JAR file, or an empty set if none found
+     * @see ClassFileJarEntryFilter#INSTANCE
+     * @see io.microsphere.io.scanner.SimpleJarEntryScanner#INSTANCE
      */
     @Nonnull
     @Immutable
-    public static Set<String> findClassNamesInJarFile(File jarFile, boolean recursive) {
+    public static Set<String> findClassNamesInJarFile(@Nullable File jarFile, boolean recursive) {
         if (jarFile == null || !jarFile.exists()) {
             return emptySet();
         }
@@ -623,18 +992,66 @@ public abstract class ClassUtils implements Utils {
         return classNames;
     }
 
+    /**
+     * Resolves the fully qualified class name from a class file within a classes directory.
+     * <p>
+     * This method calculates the relative path of the class file from the classes directory,
+     * then converts the path to a fully qualified class name by replacing path separators
+     * with dots and removing the ".class" extension.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * File classesDir = new File("/project/target/classes");
+     * File classFile = new File("/project/target/classes/com/example/MyClass.class");
+     * String className = ClassUtils.resolveClassName(classesDir, classFile);
+     * // Returns: "com.example.MyClass"
+     * }</pre>
+     *
+     * @param classesDirectory the root directory containing compiled classes, must not be {@code null}
+     * @param classFile        the class file to resolve the name for, must not be {@code null}
+     * @return the fully qualified class name, never {@code null}
+     * @see #resolveRelativePath(File, File)
+     * @see #resolveClassName(String)
+     */
     protected static String resolveClassName(File classesDirectory, File classFile) {
         String classFileRelativePath = resolveRelativePath(classesDirectory, classFile);
         return resolveClassName(classFileRelativePath);
     }
 
     /**
-     * Resolve resource name to class name
+     * Resolves the fully qualified class name from a resource name.
+     * <p>
+     * This method converts a resource name (using '/' as separator) to a fully qualified
+     * class name (using '.' as separator) by replacing slashes with dots and removing
+     * the ".class" extension if present. It also handles cases where the resource name
+     * might start with leading dots.
+     * </p>
      *
-     * @param resourceName resource name
-     * @return class name
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String className1 = ClassUtils.resolveClassName("com/example/MyClass.class");
+     * // Returns: "com.example.MyClass"
+     *
+     * String className2 = ClassUtils.resolveClassName("com/example/MyClass");
+     * // Returns: "com.example.MyClass"
+     *
+     * String className3 = ClassUtils.resolveClassName("./com/example/MyClass.class");
+     * // Returns: "com.example.MyClass"
+     *
+     * String className4 = ClassUtils.resolveClassName(null);
+     * // Returns: null
+     * }</pre>
+     *
+     * @param resourceName the resource name to resolve, may be {@code null}
+     * @return the fully qualified class name, or {@code null} if the input is {@code null}
+     * @see #resolveClassName(File, File)
      */
-    public static String resolveClassName(String resourceName) {
+    @Nullable
+    public static String resolveClassName(@Nullable String resourceName) {
+        if (resourceName == null) {
+            return null;
+        }
         String className = replace(resourceName, SLASH, DOT);
         className = substringBefore(className, CLASS_EXTENSION);
         while (startsWith(className, DOT)) {
@@ -644,122 +1061,358 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Get all super classes from the specified type
+     * Get all super classes from the specified type.
      *
-     * @param type the specified type
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * List<Class<?>> superClasses = ClassUtils.getAllSuperClasses(String.class);
+     * // Returns a list containing: [Object.class]
+     *
+     * List<Class<?>> noSuperClasses = ClassUtils.getAllSuperClasses(Object.class);
+     * // Returns an empty list since Object has no superclass
+     *
+     * List<Class<?>> nullResult = ClassUtils.getAllSuperClasses(null);
+     * // Returns an empty list since the input is null
+     * }</pre>
+     *
+     * @param type the specified type, may be {@code null}
+     * @return non-null read-only {@link List} of super classes
+     * @see #findAllSuperClasses(Class, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> getAllSuperClasses(Class<?> type) {
+    public static List<Class<?>> getAllSuperClasses(@Nullable Class<?> type) {
         return findAllSuperClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Get all interfaces from the specified type
+     * Get all interfaces from the specified type.
+     * <p>
+     * This method returns a list of all interfaces implemented by the given class or interface,
+     * including interfaces inherited from superclasses and superinterfaces. The returned list
+     * is read-only and immutable.
+     * </p>
      *
-     * @param type the specified type
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // For a class implementing multiple interfaces
+     * class Example implements Runnable, Cloneable {}
+     * List<Class<?>> interfaces = ClassUtils.getAllInterfaces(Example.class);
+     * // Returns a list containing: [Runnable.class, Cloneable.class]
+     *
+     * // For an interface extending other interfaces
+     * interface SubInterface extends Serializable, Comparable<String> {}
+     * List<Class<?>> superInterfaces = ClassUtils.getAllInterfaces(SubInterface.class);
+     * // Returns a list containing: [Serializable.class, Comparable.class]
+     *
+     * // For a class with no interfaces
+     * class PlainClass {}
+     * List<Class<?>> noInterfaces = ClassUtils.getAllInterfaces(PlainClass.class);
+     * // Returns an empty list
+     *
+     * // For null input
+     * List<Class<?>> nullResult = ClassUtils.getAllInterfaces(null);
+     * // Returns an empty list
+     * }</pre>
+     *
+     * @param type the specified type, may be {@code null}
+     * @return non-null read-only {@link List} of interfaces
+     * @see #findAllInterfaces(Class, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> getAllInterfaces(Class<?> type) {
+    public static List<Class<?>> getAllInterfaces(@Nullable Class<?> type) {
         return findAllInterfaces(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Get all inherited types from the specified type
+     * Get all inherited types from the specified type.
+     * <p>
+     * This method returns a list of all types inherited by the given class or interface,
+     * including superclasses and interfaces. The returned list is read-only and immutable.
+     * </p>
      *
-     * @param type the specified type
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Parent {}
+     * interface MyInterface {}
+     * class Child extends Parent implements MyInterface {}
+     *
+     * List<Class<?>> inheritedTypes = ClassUtils.getAllInheritedTypes(Child.class);
+     * // Returns a list containing Parent.class and MyInterface.class
+     *
+     * List<Class<?>> noInheritedTypes = ClassUtils.getAllInheritedTypes(Object.class);
+     * // Returns an empty list since Object has no superclass or interfaces in this context
+     *
+     * List<Class<?>> nullResult = ClassUtils.getAllInheritedTypes(null);
+     * // Returns an empty list since the input is null
+     * }</pre>
+     *
+     * @param type the specified type, may be {@code null}
+     * @return non-null read-only {@link List} of inherited types
+     * @see #getAllInheritedClasses(Class)
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> getAllInheritedTypes(Class<?> type) {
+    public static List<Class<?>> getAllInheritedTypes(@Nullable Class<?> type) {
         return getAllInheritedClasses(type);
     }
 
     /**
-     * Get all inherited classes from the specified type
+     * Get all inherited classes from the specified type.
+     * <p>
+     * This method returns a list of all classes inherited by the given class,
+     * including its superclasses. It does not include interfaces. The returned list
+     * is read-only and immutable.
+     * </p>
      *
-     * @param type the specified type
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Parent {}
+     * class Child extends Parent {}
+     *
+     * List<Class<?>> inheritedClasses = ClassUtils.getAllInheritedClasses(Child.class);
+     * // Returns a list containing Parent.class
+     *
+     * List<Class<?>> noInheritedClasses = ClassUtils.getAllInheritedClasses(Object.class);
+     * // Returns an empty list since Object has no superclass
+     *
+     * List<Class<?>> nullResult = ClassUtils.getAllInheritedClasses(null);
+     * // Returns an empty list since the input is null
+     * }</pre>
+     *
+     * @param type the specified type, may be {@code null}
+     * @return non-null read-only {@link List} of inherited classes
+     * @see #findAllInheritedClasses(Class, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> getAllInheritedClasses(Class<?> type) {
+    public static List<Class<?>> getAllInheritedClasses(@Nullable Class<?> type) {
         return findAllInheritedClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
     /**
-     * Get all classes from the specified type
+     * Get all classes from the specified type, including the type itself, its superclasses, and interfaces.
+     * <p>
+     * This method returns a list of all classes related to the given class or interface,
+     * including the class itself, its superclasses, and interfaces. The returned list
+     * is read-only and immutable.
+     * </p>
      *
-     * @param type the specified type
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Parent {}
+     * interface MyInterface {}
+     * class Child extends Parent implements MyInterface {}
+     *
+     * List<Class<?>> allClasses = ClassUtils.getAllClasses(Child.class);
+     * // Returns a list containing Child.class, Parent.class, MyInterface.class, and Object.class
+     *
+     * List<Class<?>> objectClasses = ClassUtils.getAllClasses(Object.class);
+     * // Returns a list containing Object.class
+     *
+     * List<Class<?>> nullResult = ClassUtils.getAllClasses(null);
+     * // Returns an empty list since the input is null
+     * }</pre>
+     *
+     * @param type the specified type, may be {@code null}
+     * @return non-null read-only {@link List} of all classes related to the specified type
+     * @see #findAllClasses(Class, Predicate[])
      */
-    @Nonnull
-    @Immutable
-    public static List<Class<?>> getAllClasses(Class<?> type) {
+    public static List<Class<?>> getAllClasses(@Nullable Class<?> type) {
         return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
+
     /**
-     * Find all super classes from the specified type
+     * Find all super classes from the specified type, optionally filtering the results.
+     * <p>
+     * This method traverses up the inheritance hierarchy of the given class, collecting all its superclasses.
+     * The results can be filtered using the provided {@link Predicate} filters. If no filters are provided,
+     * all superclasses are returned.
+     * </p>
      *
-     * @param type         the specified type
-     * @param classFilters the filters for classes
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all superclasses of String
+     * List<Class<?>> superClasses = ClassUtils.findAllSuperClasses(String.class);
+     * // Returns: [java.lang.Object]
+     *
+     * // Find superclasses with a filter
+     * List<Class<?>> filtered = ClassUtils.findAllSuperClasses(ArrayList.class, cls -> !cls.equals(Object.class));
+     * // Returns: [java.util.AbstractList, java.util.AbstractCollection]
+     *
+     * // Null input returns empty list
+     * List<Class<?>> nullResult = ClassUtils.findAllSuperClasses(null);
+     * // Returns: []
+     * }</pre>
+     *
+     * @param type         the specified type to find superclasses for, may be {@code null}
+     * @param classFilters optional filters to apply to the results
+     * @return a non-null, read-only {@link List} of superclasses
+     * @see #findTypes(Class, boolean, boolean, boolean, boolean, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> findAllSuperClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+    public static List<Class<?>> findAllSuperClasses(@Nullable Class<?> type, @Nullable Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, false, classFilters);
     }
 
     /**
-     * find all interfaces from the specified type
+     * Find all interfaces from the specified type, optionally filtering the results.
+     * <p>
+     * This method traverses the inheritance hierarchy of the given class or interface,
+     * collecting all interfaces it implements or extends. The results can be filtered
+     * using the provided {@link Predicate} filters. If no filters are provided,
+     * all interfaces are returned.
+     * </p>
      *
-     * @param type             the specified type
-     * @param interfaceFilters the filters for interfaces
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all interfaces implemented by ArrayList
+     * List<Class<?>> interfaces = ClassUtils.findAllInterfaces(ArrayList.class);
+     * // Returns: [java.util.List, java.util.Collection, java.lang.Iterable, java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable]
+     *
+     * // Find interfaces with a filter
+     * List<Class<?>> filtered = ClassUtils.findAllInterfaces(ArrayList.class, cls -> cls.getSimpleName().startsWith("C"));
+     * // Returns: [java.util.Collection, java.lang.Cloneable]
+     *
+     * // Null input returns empty list
+     * List<Class<?>> nullResult = ClassUtils.findAllInterfaces(null);
+     * // Returns: []
+     * }</pre>
+     *
+     * @param type             the specified type to find interfaces for, may be {@code null}
+     * @param interfaceFilters optional filters to apply to the results
+     * @return a non-null, read-only {@link List} of interfaces
+     * @see #findTypes(Class, boolean, boolean, boolean, boolean, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> findAllInterfaces(Class<?> type, Predicate<? super Class<?>>... interfaceFilters) {
+    public static List<Class<?>> findAllInterfaces(@Nullable Class<?> type, @Nullable Predicate<? super Class<?>>... interfaceFilters) {
         return findTypes(type, false, true, false, true, interfaceFilters);
     }
 
     /**
-     * Find all inherited classes from the specified type
+     * Find all inherited classes from the specified type, optionally filtering the results.
+     * <p>
+     * This method traverses the inheritance hierarchy of the given class,
+     * collecting all its superclasses and interfaces. The results can be filtered
+     * using the provided {@link Predicate} filters. If no filters are provided,
+     * all inherited classes are returned.
+     * </p>
      *
-     * @param type         the specified type
-     * @param classFilters the filters for types
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all inherited classes of ArrayList
+     * List<Class<?>> inherited = ClassUtils.findAllInheritedClasses(ArrayList.class);
+     * // Returns: [java.util.AbstractList, java.util.AbstractCollection, java.lang.Object,
+     * //           java.util.List, java.util.Collection, java.lang.Iterable,
+     * //           java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable]
+     *
+     * // Find inherited classes with a filter
+     * List<Class<?>> filtered = ClassUtils.findAllInheritedClasses(ArrayList.class,
+     *         cls -> cls.getSimpleName().startsWith("A") || cls.getSimpleName().endsWith("able"));
+     * // Returns: [java.util.AbstractList, java.util.AbstractCollection,
+     * //           java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable]
+     *
+     * // Null input returns empty list
+     * List<Class<?>> nullResult = ClassUtils.findAllInheritedClasses(null);
+     * // Returns: []
+     * }</pre>
+     *
+     * @param type         the specified type to find inherited classes for, may be {@code null}
+     * @param classFilters optional filters to apply to the results
+     * @return a non-null, read-only {@link List} of inherited classes
+     * @see #findTypes(Class, boolean, boolean, boolean, boolean, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> findAllInheritedClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+    public static List<Class<?>> findAllInheritedClasses(@Nullable Class<?> type, @Nullable Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, false, true, true, true, classFilters);
     }
 
     /**
-     * Find all classes from the specified type with filters
+     * Find all classes from the specified type, optionally filtering the results.
+     * <p>
+     * This method collects all classes related to the given class or interface,
+     * including the class itself, its superclasses, and interfaces. The results
+     * can be filtered using the provided {@link Predicate} filters. If no filters
+     * are provided, all related classes are returned.
+     * </p>
      *
-     * @param type         the specified type
-     * @param classFilters class filters
-     * @return non-null read-only {@link List}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all classes related to ArrayList
+     * List<Class<?>> allClasses = ClassUtils.findAllClasses(ArrayList.class);
+     * // Returns: [java.util.ArrayList, java.util.AbstractList, java.util.AbstractCollection,
+     * //           java.lang.Object, java.util.List, java.util.Collection, java.lang.Iterable,
+     * //           java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable]
+     *
+     * // Find classes with a filter
+     * List<Class<?>> filtered = ClassUtils.findAllClasses(ArrayList.class,
+     *         cls -> cls.getSimpleName().startsWith("A") || cls.getSimpleName().endsWith("able"));
+     * // Returns: [java.util.ArrayList, java.util.AbstractList, java.util.AbstractCollection,
+     * //           java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable]
+     *
+     * // Null input returns empty list
+     * List<Class<?>> nullResult = ClassUtils.findAllClasses(null);
+     * // Returns: []
+     * }</pre>
+     *
+     * @param type         the specified type to find classes for, may be {@code null}
+     * @param classFilters optional filters to apply to the results
+     * @return a non-null, read-only {@link List} of all classes related to the specified type
+     * @see #findTypes(Class, boolean, boolean, boolean, boolean, Predicate[])
      */
     @Nonnull
     @Immutable
-    public static List<Class<?>> findAllClasses(Class<?> type, Predicate<? super Class<?>>... classFilters) {
+    public static List<Class<?>> findAllClasses(@Nullable Class<?> type, @Nullable Predicate<? super Class<?>>... classFilters) {
         return findTypes(type, true, true, true, true, classFilters);
     }
 
+    /**
+     * Finds types based on the specified criteria.
+     * <p>
+     * This method is a core utility for traversing class hierarchies and collecting types according to various flags.
+     * It can include the original type, hierarchical types (superclasses), generic superclass, and/or interfaces.
+     * The results can be filtered using the provided {@link Predicate} filters.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Find all superclasses of ArrayList
+     * List<Class<?>> superClasses = ClassUtils.findTypes(ArrayList.class, false, true, true, false);
+     * // Returns: [java.util.AbstractList, java.util.AbstractCollection, java.lang.Object]
+     *
+     * // Find all interfaces implemented by ArrayList
+     * List<Class<?>> interfaces = ClassUtils.findTypes(ArrayList.class, false, true, false, true);
+     * // Returns: [java.util.List, java.util.Collection, java.lang.Iterable,
+     * //           java.util.RandomAccess, java.lang.Cloneable, java.io.Serializable]
+     *
+     * // Find the type itself and all its superclasses
+     * List<Class<?>> selfAndSuper = ClassUtils.findTypes(String.class, true, true, true, false);
+     * // Returns: [java.lang.String, java.lang.Object]
+     *
+     * // Null input returns empty list
+     * List<Class<?>> nullResult = ClassUtils.findTypes(null, true, true, true, true);
+     * // Returns: []
+     * }</pre>
+     *
+     * @param type                     the specified type to find related types for, may be {@code null}
+     * @param includeSelf              whether to include the type itself in the results
+     * @param includeHierarchicalTypes whether to include superclasses in the results
+     * @param includeGenericSuperclass whether to include the direct generic superclass in the results
+     * @param includeGenericInterfaces whether to include interfaces in the results
+     * @param typeFilters              optional filters to apply to the results
+     * @return a non-null, read-only {@link List} of classes based on the specified criteria
+     * @see TypeFinder#classFinder(Class, boolean, boolean, boolean, boolean)
+     */
     @Nonnull
     @Immutable
-    protected static List<Class<?>> findTypes(Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes,
+    protected static List<Class<?>> findTypes(@Nullable Class<?> type, boolean includeSelf, boolean includeHierarchicalTypes,
                                               boolean includeGenericSuperclass, boolean includeGenericInterfaces,
-                                              Predicate<? super Class<?>>... typeFilters) {
+                                              @Nullable Predicate<? super Class<?>>... typeFilters) {
         if (type == null || isPrimitive(type)) {
             return emptyList();
         }
@@ -767,13 +1420,26 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * the semantics is same as {@link Class#isAssignableFrom(Class)}
+     * Checks if the {@code superType} is assignable from the {@code targetType}.
+     * <p>
+     * This method is a null-safe variant of {@link Class#isAssignableFrom(Class)}.
+     * It returns {@code false} if either of the arguments is {@code null}.
+     * </p>
      *
-     * @param superType  the super type
-     * @param targetType the target type
-     * @return see {@link Class#isAssignableFrom(Class)}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isAssignableFrom(List.class, ArrayList.class);  // returns true
+     * boolean result2 = ClassUtils.isAssignableFrom(String.class, Object.class);   // returns false
+     * boolean result3 = ClassUtils.isAssignableFrom(null, String.class);           // returns false
+     * boolean result4 = ClassUtils.isAssignableFrom(String.class, null);           // returns false
+     * }</pre>
+     *
+     * @param superType  the super type to check against, may be {@code null}
+     * @param targetType the target type to check, may be {@code null}
+     * @return {@code true} if {@code superType} is assignable from {@code targetType}, {@code false} otherwise
+     * @see Class#isAssignableFrom(Class)
      */
-    public static boolean isAssignableFrom(Class<?> superType, Class<?> targetType) {
+    public static boolean isAssignableFrom(@Nullable Class<?> superType, @Nullable Class<?> targetType) {
         // any argument is null
         if (superType == null || targetType == null) {
             return false;
@@ -791,6 +1457,7 @@ public abstract class ClassUtils implements Utils {
      *
      * @see #getClass(Object)
      */
+    @Nullable
     public static Class<?> getType(@Nullable Object value) {
         return getClass(value);
     }
@@ -817,6 +1484,7 @@ public abstract class ClassUtils implements Utils {
      * @return the Class of the given object, or {@code null} if the object is {@code null}
      * @see Object#getClass()
      */
+    @Nullable
     public static Class<?> getClass(@Nullable Object object) {
         return object == null ? null : object.getClass();
     }
@@ -826,40 +1494,87 @@ public abstract class ClassUtils implements Utils {
      *
      * @see #getTypes(Object...)
      */
-    public static Class[] getTypes(Object... values) {
+    @Nonnull
+    public static Class[] getTypes(@Nullable Object... values) {
         return getClasses(values);
     }
 
     /**
-     * Get the types of the specified values
+     * Get the {@link Class types} of the specified values
      *
      * @param values the values
      * @return If can't be resolved, return {@link ArrayUtils#EMPTY_CLASS_ARRAY empty class array}
      */
-    public static Class<?>[] getClasses(Object... values) {
-
+    @Nonnull
+    public static Class<?>[] getClasses(@Nullable Object... values) {
         if (isEmpty(values)) {
             return EMPTY_CLASS_ARRAY;
         }
-
         int size = values.length;
-
         Class<?>[] types = new Class[size];
-
         for (int i = 0; i < size; i++) {
             types[i] = getClass(values[i]);
         }
-
         return types;
     }
 
     /**
-     * Get the name of the specified type
+     * Gets the type name of the given object.
+     * <p>
+     * This method returns the fully qualified name of the class of the specified object.
+     * If the object is {@code null}, this method returns {@code null}.
+     * </p>
      *
-     * @param type the specified type
-     * @return non-null
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String str = "Hello";
+     * String typeName = ClassUtils.getTypeName(str);
+     * System.out.println(typeName); // prints: java.lang.String
+     *
+     * Object obj = null;
+     * String nullTypeName = ClassUtils.getTypeName(obj);
+     * System.out.println(nullTypeName); // prints: null
+     * }</pre>
+     *
+     * @param value the object to get the type name from, may be {@code null}
+     * @return the fully qualified name of the class of the given object, or {@code null} if the object is {@code null}
+     * @see #getTypeName(Class)
      */
-    public static String getTypeName(Class<?> type) {
+    @Nullable
+    public static String getTypeName(@Nullable Object value) {
+        return getTypeName(getClass(value));
+    }
+
+    /**
+     * Gets the type name of the given class.
+     * <p>
+     * This method returns the fully qualified name of the specified class.
+     * For array types, it returns the component type name followed by the appropriate
+     * number of square brackets ("[]"). If the class is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String typeName = ClassUtils.getTypeName(String.class);
+     * System.out.println(typeName); // prints: java.lang.String
+     *
+     * String arrayTypeName = ClassUtils.getTypeName(int[].class);
+     * System.out.println(arrayTypeName); // prints: int[]
+     *
+     * String nullTypeName = ClassUtils.getTypeName(null);
+     * System.out.println(nullTypeName); // prints: null
+     * }</pre>
+     *
+     * @param type the class to get the type name from, may be {@code null}
+     * @return the fully qualified name of the given class, or {@code null} if the class is {@code null}
+     * @see Class#getName()
+     * @see Class#getComponentType()
+     */
+    @Nullable
+    public static String getTypeName(@Nullable Class<?> type) {
+        if (type == null) {
+            return null;
+        }
         if (type.isArray()) {
             try {
                 Class<?> cl = type;
@@ -882,16 +1597,38 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Get the simple name of the specified type
+     * Gets the simple name of the given class.
+     * <p>
+     * This method returns the simple name of the specified class as defined in the Java Language Specification.
+     * For array types, it returns the component type's simple name followed by the appropriate number of square brackets ("[]").
+     * If the class is {@code null}, this method returns {@code null}.
+     * </p>
      *
-     * @param type the specified type
-     * @return non-null
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String simpleName = ClassUtils.getSimpleName(String.class);
+     * System.out.println(simpleName); // prints: String
+     *
+     * String arraySimpleName = ClassUtils.getSimpleName(int[].class);
+     * System.out.println(arraySimpleName); // prints: int[]
+     *
+     * String nullSimpleName = ClassUtils.getSimpleName(null);
+     * System.out.println(nullSimpleName); // prints: null
+     * }</pre>
+     *
+     * @param type the class to get the simple name from, may be {@code null}
+     * @return the simple name of the given class, or {@code null} if the class is {@code null}
+     * @see Class#getSimpleName()
+     * @see #getSimpleName(Class, boolean)
      */
-    public static String getSimpleName(Class<?> type) {
+    @Nullable
+    public static String getSimpleName(@Nullable Class<?> type) {
+        if (type == null) {
+            return null;
+        }
         boolean array = type.isArray();
         return getSimpleName(type, array);
     }
-
 
     private static String getSimpleName(Class<?> type, boolean array) {
         if (array) {
@@ -920,19 +1657,47 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * the semantics is same as {@link Class#isAssignableFrom(Class)}
+     * Checks if the {@code targetType} is derived from any of the specified {@code superTypes}.
+     * <p>
+     * This method returns {@code true} if the {@code targetType} is assignable from any of the
+     * {@code superTypes}, meaning that {@code targetType} is the same as, or is a subclass or
+     * subinterface of, any of the {@code superTypes}. It returns {@code false} if {@code targetType}
+     * is {@code null}, if {@code superTypes} is empty, or if none of the {@code superTypes} are
+     * assignable from {@code targetType}.
+     * </p>
      *
-     * @param targetType the target type
-     * @param superTypes the super types
-     * @return see {@link Class#isAssignableFrom(Class)}
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isDerived(ArrayList.class, List.class, Collection.class);
+     * // returns true because ArrayList implements List and Collection
+     *
+     * boolean result2 = ClassUtils.isDerived(String.class, Number.class);
+     * // returns false because String does not implement or extend Number
+     *
+     * boolean result3 = ClassUtils.isDerived(null, Object.class);
+     * // returns false because targetType is null
+     *
+     * boolean result4 = ClassUtils.isDerived(String.class);
+     * // returns false because superTypes is empty
+     * }</pre>
+     *
+     * @param targetType the target type to check, may be {@code null}
+     * @param superTypes the super types to check against, may be {@code null} or empty
+     * @return {@code true} if {@code targetType} is derived from any of the {@code superTypes},
+     * {@code false} otherwise
+     * @see #isAssignableFrom(Class, Class)
      */
-    public static boolean isDerived(Class<?> targetType, Class<?>... superTypes) {
-        // any argument is null
-        if (superTypes == null || superTypes.length == 0 || targetType == null) {
+    public static boolean isDerived(@Nullable Class<?> targetType, @Nullable Class<?>... superTypes) {
+        if (targetType == null) { // any argument is null
+            return false;
+        }
+        int length = length(superTypes);
+        if (length == 0) { // superTypes is empty
             return false;
         }
         boolean derived = false;
-        for (Class<?> superType : superTypes) {
+        for (int i = 0; i < length; i++) {
+            Class<?> superType = superTypes[i];
             if (isAssignableFrom(superType, targetType)) {
                 derived = true;
                 break;
@@ -941,7 +1706,41 @@ public abstract class ClassUtils implements Utils {
         return derived;
     }
 
-    public static <T> T newInstance(Class<T> type, Object... args) {
+    /**
+     * Creates a new instance of the specified class by finding a suitable constructor
+     * that matches the provided arguments and invoking it.
+     *
+     * <p>This method searches for a declared constructor in the given class that
+     * matches the number and types of the provided arguments. It handles primitive
+     * types by resolving their wrapper types for comparison. If no matching constructor
+     * is found, an {@link IllegalArgumentException} is thrown. If a matching constructor
+     * is found, it is invoked using {@link ConstructorUtils#newInstance(Constructor, Object...)}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Creating an instance of a class with a parameterized constructor
+     * MyClass instance = ClassUtils.newInstance(MyClass.class, "example", 42);
+     *
+     * // Creating an instance of a class with a no-arg constructor
+     * MyClass instance2 = ClassUtils.newInstance(MyClass.class);
+     *
+     * // This will throw an IllegalArgumentException if no matching constructor exists
+     * try {
+     *     ClassUtils.newInstance(MyClass.class, "invalid", "arguments");
+     * } catch (IllegalArgumentException e) {
+     *     System.out.println("No matching constructor found: " + e.getMessage());
+     * }
+     * }</pre>
+     *
+     * @param type the class of which to create a new instance
+     * @param args the arguments to pass to the constructor
+     * @param <T>  the type of the object to create
+     * @return a new instance of the specified class
+     * @throws IllegalArgumentException if no constructor matching the provided arguments is found
+     * @see ConstructorUtils#newInstance(Constructor, Object...)
+     */
+    @Nonnull
+    public static <T> T newInstance(@Nonnull Class<T> type, Object... args) {
         int length = length(args);
 
         List<Constructor<?>> constructors = findDeclaredConstructors(type, constructor -> {
@@ -971,16 +1770,84 @@ public abstract class ClassUtils implements Utils {
         return ConstructorUtils.newInstance(constructor, args);
     }
 
-    public static Class<?> getTopComponentType(Object array) {
-        return array == null ? null : getTopComponentType(array.getClass());
+    /**
+     * Gets the top-level component type of the given array object.
+     * <p>
+     * This method recursively retrieves the component type of an array until it reaches
+     * the base (non-array) type. For example, for a 2D array {@code int[][]}, this method
+     * will return {@code int.class}. If the input is not an array or is {@code null},
+     * this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * int[] array1D = {1, 2, 3};
+     * Class<?> componentType1 = ClassUtils.getTopComponentType(array1D);
+     * // Returns: int.class
+     *
+     * int[][] array2D = {{1, 2}, {3, 4}};
+     * Class<?> componentType2 = ClassUtils.getTopComponentType(array2D);
+     * // Returns: int.class
+     *
+     * String[] stringArray = {"a", "b"};
+     * Class<?> componentType3 = ClassUtils.getTopComponentType(stringArray);
+     * // Returns: String.class
+     *
+     * Object nonArray = "not an array";
+     * Class<?> componentType4 = ClassUtils.getTopComponentType(nonArray);
+     * // Returns: null
+     *
+     * Class<?> componentType5 = ClassUtils.getTopComponentType(null);
+     * // Returns: null
+     * }</pre>
+     *
+     * @param array the array object to get the top-level component type from, may be {@code null}
+     * @return the top-level component type of the array, or {@code null} if the input is not an array or is {@code null}
+     * @see #getTopComponentType(Class)
+     */
+    @Nullable
+    public static Class<?> getTopComponentType(@Nullable Object array) {
+        return getTopComponentType(getClass(array));
     }
 
-    public static Class<?> getTopComponentType(Class<?> arrayType) {
+    /**
+     * Gets the top-level component type of the given array type.
+     * <p>
+     * This method recursively retrieves the component type of an array until it reaches
+     * the base (non-array) type. For example, for a 2D array {@code int[][]}, this method
+     * will return {@code int.class}. If the input is not an array or is {@code null},
+     * this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> componentType1 = ClassUtils.getTopComponentType(int[].class);
+     * // Returns: int.class
+     *
+     * Class<?> componentType2 = ClassUtils.getTopComponentType(int[][].class);
+     * // Returns: int.class
+     *
+     * Class<?> componentType3 = ClassUtils.getTopComponentType(String[].class);
+     * // Returns: String.class
+     *
+     * Class<?> componentType4 = ClassUtils.getTopComponentType(String.class);
+     * // Returns: null
+     *
+     * Class<?> componentType5 = ClassUtils.getTopComponentType(null);
+     * // Returns: null
+     * }</pre>
+     *
+     * @param arrayType the array type to get the top-level component type from, may be {@code null}
+     * @return the top-level component type of the array, or {@code null} if the input is not an array or is {@code null}
+     * @see #isArray(Class)
+     * @see Class#getComponentType()
+     */
+    @Nullable
+    public static Class<?> getTopComponentType(@Nullable Class<?> arrayType) {
         if (!isArray(arrayType)) {
             return null;
         }
         Class<?> targetType = null;
-
         Class<?> componentType = arrayType.getComponentType();
 
         while (componentType != null) {
@@ -992,51 +1859,49 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
-     * Cast the given object to the specified type
+     * Casts the given object to the specified type if possible.
+     * <p>
+     * This method checks if the provided object is an instance of the target cast type.
+     * If it is, the object is cast to the target type and returned. Otherwise, {@code null} is returned.
+     * This method is null-safe and will return {@code null} if either the object or the cast type is {@code null}.
+     * </p>
      *
-     * @param object   the object
-     * @param castType the type to cast
-     * @param <T>      the type to cast
-     * @return the casted instance if and only if <code>object</code> is an instance of <code>castType</code> ,
-     * <code>null</code> otherwise
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String str = "Hello";
+     * CharSequence charSeq = ClassUtils.cast(str, CharSequence.class);
+     * // Returns: "Hello" as CharSequence
+     *
+     * Integer num = 42;
+     * String strNum = ClassUtils.cast(num, String.class);
+     * // Returns: null (Integer is not an instance of String)
+     *
+     * Object nullObj = null;
+     * String nullResult = ClassUtils.cast(nullObj, String.class);
+     * // Returns: null (object is null)
+     *
+     * String str2 = "World";
+     * String result = ClassUtils.cast(str2, null);
+     * // Returns: null (castType is null)
+     * }</pre>
+     *
+     * @param object   the object to cast, may be {@code null}
+     * @param castType the type to cast the object to, may be {@code null}
+     * @param <T>      the type to cast to
+     * @return the casted object if it is an instance of the cast type, or {@code null} if the object
+     * is not an instance of the cast type, or if either the object or cast type is {@code null}
+     * @see Class#isInstance(Object)
+     * @see Class#cast(Object)
      */
-    public static <T> T cast(Object object, Class<T> castType) {
+    @Nullable
+    public static <T> T cast(@Nullable Object object, @Nullable Class<T> castType) {
         if (object == null || castType == null) {
             return null;
         }
         return castType.isInstance(object) ? castType.cast(object) : null;
     }
 
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents an annotation type; false otherwise
-     * @see Class#isAnnotation()
-     * @see io.microsphere.reflect.Modifier#ANNOTATION
-     */
-    static boolean isAnnotation(int modifiers) {
-        return ANNOTATION.matches(modifiers);
-    }
-
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents an enumeration type; false otherwise
-     * @see Class#isEnum()
-     * @see io.microsphere.reflect.Modifier#ENUM
-     */
-    static boolean isEnum(int modifiers) {
-        return ENUM.matches(modifiers);
-    }
-
-    /**
-     * @param modifiers {@link Class#getModifiers()}
-     * @return true if this class's modifiers represents a synthetic type; false otherwise
-     * @see Class#isSynthetic()
-     * @see io.microsphere.reflect.Modifier#SYNTHETIC
-     */
-    static boolean isSynthetic(int modifiers) {
-        return SYNTHETIC.matches(modifiers);
-    }
-
     private ClassUtils() {
     }
+
 }
