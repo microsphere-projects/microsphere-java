@@ -511,6 +511,44 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
+     * Checks if the specified object is a simple type.
+     * <p>
+     * A simple type is defined as one of the following:
+     * <ul>
+     *   <li>{@link Void}</li>
+     *   <li>{@link Boolean}</li>
+     *   <li>{@link Character}</li>
+     *   <li>{@link Byte}</li>
+     *   <li>{@link Short}</li>
+     *   <li>{@link Integer}</li>
+     *   <li>{@link Long}</li>
+     *   <li>{@link Float}</li>
+     *   <li>{@link Double}</li>
+     *   <li>{@link String}</li>
+     *   <li>{@link BigDecimal}</li>
+     *   <li>{@link BigInteger}</li>
+     *   <li>{@link Date}</li>
+     *   <li>{@link Object}</li>
+     * </ul>
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isSimpleType("Hello");  // returns true
+     * boolean result2 = ClassUtils.isSimpleType(123);      // returns true
+     * boolean result3 = ClassUtils.isSimpleType(new ArrayList<>()); // returns false
+     * boolean result4 = ClassUtils.isSimpleType(null);     // returns false
+     * }</pre>
+     *
+     * @param object the object to check, may be {@code null}
+     * @return {@code true} if the specified object is a simple type, {@code false} otherwise
+     * @see #isSimpleType(Class)
+     */
+    public static boolean isSimpleType(@Nullable Object object) {
+        return isSimpleType(getClass(object));
+    }
+
+    /**
      * Checks if the specified type is a simple type.
      * <p>
      * A simple type is defined as one of the following:
