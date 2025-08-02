@@ -17,6 +17,8 @@
 
 package io.microsphere.test;
 
+import java.util.Arrays;
+
 /**
  * Data Model
  *
@@ -133,5 +135,22 @@ public class Data {
 
     public void setNames(String[] names) {
         this.names = names;
+    }
+
+    @Override
+    public String toString() {
+        return "Data{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", male=" + male +
+                ", height=" + height +
+                ", weight=" + weight +
+                ", birth=" + birth +
+                ", index=" + index +
+                ", grade=" + grade +
+                ", sex=" + sex +
+                ", object=" + object +
+                ", names=" + Arrays.toString(names) +
+                '}';
     }
 }
