@@ -20,7 +20,6 @@ import io.microsphere.json.JSONStringer.Scope;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import static io.microsphere.json.JSON.checkDouble;
@@ -91,7 +90,7 @@ public class JSONArray {
      */
     /* Accept a raw type for API compatibility */
     @SuppressWarnings("rawtypes")
-    public JSONArray(Collection copyFrom) {
+    public JSONArray(Iterable<?> copyFrom) {
         this();
         if (copyFrom != null) {
             for (Object value : copyFrom) {
