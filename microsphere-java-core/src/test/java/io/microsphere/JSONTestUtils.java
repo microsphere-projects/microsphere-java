@@ -18,6 +18,7 @@
 package io.microsphere;
 
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.json.JSONException;
 import io.microsphere.json.JSONObject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class JSONTestUtils {
 
-    public static void assertConfigurationPropertyJSON(String json) throws Throwable {
+    public static void assertConfigurationPropertyJSON(String json) throws JSONException {
         JSONObject jsonObject = new JSONObject(json);
         assertEquals("server.port", jsonObject.getString("name"));
         assertEquals("java.lang.Integer", jsonObject.getString("type"));
