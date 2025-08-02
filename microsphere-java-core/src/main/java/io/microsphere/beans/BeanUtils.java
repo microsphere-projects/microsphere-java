@@ -24,32 +24,30 @@ import io.microsphere.collection.MapUtils;
 import io.microsphere.lang.MutableInteger;
 import io.microsphere.util.Utils;
 
-import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.MapUtils.isMap;
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
-import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.MutableInteger.of;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isSimpleType;
-import static io.microsphere.util.StringUtils.uncapitalize;
-import static java.beans.Introspector.getBeanInfo;
 import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
 import static java.lang.reflect.Array.get;
@@ -88,7 +86,7 @@ public abstract class BeanUtils implements Utils {
     /**
      * The default maximum levels of resolving properties of a bean, default is 100
      */
-    public static final int DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_LEVELS = parseInt(DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE);
+    public static final int DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = parseInt(DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE);
 
     /**
      * The maximum levels of resolving properties of a bean, default is 100
@@ -99,7 +97,34 @@ public abstract class BeanUtils implements Utils {
             description = "The maximum depth of resolving properties of a bean in order to avoid stack overflow, " +
                     "default is " + DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE
     )
-    public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME, DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_LEVELS);
+    public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME, DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH);
+
+    /**
+     * The property value of default cache size of {@link BeanMetadata}, default value : "64"
+     */
+    static final String BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE = "64";
+
+    /**
+     * The default cache size of {@link BeanMetadata}, default value : 64
+     */
+    public static final int DEFAULT_BEAN_METADATA_CACHE_SIZE = parseInt(BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE);
+
+    /**
+     * The property name of cache size of {@link BeanMetadata} :  "microsphere.bean.metadata.cache.size"
+     */
+    public static final String BEAN_METADATA_CACHE_SIZE_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "bean.metadata.cache.size";
+
+    /**
+     * The cache size of {@link BeanMetadata}
+     */
+    @ConfigurationProperty(
+            name = BEAN_METADATA_CACHE_SIZE_PROPERTY_NAME,
+            defaultValue = BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE,
+            description = "The cache size of BeanMetadata, default is " + BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE
+    )
+    public static final int BEAN_METADATA_CACHE_SIZE = getInteger(BEAN_METADATA_CACHE_SIZE_PROPERTY_NAME, DEFAULT_BEAN_METADATA_CACHE_SIZE);
+
+    private static final ConcurrentMap<Class<?>, BeanMetadata> beanMetadataCache = newConcurrentHashMap(BEAN_METADATA_CACHE_SIZE);
 
     /**
      * Resolves the properties of a given Java Bean and returns them as a {@link Map}.
@@ -226,6 +251,18 @@ public abstract class BeanUtils implements Utils {
     }
 
     /**
+     * Get the {@link BeanMetadata} for the specified {@link Class}.
+     *
+     * @param beanClass the specified {@link Class}
+     * @return non-null
+     * @throws RuntimeException if an exception occurs during introspection
+     */
+    @Nonnull
+    public static BeanMetadata getBeanMetadata(Class<?> beanClass) throws RuntimeException {
+        return beanMetadataCache.computeIfAbsent(beanClass, BeanMetadata::of);
+    }
+
+    /**
      * Resolves the properties of a given Java Bean recursively up to a specified maximum depth,
      * tracking the current depth with a {@link MutableInteger}, and returns them as a {@link Map}.
      * <p>
@@ -307,12 +344,12 @@ public abstract class BeanUtils implements Utils {
         }
 
         Class<?> beanClass = bean.getClass();
-        Map<String, Object> propertiesMap = newHashMap();
-        BeanInfo beanInfo = execute(() -> getBeanInfo(beanClass, Object.class));
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < propertyDescriptors.length; i++) {
-            PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-            String propertyName = uncapitalize(propertyDescriptor.getName());
+        BeanMetadata beanMetadata = getBeanMetadata(beanClass);
+        Map<String, PropertyDescriptor> propertyDescriptorsMap = beanMetadata.getPropertyDescriptorsMap();
+        Map<String, Object> propertiesMap = newFixedHashMap(propertyDescriptorsMap.size());
+        for (Map.Entry<String, PropertyDescriptor> entry : propertyDescriptorsMap.entrySet()) {
+            String propertyName = entry.getKey();
+            PropertyDescriptor propertyDescriptor = entry.getValue();
             Object propertyValue = resolveProperty(bean, propertyDescriptor, resolvedDepth, maxResolvedDepth);
             propertiesMap.put(propertyName, propertyValue);
         }
