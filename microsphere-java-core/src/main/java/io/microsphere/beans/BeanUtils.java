@@ -388,7 +388,7 @@ public abstract class BeanUtils implements Utils {
             List<Object> values = newArrayList(length);
             for (int i = 0; i < length; i++) {
                 Object element = get(resolvedValue, i);
-                values.add(i, resolvePropertiesAsMap(element));
+                values.add(i, resolveProperty(element, resolvedDepth, maxResolvedDepth));
             }
         } else if (isList(valueType)) {
             List<?> list = (List<?>) resolvedValue;
