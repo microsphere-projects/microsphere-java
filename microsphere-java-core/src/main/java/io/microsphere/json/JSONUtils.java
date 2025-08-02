@@ -18,6 +18,7 @@
 package io.microsphere.json;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.lang.reflect.Type;
@@ -35,6 +36,7 @@ import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
+import static io.microsphere.json.JSONObject.wrap;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
@@ -439,6 +441,35 @@ public abstract class JSONUtils implements Utils {
     }
 
     /**
+     * Converts an object into its JSON string representation.
+     * <p>
+     * This method takes an object, wraps it using {@link JSONObject#wrap(Object)},
+     * and then converts it to a JSON string if it is a {@link JSONObject} or {@link JSONArray}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String jsonString = JSONUtils.writeValueAsString(Map.of("name", "John", "age", 30));
+     * // Result: {"name":"John","age":30}
+     *
+     * String arrayJson = JSONUtils.writeValueAsString(new String[]{"apple", "banana"});
+     * // Result: ["apple","banana"]
+     * }</pre>
+     *
+     * @param object the object to be converted to a JSON string.
+     * @return a JSON string representation of the given object, or {@code null} if conversion is not possible.
+     * @see JSONObject#wrap(Object)
+     */
+    @Nullable
+    public static String writeValueAsString(Object object) {
+        Object wrapper = wrap(object);
+        if (wrapper instanceof JSONObject || wrapper instanceof JSONArray) {
+            return wrapper.toString();
+        }
+        return null;
+    }
+
+    /**
      * Converts a JavaBean object into its JSON string representation.
      * <p>
      * This method takes a JavaBean object, resolves its properties into a map,
@@ -468,7 +499,7 @@ public abstract class JSONUtils implements Utils {
      * @throws IllegalArgumentException if the input object is null.
      */
     @Nonnull
-    public static String writeJavaBeanAsString(Object javaBean) {
+    public static String writeBeanAsString(Object javaBean) {
         Map<String, Object> properties = resolvePropertiesAsMap(javaBean);
         JSONObject jsonObject = new JSONObject(properties);
         return jsonObject.toString();
