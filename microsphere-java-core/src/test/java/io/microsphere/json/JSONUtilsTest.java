@@ -22,6 +22,7 @@ import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
@@ -29,7 +30,8 @@ import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.json.JSONUtils.append;
-import static io.microsphere.json.JSONUtils.writeJavaBeanAsString;
+import static io.microsphere.json.JSONUtils.writeBeanAsString;
+import static io.microsphere.json.JSONUtils.writeValueAsString;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -39,6 +41,7 @@ import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link JSONUtils} Test
@@ -326,9 +329,42 @@ class JSONUtilsTest {
     }
 
     @Test
-    void testWriteJavaBeanAsString() throws Throwable {
+    void testWriteValueAsStringWithJavaBean() throws JSONException {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
-        String json = writeJavaBeanAsString(configurationProperty);
+        String json = writeValueAsString(configurationProperty);
+        assertConfigurationPropertyJSON(json);
+    }
+
+    @Test
+    void testWriteValueAsStringWithMap() {
+        Map<String, Object> map = ofMap("key1", "value1", "key2", 2);
+        String json = writeValueAsString(map);
+        assertEquals(new JSONObject(map).toString(), json);
+    }
+
+    @Test
+    void testWriteValueAsStringWithArray() throws JSONException {
+        Object array = ofArray("value1", "value2");
+        String json = writeValueAsString(array);
+        assertEquals(new JSONArray(array).toString(), json);
+    }
+
+    @Test
+    void testWriteValueAsStringWith() {
+        String json = writeValueAsString("Hello");
+        assertNull(json);
+    }
+
+    @Test
+    void testWriteValueAsStringWithNull() {
+        String json = writeValueAsString(null);
+        assertNull(json);
+    }
+
+    @Test
+    void testWriteBeanAsString() throws JSONException {
+        ConfigurationProperty configurationProperty = newConfigurationProperty();
+        String json = writeBeanAsString(configurationProperty);
         assertConfigurationPropertyJSON(json);
     }
 
