@@ -21,6 +21,7 @@ package io.microsphere.metadata;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.json.JSONArray;
+import io.microsphere.json.JSONException;
 import io.microsphere.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,14 +51,14 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
     }
 
     @Test
-    void testGenerate() throws Throwable {
+    void testGenerate() throws JSONException {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = generator.generate(configurationProperty);
         assertConfigurationPropertyJSON(json);
     }
 
     @Test
-    void testGenerateWithConfigurationProperty() throws Throwable {
+    void testGenerateWithConfigurationProperty() throws JSONException {
         ConfigurationProperty configurationProperty = new ConfigurationProperty("server.port", Integer.class);
         String json = generator.generate(configurationProperty);
         JSONObject jsonObject = new JSONObject(json);
@@ -100,7 +101,7 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
     }
 
     @Test
-    void testGenerateWithMetadata() throws Throwable {
+    void testGenerateWithMetadata() throws JSONException {
         Metadata metadata = new Metadata();
         String json = generator.generate(metadata);
         JSONObject jsonObject = new JSONObject(json);
