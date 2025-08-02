@@ -62,6 +62,7 @@ import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.ClassUtils.isDerived;
+import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isFinal;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
 import static io.microsphere.util.ClassUtils.isNumber;
@@ -75,6 +76,7 @@ import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
+import static java.lang.Thread.State.NEW;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -273,7 +275,17 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsCharSequence() {
+    void testIsCharSequenceWithObject() {
+        assertTrue(isCharSequence(new StringBuilder()));
+        assertTrue(isCharSequence(new StringBuffer()));
+        assertTrue(isCharSequence(new String()));
+
+        assertFalse(isCharSequence(new Object()));
+        assertFalse(isCharSequence(null));
+    }
+
+    @Test
+    void testIsCharSequenceWithType() {
         assertTrue(isCharSequence(CharSequence.class));
         assertTrue(isCharSequence(String.class));
         assertTrue(isCharSequence(StringBuilder.class));
@@ -285,7 +297,20 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsNumber() {
+    void testIsNumberWithObject() {
+        assertTrue(isNumber(new Integer(1)));
+        assertTrue(isNumber(new Long(1L)));
+        assertTrue(isNumber(new Float(1.0f)));
+        assertTrue(isNumber(new Double(1.0d)));
+        assertTrue(isNumber(new BigDecimal("1.0")));
+        assertTrue(isNumber(new BigInteger("1")));
+
+        assertFalse(isNumber(new ClassUtilsTest()));
+        assertFalse(isNumber(null));
+    }
+
+    @Test
+    void testIsNumberWithType() {
         assertTrue(isNumber(Number.class));
         assertTrue(isNumber(Byte.class));
         assertTrue(isNumber(Short.class));
@@ -305,6 +330,22 @@ class ClassUtilsTest extends AbstractTestCase {
         assertTrue(isClass(String.class));
         assertFalse(isClass("Hello"));
         assertFalse(isClass(null));
+    }
+
+    @Test
+    void testIsEnumWithObject() {
+        assertTrue(isEnum(NEW));
+
+        assertFalse(isEnum("NEW"));
+        assertFalse(isEnum((Object) null));
+    }
+
+    @Test
+    void testIsEnumWithClass() {
+        assertTrue(isEnum(Thread.State.class));
+
+        assertFalse(isEnum(String.class));
+        assertFalse(isEnum(null));
     }
 
     @Test
@@ -553,7 +594,7 @@ class ClassUtilsTest extends AbstractTestCase {
         assertEquals("io.microsphere.collection.DefaultEntry", getTypeName(ofEntry("Key", "Value")));
 
         // c) Inner classes (non-static member classes)
-        assertEquals("java.lang.Thread$State", getTypeName(Thread.State.NEW));
+        assertEquals("java.lang.Thread$State", getTypeName(NEW));
 
         // d) Local classes (named classes declared within a method)
         class LocalClass {
@@ -726,7 +767,8 @@ class ClassUtilsTest extends AbstractTestCase {
         assertEquals("test", cast("test", CharSequence.class));
     }
 
-    private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
+    private void assertFindClassNamesMethod
+            (Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
         // Null
         assertSame(emptySet(), findClassNamesFunction.apply(null, true));
 
