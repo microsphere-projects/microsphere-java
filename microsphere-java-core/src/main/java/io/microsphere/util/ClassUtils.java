@@ -52,7 +52,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.reflect.ConstructorUtils.findDeclaredConstructors;
 import static io.microsphere.reflect.Modifier.isAnnotation;
-import static io.microsphere.reflect.Modifier.isEnum;
 import static io.microsphere.reflect.Modifier.isSynthetic;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -410,7 +409,7 @@ public abstract class ClassUtils implements Utils {
 
         int mod = type.getModifiers();
         if (isAnnotation(mod)
-                || isEnum(mod)
+                || io.microsphere.reflect.Modifier.isEnum(mod)
                 || isInterface(mod)
                 || isSynthetic(mod)
                 || isPrimitive(type)
@@ -586,6 +585,25 @@ public abstract class ClassUtils implements Utils {
     }
 
     /**
+     * Checks if the given object is an instance of {@link CharSequence}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isCharSequence("Hello");     // returns true
+     * boolean result2 = ClassUtils.isCharSequence(new StringBuilder("World")); // returns true
+     * boolean result3 = ClassUtils.isCharSequence(123);         // returns false
+     * boolean result4 = ClassUtils.isCharSequence(null);        // returns false
+     * }</pre>
+     *
+     * @param value the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link CharSequence}, {@code false} otherwise
+     * @see #isCharSequence(Class)
+     */
+    public static boolean isCharSequence(@Nullable Object value) {
+        return value instanceof CharSequence;
+    }
+
+    /**
      * Checks if the given type is a subtype of {@link CharSequence}.
      *
      * <h3>Example Usage</h3>
@@ -599,6 +617,25 @@ public abstract class ClassUtils implements Utils {
      */
     public static boolean isCharSequence(@Nullable Class<?> type) {
         return isAssignableFrom(CharSequence.class, type);
+    }
+
+    /**
+     * Checks if the given object is an instance of {@link Number}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isNumber(Integer.valueOf(10));  // returns true
+     * boolean result2 = ClassUtils.isNumber(10.5);                 // returns true
+     * boolean result3 = ClassUtils.isNumber("123");                // returns false
+     * boolean result4 = ClassUtils.isNumber(null);                 // returns false
+     * }</pre>
+     *
+     * @param value the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link Number}, {@code false} otherwise
+     * @see #isNumber(Class)
+     */
+    public static boolean isNumber(@Nullable Object value) {
+        return value instanceof Number;
     }
 
     /**
@@ -632,6 +669,50 @@ public abstract class ClassUtils implements Utils {
      */
     public static boolean isClass(@Nullable Object object) {
         return object instanceof Class;
+    }
+
+    /**
+     * Checks if the given object is an instance of {@link Enum}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * enum Color { RED, GREEN, BLUE }
+     *
+     * boolean result1 = ClassUtils.isEnum(Color.RED);  // returns true
+     * boolean result2 = ClassUtils.isEnum("RED");      // returns false
+     * boolean result3 = ClassUtils.isEnum(null);       // returns false
+     * }</pre>
+     *
+     * @param object the object to check, may be {@code null}
+     * @return {@code true} if the object is an instance of {@link Enum}, {@code false} otherwise
+     * @see #isEnum(Class)
+     */
+    public static boolean isEnum(@Nullable Object object) {
+        return object instanceof Enum;
+    }
+
+    /**
+     * Checks if the specified class is an enum.
+     * <p>
+     * This method returns {@code true} if the given class is an enum type,
+     * and {@code false} otherwise. It also returns {@code false} if the class is {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * enum Color { RED, GREEN, BLUE }
+     *
+     * boolean result1 = ClassUtils.isEnum(Color.class);  // returns true
+     * boolean result2 = ClassUtils.isEnum(String.class); // returns false
+     * boolean result3 = ClassUtils.isEnum(null);         // returns false
+     * }</pre>
+     *
+     * @param type the class to check, may be {@code null}
+     * @return {@code true} if the specified class is an enum, {@code false} otherwise
+     * @see Class#isEnum()
+     */
+    public static boolean isEnum(@Nullable Class<?> type) {
+        return type != null && type.isEnum();
     }
 
     /**
@@ -694,6 +775,38 @@ public abstract class ClassUtils implements Utils {
             return primitiveType;
         }
         return PRIMITIVE_TO_WRAPPER_TYPES_MAP.get(primitiveType);
+    }
+
+    /**
+     * Checks if the specified object is a wrapper type.
+     * <p>
+     * A wrapper type is one of the following:
+     * <ul>
+     *   <li>{@link Boolean}</li>
+     *   <li>{@link Character}</li>
+     *   <li>{@link Byte}</li>
+     *   <li>{@link Short}</li>
+     *   <li>{@link Integer}</li>
+     *   <li>{@link Long}</li>
+     *   <li>{@link Float}</li>
+     *   <li>{@link Double}</li>
+     * </ul>
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = ClassUtils.isWrapperType(Integer.valueOf(10));  // returns true
+     * boolean result2 = ClassUtils.isWrapperType(10);                   // returns false (primitive type)
+     * boolean result3 = ClassUtils.isWrapperType("Hello");              // returns false
+     * boolean result4 = ClassUtils.isWrapperType(null);                 // returns false
+     * }</pre>
+     *
+     * @param value the object to check, may be {@code null}
+     * @return {@code true} if the specified object is a wrapper type, {@code false} otherwise
+     * @see #isWrapperType(Class)
+     */
+    public static boolean isWrapperType(@Nullable Object value) {
+        return isWrapperType(getClass(value));
     }
 
     /**
