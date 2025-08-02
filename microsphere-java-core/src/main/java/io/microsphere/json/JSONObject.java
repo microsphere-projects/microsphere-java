@@ -19,7 +19,6 @@ package io.microsphere.json;
 import io.microsphere.json.JSONStringer.Scope;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,6 +32,7 @@ import static io.microsphere.json.JSON.toLong;
 import static io.microsphere.json.JSON.typeMismatch;
 import static io.microsphere.lang.function.ThrowableAction.execute;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static io.microsphere.util.ClassUtils.isArray;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
@@ -851,16 +851,13 @@ public class JSONObject {
         if (o == null) {
             return NULL;
         }
-        if (o instanceof JSONArray || o instanceof JSONObject) {
-            return o;
-        }
-        if (o.equals(NULL)) {
+        if (o instanceof JSONArray || o instanceof JSONObject || o.equals(NULL)) {
             return o;
         }
         try {
-            if (o instanceof Collection) {
-                return new JSONArray((Collection) o);
-            } else if (o.getClass().isArray()) {
+            if (o instanceof Iterable) {
+                return new JSONArray((Iterable) o);
+            } else if (isArray(o.getClass())) {
                 return new JSONArray(o);
             } else if (o instanceof Map) {
                 return new JSONObject((Map) o);
@@ -873,7 +870,7 @@ public class JSONObject {
             } else if (getTypeName(o).startsWith("java.")) {
                 return o.toString();
             } else { // Java Bean
-                return resolvePropertiesAsMap(o);
+                return new JSONObject(resolvePropertiesAsMap(o));
             }
         } catch (Exception ignored) {
         }
