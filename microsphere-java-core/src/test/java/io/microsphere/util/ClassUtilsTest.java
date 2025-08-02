@@ -244,7 +244,15 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsSimpleType() {
+    void testIsSimpleTypeWithObject() {
+        assertTrue(isSimpleType("Hello,World"));
+        assertTrue(isSimpleType(new Integer(1)));
+
+        assertFalse(isSimpleType(new ClassUtilsTest()));
+    }
+
+    @Test
+    void testIsSimpleTypeWithClass() {
         assertTrue(isSimpleType(Void.class));
         assertTrue(isSimpleType(Boolean.class));
         assertTrue(isSimpleType(Character.class));
