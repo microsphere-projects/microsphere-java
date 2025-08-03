@@ -76,6 +76,7 @@ import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
+import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
 import static java.lang.Thread.State.NEW;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -400,6 +401,14 @@ class ClassUtilsTest extends AbstractTestCase {
 
         assertEquals(Double.class, resolveWrapperType(Double.TYPE));
         assertEquals(Double.class, resolveWrapperType(Double.class));
+    }
+
+    @Test
+    void testTryResolveWrapperType() {
+        assertSame(Integer.class, tryResolveWrapperType(int.class));     // returns Integer.class
+        assertSame(Integer.class, tryResolveWrapperType(Integer.class)); // returns Integer.class
+        assertSame(String.class, tryResolveWrapperType(String.class));   // returns String.class
+        assertNull(tryResolveWrapperType(null));             // returns null
     }
 
     @Test
