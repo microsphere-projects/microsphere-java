@@ -19,6 +19,7 @@ package io.microsphere.json;
 
 
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.test.Data;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,7 @@ import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.json.JSONUtils.append;
+import static io.microsphere.json.JSONUtils.readValue;
 import static io.microsphere.json.JSONUtils.writeBeanAsString;
 import static io.microsphere.json.JSONUtils.writeValueAsString;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -326,6 +328,25 @@ class JSONUtilsTest {
         Class<?>[] classes = ofArray(String.class, Integer.class);
         append(jsonBuilder, "name", classes);
         assertEquals("\"name\":[\"java.lang.String\",\"java.lang.Integer\"]", jsonBuilder.toString());
+    }
+
+    @Test
+    void testReadeValue() {
+        Data data = new Data();
+        data.setName("Mercy");
+        data.setAge(18);
+        data.setMale(true);
+        data.setHeight(1.78);
+        data.setWeight(68.5f);
+        data.setBirth(System.currentTimeMillis());
+        data.setIndex((short) 1);
+        data.setGrade((byte) 1);
+        data.setSex('M');
+        data.setObject("Testing");
+        data.setNames(new String[]{"Mercy", "Mercy"});
+        String json = writeValueAsString(data);
+        Data readValue = readValue(json, Data.class);
+        assertEquals(data, readValue);
     }
 
     @Test
