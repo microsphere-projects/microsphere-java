@@ -831,8 +831,7 @@ public abstract class ClassUtils implements Utils {
         }
         return PRIMITIVE_TO_WRAPPER_TYPES_MAP.getOrDefault(type, defaultType);
     }
-
-
+    
     /**
      * Checks if the specified object is a wrapper type.
      * <p>
