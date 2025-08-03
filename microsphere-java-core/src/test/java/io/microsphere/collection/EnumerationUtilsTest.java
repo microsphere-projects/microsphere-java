@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
+import static io.microsphere.collection.EnumerationUtils.isEnumeration;
 import static io.microsphere.collection.EnumerationUtils.of;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,6 +38,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 class EnumerationUtilsTest {
+
+    @Test
+    void testIsEnumerationWithObject() {
+        assertTrue(isEnumeration(of("A", "B", "C")));
+
+        assertFalse(isEnumeration("Hello"));
+        assertFalse(isEnumeration((Object) null));
+    }
+
+    @Test
+    void testIsEnumerationWithClass() {
+        assertTrue(isEnumeration(Enumeration.class));
+
+        assertFalse(isEnumeration(String.class));
+        assertFalse(isEnumeration(null));
+    }
 
     @Test
     void testOf() {
