@@ -771,11 +771,67 @@ public abstract class ClassUtils implements Utils {
      */
     @Nullable
     public static Class<?> resolveWrapperType(@Nullable Class<?> primitiveType) {
-        if (isWrapperType(primitiveType)) {
-            return primitiveType;
-        }
-        return PRIMITIVE_TO_WRAPPER_TYPES_MAP.get(primitiveType);
+        return tryResolveWrapperType(primitiveType, null);
     }
+
+    /**
+     * Attempts to resolve the wrapper type for the given primitive type.
+     * <p>
+     * If the provided type is already a wrapper type, it is returned as-is.
+     * If the provided type is a primitive type (e.g., {@code int}, {@code boolean}),
+     * the corresponding wrapper type (e.g., {@link Integer}, {@link Boolean}) is returned.
+     * If the provided type is neither a primitive nor a wrapper type, the primitive type itself is returned.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> result1 = ClassUtils.tryResolveWrapperType(int.class);      // returns Integer.class
+     * Class<?> result2 = ClassUtils.tryResolveWrapperType(Integer.class);  // returns Integer.class
+     * Class<?> result3 = ClassUtils.tryResolveWrapperType(String.class);   // returns String.class
+     * Class<?> result4 = ClassUtils.tryResolveWrapperType(null);          // returns null
+     * }</pre>
+     *
+     * @param primitiveType the primitive type to resolve, may be {@code null}
+     * @return the corresponding wrapper type if the input is a primitive type,
+     * the input type itself if it is a wrapper type, or the input type itself if it is neither
+     * @see #isWrapperType(Class)
+     * @see #PRIMITIVE_TO_WRAPPER_TYPES_MAP
+     */
+    public static Class<?> tryResolveWrapperType(@Nullable Class<?> primitiveType) {
+        return tryResolveWrapperType(primitiveType, primitiveType);
+    }
+
+    /**
+     * Attempts to resolve the wrapper type for the given primitive type.
+     * <p>
+     * If the provided type is already a wrapper type, it is returned as-is.
+     * If the provided type is a primitive type (e.g., {@code int}, {@code boolean}),
+     * the corresponding wrapper type (e.g., {@link Integer}, {@link Boolean}) is returned.
+     * If the provided type is neither a primitive nor a wrapper type, the specified default type is returned.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> result1 = ClassUtils.tryResolveWrapperType(int.class, Object.class);      // returns Integer.class
+     * Class<?> result2 = ClassUtils.tryResolveWrapperType(Integer.class, Object.class);  // returns Integer.class
+     * Class<?> result3 = ClassUtils.tryResolveWrapperType(String.class, Object.class);   // returns Object.class
+     * Class<?> result4 = ClassUtils.tryResolveWrapperType(null, Object.class);          // returns Object.class
+     * }</pre>
+     *
+     * @param type        the type to resolve, may be {@code null}
+     * @param defaultType the default type to return if the input type is neither primitive nor wrapper type
+     * @return the corresponding wrapper type if the input is a primitive type,
+     * the input type itself if it is a wrapper type, or the specified default type if it is neither
+     * @see #isWrapperType(Class)
+     * @see #PRIMITIVE_TO_WRAPPER_TYPES_MAP
+     */
+    protected static Class<?> tryResolveWrapperType(@Nullable Class<?> type, @Nullable Class<?> defaultType) {
+        if (isWrapperType(type)) {
+            return type;
+        }
+        return PRIMITIVE_TO_WRAPPER_TYPES_MAP.getOrDefault(type, defaultType);
+    }
+
 
     /**
      * Checks if the specified object is a wrapper type.
