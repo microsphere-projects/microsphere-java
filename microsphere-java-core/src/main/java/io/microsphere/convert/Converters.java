@@ -38,7 +38,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * @see Converter
  * @since 1.0.0
  */
-public class Converters implements Utils {
+class Converters implements Utils {
 
     private static final ClassLoader classLoader = getClassLoader(Converters.class);
 
