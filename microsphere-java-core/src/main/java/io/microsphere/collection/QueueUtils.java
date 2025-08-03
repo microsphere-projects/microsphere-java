@@ -18,12 +18,15 @@ package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Queue;
 
 import static io.microsphere.collection.ReversedDeque.of;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
 /**
  * The utilities class for Java {@link Queue}
@@ -52,8 +55,26 @@ public abstract class QueueUtils implements Utils {
      * @return {@code true} if the given {@link Iterable} is a {@link Queue},
      * {@code false} otherwise
      */
-    public static boolean isQueue(Iterable<?> values) {
+    public static boolean isQueue(@Nullable Object values) {
         return values instanceof Queue;
+    }
+
+    /**
+     * Checks whether the specified {@link Class type} is an instance of {@link Queue}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result = isQueue(LinkedList.class); // returns true
+     *
+     * result = isQueue(ArrayList.class); // returns false
+     * }</pre>
+     *
+     * @param type the {@link Class type} to check
+     * @return {@code true} if the given {@link Class type} is a {@link Queue},
+     * {@code false} otherwise
+     */
+    public static boolean isQueue(@Nullable Class<?> type) {
+        return isAssignableFrom(Queue.class, type);
     }
 
     /**
@@ -255,6 +276,44 @@ public abstract class QueueUtils implements Utils {
      */
     public static <E> Deque<E> reversedDeque(Deque<E> deque) {
         return of(deque);
+    }
+
+    /**
+     * Creates a new empty {@link ArrayDeque} instance.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ArrayDeque<String> deque = newArrayDeque();
+     * deque.add("Hello");
+     * deque.add("World");
+     * System.out.println(deque); // prints [Hello, World]
+     * }</pre>
+     *
+     * @param <E> the type of elements held in the deque
+     * @return a new empty {@link ArrayDeque} instance
+     */
+    public static <E> ArrayDeque<E> newArrayDeque() {
+        return new ArrayDeque<>();
+    }
+
+    /**
+     * Creates a new {@link ArrayDeque} instance with the specified initial capacity.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ArrayDeque<String> deque = newArrayDeque(16);
+     * deque.add("Hello");
+     * deque.add("World");
+     * System.out.println(deque); // prints [Hello, World]
+     * }</pre>
+     *
+     * @param <E> the type of elements held in the deque
+     * @param initialCapacity the initial capacity of the deque
+     * @return a new {@link ArrayDeque} instance with the specified initial capacity
+     * @throws IllegalArgumentException if the specified initial capacity is negative
+     */
+    public static <E> ArrayDeque<E> newArrayDeque(int initialCapacity) {
+        return new ArrayDeque<>(initialCapacity);
     }
 
     private QueueUtils() {
