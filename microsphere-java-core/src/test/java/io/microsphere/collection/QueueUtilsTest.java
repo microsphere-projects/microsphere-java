@@ -17,6 +17,7 @@ import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.isDeque;
 import static io.microsphere.collection.QueueUtils.isQueue;
+import static io.microsphere.collection.QueueUtils.newArrayDeque;
 import static io.microsphere.collection.QueueUtils.reversedDeque;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
@@ -48,12 +49,21 @@ class QueueUtilsTest {
     }
 
     @Test
-    void testIsQueue() {
+    void testIsQueueWithObject() {
         assertTrue(isQueue(emptyQueue()));
         assertTrue(isQueue(emptyDeque()));
-        assertFalse(isQueue(null));
+        assertFalse(isQueue((Object) null));
         assertTrue(isQueue(unmodifiableQueue(emptyDeque())));
         assertFalse(isQueue(emptyList()));
+    }
+
+    @Test
+    void testIsQueueWithType() {
+        assertTrue(isQueue(Queue.class));
+        assertTrue(isQueue(Deque.class));
+
+        assertFalse(isQueue(Object.class));
+        assertFalse(isQueue((null)));
     }
 
     @Test
@@ -203,6 +213,18 @@ class QueueUtilsTest {
         assertNotNull(queue.parallelStream());
         queue.forEach(e -> {
         });
+    }
+  
+    @Test
+    void testNewArrayDeque() {
+        Deque<String> deque = newArrayDeque();
+        assertNotNull(deque);
+    }
+
+    @Test
+    void testNewArrayDequeWithCapacity() {
+        Deque<String> deque = newArrayDeque(10);
+        assertNotNull(deque);
     }
 
 }
