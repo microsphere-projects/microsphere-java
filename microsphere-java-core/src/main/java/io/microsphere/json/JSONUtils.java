@@ -19,16 +19,32 @@ package io.microsphere.json;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+import io.microsphere.beans.BeanMetadata;
+import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 
+import static io.microsphere.beans.BeanUtils.getBeanMetadata;
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
+import static io.microsphere.collection.EnumerationUtils.isEnumeration;
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
+import static io.microsphere.collection.ListUtils.isList;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.QueueUtils.isQueue;
+import static io.microsphere.collection.QueueUtils.newArrayDeque;
+import static io.microsphere.collection.SetUtils.isSet;
+import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTE_CHAR;
@@ -36,10 +52,17 @@ import static io.microsphere.constants.SymbolConstants.LEFT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
+import static io.microsphere.convert.Converter.convertIfPossible;
 import static io.microsphere.json.JSONObject.wrap;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
+import static java.lang.reflect.Array.newInstance;
+import static java.lang.reflect.Array.set;
 
 /**
  * Utility class for generating and manipulating JSON strings.
@@ -438,6 +461,179 @@ public abstract class JSONUtils implements Utils {
                     .append(COLON_CHAR);
         }
         return jsonBuilder;
+    }
+
+    /**
+     * Checks if the given object is an instance of {@link JSONObject}.
+     * <p>
+     * This method returns {@code true} if the provided object is an instance of {@link JSONObject},
+     * and {@code false} otherwise. It is useful for type checking before performing operations
+     * specific to {@link JSONObject}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Object obj = new JSONObject();
+     * boolean result = JSONUtils.isJSONObject(obj); // returns true
+     *
+     * Object str = "not a JSONObject";
+     * boolean result2 = JSONUtils.isJSONObject(str); // returns false
+     * }</pre>
+     *
+     * @param value the object to check
+     * @return {@code true} if the object is an instance of {@link JSONObject}, {@code false} otherwise
+     * @see JSONObject
+     */
+    public static boolean isJSONObject(Object value) {
+        return value instanceof JSONObject;
+    }
+
+    /**
+     * Checks if the given object is an instance of {@link JSONArray}.
+     * <p>
+     * This method returns {@code true} if the provided object is an instance of {@link JSONArray},
+     * and {@code false} otherwise. It is useful for type checking before performing operations
+     * specific to {@link JSONArray}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Object obj = new JSONArray();
+     * boolean result = JSONUtils.isJSONArray(obj); // returns true
+     *
+     * Object str = "not a JSONArray";
+     * boolean result2 = JSONUtils.isJSONArray(str); // returns false
+     * }</pre>
+     *
+     * @param value the object to check
+     * @return {@code true} if the object is an instance of {@link JSONArray}, {@code false} otherwise
+     * @see JSONArray
+     */
+    public static boolean isJSONArray(Object value) {
+        return value instanceof JSONArray;
+    }
+
+
+    public static <V> V readValue(String json, Class<V> valueType) {
+        return readValue(execute(() -> new JSONObject(json)), valueType);
+    }
+
+    public static <V> V readValue(JSONObject jsonObject, Class<V> valueType) {
+        BeanMetadata beanMetadata = getBeanMetadata(valueType);
+        V valueObject = ClassUtils.newInstance(valueType);
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = jsonObject.opt(key);
+            if (value != null) {
+                PropertyDescriptor propertyDescriptor = beanMetadata.getPropertyDescriptor(key);
+                Method writeMethod = propertyDescriptor.getWriteMethod();
+                if (writeMethod == null) {
+                    continue;
+                }
+                Class<?> propertyType = propertyDescriptor.getPropertyType();
+                Object convertedValue = null;
+                if (value instanceof JSONObject) {
+                    convertedValue = readValue((JSONObject) value, propertyType);
+                } else if (value instanceof JSONArray) {
+                    JSONArray jsonArray = (JSONArray) value;
+                    int length = jsonArray.length();
+
+                } else {
+                    propertyType = tryResolveWrapperType(propertyType);
+                    convertedValue = convertIfPossible(value, propertyType);
+                }
+                if (convertedValue != null) {
+                    invokeMethod(valueObject, writeMethod, convertedValue);
+                }
+            }
+        }
+        return valueObject;
+    }
+
+    public static Object readValue(Object value) {
+        if (value == null) {
+            return null;
+        }
+        return readValue(value, value.getClass());
+    }
+
+    public static Object readValue(Object value, Type valueType) {
+        Object resolvedValue = null;
+        if (value instanceof JSONObject) {
+            resolvedValue = readValue((JSONObject) value, valueType);
+        } else if (value instanceof JSONArray) {
+            JSONArray jsonArray = (JSONArray) value;
+            resolvedValue = readValues(jsonArray, valueType, valueType);
+        } else {
+            valueType = tryResolveWrapperType(valueType);
+            resolvedValue = convertIfPossible(value, valueType);
+        }
+        return resolvedValue;
+    }
+
+    public static Object readValues(JSONArray jsonArray, Class<?> multipleType, Class<?> elementType) {
+        if (isArray(multipleType)) {
+            return readArray(jsonArray, elementType);
+        } else if (isList(multipleType)) {
+            return readList(jsonArray, elementType);
+        } else if (isSet(multipleType)) {
+            return readSet(jsonArray, elementType);
+        } else if (isQueue(multipleType)) {
+            return readQueue(jsonArray, elementType);
+        } else if (isEnumeration(multipleType)) {
+            return readEnumeration(jsonArray, elementType);
+        }
+        return null;
+    }
+
+    private static Object readEnumeration(JSONArray jsonArray, Class<?> elementType) {
+        Object[] array = readArray(jsonArray, elementType);
+        return ofEnumeration(array);
+    }
+
+    private static Object readList(JSONArray jsonArray, Class<?> elementType) {
+        List<Object> list = newArrayList(jsonArray.length());
+        addValues(jsonArray, list, elementType);
+        return list;
+    }
+
+    private static Queue<Object> readQueue(JSONArray jsonArray, Class<?> elementType) {
+        Queue<Object> queue = newArrayDeque(jsonArray.length());
+        addValues(jsonArray, queue, elementType);
+        return queue;
+    }
+
+    static Set<Object> readSet(JSONArray jsonArray, Class<?> elementType) {
+        int length = jsonArray.length();
+        Set<Object> sets = newFixedLinkedHashSet(length);
+        addValues(jsonArray, sets, elementType);
+        return sets;
+    }
+
+    static <C extends Collection> void addValues(JSONArray jsonArray, C collection, Class<?> elementType) {
+        int length = jsonArray.length();
+        for (int i = 0; i < length; i++) {
+            Object value = jsonArray.opt(i);
+            value = readValue(value, elementType);
+            collection.add(value);
+        }
+    }
+
+
+    public static <E, C extends Iterable<E>> C readValues(String json, Class<C> collectionType, Class<E> elementType) {
+        return null;
+    }
+
+    public static <E> E[] readArray(JSONArray jsonArray, Class<E> componentType) {
+        int length = jsonArray.length();
+        E[] array = (E[]) newInstance(componentType, length);
+        for (int i = 0; i < length; i++) {
+            Object value = jsonArray.opt(i);
+            value = readValue(value, componentType);
+            set(array, i, value);
+        }
+        return array;
     }
 
     /**
