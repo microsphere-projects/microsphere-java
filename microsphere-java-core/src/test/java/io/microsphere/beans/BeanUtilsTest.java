@@ -20,9 +20,12 @@ package io.microsphere.beans;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.io.event.FileChangedEvent;
+import io.microsphere.test.MultipleValueData;
 import org.junit.jupiter.api.Test;
 
+import java.beans.PropertyDescriptor;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,9 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.microsphere.beans.BeanUtils.findPropertyDescriptor;
+import static io.microsphere.beans.BeanUtils.findWriteMethod;
+import static io.microsphere.beans.BeanUtils.getBeanMetadata;
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
 import static io.microsphere.beans.BeanUtils.resolveProperty;
 import static io.microsphere.collection.Lists.ofList;
@@ -42,6 +48,7 @@ import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,6 +61,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 class BeanUtilsTest extends AbstractTestCase {
+
+    @Test
+    void testGetBeanMetadata() {
+        BeanMetadata beanMetadata = getBeanMetadata(TestBean.class);
+        assertNotNull(beanMetadata);
+        assertSame(beanMetadata, getBeanMetadata(TestBean.class));
+    }
+
+    @Test
+    void testFindPropertyDescriptor() {
+        BeanMetadata beanMetadata = getBeanMetadata(TestBean.class);
+        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanMetadata, "booleanValue");
+        assertNotNull(propertyDescriptor);
+        assertSame(propertyDescriptor, beanMetadata.getPropertyDescriptor("booleanValue"));
+    }
+
+    @Test
+    void testFindPropertyDescriptorOnNotFound() {
+        BeanMetadata beanMetadata = getBeanMetadata(TestBean.class);
+        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanMetadata, "notFound");
+        assertNull(propertyDescriptor);
+    }
+
+    @Test
+    void testFindWriteMethod() {
+        BeanMetadata beanMetadata = getBeanMetadata(MultipleValueData.class);
+        Method writeMethod = findWriteMethod(beanMetadata, "stringList");
+        assertNotNull(writeMethod);
+    }
+
+    @Test
+    void testFindWriteMethodOnNotFound() {
+        BeanMetadata beanMetadata = getBeanMetadata(TestBean.class);
+        Method writeMethod = findWriteMethod(beanMetadata, "booleanValue");
+        assertNull(writeMethod);
+    }
+
 
     @Test
     void testResolvePropertiesAsMap() {
@@ -112,13 +156,13 @@ class BeanUtilsTest extends AbstractTestCase {
         assertEquals(1, ((AtomicInteger) propertiesMap.get("atomicInteger")).get());
         assertEquals(TimeUnit.DAYS, propertiesMap.get("timeUnit"));
         assertEquals(String.class, propertiesMap.get("clazz"));
-        Data[] dataArray = (Data[]) propertiesMap.get("dataArray");
+        Object[] dataArray = (Object[]) propertiesMap.get("dataArray");
         for (int i = 0; i < 3; i++) {
-            Data d = dataArray[i];
-            assertEquals(1, d.value);
-            assertEquals(ofList(1, 2, 3), d.list);
-            assertEquals(ofSet(1, 2, 3), d.set);
-            assertEquals(ofMap("1", date, "2", date, "3", null), d.map);
+            Map<String, Object> d = (Map) dataArray[i];
+            assertEquals(1, d.get("value"));
+            assertEquals(ofList(1, 2, 3), d.get("list"));
+            assertEquals(ofSet(1, 2, 3), d.get("set"));
+            assertEquals(ofMap("1", date, "2", date, "3", null),  d.get("map"));
         }
     }
 
