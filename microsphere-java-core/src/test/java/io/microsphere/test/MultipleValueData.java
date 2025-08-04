@@ -84,6 +84,10 @@ public class MultipleValueData {
         this.objects = objects;
     }
 
+    public Object getObject() {
+        return null;
+    }
+
     @Override
     public final boolean equals(Object o) {
         if (!(o instanceof MultipleValueData)) return false;
