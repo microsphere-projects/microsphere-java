@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.StringUtils.uncapitalize;
 import static java.util.Collections.unmodifiableMap;
 
@@ -118,8 +119,9 @@ public class BeanMetadata {
 
     @Override
     public String toString() {
-        return "BeanMetadata{" + "beanClass='" + getBeanClass().getName() + "'}";
+        return "BeanMetadata{" + "beanClass='" + getTypeName(this.beanClass) + "'}";
     }
+
 
     /**
      * Create a {@link BeanMetadata} instance from the specified bean class.
