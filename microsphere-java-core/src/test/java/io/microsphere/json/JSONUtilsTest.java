@@ -19,19 +19,32 @@ package io.microsphere.json;
 
 
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.collection.CollectionUtils;
 import io.microsphere.test.Data;
+import io.microsphere.test.MultipleValueData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
 import static io.microsphere.JSONTestUtils.newConfigurationProperty;
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
+import static io.microsphere.collection.QueueUtils.ofQueue;
+import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.json.JSONUtils.append;
+import static io.microsphere.json.JSONUtils.jsonArray;
+import static io.microsphere.json.JSONUtils.jsonObject;
+import static io.microsphere.json.JSONUtils.readArray;
 import static io.microsphere.json.JSONUtils.readValue;
+import static io.microsphere.json.JSONUtils.readValues;
 import static io.microsphere.json.JSONUtils.writeBeanAsString;
 import static io.microsphere.json.JSONUtils.writeValueAsString;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -42,8 +55,11 @@ import static java.lang.Character.valueOf;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link JSONUtils} Test
@@ -331,22 +347,123 @@ class JSONUtilsTest {
     }
 
     @Test
-    void testReadeValue() {
-        Data data = new Data();
-        data.setName("Mercy");
-        data.setAge(18);
-        data.setMale(true);
-        data.setHeight(1.78);
-        data.setWeight(68.5f);
-        data.setBirth(System.currentTimeMillis());
-        data.setIndex((short) 1);
-        data.setGrade((byte) 1);
-        data.setSex('M');
-        data.setObject("Testing");
-        data.setNames(new String[]{"Mercy", "Mercy"});
+    void testJsonObject() throws JSONException {
+        String jsonString = "{\"name\":\"John\", \"age\":30}";
+        JSONObject jsonObject = jsonObject(jsonString);
+        assertEquals("John", jsonObject.getString("name")); // "John"
+        assertEquals(30, jsonObject.getInt("age"));         // "30"
+    }
+
+    @Test
+    void testJsonObjectOnInvalidContent() {
+        assertThrows(IllegalArgumentException.class, () -> jsonObject("{name}"));
+    }
+
+    @Test
+    void testJsonArray() throws JSONException {
+        JSONArray jsonArray = jsonArray("[1,2,3]");
+        assertEquals(1, jsonArray.getInt(0));
+        assertEquals(2, jsonArray.getInt(1));
+        assertEquals(3, jsonArray.getInt(2));
+    }
+
+    @Test
+    void testJsonArrayOnInvalidContent() {
+        assertThrows(IllegalArgumentException.class, () -> jsonArray("[1,2,3"));
+    }
+
+    @Test
+    void testReadeValueWithSimpleData() {
+        Data data = createData();
         String json = writeValueAsString(data);
         Data readValue = readValue(json, Data.class);
         assertEquals(data, readValue);
+    }
+
+    @Test
+    void testReadValueWithMultipleValueData() {
+        MultipleValueData md = new MultipleValueData();
+        md.setStringList(ofList("a", "b", "c"));
+        md.setIntegerSet(ofSet(1, 2, 3));
+        md.setDataQueue(ofQueue(createData()));
+        md.setClassEnumeration(ofEnumeration(String.class, Integer.class));
+        md.setObjects(ofArray("Hello", 123, true, 45.67));
+        String json = writeValueAsString(md);
+        MultipleValueData readValue = readValue(json, MultipleValueData.class);
+        assertEquals(md, readValue);
+    }
+
+    @Test
+    void testReadValuesWithArray() {
+        Data data = createData();
+        Data[] dataArray = ofArray(data);
+        String json = writeValueAsString(ofArray(data));
+        Data[] dataArrayCopy = readValues(json, Data[].class, Data.class);
+        assertArrayEquals(dataArray, dataArrayCopy);
+        assertEquals(data, dataArray[0]);
+    }
+
+    @Test
+    void testReadValuesWithList() {
+        Data data = createData();
+        List<Data> dataList = ofList(data);
+        String json = writeValueAsString(dataList);
+        List<Data> dataListCopy = readValues(json, List.class, Data.class);
+        assertEquals(dataList, dataListCopy);
+    }
+
+    @Test
+    void testReadValuesWithSet() {
+        Data data = createData();
+        Set<Data> dataSet = ofSet(data);
+        String json = writeValueAsString(dataSet);
+        Set<Data> dataSetCopy = readValues(json, Set.class, Data.class);
+        assertEquals(dataSet, dataSetCopy);
+    }
+
+    @Test
+    void testReadValuesWithQueue() {
+        Data data = createData();
+        Queue<Data> dataQueue = ofQueue(data);
+        String json = writeValueAsString(dataQueue);
+        Queue<Data> dataQueueCopy = readValues(json, Queue.class, Data.class);
+        assertTrue(CollectionUtils.equals(dataQueue, dataQueueCopy));
+    }
+
+    @Test
+    void testReadValuesWithEnumeration() {
+        Data data = createData();
+        Enumeration<Data> dataEnumeration = ofEnumeration(data);
+        String json = writeValueAsString(dataEnumeration);
+        Enumeration<Data> dataEnumerationCopy = readValues(json, Enumeration.class, Data.class);
+        assertEquals(dataEnumeration, dataEnumerationCopy);
+    }
+
+    @Test
+    void testReadValuesWithIterable() {
+        Data data = createData();
+        List<Data> dataList = ofList(data);
+        String json = writeValueAsString(dataList);
+        Iterable<Data> dataCopy = readValues(json, Iterable.class, Data.class);
+        assertEquals(dataList, dataCopy);
+    }
+
+    @Test
+    void testReadValuesWithUnsupportedType() {
+        Data data = createData();
+        List<Data> dataList = ofList(data);
+        String json = writeValueAsString(dataList);
+        Object dataCopy = readValues(json, Object.class, Data.class);
+        assertNull(dataCopy);
+    }
+
+    @Test
+    void testReadArray() {
+        Data data = createData();
+        Data[] dataArray = ofArray(data);
+        String json = writeValueAsString(dataArray);
+        Data[] dataArrayCopy = readArray(json, Data.class);
+        assertArrayEquals(dataArray, dataArrayCopy);
     }
 
     @Test
@@ -387,6 +504,22 @@ class JSONUtilsTest {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = writeBeanAsString(configurationProperty);
         assertConfigurationPropertyJSON(json);
+    }
+
+    Data createData() {
+        Data data = new Data();
+        data.setName("Mercy");
+        data.setAge(18);
+        data.setMale(true);
+        data.setHeight(1.78);
+        data.setWeight(68.5f);
+        data.setBirth(System.currentTimeMillis());
+        data.setIndex((short) 1);
+        data.setGrade((byte) 1);
+        data.setSex('M');
+        data.setObject("Testing");
+        data.setNames(new String[]{"Mercy", "Mercy"});
+        return data;
     }
 
 }
