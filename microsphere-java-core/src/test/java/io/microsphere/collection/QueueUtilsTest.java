@@ -18,12 +18,14 @@ import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.isDeque;
 import static io.microsphere.collection.QueueUtils.isQueue;
 import static io.microsphere.collection.QueueUtils.newArrayDeque;
+import static io.microsphere.collection.QueueUtils.ofQueue;
 import static io.microsphere.collection.QueueUtils.reversedDeque;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.QueueUtils.unmodifiableDeque;
 import static io.microsphere.collection.QueueUtils.unmodifiableQueue;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyIterator;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -216,6 +218,14 @@ class QueueUtilsTest {
     }
 
     @Test
+    void testOfQueue() {
+        Queue<String> queue = ofQueue("a", "b", "c");
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertTrue(queue.containsAll(asList("a", "b", "c")));
+    }
+
+    @Test
     void testNewArrayDeque() {
         Deque<String> deque = newArrayDeque();
         assertNotNull(deque);
@@ -225,6 +235,14 @@ class QueueUtilsTest {
     void testNewArrayDequeWithCapacity() {
         Deque<String> deque = newArrayDeque(10);
         assertNotNull(deque);
+    }
+
+    @Test
+    void testNewArrayDequeWithElements() {
+        Deque<String> deque = newArrayDeque("a", "b", "c");
+        assertNotNull(deque);
+        assertEquals(3, deque.size());
+        assertTrue(deque.containsAll(asList("a", "b", "c")));
     }
 
 }
