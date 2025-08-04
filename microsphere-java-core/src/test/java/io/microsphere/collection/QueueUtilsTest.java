@@ -214,7 +214,7 @@ class QueueUtilsTest {
         queue.forEach(e -> {
         });
     }
-  
+
     @Test
     void testNewArrayDeque() {
         Deque<String> deque = newArrayDeque();
