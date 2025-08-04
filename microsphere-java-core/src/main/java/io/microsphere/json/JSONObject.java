@@ -19,11 +19,13 @@ package io.microsphere.json;
 import io.microsphere.json.JSONStringer.Scope;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
+import static io.microsphere.collection.EnumerationUtils.isEnumeration;
 import static io.microsphere.collection.MapUtils.isMap;
 import static io.microsphere.json.JSON.checkDouble;
 import static io.microsphere.json.JSON.toBoolean;
@@ -867,6 +869,8 @@ public class JSONObject {
                 return new JSONArray((Iterable) o);
             } else if (isArray(o)) {
                 return new JSONArray(o);
+            } else if (isEnumeration(o)) {
+                return new JSONArray((Enumeration<?>) o);
             } else if (isMap(o)) {
                 return new JSONObject((Map) o);
             } else if (isClass(o)) {
