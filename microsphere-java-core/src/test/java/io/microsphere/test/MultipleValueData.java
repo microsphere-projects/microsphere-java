@@ -44,6 +44,8 @@ public class MultipleValueData {
 
     private Object[] objects;
 
+    private String name;
+
     public List<String> getStringList() {
         return stringList;
     }
@@ -82,6 +84,14 @@ public class MultipleValueData {
 
     public void setObjects(Object[] objects) {
         this.objects = objects;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Object getObject() {
