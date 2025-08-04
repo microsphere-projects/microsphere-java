@@ -25,6 +25,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -476,10 +477,14 @@ class JSONObjectTest {
         assertWrap(this.jsonObject);
         // JSONArray
         assertWrap(new JSONArray());
+
+        Integer[] values = ofArray(1, 2, 3);
         // Iterable
-        assertEquals(new JSONArray(ofList(1, 2, 3)), wrap(ofList(1, 2, 3)));
+        assertEquals(new JSONArray(ofList(values)), wrap(ofList(values)));
         // Array
-        assertEquals(new JSONArray(ofArray(1, 2, 3)), wrap(ofArray(1, 2, 3)));
+        assertEquals(new JSONArray(ofArray(values)), wrap(ofArray(values)));
+        // Enumeration
+        assertEquals(new JSONArray(ofEnumeration(values)), wrap(ofEnumeration((values))));
         // Map
         assertEquals(new JSONObject(ofMap("name", "Mercy")), wrap(ofMap("name", "Mercy")));
         // Wrapper
