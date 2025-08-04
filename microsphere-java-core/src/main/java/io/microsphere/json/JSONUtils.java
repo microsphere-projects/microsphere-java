@@ -20,13 +20,15 @@ package io.microsphere.json;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.beans.BeanMetadata;
+import io.microsphere.logging.Logger;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.Set;
 
+import static io.microsphere.beans.BeanUtils.findWriteMethod;
 import static io.microsphere.beans.BeanUtils.getBeanMetadata;
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
 import static io.microsphere.collection.EnumerationUtils.isEnumeration;
@@ -54,10 +57,14 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.convert.Converter.convertIfPossible;
 import static io.microsphere.json.JSONObject.wrap;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.reflect.TypeUtils.asClass;
+import static io.microsphere.reflect.TypeUtils.asParameterizedType;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
+import static io.microsphere.util.ExceptionUtils.wrap;
+import static io.microsphere.util.IterableUtils.isIterable;
 import static io.microsphere.util.StringUtils.isNotBlank;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
@@ -98,6 +105,8 @@ import static java.lang.reflect.Array.set;
  * @since 1.0.0
  */
 public abstract class JSONUtils implements Utils {
+
+    private static final Logger logger = getLogger(JSONUtils.class);
 
     public static void append(StringBuilder jsonBuilder, String name, boolean value) {
         appendName(jsonBuilder, name)
@@ -513,124 +522,318 @@ public abstract class JSONUtils implements Utils {
         return value instanceof JSONArray;
     }
 
-
-    public static <V> V readValue(String json, Class<V> valueType) {
-        return readValue(execute(() -> new JSONObject(json)), valueType);
+    /**
+     * Parses a JSON string and returns a {@link JSONObject} representation of it.
+     * <p>
+     * This method takes a valid JSON string and converts it into a {@code JSONObject}.
+     * If the string is not a valid JSON or cannot be parsed into a {@code JSONObject},
+     * an {@link IllegalArgumentException} will be thrown with the underlying {@link JSONException}
+     * as the cause.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String jsonString = "{\"name\":\"John\", \"age\":30}";
+     * JSONObject jsonObject = JSONUtils.jsonObject(jsonString);
+     * String name = jsonObject.getString("name"); // "John"
+     * int age = jsonObject.getInt("age");        // 30
+     *
+     * // Invalid JSON example:
+     * try {
+     *     JSONUtils.jsonObject("{invalid json}");
+     * } catch (IllegalArgumentException e) {
+     *     // Handle parsing error
+     * }
+     * }</pre>
+     *
+     * @param json the JSON string to parse
+     * @return a {@code JSONObject} representation of the parsed JSON string
+     * @throws IllegalArgumentException if the string is not valid JSON or cannot be parsed
+     */
+    @Nonnull
+    public static JSONObject jsonObject(String json) throws IllegalArgumentException {
+        final JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(json);
+        } catch (JSONException e) {
+            throw wrap(e, IllegalArgumentException.class);
+        }
+        return jsonObject;
     }
 
-    public static <V> V readValue(JSONObject jsonObject, Class<V> valueType) {
-        BeanMetadata beanMetadata = getBeanMetadata(valueType);
-        V valueObject = ClassUtils.newInstance(valueType);
+    /**
+     * Parses a JSON string and returns a {@link JSONArray} representation of it.
+     * <p>
+     * This method takes a valid JSON string and converts it into a {@code JSONArray}.
+     * If the string is not a valid JSON or cannot be parsed into a {@code JSONArray},
+     * an {@link IllegalArgumentException} will be thrown with the underlying {@link JSONException}
+     * as the cause.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String jsonString = "[\"apple\", \"banana\", \"cherry\"]";
+     * JSONArray jsonArray = JSONUtils.jsonArray(jsonString);
+     * String firstItem = jsonArray.getString(0); // "apple"
+     * int length = jsonArray.length();           // 3
+     *
+     * // Invalid JSON example:
+     * try {
+     *     JSONUtils.jsonArray("[invalid json]");
+     * } catch (IllegalArgumentException e) {
+     *     // Handle parsing error
+     * }
+     * }</pre>
+     *
+     * @param json the JSON string to parse
+     * @return a {@code JSONArray} representation of the parsed JSON string
+     * @throws IllegalArgumentException if the string is not valid JSON or cannot be parsed
+     * @see JSONArray
+     */
+    @Nonnull
+    public static JSONArray jsonArray(String json) throws IllegalArgumentException {
+        final JSONArray jsonArray;
+        try {
+            jsonArray = new JSONArray(json);
+        } catch (JSONException e) {
+            throw wrap(e, IllegalArgumentException.class);
+        }
+        return jsonArray;
+    }
+
+    /**
+     * Reads a JSON string and converts it into an instance of the specified target type.
+     * <p>
+     * This method parses the provided JSON string into a {@link JSONObject} and then maps its properties
+     * to a new instance of the target type. It supports nested objects, collections, and type conversion
+     * where necessary.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String json = "{\"name\":\"John Doe\",\"age\":30}";
+     * Person person = JSONUtils.readValue(json, Person.class);
+     * // person.getName() returns "John Doe"
+     * // person.getAge() returns 30
+     *
+     * String nestedJson = "{\"user\":{\"name\":\"Jane\"},\"active\":true}";
+     * MyBean bean = JSONUtils.readValue(nestedJson, MyBean.class);
+     * // bean.getUser().getName() returns "Jane"
+     * // bean.isActive() returns true
+     * }</pre>
+     *
+     * @param json       the JSON string to parse and convert
+     * @param targetType the class of the target type to which the JSON should be converted
+     * @param <V>        the type of the target object
+     * @return an instance of the target type populated with data from the JSON string
+     * @throws IllegalArgumentException if the JSON string is invalid or cannot be converted to the target type
+     * @see JSONObject
+     * @see #readValue(JSONObject, Class)
+     */
+    @Nonnull
+    public static <V> V readValue(String json, Class<V> targetType) {
+        return readValue(jsonObject(json), targetType);
+    }
+
+    /**
+     * Reads a {@link JSONObject} and converts it into an instance of the specified target type.
+     * <p>
+     * This method takes a {@code JSONObject} and maps its properties to a new instance of the target type.
+     * It supports nested objects, collections, and type conversion where necessary.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONObject jsonObject = new JSONObject("{\"name\":\"John Doe\",\"age\":30}");
+     * Person person = JSONUtils.readValue(jsonObject, Person.class);
+     * // person.getName() returns "John Doe"
+     * // person.getAge() returns 30
+     *
+     * JSONObject nestedJsonObject = new JSONObject("{\"user\":{\"name\":\"Jane\"},\"active\":true}");
+     * MyBean bean = JSONUtils.readValue(nestedJsonObject, MyBean.class);
+     * // bean.getUser().getName() returns "Jane"
+     * // bean.isActive() returns true
+     * }</pre>
+     *
+     * @param jsonObject the {@code JSONObject} to parse and convert
+     * @param targetType the class of the target type to which the JSON should be converted
+     * @param <V>        the type of the target object
+     * @return an instance of the target type populated with data from the {@code JSONObject}
+     * @throws IllegalArgumentException if the {@code JSONObject} cannot be converted to the target type
+     * @see JSONObject
+     * @see #readValue(String, Class)
+     */
+    @Nonnull
+    public static <V> V readValue(JSONObject jsonObject, Class<V> targetType) {
+        BeanMetadata beanMetadata = getBeanMetadata(targetType);
+        V valueObject = ClassUtils.newInstance(targetType);
         Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();
             Object value = jsonObject.opt(key);
             if (value != null) {
-                PropertyDescriptor propertyDescriptor = beanMetadata.getPropertyDescriptor(key);
-                Method writeMethod = propertyDescriptor.getWriteMethod();
-                if (writeMethod == null) {
-                    continue;
-                }
-                Class<?> propertyType = propertyDescriptor.getPropertyType();
-                Object convertedValue = null;
-                if (value instanceof JSONObject) {
-                    convertedValue = readValue((JSONObject) value, propertyType);
-                } else if (value instanceof JSONArray) {
-                    JSONArray jsonArray = (JSONArray) value;
-                    int length = jsonArray.length();
-
-                } else {
-                    propertyType = tryResolveWrapperType(propertyType);
-                    convertedValue = convertIfPossible(value, propertyType);
-                }
-                if (convertedValue != null) {
-                    invokeMethod(valueObject, writeMethod, convertedValue);
+                Method writeMethod = findWriteMethod(beanMetadata, key);
+                if (writeMethod != null) {
+                    Type propertyType = writeMethod.getGenericParameterTypes()[0];
+                    Object convertedValue = convertValue(value, propertyType);
+                    if (convertedValue != null) {
+                        invokeMethod(valueObject, writeMethod, convertedValue);
+                    }
                 }
             }
         }
         return valueObject;
     }
 
-    public static Object readValue(Object value) {
-        if (value == null) {
-            return null;
-        }
-        return readValue(value, value.getClass());
+    /**
+     * Reads a JSON array string and converts it into an instance of the specified collection or array type.
+     * <p>
+     * This method parses the provided JSON array string into a {@link JSONArray} and then maps its elements
+     * to a new instance of the specified collection or array type. It supports arrays, {@link List}, {@link Set},
+     * {@link Queue}, and {@link java.util.Enumeration}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String json = "[\"apple\", \"banana\", \"cherry\"]";
+     *
+     * // Convert to String array
+     * String[] stringArray = (String[]) JSONUtils.readValues(json, String[].class, String.class);
+     *
+     * // Convert to List<String>
+     * List<String> stringList = (List<String>) JSONUtils.readValues(json, List.class, String.class);
+     *
+     * // Convert to Set<String>
+     * Set<String> stringSet = (Set<String>) JSONUtils.readValues(json, Set.class, String.class);
+     * }</pre>
+     *
+     * @param json         the JSON array string to parse and convert
+     * @param multipleType the class of the target collection or array type to which the JSON should be converted
+     * @param elementType  the class of the elements in the target collection or array
+     * @return an instance of the target collection or array type populated with data from the JSON array string,
+     * or {@code null} if the target type is not supported
+     * @throws IllegalArgumentException if the JSON string is invalid or cannot be parsed into a {@code JSONArray}
+     * @see JSONArray
+     * @see #readValues(JSONArray, Class, Class)
+     */
+    @Nullable
+    public static <V> V readValues(String json, Class<V> multipleType, Class<?> elementType) {
+        return readValues(jsonArray(json), multipleType, elementType);
     }
 
-    public static Object readValue(Object value, Type valueType) {
-        Object resolvedValue = null;
-        if (value instanceof JSONObject) {
-            resolvedValue = readValue((JSONObject) value, valueType);
-        } else if (value instanceof JSONArray) {
-            JSONArray jsonArray = (JSONArray) value;
-            resolvedValue = readValues(jsonArray, valueType, valueType);
-        } else {
-            valueType = tryResolveWrapperType(valueType);
-            resolvedValue = convertIfPossible(value, valueType);
-        }
-        return resolvedValue;
-    }
-
-    public static Object readValues(JSONArray jsonArray, Class<?> multipleType, Class<?> elementType) {
+    /**
+     * Reads a {@link JSONArray} and converts it into an instance of the specified collection or array type.
+     * <p>
+     * This method takes a {@code JSONArray} and maps its elements to a new instance of the specified collection
+     * or array type. It supports arrays, {@link List}, {@link Set}, {@link Queue}, and {@link java.util.Enumeration}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray jsonArray = new JSONArray("[\"apple\", \"banana\", \"cherry\"]");
+     *
+     * // Convert to String array
+     * String[] stringArray = (String[]) JSONUtils.readValues(jsonArray, String[].class, String.class);
+     *
+     * // Convert to List<String>
+     * List<String> stringList = (List<String>) JSONUtils.readValues(jsonArray, List.class, String.class);
+     *
+     * // Convert to Set<String>
+     * Set<String> stringSet = (Set<String>) JSONUtils.readValues(jsonArray, Set.class, String.class);
+     * }</pre>
+     *
+     * @param jsonArray    the {@code JSONArray} to parse and convert
+     * @param multipleType the class of the target collection or array type to which the JSON should be converted
+     * @param elementType  the class of the elements in the target collection or array
+     * @return an instance of the target collection or array type populated with data from the {@code JSONArray},
+     * or {@code null} if the target type is not supported
+     * @see JSONArray
+     * @see #readValues(String, Class, Class)
+     */
+    @Nullable
+    public static <V> V readValues(JSONArray jsonArray, Class<V> multipleType, Class<?> elementType) {
         if (isArray(multipleType)) {
-            return readArray(jsonArray, elementType);
+            return (V) readArray(jsonArray, multipleType.getComponentType());
         } else if (isList(multipleType)) {
-            return readList(jsonArray, elementType);
+            return (V) toList(jsonArray, elementType);
         } else if (isSet(multipleType)) {
-            return readSet(jsonArray, elementType);
+            return (V) toSet(jsonArray, elementType);
         } else if (isQueue(multipleType)) {
-            return readQueue(jsonArray, elementType);
+            return (V) toQueue(jsonArray, elementType);
         } else if (isEnumeration(multipleType)) {
-            return readEnumeration(jsonArray, elementType);
+            return (V) toEnumeration(jsonArray, elementType);
+        } else if (isIterable(multipleType)) {
+            return (V) toList(jsonArray, elementType);
         }
         return null;
     }
 
-    private static Object readEnumeration(JSONArray jsonArray, Class<?> elementType) {
-        Object[] array = readArray(jsonArray, elementType);
-        return ofEnumeration(array);
+    /**
+     * Reads a JSON array string and converts it into an array of the specified component type.
+     * <p>
+     * This method parses the provided JSON array string into a {@link JSONArray} and then maps its elements
+     * to a new array of the specified component type. It supports arrays of any type, including primitives
+     * and their wrapper classes.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String json = "[\"apple\", \"banana\", \"cherry\"]";
+     * String[] stringArray = JSONUtils.readArray(json, String.class);
+     * // stringArray[0] returns "apple"
+     * // stringArray.length returns 3
+     *
+     * String numberJson = "[1, 2, 3]";
+     * Integer[] integerArray = JSONUtils.readArray(numberJson, Integer.class);
+     * // integerArray[0] returns 1
+     * // integerArray.length returns 3
+     * }</pre>
+     *
+     * @param json          the JSON array string to parse and convert
+     * @param componentType the class of the component type of the array
+     * @param <E>           the type of the elements in the array
+     * @return an array of the specified component type populated with data from the JSON array string
+     * @throws IllegalArgumentException if the JSON string is invalid or cannot be parsed into a {@code JSONArray}
+     * @see JSONArray
+     * @see #readArray(JSONArray, Class)
+     */
+    public static <E> E[] readArray(String json, Class<E> componentType) {
+        return readArray(jsonArray(json), componentType);
     }
 
-    private static Object readList(JSONArray jsonArray, Class<?> elementType) {
-        List<Object> list = newArrayList(jsonArray.length());
-        addValues(jsonArray, list, elementType);
-        return list;
-    }
-
-    private static Queue<Object> readQueue(JSONArray jsonArray, Class<?> elementType) {
-        Queue<Object> queue = newArrayDeque(jsonArray.length());
-        addValues(jsonArray, queue, elementType);
-        return queue;
-    }
-
-    static Set<Object> readSet(JSONArray jsonArray, Class<?> elementType) {
-        int length = jsonArray.length();
-        Set<Object> sets = newFixedLinkedHashSet(length);
-        addValues(jsonArray, sets, elementType);
-        return sets;
-    }
-
-    static <C extends Collection> void addValues(JSONArray jsonArray, C collection, Class<?> elementType) {
-        int length = jsonArray.length();
-        for (int i = 0; i < length; i++) {
-            Object value = jsonArray.opt(i);
-            value = readValue(value, elementType);
-            collection.add(value);
-        }
-    }
-
-
-    public static <E, C extends Iterable<E>> C readValues(String json, Class<C> collectionType, Class<E> elementType) {
-        return null;
-    }
-
+    /**
+     * Reads a {@link JSONArray} and converts it into an array of the specified component type.
+     * <p>
+     * This method takes a {@code JSONArray} and maps its elements to a new array of the specified component type.
+     * It supports arrays of any type, including primitives and their wrapper classes.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray jsonArray = new JSONArray("[\"apple\", \"banana\", \"cherry\"]");
+     * String[] stringArray = JSONUtils.readArray(jsonArray, String.class);
+     * // stringArray[0] returns "apple"
+     * // stringArray.length returns 3
+     *
+     * JSONArray numberJsonArray = new JSONArray("[1, 2, 3]");
+     * Integer[] integerArray = JSONUtils.readArray(numberJsonArray, Integer.class);
+     * // integerArray[0] returns 1
+     * // integerArray.length returns 3
+     * }</pre>
+     *
+     * @param jsonArray     the {@code JSONArray} to parse and convert
+     * @param componentType the class of the component type of the array
+     * @param <E>           the type of the elements in the array
+     * @return an array of the specified component type populated with data from the {@code JSONArray}
+     * @see JSONArray
+     * @see #readArray(String, Class)
+     */
     public static <E> E[] readArray(JSONArray jsonArray, Class<E> componentType) {
         int length = jsonArray.length();
         E[] array = (E[]) newInstance(componentType, length);
         for (int i = 0; i < length; i++) {
             Object value = jsonArray.opt(i);
-            value = readValue(value, componentType);
+            value = convertValue(value, componentType);
             set(array, i, value);
         }
         return array;
@@ -740,6 +943,62 @@ public abstract class JSONUtils implements Utils {
         appendString(jsonBuilder, value.getTypeName());
     }
 
+    static Object convertValue(Object value, Type targetType) {
+        if (value == null) {
+            return null;
+        }
+        Class<?> valueClass = asClass(targetType);
+        if (value instanceof JSONObject) {
+            return readValue((JSONObject) value, valueClass);
+        } else if (value instanceof JSONArray) {
+            JSONArray jsonArray = (JSONArray) value;
+            ParameterizedType parameterizedType = asParameterizedType(targetType);
+            Class<?> elementType;
+            if (parameterizedType == null) {
+                elementType = Object.class;
+            } else {
+                elementType = asClass(parameterizedType.getActualTypeArguments()[0]);
+            }
+            return readValues(jsonArray, valueClass, elementType);
+        } else {
+            valueClass = tryResolveWrapperType(valueClass);
+            Object convertedValue = convertIfPossible(value, valueClass);
+            return convertedValue != null ? convertedValue : value;
+        }
+    }
+
+    static Enumeration<?> toEnumeration(JSONArray jsonArray, Class<?> elementType) {
+        Object[] array = readArray(jsonArray, elementType);
+        return ofEnumeration(array);
+    }
+
+    static List<?> toList(JSONArray jsonArray, Class<?> elementType) {
+        List<Object> list = newArrayList(jsonArray.length());
+        addValues(jsonArray, list, elementType);
+        return list;
+    }
+
+    static Queue<Object> toQueue(JSONArray jsonArray, Class<?> elementType) {
+        Queue<Object> queue = newArrayDeque(jsonArray.length());
+        addValues(jsonArray, queue, elementType);
+        return queue;
+    }
+
+    static Set<Object> toSet(JSONArray jsonArray, Class<?> elementType) {
+        int length = jsonArray.length();
+        Set<Object> sets = newFixedLinkedHashSet(length);
+        addValues(jsonArray, sets, elementType);
+        return sets;
+    }
+
+    static <C extends Collection> void addValues(JSONArray jsonArray, C collection, Class<?> elementType) {
+        int length = jsonArray.length();
+        for (int i = 0; i < length; i++) {
+            Object value = jsonArray.opt(i);
+            value = convertValue(value, elementType);
+            collection.add(value);
+        }
+    }
 
     private JSONUtils() {
     }
