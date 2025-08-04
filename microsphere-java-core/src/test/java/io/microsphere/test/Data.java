@@ -18,6 +18,7 @@
 package io.microsphere.test;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Data Model
@@ -167,8 +168,8 @@ public class Data {
                 && index == data.index
                 && grade == data.grade
                 && sex == data.sex
-                && name.equals(data.name)
-                && object.equals(data.object)
+                && Objects.equals(this.name, data.name)
+                && Objects.equals(this.object, data.object)
                 && Arrays.equals(names, data.names);
     }
 
