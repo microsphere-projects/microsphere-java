@@ -153,4 +153,38 @@ public class Data {
                 ", names=" + Arrays.toString(names) +
                 '}';
     }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof Data)) return false;
+
+        Data data = (Data) o;
+        return age == data.age
+                && male == data.male
+                && Double.compare(height, data.height) == 0
+                && Float.compare(weight, data.weight) == 0
+                && birth == data.birth
+                && index == data.index
+                && grade == data.grade
+                && sex == data.sex
+                && name.equals(data.name)
+                && object.equals(data.object)
+                && Arrays.equals(names, data.names);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + age;
+        result = 31 * result + Boolean.hashCode(male);
+        result = 31 * result + Double.hashCode(height);
+        result = 31 * result + Float.hashCode(weight);
+        result = 31 * result + Long.hashCode(birth);
+        result = 31 * result + index;
+        result = 31 * result + grade;
+        result = 31 * result + sex;
+        result = 31 * result + object.hashCode();
+        result = 31 * result + Arrays.hashCode(names);
+        return result;
+    }
 }
