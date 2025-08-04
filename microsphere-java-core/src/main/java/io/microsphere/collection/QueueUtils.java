@@ -26,6 +26,7 @@ import java.util.Deque;
 import java.util.Queue;
 
 import static io.microsphere.collection.ReversedDeque.of;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
 /**
@@ -279,6 +280,36 @@ public abstract class QueueUtils implements Utils {
     }
 
     /**
+     * Creates an immutable queue containing the specified elements.
+     *
+     * <p>
+     * This method first creates a new {@link ArrayDeque} with the given elements and then wraps it
+     * in an unmodifiable view using {@link #unmodifiableQueue(Queue)}. The resulting queue is immutable,
+     * so any attempt to modify it will result in an {@link UnsupportedOperationException}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Queue<String> queue = ofQueue("Hello", "World");
+     * System.out.println(queue); // prints [Hello, World]
+     *
+     * Queue<Integer> emptyQueue = ofQueue();
+     * System.out.println(emptyQueue); // prints []
+     *
+     * queue.add("Java"); // throws UnsupportedOperationException
+     * }</pre>
+     *
+     * @param <E>      the type of elements held in the queue
+     * @param elements the elements to be added to the queue, can be null or empty
+     * @return an immutable queue containing the specified elements
+     */
+    @Nonnull
+    @Immutable
+    public static <E> Queue<E> ofQueue(E... elements) {
+        return unmodifiableDeque(newArrayDeque(elements));
+    }
+
+    /**
      * Creates a new empty {@link ArrayDeque} instance.
      *
      * <h3>Example Usage</h3>
@@ -292,6 +323,7 @@ public abstract class QueueUtils implements Utils {
      * @param <E> the type of elements held in the deque
      * @return a new empty {@link ArrayDeque} instance
      */
+    @Nonnull
     public static <E> ArrayDeque<E> newArrayDeque() {
         return new ArrayDeque<>();
     }
@@ -307,13 +339,40 @@ public abstract class QueueUtils implements Utils {
      * System.out.println(deque); // prints [Hello, World]
      * }</pre>
      *
-     * @param <E> the type of elements held in the deque
+     * @param <E>             the type of elements held in the deque
      * @param initialCapacity the initial capacity of the deque
      * @return a new {@link ArrayDeque} instance with the specified initial capacity
      * @throws IllegalArgumentException if the specified initial capacity is negative
      */
+    @Nonnull
     public static <E> ArrayDeque<E> newArrayDeque(int initialCapacity) {
         return new ArrayDeque<>(initialCapacity);
+    }
+
+    /**
+     * Creates a new {@link ArrayDeque} instance containing the specified elements.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ArrayDeque<String> deque = newArrayDeque("Hello", "World");
+     * System.out.println(deque); // prints [Hello, World]
+     *
+     * ArrayDeque<Integer> emptyDeque = newArrayDeque();
+     * System.out.println(emptyDeque); // prints []
+     * }</pre>
+     *
+     * @param <E>      the type of elements held in the deque
+     * @param elements the elements to be added to the deque, can be null or empty
+     * @return a new {@link ArrayDeque} instance containing the specified elements
+     */
+    @Nonnull
+    public static <E> ArrayDeque<E> newArrayDeque(E... elements) {
+        int length = length(elements);
+        ArrayDeque<E> arrayDeque = newArrayDeque(length);
+        for (int i = 0; i < length; i++) {
+            arrayDeque.add(elements[i]);
+        }
+        return arrayDeque;
     }
 
     private QueueUtils() {
