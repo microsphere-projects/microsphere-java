@@ -30,14 +30,41 @@ import static io.microsphere.util.ClassUtils.isAssignableFrom;
  */
 public abstract class IterableUtils implements Utils {
 
+    /**
+     * Checks if the given object is an instance of {@link Iterable}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("a", "b", "c");
+     * boolean result1 = IterableUtils.isIterable(list);     // true
+     * boolean result2 = IterableUtils.isIterable("string"); // false
+     * boolean result3 = IterableUtils.isIterable(null);     // false
+     * }</pre>
+     *
+     * @param object the object to check
+     * @return {@code true} if the object is an instance of {@link Iterable}, {@code false} otherwise
+     */
     public static boolean isIterable(@Nullable Object object) {
         return object instanceof Iterable;
     }
 
+    /**
+     * Checks if the given class is assignable from {@link Iterable}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = IterableUtils.isIterable(List.class);  // true
+     * boolean result2 = IterableUtils.isIterable(String.class); // false
+     * boolean result3 = IterableUtils.isIterable(null);        // false
+     * }</pre>
+     *
+     * @param clazz the class to check
+     * @return {@code true} if the class is assignable from {@link Iterable}, {@code false} otherwise
+     * @see ClassUtils#isAssignableFrom(Class, Class)
+     */
     public static boolean isIterable(@Nullable Class<?> clazz) {
         return isAssignableFrom(Iterable.class, clazz);
     }
-
 
     private IterableUtils() {
     }
