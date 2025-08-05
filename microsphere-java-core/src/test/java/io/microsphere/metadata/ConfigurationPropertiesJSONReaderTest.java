@@ -50,7 +50,7 @@ class ConfigurationPropertiesJSONReaderTest {
     void testLoad() throws Throwable {
         ClassLoader classLoader = getClassLoader(getClass());
         try (InputStream inputStream = classLoader.getResourceAsStream("META-INF/microsphere/configuration-properties.json")) {
-            List<ConfigurationProperty> configurationProperties = reader.load(inputStream);
+            List<ConfigurationProperty> configurationProperties = reader.read(inputStream);
             assertEquals(6, configurationProperties.size());
         }
     }
