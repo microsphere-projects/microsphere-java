@@ -21,9 +21,9 @@ package io.microsphere.constants;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
-import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME;
+import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
 import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE;
-import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME;
+import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
 import static io.microsphere.constants.ResourceConstants.METADATA_RESOURCE;
 import static io.microsphere.constants.ResourceConstants.MICROSPHERE_METADATA_RESOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,8 +41,8 @@ class ResourceConstantsTest {
     void testConstants() {
         assertEquals("META-INF/", METADATA_RESOURCE);
         assertEquals("META-INF/microsphere/", MICROSPHERE_METADATA_RESOURCE);
-        assertEquals("configuration-properties.json", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME);
-        assertEquals("additional-configuration-properties.json", ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME);
+        assertEquals("configuration-properties.json", CONFIGURATION_PROPERTY_METADATA_FILE_NAME);
+        assertEquals("additional-configuration-properties.json", ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_FILE_NAME);
         assertEquals("META-INF/microsphere/configuration-properties.json", CONFIGURATION_PROPERTY_METADATA_RESOURCE);
         assertEquals("META-INF/microsphere/additional-configuration-properties.json", ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE);
     }
