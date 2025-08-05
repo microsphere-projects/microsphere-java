@@ -41,10 +41,10 @@ import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 public interface ConfigurationPropertyReader extends Prioritized {
 
     /**
-     * Loads a list of {@link ConfigurationProperty} objects from the provided {@link InputStream}.
+     * Reads a list of {@link ConfigurationProperty} objects from the provided {@link InputStream}.
      * <p>
      * This method reads configuration properties from the given input stream, using the default charset
-     * for decoding the content. It internally delegates to {@link #load(Reader)} after wrapping the
+     * for decoding the content. It internally delegates to {@link #read(Reader)} after wrapping the
      * input stream into an {@link InputStreamReader}.
      *
      * <h3>Example Usage</h3>
@@ -59,20 +59,20 @@ public interface ConfigurationPropertyReader extends Prioritized {
      * @param inputStream the input stream to read from; must not be {@code null}
      * @return a list of {@link ConfigurationProperty} objects loaded from the input stream
      * @throws Throwable if any error occurs during loading
-     * @see #load(Reader)
+     * @see #read(Reader)
      */
     @Nonnull
     @Immutable
-    default List<ConfigurationProperty> load(InputStream inputStream) throws Throwable {
-        return load(new InputStreamReader(inputStream, DEFAULT_CHARSET));
+    default List<ConfigurationProperty> read(InputStream inputStream) throws Throwable {
+        return read(new InputStreamReader(inputStream, DEFAULT_CHARSET));
     }
 
     /**
-     * Loads a list of {@link ConfigurationProperty} objects from the provided {@link Reader}.
+     * Reads a list of {@link ConfigurationProperty} objects from the provided {@link Reader}.
      * <p>
      * This method reads configuration properties from the given reader by first copying its content
      * into a string using {@link io.microsphere.io.IOUtils#copyToString(Reader)}, then delegating
-     * to {@link #load(String)} to perform the actual parsing and loading.
+     * to {@link #read(String)} to perform the actual parsing and loading.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
@@ -86,17 +86,17 @@ public interface ConfigurationPropertyReader extends Prioritized {
      * @param reader the reader to read from; must not be {@code null}
      * @return a list of {@link ConfigurationProperty} objects loaded from the reader
      * @throws Throwable if any error occurs during loading
-     * @see #load(String)
+     * @see #read(String)
      * @see io.microsphere.io.IOUtils#copyToString(Reader)
      */
     @Nonnull
     @Immutable
-    default List<ConfigurationProperty> load(Reader reader) throws Throwable {
-        return load(copyToString(reader));
+    default List<ConfigurationProperty> read(Reader reader) throws Throwable {
+        return read(copyToString(reader));
     }
 
     /**
-     * Loads a list of {@link ConfigurationProperty} objects from the provided content string.
+     * Reads a list of {@link ConfigurationProperty} objects from the provided content string.
      * <p>
      * This method parses and loads configuration properties from the given string content.
      * The format of the content is determined by the specific implementation of this interface.
@@ -116,6 +116,6 @@ public interface ConfigurationPropertyReader extends Prioritized {
      */
     @Nonnull
     @Immutable
-    List<ConfigurationProperty> load(String content) throws Throwable;
+    List<ConfigurationProperty> read(String content) throws Throwable;
 
 }
