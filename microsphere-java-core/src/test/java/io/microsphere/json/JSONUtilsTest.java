@@ -26,6 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -39,11 +40,20 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.collection.QueueUtils.ofQueue;
 import static io.microsphere.collection.Sets.ofSet;
+import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONUtils.append;
+import static io.microsphere.json.JSONUtils.convertValue;
+import static io.microsphere.json.JSONUtils.isEmpty;
+import static io.microsphere.json.JSONUtils.isNotEmpty;
+import static io.microsphere.json.JSONUtils.isNotNull;
+import static io.microsphere.json.JSONUtils.isNull;
+import static io.microsphere.json.JSONUtils.isUnknownClass;
 import static io.microsphere.json.JSONUtils.jsonArray;
 import static io.microsphere.json.JSONUtils.jsonObject;
+import static io.microsphere.json.JSONUtils.length;
 import static io.microsphere.json.JSONUtils.readArray;
 import static io.microsphere.json.JSONUtils.readValue;
+import static io.microsphere.json.JSONUtils.readValueAsBean;
 import static io.microsphere.json.JSONUtils.readValues;
 import static io.microsphere.json.JSONUtils.writeBeanAsString;
 import static io.microsphere.json.JSONUtils.writeValueAsString;
@@ -57,6 +67,8 @@ import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -346,6 +358,128 @@ class JSONUtilsTest {
         assertEquals("\"name\":[\"java.lang.String\",\"java.lang.Integer\"]", jsonBuilder.toString());
     }
 
+
+    @Test
+    void testIsUnknownClass() {
+        assertTrue(isUnknownClass(Void.class));
+
+        assertFalse(isUnknownClass(String.class));
+        assertFalse(isUnknownClass(Void.TYPE));
+        assertFalse(isUnknownClass(null));
+    }
+
+    @Test
+    void testLengthWithJSONObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        assertEquals(0, length(jsonObject));
+
+        jsonObject.put("name", "Mike");
+        assertEquals(1, length(jsonObject));
+
+        jsonObject.put("age", 18);
+        assertEquals(2, length(jsonObject));
+
+        jsonObject.put("name", "John");
+        assertEquals(2, length(jsonObject));
+    }
+
+    @Test
+    void testLengthWithNullJSONObject() {
+        assertEquals(0, length((JSONObject) null));
+    }
+
+    @Test
+    void testLengthWithJSONArray() {
+        JSONArray jsonArray = new JSONArray();
+        assertEquals(0, length(jsonArray));
+
+        jsonArray.put("name");
+        assertEquals(1, length(jsonArray));
+
+        jsonArray.put("age");
+        assertEquals(2, length(jsonArray));
+
+        jsonArray.put("name");
+        assertEquals(3, length(jsonArray));
+    }
+
+    @Test
+    void testLengthWithNullJSONArray() {
+        assertEquals(0, length((JSONArray) null));
+    }
+
+    @Test
+    void testIsEmptyWithJSONObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        assertTrue(isEmpty(jsonObject));
+
+        jsonObject.put("name", "Mike");
+        assertFalse(isEmpty(jsonObject));
+    }
+
+    @Test
+    void testIsEmptyWithNullJSONObject() {
+        assertTrue(isEmpty((JSONObject) null));
+    }
+
+    @Test
+    void testIsEmptyWithJSONArray() {
+        JSONArray jsonArray = new JSONArray();
+        assertTrue(isEmpty(jsonArray));
+
+        jsonArray.put("name");
+        assertFalse(isEmpty(jsonArray));
+    }
+
+    @Test
+    void testIsEmptyWithNullJSONArray() {
+        assertTrue(isEmpty((JSONArray) null));
+    }
+
+    @Test
+    void testIsNotEmptyWithJSONObject() throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        assertFalse(isNotEmpty(jsonObject));
+
+        jsonObject.put("name", "Mike");
+        assertTrue(isNotEmpty(jsonObject));
+    }
+
+    @Test
+    void testIsNotEmptyWithNullJSONObject() {
+        assertFalse(isNotEmpty((JSONObject) null));
+    }
+
+    @Test
+    void testIsNotEmptyWithJSONArray() {
+        JSONArray jsonArray = new JSONArray();
+        assertFalse(isNotEmpty(jsonArray));
+
+        jsonArray.put("Mike");
+        assertTrue(isNotEmpty(jsonArray));
+    }
+
+    @Test
+    void testIsNotEmptyWithNullJSONArray() {
+        assertFalse(isNotEmpty((JSONArray) null));
+    }
+
+    @Test
+    void testIsNull() {
+        assertTrue(isNull(null));
+        assertTrue(isNull(NULL));
+
+        assertFalse(isNull("null"));
+    }
+
+    @Test
+    void testIsNotNull() {
+        assertFalse(isNotNull(null));
+        assertFalse(isNotNull(NULL));
+
+        assertTrue(isNotNull("null"));
+    }
+
     @Test
     void testJsonObject() throws JSONException {
         String jsonString = "{\"name\":\"John\", \"age\":30}";
@@ -372,6 +506,25 @@ class JSONUtilsTest {
         assertThrows(IllegalArgumentException.class, () -> jsonArray("[1,2,3"));
     }
 
+
+    @Test
+    void testReadValueWithMap() {
+        Data data = createData();
+        String json = writeValueAsString(data);
+        Map<String, Object> readValue = readValue(json, Map.class);
+        assertEquals(data.getName(), readValue.get("name"));
+        assertEquals(data.getAge(), readValue.get("age"));
+        assertEquals(data.isMale(), readValue.get("male"));
+        assertEquals(data.getHeight(), readValue.get("height"));
+        assertEquals(data.getWeight(), ((Double) readValue.get("weight")).floatValue());
+        assertEquals(data.getBirth(), readValue.get("birth"));
+        assertEquals(data.getIndex(), ((Integer) readValue.get("index")).shortValue());
+        assertEquals(data.getGrade(), ((Integer) readValue.get("grade")).byteValue());
+        assertEquals(String.valueOf(data.getSex()), readValue.get("sex"));
+        assertEquals(data.getObject(), readValue.get("object"));
+        assertArrayEquals(data.getNames(), (String[]) readValue.get("names"));
+    }
+
     @Test
     void testReadeValueWithSimpleData() {
         Data data = createData();
@@ -381,7 +534,7 @@ class JSONUtilsTest {
     }
 
     @Test
-    void testReadValueWithMultipleValueData() {
+    void testReadValueAsBean() {
         MultipleValueData md = new MultipleValueData();
         md.setStringList(ofList("a", "b", "c"));
         md.setIntegerSet(ofSet(1, 2, 3));
@@ -389,8 +542,19 @@ class JSONUtilsTest {
         md.setClassEnumeration(ofEnumeration(String.class, Integer.class));
         md.setObjects(ofArray("Hello", 123, true, 45.67));
         String json = writeValueAsString(md);
-        MultipleValueData readValue = readValue(json, MultipleValueData.class);
+        JSONObject jsonObject = jsonObject(json);
+        MultipleValueData readValue = readValueAsBean(jsonObject, MultipleValueData.class);
         assertEquals(md, readValue);
+    }
+
+    @Test
+    void testReadValueAsBeanOnMissingKey() throws JSONException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", null);
+        map.put("test-name", "test-value");
+        JSONObject jsonObject = new JSONObject(map);
+        Data dataCopy = readValueAsBean(jsonObject, Data.class);
+        assertNotNull(dataCopy);
     }
 
     @Test
@@ -497,6 +661,12 @@ class JSONUtilsTest {
     void testWriteValueAsStringWithNull() {
         String json = writeValueAsString(null);
         assertNull(json);
+    }
+
+    @Test
+    void testConvertValueWithNullValue() {
+        assertNull(convertValue(null, String.class));
+        assertNull(convertValue(NULL, String.class));
     }
 
     @Test
