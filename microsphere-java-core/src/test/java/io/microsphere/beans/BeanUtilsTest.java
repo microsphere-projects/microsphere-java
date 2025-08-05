@@ -162,7 +162,7 @@ class BeanUtilsTest extends AbstractTestCase {
             assertEquals(1, d.get("value"));
             assertEquals(ofList(1, 2, 3), d.get("list"));
             assertEquals(ofSet(1, 2, 3), d.get("set"));
-            assertEquals(ofMap("1", date, "2", date, "3", null),  d.get("map"));
+            assertEquals(ofMap("1", date, "2", date, "3", null), d.get("map"));
         }
     }
 
