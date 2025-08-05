@@ -44,6 +44,7 @@ import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.ofList;
+import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.collection.QueueUtils.isQueue;
 import static io.microsphere.collection.QueueUtils.newArrayDeque;
 import static io.microsphere.collection.SetUtils.isSet;
@@ -61,7 +62,9 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.IterableUtils.isIterable;
@@ -107,6 +110,8 @@ import static java.lang.reflect.Array.set;
 public abstract class JSONUtils implements Utils {
 
     private static final Logger logger = getLogger(JSONUtils.class);
+
+    static final Class<?> UNKNOWN_CLASS = Void.class;
 
     public static void append(StringBuilder jsonBuilder, String name, boolean value) {
         appendName(jsonBuilder, name)
@@ -472,6 +477,221 @@ public abstract class JSONUtils implements Utils {
         return jsonBuilder;
     }
 
+    static boolean isUnknownClass(Class<?> targetClass) {
+        return UNKNOWN_CLASS == targetClass;
+    }
+
+    /**
+     * Returns the number of name/value mappings in the specified {@link JSONObject}.
+     * <p>
+     * This method returns the count of key-value pairs in the given {@code JSONObject}.
+     * If the {@code JSONObject} is {@code null}, this method returns {@code 0}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONObject obj = new JSONObject();
+     * obj.put("name", "John");
+     * obj.put("age", 30);
+     * int length = JSONUtils.length(obj); // returns 2
+     *
+     * JSONObject nullObj = null;
+     * int nullLength = JSONUtils.length(nullObj); // returns 0
+     * }</pre>
+     *
+     * @param jsonObject the {@link JSONObject} whose length is to be determined
+     * @return the number of name/value mappings in the {@link JSONObject}, or {@code 0} if the {@link JSONObject} is {@code null}
+     * @see JSONObject#length()
+     */
+    public static int length(JSONObject jsonObject) {
+        return jsonObject == null ? 0 : jsonObject.length();
+    }
+
+    /**
+     * Returns the number of values in the specified {@link JSONArray}.
+     * <p>
+     * This method returns the count of elements in the given {@code JSONArray}.
+     * If the {@code JSONArray} is {@code null}, this method returns {@code 0}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray array = new JSONArray();
+     * array.put("value1");
+     * array.put("value2");
+     * int length = JSONUtils.length(array); // returns 2
+     *
+     * JSONArray nullArray = null;
+     * int nullLength = JSONUtils.length(nullArray); // returns 0
+     * }</pre>
+     *
+     * @param jsonArray the {@link JSONArray} whose length is to be determined
+     * @return the number of values in the {@link JSONArray}, or {@code 0} if the {@link JSONArray} is {@code null}
+     * @see JSONArray#length()
+     */
+    public static int length(JSONArray jsonArray) {
+        return jsonArray == null ? 0 : jsonArray.length();
+    }
+
+    /**
+     * Checks if the given {@link JSONObject} is empty.
+     * <p>
+     * This method returns {@code true} if the provided {@code JSONObject} is {@code null} or contains no key-value mappings.
+     * Otherwise, it returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONObject obj = new JSONObject();
+     * boolean empty = JSONUtils.isEmpty(obj); // returns true
+     *
+     * obj.put("key", "value");
+     * boolean notEmpty = JSONUtils.isEmpty(obj); // returns false
+     *
+     * JSONObject nullObj = null;
+     * boolean nullEmpty = JSONUtils.isEmpty(nullObj); // returns true
+     * }</pre>
+     *
+     * @param jsonObject the {@link JSONObject} to check
+     * @return {@code true} if the {@link JSONObject} is {@code null} or empty, {@code false} otherwise
+     * @see #length(JSONObject)
+     * @see JSONObject#length()
+     */
+    public static boolean isEmpty(JSONObject jsonObject) {
+        return length(jsonObject) == 0;
+    }
+
+    /**
+     * Checks if the given {@link JSONArray} is empty.
+     * <p>
+     * This method returns {@code true} if the provided {@code JSONArray} is {@code null} or contains no elements.
+     * Otherwise, it returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray array = new JSONArray();
+     * boolean empty = JSONUtils.isEmpty(array); // returns true
+     *
+     * array.put("value");
+     * boolean notEmpty = JSONUtils.isEmpty(array); // returns false
+     *
+     * JSONArray nullArray = null;
+     * boolean nullEmpty = JSONUtils.isEmpty(nullArray); // returns true
+     * }</pre>
+     *
+     * @param jsonArray the {@link JSONArray} to check
+     * @return {@code true} if the {@link JSONArray} is {@code null} or empty, {@code false} otherwise
+     * @see #length(JSONArray)
+     * @see JSONArray#length()
+     */
+    public static boolean isEmpty(JSONArray jsonArray) {
+        return length(jsonArray) == 0;
+    }
+
+    /**
+     * Checks if the given {@link JSONObject} is not empty.
+     * <p>
+     * This method returns {@code true} if the provided {@code JSONObject} is not {@code null} and contains at least one key-value mapping.
+     * Otherwise, it returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONObject obj = new JSONObject();
+     * boolean empty = JSONUtils.isNotEmpty(obj); // returns false
+     *
+     * obj.put("key", "value");
+     * boolean notEmpty = JSONUtils.isNotEmpty(obj); // returns true
+     *
+     * JSONObject nullObj = null;
+     * boolean nullEmpty = JSONUtils.isNotEmpty(nullObj); // returns false
+     * }</pre>
+     *
+     * @param jsonObject the {@link JSONObject} to check
+     * @return {@code true} if the {@link JSONObject} is not {@code null} and not empty, {@code false} otherwise
+     * @see #isEmpty(JSONObject)
+     * @see JSONObject#length()
+     */
+    public static boolean isNotEmpty(JSONObject jsonObject) {
+        return !isEmpty(jsonObject);
+    }
+
+    /**
+     * Checks if the given {@link JSONArray} is not empty.
+     * <p>
+     * This method returns {@code true} if the provided {@code JSONArray} is not {@code null} and contains at least one element.
+     * Otherwise, it returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray array = new JSONArray();
+     * boolean empty = JSONUtils.isNotEmpty(array); // returns false
+     *
+     * array.put("value");
+     * boolean notEmpty = JSONUtils.isNotEmpty(array); // returns true
+     *
+     * JSONArray nullArray = null;
+     * boolean nullEmpty = JSONUtils.isNotEmpty(nullArray); // returns false
+     * }</pre>
+     *
+     * @param jsonArray the {@link JSONArray} to check
+     * @return {@code true} if the {@link JSONArray} is not {@code null} and not empty, {@code false} otherwise
+     * @see #isEmpty(JSONArray)
+     * @see JSONArray#length()
+     */
+    public static boolean isNotEmpty(JSONArray jsonArray) {
+        return !isEmpty(jsonArray);
+    }
+
+    /**
+     * Checks if the given object is null or equals to {@link JSONObject#NULL}.
+     * <p>
+     * This method returns {@code true} if the provided object is {@code null} or
+     * is equal to {@link JSONObject#NULL}, which is a special sentinel value used
+     * in JSON operations. Otherwise, it returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = JSONUtils.isNull(null); // returns true
+     * boolean result2 = JSONUtils.isNull(JSONObject.NULL); // returns true
+     * boolean result3 = JSONUtils.isNull("some value"); // returns false
+     * }</pre>
+     *
+     * @param object the object to check
+     * @return {@code true} if the object is {@code null} or equals to {@link JSONObject#NULL}, {@code false} otherwise
+     * @see JSONObject#NULL
+     */
+    public static boolean isNull(Object object) {
+        return JSONObject.NULL.equals(object);
+    }
+
+    /**
+     * Checks if the given object is not null and not equal to {@link JSONObject#NULL}.
+     * <p>
+     * This method returns {@code true} if the provided object is neither {@code null} nor
+     * equal to {@link JSONObject#NULL}, which is a special sentinel value used in JSON operations.
+     * Otherwise, it returns {@code false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result1 = JSONUtils.isNotNull("some value"); // returns true
+     * boolean result2 = JSONUtils.isNotNull(JSONObject.NULL); // returns false
+     * boolean result3 = JSONUtils.isNotNull(null); // returns false
+     * }</pre>
+     *
+     * @param object the object to check
+     * @return {@code true} if the object is not {@code null} and not equal to {@link JSONObject#NULL}, {@code false} otherwise
+     * @see JSONObject#NULL
+     * @see #isNull(Object)
+     */
+    public static boolean isNotNull(Object object) {
+        return !isNull(object);
+    }
+
     /**
      * Checks if the given object is an instance of {@link JSONObject}.
      * <p>
@@ -645,9 +865,9 @@ public abstract class JSONUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * JSONObject jsonObject = new JSONObject("{\"name\":\"John Doe\",\"age\":30}");
-     * Person person = JSONUtils.readValue(jsonObject, Person.class);
-     * // person.getName() returns "John Doe"
-     * // person.getAge() returns 30
+     * Map<String, Object> map = JSONUtils.readValueAsMap(jsonObject);
+     * // map.get("name") returns "John Doe"
+     * // map.get("age") returns 30
      *
      * JSONObject nestedJsonObject = new JSONObject("{\"user\":{\"name\":\"Jane\"},\"active\":true}");
      * MyBean bean = JSONUtils.readValue(nestedJsonObject, MyBean.class);
@@ -665,13 +885,84 @@ public abstract class JSONUtils implements Utils {
      */
     @Nonnull
     public static <V> V readValue(JSONObject jsonObject, Class<V> targetType) {
-        BeanMetadata beanMetadata = getBeanMetadata(targetType);
-        V valueObject = ClassUtils.newInstance(targetType);
+        if (isAssignableFrom(Map.class, targetType)) {
+            return (V) readValueAsMap(jsonObject);
+        }
+        return readValueAsBean(jsonObject, targetType);
+    }
+
+    /**
+     * Reads a {@link JSONObject} and converts it into a {@link Map} with {@link String} keys and {@link Object} values.
+     * <p>
+     * This method takes a {@code JSONObject} and maps its properties to a new {@code Map}. Each key-value pair
+     * in the {@code JSONObject} is added to the map, with values being converted if necessary.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONObject jsonObject = new JSONObject("{\"name\":\"John Doe\",\"age\":30}");
+     * Map<String, Object> map = JSONUtils.readValueAsMap(jsonObject);
+     * // map.get("name") returns "John Doe"
+     * // map.get("age") returns 30
+     *
+     * JSONObject nestedJsonObject = new JSONObject("{\"user\":{\"name\":\"Jane\"},\"active\":true}");
+     * Map<String, Object> nestedMap = JSONUtils.readValueAsMap(nestedJsonObject);
+     * // nestedMap.get("user") returns a Map representing the user object
+     * // nestedMap.get("active") returns true
+     * }</pre>
+     *
+     * @param jsonObject the {@code JSONObject} to parse and convert
+     * @return a {@code Map} populated with data from the {@code JSONObject}
+     * @see JSONObject
+     */
+    public static Map<String, Object> readValueAsMap(JSONObject jsonObject) {
+        Map<String, Object> map = newFixedLinkedHashMap(jsonObject.length());
         Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();
             Object value = jsonObject.opt(key);
-            if (value != null) {
+            map.put(key, convertValue(value, Map.class));
+        }
+        return map;
+    }
+
+    /**
+     * Reads a {@link JSONObject} and converts it into an instance of the specified bean type.
+     * <p>
+     * This method takes a {@code JSONObject} and maps its properties to a new instance of the bean type.
+     * It supports nested objects, collections, and type conversion where necessary.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONObject jsonObject = new JSONObject("{\"name\":\"John Doe\",\"age\":30}");
+     * Person person = JSONUtils.readValue(jsonObject, Person.class);
+     * // person.getName() returns "John Doe"
+     * // person.getAge() returns 30
+     *
+     * JSONObject nestedJsonObject = new JSONObject("{\"user\":{\"name\":\"Jane\"},\"active\":true}");
+     * MyBean bean = JSONUtils.readValue(nestedJsonObject, MyBean.class);
+     * // bean.getUser().getName() returns "Jane"
+     * // bean.isActive() returns true
+     * }</pre>
+     *
+     * @param jsonObject the {@code JSONObject} to parse and convert
+     * @param beanClass  the class of the Bean to which the JSON should be converted
+     * @param <V>        the type of the target object
+     * @return an instance of the bean type populated with data from the {@code JSONObject}
+     * @throws IllegalArgumentException if the {@code JSONObject} cannot be converted to the bean type
+     * @see JSONObject
+     * @see #readValue(String, Class)
+     */
+    @Nonnull
+    public static <V> V readValueAsBean(JSONObject jsonObject, Class<V> beanClass) {
+        BeanMetadata beanMetadata = getBeanMetadata(beanClass);
+        V valueObject = ClassUtils.newInstance(beanClass);
+        Iterator<String> iterator = jsonObject.keys();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = jsonObject.opt(key);
+            if (isNotNull(value)) {
                 Method writeMethod = findWriteMethod(beanMetadata, key);
                 if (writeMethod != null) {
                     Type propertyType = writeMethod.getGenericParameterTypes()[0];
@@ -707,9 +998,9 @@ public abstract class JSONUtils implements Utils {
      * Set<String> stringSet = (Set<String>) JSONUtils.readValues(json, Set.class, String.class);
      * }</pre>
      *
-     * @param json         the JSON array string to parse and convert
-     * @param multipleType the class of the target collection or array type to which the JSON should be converted
-     * @param elementType  the class of the elements in the target collection or array
+     * @param json          the JSON array string to parse and convert
+     * @param multipleClass the class of the target collection or array type to which the JSON should be converted
+     * @param elementClass  the class of the elements in the target collection or array
      * @return an instance of the target collection or array type populated with data from the JSON array string,
      * or {@code null} if the target type is not supported
      * @throws IllegalArgumentException if the JSON string is invalid or cannot be parsed into a {@code JSONArray}
@@ -717,9 +1008,61 @@ public abstract class JSONUtils implements Utils {
      * @see #readValues(JSONArray, Class, Class)
      */
     @Nullable
-    public static <V> V readValues(String json, Class<V> multipleType, Class<?> elementType) {
-        return readValues(jsonArray(json), multipleType, elementType);
+    public static <V> V readValues(String json, Class<V> multipleClass, Class<?> elementClass) {
+        return readValues(jsonArray(json), multipleClass, elementClass);
     }
+
+    /**
+     * Reads a {@link JSONArray} and converts it into an instance of the specified target type.
+     * <p>
+     * This method takes a {@code JSONArray} and maps its elements to a new instance of the specified target type.
+     * It supports arrays, {@link List}, {@link Set}, {@link Queue}, and {@link java.util.Enumeration}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray jsonArray = new JSONArray("[\"apple\", \"banana\", \"cherry\"]");
+     *
+     * // Convert to String array
+     * String[] stringArray = (String[]) JSONUtils.readValues(jsonArray, String[].class);
+     *
+     * // Convert to List<String>
+     * List<String> stringList = (List<String>) JSONUtils.readValues(jsonArray, List.class);
+     *
+     * // Convert to Set<String>
+     * Set<String> stringSet = (Set<String>) JSONUtils.readValues(jsonArray, Set.class);
+     * }</pre>
+     *
+     * @param jsonArray  the {@code JSONArray} to parse and convert
+     * @param targetType the target type to which the JSON should be converted, it can be an array, {@link List}, {@link Set}, {@link Queue}, or {@link java.util.Enumeration}
+     * @return an instance of the target type populated with data from the {@code JSONArray},
+     * or {@code null} if the target type is not supported or the {@code JSONArray} is empty
+     * @see JSONArray
+     * @see #readValues(JSONArray, Class, Class)
+     */
+    @Nullable
+    public static Object readValues(JSONArray jsonArray, Type targetType) {
+        if (isEmpty(jsonArray)) {
+            return null;
+        }
+        ParameterizedType parameterizedType = asParameterizedType(targetType);
+        Class<?> multipleClass = null;
+        Class<?> elementClass;
+        if (parameterizedType == null) { // If the target type is not parameterized
+            elementClass = getType(jsonArray.opt(0));
+        } else {
+            multipleClass = asClass(parameterizedType.getRawType());
+            elementClass = asClass(parameterizedType.getActualTypeArguments()[0]);
+        }
+        if (multipleClass == null) {
+            if (elementClass != null) {
+                return readArray(jsonArray, elementClass);
+            }
+            return null;
+        }
+        return readValues(jsonArray, multipleClass, elementClass);
+    }
+
 
     /**
      * Reads a {@link JSONArray} and converts it into an instance of the specified collection or array type.
@@ -742,28 +1085,28 @@ public abstract class JSONUtils implements Utils {
      * Set<String> stringSet = (Set<String>) JSONUtils.readValues(jsonArray, Set.class, String.class);
      * }</pre>
      *
-     * @param jsonArray    the {@code JSONArray} to parse and convert
-     * @param multipleType the class of the target collection or array type to which the JSON should be converted
-     * @param elementType  the class of the elements in the target collection or array
+     * @param jsonArray     the {@code JSONArray} to parse and convert
+     * @param multipleClass the class of the target collection or array type to which the JSON should be converted
+     * @param elementClass  the class of the elements in the target collection or array
      * @return an instance of the target collection or array type populated with data from the {@code JSONArray},
      * or {@code null} if the target type is not supported
      * @see JSONArray
      * @see #readValues(String, Class, Class)
      */
     @Nullable
-    public static <V> V readValues(JSONArray jsonArray, Class<V> multipleType, Class<?> elementType) {
-        if (isArray(multipleType)) {
-            return (V) readArray(jsonArray, multipleType.getComponentType());
-        } else if (isList(multipleType)) {
-            return (V) toList(jsonArray, elementType);
-        } else if (isSet(multipleType)) {
-            return (V) toSet(jsonArray, elementType);
-        } else if (isQueue(multipleType)) {
-            return (V) toQueue(jsonArray, elementType);
-        } else if (isEnumeration(multipleType)) {
-            return (V) toEnumeration(jsonArray, elementType);
-        } else if (isIterable(multipleType)) {
-            return (V) toList(jsonArray, elementType);
+    public static <V> V readValues(JSONArray jsonArray, Class<V> multipleClass, Class<?> elementClass) {
+        if (isArray(multipleClass)) {
+            return (V) readArray(jsonArray, multipleClass.getComponentType());
+        } else if (isList(multipleClass)) {
+            return (V) toList(jsonArray, elementClass);
+        } else if (isSet(multipleClass)) {
+            return (V) toSet(jsonArray, elementClass);
+        } else if (isQueue(multipleClass)) {
+            return (V) toQueue(jsonArray, elementClass);
+        } else if (isEnumeration(multipleClass)) {
+            return (V) toEnumeration(jsonArray, elementClass);
+        } else if (isIterable(multipleClass)) {
+            return (V) toList(jsonArray, elementClass);
         }
         return null;
     }
@@ -862,7 +1205,7 @@ public abstract class JSONUtils implements Utils {
     @Nullable
     public static String writeValueAsString(Object object) {
         Object wrapper = wrap(object);
-        if (wrapper instanceof JSONObject || wrapper instanceof JSONArray) {
+        if (isJSONObject(wrapper) || isJSONArray(wrapper)) {
             return wrapper.toString();
         }
         return null;
@@ -944,22 +1287,15 @@ public abstract class JSONUtils implements Utils {
     }
 
     static Object convertValue(Object value, Type targetType) {
-        if (value == null) {
+        if (isNull(value)) {
             return null;
         }
         Class<?> valueClass = asClass(targetType);
-        if (value instanceof JSONObject) {
+        if (isJSONObject(value)) {
             return readValue((JSONObject) value, valueClass);
-        } else if (value instanceof JSONArray) {
+        } else if (isJSONArray(value)) {
             JSONArray jsonArray = (JSONArray) value;
-            ParameterizedType parameterizedType = asParameterizedType(targetType);
-            Class<?> elementType;
-            if (parameterizedType == null) {
-                elementType = Object.class;
-            } else {
-                elementType = asClass(parameterizedType.getActualTypeArguments()[0]);
-            }
-            return readValues(jsonArray, valueClass, elementType);
+            return readValues(jsonArray, targetType);
         } else {
             valueClass = tryResolveWrapperType(valueClass);
             Object convertedValue = convertIfPossible(value, valueClass);
@@ -967,35 +1303,35 @@ public abstract class JSONUtils implements Utils {
         }
     }
 
-    static Enumeration<?> toEnumeration(JSONArray jsonArray, Class<?> elementType) {
-        Object[] array = readArray(jsonArray, elementType);
+    static Enumeration<?> toEnumeration(JSONArray jsonArray, Class<?> elementClass) {
+        Object[] array = readArray(jsonArray, elementClass);
         return ofEnumeration(array);
     }
 
-    static List<?> toList(JSONArray jsonArray, Class<?> elementType) {
+    static List<?> toList(JSONArray jsonArray, Class<?> elementClass) {
         List<Object> list = newArrayList(jsonArray.length());
-        addValues(jsonArray, list, elementType);
+        addValues(jsonArray, list, elementClass);
         return list;
     }
 
-    static Queue<Object> toQueue(JSONArray jsonArray, Class<?> elementType) {
+    static Queue<Object> toQueue(JSONArray jsonArray, Class<?> elementClass) {
         Queue<Object> queue = newArrayDeque(jsonArray.length());
-        addValues(jsonArray, queue, elementType);
+        addValues(jsonArray, queue, elementClass);
         return queue;
     }
 
-    static Set<Object> toSet(JSONArray jsonArray, Class<?> elementType) {
+    static Set<Object> toSet(JSONArray jsonArray, Class<?> elementClass) {
         int length = jsonArray.length();
         Set<Object> sets = newFixedLinkedHashSet(length);
-        addValues(jsonArray, sets, elementType);
+        addValues(jsonArray, sets, elementClass);
         return sets;
     }
 
-    static <C extends Collection> void addValues(JSONArray jsonArray, C collection, Class<?> elementType) {
+    static <C extends Collection> void addValues(JSONArray jsonArray, C collection, Class<?> elementClass) {
         int length = jsonArray.length();
         for (int i = 0; i < length; i++) {
             Object value = jsonArray.opt(i);
-            value = convertValue(value, elementType);
+            value = convertValue(value, elementClass);
             collection.add(value);
         }
     }
