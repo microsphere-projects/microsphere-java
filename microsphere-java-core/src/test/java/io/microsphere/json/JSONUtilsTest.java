@@ -20,6 +20,10 @@ package io.microsphere.json;
 
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.collection.CollectionUtils;
+import io.microsphere.test.A;
+import io.microsphere.test.B;
+import io.microsphere.test.C;
+import io.microsphere.test.D;
 import io.microsphere.test.Data;
 import io.microsphere.test.MultipleValueData;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +47,7 @@ import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONUtils.append;
 import static io.microsphere.json.JSONUtils.convertValue;
+import static io.microsphere.json.JSONUtils.determineElementClass;
 import static io.microsphere.json.JSONUtils.isEmpty;
 import static io.microsphere.json.JSONUtils.isNotEmpty;
 import static io.microsphere.json.JSONUtils.isNotNull;
@@ -70,6 +75,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -664,16 +670,67 @@ class JSONUtilsTest {
     }
 
     @Test
+    void testWriteBeanAsString() throws JSONException {
+        ConfigurationProperty configurationProperty = newConfigurationProperty();
+        String json = writeBeanAsString(configurationProperty);
+        assertConfigurationPropertyJSON(json);
+    }
+
+    @Test
     void testConvertValueWithNullValue() {
         assertNull(convertValue(null, String.class));
         assertNull(convertValue(NULL, String.class));
     }
 
     @Test
-    void testWriteBeanAsString() throws JSONException {
-        ConfigurationProperty configurationProperty = newConfigurationProperty();
-        String json = writeBeanAsString(configurationProperty);
-        assertConfigurationPropertyJSON(json);
+    void testDetermineElementClassWithSameTypeElements() {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("1");
+        jsonArray.put("2");
+
+        Class<?> elementClass = determineElementClass(jsonArray);
+        assertSame(String.class, elementClass);
+    }
+
+    @Test
+    void testDetermineElementClassWithDifferentTypeElements() {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put("1");
+        jsonArray.put("2");
+        jsonArray.put(3);
+        Class<?> elementClass = determineElementClass(jsonArray);
+        assertSame(Object.class, elementClass);
+    }
+
+    @Test
+    void testDetermineElementClassWithHierarchicalTypeElements() {
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.put(new D());
+        Class<?> elementClass = determineElementClass(jsonArray);
+        assertSame(D.class, elementClass);
+        
+        jsonArray.put(new B());
+        elementClass = determineElementClass(jsonArray);
+        assertSame(B.class, elementClass);
+
+        jsonArray.put(new C());
+        elementClass = determineElementClass(jsonArray);
+        assertSame(B.class, elementClass);
+
+        jsonArray.put(new A());
+        elementClass = determineElementClass(jsonArray);
+        assertSame(A.class, elementClass);
+
+        jsonArray.put(new Object());
+        elementClass = determineElementClass(jsonArray);
+        assertSame(Object.class, elementClass);
+    }
+
+    @Test
+    void testDetermineElementClassWithoutElement() {
+        JSONArray jsonArray = new JSONArray();
+        Class<?> elementClass = determineElementClass(jsonArray);
+        assertSame(Object.class, elementClass);
     }
 
     Data createData() {
