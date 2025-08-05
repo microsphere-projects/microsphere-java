@@ -1,0 +1,32 @@
+[
+  {
+    "name": "microsphere.artifact-id.manifest-attribute-names",
+    "type": "java.lang.String[]",
+    "defaultValue": "Bundle-Name,Automatic-Module-Name,Implementation-Title",
+    "required": false,
+    "description": "The attribute names in the 'META-INF\/MANIFEST' resource are retrieved as the artifact id",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.classloading.ManifestArtifactResourceResolver",
+      "declaredField": "ARTIFACT_ID_ATTRIBUTE_NAMES_PROPERTY_NAME"
+    }
+  },
+  {
+    "name": "microsphere.artifact-version.manifest-attribute-names",
+    "type": "java.lang.String[]",
+    "defaultValue": "Bundle-Version,Implementation-Version",
+    "required": false,
+    "description": "The attribute names in the 'META-INF\/MANIFEST' resource are retrieved as the artifact version",
+    "metadata": {
+      "sources": [
+        "system-properties"
+      ],
+      "targets": [],
+      "declaredClass": "io.microsphere.classloading.ManifestArtifactResourceResolver",
+      "declaredField": "VERSION_ATTRIBUTE_NAMES_PROPERTY_NAME"
+    }
+  }
+]
