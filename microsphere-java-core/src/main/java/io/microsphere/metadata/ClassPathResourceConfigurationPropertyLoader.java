@@ -88,7 +88,7 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
 
     void load(List<ConfigurationProperty> configurationProperties, ThrowableSupplier<InputStream> streamSupplier) throws Throwable {
         try (InputStream inputStream = streamSupplier.get()) {
-            configurationProperties.addAll(this.configurationPropertyReader.load(inputStream));
+            configurationProperties.addAll(this.configurationPropertyReader.read(inputStream));
         }
     }
 }
