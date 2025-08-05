@@ -45,8 +45,8 @@ class ConfigurationPropertyLoaderTest {
     @Test
     void testLoadAll() {
         List<ConfigurationProperty> configurationProperties = loadAll();
-        assertEquals(1, configurationProperties.size());
-        assertEquals(newConfigurationProperty(), configurationProperties.get(0));
+        assertEquals(3, configurationProperties.size());
+        assertEquals(newConfigurationProperty(), configurationProperties.get(2));
     }
 
     ConfigurationProperty newConfigurationProperty() {
