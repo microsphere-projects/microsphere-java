@@ -20,10 +20,10 @@ package io.microsphere.constants;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
-import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE;
+import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
+import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.constants.ResourceConstants.METADATA_RESOURCE;
 import static io.microsphere.constants.ResourceConstants.MICROSPHERE_METADATA_RESOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
