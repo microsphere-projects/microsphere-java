@@ -21,9 +21,11 @@ package io.microsphere.json;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -39,6 +41,7 @@ import static java.lang.Double.NEGATIVE_INFINITY;
 import static java.lang.Double.NaN;
 import static java.lang.Double.POSITIVE_INFINITY;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.Thread.State.NEW;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -466,13 +469,25 @@ class JSONObjectTest {
 
     @Test
     void testWrap() throws JSONException {
+        // null
         assertEquals(NULL, wrap(null));
+        // NULL
         assertWrap(NULL);
+        // JSONObject
         assertWrap(this.jsonObject);
+        // JSONArray
         assertWrap(new JSONArray());
-        assertEquals(new JSONArray(ofList(1, 2, 3)), wrap(ofList(1, 2, 3)));
-        assertEquals(new JSONArray(ofArray(1, 2, 3)), wrap(ofArray(1, 2, 3)));
+
+        Integer[] values = ofArray(1, 2, 3);
+        // Iterable
+        assertEquals(new JSONArray(ofList(values)), wrap(ofList(values)));
+        // Array
+        assertEquals(new JSONArray(ofArray(values)), wrap(ofArray(values)));
+        // Enumeration
+        assertEquals(new JSONArray(ofEnumeration(values)), wrap(ofEnumeration((values))));
+        // Map
         assertEquals(new JSONObject(ofMap("name", "Mercy")), wrap(ofMap("name", "Mercy")));
+        // Wrapper
         assertWrap(TRUE);
         assertWrap(FALSE);
         assertWrap(Byte.MAX_VALUE);
@@ -488,10 +503,19 @@ class JSONObjectTest {
         assertWrap(Float.MIN_VALUE);
         assertWrap(Double.MAX_VALUE);
         assertWrap(Double.MIN_VALUE);
+        // CharSequence(String)
         assertWrap("Hello");
+        // CharSequence
         assertEquals("1.0", wrap(new StringBuilder("1.0")));
+        // Class
         assertEquals("java.lang.String", wrap(String.class));
-        assertNull(wrap(this));
+        // Enum
+        assertEquals("NEW", wrap(NEW));
+        // java.* class
+        Date date = new Date();
+        assertEquals(date.toString(), wrap(date));
+        // Java Beans
+        assertEquals(new JSONObject(), wrap(this));
     }
 
     @Test

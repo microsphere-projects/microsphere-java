@@ -21,6 +21,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ServiceLoaderUtils;
 
@@ -42,7 +43,7 @@ import static java.util.Collections.unmodifiableList;
  * @see io.microsphere.annotation.ConfigurationProperty
  * @since 1.0.0
  */
-public interface ConfigurationPropertyLoader {
+public interface ConfigurationPropertyLoader extends Prioritized {
 
     /**
      * Loads a list of {@link ConfigurationProperty} instances.

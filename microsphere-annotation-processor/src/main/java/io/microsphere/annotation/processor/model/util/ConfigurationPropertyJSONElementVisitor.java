@@ -19,7 +19,7 @@ package io.microsphere.annotation.processor.model.util;
 
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
-import io.microsphere.metadata.ConfigurationPropertyJSONGenerator;
+import io.microsphere.metadata.ConfigurationPropertyGenerator;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
@@ -42,7 +42,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 
 /**
  * {@link ConfigurationProperty @ConfigurationProperty}'s {@link AnnotatedElementJSONElementVisitor} based on
- * {@link ConfigurationPropertyJSONGenerator} generating the JSON representation of the configuration property metadata.
+ * {@link ConfigurationPropertyGenerator} generating the JSON representation of the configuration property metadata.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see AnnotatedElementJSONElementVisitor
@@ -54,11 +54,11 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
 
     public static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
-    private final ConfigurationPropertyJSONGenerator generator;
+    private final ConfigurationPropertyGenerator generator;
 
     public ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
         super(processingEnv, CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
-        this.generator = loadFirstService(ConfigurationPropertyJSONGenerator.class);
+        this.generator = loadFirstService(ConfigurationPropertyGenerator.class);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
         return false;
     }
 
-    public ConfigurationPropertyJSONGenerator getGenerator() {
+    public ConfigurationPropertyGenerator getGenerator() {
         return generator;
     }
 

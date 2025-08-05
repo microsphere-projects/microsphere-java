@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static io.microsphere.annotation.processor.ConfigurationPropertyAnnotationProcessor.CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME;
 import static io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,7 +56,6 @@ class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationPro
 
     @Test
     void testConstants() {
-        assertEquals("META-INF/microsphere/configuration-properties.json", CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME);
         assertEquals("io.microsphere.annotation.ConfigurationProperty", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
     }
 }

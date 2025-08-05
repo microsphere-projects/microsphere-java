@@ -21,13 +21,11 @@ import io.microsphere.beans.BeanUtils;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.json.JSONObject;
 
-import java.util.Map;
-
-import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
+import static io.microsphere.json.JSONUtils.writeBeanAsString;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * {@link ConfigurationPropertyJSONGenerator} class based on Java Reflection API
+ * {@link ConfigurationPropertyGenerator} class based on Java Reflection API
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
@@ -67,18 +65,16 @@ import static io.microsphere.util.Assert.assertNotNull;
  * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationPropertyJSONGenerator
+ * @see ConfigurationPropertyGenerator
  * @see JSONObject
  * @see BeanUtils#resolvePropertiesAsMap(Object)
  * @since 1.0.0
  */
-public class ReflectiveConfigurationPropertyJSONGenerator implements ConfigurationPropertyJSONGenerator {
+public class ReflectiveConfigurationPropertyGenerator implements ConfigurationPropertyGenerator {
 
     @Override
     public String generate(ConfigurationProperty configurationProperty) throws IllegalArgumentException {
         assertNotNull(configurationProperty, () -> "The 'ConfigurationProperty' argument must not be null");
-        Map<String, Object> properties = resolvePropertiesAsMap(configurationProperty);
-        JSONObject jsonObject = new JSONObject(properties);
-        return jsonObject.toString();
+        return writeBeanAsString(configurationProperty);
     }
 }

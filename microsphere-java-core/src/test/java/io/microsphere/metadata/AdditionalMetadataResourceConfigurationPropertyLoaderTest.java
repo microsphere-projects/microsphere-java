@@ -19,37 +19,38 @@ package io.microsphere.metadata;
 
 
 import io.microsphere.beans.ConfigurationProperty;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
-import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
+import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link ConfigurationPropertyLoader} Test
+ * {@link AdditionalMetadataResourceConfigurationPropertyLoader} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationPropertyLoader
+ * @see AdditionalMetadataResourceConfigurationPropertyLoader
  * @since 1.0.0
  */
-class ConfigurationPropertyLoaderTest {
+class AdditionalMetadataResourceConfigurationPropertyLoaderTest {
+
+    private AdditionalMetadataResourceConfigurationPropertyLoader configurationPropertyLoader;
+
+    @BeforeEach
+    void setUp() {
+        this.configurationPropertyLoader = new AdditionalMetadataResourceConfigurationPropertyLoader();
+    }
 
     @Test
     void testLoad() throws Throwable {
-        assertEquals(ofList(newConfigurationProperty()), new DefaultConfigurationPropertyLoader().load());
+        List<ConfigurationProperty> configurationProperties = configurationPropertyLoader.load();
+        assertEquals(2, configurationProperties.size());
     }
 
     @Test
-    void testLoadAll() {
-        List<ConfigurationProperty> configurationProperties = loadAll();
-        assertEquals(3, configurationProperties.size());
-        assertEquals(newConfigurationProperty(), configurationProperties.get(2));
-    }
-
-    ConfigurationProperty newConfigurationProperty() {
-        return new ConfigurationProperty(MICROSPHERE_PROPERTY_NAME_PREFIX + "test");
+    void testGetPriority() {
+        assertEquals(MIN_PRIORITY + 9, configurationPropertyLoader.getPriority());
     }
 }

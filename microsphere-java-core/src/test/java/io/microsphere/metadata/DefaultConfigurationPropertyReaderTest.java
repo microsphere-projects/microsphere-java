@@ -19,37 +19,44 @@ package io.microsphere.metadata;
 
 
 import io.microsphere.beans.ConfigurationProperty;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.InputStream;
 import java.util.List;
 
-import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
-import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
+import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
+import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link ConfigurationPropertyLoader} Test
+ * {@link DefaultConfigurationPropertyReader} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationPropertyLoader
+ * @see DefaultConfigurationPropertyReader
  * @since 1.0.0
  */
-class ConfigurationPropertyLoaderTest {
+class DefaultConfigurationPropertyReaderTest {
 
-    @Test
-    void testLoad() throws Throwable {
-        assertEquals(ofList(newConfigurationProperty()), new DefaultConfigurationPropertyLoader().load());
+    private DefaultConfigurationPropertyReader configurationPropertyReader;
+
+    @BeforeEach
+    void setUp() {
+        this.configurationPropertyReader = new DefaultConfigurationPropertyReader();
     }
 
     @Test
-    void testLoadAll() {
-        List<ConfigurationProperty> configurationProperties = loadAll();
-        assertEquals(3, configurationProperties.size());
-        assertEquals(newConfigurationProperty(), configurationProperties.get(2));
+    void testRead() throws Throwable {
+        ClassLoader classLoader = getClass().getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream(ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE)) {
+            List<ConfigurationProperty> configurationProperties = this.configurationPropertyReader.read(inputStream);
+            assertEquals(2, configurationProperties.size());
+        }
+
     }
 
-    ConfigurationProperty newConfigurationProperty() {
-        return new ConfigurationProperty(MICROSPHERE_PROPERTY_NAME_PREFIX + "test");
+    @Test
+    void testGetPriority() {
+        assertEquals(MIN_PRIORITY, configurationPropertyReader.getPriority());
     }
 }

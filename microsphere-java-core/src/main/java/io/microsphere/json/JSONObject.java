@@ -19,19 +19,30 @@ package io.microsphere.json;
 import io.microsphere.json.JSONStringer.Scope;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
+import static io.microsphere.collection.EnumerationUtils.isEnumeration;
+import static io.microsphere.collection.MapUtils.isMap;
 import static io.microsphere.json.JSON.checkDouble;
 import static io.microsphere.json.JSON.toBoolean;
 import static io.microsphere.json.JSON.toDouble;
 import static io.microsphere.json.JSON.toInteger;
 import static io.microsphere.json.JSON.toLong;
 import static io.microsphere.json.JSON.typeMismatch;
+import static io.microsphere.json.JSONUtils.isJSONArray;
+import static io.microsphere.json.JSONUtils.isJSONObject;
 import static io.microsphere.lang.function.ThrowableAction.execute;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isCharSequence;
+import static io.microsphere.util.ClassUtils.isClass;
+import static io.microsphere.util.ClassUtils.isEnum;
+import static io.microsphere.util.ClassUtils.isNumber;
+import static io.microsphere.util.ClassUtils.isWrapperType;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
@@ -708,7 +719,7 @@ public class JSONObject {
      */
     /* Return a raw type for API compatibility */
     @SuppressWarnings("rawtypes")
-    public Iterator keys() {
+    public Iterator<String> keys() {
         return this.nameValuePairs.keySet().iterator();
     }
 
@@ -847,30 +858,27 @@ public class JSONObject {
      */
     @SuppressWarnings("rawtypes")
     public static Object wrap(Object o) {
-        if (o == null) {
+        if (o == null || o.equals(NULL)) {
             return NULL;
         }
-        if (o instanceof JSONArray || o instanceof JSONObject) {
-            return o;
-        }
-        if (o.equals(NULL)) {
+        if (isJSONObject(o) || isJSONArray(o) || isNumber(o) || isWrapperType(o)) {
             return o;
         }
         try {
-            if (o instanceof Collection) {
-                return new JSONArray((Collection) o);
-            } else if (o.getClass().isArray()) {
+            if (o instanceof Iterable) {
+                return new JSONArray((Iterable) o);
+            } else if (isArray(o)) {
                 return new JSONArray(o);
-            } else if (o instanceof Map) {
+            } else if (isEnumeration(o)) {
+                return new JSONArray((Enumeration<?>) o);
+            } else if (isMap(o)) {
                 return new JSONObject((Map) o);
-            } else if (o instanceof Boolean || o instanceof Byte || o instanceof Character || o instanceof Double
-                    || o instanceof Float || o instanceof Integer || o instanceof Long || o instanceof Short
-                    || o instanceof String) {
-                return o;
-            } else if (o instanceof Class) {
+            } else if (isClass(o)) {
                 return getTypeName((Class) o);
-            } else if (o.getClass().getPackage().getName().startsWith("java.")) {
+            } else if (isCharSequence(o) || isEnum(o) || getTypeName(o).startsWith("java.")) {
                 return o.toString();
+            } else { // Java Bean
+                return new JSONObject(resolvePropertiesAsMap(o));
             }
         } catch (Exception ignored) {
         }

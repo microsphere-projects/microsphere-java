@@ -22,7 +22,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.Enumeration;
 
+import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -70,6 +72,16 @@ class JSONArrayTest {
     void testConstructorWithJSONArray() throws JSONException {
         JSONTokener jsonTokener = new JSONTokener("[ 1 ,2 , 3]");
         JSONArray jsonArray = new JSONArray(jsonTokener);
+        assertEquals(3, jsonArray.length());
+        assertEquals(1, jsonArray.getInt(0));
+        assertEquals(2, jsonArray.getInt(1));
+        assertEquals(3, jsonArray.getInt(2));
+    }
+
+    @Test
+    void testConstructorWithEnumeration() throws JSONException {
+        Enumeration<?> enumeration = ofEnumeration(1, 2, 3);
+        JSONArray jsonArray = new JSONArray(enumeration);
         assertEquals(3, jsonArray.length());
         assertEquals(1, jsonArray.getInt(0));
         assertEquals(2, jsonArray.getInt(1));
