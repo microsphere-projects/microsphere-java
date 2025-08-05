@@ -16,8 +16,17 @@
  */
 package io.microsphere.collection;
 
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
+import java.util.StringJoiner;
+
+import static io.microsphere.constants.SymbolConstants.COMMA;
+import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET;
+import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET;
+import static io.microsphere.constants.SymbolConstants.SPACE;
+import static java.lang.String.valueOf;
+import static java.util.Objects.hash;
 
 /**
  * <p>{@code ArrayEnumeration} is an implementation of enumeration based on an array,
@@ -64,5 +73,27 @@ public class ArrayEnumeration<E> implements Enumeration<E> {
             throw new NoSuchElementException("No more elements exist");
         }
         return elements[position++];
+    }
+
+    @Override
+    public int hashCode() {
+        return hash(this.elements);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (!(o instanceof ArrayEnumeration)) return false;
+
+        ArrayEnumeration<?> that = (ArrayEnumeration<?>) o;
+        return Arrays.equals(elements, that.elements);
+    }
+
+    @Override
+    public String toString() {
+        StringJoiner stringJoiner = new StringJoiner(COMMA + SPACE, LEFT_SQUARE_BRACKET, RIGHT_SQUARE_BRACKET);
+        for (E element : elements) {
+            stringJoiner.add(valueOf(element));
+        }
+        return stringJoiner.toString();
     }
 }

@@ -21,10 +21,13 @@ package io.microsphere.metadata;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.json.JSONArray;
+import io.microsphere.json.JSONException;
 import io.microsphere.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
+import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,30 +35,30 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link DefaultConfigurationPropertyJSONGenerator} Test
+ * {@link DefaultConfigurationPropertyGenerator} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see DefaultConfigurationPropertyJSONGenerator
+ * @see DefaultConfigurationPropertyGenerator
  * @since 1.0.0
  */
-class DefaultConfigurationPropertyJSONGeneratorTest {
+class DefaultConfigurationPropertyGeneratorTest {
 
-    private DefaultConfigurationPropertyJSONGenerator generator;
+    private DefaultConfigurationPropertyGenerator generator;
 
     @BeforeEach
     void setUp() {
-        this.generator = new DefaultConfigurationPropertyJSONGenerator();
+        this.generator = new DefaultConfigurationPropertyGenerator();
     }
 
     @Test
-    void testGenerate() throws Throwable {
+    void testGenerate() throws JSONException {
         ConfigurationProperty configurationProperty = newConfigurationProperty();
         String json = generator.generate(configurationProperty);
         assertConfigurationPropertyJSON(json);
     }
 
     @Test
-    void testGenerateWithConfigurationProperty() throws Throwable {
+    void testGenerateWithConfigurationProperty() throws JSONException {
         ConfigurationProperty configurationProperty = new ConfigurationProperty("server.port", Integer.class);
         String json = generator.generate(configurationProperty);
         JSONObject jsonObject = new JSONObject(json);
@@ -98,7 +101,7 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
     }
 
     @Test
-    void testGenerateWithMetadata() throws Throwable {
+    void testGenerateWithMetadata() throws JSONException {
         Metadata metadata = new Metadata();
         String json = generator.generate(metadata);
         JSONObject jsonObject = new JSONObject(json);
@@ -140,37 +143,5 @@ class DefaultConfigurationPropertyJSONGeneratorTest {
     void testGetPriority() {
         int priority = generator.getPriority();
         assertEquals(MIN_PRIORITY, priority);
-    }
-
-    static void assertConfigurationPropertyJSON(String json) throws Throwable {
-        JSONObject jsonObject = new JSONObject(json);
-        assertEquals("server.port", jsonObject.getString("name"));
-        assertEquals("java.lang.Integer", jsonObject.getString("type"));
-        assertEquals(8080, jsonObject.getInt("value"));
-        assertEquals(8080, jsonObject.getInt("defaultValue"));
-        assertEquals(true, jsonObject.getBoolean("required"));
-        assertEquals("The port number for the server", jsonObject.getString("description"));
-        JSONObject metadata = jsonObject.getJSONObject("metadata");
-        assertEquals(1, metadata.getJSONArray("sources").length());
-        assertEquals("application.properties", metadata.getJSONArray("sources").getString(0));
-        assertEquals(1, metadata.getJSONArray("targets").length());
-        assertEquals("server", metadata.getJSONArray("targets").getString(0));
-        assertEquals("com.example.ServerConfig", metadata.getString("declaredClass"));
-        assertEquals("port", metadata.getString("declaredField"));
-    }
-
-    static ConfigurationProperty newConfigurationProperty() {
-        ConfigurationProperty configurationProperty = new ConfigurationProperty("server.port", Integer.class);
-        configurationProperty.setValue(8080);
-        configurationProperty.setDefaultValue(8080);
-        configurationProperty.setRequired(true);
-        configurationProperty.setDescription("The port number for the server");
-
-        Metadata metadata = configurationProperty.getMetadata();
-        metadata.getSources().add("application.properties");
-        metadata.getTargets().add("server");
-        metadata.setDeclaredClass("com.example.ServerConfig");
-        metadata.setDeclaredField("port");
-        return configurationProperty;
     }
 }

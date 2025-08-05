@@ -22,37 +22,36 @@ import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
-import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.assertConfigurationPropertyJSON;
-import static io.microsphere.metadata.DefaultConfigurationPropertyJSONGeneratorTest.newConfigurationProperty;
+import java.io.InputStream;
+import java.util.List;
+
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link ReflectiveConfigurationPropertyJSONGenerator} Test
+ * {@link DefaultConfigurationPropertyReader} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ReflectiveConfigurationPropertyJSONGenerator
+ * @see DefaultConfigurationPropertyReader
  * @since 1.0.0
  */
-class ReflectiveConfigurationPropertyJSONGeneratorTest {
+class ConfigurationPropertiesJSONReaderTest {
 
-    private ReflectiveConfigurationPropertyJSONGenerator generator;
+    private static final String JSON_RESOURCE_NAME = "META-INF/microsphere/configuration-properties.json";
+
+    private DefaultConfigurationPropertyReader reader;
 
     @BeforeEach
     void setUp() {
-        this.generator = new ReflectiveConfigurationPropertyJSONGenerator();
+        this.reader = new DefaultConfigurationPropertyReader();
     }
 
     @Test
-    void testGenerate() throws Throwable {
-        ConfigurationProperty configurationProperty = newConfigurationProperty();
-        String json = generator.generate(configurationProperty);
-        assertConfigurationPropertyJSON(json);
-    }
-
-    @Test
-    void testGetPriority() {
-        int priority = generator.getPriority();
-        assertEquals(NORMAL_PRIORITY, priority);
+    void testLoad() throws Throwable {
+        ClassLoader classLoader = getClassLoader(getClass());
+        try (InputStream inputStream = classLoader.getResourceAsStream("META-INF/microsphere/configuration-properties.json")) {
+            List<ConfigurationProperty> configurationProperties = reader.read(inputStream);
+            assertEquals(6, configurationProperties.size());
+        }
     }
 }

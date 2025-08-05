@@ -31,7 +31,7 @@ import static io.microsphere.json.JSONUtils.appendName;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
- * The default implementation class of {@link ConfigurationPropertyJSONGenerator}.
+ * The default implementation class of {@link ConfigurationPropertyGenerator}.
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
@@ -71,11 +71,11 @@ import static io.microsphere.util.Assert.assertNotNull;
  * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationPropertyJSONGenerator
+ * @see ConfigurationPropertyGenerator
  * @see ConfigurationProperty
  * @since 1.0.0
  */
-public class DefaultConfigurationPropertyJSONGenerator implements ConfigurationPropertyJSONGenerator {
+public class DefaultConfigurationPropertyGenerator implements ConfigurationPropertyGenerator {
 
     @Override
     public String generate(ConfigurationProperty configurationProperty) {

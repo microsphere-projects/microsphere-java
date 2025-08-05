@@ -27,9 +27,19 @@ import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 
+import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_CHAR_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_DOUBLE_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_FLOAT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_INT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_LONG_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
+import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
@@ -39,8 +49,10 @@ import static io.microsphere.util.ClassUtils.findAllClasses;
 import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
+import static io.microsphere.util.ClassUtils.getClasses;
 import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
@@ -50,6 +62,7 @@ import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.ClassUtils.isDerived;
+import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isFinal;
 import static io.microsphere.util.ClassUtils.isGeneralClass;
 import static io.microsphere.util.ClassUtils.isNumber;
@@ -63,6 +76,8 @@ import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
+import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
+import static java.lang.Thread.State.NEW;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -88,7 +103,14 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsArray() {
+    void testIsArrayWithObject() {
+        assertTrue(isArray(EMPTY_OBJECT_ARRAY));
+        assertTrue(isArray(EMPTY_BOOLEAN_ARRAY));
+        assertFalse(isArray((Object) null));
+    }
+
+    @Test
+    void testIsArrayWithClass() {
 
         // Primitive-Type array
         assertTrue(isArray(int[].class));
@@ -225,7 +247,15 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsSimpleType() {
+    void testIsSimpleTypeWithObject() {
+        assertTrue(isSimpleType("Hello,World"));
+        assertTrue(isSimpleType(new Integer(1)));
+
+        assertFalse(isSimpleType(new ClassUtilsTest()));
+    }
+
+    @Test
+    void testIsSimpleTypeWithClass() {
         assertTrue(isSimpleType(Void.class));
         assertTrue(isSimpleType(Boolean.class));
         assertTrue(isSimpleType(Character.class));
@@ -246,7 +276,17 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsCharSequence() {
+    void testIsCharSequenceWithObject() {
+        assertTrue(isCharSequence(new StringBuilder()));
+        assertTrue(isCharSequence(new StringBuffer()));
+        assertTrue(isCharSequence(new String()));
+
+        assertFalse(isCharSequence(new Object()));
+        assertFalse(isCharSequence(null));
+    }
+
+    @Test
+    void testIsCharSequenceWithType() {
         assertTrue(isCharSequence(CharSequence.class));
         assertTrue(isCharSequence(String.class));
         assertTrue(isCharSequence(StringBuilder.class));
@@ -258,7 +298,20 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsNumber() {
+    void testIsNumberWithObject() {
+        assertTrue(isNumber(new Integer(1)));
+        assertTrue(isNumber(new Long(1L)));
+        assertTrue(isNumber(new Float(1.0f)));
+        assertTrue(isNumber(new Double(1.0d)));
+        assertTrue(isNumber(new BigDecimal("1.0")));
+        assertTrue(isNumber(new BigInteger("1")));
+
+        assertFalse(isNumber(new ClassUtilsTest()));
+        assertFalse(isNumber(null));
+    }
+
+    @Test
+    void testIsNumberWithType() {
         assertTrue(isNumber(Number.class));
         assertTrue(isNumber(Byte.class));
         assertTrue(isNumber(Short.class));
@@ -278,6 +331,22 @@ class ClassUtilsTest extends AbstractTestCase {
         assertTrue(isClass(String.class));
         assertFalse(isClass("Hello"));
         assertFalse(isClass(null));
+    }
+
+    @Test
+    void testIsEnumWithObject() {
+        assertTrue(isEnum(NEW));
+
+        assertFalse(isEnum("NEW"));
+        assertFalse(isEnum((Object) null));
+    }
+
+    @Test
+    void testIsEnumWithClass() {
+        assertTrue(isEnum(Thread.State.class));
+
+        assertFalse(isEnum(String.class));
+        assertFalse(isEnum(null));
     }
 
     @Test
@@ -332,6 +401,14 @@ class ClassUtilsTest extends AbstractTestCase {
 
         assertEquals(Double.class, resolveWrapperType(Double.TYPE));
         assertEquals(Double.class, resolveWrapperType(Double.class));
+    }
+
+    @Test
+    void testTryResolveWrapperType() {
+        assertSame(Integer.class, tryResolveWrapperType(int.class));     // returns Integer.class
+        assertSame(Integer.class, tryResolveWrapperType(Integer.class)); // returns Integer.class
+        assertSame(String.class, tryResolveWrapperType(String.class));   // returns String.class
+        assertNull(tryResolveWrapperType(null));             // returns null
     }
 
     @Test
@@ -517,9 +594,39 @@ class ClassUtilsTest extends AbstractTestCase {
         PRIMITIVE_TYPES.forEach(t -> assertSame(emptyList(), findAllClasses(t, a -> true)));
     }
 
+    @Test
+    void testGetTypeNameWithObject() {
+        // a) Top level classes
+        assertEquals("java.lang.String", getTypeName("Hello,World"));
+
+        // b) Nested classes (static member classes)
+        assertEquals("io.microsphere.collection.DefaultEntry", getTypeName(ofEntry("Key", "Value")));
+
+        // c) Inner classes (non-static member classes)
+        assertEquals("java.lang.Thread$State", getTypeName(NEW));
+
+        // d) Local classes (named classes declared within a method)
+        class LocalClass {
+        }
+        assertEquals("io.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(new LocalClass()));
+
+        // e) Anonymous classes
+        Serializable instance = new Serializable() {
+        };
+        assertEquals("io.microsphere.util.ClassUtilsTest$1", getTypeName(instance));
+
+        // f) Array classes
+        assertEquals("byte[]", getTypeName(EMPTY_BYTE_ARRAY));
+        assertEquals("char[]", getTypeName(EMPTY_CHAR_ARRAY));
+        assertEquals("short[]", getTypeName(EMPTY_SHORT_ARRAY));
+        assertEquals("int[]", getTypeName(EMPTY_INT_ARRAY));
+        assertEquals("long[]", getTypeName(EMPTY_LONG_ARRAY));
+        assertEquals("float[]", getTypeName(EMPTY_FLOAT_ARRAY));
+        assertEquals("double[]", getTypeName(EMPTY_DOUBLE_ARRAY));
+    }
 
     @Test
-    void testGetTypeName() {
+    void testGetTypeNameWithClass() {
         // a) Top level classes
         assertEquals("java.lang.String", getTypeName(String.class));
 
@@ -532,12 +639,12 @@ class ClassUtilsTest extends AbstractTestCase {
         // d) Local classes (named classes declared within a method)
         class LocalClass {
         }
-        assertEquals("io.microsphere.util.ClassUtilsTest$1LocalClass", getTypeName(LocalClass.class));
+        assertEquals("io.microsphere.util.ClassUtilsTest$2LocalClass", getTypeName(LocalClass.class));
 
         // e) Anonymous classes
         Serializable instance = new Serializable() {
         };
-        assertEquals("io.microsphere.util.ClassUtilsTest$1", getTypeName(instance.getClass()));
+        assertEquals("io.microsphere.util.ClassUtilsTest$2", getTypeName(instance.getClass()));
 
         // f) Array classes
         assertEquals("byte[]", getTypeName(byte[].class));
@@ -547,6 +654,16 @@ class ClassUtilsTest extends AbstractTestCase {
         assertEquals("long[]", getTypeName(long[].class));
         assertEquals("float[]", getTypeName(float[].class));
         assertEquals("double[]", getTypeName(double[].class));
+    }
+
+    @Test
+    void testGetTypeNameWithNullClass() {
+        assertNull(getTypeName(null));
+    }
+
+    @Test
+    void testGetTypeNameWithNullObject() {
+        assertNull(getTypeName((Object) null));
     }
 
     @Test
@@ -604,12 +721,35 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testGetType() {
+        assertNull(getType(null));
+        assertSame(String.class, getType(""));
+        assertSame(Class.class, getType(String.class));
+    }
+
+    @Test
+    void testGetClass() {
+        assertNull(ClassUtils.getClass(null));
+        assertSame(String.class, ClassUtils.getClass(""));
+        assertSame(Class.class, ClassUtils.getClass(String.class));
+    }
+
+    @Test
     void testGetTypes() {
         assertSame(EMPTY_CLASS_ARRAY, getTypes(null));
         assertSame(EMPTY_CLASS_ARRAY, getTypes());
         assertSame(EMPTY_CLASS_ARRAY, getTypes(EMPTY_OBJECT_ARRAY));
 
-        assertArrayEquals(new Object[]{String.class, Integer.class}, getTypes("", Integer.valueOf((1))));
+        assertArrayEquals(ofArray(String.class, Integer.class), getTypes("", Integer.valueOf((1))));
+    }
+
+    @Test
+    void testGetClasses() {
+        assertSame(EMPTY_CLASS_ARRAY, getClasses(null));
+        assertSame(EMPTY_CLASS_ARRAY, getClasses());
+        assertSame(EMPTY_CLASS_ARRAY, getClasses(EMPTY_OBJECT_ARRAY));
+
+        assertArrayEquals(ofArray(String.class, Integer.class), getClasses("", Integer.valueOf((1))));
     }
 
     @Test
@@ -636,7 +776,8 @@ class ClassUtilsTest extends AbstractTestCase {
         assertEquals("test", cast("test", CharSequence.class));
     }
 
-    private void assertFindClassNamesMethod(Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
+    private void assertFindClassNamesMethod
+            (Class<?> targetClassInClassPath, BiFunction<File, Boolean, Set<String>> findClassNamesFunction) {
         // Null
         assertSame(emptySet(), findClassNamesFunction.apply(null, true));
 

@@ -284,7 +284,7 @@ public class JSONTokener {
      * @return a literal value
      * @throws JSONException if processing of json failed
      */
-    Object readLiteral() throws JSONException {
+    public Object readLiteral() throws JSONException {
         String literal = nextToInternal("{}[]/\\:,=;# \t\f");
 
         if (literal.isEmpty()) {
@@ -359,7 +359,7 @@ public class JSONTokener {
      * @return an object
      * @throws JSONException if processing of json failed
      */
-    JSONObject readObject() throws JSONException {
+    public JSONObject readObject() throws JSONException {
         JSONObject result = new JSONObject();
 
         /* Peek to see if this is the empty object. */
@@ -415,7 +415,7 @@ public class JSONTokener {
      * @return an array
      * @throws JSONException if processing of json failed
      */
-    JSONArray readArray() throws JSONException {
+    public JSONArray readArray() throws JSONException {
         JSONArray result = new JSONArray();
 
         /* to cover input that ends with ",]". */

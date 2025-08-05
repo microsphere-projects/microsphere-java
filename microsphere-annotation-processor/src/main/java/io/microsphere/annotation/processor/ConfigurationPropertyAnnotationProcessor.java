@@ -20,7 +20,7 @@ package io.microsphere.annotation.processor;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor;
 import io.microsphere.json.JSONArray;
-import io.microsphere.metadata.ConfigurationPropertyJSONGenerator;
+import io.microsphere.metadata.ConfigurationPropertyGenerator;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
@@ -37,6 +37,7 @@ import java.util.Set;
 
 import static io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
 import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
+import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
@@ -67,7 +68,7 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperty
  * @see ConfigurationPropertyJSONElementVisitor
- * @see ConfigurationPropertyJSONGenerator
+ * @see ConfigurationPropertyGenerator
  * @see ResourceProcessor
  * @see Messager
  * @see ProcessingEnvironment
@@ -75,11 +76,6 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
  */
 @SupportedAnnotationTypes(value = CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME)
 public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor {
-
-    /**
-     * The resource name of {@link ConfigurationProperty} metadata
-     */
-    public static final String CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "META-INF/microsphere/configuration-properties.json";
 
     private Messager messager;
 
@@ -140,14 +136,14 @@ public class ConfigurationPropertyAnnotationProcessor extends AbstractProcessor 
     }
 
     private void appendGeneratedConfigurationPropertyJSON(StringBuilder jsonBuilder, io.microsphere.beans.ConfigurationProperty configurationProperty) {
-        ConfigurationPropertyJSONGenerator generator = this.jsonElementVisitor.getGenerator();
+        ConfigurationPropertyGenerator generator = this.jsonElementVisitor.getGenerator();
         String json = generator.generate(configurationProperty);
         jsonBuilder.append(json)
                 .append(COMMA_CHAR);
     }
 
     private void writeMetadata() {
-        classPathResourceProcessor.processInResourceWriter(CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME, writer -> {
+        classPathResourceProcessor.processInResourceWriter(CONFIGURATION_PROPERTY_METADATA_RESOURCE, writer -> {
             JSONArray jsonArray = new JSONArray(jsonBuilder.toString());
             String formatedJSON = jsonArray.toString(2);
             writer.write(formatedJSON);
