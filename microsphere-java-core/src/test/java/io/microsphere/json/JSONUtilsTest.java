@@ -708,7 +708,7 @@ class JSONUtilsTest {
         jsonArray.put(new D());
         Class<?> elementClass = determineElementClass(jsonArray);
         assertSame(D.class, elementClass);
-        
+
         jsonArray.put(new B());
         elementClass = determineElementClass(jsonArray);
         assertSame(B.class, elementClass);
