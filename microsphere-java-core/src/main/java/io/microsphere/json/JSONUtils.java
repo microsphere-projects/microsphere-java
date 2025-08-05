@@ -62,7 +62,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
-import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
@@ -1049,7 +1048,7 @@ public abstract class JSONUtils implements Utils {
         Class<?> multipleClass = null;
         Class<?> elementClass;
         if (parameterizedType == null) { // If the target type is not parameterized
-            elementClass = getType(jsonArray.opt(0));
+            elementClass = determineElementClass(jsonArray);
         } else {
             multipleClass = asClass(parameterizedType.getRawType());
             elementClass = asClass(parameterizedType.getActualTypeArguments()[0]);
@@ -1245,6 +1244,51 @@ public abstract class JSONUtils implements Utils {
         Map<String, Object> properties = resolvePropertiesAsMap(javaBean);
         JSONObject jsonObject = new JSONObject(properties);
         return jsonObject.toString();
+    }
+
+    /**
+     * Determines the common class of elements in the given {@link JSONArray}.
+     * <p>
+     * This method iterates through the elements of the provided {@code JSONArray} to find a common class.
+     * If all elements are of the same class or one class is assignable from all others, that class is returned.
+     * If no common class can be determined, {@code Object.class} is returned.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * JSONArray array1 = new JSONArray("[\"apple\", \"banana\", \"cherry\"]");
+     * Class<?> commonClass1 = JSONUtils.determineElementClass(array1); // returns String.class
+     *
+     * JSONArray array2 = new JSONArray("[1, \"banana\", 3.14]");
+     * Class<?> commonClass2 = JSONUtils.determineElementClass(array2); // returns Object.class
+     *
+     * JSONArray array3 = new JSONArray("[1, 2, 3]");
+     * Class<?> commonClass3 = JSONUtils.determineElementClass(array3); // returns Integer.class
+     * }</pre>
+     *
+     * @param jsonArray the {@link JSONArray} whose elements' common class is to be determined
+     * @return the common class of the elements, or {@code Object.class} if no common class can be determined
+     */
+    @Nonnull
+    public static Class<?> determineElementClass(JSONArray jsonArray) {
+        int length = length(jsonArray);
+        Class<?> targetClass = Object.class;
+        for (int i = 0; i < length; i++) {
+            Object element = jsonArray.opt(i);
+            Class<?> elementClass = element.getClass();
+            if (i == 0) {
+                targetClass = elementClass;
+            } else {
+                if (elementClass == targetClass || targetClass.isAssignableFrom(elementClass)) {
+                } else if (elementClass.isAssignableFrom(targetClass)) {
+                    targetClass = elementClass;
+                } else {
+                    targetClass = Object.class;
+                    break;
+                }
+            }
+        }
+        return targetClass;
     }
 
     static void appendMap(StringBuilder jsonBuilder, Map<String, Object> map) {
