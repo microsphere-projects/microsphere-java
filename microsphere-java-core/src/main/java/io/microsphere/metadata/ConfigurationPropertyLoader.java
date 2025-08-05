@@ -30,6 +30,7 @@ import java.util.List;
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.unmodifiableList;
@@ -89,7 +90,8 @@ public interface ConfigurationPropertyLoader extends Prioritized {
     @Immutable
     static List<ConfigurationProperty> loadAll() {
         Logger logger = getLogger(ConfigurationPropertyLoader.class);
-        List<ConfigurationPropertyLoader> loaders = loadServicesList(ConfigurationPropertyLoader.class);
+        ClassLoader classLoader = getDefaultClassLoader();
+        List<ConfigurationPropertyLoader> loaders = loadServicesList(ConfigurationPropertyLoader.class, classLoader);
         List<ConfigurationProperty> configurationProperties = newLinkedList();
         for (ConfigurationPropertyLoader loader : loaders) {
             try {
