@@ -38,7 +38,7 @@ import static java.util.Collections.unmodifiableList;
 public class DefaultConfigurationPropertyReader implements ConfigurationPropertyReader {
 
     @Override
-    public List<ConfigurationProperty> load(String content) throws Throwable {
+    public List<ConfigurationProperty> read(String content) throws Throwable {
         List<Map<String, Object>> configurationPropertiesMaps = readValues(content, List.class, Map.class);
         int size = configurationPropertiesMaps.size();
         List<ConfigurationProperty> configurationProperties = newArrayList(size);
