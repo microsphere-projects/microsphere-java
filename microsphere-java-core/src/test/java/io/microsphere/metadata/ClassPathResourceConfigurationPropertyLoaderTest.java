@@ -26,6 +26,7 @@ import java.util.List;
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ClassPathResourceConfigurationPropertyLoader} Test
@@ -56,6 +57,13 @@ class ClassPathResourceConfigurationPropertyLoaderTest {
         ClassPathResourceConfigurationPropertyLoader loader = new ClassPathResourceConfigurationPropertyLoader(ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE, true) {
         };
         assertConfigurationProperties(loader);
+    }
+
+    @Test
+    void testLoadWithNotFoundResource() throws Throwable {
+        ClassPathResourceConfigurationPropertyLoader loader = new ClassPathResourceConfigurationPropertyLoader("Not-Found-Resource") {
+        };
+        assertTrue(loader.load().isEmpty());
     }
 
     void assertConfigurationProperties(ClassPathResourceConfigurationPropertyLoader loader) throws Throwable {
