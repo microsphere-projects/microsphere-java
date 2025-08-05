@@ -51,7 +51,7 @@ public interface ResourceConstants {
      * The resource location of {@link ConfigurationProperty configuration properties} metadata :
      * "META-INF/microsphere/configuration-properties.json"
      */
-    String  CONFIGURATION_PROPERTY_METADATA_RESOURCE = MICROSPHERE_METADATA_RESOURCE + CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
+    String CONFIGURATION_PROPERTY_METADATA_RESOURCE = MICROSPHERE_METADATA_RESOURCE + CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
 
     /**
      * The resource location of additional {@link ConfigurationProperty configuration properties} metadata :
