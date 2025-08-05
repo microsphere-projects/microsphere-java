@@ -21,6 +21,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.lang.function.ThrowableSupplier;
+import io.microsphere.logging.Logger;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static java.util.Collections.unmodifiableList;
@@ -42,6 +44,8 @@ import static java.util.Collections.unmodifiableList;
  * @since 1.0.0
  */
 public abstract class ClassPathResourceConfigurationPropertyLoader implements ConfigurationPropertyLoader {
+
+    protected final Logger logger = getLogger(getClass());
 
     protected final String resourceName;
 
@@ -88,6 +92,12 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
 
     void load(List<ConfigurationProperty> configurationProperties, ThrowableSupplier<InputStream> streamSupplier) throws Throwable {
         try (InputStream inputStream = streamSupplier.get()) {
+            if (inputStream == null) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The InputStream can't be open for the Class-Path resource: '{}', ClassLoader : {}", this.resourceName, this.classLoader);
+                }
+                return;
+            }
             configurationProperties.addAll(this.configurationPropertyReader.read(inputStream));
         }
     }
