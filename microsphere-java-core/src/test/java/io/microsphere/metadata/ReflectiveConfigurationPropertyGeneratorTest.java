@@ -19,37 +19,40 @@ package io.microsphere.metadata;
 
 
 import io.microsphere.beans.ConfigurationProperty;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
-import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
+import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
+import static io.microsphere.JSONTestUtils.newConfigurationProperty;
+import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link ConfigurationPropertyLoader} Test
+ * {@link ReflectiveConfigurationPropertyGenerator} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationPropertyLoader
+ * @see ReflectiveConfigurationPropertyGenerator
  * @since 1.0.0
  */
-class ConfigurationPropertyLoaderTest {
+class ReflectiveConfigurationPropertyGeneratorTest {
 
-    @Test
-    void testLoad() throws Throwable {
-        assertEquals(ofList(newConfigurationProperty()), new DefaultConfigurationPropertyLoader().load());
+    private ReflectiveConfigurationPropertyGenerator generator;
+
+    @BeforeEach
+    void setUp() {
+        this.generator = new ReflectiveConfigurationPropertyGenerator();
     }
 
     @Test
-    void testLoadAll() {
-        List<ConfigurationProperty> configurationProperties = loadAll();
-        assertEquals(3, configurationProperties.size());
-        assertEquals(newConfigurationProperty(), configurationProperties.get(2));
+    void testGenerate() throws Throwable {
+        ConfigurationProperty configurationProperty = newConfigurationProperty();
+        String json = generator.generate(configurationProperty);
+        assertConfigurationPropertyJSON(json);
     }
 
-    ConfigurationProperty newConfigurationProperty() {
-        return new ConfigurationProperty(MICROSPHERE_PROPERTY_NAME_PREFIX + "test");
+    @Test
+    void testGetPriority() {
+        int priority = generator.getPriority();
+        assertEquals(NORMAL_PRIORITY, priority);
     }
 }

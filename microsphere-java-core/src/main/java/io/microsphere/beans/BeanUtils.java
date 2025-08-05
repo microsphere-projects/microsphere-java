@@ -20,41 +20,53 @@ package io.microsphere.beans;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.collection.MapUtils;
 import io.microsphere.lang.MutableInteger;
+import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
-import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.CollectionUtils.toIterable;
+import static io.microsphere.collection.EnumerationUtils.isEnumeration;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.isMap;
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
-import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.collection.MapUtils.size;
+import static io.microsphere.collection.QueueUtils.isQueue;
+import static io.microsphere.collection.QueueUtils.newArrayDeque;
 import static io.microsphere.collection.SetUtils.isSet;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.lang.MutableInteger.of;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isSimpleType;
-import static io.microsphere.util.StringUtils.uncapitalize;
-import static java.beans.Introspector.getBeanInfo;
 import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
+import static java.lang.reflect.Array.newInstance;
+import static java.lang.reflect.Array.set;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.enumeration;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -65,6 +77,8 @@ import static java.util.Collections.unmodifiableMap;
  * @since 1.0.0
  */
 public abstract class BeanUtils implements Utils {
+
+    private static final Logger logger = getLogger(BeanUtils.class);
 
     static final String DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE = "100";
 
@@ -88,7 +102,7 @@ public abstract class BeanUtils implements Utils {
     /**
      * The default maximum levels of resolving properties of a bean, default is 100
      */
-    public static final int DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_LEVELS = parseInt(DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE);
+    public static final int DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = parseInt(DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE);
 
     /**
      * The maximum levels of resolving properties of a bean, default is 100
@@ -99,7 +113,34 @@ public abstract class BeanUtils implements Utils {
             description = "The maximum depth of resolving properties of a bean in order to avoid stack overflow, " +
                     "default is " + DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_VALUE
     )
-    public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME, DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_LEVELS);
+    public static final int BEAN_PROPERTIES_MAX_RESOLVED_DEPTH = getInteger(BEAN_PROPERTIES_MAX_RESOLVED_DEPTH_PROPERTY_NAME, DEFAULT_BEAN_PROPERTIES_MAX_RESOLVED_DEPTH);
+
+    /**
+     * The property value of default cache size of {@link BeanMetadata}, default value : "64"
+     */
+    static final String BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE = "64";
+
+    /**
+     * The default cache size of {@link BeanMetadata}, default value : 64
+     */
+    public static final int DEFAULT_BEAN_METADATA_CACHE_SIZE = parseInt(BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE);
+
+    /**
+     * The property name of cache size of {@link BeanMetadata} :  "microsphere.bean.metadata.cache.size"
+     */
+    public static final String BEAN_METADATA_CACHE_SIZE_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "bean.metadata.cache.size";
+
+    /**
+     * The cache size of {@link BeanMetadata}
+     */
+    @ConfigurationProperty(
+            name = BEAN_METADATA_CACHE_SIZE_PROPERTY_NAME,
+            defaultValue = BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE,
+            description = "The cache size of BeanMetadata, default is " + BEAN_METADATA_CACHE_SIZE_DEFAULT_PROPERTY_VALUE
+    )
+    public static final int BEAN_METADATA_CACHE_SIZE = getInteger(BEAN_METADATA_CACHE_SIZE_PROPERTY_NAME, DEFAULT_BEAN_METADATA_CACHE_SIZE);
+
+    private static final ConcurrentMap<Class<?>, BeanMetadata> beanMetadataCache = newConcurrentHashMap(BEAN_METADATA_CACHE_SIZE);
 
     /**
      * Resolves the properties of a given Java Bean and returns them as a {@link Map}.
@@ -226,6 +267,107 @@ public abstract class BeanUtils implements Utils {
     }
 
     /**
+     * Get the {@link BeanMetadata} for the specified {@link Class}.
+     *
+     * @param beanClass the specified {@link Class}
+     * @return non-null
+     * @throws RuntimeException if an exception occurs during introspection
+     */
+    @Nonnull
+    public static BeanMetadata getBeanMetadata(Class<?> beanClass) throws RuntimeException {
+        return beanMetadataCache.computeIfAbsent(beanClass, BeanMetadata::of);
+    }
+
+    /**
+     * Finds the write method (setter) for a specified property of a given bean.
+     * <p>
+     * This method retrieves the {@link PropertyDescriptor} for the specified property
+     * from the provided {@link BeanMetadata}. If the property descriptor exists and
+     * has a write method, that method is returned. Otherwise, {@code null} is returned.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Example 1: Finding a write method for a simple property
+     * BeanMetadata metadata = BeanMetadata.of(Person.class);
+     * Method setNameMethod = BeanUtils.findWriteMethod(metadata, "name");
+     * if (setNameMethod != null) {
+     *     System.out.println("Found setter method: " + setNameMethod.getName());
+     * }
+     *
+     * // Example 2: Handling a property with no setter
+     * Method readOnlyPropertyMethod = BeanUtils.findWriteMethod(metadata, "readOnlyProperty");
+     * if (readOnlyPropertyMethod == null) {
+     *     System.out.println("No setter method found for 'readOnlyProperty'");
+     * }
+     * }</pre>
+     *
+     * @param beanMetadata the metadata of the bean to introspect; must not be {@code null}
+     * @param propertyName the name of the property for which to find the write method;
+     *                     must not be {@code null} or empty
+     * @return the write method (setter) for the specified property, or {@code null}
+     * if no such method exists or the property is not found
+     * @throws IllegalArgumentException if {@code beanMetadata} or {@code propertyName} is {@code null}
+     */
+    public static Method findWriteMethod(BeanMetadata beanMetadata, String propertyName) {
+        PropertyDescriptor propertyDescriptor = findPropertyDescriptor(beanMetadata, propertyName);
+        if (propertyDescriptor == null) {
+            return null;
+        }
+        Method writeMethod = propertyDescriptor.getWriteMethod();
+        if (writeMethod == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The property[name : '{}'] of Bean[class : '{}'] has no write method, skipping...",
+                        propertyName, getTypeName(beanMetadata.getBeanClass()));
+            }
+        }
+        return writeMethod;
+    }
+
+    /**
+     * Finds the {@link PropertyDescriptor} for a specified property of a given bean.
+     * <p>
+     * This method retrieves the {@link PropertyDescriptor} for the specified property
+     * from the provided {@link BeanMetadata}. If the property descriptor exists, it is returned.
+     * Otherwise, {@code null} is returned. If the property descriptor is not found,
+     * a trace log message will be recorded.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Example 1: Finding a property descriptor for a simple property
+     * BeanMetadata metadata = BeanMetadata.of(Person.class);
+     * PropertyDescriptor nameDescriptor = BeanUtils.findPropertyDescriptor(metadata, "name");
+     * if (nameDescriptor != null) {
+     *     System.out.println("Found property descriptor: " + nameDescriptor.getName());
+     * }
+     *
+     * // Example 2: Handling a non-existent property
+     * PropertyDescriptor nonExistentDescriptor = BeanUtils.findPropertyDescriptor(metadata, "nonExistentProperty");
+     * if (nonExistentDescriptor == null) {
+     *     System.out.println("Property descriptor not found for 'nonExistentProperty'");
+     * }
+     * }</pre>
+     *
+     * @param beanMetadata the metadata of the bean to introspect; must not be {@code null}
+     * @param propertyName the name of the property for which to find the descriptor;
+     *                     must not be {@code null} or empty
+     * @return the {@link PropertyDescriptor} for the specified property, or {@code null}
+     * if no such descriptor exists or the property is not found
+     * @throws IllegalArgumentException if {@code beanMetadata} or {@code propertyName} is {@code null}
+     */
+    public static PropertyDescriptor findPropertyDescriptor(BeanMetadata beanMetadata, String propertyName) {
+        PropertyDescriptor propertyDescriptor = beanMetadata.getPropertyDescriptor(propertyName);
+        if (propertyDescriptor == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The property[name : '{}'] of Bean[class : '{}'] has no property descriptor, skipping...",
+                        propertyName, getTypeName(beanMetadata.getBeanClass()));
+            }
+        }
+        return propertyDescriptor;
+    }
+
+    /**
      * Resolves the properties of a given Java Bean recursively up to a specified maximum depth,
      * tracking the current depth with a {@link MutableInteger}, and returns them as a {@link Map}.
      * <p>
@@ -307,12 +449,12 @@ public abstract class BeanUtils implements Utils {
         }
 
         Class<?> beanClass = bean.getClass();
-        Map<String, Object> propertiesMap = newHashMap();
-        BeanInfo beanInfo = execute(() -> getBeanInfo(beanClass, Object.class));
-        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-        for (int i = 0; i < propertyDescriptors.length; i++) {
-            PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
-            String propertyName = uncapitalize(propertyDescriptor.getName());
+        BeanMetadata beanMetadata = getBeanMetadata(beanClass);
+        Map<String, PropertyDescriptor> propertyDescriptorsMap = beanMetadata.getPropertyDescriptorsMap();
+        Map<String, Object> propertiesMap = newFixedHashMap(propertyDescriptorsMap.size());
+        for (Map.Entry<String, PropertyDescriptor> entry : propertyDescriptorsMap.entrySet()) {
+            String propertyName = entry.getKey();
+            PropertyDescriptor propertyDescriptor = entry.getValue();
             Object propertyValue = resolveProperty(bean, propertyDescriptor, resolvedDepth, maxResolvedDepth);
             propertiesMap.put(propertyName, propertyValue);
         }
@@ -336,8 +478,6 @@ public abstract class BeanUtils implements Utils {
             return null;
         }
 
-        Object resolvedValue = value;
-
         if (valueType.isPrimitive()
                 || isSimpleType(valueType)
                 || isCharSequence(valueType)
@@ -346,39 +486,76 @@ public abstract class BeanUtils implements Utils {
                 || isClass(value)
         ) {
             // do nothing, just return the propertyValue
+            return value;
         } else if (valueType.isArray()) {
-            int length = getLength(resolvedValue);
-            List<Object> values = newArrayList(length);
-            for (int i = 0; i < length; i++) {
-                Object element = get(resolvedValue, i);
-                values.add(i, resolvePropertiesAsMap(element));
-            }
+            return toArray(value, valueType, resolvedDepth, maxResolvedDepth);
         } else if (isList(valueType)) {
-            List<?> list = (List<?>) resolvedValue;
-            int size = size(list);
-            List<Object> newList = newArrayList(size);
-            for (int i = 0; i < size; i++) {
-                Object element = list.get(i);
-                newList.add(i, resolveProperty(element, resolvedDepth, maxResolvedDepth));
-            }
+            return toList(value, valueType, resolvedDepth, maxResolvedDepth);
         } else if (isSet(valueType)) {
-            Set<?> set = (Set<?>) resolvedValue;
-            Set<Object> newSet = newFixedLinkedHashSet(size(set));
-            for (Object element : set) {
-                newSet.add(resolveProperty(element, resolvedDepth, maxResolvedDepth));
-            }
+            return toSet(value, valueType, resolvedDepth, maxResolvedDepth);
+        } else if (isQueue(valueType)) {
+            return toQueue(value, valueType, resolvedDepth, maxResolvedDepth);
+        } else if (isEnumeration(valueType)) {
+            return toEnumeration(value, valueType, resolvedDepth, maxResolvedDepth);
         } else if (isMap(valueType)) {
-            Map<?, ?> map = (Map<?, ?>) resolvedValue;
-            Map<Object, Object> newMap = newFixedLinkedHashMap(MapUtils.size(map));
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                newMap.put(entry.getKey(), resolveProperty(entry.getValue(), resolvedDepth, maxResolvedDepth));
-            }
-            resolvedValue = newMap;
+            return toMap(value, valueType, resolvedDepth, maxResolvedDepth);
         } else { // as the POJO
-            resolvedValue = resolvePropertiesAsMap(resolvedValue, resolvedDepth, maxResolvedDepth);
+            return resolvePropertiesAsMap(value, resolvedDepth, maxResolvedDepth);
         }
+    }
 
-        return resolvedValue;
+    static Object toArray(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        int length = getLength(value);
+        Object newArray = newInstance(Object.class, length);
+        for (int i = 0; i < length; i++) {
+            Object element = get(value, i);
+            set(newArray, i, resolveProperty(element, valueType.getComponentType(), resolvedDepth, maxResolvedDepth));
+        }
+        return newArray;
+    }
+
+    static List<?> toList(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        List<?> list = (List<?>) value;
+        List<Object> newList = newArrayList(size(list));
+        addValues(newList, list, resolvedDepth, maxResolvedDepth);
+        return newList;
+    }
+
+    static Set<?> toSet(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        Set<?> set = (Set<?>) value;
+        Set<Object> newSet = newFixedLinkedHashSet(size(set));
+        addValues(newSet, set, resolvedDepth, maxResolvedDepth);
+        return newSet;
+    }
+
+    static Queue<?> toQueue(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        Queue<?> queue = (Queue<?>) value;
+        Queue<Object> newQueue = newArrayDeque(size(queue));
+        addValues(newQueue, queue, resolvedDepth, maxResolvedDepth);
+        return newQueue;
+    }
+
+    static Enumeration<?> toEnumeration(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        Enumeration<?> enumeration = (Enumeration<?>) value;
+        List<Object> newList = newLinkedList();
+        addValues(newList, toIterable(enumeration), resolvedDepth, maxResolvedDepth);
+        return enumeration(newList);
+    }
+
+    static Object toMap(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        Map<?, ?> map = (Map<?, ?>) value;
+        Map<Object, Object> newMap = newFixedLinkedHashMap(size(map));
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+            newMap.put(entry.getKey(), resolveProperty(entry.getValue(), resolvedDepth, maxResolvedDepth));
+        }
+        return newMap;
+    }
+
+    static void addValues(Collection<Object> targetValues, Iterable<?> sourceValues, MutableInteger resolvedDepth, int maxResolvedDepth) {
+        for (Object value : sourceValues) {
+            Object resolvedValue = resolveProperty(value, resolvedDepth, maxResolvedDepth);
+            targetValues.add(resolvedValue);
+        }
     }
 
     private BeanUtils() {

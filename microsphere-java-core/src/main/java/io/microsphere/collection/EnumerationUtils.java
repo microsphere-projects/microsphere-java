@@ -17,10 +17,13 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.util.Collections;
 import java.util.Enumeration;
+
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
 /**
  * The utilities class for Java {@link Enumeration}
@@ -31,6 +34,45 @@ import java.util.Enumeration;
  * @since 1.0.0
  */
 public abstract class EnumerationUtils implements Utils {
+
+    /**
+     * Checks if the given object is an instance of {@link Enumeration}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result = EnumerationUtils.isEnumeration(someObject);
+     * if (result) {
+     *     Enumeration<?> enumeration = (Enumeration<?>) someObject;
+     *     while (enumeration.hasMoreElements()) {
+     *         System.out.println(enumeration.nextElement());
+     *     }
+     * }
+     * }</pre>
+     *
+     * @param values the object to check
+     * @return {@code true} if the object is an instance of {@link Enumeration}, {@code false} otherwise
+     */
+    public static boolean isEnumeration(@Nullable Object values) {
+        return values instanceof Enumeration;
+    }
+
+    /**
+     * Checks if the given class type is assignable from {@link Enumeration}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * boolean result = EnumerationUtils.isEnumeration(SomeEnumClass.class);
+     * if (result) {
+     *     // The class is an Enumeration
+     * }
+     * }</pre>
+     *
+     * @param type the class type to check
+     * @return {@code true} if the class is assignable from {@link Enumeration}, {@code false} otherwise
+     */
+    public static boolean isEnumeration(@Nullable Class<?> type) {
+        return isAssignableFrom(Enumeration.class, type);
+    }
 
     /**
      * Creates an {@link Enumeration} from the provided elements.

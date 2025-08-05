@@ -20,9 +20,10 @@ import io.microsphere.json.JSONStringer.Scope;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.json.JSON.checkDouble;
 import static io.microsphere.json.JSON.toBoolean;
 import static io.microsphere.json.JSON.toDouble;
@@ -32,6 +33,7 @@ import static io.microsphere.json.JSON.typeMismatch;
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONObject.wrap;
 import static io.microsphere.lang.function.ThrowableAction.execute;
+import static io.microsphere.util.ClassUtils.isArray;
 import static java.lang.Double.NaN;
 import static java.lang.Math.min;
 import static java.lang.reflect.Array.getLength;
@@ -83,6 +85,15 @@ public class JSONArray {
         this.values = new ArrayList<>();
     }
 
+    @SuppressWarnings("rawtypes")
+    public JSONArray(Enumeration<?> enumeration) {
+        this();
+        while (enumeration.hasMoreElements()) {
+            Object value = enumeration.nextElement();
+            put(wrap(value));
+        }
+    }
+
     /**
      * Creates a new {@code JSONArray} by copying all values from the given collection.
      *
@@ -91,7 +102,7 @@ public class JSONArray {
      */
     /* Accept a raw type for API compatibility */
     @SuppressWarnings("rawtypes")
-    public JSONArray(Collection copyFrom) {
+    public JSONArray(Iterable<?> copyFrom) {
         this();
         if (copyFrom != null) {
             for (Object value : copyFrom) {
@@ -138,12 +149,12 @@ public class JSONArray {
      * @throws JSONException if processing of json failed
      */
     public JSONArray(Object array) throws JSONException {
-        if (!array.getClass().isArray()) {
+        if (!isArray(array)) {
             throw new JSONException("Not a primitive array: " + array.getClass());
         }
-        final int length = getLength(array);
-        this.values = new ArrayList<>(length);
-        for (int i = 0; i < length; ++i) {
+        int length = getLength(array);
+        this.values = newArrayList(length);
+        for (int i = 0; i < length; i++) {
             put(wrap(Array.get(array, i)));
         }
     }

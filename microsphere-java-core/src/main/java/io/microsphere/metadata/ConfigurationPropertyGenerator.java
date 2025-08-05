@@ -22,33 +22,43 @@ import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.lang.Prioritized;
 
 /**
- * ConfigurationPropertyJSONGenerator is an interface that defines the contract for generating
- * JSON representations of {@link ConfigurationProperty} objects.
+ * {@code ConfigurationPropertyGenerator} interface can be implemented by objects that
+ * generate string representations (e.g., JSON, XML, Properties) of {@link ConfigurationProperty}.
  *
- * <p>Implementations of this interface are responsible for converting a {@link ConfigurationProperty}
- * into a JSON string. This can be useful for serialization, logging, or transmitting configuration
- * metadata in a standardized format.
+ * <p>Implementing classes should typically also implement the {@link Prioritized#getPriority()} method
+ * to define their priority value. The priority is used to determine ordering via the
+ * {@link Prioritized#compareTo(Prioritized)} method.
  *
  * <h3>Example Usage</h3>
- * <pre>
- * {@code
- * ConfigurationProperty property = new ConfigurationProperty("server.port", "8080", "The port number");
- * ConfigurationPropertyJSONGenerator generator = new SomeConcreteGenerator();
- * String json = generator.generate(property);
- * // json might look like: {"name":"server.port","value":"8080","description":"The port number"}
+ * <pre>{@code
+ * public class JsonPropertyGenerator implements ConfigurationPropertyGenerator {
+ *     public int getPriority() {
+ *         return 1;
+ *     }
+ *
+ *     public String generate(ConfigurationProperty property) {
+ *         // Implementation to generate JSON representation
+ *         return "{\"" + property.getName() + "\":\"" + property.getValue() + "\"}";
+ *     }
  * }
- * </pre>
+ *
+ * // Registering and using generators
+ * List<ConfigurationPropertyGenerator> generators = new ArrayList<>();
+ * generators.add(new JsonPropertyGenerator());
+ * Collections.sort(generators); // Sort by priority
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperty
+ * @see Prioritized
  * @since 1.0.0
  */
-public interface ConfigurationPropertyJSONGenerator extends Prioritized {
+public interface ConfigurationPropertyGenerator extends Prioritized {
 
     /**
-     * Generates a JSON representation of the given {@link ConfigurationProperty}.
+     * Generates a content of the given {@link ConfigurationProperty}.
      *
-     * @param configurationProperty the configuration property to be converted to JSON.
+     * @param configurationProperty the configuration property to be the some content.
      * @return a JSON string representation of the configuration property.
      * @throws IllegalArgumentException if the configurationProperty is null.
      */

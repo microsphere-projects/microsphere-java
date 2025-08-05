@@ -19,10 +19,9 @@ package io.microsphere.convert;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
+import static io.microsphere.convert.Converters.findConverter;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
-import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
-import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
 
 /**
@@ -135,10 +134,7 @@ public interface Converter<S, T> extends Prioritized {
      * @return a converter instance that can handle the specified types, or {@code null} if no suitable converter is found
      */
     static <S, T> Converter<S, T> getConverter(Class<S> sourceType, Class<T> targetType) {
-        ClassLoader classLoader = getClassLoader(Converter.class);
-        return loadServicesList(Converter.class, classLoader).stream()
-                .sorted()
-                .filter(converter -> converter.accept(sourceType, targetType)).findFirst().orElse(null);
+        return findConverter(sourceType, targetType);
     }
 
     /**
