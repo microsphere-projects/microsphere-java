@@ -38,24 +38,24 @@ public interface ResourceConstants {
     String MICROSPHERE_METADATA_RESOURCE = METADATA_RESOURCE + "microsphere/";
 
     /**
-     * The resource name of {@link ConfigurationProperty configuration properties} Metadata
+     * The file name of {@link ConfigurationProperty configuration properties} Metadata
      */
-    String CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "configuration-properties.json";
+    String CONFIGURATION_PROPERTY_METADATA_FILE_NAME = "configuration-properties.json";
 
     /**
      * The resource name of additional {@link ConfigurationProperty configuration properties} Metadata
      */
-    String ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME = "additional-configuration-properties.json";
+    String ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_FILE_NAME = "additional-configuration-properties.json";
 
     /**
      * The resource location of {@link ConfigurationProperty configuration properties} metadata :
      * "META-INF/microsphere/configuration-properties.json"
      */
-    String CONFIGURATION_PROPERTY_METADATA_RESOURCE = MICROSPHERE_METADATA_RESOURCE + CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME;
+    String  CONFIGURATION_PROPERTY_METADATA_RESOURCE = MICROSPHERE_METADATA_RESOURCE + CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
 
     /**
      * The resource location of additional {@link ConfigurationProperty configuration properties} metadata :
      * "META-INF/microsphere/additional-configuration-properties.json"
      */
-    String ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE = MICROSPHERE_METADATA_RESOURCE + ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE_NAME;
+    String ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE = MICROSPHERE_METADATA_RESOURCE + ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_FILE_NAME;
 }
