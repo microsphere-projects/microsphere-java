@@ -17,7 +17,10 @@
 
 package io.microsphere.util;
 
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+
+import java.util.function.Consumer;
 
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 
@@ -64,6 +67,56 @@ public abstract class IterableUtils implements Utils {
      */
     public static boolean isIterable(@Nullable Class<?> clazz) {
         return isAssignableFrom(Iterable.class, clazz);
+    }
+
+    /**
+     * Iterates over the given {@link Iterable} and applies the provided {@link Consumer} to each element.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("a", "b", "c");
+     * IterableUtils.iterate(list, System.out::println);
+     * // Output:
+     * // a
+     * // b
+     * // c
+     * }</pre>
+     *
+     * @param elements        the {@link Iterable} to iterate over
+     * @param elementConsumer the {@link Consumer} to apply to each element
+     * @param <E>             the type of elements in the {@link Iterable}
+     */
+    public static <E> void iterate(@Nullable Iterable<E> elements, @Nonnull Consumer<E> elementConsumer) {
+        if (elements != null) {
+            for (E element : elements) {
+                elementConsumer.accept(element);
+            }
+        }
+    }
+
+    /**
+     * Iterates over the given {@link Iterable} and applies the provided {@link Consumer} to each element.
+     * <p>
+     * This method is equivalent to {@link #iterate(Iterable, Consumer)}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * List<String> list = Arrays.asList("a", "b", "c");
+     * IterableUtils.forEach(list, System.out::println);
+     * // Output:
+     * // a
+     * // b
+     * // c
+     * }</pre>
+     *
+     * @param elements        the {@link Iterable} to iterate over
+     * @param elementConsumer the {@link Consumer} to apply to each element
+     * @param <E>             the type of elements in the {@link Iterable}
+     * @see #iterate(Iterable, Consumer)
+     */
+    public static <E> void forEach(@Nullable Iterable<E> elements, @Nonnull Consumer<E> elementConsumer) {
+        iterate(elements, elementConsumer);
     }
 
     private IterableUtils() {
