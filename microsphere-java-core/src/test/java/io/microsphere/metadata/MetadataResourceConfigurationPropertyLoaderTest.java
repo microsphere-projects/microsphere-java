@@ -46,7 +46,7 @@ class MetadataResourceConfigurationPropertyLoaderTest {
     @Test
     void testLoad() throws Throwable {
         List<ConfigurationProperty> configurationProperties = configurationPropertyLoader.load();
-        assertEquals(6, configurationProperties.size());
+        assertEquals(7, configurationProperties.size());
     }
 
     @Test
