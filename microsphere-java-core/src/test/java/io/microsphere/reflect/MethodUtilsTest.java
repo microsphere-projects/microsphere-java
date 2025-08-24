@@ -526,6 +526,13 @@ class MethodUtilsTest {
     }
 
     @Test
+    void testBuildSignature() {
+        assertEquals("java.lang.String#toString()", buildSignature(String.class, "toString"));
+        assertEquals("java.lang.String#substring(int)", buildSignature(String.class, "substring", int.class));
+        assertEquals("java.lang.String#substring(int,int)", buildSignature(String.class, "substring", int.class, int.class));
+    }
+
+    @Test
     void testIsObjectMethod() {
         assertIsObjectMethod(true, Object.class, "toString");
         assertIsObjectMethod(false, String.class, "toString");
