@@ -17,6 +17,8 @@
 package io.microsphere.util;
 
 import io.microsphere.reflect.MemberUtils;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.SourceVersion;
@@ -89,10 +91,15 @@ import static io.microsphere.util.SystemUtils.USER_HOME;
 import static io.microsphere.util.SystemUtils.USER_HOME_PROPERTY_KEY;
 import static io.microsphere.util.SystemUtils.USER_NAME;
 import static io.microsphere.util.SystemUtils.USER_NAME_PROPERTY_KEY;
+import static io.microsphere.util.SystemUtils.copySystemProperties;
+import static io.microsphere.util.SystemUtils.getSystemProperty;
+import static io.microsphere.util.SystemUtils.getSystemPropertyFromCopy;
+import static io.microsphere.util.SystemUtils.resetSystemPropertiesCopy;
 import static java.lang.System.getProperty;
 import static javax.lang.model.SourceVersion.latest;
 import static javax.lang.model.SourceVersion.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link SystemUtils} Test
@@ -136,6 +143,32 @@ class SystemUtilsTest {
                 .filter(MemberUtils::isStatic)
                 .filter(field -> field.getName().startsWith(IS_JAVA_VERSION_FIELD_NAME_PREFIX))
                 .toArray(Field[]::new);
+    }
+
+    @BeforeEach
+    void setUp() {
+        resetSystemPropertiesCopy();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        resetSystemPropertiesCopy();
+    }
+
+    @Test
+    void testCopySystemProperties() {
+        copySystemProperties();
+        assertEquals(JAVA_VERSION, getSystemPropertyFromCopy(JAVA_VERSION_PROPERTY_KEY));
+
+        copySystemProperties();
+        assertEquals(JAVA_VERSION, getSystemPropertyFromCopy(JAVA_VERSION_PROPERTY_KEY));
+    }
+
+    @Test
+    void testResetSystemProperties() {
+        testCopySystemProperties();
+        resetSystemPropertiesCopy();
+        assertNull(getSystemPropertyFromCopy(JAVA_VERSION_PROPERTY_KEY));
     }
 
     @Test
@@ -207,6 +240,13 @@ class SystemUtilsTest {
     void testJavaVersion() throws Throwable {
         assertEquals(IS_LTS_JAVA_VERSION, IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21);
         assertJavaVersion();
+    }
+
+    @Test
+    void testGetSystemPropertyFromCopy() {
+        copySystemProperties();
+        assertEquals(JAVA_VERSION, getSystemProperty(JAVA_VERSION_PROPERTY_KEY));
+        assertEquals("defaultValue", getSystemProperty("not-found-key", "defaultValue"));
     }
 
     private void assertJavaVersion() throws Throwable {
