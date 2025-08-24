@@ -17,6 +17,8 @@
 package io.microsphere.reflect;
 
 import io.microsphere.lang.Prioritized;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
@@ -28,6 +30,7 @@ import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
 import static io.microsphere.reflect.MemberUtils.PUBLIC_MEMBER_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.BANNED_METHODS_PROPERTY_NAME;
 import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
@@ -37,6 +40,7 @@ import static io.microsphere.reflect.MethodUtils.PUBLIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.buildKey;
 import static io.microsphere.reflect.MethodUtils.buildSignature;
+import static io.microsphere.reflect.MethodUtils.clearBannedMethods;
 import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.findAllMethods;
@@ -50,6 +54,7 @@ import static io.microsphere.reflect.MethodUtils.getAllMethods;
 import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
+import static io.microsphere.reflect.MethodUtils.initBannedMethods;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.reflect.MethodUtils.isObjectMethod;
@@ -57,6 +62,7 @@ import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static java.lang.Integer.valueOf;
+import static java.lang.System.setProperty;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -78,6 +84,17 @@ class MethodUtilsTest {
 
     static {
         JACOCO_ADDED_METHOD_COUNT = JACOCO_AGENT_INSTRUCTED ? 1 : 0;
+    }
+
+    @BeforeEach
+    void setUp() {
+        afterAll();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        System.getProperties().remove(BANNED_METHODS_PROPERTY_NAME);
+        clearBannedMethods();
     }
 
     @Test
@@ -105,6 +122,23 @@ class MethodUtilsTest {
         assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "publicMethod", int.class)));
         assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "protectedMethod", Object[].class)));
         assertTrue(NON_PRIVATE_METHOD_PREDICATE.test(findMethod(ReflectionTest.class, "packagePrivateMethod", String.class)));
+    }
+
+    @Test
+    void testInitBannedMethods() {
+        String signature = buildSignature(String.class, "substring", int.class);
+        String signature2 = buildSignature(String.class, "substring", int.class, int.class);
+        setProperty(BANNED_METHODS_PROPERTY_NAME, signature + " | " + signature2);
+        initBannedMethods();
+        assertNull(findMethod(String.class, "substring", int.class));
+        assertNull(findMethod(String.class, "substring", int.class, int.class));
+    }
+
+    @Test
+    void testInitBannedMethodsWithoutProperty() {
+        initBannedMethods();
+        assertNotNull(findMethod(String.class, "substring", int.class));
+        assertNotNull(findMethod(String.class, "substring", int.class, int.class));
     }
 
     @Test
