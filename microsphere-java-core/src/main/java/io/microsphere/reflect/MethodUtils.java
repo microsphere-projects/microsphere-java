@@ -51,6 +51,7 @@ import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
@@ -1019,8 +1020,30 @@ public abstract class MethodUtils implements Utils {
         return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
     }
 
-    static String buildSignature(Class<?> declaringClass, String methodName, Class<?>[] parameterTypes) {
-        int parameterCount = parameterTypes.length;
+    /**
+     * Builds a method signature string based on the provided declaring class, method name, and parameter types.
+     *
+     * <p>The generated signature follows the format: {@code declaringClassName#methodName(paramType1,paramType2,...)}.
+     * This utility method is primarily used internally to create unique identifiers for methods.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String signature = MethodUtils.buildSignature(String.class, "substring", new Class[]{int.class, int.class});
+     * System.out.println(signature);  // Output: java.lang.String#substring(int,int)
+     * }</pre>
+     *
+     * <pre>{@code
+     * String signature = MethodUtils.buildSignature(List.class, "add", new Class[]{Object.class});
+     * System.out.println(signature);  // Output: java.util.List#add(java.lang.Object)
+     * }</pre>
+     *
+     * @param declaringClass the class that declares the method
+     * @param methodName     the name of the method
+     * @param parameterTypes the parameter types of the method
+     * @return a non-null string representing the method signature
+     */
+    public static String buildSignature(Class<?> declaringClass, String methodName, Class<?>... parameterTypes) {
+        int parameterCount = length(parameterTypes);
         String[] parameterTypeNames = new String[parameterCount];
         String declaringClassName = getTypeName(declaringClass);
         int size = declaringClassName.length() + 1 // '#'
