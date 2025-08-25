@@ -52,6 +52,7 @@ import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
+import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -561,14 +562,16 @@ public abstract class ClassLoaderUtils implements Utils {
         if (isBlank(className)) {
             return null;
         }
+        Class<?> klass = null;
         try {
-            return classLoader.loadClass(className);
+            klass = classLoader.loadClass(className);
         } catch (Throwable e) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The Class[name : '{}'] can't be loaded from the ClassLoader : {}", className, classLoader, e);
             }
+            klass = resolvePrimitiveClassForName(className);
         }
-        return null;
+        return klass;
     }
 
     /**

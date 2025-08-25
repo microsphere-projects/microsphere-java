@@ -20,7 +20,7 @@ package io.microsphere.json;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.beans.BeanMetadata;
-import io.microsphere.logging.Logger;
+import io.microsphere.util.CharSequenceUtils;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
 
@@ -58,7 +58,6 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.convert.Converter.convertIfPossible;
 import static io.microsphere.json.JSONObject.wrap;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.asParameterizedType;
@@ -68,6 +67,7 @@ import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.IterableUtils.isIterable;
 import static io.microsphere.util.StringUtils.isNotBlank;
+import static java.lang.String.format;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 import static java.lang.reflect.Array.newInstance;
@@ -108,9 +108,36 @@ import static java.lang.reflect.Array.set;
  */
 public abstract class JSONUtils implements Utils {
 
-    private static final Logger logger = getLogger(JSONUtils.class);
+    private static final String U2028 = "\\u2028";
+
+    private static final String U2029 = "\\u2029";
 
     static final Class<?> UNKNOWN_CLASS = Void.class;
+
+    /*
+     * From RFC 7159, "All Unicode characters may be placed within the quotation marks
+     * except for the characters that must be escaped: quotation mark, reverse solidus,
+     * and the control characters (U+0000 through U+001F)."
+     *
+     * We also escape '\u2028' and '\u2029', which JavaScript interprets as newline
+     * characters. This prevents eval() from failing with a syntax error.
+     * https://github.com/google/gson/issues/341
+     */
+    private static final String[] REPLACEMENT_CHARS;
+
+    static {
+        REPLACEMENT_CHARS = new String[128];
+        for (int i = 0; i <= 0x1f; i++) {
+            REPLACEMENT_CHARS[i] = format("\\u%04x", i);
+        }
+        REPLACEMENT_CHARS['"'] = "\\\"";
+        REPLACEMENT_CHARS['\\'] = "\\\\";
+        REPLACEMENT_CHARS['\t'] = "\\t";
+        REPLACEMENT_CHARS['\b'] = "\\b";
+        REPLACEMENT_CHARS['\n'] = "\\n";
+        REPLACEMENT_CHARS['\r'] = "\\r";
+        REPLACEMENT_CHARS['\f'] = "\\f";
+    }
 
     public static void append(StringBuilder jsonBuilder, String name, boolean value) {
         appendName(jsonBuilder, name)
@@ -199,7 +226,7 @@ public abstract class JSONUtils implements Utils {
     public static void append(StringBuilder jsonBuilder, String name, String value) {
         appendName(jsonBuilder, name)
                 .append(DOUBLE_QUOTE_CHAR)
-                .append(value)
+                .append(escape(value))
                 .append(DOUBLE_QUOTE_CHAR);
     }
 
@@ -1289,6 +1316,71 @@ public abstract class JSONUtils implements Utils {
             }
         }
         return targetClass;
+    }
+
+
+    /**
+     * Escapes a string for JSON formatting.
+     * <p>
+     * This method takes a string and escapes characters that are not allowed in JSON strings,
+     * such as quotation marks, reverse solidus, and control characters (U+0000 through U+001F).
+     * It also escapes '\u2028' and '\u2029', which JavaScript interprets as newline characters.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String escaped = JSONUtils.escape("Hello\nWorld");  // returns "Hello\\nWorld"
+     * String escaped2 = JSONUtils.escape("Quote: \"Hello\"");  // returns "Quote: \\\"Hello\\\""
+     * String escaped3 = JSONUtils.escape("Backslash: \\");  // returns "Backslash: \\\\"
+     * }</pre>
+     *
+     * @param v the string to escape, may be {@code null}
+     * @return the escaped string, or an empty string if the input is {@code null}
+     */
+    public static String escape(@Nullable String v) {
+        int length = CharSequenceUtils.length(v);
+        if (length == 0) {
+            return v;
+        }
+
+        int afterReplacement = 0;
+        StringBuilder builder = null;
+        for (int i = 0; i < length; i++) {
+            char c = v.charAt(i);
+            String replacement;
+            if (c < 0x80) {
+                replacement = REPLACEMENT_CHARS[c];
+                if (replacement == null) {
+                    continue;
+                }
+            } else if (c == '\u2028') {
+                replacement = U2028;
+            } else if (c == '\u2029') {
+                replacement = U2029;
+            } else {
+                continue;
+            }
+            if (afterReplacement < i) { // write characters between the last replacement
+                // and now
+                if (builder == null) {
+                    builder = new StringBuilder(length);
+                }
+                builder.append(v, afterReplacement, i);
+            }
+            if (builder == null) {
+                builder = new StringBuilder(length);
+            }
+            builder.append(replacement);
+            afterReplacement = i + 1;
+        }
+        if (builder == null) {
+            return v; // then we didn't escape anything
+        }
+
+        if (afterReplacement < length) {
+            builder.append(v, afterReplacement, length);
+        }
+        return builder.toString();
     }
 
     static void appendMap(StringBuilder jsonBuilder, Map<String, Object> map) {

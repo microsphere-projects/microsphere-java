@@ -39,6 +39,7 @@ import static io.microsphere.annotation.processor.util.ClassUtils.getClassName;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeName;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
+import static io.microsphere.util.StringUtils.isBlank;
 
 /**
  * {@link ConfigurationProperty @ConfigurationProperty}'s {@link AnnotatedElementJSONElementVisitor} based on
@@ -84,7 +85,7 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
                     boolean required = (boolean) annotationValue.getValue();
                     configurationProperty.setRequired(required);
                 } else if ("description".equals(attributeName)) {
-                    String description = resolveStringValue(attributeMethod, annotationValue);
+                    String description = resolveDescription(field, attributeMethod, annotationValue);
                     configurationProperty.setDescription(description);
                 } else if ("source".equals(attributeName)) {
                     setSources(configurationProperty, annotationValue);
@@ -114,6 +115,14 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
         Object value = matchesDefaultAttributeValue(attributeMethod, annotationValue) ? field.asType() : annotationValue.getValue();
         TypeMirror type = (TypeMirror) value;
         return getTypeName(type);
+    }
+
+    private String resolveDescription(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
+        String description = resolveStringValue(attributeMethod, annotationValue);
+        if (isBlank(description)) {
+            description = elements.getDocComment(field);
+        }
+        return description;
     }
 
     private String resolveStringValue(ExecutableElement attributeMethod, AnnotationValue annotationValue) {

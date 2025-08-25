@@ -432,7 +432,7 @@ public abstract class CollectionUtils implements Utils {
      * </p>
      *
      * @param collection the collection to which elements are to be added, may be null or empty
-     * @param values     the array of elements to add, may be null
+     * @param newValues  the array of elements to add, may be null
      * @param <T>        the type of elements in the collection and array
      * @return the number of elements successfully added to the collection
      *
@@ -449,21 +449,61 @@ public abstract class CollectionUtils implements Utils {
      * int count4 = CollectionUtils.addAll(emptyCollection, "x"); // returns 0
      * }</pre>
      */
-    public static <T> int addAll(@Nullable Collection<T> collection, T... values) {
-
+    public static <T> int addAll(@Nullable Collection<T> collection, T... newValues) {
         if (collection == null) {
             return 0;
         }
 
-        int size = length(values);
-
+        int size = length(newValues);
         if (size < 1) {
             return 0;
         }
 
         int effectedCount = 0;
         for (int i = 0; i < size; i++) {
-            if (collection.add(values[i])) {
+            if (collection.add(newValues[i])) {
+                effectedCount++;
+            }
+        }
+
+        return effectedCount;
+    }
+
+    /**
+     * Adds all the elements in the specified {@link Iterable} to the given collection.
+     *
+     * <p>
+     * If the provided collection is null or empty, no elements are added, and 0 is returned.
+     * If the iterable is null or has no elements, 0 is also returned.
+     * </p>
+     *
+     * @param collection the collection to which elements are to be added, may be null or empty
+     * @param newValues  the {@link Iterable} of elements to add, may be null
+     * @param <T>        the type of elements in the collection and iterable
+     * @return the number of elements successfully added to the collection
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Collection<String> collection = new ArrayList<>();
+     * Iterable<String> values = Arrays.asList("a", "b", "c");
+     * int count1 = CollectionUtils.addAll(collection, values); // returns 3
+     *
+     * int count2 = CollectionUtils.addAll(null, values); // returns 0
+     *
+     * int count3 = CollectionUtils.addAll(collection, (Iterable<String>) null); // returns 0
+     *
+     * Collection<String> emptyCollection = Collections.emptyList();
+     * int count4 = CollectionUtils.addAll(emptyCollection, values); // returns 0
+     * }</pre>
+     */
+    public static <T> int addAll(@Nullable Collection<T> collection, @Nullable Iterable<T> newValues) {
+        if (collection == null || newValues == null) {
+            return 0;
+        }
+
+        int effectedCount = 0;
+        for (T newValue : newValues) {
+            if (collection.add(newValue)) {
                 effectedCount++;
             }
         }
