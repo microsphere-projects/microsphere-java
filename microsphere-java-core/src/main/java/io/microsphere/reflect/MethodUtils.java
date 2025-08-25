@@ -183,11 +183,8 @@ public abstract class MethodUtils implements Utils {
      * Method substringMethod = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
      * // substringMethod will be null
      * }</pre>
-     *
-     * @throws RuntimeException if any error occurs during the initialization process,
-     *                          such as class not found, method not found, or other reflection-related issues.
      */
-    public static void initBannedMethods() throws RuntimeException {
+    public static void initBannedMethods() {
         String bannedMethodsPropertyValue = getSystemProperty(BANNED_METHODS_PROPERTY_NAME);
         String[] bannedMethodsSignatures = split(bannedMethodsPropertyValue, VERTICAL_BAR_CHAR);
         int length = length(bannedMethodsSignatures);
@@ -204,13 +201,13 @@ public abstract class MethodUtils implements Utils {
                 for (int i = 0; i < parameterClassNames.length; i++) {
                     parameterTypes[i] = resolveClass(parameterClassNames[i], classLoader);
                 }
-                addBannedMethod(declaredClass, methodName, parameterTypes);
+                banMethod(declaredClass, methodName, parameterTypes);
             }
         }
     }
 
     /**
-     * Adds a banned method to the cache based on the provided class, method name, and parameter types.
+     * Bans method to the cache based on the provided class, method name, and parameter types.
      * <p>
      * This method creates a {@link MethodKey} using the specified parameters, finds the corresponding {@link Method}
      * using {@link #doFindMethod(MethodKey)}, and stores it in the {@link #bannedMethodsCache}. If the method is already
@@ -235,7 +232,7 @@ public abstract class MethodUtils implements Utils {
      * @see #initBannedMethods()
      * @see #bannedMethodsCache
      */
-    public static Method addBannedMethod(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+    public static Method banMethod(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
         MethodKey key = buildKey(declaredClass, methodName, parameterTypes);
         Method method = methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
         bannedMethodsCache.put(key, method);
