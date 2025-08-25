@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.logging.LoggerFactory;
+import io.microsphere.util.StopWatch.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,6 +27,7 @@ import static io.microsphere.util.StopWatch.Task.start;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -42,11 +44,14 @@ class StopWatchTest {
 
     private static final Logger logger = LoggerFactory.getLogger(StopWatchTest.class);
 
+    private static final String testName = "test";
+
+
     private StopWatch stopWatch;
 
     @BeforeEach
     void setUp() {
-        stopWatch = new StopWatch("test");
+        stopWatch = new StopWatch(testName);
     }
 
     @Test
@@ -57,12 +62,12 @@ class StopWatchTest {
         Thread.sleep(10);
         stopWatch.stop();
         stopWatch.stop();
-        StopWatch.Task currentTask = stopWatch.getCurrentTask();
+        Task currentTask = stopWatch.getCurrentTask();
         assertNull(currentTask);
-        assertEquals("test", stopWatch.getId());
+        assertEquals(testName, stopWatch.getId());
         assertEquals(0, stopWatch.getRunningTasks().size());
         assertEquals(2, stopWatch.getCompletedTasks().size());
-        StopWatch.Task task = stopWatch.getCompletedTasks().get(1);
+        Task task = stopWatch.getCompletedTasks().get(1);
         assertEquals("1", task.getTaskName());
         assertFalse(task.isReentrant());
         assertTrue(task.getStartTimeNanos() > 0);
@@ -74,18 +79,32 @@ class StopWatchTest {
 
     @Test
     void testTask() {
-        String testName = "test";
-        StopWatch.Task task = start(testName);
+        Task task = start(testName);
         task.stop();
         assertSame(testName, task.getTaskName());
         assertFalse(task.isReentrant());
         assertTrue(task.getStartTimeNanos() > 0);
         assertTrue(task.getElapsedNanos() > 0);
-        assertEquals(task, start(testName));
-        assertEquals(task.hashCode(), start(testName).hashCode());
-
     }
 
+    @Test
+    void testTaskOnEquals() {
+        Task task = start(testName);
+        assertEquals(task, task);
+        assertEquals(task, start(testName));
+    }
+
+    @Test
+    void testTaskOnNotEquals() {
+        Task task = start(testName);
+        assertNotEquals(task, testName);
+    }
+
+    @Test
+    void testTaskHashCode() {
+        Task task = start(testName);
+        assertEquals(task.hashCode(), start(testName).hashCode());
+    }
 
     @Test
     void testStartOnNullTaskName() {

@@ -38,7 +38,7 @@ import static io.microsphere.reflect.MethodUtils.OBJECT_DECLARED_METHODS;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.PUBLIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
-import static io.microsphere.reflect.MethodUtils.addBannedMethod;
+import static io.microsphere.reflect.MethodUtils.banMethod;
 import static io.microsphere.reflect.MethodUtils.buildKey;
 import static io.microsphere.reflect.MethodUtils.buildSignature;
 import static io.microsphere.reflect.MethodUtils.clearBannedMethods;
@@ -143,13 +143,13 @@ class MethodUtilsTest {
     }
 
     @Test
-    void testAddBannedMethod() {
-        assertAddBannedMethod(String.class, "substring", int.class);
-        assertAddBannedMethod(String.class, "substring", int.class, int.class);
+    void testBanMethod() {
+        assertBanMethod(String.class, "substring", int.class);
+        assertBanMethod(String.class, "substring", int.class, int.class);
     }
 
-    void assertAddBannedMethod(Class<?> declaringClass, String methodName, Class<?>... parameterTypes) {
-        addBannedMethod(declaringClass, methodName, parameterTypes);
+    void assertBanMethod(Class<?> declaringClass, String methodName, Class<?>... parameterTypes) {
+        banMethod(declaringClass, methodName, parameterTypes);
         assertNull(findMethod(declaringClass, methodName, parameterTypes));
     }
 

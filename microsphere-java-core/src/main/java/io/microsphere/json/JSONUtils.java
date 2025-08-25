@@ -128,7 +128,7 @@ public abstract class JSONUtils implements Utils {
     static {
         REPLACEMENT_CHARS = new String[128];
         for (int i = 0; i <= 0x1f; i++) {
-            REPLACEMENT_CHARS[i] = format("\\u%04x", (int) i);
+            REPLACEMENT_CHARS[i] = format("\\u%04x", i);
         }
         REPLACEMENT_CHARS['"'] = "\\\"";
         REPLACEMENT_CHARS['\\'] = "\\\\";
@@ -1350,8 +1350,9 @@ public abstract class JSONUtils implements Utils {
             String replacement;
             if (c < 0x80) {
                 replacement = REPLACEMENT_CHARS[c];
-                if (replacement == null)
+                if (replacement == null) {
                     continue;
+                }
             } else if (c == '\u2028') {
                 replacement = U2028;
             } else if (c == '\u2029') {
@@ -1361,12 +1362,14 @@ public abstract class JSONUtils implements Utils {
             }
             if (afterReplacement < i) { // write characters between the last replacement
                 // and now
-                if (builder == null)
+                if (builder == null) {
                     builder = new StringBuilder(length);
+                }
                 builder.append(v, afterReplacement, i);
             }
-            if (builder == null)
+            if (builder == null) {
                 builder = new StringBuilder(length);
+            }
             builder.append(replacement);
             afterReplacement = i + 1;
         }
