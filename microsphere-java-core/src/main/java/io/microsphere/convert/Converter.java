@@ -158,9 +158,9 @@ public interface Converter<S, T> extends Prioritized {
      * @return the converted object of type {@code T}, or {@code null} if no suitable converter is found
      */
     static <T> T convertIfPossible(Object source, Class<T> targetType) {
-        Converter converter = getConverter(source.getClass(), targetType);
+        Converter<Object, T> converter = (Converter<Object, T>) getConverter(source.getClass(), targetType);
         if (converter != null) {
-            return (T) converter.convert(source);
+            return converter.convert(source);
         }
         return null;
     }

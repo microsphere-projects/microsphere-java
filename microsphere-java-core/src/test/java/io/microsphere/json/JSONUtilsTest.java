@@ -48,6 +48,7 @@ import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONUtils.append;
 import static io.microsphere.json.JSONUtils.convertValue;
 import static io.microsphere.json.JSONUtils.determineElementClass;
+import static io.microsphere.json.JSONUtils.escape;
 import static io.microsphere.json.JSONUtils.isEmpty;
 import static io.microsphere.json.JSONUtils.isNotEmpty;
 import static io.microsphere.json.JSONUtils.isNotNull;
@@ -63,6 +64,7 @@ import static io.microsphere.json.JSONUtils.readValues;
 import static io.microsphere.json.JSONUtils.writeBeanAsString;
 import static io.microsphere.json.JSONUtils.writeValueAsString;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.Byte.valueOf;
@@ -731,6 +733,78 @@ class JSONUtilsTest {
         JSONArray jsonArray = new JSONArray();
         Class<?> elementClass = determineElementClass(jsonArray);
         assertSame(Object.class, elementClass);
+    }
+
+    @Test
+    void testEscape() {
+        assertEquals("Hello\\nWorld", escape("Hello\nWorld"));
+        assertEquals("Quote: \\\"Hello\\\"", escape("Quote: \"Hello\""));
+    }
+
+    @Test
+    void testEscapeWithNull() {
+        assertNull(escape(null));
+    }
+
+    @Test
+    void testEscapeWithEmptyString() {
+        assertEquals(EMPTY_STRING, escape(EMPTY_STRING));
+    }
+
+    @Test
+    void testEscapeWithNormalString() {
+        String result = JSONUtils.escape("hello world");
+        assertEquals("hello world", result);
+    }
+
+    @Test
+    void testEscapeWithNewline() {
+        String result = JSONUtils.escape("hello\nworld");
+        assertEquals("hello\\nworld", result);
+    }
+
+    @Test
+    void testEscapeWithCarriageReturn() {
+        String result = JSONUtils.escape("hello\rworld");
+        assertEquals("hello\\rworld", result);
+    }
+
+    @Test
+    void testEscapeWithTab() {
+        String result = JSONUtils.escape("hello\tworld");
+        assertEquals("hello\\tworld", result);
+    }
+
+    @Test
+    void testEscapeWithDoubleQuote() {
+        String result = JSONUtils.escape("say \"hello\"");
+        assertEquals("say \\\"hello\\\"", result);
+    }
+
+    @Test
+    void testEscapeWithBackslash() {
+        String result = JSONUtils.escape("path\\to\\file");
+        assertEquals("path\\\\to\\\\file", result);
+    }
+
+    @Test
+    void testEscapeWithU2028() {
+        String result = JSONUtils.escape("line\u2028break");
+        assertEquals("line\\u2028break", result);
+    }
+
+    @Test
+    void testEscapeWithU2029() {
+        String result = JSONUtils.escape("line\u2029break");
+        assertEquals("line\\u2029break", result);
+    }
+
+    @Test
+    void testEscapeWithMultipleEscapes() {
+        String input = "a\"b\\c\nd\te\u2028f\u2029g";
+        String expected = "a\\\"b\\\\c\\nd\\te\\u2028f\\u2029g";
+        String result = JSONUtils.escape(input);
+        assertEquals(expected, result);
     }
 
     Data createData() {

@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
@@ -32,11 +33,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.ListUtils.of;
+import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
+import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS_CHAR;
+import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS;
 import static io.microsphere.constants.SymbolConstants.RIGHT_PARENTHESIS_CHAR;
+import static io.microsphere.constants.SymbolConstants.SHARP;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
+import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR_CHAR;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
@@ -51,11 +58,17 @@ import static io.microsphere.util.AnnotationUtils.isAnnotationPresent;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.StringUtils.substringBefore;
+import static io.microsphere.util.StringUtils.substringBetween;
+import static io.microsphere.util.SystemUtils.getSystemProperty;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.hash;
@@ -69,6 +82,18 @@ import static java.util.Objects.hash;
 public abstract class MethodUtils implements Utils {
 
     private static final Logger logger = getLogger(MethodUtils.class);
+
+    /**
+     * The property name of banned methods
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * System.setProperty(BANNED_METHODS_PROPERTY_NAME, "java.lang.String#substring() | java.lang.String#substring(int,int)")
+     * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class); // returns null
+     * method = MethodUtils.findMethod(String.class, "substring"); // returns null
+     * method = MethodUtils.findMethod(String.class, "substring", int.class); // returns non-null
+     * }</pre>
+     */
+    public static final String BANNED_METHODS_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "reflect.banned-methods";
 
     /**
      * The public methods of {@link Object}
@@ -116,7 +141,126 @@ public abstract class MethodUtils implements Utils {
 
     private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>(256);
 
+    /**
+     * The cache to store the methods to be banned by the {@link #buildSignature(Class, String, Class[]) signatures}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * System.setProperty(BANNED_METHODS_PROPERTY_NAME, "java.lang.String#substring() | java.lang.String#substring(int,int)")
+     * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class); // returns null
+     * method = MethodUtils.findMethod(String.class, "substring"); // returns null
+     * method = MethodUtils.findMethod(String.class, "substring", int.class); // returns non-null
+     * }</pre>
+     */
+    @ConfigurationProperty(
+            name = BANNED_METHODS_PROPERTY_NAME,
+            type = String[].class,
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
+    private final static ConcurrentMap<MethodKey, Method> bannedMethodsCache = new ConcurrentHashMap<>(16);
+
     private static final ConcurrentMap<Class<?>, Method[]> declaredMethodsCache = new ConcurrentHashMap<>(256);
+
+    /**
+     * Initializes the banned methods cache based on the system property {@value #BANNED_METHODS_PROPERTY_NAME}.
+     * <p>
+     * This method reads the comma-separated list of method signatures from the system property
+     * {@value #BANNED_METHODS_PROPERTY_NAME}, parses each signature, resolves the corresponding {@link Method},
+     * and stores it in the {@link #bannedMethodsCache}. The format for each method signature is:
+     * {@code fully.qualified.ClassName#methodName(parameter.Type1,parameter.Type2)}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Set the system property to ban specific methods
+     * System.setProperty(MethodUtils.BANNED_METHODS_PROPERTY_NAME,
+     *     "java.lang.String#substring(int,int)|java.lang.Object#toString()");
+     *
+     * // Initialize the banned methods cache
+     * MethodUtils.initBannedMethods();
+     *
+     * // After this call, findMethod will return null for banned methods
+     * Method substringMethod = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
+     * // substringMethod will be null
+     * }</pre>
+     */
+    public static void initBannedMethods() {
+        String bannedMethodsPropertyValue = getSystemProperty(BANNED_METHODS_PROPERTY_NAME);
+        String[] bannedMethodsSignatures = split(bannedMethodsPropertyValue, VERTICAL_BAR_CHAR);
+        int length = length(bannedMethodsSignatures);
+        if (length > 0) {
+            ClassLoader classLoader = MethodUtils.class.getClassLoader();
+            for (String bannedMethodsSignature : bannedMethodsSignatures) {
+                String signature = bannedMethodsSignature.trim();
+                String declaredClassName = substringBefore(signature, SHARP);
+                String methodName = substringBetween(signature, SHARP, LEFT_PARENTHESIS);
+                String parameterClasses = substringBetween(signature, LEFT_PARENTHESIS, RIGHT_PARENTHESIS);
+                String[] parameterClassNames = split(parameterClasses, COMMA_CHAR);
+                Class<?> declaredClass = resolveClass(declaredClassName, classLoader);
+                Class<?>[] parameterTypes = new Class[parameterClassNames.length];
+                for (int i = 0; i < parameterClassNames.length; i++) {
+                    parameterTypes[i] = resolveClass(parameterClassNames[i], classLoader);
+                }
+                banMethod(declaredClass, methodName, parameterTypes);
+            }
+        }
+    }
+
+    /**
+     * Bans method to the cache based on the provided class, method name, and parameter types.
+     * <p>
+     * This method creates a {@link MethodKey} using the specified parameters, finds the corresponding {@link Method}
+     * using {@link #doFindMethod(MethodKey)}, and stores it in the {@link #bannedMethodsCache}. If the method is already
+     * present in the cache, it will not be overwritten.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Ban the String.substring(int, int) method
+     * MethodUtils.banMethod(String.class, "substring", int.class, int.class);
+     *
+     * // After this call, findMethod will return null for the banned method
+     * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
+     * // method will be null
+     * }</pre>
+     *
+     * @param declaredClass  the class that declares the method to be banned
+     * @param methodName     the name of the method to be banned
+     * @param parameterTypes the parameter types of the method to be banned (can be empty if the method has no parameters)
+     * @return the banned method, or {@code null} if the method could not be found
+     * @throws NullPointerException If the target method can't be found
+     * @see #initBannedMethods()
+     * @see #bannedMethodsCache
+     */
+    public static Method banMethod(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+        MethodKey key = buildKey(declaredClass, methodName, parameterTypes);
+        Method method = methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
+        bannedMethodsCache.put(key, method);
+        return method;
+    }
+
+    /**
+     * Clears the cache of banned methods.
+     *
+     * <p>This method removes all entries from the {@link #bannedMethodsCache}, effectively
+     * allowing all previously banned methods to be discoverable again by {@link #findMethod(Class, String, Class[])}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Clear all banned methods
+     * MethodUtils.clearBannedMethods();
+     *
+     * // After this call, findMethod will return previously banned methods
+     * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
+     * // method may now be non-null if it was previously banned
+     * }</pre>
+     *
+     * @see #initBannedMethods()
+     * @see #bannedMethodsCache
+     */
+    public static void clearBannedMethods() {
+        bannedMethodsCache.clear();
+    }
 
     /**
      * Creates a {@link Predicate} that excludes methods declared by the specified class.
@@ -482,7 +626,7 @@ public abstract class MethodUtils implements Utils {
     @Nullable
     public static Method findMethod(Class targetClass, String methodName, Class<?>... parameterTypes) {
         MethodKey key = buildKey(targetClass, methodName, parameterTypes);
-        return methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
+        return bannedMethodsCache.containsKey(key) ? null : methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
     }
 
     /**
@@ -1019,8 +1163,30 @@ public abstract class MethodUtils implements Utils {
         return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
     }
 
-    static String buildSignature(Class<?> declaringClass, String methodName, Class<?>[] parameterTypes) {
-        int parameterCount = parameterTypes.length;
+    /**
+     * Builds a method signature string based on the provided declaring class, method name, and parameter types.
+     *
+     * <p>The generated signature follows the format: {@code declaringClassName#methodName(paramType1,paramType2,...)}.
+     * This utility method is primarily used internally to create unique identifiers for methods.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * String signature = MethodUtils.buildSignature(String.class, "substring", new Class[]{int.class, int.class});
+     * System.out.println(signature);  // Output: java.lang.String#substring(int,int)
+     * }</pre>
+     *
+     * <pre>{@code
+     * String signature = MethodUtils.buildSignature(List.class, "add", new Class[]{Object.class});
+     * System.out.println(signature);  // Output: java.util.List#add(java.lang.Object)
+     * }</pre>
+     *
+     * @param declaringClass the class that declares the method
+     * @param methodName     the name of the method
+     * @param parameterTypes the parameter types of the method
+     * @return a non-null string representing the method signature
+     */
+    public static String buildSignature(Class<?> declaringClass, String methodName, Class<?>... parameterTypes) {
+        int parameterCount = length(parameterTypes);
         String[] parameterTypeNames = new String[parameterCount];
         String declaringClassName = getTypeName(declaringClass);
         int size = declaringClassName.length() + 1 // '#'
