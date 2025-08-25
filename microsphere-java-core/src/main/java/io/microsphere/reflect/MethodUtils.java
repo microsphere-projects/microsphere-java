@@ -217,7 +217,7 @@ public abstract class MethodUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * // Ban the String.substring(int, int) method
-     * MethodUtils.addBannedMethod(String.class, "substring", int.class, int.class);
+     * MethodUtils.banMethod(String.class, "substring", int.class, int.class);
      *
      * // After this call, findMethod will return null for the banned method
      * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
