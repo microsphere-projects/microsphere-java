@@ -226,7 +226,7 @@ public abstract class JSONUtils implements Utils {
     public static void append(StringBuilder jsonBuilder, String name, String value) {
         appendName(jsonBuilder, name)
                 .append(DOUBLE_QUOTE_CHAR)
-                .append(value)
+                .append(escape(value))
                 .append(DOUBLE_QUOTE_CHAR);
     }
 
