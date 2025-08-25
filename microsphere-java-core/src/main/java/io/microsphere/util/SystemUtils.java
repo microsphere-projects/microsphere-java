@@ -22,7 +22,7 @@ import io.microsphere.logging.Logger;
 import java.util.Map;
 import java.util.Properties;
 
-import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StringUtils.startsWith;
 import static java.lang.System.getProperties;
@@ -545,7 +545,7 @@ public abstract class SystemUtils implements Utils {
         synchronized (SystemUtils.class) {
             Map<String, String> copy = systemPropertiesCopy;
             if (copy == null) {
-                copy = newHashMap(properties.size());
+                copy = newFixedHashMap(properties.size());
                 systemPropertiesCopy = copy;
             } else {
                 copy.clear();
