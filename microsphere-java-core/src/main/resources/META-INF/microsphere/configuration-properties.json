@@ -87,6 +87,7 @@
     "name": "microsphere.reflect.banned-methods",
     "type": "java.lang.String[]",
     "required": false,
+    "description": "The cache to store the methods to be banned by the {@link #buildSignature(Class, String, Class[]) signatures}.\n\n <h3>Example Usage<\/h3>\n <pre>{@code\n System.setProperty(BANNED_METHODS_PROPERTY_NAME, \"java.lang.String#substring() | java.lang.String#substring(int,int)\")\n Method method = MethodUtils.findMethod(String.class, \"substring\", int.class, int.class); \/\/ returns null\n method = MethodUtils.findMethod(String.class, \"substring\"); \/\/ returns null\n method = MethodUtils.findMethod(String.class, \"substring\", int.class); \/\/ returns non-null\n }<\/pre>\n",
     "metadata": {
       "sources": [
         "system-properties"
