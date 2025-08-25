@@ -317,6 +317,13 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testDoLoadClass() {
+        assertSame(ClassLoaderUtilsTest.class, doLoadClass(classLoader, ClassLoaderUtilsTest.class.getName()));
+        assertSame(int.class, doLoadClass(classLoader, int.class.getName()));
+        assertSame(int.class, doLoadClass(classLoader, "int"));
+    }
+
+    @Test
     void testDoLoadClassOnNull() {
         assertNull(doLoadClass(null, ClassLoaderUtilsTest.class.getName()));
         assertNull(doLoadClass(null, Nonnull.class.getName()));

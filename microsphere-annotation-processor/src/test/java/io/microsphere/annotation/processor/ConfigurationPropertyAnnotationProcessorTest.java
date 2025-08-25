@@ -21,6 +21,7 @@ import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.classloading.ManifestArtifactResourceResolver;
 import io.microsphere.io.IOUtils;
 import io.microsphere.io.StandardFileWatchService;
+import io.microsphere.reflect.MethodUtils;
 import io.microsphere.reflect.TypeUtils;
 import io.microsphere.util.ServiceLoaderUtils;
 import org.junit.jupiter.api.Test;
@@ -51,6 +52,7 @@ class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationPro
         compiledClasses.add(StandardFileWatchService.class);
         compiledClasses.add(TypeUtils.class);
         compiledClasses.add(ServiceLoaderUtils.class);
+        compiledClasses.add(MethodUtils.class);
         compiledClasses.add(ConfigurationProperty.class);
     }
 

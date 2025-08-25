@@ -19,8 +19,12 @@ package io.microsphere.util;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
+import java.util.Map;
+
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StringUtils.startsWith;
+import static java.lang.System.getProperties;
 import static java.lang.System.getProperty;
 
 /**
@@ -512,6 +516,45 @@ public abstract class SystemUtils implements Utils {
     public static final boolean IS_LTS_JAVA_VERSION = IS_JAVA_8 || IS_JAVA_11 || IS_JAVA_17 || IS_JAVA_21;
 
     /**
+     * The copy of {@link System#getProperties() JDK System Properties, reduces
+     * the performance cost of {@link System#getProperty(String)}.
+     */
+    private static Map<String, String> systemPropertiesCopy;
+
+    /**
+     * <p>
+     * Copies the current system properties into an internal map for later access.
+     * </p>
+     * <p>
+     * This method is useful when you want to capture the system properties at a certain point in time
+     * and access them later without querying the system again. It ensures that the properties are copied
+     * in a thread-safe manner.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * SystemUtils.copySystemProperties();
+     * }</pre>
+     *
+     * @see #getSystemProperty(String)
+     * @see #getSystemProperty(String, String)
+     */
+    public static void copySystemProperties() {
+        Map properties = getProperties();
+        Map<String, String> copy = systemPropertiesCopy;
+        if (copy == null) {
+            copy = newHashMap(properties.size());
+            systemPropertiesCopy = copy;
+        }
+        synchronized (SystemUtils.class) {
+            copy.putAll(properties);
+        }
+        if (logger.isTraceEnabled()) {
+            logger.trace("The JDK System Properties has been copied : {}", systemPropertiesCopy);
+        }
+    }
+
+    /**
      * <p>
      * Gets a system property with the given key, defaulting to {@code null} if the property cannot be read.
      * </p>
@@ -552,12 +595,23 @@ public abstract class SystemUtils implements Utils {
      */
     @Nullable
     public static String getSystemProperty(String key, String defaultValue) {
-        try {
-            return getProperty(key, defaultValue);
-        } catch (final SecurityException ex) {
-            logger.warn("Caught a SecurityException reading the system property '{}'; " + "the SystemUtils property value will be : '{}'", key, defaultValue);
-            return defaultValue;
+        String value = getSystemPropertyFromCopy(key);
+        return value == null ? getProperty(key, defaultValue) : value;
+    }
+
+    /**
+     * Reset the {@link #systemPropertiesCopy} to be <code>null</code>,
+     * mainly used for testing
+     */
+    protected static void resetSystemPropertiesCopy() {
+        if (logger.isTraceEnabled()) {
+            logger.trace("The copy of JDK System Properties has been reset!");
         }
+        systemPropertiesCopy = null;
+    }
+
+    protected static String getSystemPropertyFromCopy(String key) {
+        return systemPropertiesCopy == null ? null : systemPropertiesCopy.get(key);
     }
 
     private static boolean matchesJavaVersion(final String versionPrefix) {

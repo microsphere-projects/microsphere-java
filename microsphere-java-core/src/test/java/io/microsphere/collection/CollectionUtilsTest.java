@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -190,16 +189,49 @@ class CollectionUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testAddAll() {
-        List<String> values = new LinkedList<>();
-        assertEquals(0, addAll(TEST_EMPTY_LIST));
-        assertEquals(0, addAll(TEST_NULL_COLLECTION, "A"));
-        assertEquals(0, addAll(values));
+    void testAddAllWithList() {
+        List<String> values = newLinkedList();
         assertEquals(2, addAll(values, "A", "B"));
         assertEquals(ofList("A", "B"), values);
+    }
 
+    @Test
+    void testAddAllWithSet() {
         Set<String> set = newHashSet(TEST_ELEMENT);
         assertEquals(0, addAll(set, TEST_ELEMENT));
+    }
+
+    @Test
+    void testAddAllWithoutValues() {
+        assertEquals(0, addAll(TEST_EMPTY_LIST));
+        assertEquals(0, addAll(newLinkedList()));
+    }
+
+    @Test
+    void testAddAllWithNullCollection() {
+        assertEquals(0, addAll(TEST_NULL_COLLECTION, "A"));
+    }
+
+    @Test
+    public void testAddAllWithListAndIterable() {
+        List<String> values = newLinkedList();
+        assertEquals(2, addAll(values, ofList("A", "B")));
+    }
+
+    @Test
+    public void testAddAllWithSetAndIterable() {
+        Set<String> set = newHashSet(TEST_ELEMENT);
+        assertEquals(0, addAll(set, set));
+    }
+
+    @Test
+    public void testAddAllWithNullList() {
+        assertEquals(0, addAll(TEST_NULL_COLLECTION, ofList("A")));
+    }
+
+    @Test
+    public void testAddAllWithNullIterable() {
+        assertEquals(0, addAll(newLinkedList(), (List) null));
     }
 
     @Test

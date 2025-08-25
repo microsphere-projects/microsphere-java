@@ -26,9 +26,12 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
+import static io.microsphere.util.IterableUtils.forEach;
 import static io.microsphere.util.IterableUtils.isIterable;
+import static io.microsphere.util.IterableUtils.iterate;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -65,5 +68,29 @@ class IterableUtilsTest {
 
         assertFalse(isIterable(Object.class));
         assertFalse(isIterable(null));
+    }
+
+    @Test
+    public void testIterate() {
+        iterate(ofList(1, 2, 3), i -> {
+        });
+    }
+
+    @Test
+    public void testIterateWithNullElements() {
+        iterate(null, i -> {
+        });
+    }
+
+    @Test
+    public void testForEach() {
+        forEach(ofList(1, 2, 3), i -> {
+        });
+    }
+
+    @Test
+    public void testForEachWithNullElements() {
+        forEach(null, i -> {
+        });
     }
 }
