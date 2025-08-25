@@ -547,11 +547,13 @@ public abstract class SystemUtils implements Utils {
             if (copy == null) {
                 copy = newHashMap(properties.size());
                 systemPropertiesCopy = copy;
+            } else {
+                copy.clear();
             }
             copy.putAll((Map) properties);
         }
         if (logger.isTraceEnabled()) {
-            logger.trace("The JDK System Properties has been copied : {}", systemPropertiesCopy);
+            logger.trace("The JDK System Properties has been copied : {}", properties);
         }
     }
 
