@@ -38,7 +38,6 @@ import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesDe
 import static io.microsphere.annotation.processor.util.ClassUtils.getClassName;
 import static io.microsphere.annotation.processor.util.TypeUtils.getTypeName;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
-import static io.microsphere.json.JSONUtils.escape;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.StringUtils.isBlank;
 
@@ -121,7 +120,7 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
     private String resolveDescription(VariableElement field, ExecutableElement attributeMethod, AnnotationValue annotationValue) {
         String description = resolveStringValue(attributeMethod, annotationValue);
         if (isBlank(description)) {
-            description = escape(elements.getDocComment(field));
+            description = elements.getDocComment(field);
         }
         return description;
     }
