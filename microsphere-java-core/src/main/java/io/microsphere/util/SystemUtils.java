@@ -541,12 +541,12 @@ public abstract class SystemUtils implements Utils {
      */
     public static void copySystemProperties() {
         Map properties = getProperties();
-        Map<String, String> copy = systemPropertiesCopy;
-        if (copy == null) {
-            copy = newHashMap(properties.size());
-            systemPropertiesCopy = copy;
-        }
         synchronized (SystemUtils.class) {
+            Map<String, String> copy = systemPropertiesCopy;
+            if (copy == null) {
+                copy = newHashMap(properties.size());
+                systemPropertiesCopy = copy;
+            }
             copy.putAll(properties);
         }
         if (logger.isTraceEnabled()) {
