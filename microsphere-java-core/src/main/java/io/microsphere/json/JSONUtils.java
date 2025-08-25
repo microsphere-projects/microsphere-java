@@ -128,7 +128,7 @@ public abstract class JSONUtils implements Utils {
     static {
         REPLACEMENT_CHARS = new String[128];
         for (int i = 0; i <= 0x1f; i++) {
-            REPLACEMENT_CHARS[i] = format("\\u%04x", (int) i);
+            REPLACEMENT_CHARS[i] = format("\\u%04x", i);
         }
         REPLACEMENT_CHARS['"'] = "\\\"";
         REPLACEMENT_CHARS['\\'] = "\\\\";
