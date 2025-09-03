@@ -35,7 +35,7 @@ import static java.util.Collections.emptySet;
  *     <li>Locating the runtime URL of a class by name or type</li>
  * </ul>
  *
- * <h3>Example Usage:</h3>
+ * <h3>Example Usage</h3>
  * <pre>{@code
  * // Get all application class paths
  * Set<String> classPaths = ClassPathUtils.getClassPaths();
