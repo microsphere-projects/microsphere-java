@@ -115,7 +115,7 @@ class FileUtilsTest extends AbstractTestCase {
     void testDeleteDirectoryOnIOException() throws Exception {
         ExecutorService executor = newSingleThreadExecutor();
         executor.submit(this::testDeleteDirectoryOnIOException0);
-        executor.shutdown();
+        shutdown(executor);
         while (!executor.isTerminated()) {
             sleep(10L);
         }
