@@ -1315,7 +1315,7 @@ public abstract class URLUtils implements Utils {
         if (startIndex > -1) {
             int endIndex = url.indexOf("://", startIndex);
             if (endIndex > startIndex) {
-                return url.substring(startIndex, endIndex);
+                return url.substring(startIndex + 1, endIndex);
             }
         }
         return null;
