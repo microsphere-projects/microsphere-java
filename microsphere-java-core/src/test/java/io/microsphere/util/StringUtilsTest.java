@@ -3,12 +3,11 @@ package io.microsphere.util;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.COMMA;
-import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.SPACE;
-import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.CharSequenceUtils.length;
 import static io.microsphere.util.CharSequenceUtilsTest.TEST_BLANK_STRING;
 import static io.microsphere.util.CharSequenceUtilsTest.TEST_CSV_STRING;
 import static io.microsphere.util.CharSequenceUtilsTest.TEST_EMPTY_STRING;
@@ -42,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.util.StringUtils.delimitedListToStringArray;
 
 /**
  * {@link StringUtils} Test
@@ -81,26 +81,37 @@ class StringUtilsTest {
 
     @Test
     void testSplit() {
-        String[] values = split(null, SPACE_CHAR);
-        assertSame(EMPTY_STRING_ARRAY, values);
+        assertSame(EMPTY_STRING_ARRAY, assertSplit(null, SPACE));
 
-        values = split(TEST_EMPTY_STRING, SPACE);
-        assertSame(EMPTY_STRING_ARRAY, values);
+        assertSame(EMPTY_STRING_ARRAY, assertSplit(TEST_EMPTY_STRING, SPACE));
 
-        values = split(TEST_BLANK_STRING, null);
-        assertSame(EMPTY_STRING_ARRAY, values);
+        assertSame(EMPTY_STRING_ARRAY, assertSplit(TEST_EMPTY_STRING, EMPTY_STRING));
 
-        values = split(TEST_BLANK_STRING, SPACE);
-        assertArrayEquals(EMPTY_STRING_ARRAY, values);
+        assertArrayEquals(ofArray(TEST_BLANK_STRING), assertSplit(TEST_BLANK_STRING, null));
 
-        values = split(SPACE + SPACE, SPACE);
-        assertArrayEquals(EMPTY_STRING_ARRAY, values);
+        assertArrayEquals(ofArray(TEST_BLANK_STRING), assertSplit(TEST_BLANK_STRING, EMPTY_STRING));
 
-        values = split(SPACE + SPACE + SPACE, SPACE);
-        assertArrayEquals(EMPTY_STRING_ARRAY, values);
+        assertArrayEquals(ofArray(EMPTY_STRING, EMPTY_STRING), assertSplit(TEST_BLANK_STRING, SPACE));
 
-        values = split(TEST_CSV_STRING, COMMA_CHAR);
-        assertArrayEquals(ofArray("a", "b", "c"), values);
+        assertArrayEquals(ofArray(EMPTY_STRING, EMPTY_STRING, EMPTY_STRING), assertSplit(SPACE + SPACE, SPACE));
+
+        assertArrayEquals(ofArray(EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING), assertSplit(SPACE + SPACE + SPACE, SPACE));
+
+        assertArrayEquals(ofArray("a", "b", "c"), assertSplit(TEST_CSV_STRING, COMMA));
+
+        assertArrayEquals(ofArray(TEST_CSV_STRING), assertSplit(TEST_CSV_STRING, SPACE));
+
+        assertArrayEquals(ofArray("a", "", "b", "c"), assertSplit("a, , b, c", ", "));
+    }
+
+    String[] assertSplit(String str, String delimiter) {
+        String[] values = split(str, delimiter);
+        if (length(delimiter) == 1) {
+            assertArrayEquals(split(str, delimiter.charAt(0)), values);
+        }
+        String[] valuesFromString = delimitedListToStringArray(str, delimiter);
+        assertArrayEquals(valuesFromString, values);
+        return values;
     }
 
     @Test
