@@ -111,11 +111,13 @@ class StringUtilsTest {
 
     String[] assertSplit(String str, String delimiter) {
         String[] values = split(str, delimiter);
-        if (length(delimiter) == 1) {
+        int length = length(delimiter);
+        if (length == 1) {
             assertArrayEquals(split(str, delimiter.charAt(0)), values);
+        } else if (length > 1) {
+            String[] valuesFromString = delimitedListToStringArray(str, delimiter);
+            assertArrayEquals(valuesFromString, values);
         }
-        String[] valuesFromString = delimitedListToStringArray(str, delimiter);
-        assertArrayEquals(valuesFromString, values);
         return values;
     }
 
@@ -177,11 +179,10 @@ class StringUtilsTest {
     @Test
     void testReplace() {
         assertNull(replace(null, null, null));
+
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, "null", null));
         assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, "null", "null"));
-
-        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, TEST_EMPTY_STRING, 0));
 
