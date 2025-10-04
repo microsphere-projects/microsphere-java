@@ -177,11 +177,10 @@ class StringUtilsTest {
     @Test
     void testReplace() {
         assertNull(replace(null, null, null));
+
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, "null", null));
         assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, "null", "null"));
-
-        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, TEST_EMPTY_STRING, 0));
 
