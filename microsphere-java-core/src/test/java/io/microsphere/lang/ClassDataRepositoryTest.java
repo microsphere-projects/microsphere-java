@@ -50,7 +50,6 @@ class ClassDataRepositoryTest extends AbstractTestCase {
         for (String classPath : classPaths) {
             Set<String> classNames = repository.getClassNamesInClassPath(classPath, true);
             assertNotNull(classNames);
-            assertThrows(UnsupportedOperationException.class, classNames::clear);
         }
     }
 

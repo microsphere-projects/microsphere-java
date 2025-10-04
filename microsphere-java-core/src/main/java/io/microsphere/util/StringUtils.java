@@ -17,11 +17,15 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Immutable;
+import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 
-import java.util.StringTokenizer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static java.lang.Character.isDigit;
@@ -127,7 +131,8 @@ public abstract class StringUtils implements Utils {
      * @param delimiter the char used as a delimiter to split the String
      * @return an array of Strings, split by the delimiter; never null
      */
-    public static String[] split(String value, char delimiter) {
+    @Nonnull
+    public static String[] split(@Nullable String value, char delimiter) {
         return split(value, valueOf(delimiter));
     }
 
@@ -140,7 +145,9 @@ public abstract class StringUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.split(null, ",")       = []
+     * StringUtils.split("", null)        = []
      * StringUtils.split("", ";")         = []
+     * StringUtils.split("abc", "")       = ["a", "b", "c"]
      * StringUtils.split("a,b,c", ",")    = ["a", "b", "c"]
      * StringUtils.split("a;b;c", ",")    = ["a;b;c"]
      * StringUtils.split("a,,b,c", ",")   = ["a", "", "b", "c"]
@@ -150,12 +157,41 @@ public abstract class StringUtils implements Utils {
      * @param delimiter the String used as a delimiter to split the String, may be null or empty
      * @return an array of Strings, split by the delimiter; never null
      */
-    public static String[] split(String value, String delimiter) {
-        if (isEmpty(value) || isEmpty(delimiter)) {
+    @Nonnull
+    public static String[] split(@Nullable String value, @Nullable String delimiter) {
+        int length = length(value);
+        if (length < 1) {
             return EMPTY_STRING_ARRAY;
         }
-        StringTokenizer stringTokenizer = new StringTokenizer(value, delimiter);
-        return (String[]) asArray(stringTokenizer, String.class);
+
+        if (delimiter == null) {
+            return ofArray(value);
+        }
+
+        int delimiterLength = delimiter.length();
+
+        List<String> result = new ArrayList<>();
+
+        if (delimiterLength == 0) {
+            for (int i = 0; i < value.length(); i++) {
+                result.add(value.substring(i, i + 1));
+            }
+        } else {
+            int startIndex = 0;
+            int endIndex;
+
+            while ((endIndex = value.indexOf(delimiter, startIndex)) > -1) {
+                String part = value.substring(startIndex, endIndex);
+                result.add(part);
+                startIndex = endIndex + delimiterLength;
+            }
+            if (startIndex <= length) {
+                // Add rest of String, but not in case of empty input.
+                result.add(value.substring(startIndex));
+            }
+        }
+
+        return toStringArray(result);
     }
 
     /**
@@ -778,6 +814,26 @@ public abstract class StringUtils implements Utils {
      */
     public static String uncapitalize(String str) {
         return changeFirstCharacter(str, false);
+    }
+
+    /**
+     * Convert the given {@link Collection} into a {@code String} array.
+     * <p>The {@code Collection} must contain {@code String} elements only.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.toStringArray(null)               = []
+     * StringUtils.toStringArray(new ArrayList<>())  = []
+     * StringUtils.toStringArray(Arrays.asList("a", "b", "c")) = ["a", "b", "c"]
+     * }</pre>
+     *
+     * @param collection the {@code Collection} to convert
+     *                   (potentially {@code null} or empty)
+     * @return the resulting {@code String} array
+     */
+    @Nonnull
+    public static String[] toStringArray(@Nullable Collection<String> collection) {
+        return isEmpty(collection) ? EMPTY_STRING_ARRAY : collection.toArray(EMPTY_STRING_ARRAY);
     }
 
     static String changeFirstCharacter(String str, boolean capitalize) {
