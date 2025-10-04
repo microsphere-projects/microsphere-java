@@ -120,7 +120,7 @@ class FileUtilsTest extends AbstractTestCase {
         assertTrue(executor.awaitTermination(5, SECONDS));
     }
 
-    Void testDeleteDirectoryOnIOException0() throws Exception {
+    File testDeleteDirectoryOnIOException0() throws Exception {
         File testDir = createRandomTempDirectory();
 
         ExecutorService fileCreationExecutor = newSingleThreadExecutor();
@@ -170,7 +170,7 @@ class FileUtilsTest extends AbstractTestCase {
         assertFalse(creatingFile.get());
         assertFalse(deletingDirectory.get());
 
-        return null;
+        return testDir;
     }
 
     @Test
