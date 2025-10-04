@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>0.0.25100402</version>
+        <version>0.2.1</version>
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
