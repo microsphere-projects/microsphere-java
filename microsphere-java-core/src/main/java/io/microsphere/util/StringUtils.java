@@ -32,6 +32,7 @@ import static java.lang.Character.isDigit;
 import static java.lang.Character.isWhitespace;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
+import static java.lang.String.valueOf;
 
 /**
  * The utilities class for {@link String}
@@ -132,27 +133,7 @@ public abstract class StringUtils implements Utils {
      */
     @Nonnull
     public static String[] split(@Nullable String value, char delimiter) {
-        int length = length(value);
-        if (length < 1) {
-            return EMPTY_STRING_ARRAY;
-        }
-
-        List<String> result = new ArrayList<>();
-
-        int startIndex = 0;
-        int endIndex;
-
-        while ((endIndex = value.indexOf(delimiter, startIndex)) > -1) {
-            String part = value.substring(startIndex, endIndex);
-            result.add(part);
-            startIndex = endIndex + 1;
-        }
-        if (startIndex <= length) {
-            // Add rest of String, but not in case of empty input.
-            result.add(value.substring(startIndex));
-        }
-
-        return toStringArray(result);
+        return split(value, valueOf(delimiter));
     }
 
     /**
@@ -852,7 +833,7 @@ public abstract class StringUtils implements Utils {
      */
     @Nonnull
     public static String[] toStringArray(@Nullable Collection<String> collection) {
-        return (!isEmpty(collection) ? collection.toArray(EMPTY_STRING_ARRAY) : EMPTY_STRING_ARRAY);
+        return isEmpty(collection) ? EMPTY_STRING_ARRAY : collection.toArray(EMPTY_STRING_ARRAY);
     }
 
     static String changeFirstCharacter(String str, boolean capitalize) {
