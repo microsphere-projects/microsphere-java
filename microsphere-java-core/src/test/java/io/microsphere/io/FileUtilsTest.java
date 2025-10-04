@@ -34,6 +34,7 @@ import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newFixedThreadPool;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -116,8 +117,7 @@ class FileUtilsTest extends AbstractTestCase {
         ExecutorService executor = newSingleThreadExecutor();
         executor.submit(this::testDeleteDirectoryOnIOException0);
         shutdown(executor);
-        while (!executor.isTerminated()) {
-        }
+        assertTrue(executor.awaitTermination(5, SECONDS));
     }
 
     Void testDeleteDirectoryOnIOException0() throws Exception {
