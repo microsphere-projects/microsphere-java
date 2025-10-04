@@ -113,6 +113,14 @@ class FileUtilsTest extends AbstractTestCase {
 
     @Test
     void testDeleteDirectoryOnIOException() throws Exception {
+        ExecutorService executor = newSingleThreadExecutor();
+        executor.submit(this::testDeleteDirectoryOnIOException0);
+        shutdown(executor);
+        while (!executor.isTerminated()) {
+        }
+    }
+
+    Void testDeleteDirectoryOnIOException0() throws Exception {
         File testDir = createRandomTempDirectory();
 
         ExecutorService fileCreationExecutor = newSingleThreadExecutor();
@@ -161,6 +169,8 @@ class FileUtilsTest extends AbstractTestCase {
         assertNotNull(ioExceptionReference.get());
         assertFalse(creatingFile.get());
         assertFalse(deletingDirectory.get());
+
+        return null;
     }
 
     @Test
