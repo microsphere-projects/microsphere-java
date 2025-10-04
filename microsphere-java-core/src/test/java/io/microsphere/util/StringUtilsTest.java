@@ -2,8 +2,11 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.SymbolConstants.COMMA;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.SHARP;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -30,11 +33,13 @@ import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.StringUtils.substringBetween;
+import static io.microsphere.util.StringUtils.toStringArray;
 import static io.microsphere.util.StringUtils.trimAllWhitespace;
 import static io.microsphere.util.StringUtils.trimLeadingWhitespace;
 import static io.microsphere.util.StringUtils.trimTrailingWhitespace;
 import static io.microsphere.util.StringUtils.trimWhitespace;
 import static io.microsphere.util.StringUtils.uncapitalize;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -173,6 +178,10 @@ class StringUtilsTest {
     void testReplace() {
         assertNull(replace(null, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
+        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, "null", null));
+        assertEquals(TEST_CSV_STRING, replace(TEST_CSV_STRING, "null", "null"));
+
+        assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, null, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, null));
         assertEquals(TEST_EMPTY_STRING, replace(TEST_EMPTY_STRING, TEST_EMPTY_STRING, TEST_EMPTY_STRING, 0));
 
@@ -184,6 +193,9 @@ class StringUtilsTest {
         assertEquals("a|b|c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR));
         assertEquals("a|b|c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 100));
         assertEquals("a|b,c", replace(TEST_CSV_STRING, COMMA, VERTICAL_BAR, 1));
+
+        assertEquals("abc", replace(TEST_CSV_STRING, COMMA, EMPTY_STRING));
+
     }
 
     @Test
@@ -238,6 +250,7 @@ class StringUtilsTest {
         assertSame(TEST_EMPTY_STRING, substringBeforeLast(TEST_EMPTY_STRING, null));
         assertSame(TEST_CSV_STRING, substringBeforeLast(TEST_CSV_STRING, null));
         assertSame(TEST_CSV_STRING, substringBeforeLast(TEST_CSV_STRING, TEST_EMPTY_STRING));
+        assertSame(TEST_CSV_STRING, substringBeforeLast(TEST_CSV_STRING, SHARP));
 
         assertEquals("a,b", substringBeforeLast(TEST_CSV_STRING, COMMA));
         assertEquals("a,", substringBeforeLast(TEST_CSV_STRING, "b"));
@@ -257,6 +270,7 @@ class StringUtilsTest {
         assertEquals(",c", substringAfterLast(TEST_CSV_STRING, "b"));
         assertEquals("c", substringAfterLast(TEST_CSV_STRING, COMMA));
         assertEquals(TEST_EMPTY_STRING, substringAfterLast(TEST_CSV_STRING, "c"));
+        assertEquals(TEST_EMPTY_STRING, substringAfterLast(TEST_CSV_STRING, SHARP));
     }
 
     @Test
@@ -335,6 +349,14 @@ class StringUtilsTest {
         assertSame(TEST_BLANK_STRING, uncapitalize(TEST_BLANK_STRING));
         assertEquals("hello world", uncapitalize("Hello world"));
         assertSame("hello world", uncapitalize("hello world"));
+    }
+
+    @Test
+    void testToStringArray() {
+        assertSame(EMPTY_STRING_ARRAY, toStringArray(null));
+        assertSame(EMPTY_STRING_ARRAY, toStringArray(emptyList()));
+        assertSame(EMPTY_STRING_ARRAY, toStringArray(newLinkedList()));
+        assertArrayEquals(ofArray("a", "b", "c"), toStringArray(ofList("a", "b", "c")));
     }
 
 }
