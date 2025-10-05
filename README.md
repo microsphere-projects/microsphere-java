@@ -54,7 +54,6 @@ The framework is organized into several key modules:
 The easiest way to get started is by adding the Microsphere Java BOM (Bill of Materials) to your project's pom.xml:
 
 ```xml
-
 <dependencyManagement>
     <dependencies>
         ...
@@ -74,7 +73,6 @@ The easiest way to get started is by adding the Microsphere Java BOM (Bill of Ma
 Then add the specific modules you need:
 
 ```xml
-
 <dependencies>
     <!-- Core utilities -->
     <dependency>
@@ -141,23 +139,29 @@ We welcome your contributions! Please read [Code of Conduct](./CODE_OF_CONDUCT.m
 
 ## Reporting Issues
 
-* Before you log a bug, please search the [issues](./issues) to see if someone has already reported the problem.
-* If the issue doesn't already exist, [create a new issue]({./issues/new).
+* Before you log a bug, please search the [issues](https://github.com/microsphere-projects/microsphere-java/issues) to
+  see if someone has already reported the problem.
+* If the issue doesn't already
+  exist, [create a new issue](https://github.com/microsphere-projects/microsphere-java/issues/new).
 * Please provide as much information as possible with the issue report.
 
-## Documents
+## Documentation
 
-The Microsphere Java Framework maintains:
+## User Guide
 
-- [Reference](https://microsphere-projects.github.io/microsphere-java/) (TODO)
-- [Wiki](https://github.com/microsphere-projects/microsphere-java/wiki)
-- JavaDoc
-    - [microsphere-java-core](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-core)
-    - [microsphere-annotation-processor](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-annotation-processor)
-- User Guides
-    - [DeepWiki](https://deepwiki.com/microsphere-projects/microsphere-java)
-    - [Zread](https://zread.ai/microsphere-projects/microsphere-java)
-      
+[DeepWiki Host](https://deepwiki.com/microsphere-projects/microsphere-java)
+
+[ZRead Host](https://zread.ai/microsphere-projects/microsphere-java)
+
+### Wiki
+
+[Github Host](https://github.com/microsphere-projects/microsphere-java/wiki)
+
+### JavaDoc
+
+- [microsphere-java-core](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-core)
+- [microsphere-annotation-processor](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-annotation-processor)
+
 ## License
 
-The Microsphere Java is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+The Microsphere Java is released under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
