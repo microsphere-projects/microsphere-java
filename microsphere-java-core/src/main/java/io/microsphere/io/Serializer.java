@@ -26,7 +26,7 @@ import java.io.IOException;
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * public class StringSerializer implements Serializer&lt;String&gt; {
+ * public class StringSerializer implements Serializer<String> {
  *     public byte[] serialize(String source) throws IOException {
  *         return source.getBytes(StandardCharsets.UTF_8);
  *     }
