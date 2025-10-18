@@ -34,7 +34,7 @@ import static io.microsphere.classloading.MavenArtifact.create;
  * <ul>
  *     <li>The resolver checks if a given resource path matches the pattern of a Maven POM properties file using the
  *     {@link #isArtifactMetadata(String)} method. The pattern is typically:
- *     <code>META-INF/maven/&lt;groupId&gt;/&lt;artifactId&gt;/pom.properties</code>.</li>
+ *     <code>META-INF/maven/<groupId>/<artifactId>/pom.properties</code>.</li>
  *     <li>If a match is found, it reads the properties file via the
  *     {@link #resolve(URL, InputStream, ClassLoader)} method and extracts key metadata: groupId, artifactId, and version.</li>
  *     <li>It then constructs an {@link Artifact} object using these properties and associates it with the original URL.</li>
