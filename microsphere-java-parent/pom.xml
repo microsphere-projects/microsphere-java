@@ -114,7 +114,7 @@
                 <jdk>[1.8,17)</jdk>
             </activation>
             <properties>
-                <spring.version>5.3.31</spring.version>
+                <spring.version>5.3.39</spring.version>
             </properties>
         </profile>
     </profiles>
