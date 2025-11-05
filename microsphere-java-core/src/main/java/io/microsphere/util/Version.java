@@ -52,6 +52,7 @@ import static java.lang.Integer.parseInt;
  * This class provides methods to compare versions using standard comparison operators such as greater than,
  * less than, and equal to. It also supports parsing version strings in the format "major.minor.patch".
  * </p>
+ * See <a href="https://semver.org/">Semantic Versioning</a> for more details.
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
