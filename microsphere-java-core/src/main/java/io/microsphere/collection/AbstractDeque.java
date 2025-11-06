@@ -33,8 +33,8 @@ import java.util.NoSuchElementException;
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * public class SimpleDeque&lt;E&gt; extends AbstractDeque&lt;E&gt; {
- *     private final List&lt;E&gt; list = new ArrayList&lt;&gt;();
+ * public class SimpleDeque<E> extends AbstractDeque<E> {
+ *     private final List<E> list = new ArrayList<>();
  *
  *     public void addFirst(E e) {
  *         list.add(0, e);
