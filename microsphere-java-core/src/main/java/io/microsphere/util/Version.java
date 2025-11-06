@@ -18,12 +18,12 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.ClassDataRepository;
 
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
-import java.util.StringTokenizer;
 import java.util.function.BiPredicate;
 
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
@@ -31,13 +31,17 @@ import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.EQUAL;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN;
 import static io.microsphere.constants.SymbolConstants.GREATER_THAN_OR_EQUAL_TO;
+import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN_OR_EQUAL_TO;
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
+import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.Assert.assertTrue;
+import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.Version.Operator.EQ;
 import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.Version.Operator.GT;
@@ -51,6 +55,13 @@ import static java.lang.Integer.parseInt;
  * <p>
  * This class provides methods to compare versions using standard comparison operators such as greater than,
  * less than, and equal to. It also supports parsing version strings in the format "major.minor.patch".
+ * The supported version patterns :
+ * <ul>
+ *     <li>major</li>
+ *     <li>major.minor</li>
+ *     <li>major.minor.patch</li>
+ *     <li>major.minor.patch-preRelease</li>
+ * </ul>
  * </p>
  * See <a href="https://semver.org/">Semantic Versioning</a> for more details.
  *
@@ -77,13 +88,16 @@ import static java.lang.Integer.parseInt;
 @Immutable
 public class Version implements Comparable<Version>, Serializable {
 
-    private static final long serialVersionUID = -6434504483466016691L;
+    private static final long serialVersionUID = 609463905158722630L;
 
     private final int major;
 
     private final int minor;
 
     private final int patch;
+
+    @Nullable
+    private final String preRelease;
 
     public Version(int major) {
         this(major, 0);
@@ -94,9 +108,18 @@ public class Version implements Comparable<Version>, Serializable {
     }
 
     public Version(int major, int minor, int patch) {
+        this(major, minor, patch, null);
+    }
+
+    public Version(int major, int minor, int patch, String preRelease) {
+        assertTrue(major >= 0, "The 'major' version must not be a non-negative integer!");
+        assertTrue(minor >= 0, "The 'minor' version must not be a non-negative integer!");
+        assertTrue(patch >= 0, "The 'patch' version must not be a non-negative integer!");
+        assertTrue(major + minor + patch > 0, "The 'major', 'minor' and 'patch' must not be null at the same time!");
         this.major = major;
         this.minor = minor;
         this.patch = patch;
+        this.preRelease = preRelease;
     }
 
     /**
@@ -124,6 +147,16 @@ public class Version implements Comparable<Version>, Serializable {
      */
     public int getPatch() {
         return patch;
+    }
+
+    /**
+     * The pre-release
+     *
+     * @return pre-release
+     */
+    @Nullable
+    public String getPreRelease() {
+        return preRelease;
     }
 
     /**
@@ -252,6 +285,9 @@ public class Version implements Comparable<Version>, Serializable {
         int result = major;
         result = 31 * result + minor;
         result = 31 * result + patch;
+        if (preRelease != null) {
+            result = 31 * result + preRelease.hashCode();
+        }
         return result;
     }
 
@@ -271,17 +307,35 @@ public class Version implements Comparable<Version>, Serializable {
 
         result = compare(this.patch, that.patch);
 
+        if (result != 0) {
+            return result;
+        }
+
+        result = comparePreRelease(this.preRelease, that.preRelease);
+
         return result;
     }
 
+    /**
+     * Compare pre-release
+     *
+     * @param v1
+     * @param v2
+     * @return
+     */
+    static int comparePreRelease(String v1, String v2) {
+        if (v1 == null) {
+            return v2 == null ? 0 : 1;
+        }
+        if (v2 == null) {
+            return -1;
+        }
+        return v1.compareTo(v2);
+    }
 
     @Override
     public String toString() {
-        return "Version{" +
-                "major=" + major +
-                ", minor=" + minor +
-                ", patch=" + patch +
-                '}';
+        return major + DOT + minor + DOT + patch + (preRelease == null ? "" : "-" + preRelease);
     }
 
     public static Version of(int major) {
@@ -294,6 +348,10 @@ public class Version implements Comparable<Version>, Serializable {
 
     public static Version of(int major, int minor, int patch) {
         return ofVersion(major, minor, patch);
+    }
+
+    public static Version of(int major, int minor, int patch, String preRelease) {
+        return ofVersion(major, minor, patch, preRelease);
     }
 
     public static Version of(String version) {
@@ -312,19 +370,27 @@ public class Version implements Comparable<Version>, Serializable {
         return new Version(major, minor, patch);
     }
 
+    public static Version ofVersion(int major, int minor, int patch, String preRelease) {
+        return new Version(major, minor, patch, preRelease);
+    }
+
     public static Version ofVersion(String version) {
         assertNotNull(version, () -> "The 'version' argument must not be null!");
         assertNotBlank(version, () -> "The 'version' argument must not be blank!");
 
-        StringTokenizer st = new StringTokenizer(version.trim(), DOT);
+        String[] coreAndPreRelease = split(version.trim(), HYPHEN);
+        String core = coreAndPreRelease[0];
+        String preRelease = coreAndPreRelease.length > 1 ? coreAndPreRelease[1] : null;
 
-        int major = getValue(st);
-        int minor = getValue(st);
-        int patch = getValue(st);
+        String[] majorAndMinorAndPatch = split(core, DOT);
+        int size = majorAndMinorAndPatch.length;
 
-        return of(major, minor, patch);
+        int major = getValue(majorAndMinorAndPatch[0]);
+        int minor = size > 1 ? getValue(majorAndMinorAndPatch[1]) : 0;
+        int patch = size > 2 ? getValue(majorAndMinorAndPatch[2]) : 0;
+
+        return of(major, minor, patch, preRelease);
     }
-
 
     /**
      * Class that exposes the version. Fetches the "Implementation-Version" manifest attribute from the jar file.
@@ -338,19 +404,12 @@ public class Version implements Comparable<Version>, Serializable {
         Package targetPackage = targetClass.getPackage();
         String version = targetPackage.getImplementationVersion();
         if (version == null) {
-            ClassDataRepository repository = ClassDataRepository.INSTANCE;
+            ClassDataRepository repository = INSTANCE;
             URL classResource = repository.getCodeSourceLocation(targetClass);
             String errorMessage = format("The 'Implementation-Version' manifest attribute can't be fetched from the jar file[class resource : '{}'] by the target class[name :'{}']", classResource, targetClass.getName());
             throw new IllegalArgumentException(errorMessage);
         }
         return of(version);
-    }
-
-    static int getValue(StringTokenizer st) {
-        if (st.hasMoreTokens()) {
-            return getValue(st.nextToken());
-        }
-        return 0;
     }
 
     static int getValue(String part) {
@@ -374,10 +433,10 @@ public class Version implements Comparable<Version>, Serializable {
                 if (v1 == v2) {
                     return true;
                 }
-                if (v2 == null) return false;
-                if (v1.major != v2.major) return false;
-                if (v1.minor != v2.minor) return false;
-                return v1.patch == v2.patch;
+                if (v1 == null || v2 == null) {
+                    return false;
+                }
+                return v1.compareTo(v2) == 0;
             }
         },
 
@@ -390,7 +449,9 @@ public class Version implements Comparable<Version>, Serializable {
                 if (v1 == v2) {
                     return false;
                 }
-                if (v2 == null) return false;
+                if (v1 == null || v2 == null) {
+                    return false;
+                }
                 return v1.compareTo(v2) < 0;
             }
         },
@@ -404,7 +465,9 @@ public class Version implements Comparable<Version>, Serializable {
                 if (v1 == v2) {
                     return true;
                 }
-                if (v2 == null) return false;
+                if (v1 == null || v2 == null) {
+                    return false;
+                }
                 return v1.compareTo(v2) <= 0;
             }
         },
@@ -418,7 +481,9 @@ public class Version implements Comparable<Version>, Serializable {
                 if (v1 == v2) {
                     return false;
                 }
-                if (v2 == null) return false;
+                if (v1 == null || v2 == null) {
+                    return false;
+                }
                 return v1.compareTo(v2) > 0;
             }
         },
@@ -432,7 +497,9 @@ public class Version implements Comparable<Version>, Serializable {
                 if (v1 == v2) {
                     return true;
                 }
-                if (v2 == null) return false;
+                if (v1 == null || v2 == null) {
+                    return false;
+                }
                 return v1.compareTo(v2) >= 0;
             }
         };
@@ -474,6 +541,5 @@ public class Version implements Comparable<Version>, Serializable {
 
             throw new IllegalArgumentException(messageBuilder.toString());
         }
-
     }
 }
