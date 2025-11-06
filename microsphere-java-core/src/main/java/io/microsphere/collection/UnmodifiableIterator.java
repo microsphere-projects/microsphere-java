@@ -28,8 +28,8 @@ import java.util.function.Consumer;
  *
  * <h3>Example Usage</h3>
  * <pre>
- *   List&lt;String&gt; list = Arrays.asList("one", "two", "three");
- *   Iterator&lt;String&gt; unmodifiableIterator = new UnmodifiableIterator&lt;&gt;(list.iterator());
+ *   List<String> list = Arrays.asList("one", "two", "three");
+ *   Iterator<String> unmodifiableIterator = new UnmodifiableIterator<>(list.iterator());
  *
  *   while (unmodifiableIterator.hasNext()) {
  *       System.out.println(unmodifiableIterator.next());

@@ -17,16 +17,11 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.util.Version.Operator;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.constants.SymbolConstants.SPACE;
-import static io.microsphere.util.Version.Operator.EQ;
-import static io.microsphere.util.Version.Operator.GE;
-import static io.microsphere.util.Version.Operator.GT;
-import static io.microsphere.util.Version.Operator.LE;
-import static io.microsphere.util.Version.Operator.LT;
 import static io.microsphere.util.Version.getValue;
 import static io.microsphere.util.Version.getVersion;
 import static io.microsphere.util.Version.of;
@@ -51,9 +46,21 @@ class VersionTest extends AbstractTestCase {
 
     private static final int PATCH = 3;
 
+    private static final String ALPHA_PRE_RELEASE = "alpha";
+
+    private static final String BETA_PRE_RELEASE = "beta";
+
     private static final String VERSION = MAJOR + DOT + MINOR + DOT + PATCH;
 
+    private static final String ALPHA_PRE_RELEASE_VERSION = VERSION + HYPHEN + ALPHA_PRE_RELEASE;
+
+    private static final String BETA_PRE_RELEASE_VERSION = VERSION + HYPHEN + BETA_PRE_RELEASE;
+
     private static final Version TEST_VERSION = of(VERSION);
+
+    private static final Version TEST_ALPHA_PRE_RELEASE_VERSION = of(ALPHA_PRE_RELEASE_VERSION);
+
+    private static final Version TEST_BETA_PRE_RELEASE_VERSION = of(BETA_PRE_RELEASE_VERSION);
 
     @Test
     void testGetValue() {
@@ -116,14 +123,32 @@ class VersionTest extends AbstractTestCase {
     }
 
     @Test
+    void testInvalidVersion() {
+        assertThrows(IllegalArgumentException.class, () -> of(-1, 2, 3));
+        assertThrows(IllegalArgumentException.class, () -> of(1, -1, 3));
+        assertThrows(IllegalArgumentException.class, () -> of(1, 2, -1));
+        assertThrows(IllegalArgumentException.class, () -> of(0, 0, 0));
+    }
+
+    @Test
     void testEquals() {
         assertTrue(TEST_VERSION.equals(TEST_VERSION));
         assertTrue(TEST_VERSION.equals((Object) TEST_VERSION));
         assertTrue(TEST_VERSION.equals(of(MAJOR, MINOR, PATCH)));
+        assertTrue(TEST_ALPHA_PRE_RELEASE_VERSION.equals(of(MAJOR, MINOR, PATCH, ALPHA_PRE_RELEASE)));
+        assertTrue(TEST_BETA_PRE_RELEASE_VERSION.equals(of(MAJOR, MINOR, PATCH, BETA_PRE_RELEASE)));
 
-        assertFalse(TEST_VERSION.equals(of(0)));
-        assertFalse(TEST_VERSION.equals(of(MAJOR)));
-        assertFalse(TEST_VERSION.equals(of(MAJOR, MINOR)));
+        assertFalse(TEST_VERSION.equals("test"));
+        assertFalse(TEST_VERSION.equals((Object) of(MAJOR)));
+        assertFalse(TEST_VERSION.equals((Object) of(MAJOR, MINOR)));
+        assertFalse(TEST_VERSION.equals((Object) TEST_ALPHA_PRE_RELEASE_VERSION));
+        assertFalse(TEST_BETA_PRE_RELEASE_VERSION.equals((Object) TEST_ALPHA_PRE_RELEASE_VERSION));
+    }
+
+    @Test
+    void testHashCode() {
+        assertEquals(TEST_VERSION.hashCode(), TEST_VERSION.hashCode());
+        assertEquals(TEST_ALPHA_PRE_RELEASE_VERSION.hashCode(), TEST_ALPHA_PRE_RELEASE_VERSION.hashCode());
     }
 
     @Test
@@ -160,6 +185,10 @@ class VersionTest extends AbstractTestCase {
         assertFalse(TEST_VERSION.gt(of(MAJOR + 1)));
         assertFalse(TEST_VERSION.gt(of(MAJOR, MINOR + 1)));
         assertFalse(TEST_VERSION.gt(of(MAJOR, MINOR, PATCH + 1)));
+
+        assertTrue(TEST_VERSION.gt(TEST_ALPHA_PRE_RELEASE_VERSION));
+        assertTrue(TEST_VERSION.gt(TEST_BETA_PRE_RELEASE_VERSION));
+        assertTrue(TEST_BETA_PRE_RELEASE_VERSION.gt(TEST_ALPHA_PRE_RELEASE_VERSION));
     }
 
     @Test
@@ -183,6 +212,10 @@ class VersionTest extends AbstractTestCase {
         assertFalse(TEST_VERSION.ge(of(MAJOR + 1)));
         assertFalse(TEST_VERSION.ge(of(MAJOR, MINOR + 1)));
         assertFalse(TEST_VERSION.ge(of(MAJOR, MINOR, PATCH + 1)));
+
+        assertTrue(TEST_VERSION.ge(TEST_ALPHA_PRE_RELEASE_VERSION));
+        assertTrue(TEST_VERSION.ge(TEST_BETA_PRE_RELEASE_VERSION));
+        assertTrue(TEST_BETA_PRE_RELEASE_VERSION.ge(TEST_ALPHA_PRE_RELEASE_VERSION));
     }
 
     @Test
@@ -206,6 +239,14 @@ class VersionTest extends AbstractTestCase {
         assertTrue(TEST_VERSION.lt(of(MAJOR + 1)));
         assertTrue(TEST_VERSION.lt(of(MAJOR, MINOR + 1)));
         assertTrue(TEST_VERSION.lt(of(MAJOR, MINOR, PATCH + 1)));
+
+        assertTrue(TEST_ALPHA_PRE_RELEASE_VERSION.lt(TEST_VERSION));
+        assertTrue(TEST_BETA_PRE_RELEASE_VERSION.lt(TEST_VERSION));
+        assertTrue(TEST_ALPHA_PRE_RELEASE_VERSION.lt(TEST_BETA_PRE_RELEASE_VERSION));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.lt(of(MAJOR, MINOR)));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.lt(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.lt(of(MAJOR, MINOR, PATCH - 2)));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.lt(of(MAJOR)));
     }
 
     @Test
@@ -229,6 +270,17 @@ class VersionTest extends AbstractTestCase {
         assertTrue(TEST_VERSION.le(of(MAJOR + 1)));
         assertTrue(TEST_VERSION.le(of(MAJOR, MINOR + 1)));
         assertTrue(TEST_VERSION.le(of(MAJOR, MINOR, PATCH + 1)));
+
+        assertTrue(TEST_BETA_PRE_RELEASE_VERSION.le(TEST_VERSION));
+        assertTrue(TEST_ALPHA_PRE_RELEASE_VERSION.le(TEST_BETA_PRE_RELEASE_VERSION));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.le(of(MAJOR, MINOR)));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.le(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.le(of(MAJOR, MINOR, PATCH - 2)));
+        assertFalse(TEST_ALPHA_PRE_RELEASE_VERSION.le(of(MAJOR)));
+
+        assertFalse(TEST_VERSION.le(TEST_ALPHA_PRE_RELEASE_VERSION));
+        assertFalse(TEST_VERSION.le(TEST_BETA_PRE_RELEASE_VERSION));
+        assertFalse(TEST_BETA_PRE_RELEASE_VERSION.le(TEST_ALPHA_PRE_RELEASE_VERSION));
     }
 
     @Test
@@ -248,21 +300,20 @@ class VersionTest extends AbstractTestCase {
     }
 
     @Test
-    void testOperator() {
-        assertEquals(EQ, Operator.of("="));
-        assertEquals(LT, Operator.of("<"));
-        assertEquals(LE, Operator.of("<="));
-        assertEquals(GT, Operator.of(">"));
-        assertEquals(GE, Operator.of(">="));
-    }
-
-    @Test
-    void testOperatorOnIllegalArgumentException() {
-        assertThrows(IllegalArgumentException.class, () -> Operator.of(""));
-    }
-
-    @Test
     void testToString() {
-        assertEquals("Version{major=1, minor=2, patch=3}", TEST_VERSION.toString());
+        assertToString("1.0.0");
+        assertToString("1.2.3-alpha");
+        assertToString("4.5.6-beta");
+        assertToString("7.8.9-RC1");
+    }
+
+    @Test
+    void testGetPreRelease() {
+        assertEquals("alpha", TEST_ALPHA_PRE_RELEASE_VERSION.getPreRelease());
+        assertEquals("beta", TEST_BETA_PRE_RELEASE_VERSION.getPreRelease());
+    }
+
+    void assertToString(String version) {
+        assertEquals(version, of(version).toString());
     }
 }

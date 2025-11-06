@@ -28,12 +28,12 @@ class ParameterizedTypeImplTest {
     private static Type[] actualTypeArguments = new Type[]{String.class, Integer.class};
 
     /**
-     * The top-level type : Map&lt;String,Integer&gt;
+     * The top-level type : Map<String,Integer>
      */
     private ParameterizedTypeImpl topLevelType;
 
     /**
-     * The nested type : Map.Entry&lt;String,Integer&gt;
+     * The nested type : Map.Entry<String,Integer>
      */
     private ParameterizedTypeImpl nestedType;
 

@@ -21,7 +21,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if:  ${{ inputs.revision }}
+    if: ${{ inputs.revision }}
     steps:
       - name: Checkout Source
         uses: actions/checkout@v4
@@ -48,6 +48,6 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}
-          SIGN_KEY_ID:  ${{ secrets.OSS_SIGNING_KEY_ID_LONG }}
+          SIGN_KEY_ID: ${{ secrets.OSS_SIGNING_KEY_ID_LONG }}
           SIGN_KEY: ${{ secrets.OSS_SIGNING_KEY }}
           SIGN_KEY_PASS: ${{ secrets.OSS_SIGNING_PASSWORD }}
