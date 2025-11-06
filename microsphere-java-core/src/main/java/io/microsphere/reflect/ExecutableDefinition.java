@@ -38,7 +38,7 @@ import static java.util.Objects.hash;
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * public class MethodDefinition extends ExecutableDefinition&lt;Method&gt; {
+ * public class MethodDefinition extends ExecutableDefinition<Method> {
  *     public MethodDefinition(Version since, String declaredClassName, String name, String... parameterClassNames) {
  *         super(since, null, declaredClassName, name, parameterClassNames);
  *     }
