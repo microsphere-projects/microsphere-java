@@ -26,7 +26,8 @@
         <slf4j.version>2.0.17</slf4j.version>
         <logback.version>1.5.22</logback.version>
         <!-- Testing -->
-        <junit.version>6.0.1</junit.version>
+        <junit.version>6.0.2</junit.version>
+        <mockito.version>5.14.2</mockito.version>
         <jmh.version>1.37</jmh.version>
     </properties>
 
@@ -82,6 +83,14 @@
                 <version>${junit.version}</version>
             </dependency>
 
+            <!-- Mockito -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
+
+            <!-- JMH -->
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-core</artifactId>
@@ -126,7 +135,8 @@
             </activation>
             <properties>
                 <spring.version>5.3.39</spring.version>
-                <junit.version>5.13.4</junit.version>
+                <junit.version>5.14.2</junit.version>
+                <mockito.version>4.11.0</mockito.version>
             </properties>
         </profile>
 
