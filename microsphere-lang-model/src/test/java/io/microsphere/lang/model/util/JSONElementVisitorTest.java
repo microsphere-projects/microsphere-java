@@ -145,9 +145,9 @@ class JSONElementVisitorTest extends UtilTest {
     }
 
     @Test
-    void testVisitVariableOnUnsupported() {
+    void testVisitPackageOnUnsupported() {
         supported = false;
-        assertFalse(visitor.visitVariable(null, jsonBuilder));
+        assertFalse(visitor.visitPackage(this.elements.getPackageElement("io.microsphere.annotation.processor.model.util"), jsonBuilder));
     }
 
     @Test
@@ -155,7 +155,6 @@ class JSONElementVisitorTest extends UtilTest {
         VariableElement element = getField(Color.class, "RED");
         assertTrue(visitor.visitVariable(element, jsonBuilder));
         assertJson("visitVariableAsEnumConstant");
-
     }
 
     @Test
@@ -175,9 +174,9 @@ class JSONElementVisitorTest extends UtilTest {
     }
 
     @Test
-    void testVisitExecutableOnUnsupported() {
+    void testVisitVariableOnUnsupported() {
         supported = false;
-        assertFalse(visitor.visitExecutable(null, jsonBuilder));
+        assertFalse(visitor.visitVariable(null, jsonBuilder));
     }
 
     @Test
@@ -195,10 +194,9 @@ class JSONElementVisitorTest extends UtilTest {
     }
 
     @Test
-    void testVisitTypeOnUnsupported() {
+    void testVisitExecutableOnUnsupported() {
         supported = false;
-        TypeElement typeElement = getTypeElement(Serializable.class);
-        assertFalse(visitor.visitType(typeElement, jsonBuilder));
+        assertFalse(visitor.visitExecutable(null, jsonBuilder));
     }
 
     @Test
@@ -230,9 +228,10 @@ class JSONElementVisitorTest extends UtilTest {
     }
 
     @Test
-    void testVisitTypeParameterOnUnsupported() {
+    void testVisitTypeOnUnsupported() {
         supported = false;
-        assertFalse(visitor.visitTypeParameter(null, jsonBuilder));
+        TypeElement typeElement = getTypeElement(Serializable.class);
+        assertFalse(visitor.visitType(typeElement, jsonBuilder));
     }
 
     @Test
@@ -245,6 +244,12 @@ class JSONElementVisitorTest extends UtilTest {
             assertTrue(visitor.visitTypeParameter(typeParameter, jsonBuilder));
             assertJson("visitTypeParameter");
         }
+    }
+
+    @Test
+    void testVisitTypeParameterOnUnsupported() {
+        supported = false;
+        assertFalse(visitor.visitTypeParameter(null, jsonBuilder));
     }
 
     void assertJson(String expected) {
