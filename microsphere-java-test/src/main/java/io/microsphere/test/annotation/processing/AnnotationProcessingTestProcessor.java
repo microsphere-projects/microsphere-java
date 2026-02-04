@@ -26,8 +26,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.lang.reflect.Method;
@@ -87,19 +85,12 @@ class AnnotationProcessingTestProcessor extends AbstractProcessor {
         Elements elements = processingEnv.getElementUtils();
         Types types = processingEnv.getTypeUtils();
         Class<?> testClass = this.invocationContext.getTargetClass();
-        String testClassName = testClass.getName();
-        TypeElement testTypeElement = elements.getTypeElement(testClassName);
-        TypeMirror testType = testTypeElement.asType();
 
         abstractAnnotationProcessingTest.roundEnv = roundEnv;
         abstractAnnotationProcessingTest.processingEnv = processingEnv;
         abstractAnnotationProcessingTest.elements = elements;
         abstractAnnotationProcessingTest.types = types;
-        abstractAnnotationProcessingTest.testClass = testClass;
-        abstractAnnotationProcessingTest.testClassName = testClassName;
-        abstractAnnotationProcessingTest.testTypeElement = testTypeElement;
-        abstractAnnotationProcessingTest.testTypeMirror = testType;
-        abstractAnnotationProcessingTest.testDeclaredType = (DeclaredType) testType;
+        abstractAnnotationProcessingTest.initTestClass(testClass);
     }
 
     @Override
