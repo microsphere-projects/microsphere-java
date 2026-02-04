@@ -18,13 +18,17 @@
 package io.microsphere.test.annotation.processing;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -65,5 +69,18 @@ public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest {
         assertNull(NULL_METHOD);
         assertNull(NULL_METHOD_ARRAY);
         assertNull(NULL_ANNOTATION_MIRROR);
+    }
+
+    @Test
+    void testOnFailure() {
+        throw new RuntimeException("For testing");
+    }
+
+    @Override
+    protected void afterTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext, Object result, Throwable failure) {
+        super.afterTest(invocationContext, extensionContext, result, failure);
+        if (failure != null) {
+            assertEquals("For testing", failure.getMessage());
+        }
     }
 }
