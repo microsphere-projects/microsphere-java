@@ -77,10 +77,11 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
 
     @Override
     public final Boolean visitType(TypeElement e, StringBuilder jsonBuilder) {
-        boolean appended = false;
-        if (supportsType(e) && super.visitType(e, jsonBuilder)) {
-            appended = true;
+        if (!supportsType(e)) {
+            return false;
         }
+
+        boolean appended = super.visitType(e, jsonBuilder);
 
         // The declared members of the type element
         if (visitMembers(e.getEnclosedElements(), jsonBuilder)) {
@@ -92,21 +93,7 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
 
     @Override
     public final Boolean visitTypeParameter(TypeParameterElement e, StringBuilder jsonBuilder) {
-        if (!supports(e)) {
-            return FALSE;
-        }
-
-        boolean appended = false;
-        if (supportsTypeParameter(e) && doVisitTypeParameter(e, jsonBuilder)) {
-            appended = true;
-        }
-
-        // The declared members of the type element
-        if (visitMembers(e.getEnclosedElements(), jsonBuilder)) {
-            appended = true;
-        }
-
-        return appended;
+        return supportsTypeParameter(e) && doVisitTypeParameter(e, jsonBuilder);
     }
 
     protected boolean visitMembers(List<? extends Element> members, StringBuilder jsonBuilder) {
