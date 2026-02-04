@@ -87,12 +87,12 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
         this.visitor = new ResolvableAnnotationValueVisitor();
         this.visitor1 = new ResolvableAnnotationValueVisitor(true);
         this.visitor2 = new ResolvableAnnotationValueVisitor(true, true);
-        this.testAnnotationAttributes = getElementValues(testTypeElement, TestAnnotation.class);
+        this.testAnnotationAttributes = getElementValues(this.testTypeElement, TestAnnotation.class);
     }
 
     @Test
     void testVisitBoolean() {
-        assertEquals(BOOLEAN_VALUE, visitor.visitBoolean(BOOLEAN_VALUE, null));
+        assertEquals(BOOLEAN_VALUE, this.visitor.visitBoolean(BOOLEAN_VALUE, null));
         assertVisit(this.visitor, "z", BOOLEAN_VALUE);
         assertVisit(this.visitor1, "z", BOOLEAN_VALUE);
         assertVisit(this.visitor2, "z", BOOLEAN_VALUE);
@@ -100,7 +100,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitByte() {
-        assertEquals(BYTE_VALUE, visitor.visitByte(BYTE_VALUE, null));
+        assertEquals(BYTE_VALUE, this.visitor.visitByte(BYTE_VALUE, null));
         assertVisit(this.visitor, "b", BYTE_VALUE);
         assertVisit(this.visitor1, "b", BYTE_VALUE);
         assertVisit(this.visitor2, "b", BYTE_VALUE);
@@ -108,7 +108,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitChar() {
-        assertEquals(CHAR_VALUE, visitor.visitChar(CHAR_VALUE, null));
+        assertEquals(CHAR_VALUE, this.visitor.visitChar(CHAR_VALUE, null));
         assertVisit(this.visitor, "c", CHAR_VALUE);
         assertVisit(this.visitor1, "c", CHAR_VALUE);
         assertVisit(this.visitor2, "c", CHAR_VALUE);
@@ -116,7 +116,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitDouble() {
-        assertEquals(DOUBLE_VALUE, visitor.visitDouble(DOUBLE_VALUE, null));
+        assertEquals(DOUBLE_VALUE, this.visitor.visitDouble(DOUBLE_VALUE, null));
         assertVisit(this.visitor, "d", DOUBLE_VALUE);
         assertVisit(this.visitor1, "d", DOUBLE_VALUE);
         assertVisit(this.visitor2, "d", DOUBLE_VALUE);
@@ -124,7 +124,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitFloat() {
-        assertEquals(FLOAT_VALUE, visitor.visitFloat(FLOAT_VALUE, null));
+        assertEquals(FLOAT_VALUE, this.visitor.visitFloat(FLOAT_VALUE, null));
         assertVisit(this.visitor, "f", FLOAT_VALUE);
         assertVisit(this.visitor1, "f", FLOAT_VALUE);
         assertVisit(this.visitor2, "f", FLOAT_VALUE);
@@ -132,7 +132,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitInt() {
-        assertEquals(INT_VALUE, visitor.visitInt(INT_VALUE, null));
+        assertEquals(INT_VALUE, this.visitor.visitInt(INT_VALUE, null));
         assertVisit(this.visitor, "i", INT_VALUE);
         assertVisit(this.visitor1, "i", INT_VALUE);
         assertVisit(this.visitor2, "i", INT_VALUE);
@@ -140,7 +140,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitLong() {
-        assertEquals(LONG_VALUE, visitor.visitLong(LONG_VALUE, null));
+        assertEquals(LONG_VALUE, this.visitor.visitLong(LONG_VALUE, null));
         assertVisit(this.visitor, "l", LONG_VALUE);
         assertVisit(this.visitor1, "l", LONG_VALUE);
         assertVisit(this.visitor2, "l", LONG_VALUE);
@@ -148,7 +148,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitShort() {
-        assertEquals(SHORT_VALUE, visitor.visitShort(SHORT_VALUE, null));
+        assertEquals(SHORT_VALUE, this.visitor.visitShort(SHORT_VALUE, null));
         assertVisit(this.visitor, "s", SHORT_VALUE);
         assertVisit(this.visitor1, "s", SHORT_VALUE);
         assertVisit(this.visitor2, "s", SHORT_VALUE);
@@ -156,15 +156,15 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitString() {
-        assertEquals(STRING_VALUE, visitor.visitString(STRING_VALUE, null));
+        assertEquals(STRING_VALUE, this.visitor.visitString(STRING_VALUE, null));
         assertVisit(this.visitor, "string", STRING_VALUE);
         assertVisit(this.visitor1, "string", STRING_VALUE);
-        assertVisit(this.visitor1, "string", STRING_VALUE);
+        assertVisit(this.visitor2, "string", STRING_VALUE);
     }
 
     @Test
     void testVisitType() {
-        assertEquals(TYPE_VALUE, visitor.visitType(getTypeMirror(TYPE_VALUE), null));
+        assertEquals(TYPE_VALUE, this.visitor.visitType(getTypeMirror(TYPE_VALUE), null));
         assertVisit(this.visitor, "type", TYPE_VALUE);
         assertVisit(this.visitor1, "type", TYPE_VALUE.getName());
         assertVisit(this.visitor2, "type", TYPE_VALUE.getName());
@@ -204,7 +204,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
         for (Entry<ExecutableElement, AnnotationValue> elementValue : this.testAnnotationAttributes.entrySet()) {
             ExecutableElement attributeMethod = elementValue.getKey();
             AnnotationValue annotationValue = elementValue.getValue();
-            assertSame(annotationValue, visitor.visitUnknown(annotationValue, attributeMethod));
+            assertSame(annotationValue, this.visitor.visitUnknown(annotationValue, attributeMethod));
         }
     }
 
