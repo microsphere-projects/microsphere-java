@@ -36,11 +36,11 @@ import java.util.List;
 import java.util.Set;
 
 import static io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
-import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
 import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET_CHAR;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET_CHAR;
+import static io.microsphere.lang.model.util.MessagerUtils.printNote;
 import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 import static javax.lang.model.SourceVersion.latestSupported;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;

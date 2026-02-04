@@ -31,22 +31,22 @@ import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.Map;
 
-import static io.microsphere.annotation.processor.util.AnnotationUtils.getAnnotation;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.getAttributeName;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementValues;
-import static io.microsphere.annotation.processor.util.AnnotationUtils.matchesDefaultAttributeValue;
-import static io.microsphere.annotation.processor.util.ClassUtils.getClassName;
-import static io.microsphere.annotation.processor.util.TypeUtils.getTypeName;
+import static io.microsphere.lang.model.util.AnnotationUtils.getAnnotation;
+import static io.microsphere.lang.model.util.AnnotationUtils.getAttributeName;
+import static io.microsphere.lang.model.util.AnnotationUtils.getElementValues;
+import static io.microsphere.lang.model.util.AnnotationUtils.matchesDefaultAttributeValue;
+import static io.microsphere.lang.model.util.ClassUtils.getClassName;
+import static io.microsphere.lang.model.util.TypeUtils.getTypeName;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
- * {@link ConfigurationProperty @ConfigurationProperty}'s {@link AnnotatedElementJSONElementVisitor} based on
+ * {@link ConfigurationProperty @ConfigurationProperty}'s {@link io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor} based on
  * {@link ConfigurationPropertyGenerator} generating the JSON representation of the configuration property metadata.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see AnnotatedElementJSONElementVisitor
+ * @see io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor
  * @see ConfigurationProperty
  * @see io.microsphere.beans.ConfigurationProperty
  * @since 1.0.0

@@ -23,6 +23,7 @@ import io.microsphere.io.IOUtils;
 import io.microsphere.io.StandardFileWatchService;
 import io.microsphere.reflect.MethodUtils;
 import io.microsphere.reflect.TypeUtils;
+import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
 import io.microsphere.util.ServiceLoaderUtils;
 import org.junit.jupiter.api.Test;
 
@@ -39,12 +40,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationProcessingTest {
-
-    @Override
-    protected void beforeTest() {
-        super.beforeTest();
-    }
-
     @Override
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
         compiledClasses.add(ManifestArtifactResourceResolver.class);

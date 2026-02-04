@@ -18,6 +18,7 @@
 package io.microsphere.annotation.processor.model.util;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.lang.model.util.JSONElementVisitor;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -29,16 +30,16 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.AnnotatedElement;
 
-import static io.microsphere.annotation.processor.util.AnnotationUtils.getElementTypes;
-import static io.microsphere.annotation.processor.util.ElementUtils.matchesElementType;
-import static io.microsphere.annotation.processor.util.TypeUtils.getDeclaredType;
+import static io.microsphere.lang.model.util.AnnotationUtils.getElementTypes;
+import static io.microsphere.lang.model.util.ElementUtils.matchesElementType;
+import static io.microsphere.lang.model.util.TypeUtils.getDeclaredType;
 import static io.microsphere.util.Assert.assertNotNull;
 
 /**
  * An abstract implementation of {@link ElementVisitor} that generates JSON content for elements
  * annotated with a specific annotation.
  *
- * <p>This class extends {@link JSONElementVisitor}, providing functionality to filter and process
+ * <p>This class extends {@link io.microsphere.lang.model.util.JSONElementVisitor}, providing functionality to filter and process
  * only those elements that are annotated with the specified annotation. It leverages the annotation
  * processing environment to gather information about the annotated elements and constructs JSON
  * representations accordingly.</p>
@@ -79,7 +80,7 @@ import static io.microsphere.util.Assert.assertNotNull;
  * type elements annotated with a custom annotation and generates JSON output for them.</p>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see JSONElementVisitor
+ * @see io.microsphere.lang.model.util.JSONElementVisitor
  * @see AnnotatedElement
  * @see Annotation
  * @see ElementType
