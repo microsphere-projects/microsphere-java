@@ -132,6 +132,14 @@ public abstract class AbstractAnnotationProcessingTest {
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
     }
 
+    protected void initTestClass(Class<?> testClass) {
+        this.testClass = testClass;
+        this.testClassName = testClass.getName();
+        this.testTypeElement = this.elements.getTypeElement(this.testClassName);
+        this.testTypeMirror = this.testTypeElement.asType();
+        this.testDeclaredType = (DeclaredType) this.testTypeMirror;
+    }
+
     /**
      * Before Test
      *
