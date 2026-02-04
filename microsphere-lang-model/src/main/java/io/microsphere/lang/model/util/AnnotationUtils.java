@@ -44,6 +44,7 @@ import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
@@ -169,7 +170,7 @@ public interface AnnotationUtils extends Utils {
             return null;
         }
         List<AnnotationMirror> annotations = getAnnotations(annotatedConstruct, annotationClassName);
-        return annotations.isEmpty() ? null : annotations.get(0);
+        return first(annotations);
     }
 
     /**
@@ -606,7 +607,7 @@ public interface AnnotationUtils extends Utils {
             return null;
         }
         List<AnnotationMirror> annotations = findAllAnnotations(element, annotation -> matchesAnnotationTypeName(annotation, annotationClassName));
-        return isEmpty(annotations) ? null : annotations.get(0);
+        return first(annotations);
     }
 
     /**
