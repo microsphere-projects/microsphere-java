@@ -16,10 +16,10 @@
  */
 package io.microsphere.test.annotation.processing;
 
-import io.microsphere.test.service.TestServiceImpl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import io.microsphere.annotation.Nullable;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -36,6 +36,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
@@ -105,8 +106,6 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected static final AnnotationMirror NULL_ANNOTATION_MIRROR = null;
 
-    static ThreadLocal<AbstractAnnotationProcessingTest> testInstanceHolder = new ThreadLocal<>();
-
     protected RoundEnvironment roundEnv;
 
     protected ProcessingEnvironment processingEnv;
@@ -125,29 +124,13 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected DeclaredType testDeclaredType;
 
-    @BeforeEach
-    final void setUp() {
-        testInstanceHolder.set(this);
-    }
-
-    @AfterEach
-    final void tearDown() {
-        testInstanceHolder.remove();
-    }
-
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
     }
 
-    protected void beforeTest() {
-        this.testClass = TestServiceImpl.class;
-        this.testClassName = TestServiceImpl.class.getName();
-        this.elements = processingEnv.getElementUtils();
-        this.testTypeElement = this.elements.getTypeElement(this.testClassName);
-        this.testTypeMirror = this.testTypeElement.asType();
-        this.testDeclaredType = (DeclaredType) testTypeElement.asType();
+    protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
     }
 
-    protected void afterTest() {
+    protected void afterTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
+                             @Nullable Object result, @Nullable Throwable failure) {
     }
-
 }

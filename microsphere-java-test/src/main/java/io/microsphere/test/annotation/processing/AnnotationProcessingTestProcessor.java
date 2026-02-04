@@ -17,14 +17,19 @@
 package io.microsphere.test.annotation.processing;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import java.lang.reflect.Method;
 import java.util.Set;
 
@@ -38,17 +43,17 @@ import static javax.lang.model.SourceVersion.latestSupported;
  * @since 1.0.0
  */
 @SupportedAnnotationTypes(WILDCARD)
-public class AnnotationProcessingTestProcessor extends AbstractProcessor {
+class AnnotationProcessingTestProcessor extends AbstractProcessor {
 
     private final AbstractAnnotationProcessingTest abstractAnnotationProcessingTest;
 
-    private final InvocationInterceptor.Invocation<Void> invocation;
+    private final Invocation<Void> invocation;
 
     private final ReflectiveInvocationContext<Method> invocationContext;
 
     private final ExtensionContext extensionContext;
 
-    public AnnotationProcessingTestProcessor(AbstractAnnotationProcessingTest abstractAnnotationProcessingTest, InvocationInterceptor.Invocation<Void> invocation,
+    public AnnotationProcessingTestProcessor(AbstractAnnotationProcessingTest abstractAnnotationProcessingTest, Invocation<Void> invocation,
                                              ReflectiveInvocationContext<Method> invocationContext,
                                              ExtensionContext extensionContext) {
         this.abstractAnnotationProcessingTest = abstractAnnotationProcessingTest;
@@ -59,25 +64,42 @@ public class AnnotationProcessingTestProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ReflectiveInvocationContext<Method> invocationContext = this.invocationContext;
+        ExtensionContext extensionContext = this.extensionContext;
         if (!roundEnv.processingOver()) {
             prepare(roundEnv);
-            abstractAnnotationProcessingTest.beforeTest();
+            Object result = null;
+            Throwable failure = null;
+            abstractAnnotationProcessingTest.beforeTest(invocationContext, extensionContext);
             try {
-                invocation.proceed();
+                result = invocation.proceed();
             } catch (Throwable throwable) {
-                throw new RuntimeException(throwable);
+                failure = throwable;
             } finally {
-                abstractAnnotationProcessingTest.afterTest();
+                abstractAnnotationProcessingTest.afterTest(invocationContext, extensionContext, result, failure);
             }
         }
         return false;
     }
 
     protected void prepare(RoundEnvironment roundEnv) {
+        ProcessingEnvironment processingEnv = super.processingEnv;
+        Elements elements = processingEnv.getElementUtils();
+        Types types = processingEnv.getTypeUtils();
+        Class<?> testClass = this.invocationContext.getTargetClass();
+        String testClassName = testClass.getName();
+        TypeElement testTypeElement = elements.getTypeElement(testClassName);
+        TypeMirror testType = testTypeElement.asType();
+
         abstractAnnotationProcessingTest.roundEnv = roundEnv;
-        abstractAnnotationProcessingTest.processingEnv = super.processingEnv;
-        abstractAnnotationProcessingTest.elements = super.processingEnv.getElementUtils();
-        abstractAnnotationProcessingTest.types = super.processingEnv.getTypeUtils();
+        abstractAnnotationProcessingTest.processingEnv = processingEnv;
+        abstractAnnotationProcessingTest.elements = elements;
+        abstractAnnotationProcessingTest.types = types;
+        abstractAnnotationProcessingTest.testClass = testClass;
+        abstractAnnotationProcessingTest.testClassName = testClassName;
+        abstractAnnotationProcessingTest.testTypeElement = testTypeElement;
+        abstractAnnotationProcessingTest.testTypeMirror = testType;
+        abstractAnnotationProcessingTest.testDeclaredType = (DeclaredType) testType;
     }
 
     @Override

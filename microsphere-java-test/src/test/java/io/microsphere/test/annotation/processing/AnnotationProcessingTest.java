@@ -25,7 +25,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -66,6 +65,5 @@ public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest {
         assertNull(NULL_METHOD);
         assertNull(NULL_METHOD_ARRAY);
         assertNull(NULL_ANNOTATION_MIRROR);
-        assertNotNull(testInstanceHolder);
     }
 }

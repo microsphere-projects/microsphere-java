@@ -26,10 +26,10 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.Set;
 
-import static io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest.testInstanceHolder;
-import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.util.ServiceLoader.load;
 
 
 /**
@@ -38,21 +38,26 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class CompilerInvocationInterceptor implements InvocationInterceptor {
+class CompilerInvocationInterceptor implements InvocationInterceptor {
 
     @Override
     public void interceptTestMethod(Invocation<Void> invocation,
                                     ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
         Set<Class<?>> compiledClasses = new LinkedHashSet<>();
-        AbstractAnnotationProcessingTest abstractAnnotationProcessingTest = testInstanceHolder.get();
+        AbstractAnnotationProcessingTest abstractAnnotationProcessingTest = (AbstractAnnotationProcessingTest) invocationContext.getTarget().get();
         Class<?> testClass = extensionContext.getTestClass().get();
+        ClassLoader classLoader = testClass.getClassLoader();
         compiledClasses.add(testClass);
         abstractAnnotationProcessingTest.addCompiledClasses(compiledClasses);
         Compiler compiler = new Compiler();
         compiler.sourcePaths(testClass);
-        List<Processor> processors = new LinkedList<>(loadServicesList(Processor.class, testClass.getClassLoader()));
+
+        List<Processor> processors = new LinkedList<>();
         processors.add(new AnnotationProcessingTestProcessor(abstractAnnotationProcessingTest, invocation, invocationContext, extensionContext));
+        // Loads the SPI instances of Processor
+        ServiceLoader<Processor> loadedProcessors = load(Processor.class, classLoader);
+        loadedProcessors.forEach(processors::add);
         compiler.processors(processors.toArray(new Processor[0]));
         compiler.compile(compiledClasses.toArray(new Class[0]));
     }
