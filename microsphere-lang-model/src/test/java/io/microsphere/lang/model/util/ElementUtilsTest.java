@@ -94,20 +94,20 @@ class ElementUtilsTest extends UtilTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
-        super.beforeTest(invocationContext,extensionContext);
+        super.beforeTest(invocationContext, extensionContext);
         this.echoMethod = findMethod(testTypeElement, "echo", "java.lang.String");
     }
 
     @Test
     void testMatchesElementTypeElementKind() {
         assertTrue(matchesElementKind(echoMethod, METHOD));
-        assertFalse(matchesElementKind(echoMethod, FIELD));
+        assertFalse(matchesElementKind(this.echoMethod, FIELD));
     }
 
     @Test
     void testMatchesElementTypeElementKindOnNull() {
         assertFalse(matchesElementKind(NULL_ELEMENT, FIELD));
-        assertFalse(matchesElementKind(echoMethod, NULL_ELEMENT_KIND));
+        assertFalse(matchesElementKind(this.echoMethod, NULL_ELEMENT_KIND));
     }
 
     @Test
@@ -306,33 +306,35 @@ class ElementUtilsTest extends UtilTest {
     @Test
     void testFilterElementsOnNull() {
         assertEmptyList(filterElements(NULL_LIST, alwaysTrue()));
-        List<ExecutableElement> methods = ofList(echoMethod);
+        List<ExecutableElement> methods = ofList(this.echoMethod);
         assertSame(emptyList(), filterElements(methods, NULL_PREDICATE_ARRAY));
     }
 
     @Test
     void testFilterElementsOnEmpty() {
         assertEmptyList(filterElements(emptyList(), alwaysTrue()));
-        List<ExecutableElement> methods = ofList(echoMethod);
+        List<ExecutableElement> methods = ofList(this.echoMethod);
         assertEquals(methods, filterElements(methods));
     }
 
     @Test
     void testMatchParameterTypes() {
-        assertTrue(matchParameterTypes(echoMethod.getParameters(), String.class));
-        assertFalse(matchParameterTypes(echoMethod.getParameters(), Object.class));
+        assertTrue(matchParameterTypes(this.echoMethod.getParameters(), String.class));
+        assertFalse(matchParameterTypes(this.echoMethod.getParameters(), Object.class));
     }
 
     @Test
     void testMatchParameterTypesOnNull() {
         assertFalse(matchParameterTypes(NULL_LIST, String.class));
         assertFalse(matchParameterTypes(emptyList(), NULL_CLASS_ARRAY));
+        assertFalse(matchParameterTypes(NULL_METHOD, String.class));
+        assertFalse(matchParameterTypes(this.echoMethod, NULL_CLASS_ARRAY));
     }
 
     @Test
     void testMatchParameterTypeNames() {
-        assertTrue(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.String"));
-        assertFalse(matchParameterTypeNames(echoMethod.getParameters(), "java.lang.Object"));
+        assertTrue(matchParameterTypeNames(this.echoMethod.getParameters(), "java.lang.String"));
+        assertFalse(matchParameterTypeNames(this.echoMethod.getParameters(), "java.lang.Object"));
     }
 
     @Test
