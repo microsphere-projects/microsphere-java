@@ -18,9 +18,13 @@
 package io.microsphere.annotation.processor;
 
 
+import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.tools.FileObject;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.FOR_READING;
@@ -56,14 +60,14 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
     private String randomResourceName;
 
     @Override
-    protected void beforeTest() {
+    protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
         this.classOutputProcessor = new ResourceProcessor(super.processingEnv, CLASS_OUTPUT);
         this.sourcePathProcessor = new ResourceProcessor(super.processingEnv, SOURCE_PATH);
         this.randomResourceName = "test/" + currentTimeMillis() + ".txt";
     }
 
     @Override
-    protected void afterTest() {
+    protected void afterTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext, Object result, Throwable failure) {
         this.classOutputProcessor.getResource(this.randomResourceName, FOR_WRITING).ifPresent(FileObject::delete);
     }
 

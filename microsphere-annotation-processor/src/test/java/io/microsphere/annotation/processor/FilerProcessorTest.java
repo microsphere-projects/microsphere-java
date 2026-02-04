@@ -18,10 +18,15 @@
 package io.microsphere.annotation.processor;
 
 
+import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
+
+import java.lang.reflect.Method;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.exists;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -40,7 +45,7 @@ class FilerProcessorTest extends AbstractAnnotationProcessingTest {
     private FilerProcessor processor;
 
     @Override
-    protected void beforeTest() {
+    protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
         this.processor = new FilerProcessor(super.processingEnv);
     }
 
