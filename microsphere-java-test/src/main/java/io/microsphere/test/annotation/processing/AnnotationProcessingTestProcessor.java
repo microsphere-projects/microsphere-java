@@ -53,9 +53,9 @@ class AnnotationProcessingTestProcessor extends AbstractProcessor {
 
     private final ExtensionContext extensionContext;
 
-    public AnnotationProcessingTestProcessor(AbstractAnnotationProcessingTest abstractAnnotationProcessingTest, Invocation<Void> invocation,
-                                             ReflectiveInvocationContext<Method> invocationContext,
-                                             ExtensionContext extensionContext) {
+    AnnotationProcessingTestProcessor(AbstractAnnotationProcessingTest abstractAnnotationProcessingTest, Invocation<Void> invocation,
+                                      ReflectiveInvocationContext<Method> invocationContext,
+                                      ExtensionContext extensionContext) {
         this.abstractAnnotationProcessingTest = abstractAnnotationProcessingTest;
         this.invocation = invocation;
         this.invocationContext = invocationContext;
@@ -82,7 +82,7 @@ class AnnotationProcessingTestProcessor extends AbstractProcessor {
         return false;
     }
 
-    protected void prepare(RoundEnvironment roundEnv) {
+    void prepare(RoundEnvironment roundEnv) {
         ProcessingEnvironment processingEnv = super.processingEnv;
         Elements elements = processingEnv.getElementUtils();
         Types types = processingEnv.getTypeUtils();

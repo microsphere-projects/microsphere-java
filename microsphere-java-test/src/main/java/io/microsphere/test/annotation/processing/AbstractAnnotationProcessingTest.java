@@ -124,12 +124,31 @@ public abstract class AbstractAnnotationProcessingTest {
 
     protected DeclaredType testDeclaredType;
 
+    /**
+     * The classes to be compiled.
+     *
+     * @param compiledClasses the mutable {@link Set} for classes to be compiled
+     */
     protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
     }
 
+    /**
+     * Before Test
+     *
+     * @param invocationContext {@link ReflectiveInvocationContext}
+     * @param extensionContext  {@link ExtensionContext}
+     */
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
     }
 
+    /**
+     * After Test
+     *
+     * @param invocationContext {@link ReflectiveInvocationContext}
+     * @param extensionContext  {@link ExtensionContext}
+     * @param result            the result after test method returning
+     * @param failure           the failure after the test methods' execution
+     */
     protected void afterTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
                              @Nullable Object result, @Nullable Throwable failure) {
     }
