@@ -14,24 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.microsphere.annotation;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * {@link Experimental} Test
+ * {@link Nonnull @Nonnull} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Experimental
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Nonnull
  * @since 1.0.0
  */
-@Experimental(description = "ExperimentalTest")
-class ExperimentalTest {
+@Nonnull
+class NonnullTest {
 
     @Test
     void test() {
-        assertNull(ExperimentalTest.class.getAnnotation(Experimental.class));
+        assertNotNull(NonnullTest.class.getAnnotation(Nonnull.class));
     }
 }

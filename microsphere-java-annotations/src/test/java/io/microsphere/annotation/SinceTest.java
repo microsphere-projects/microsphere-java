@@ -16,37 +16,24 @@
  */
 package io.microsphere.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
+import org.junit.jupiter.api.Test;
 
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import static java.lang.annotation.ElementType.CONSTRUCTOR;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * The marker annotation indicates a feature is experimental, it could be changed or even be removed in the future.
+ * {@link Since @Since} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see Since
  * @since 1.0.0
  */
-@Documented
-@Retention(SOURCE)
-@Target({
-        ANNOTATION_TYPE,
-        CONSTRUCTOR,
-        FIELD,
-        METHOD,
-        TYPE
-})
-public @interface Experimental {
+@Since(module = "microsphere-java-core", value = "1.0.0")
+class SinceTest {
 
-    /**
-     * The description of the experimental feature
-     */
-    String description() default "";
-
+    @Test
+    void test() {
+        Since since = SinceTest.class.getAnnotation(Since.class);
+        assertEquals("microsphere-java-core", since.module());
+        assertEquals("1.0.0", since.value());
+    }
 }

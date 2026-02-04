@@ -16,24 +16,19 @@
  */
 package io.microsphere.annotation;
 
-import org.junit.jupiter.api.Test;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * {@link Since @Since} Test
+ * Marker annotation to indicate that the annotated element is immutable, this means that its state cannot be seen to
+ * change by callers.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Since
  * @since 1.0.0
  */
-@Since(module = "microsphere-java-core", value = "1.0.0")
-class SinceTest {
-
-    @Test
-    void test() {
-        Since since = SinceTest.class.getAnnotation(Since.class);
-        assertEquals("microsphere-java-core", since.module());
-        assertEquals("1.0.0", since.value());
-    }
+@Documented
+@Retention(RUNTIME)
+public @interface Immutable {
 }

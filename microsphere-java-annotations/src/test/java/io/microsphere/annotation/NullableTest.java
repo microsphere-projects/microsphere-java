@@ -19,24 +19,20 @@ package io.microsphere.annotation;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
-import static io.microsphere.annotation.ConfigurationProperty.ENVIRONMENT_VARIABLES_SOURCE;
-import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * {@link ConfigurationProperty} Test
+ * {@link Nullable @Nullable} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ConfigurationProperty
+ * @see Nullable
  * @since 1.0.0
  */
-class ConfigurationPropertyTest {
+@Nullable
+class NullableTest {
 
     @Test
-    void testSources() {
-        assertEquals("system-properties", SYSTEM_PROPERTIES_SOURCE);
-        assertEquals("environment-variables", ENVIRONMENT_VARIABLES_SOURCE);
-        assertEquals("application", APPLICATION_SOURCE);
+    void test() {
+        assertNotNull(NullableTest.class.getAnnotation(Nullable.class));
     }
 }

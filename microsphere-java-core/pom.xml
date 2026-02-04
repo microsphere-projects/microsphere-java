@@ -20,11 +20,11 @@
 
     <dependencies>
 
-        <!-- Java API Dependencies -->
+        <!-- Microsphere Java Annotations -->
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-            <optional>true</optional>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-java-annotations</artifactId>
+            <version>${revision}</version>
         </dependency>
 
         <!-- Java Common Annotations -->

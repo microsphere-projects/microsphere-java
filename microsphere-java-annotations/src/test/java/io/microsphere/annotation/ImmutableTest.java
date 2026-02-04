@@ -14,21 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.microsphere.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
+import org.junit.jupiter.api.Test;
 
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Marker annotation to indicate that the annotated element is immutable, this means that its state cannot be seen to
- * change by callers.
+ * {@link Immutable @Immutable} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Immutable
  * @since 1.0.0
  */
-@Documented
-@Retention(RUNTIME)
-public @interface Immutable {
+@Immutable
+class ImmutableTest {
+
+    @Test
+    void test() {
+        assertNotNull(ImmutableTest.class.getAnnotation(Immutable.class));
+    }
 }

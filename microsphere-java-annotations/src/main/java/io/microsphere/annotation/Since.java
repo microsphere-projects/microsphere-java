@@ -16,8 +16,6 @@
  */
 package io.microsphere.annotation;
 
-import io.microsphere.util.Version;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -38,7 +36,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * The annotation that indicates the API is introduced in the first time.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Version
  * @see Experimental
  * @since 1.0.0
  */
@@ -65,7 +62,7 @@ public @interface Since {
 
     /**
      * @return The version value of the API, e.g. <code>1.0.0</code>
-     * @see Version
      */
     String value();
+
 }

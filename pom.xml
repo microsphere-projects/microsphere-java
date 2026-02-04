@@ -57,6 +57,7 @@
     <modules>
         <module>microsphere-java-parent</module>
         <module>microsphere-java-dependencies</module>
+        <module>microsphere-java-annotations</module>
         <module>microsphere-java-core</module>
         <module>microsphere-jdk-tools</module>
         <module>microsphere-java-test</module>

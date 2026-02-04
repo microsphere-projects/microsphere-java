@@ -19,20 +19,24 @@ package io.microsphere.annotation;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.annotation.ConfigurationProperty.ENVIRONMENT_VARIABLES_SOURCE;
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link Immutable} Test
+ * {@link ConfigurationProperty @ConfigurationProperty} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see Immutable
+ * @see ConfigurationProperty
  * @since 1.0.0
  */
-@Immutable
-class ImmutableTest {
+class ConfigurationPropertyTest {
 
     @Test
-    void test() {
-        assertNotNull(ImmutableTest.class.getAnnotation(Immutable.class));
+    void testSources() {
+        assertEquals("system-properties", SYSTEM_PROPERTIES_SOURCE);
+        assertEquals("environment-variables", ENVIRONMENT_VARIABLES_SOURCE);
+        assertEquals("application", APPLICATION_SOURCE);
     }
 }
