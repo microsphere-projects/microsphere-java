@@ -18,6 +18,9 @@
 package io.microsphere.lang.model.util;
 
 import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
+import io.microsphere.test.service.TestServiceImpl;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -25,6 +28,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
@@ -42,6 +46,11 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @since 1.0.0
  */
 public abstract class UtilTest extends AbstractAnnotationProcessingTest {
+
+    @Override
+    protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+        this.testTypeElement = getTypeElement(TestServiceImpl.class);
+    }
 
     protected List<TypeMirror> getTypeMirrors(Type... types) {
         return TypeUtils.getTypeMirrors(processingEnv, types);

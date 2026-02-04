@@ -50,6 +50,7 @@ class JSONAnnotationValueVisitorTest extends UtilTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+        super.beforeTest(invocationContext,extensionContext);
         this.jsonBuilder = new StringBuilder();
         this.visitor = new JSONAnnotationValueVisitor(jsonBuilder);
         this.testAnnotationAttributes = getElementValues(testTypeElement, TestAnnotation.class);

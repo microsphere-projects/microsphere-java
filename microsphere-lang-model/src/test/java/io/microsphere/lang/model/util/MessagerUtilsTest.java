@@ -46,6 +46,7 @@ class MessagerUtilsTest extends UtilTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+        super.beforeTest(invocationContext,extensionContext);
         this.messager = this.processingEnv.getMessager();
     }
 

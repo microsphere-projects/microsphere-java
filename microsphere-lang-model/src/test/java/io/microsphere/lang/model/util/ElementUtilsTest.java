@@ -94,6 +94,7 @@ class ElementUtilsTest extends UtilTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+        super.beforeTest(invocationContext,extensionContext);
         this.echoMethod = findMethod(testTypeElement, "echo", "java.lang.String");
     }
 

@@ -83,6 +83,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
+        super.beforeTest(invocationContext, extensionContext);
         this.visitor = new ResolvableAnnotationValueVisitor();
         this.visitor1 = new ResolvableAnnotationValueVisitor(true);
         this.visitor2 = new ResolvableAnnotationValueVisitor(true, true);
