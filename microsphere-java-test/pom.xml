@@ -25,7 +25,6 @@
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-java-core</artifactId>
             <version>${revision}</version>
-            <optional>true</optional>
         </dependency>
 
         <!-- Microsphere JDK Tools -->
