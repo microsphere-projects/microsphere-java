@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterFirst;
@@ -666,7 +667,7 @@ public interface MethodUtils extends Utils {
             return null;
         }
         List<ExecutableElement> allDeclaredMethods = findAllDeclaredMethods(type, method -> matches(method, methodName, parameterTypes));
-        return allDeclaredMethods.isEmpty() ? null : allDeclaredMethods.get(0);
+        return first(allDeclaredMethods);
     }
 
     /**
@@ -730,7 +731,7 @@ public interface MethodUtils extends Utils {
             return null;
         }
         List<ExecutableElement> allDeclaredMethods = findAllDeclaredMethods(type, method -> matches(method, methodName, parameterTypeNames));
-        return allDeclaredMethods.isEmpty() ? null : allDeclaredMethods.get(0);
+        return first(allDeclaredMethods);
     }
 
     /**
