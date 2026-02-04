@@ -29,14 +29,14 @@ import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
+import static io.microsphere.lang.function.Streams.filterFirst;
 import static io.microsphere.lang.model.util.ElementUtils.filterElements;
 import static io.microsphere.lang.model.util.ElementUtils.hasModifiers;
 import static io.microsphere.lang.model.util.ElementUtils.matchesElementKind;
 import static io.microsphere.lang.model.util.MemberUtils.getDeclaredMembers;
 import static io.microsphere.lang.model.util.TypeUtils.isEnumType;
-import static io.microsphere.collection.CollectionUtils.isEmpty;
-import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
-import static io.microsphere.lang.function.Streams.filterFirst;
 import static java.util.Collections.emptyList;
 import static javax.lang.model.element.ElementKind.ENUM_CONSTANT;
 import static javax.lang.model.element.ElementKind.FIELD;

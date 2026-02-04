@@ -19,7 +19,6 @@ package io.microsphere.lang.model.util;
 
 
 import io.microsphere.test.annotation.TestAnnotation;
-import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
 import io.microsphere.test.model.Color;
 import io.microsphere.test.model.StringArrayList;
 import org.junit.jupiter.api.BeforeEach;
