@@ -18,11 +18,6 @@
     <name>Microsphere :: Java :: Test</name>
     <description>Microsphere Java Test</description>
 
-    <properties>
-        <javax.ws.rs.version>2.1</javax.ws.rs.version>
-        <jaxws-api.version>2.3.1</jaxws-api.version>
-    </properties>
-
     <dependencies>
 
         <!-- Microsphere Java Core -->
@@ -72,7 +67,6 @@
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
             <optional>true</optional>
         </dependency>
 
@@ -80,7 +74,6 @@
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
-            <version>${jaxws-api.version}</version>
             <optional>true</optional>
         </dependency>
 
