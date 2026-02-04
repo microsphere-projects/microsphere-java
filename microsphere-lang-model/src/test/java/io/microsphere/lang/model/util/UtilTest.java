@@ -49,7 +49,7 @@ public abstract class UtilTest extends AbstractAnnotationProcessingTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
-        this.testTypeElement = getTypeElement(TestServiceImpl.class);
+        initTestClass(TestServiceImpl.class);
     }
 
     protected List<TypeMirror> getTypeMirrors(Type... types) {
