@@ -27,10 +27,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static io.microsphere.lang.model.util.ElementUtils.filterElements;
 import static io.microsphere.lang.model.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.lang.model.util.TypeUtils.ofTypeElement;
-import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 

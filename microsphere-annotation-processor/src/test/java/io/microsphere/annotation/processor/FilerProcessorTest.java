@@ -25,7 +25,6 @@ import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
-
 import java.lang.reflect.Method;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.exists;

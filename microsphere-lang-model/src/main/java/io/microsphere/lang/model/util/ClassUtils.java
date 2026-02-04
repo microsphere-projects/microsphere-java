@@ -21,9 +21,9 @@ import io.microsphere.util.Utils;
 
 import javax.lang.model.type.TypeMirror;
 
-import static io.microsphere.lang.model.util.TypeUtils.ofTypeElement;
 import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.lang.model.util.TypeUtils.ofTypeElement;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 

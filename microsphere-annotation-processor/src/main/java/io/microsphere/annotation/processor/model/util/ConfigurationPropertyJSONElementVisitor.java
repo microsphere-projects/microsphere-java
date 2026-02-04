@@ -31,13 +31,13 @@ import javax.lang.model.type.TypeMirror;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.lang.model.util.AnnotationUtils.getAnnotation;
 import static io.microsphere.lang.model.util.AnnotationUtils.getAttributeName;
 import static io.microsphere.lang.model.util.AnnotationUtils.getElementValues;
 import static io.microsphere.lang.model.util.AnnotationUtils.matchesDefaultAttributeValue;
 import static io.microsphere.lang.model.util.ClassUtils.getClassName;
 import static io.microsphere.lang.model.util.TypeUtils.getTypeName;
-import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.StringUtils.isBlank;
 

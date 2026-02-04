@@ -1,6 +1,5 @@
 package io.microsphere.lang.model.util;
 
-import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
 import io.microsphere.test.service.TestService;
 import org.junit.jupiter.api.Test;
 
