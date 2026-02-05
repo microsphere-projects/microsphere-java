@@ -23,6 +23,7 @@ import org.springframework.context.annotation.ComponentScan;
 import static io.microsphere.lang.model.util.ClassUtils.getClassName;
 import static io.microsphere.lang.model.util.ClassUtils.loadClass;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -47,5 +48,6 @@ class ClassUtilsTest extends UtilTest {
     @Test
     void testLoadClass() {
         assertSame(ComponentScan.Filter.class, loadClass("org.springframework.context.annotation.ComponentScan.Filter"));
+        assertNull(loadClass("not-found-class"));
     }
 }
