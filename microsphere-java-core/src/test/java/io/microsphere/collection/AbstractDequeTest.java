@@ -3,9 +3,7 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -28,107 +26,7 @@ class AbstractDequeTest {
 
     @BeforeEach
     void setUp() {
-
-        deque = new AbstractDeque<String>() {
-
-            private String value;
-
-            @Override
-            public Iterator<String> iterator() {
-                return new Iterator<String>() {
-
-                    private int cursor = 0;
-
-                    @Override
-                    public boolean hasNext() {
-                        return cursor == 0;
-                    }
-
-                    @Override
-                    public String next() {
-                        if (cursor++ == 0) {
-                            return value;
-                        } else {
-                            throw new NoSuchElementException();
-                        }
-                    }
-
-                    @Override
-                    public void remove() {
-                        if (cursor <= 1) {
-                            value = null;
-                        } else {
-                            throw new NoSuchElementException();
-                        }
-                    }
-                };
-            }
-
-            @Override
-            public Iterator<String> descendingIterator() {
-                return iterator();
-            }
-
-            @Override
-            public boolean offerFirst(String s) {
-                if (value == null) {
-                    value = s;
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean offerLast(String s) {
-                return offerFirst(s);
-            }
-
-            @Override
-            public String pollFirst() {
-                String s = value;
-                value = null;
-                return s;
-            }
-
-            @Override
-            public String pollLast() {
-                return pollFirst();
-            }
-
-            @Override
-            public String getFirst() {
-                return value;
-            }
-
-            @Override
-            public String getLast() {
-                return getFirst();
-            }
-
-            @Override
-            public String peekFirst() {
-                return value;
-            }
-
-            @Override
-            public String peekLast() {
-                return value;
-            }
-
-            @Override
-            public boolean removeLastOccurrence(Object o) {
-                if (Objects.equals(o, value)) {
-                    value = null;
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public int size() {
-                return 1;
-            }
-        };
+        deque = new TestDeque<>(1);
     }
 
     @Test
@@ -189,7 +87,7 @@ class AbstractDequeTest {
 
     @Test
     void testRemoveFirstOccurrence() {
-        assertTrue(deque.removeFirstOccurrence(null));
+        assertFalse(deque.removeFirstOccurrence(null));
         deque.add(TEST_VALUE);
         assertFalse(deque.removeFirstOccurrence(""));
         assertTrue(deque.removeFirstOccurrence(TEST_VALUE));
