@@ -62,17 +62,26 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
 
     @Override
     public final Boolean visitPackage(PackageElement e, StringBuilder jsonBuilder) {
-        return supportsPackage(e) && doVisitPackage(e, jsonBuilder);
+        if (!supportsPackage(e)) {
+            return false;
+        }
+        return doVisitPackage(e, jsonBuilder);
     }
 
     @Override
     public final Boolean visitVariable(VariableElement e, StringBuilder stringBuilder) {
-        return supportsVariable(e) && super.visitVariable(e, stringBuilder);
+        if (!supportsVariable(e)) {
+            return false;
+        }
+        return super.visitVariable(e, stringBuilder);
     }
 
     @Override
     public final Boolean visitExecutable(ExecutableElement e, StringBuilder jsonBuilder) {
-        return supportsExecutable(e) && super.visitExecutable(e, jsonBuilder);
+        if (!supportsExecutable(e)) {
+            return false;
+        }
+        return super.visitExecutable(e, jsonBuilder);
     }
 
     @Override
@@ -93,7 +102,10 @@ public abstract class JSONElementVisitor extends ElementKindVisitor6<Boolean, St
 
     @Override
     public final Boolean visitTypeParameter(TypeParameterElement e, StringBuilder jsonBuilder) {
-        return supportsTypeParameter(e) && doVisitTypeParameter(e, jsonBuilder);
+        if (!supportsTypeParameter(e)) {
+            return false;
+        }
+        return doVisitTypeParameter(e, jsonBuilder);
     }
 
     protected boolean visitMembers(List<? extends Element> members, StringBuilder jsonBuilder) {
