@@ -48,6 +48,56 @@ public class TestDeque<E> extends AbstractDeque<E> {
     }
 
     @Override
+    public void addFirst(E e) {
+        super.addFirst(e);
+    }
+
+    @Override
+    public void addLast(E e) {
+        super.addLast(e);
+    }
+
+    @Override
+    public E removeFirst() {
+        return super.removeFirst();
+    }
+
+    @Override
+    public E removeLast() {
+        return super.removeLast();
+    }
+
+    @Override
+    public boolean removeFirstOccurrence(Object o) {
+        return super.removeFirstOccurrence(o);
+    }
+
+    @Override
+    public void push(E e) {
+        super.push(e);
+    }
+
+    @Override
+    public E pop() {
+        return super.pop();
+    }
+
+    @Override
+    public boolean offer(E e) {
+        return super.offer(e);
+    }
+
+    @Override
+    public E poll() {
+        return super.poll();
+    }
+
+    @Override
+    public E peek() {
+        return super.peek();
+    }
+
+    @Override
     public Iterator<E> iterator() {
         return delegate.iterator();
     }
