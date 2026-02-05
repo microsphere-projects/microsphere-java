@@ -103,7 +103,7 @@ class JSONAnnotationValueVisitorTest extends UtilTest {
 
     @Test
     void testVisitType() {
-        testVisit("type", "\"type\":\"io.microsphere.annotation.processor.GenericTestService\"");
+        testVisit("type", "\"type\":\"io.microsphere.test.service.GenericTestService\"");
     }
 
     @Test
