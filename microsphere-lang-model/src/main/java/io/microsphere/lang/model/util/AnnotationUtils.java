@@ -1582,15 +1582,16 @@ public interface AnnotationUtils extends Utils {
 
         if (withDefault && annotationValue == null) { // not found if the default value is required
             DeclaredType annotationType = annotation.getAnnotationType();
-            List<ExecutableElement> attributeMethods = findDeclaredMethods(annotationType, method -> !elementValues.containsKey(method));
-            int size = attributeMethods.size();
-            for (int i = 0; i < size; i++) {
-                attributeMethod = attributeMethods.get(i);
-                if (matchesAttributeMethod(attributeMethod, attributeName)) {
-                    annotationValue = attributeMethod.getDefaultValue();
-                    break;
-                }
+            List<ExecutableElement> attributeMethods = findDeclaredMethods(annotationType, method ->
+                    !elementValues.containsKey(method) && matchesAttributeMethod(method, attributeName));
+            attributeMethod = first(attributeMethods);
+            if (attributeMethod != null) {
+                annotationValue = attributeMethod.getDefaultValue();
             }
+        }
+
+        if (annotationValue == null) {
+            return null;
         }
 
         return immutableEntry(attributeMethod, annotationValue);
