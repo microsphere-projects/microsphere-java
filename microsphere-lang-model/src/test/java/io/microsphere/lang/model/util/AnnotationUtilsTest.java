@@ -569,6 +569,7 @@ class AnnotationUtilsTest extends UtilTest {
             AnnotationValue annotationValue = entry.getValue();
             assertFalse(matchesAttributeValue(annotationValue, null));
             assertFalse(matchesAttributeValue(annotationValue, (Object) null));
+            assertFalse(matchesAttributeValue(null, annotationValue));
         }
     }
 
