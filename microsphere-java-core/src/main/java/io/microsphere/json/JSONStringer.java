@@ -21,6 +21,11 @@ import java.util.List;
 
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONObject.numberToString;
+import static io.microsphere.json.JSONStringer.Scope.DANGLING_KEY;
+import static io.microsphere.json.JSONStringer.Scope.EMPTY_ARRAY;
+import static io.microsphere.json.JSONStringer.Scope.EMPTY_OBJECT;
+import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_ARRAY;
+import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.util.Arrays.fill;
 
@@ -145,7 +150,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer array() throws JSONException {
-        return open(Scope.EMPTY_ARRAY, "[");
+        return open(EMPTY_ARRAY, "[");
     }
 
     /**
@@ -155,7 +160,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer endArray() throws JSONException {
-        return close(Scope.EMPTY_ARRAY, Scope.NONEMPTY_ARRAY, "]");
+        return close(EMPTY_ARRAY, NONEMPTY_ARRAY, "]");
     }
 
     /**
@@ -166,7 +171,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer object() throws JSONException {
-        return open(Scope.EMPTY_OBJECT, "{");
+        return open(EMPTY_OBJECT, "{");
     }
 
     /**
@@ -176,7 +181,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer endObject() throws JSONException {
-        return close(Scope.EMPTY_OBJECT, Scope.NONEMPTY_OBJECT, "}");
+        return close(EMPTY_OBJECT, NONEMPTY_OBJECT, "}");
     }
 
     /**
@@ -188,7 +193,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     JSONStringer open(Scope empty, String openBracket) throws JSONException {
-        if (this.stack.isEmpty() && this.out.length() > 0) {
+        if (isEmpty() && this.out.length() > 0) {
             throw new JSONException("Nesting problem: multiple top-level roots");
         }
         beforeValue();
@@ -228,7 +233,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     private Scope peek() throws JSONException {
-        if (this.stack.isEmpty()) {
+        if (isEmpty()) {
             throw new JSONException("Nesting problem");
         }
         return this.stack.get(this.stack.size() - 1);
@@ -253,7 +258,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer value(Object value) throws JSONException {
-        if (this.stack.isEmpty()) {
+        if (isEmpty()) {
             throw new JSONException("Nesting problem");
         }
 
@@ -288,7 +293,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer value(boolean value) throws JSONException {
-        if (this.stack.isEmpty()) {
+        if (isEmpty()) {
             throw new JSONException("Nesting problem");
         }
         beforeValue();
@@ -305,7 +310,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer value(double value) throws JSONException {
-        if (this.stack.isEmpty()) {
+        if (isEmpty()) {
             throw new JSONException("Nesting problem");
         }
         beforeValue();
@@ -321,7 +326,7 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     public JSONStringer value(long value) throws JSONException {
-        if (this.stack.isEmpty()) {
+        if (isEmpty()) {
             throw new JSONException("Nesting problem");
         }
         beforeValue();
@@ -414,13 +419,13 @@ public class JSONStringer {
      */
     void beforeKey() throws JSONException {
         Scope context = peek();
-        if (context == Scope.NONEMPTY_OBJECT) { // first in object
+        if (context == NONEMPTY_OBJECT) { // first in object
             this.out.append(',');
-        } else if (context != Scope.EMPTY_OBJECT) { // not in an object!
+        } else if (context != EMPTY_OBJECT) { // not in an object!
             throw new JSONException("Nesting problem");
         }
         newline();
-        replaceTop(Scope.DANGLING_KEY);
+        replaceTop(DANGLING_KEY);
     }
 
     /**
@@ -431,20 +436,20 @@ public class JSONStringer {
      * @throws JSONException if processing of json failed
      */
     void beforeValue() throws JSONException {
-        if (this.stack.isEmpty()) {
+        if (isEmpty()) {
             return;
         }
 
         Scope context = peek();
-        if (context == Scope.EMPTY_ARRAY) { // first in array
-            replaceTop(Scope.NONEMPTY_ARRAY);
+        if (context == EMPTY_ARRAY) { // first in array
+            replaceTop(NONEMPTY_ARRAY);
             newline();
-        } else if (context == Scope.NONEMPTY_ARRAY) { // another in array
+        } else if (context == NONEMPTY_ARRAY) { // another in array
             this.out.append(',');
             newline();
-        } else if (context == Scope.DANGLING_KEY) { // value for key
+        } else if (context == DANGLING_KEY) { // value for key
             this.out.append(this.indent == null ? ":" : ": ");
-            replaceTop(Scope.NONEMPTY_OBJECT);
+            replaceTop(NONEMPTY_OBJECT);
         } else if (context != Scope.NULL) {
             throw new JSONException("Nesting problem");
         }
@@ -466,4 +471,7 @@ public class JSONStringer {
         return this.out.length() == 0 ? null : this.out.toString();
     }
 
+    boolean isEmpty() {
+        return this.stack.isEmpty();
+    }
 }
