@@ -281,7 +281,8 @@ class ElementUtilsTest extends UtilTest {
 
     @Test
     void testMatchesElementTypeWithElement() {
-        matchesElementType(this.testTypeElement, TYPE);
+        assertTrue(matchesElementType(this.testTypeElement, TYPE));
+        assertFalse(matchesElementType(this.testTypeElement, PACKAGE));
     }
 
     @Test
