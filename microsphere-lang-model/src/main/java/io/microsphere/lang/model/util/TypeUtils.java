@@ -579,7 +579,10 @@ public interface TypeUtils extends Utils {
      */
     static boolean isTypeElement(TypeMirror type) {
         DeclaredType declaredType = ofDeclaredType(type);
-        return declaredType != null && isTypeElement(declaredType.asElement());
+        if (declaredType == null) {
+            return false;
+        }
+        return isTypeElement(declaredType.asElement());
     }
 
     /**
