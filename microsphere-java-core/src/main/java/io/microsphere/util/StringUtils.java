@@ -173,7 +173,7 @@ public abstract class StringUtils implements Utils {
         List<String> result = new ArrayList<>();
 
         if (delimiterLength == 0) {
-            for (int i = 0; i < value.length(); i++) {
+            for (int i = 0; i < length; i++) {
                 result.add(value.substring(i, i + 1));
             }
         } else {
