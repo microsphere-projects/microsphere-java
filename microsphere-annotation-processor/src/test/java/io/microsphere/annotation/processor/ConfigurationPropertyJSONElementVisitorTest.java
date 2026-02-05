@@ -32,6 +32,7 @@ import java.util.Set;
 
 import static io.microsphere.annotation.processor.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -64,5 +65,12 @@ class ConfigurationPropertyJSONElementVisitorTest extends AbstractAnnotationProc
         ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor(super.processingEnv);
         assertTrue(visitor.supportsType(super.testTypeElement));
         assertTrue(visitor.supportsType(NULL_TYPE_ELEMENT));
+    }
+
+    @Test
+    void testSetSourcesOnNoSource() {
+        ConfigurationPropertyJSONElementVisitor visitor = new ConfigurationPropertyJSONElementVisitor(super.processingEnv);
+        visitor.setSources(null, "noSource", null);
+        assertNotNull(visitor);
     }
 }

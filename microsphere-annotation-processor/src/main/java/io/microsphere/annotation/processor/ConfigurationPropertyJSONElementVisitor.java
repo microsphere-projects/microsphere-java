@@ -89,8 +89,8 @@ class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElemen
                 } else if ("description".equals(attributeName)) {
                     String description = resolveDescription(field, attributeMethod, annotationValue);
                     configurationProperty.setDescription(description);
-                } else if ("source".equals(attributeName)) {
-                    setSources(configurationProperty, annotationValue);
+                } else {
+                    setSources(configurationProperty, attributeName, annotationValue);
                 }
             }
             setDeclaredClass(configurationProperty, field);
@@ -137,12 +137,14 @@ class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElemen
         return (String) value;
     }
 
-    private void setSources(io.microsphere.beans.ConfigurationProperty configurationProperty, AnnotationValue annotationValue) {
-        List<? extends AnnotationValue> sources = (List<? extends AnnotationValue>) annotationValue.getValue();
-        Metadata metadata = configurationProperty.getMetadata();
-        for (AnnotationValue source : sources) {
-            String sourceValue = (String) source.getValue();
-            metadata.getSources().add(sourceValue);
+    void setSources(io.microsphere.beans.ConfigurationProperty configurationProperty, String attributeName, AnnotationValue annotationValue) {
+        if ("source".equals(attributeName)) {
+            List<? extends AnnotationValue> sources = (List<? extends AnnotationValue>) annotationValue.getValue();
+            Metadata metadata = configurationProperty.getMetadata();
+            for (AnnotationValue source : sources) {
+                String sourceValue = (String) source.getValue();
+                metadata.getSources().add(sourceValue);
+            }
         }
     }
 
