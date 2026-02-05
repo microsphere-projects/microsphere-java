@@ -72,7 +72,7 @@ import static javax.lang.model.element.ElementKind.OTHER;
 import static javax.lang.model.element.ElementKind.PARAMETER;
 import static javax.lang.model.element.ElementKind.RESOURCE_VARIABLE;
 import static javax.lang.model.element.ElementKind.STATIC_INIT;
-import static javax.lang.model.element.Modifier.PRIVATE;
+import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.methodsIn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -127,7 +127,7 @@ class ElementUtilsTest extends UtilTest {
     void testHasModifiers() {
         List<? extends Element> members = getAllDeclaredMembers(testTypeElement.asType());
         List<VariableElement> fields = fieldsIn(members);
-        assertTrue(hasModifiers(fields.get(0), PRIVATE));
+        assertTrue(hasModifiers(fields.get(0), PROTECTED));
     }
 
     @Test
