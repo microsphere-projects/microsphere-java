@@ -1192,7 +1192,7 @@ public abstract class TypeUtils implements Utils {
             return emptyList();
         }
         List<Type> typeArguments = newLinkedList();
-        while (targetClass != null && targetClass != Object.class) {
+        while (!isObjectType(targetClass)) {
             typeArguments.addAll(resolveTypeArguments(targetClass.getGenericSuperclass()));
             typeArguments.addAll(resolveTypeArguments(targetClass.getGenericInterfaces()));
             targetClass = targetClass.getSuperclass();
