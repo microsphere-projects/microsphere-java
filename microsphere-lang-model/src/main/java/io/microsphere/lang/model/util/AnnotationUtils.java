@@ -1142,7 +1142,10 @@ public interface AnnotationUtils extends Utils {
      * {@code false} otherwise
      */
     static boolean matchesDefaultAttributeValue(ExecutableElement attributeMethod, AnnotationValue annotationValue) {
-        return attributeMethod != null && matchesAttributeValue(attributeMethod.getDefaultValue(), annotationValue);
+        if (attributeMethod == null) {
+            return false;
+        }
+        return matchesAttributeValue(attributeMethod.getDefaultValue(), annotationValue);
     }
 
     /**
