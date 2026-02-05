@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package io.microsphere.annotation.processor.model.util;
+package io.microsphere.annotation.processor;
 
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
+import io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor;
 import io.microsphere.metadata.ConfigurationPropertyGenerator;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -26,6 +27,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import java.util.List;
@@ -42,22 +44,22 @@ import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
- * {@link ConfigurationProperty @ConfigurationProperty}'s {@link io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor} based on
+ * {@link ConfigurationProperty @ConfigurationProperty}'s {@link AnnotatedElementJSONElementVisitor} based on
  * {@link ConfigurationPropertyGenerator} generating the JSON representation of the configuration property metadata.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor
+ * @see AnnotatedElementJSONElementVisitor
  * @see ConfigurationProperty
  * @see io.microsphere.beans.ConfigurationProperty
  * @since 1.0.0
  */
-public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
+class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSONElementVisitor {
 
-    public static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
+    static final String CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME = "io.microsphere.annotation.ConfigurationProperty";
 
     private final ConfigurationPropertyGenerator generator;
 
-    public ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
+    ConfigurationPropertyJSONElementVisitor(ProcessingEnvironment processingEnv) {
         super(processingEnv, CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
         this.generator = loadFirstService(ConfigurationPropertyGenerator.class);
     }
@@ -100,6 +102,11 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
             return true;
         }
         return false;
+    }
+
+    @Override
+    protected boolean supportsType(TypeElement e) {
+        return true;
     }
 
     public ConfigurationPropertyGenerator getGenerator() {
@@ -149,5 +156,4 @@ public class ConfigurationPropertyJSONElementVisitor extends AnnotatedElementJSO
         String declaredFieldName = field.getSimpleName().toString();
         configurationProperty.getMetadata().setDeclaredField(declaredFieldName);
     }
-
 }

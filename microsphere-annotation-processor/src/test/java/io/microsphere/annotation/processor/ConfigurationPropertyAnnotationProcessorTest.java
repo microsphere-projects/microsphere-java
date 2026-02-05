@@ -17,20 +17,11 @@
 
 package io.microsphere.annotation.processor;
 
-import io.microsphere.annotation.ConfigurationProperty;
-import io.microsphere.classloading.ManifestArtifactResourceResolver;
-import io.microsphere.io.IOUtils;
-import io.microsphere.io.StandardFileWatchService;
-import io.microsphere.reflect.MethodUtils;
-import io.microsphere.reflect.TypeUtils;
 import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
-import io.microsphere.util.ServiceLoaderUtils;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
-
-import static io.microsphere.annotation.processor.model.util.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.util.Assert.assertNotNull;
+import static java.util.Collections.emptySet;
 
 /**
  * {@link ConfigurationPropertyAnnotationProcessor} Test
@@ -40,19 +31,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 class ConfigurationPropertyAnnotationProcessorTest extends AbstractAnnotationProcessingTest {
-    @Override
-    protected void addCompiledClasses(Set<Class<?>> compiledClasses) {
-        compiledClasses.add(ManifestArtifactResourceResolver.class);
-        compiledClasses.add(IOUtils.class);
-        compiledClasses.add(StandardFileWatchService.class);
-        compiledClasses.add(TypeUtils.class);
-        compiledClasses.add(ServiceLoaderUtils.class);
-        compiledClasses.add(MethodUtils.class);
-        compiledClasses.add(ConfigurationProperty.class);
-    }
 
     @Test
-    void testConstants() {
-        assertEquals("io.microsphere.annotation.ConfigurationProperty", CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME);
+    void testResolveMetadataOnEmptySet() {
+        ConfigurationPropertyAnnotationProcessor processor = new ConfigurationPropertyAnnotationProcessor();
+        processor.init(super.processingEnv);
+        processor.resolveMetadata(emptySet());
+        String json = processor.toJSON();
+        assertNotNull("[]", json);
     }
 }

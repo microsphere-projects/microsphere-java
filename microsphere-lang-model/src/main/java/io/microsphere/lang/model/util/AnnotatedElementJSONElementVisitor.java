@@ -15,10 +15,9 @@
  * limitations under the License.
  */
 
-package io.microsphere.annotation.processor.model.util;
+package io.microsphere.lang.model.util;
 
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.lang.model.util.JSONElementVisitor;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
@@ -125,5 +124,4 @@ public abstract class AnnotatedElementJSONElementVisitor extends JSONElementVisi
     protected boolean supports(Element e) {
         return matchesElementType(e, this.elementTypes);
     }
-
 }
