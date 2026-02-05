@@ -140,14 +140,14 @@ class JSONElementVisitorTest extends UtilTest {
 
     @Test
     void testVisitPackage() {
-        assertTrue(visitor.visitPackage(this.elements.getPackageElement("io.microsphere.annotation.processor.model.util"), jsonBuilder));
+        assertTrue(visitor.visitPackage(this.elements.getPackageElement("io.microsphere.lang.model.util"), jsonBuilder));
         assertJson("visitPackage");
     }
 
     @Test
     void testVisitPackageOnUnsupported() {
         supported = false;
-        assertFalse(visitor.visitPackage(this.elements.getPackageElement("io.microsphere.annotation.processor.model.util"), jsonBuilder));
+        assertFalse(visitor.visitPackage(this.elements.getPackageElement("io.microsphere.lang.model.util"), jsonBuilder));
     }
 
     @Test
