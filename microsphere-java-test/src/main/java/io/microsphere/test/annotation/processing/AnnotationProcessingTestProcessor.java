@@ -32,6 +32,8 @@ import java.lang.reflect.Method;
 import java.util.Set;
 
 import static io.microsphere.constants.SymbolConstants.WILDCARD;
+import static io.microsphere.util.ExceptionUtils.wrap;
+import static io.microsphere.util.ThrowableUtils.getRootCause;
 import static javax.lang.model.SourceVersion.latestSupported;
 
 /**
@@ -75,6 +77,10 @@ class AnnotationProcessingTestProcessor extends AbstractProcessor {
                 failure = throwable;
             } finally {
                 abstractAnnotationProcessingTest.afterTest(invocationContext, extensionContext, result, failure);
+            }
+            if (failure != null) {
+                Throwable cause = getRootCause(failure);
+                throw wrap(cause, Error.class);
             }
         }
         return false;
