@@ -34,11 +34,14 @@ import static io.microsphere.io.IOUtils.copyToString;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static java.lang.Boolean.FALSE;
 import static java.lang.System.currentTimeMillis;
+import static java.util.Optional.empty;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -81,6 +84,10 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
         assertThrows(RuntimeException.class, () -> this.classOutputProcessor.processInResource(this.randomResourceName, FOR_READING, fileObject -> {
             throw new RuntimeException();
         }));
+
+        assertNull(this.classOutputProcessor.processInResource(this.randomResourceName, FOR_READING, fileObject -> {
+            throw new RuntimeException();
+        }, e -> null));
     }
 
     @Test
@@ -101,6 +108,10 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
         assertThrows(RuntimeException.class, () -> this.sourcePathProcessor.processInResourceInputStream(JAVA_SOURCE_RESOURCE_NAME, inputStream -> {
             throw new RuntimeException();
         }));
+
+        assertSame(empty(), this.sourcePathProcessor.processInResourceInputStream(JAVA_SOURCE_RESOURCE_NAME, inputStream -> {
+            throw new RuntimeException();
+        }, (f, e) -> null));
     }
 
     @Test
@@ -115,6 +126,10 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
         assertThrows(RuntimeException.class, () -> this.sourcePathProcessor.processInResourceReader(JAVA_SOURCE_RESOURCE_NAME, reader -> {
             throw new RuntimeException();
         }));
+
+        assertSame(empty(), this.sourcePathProcessor.processInResourceReader(JAVA_SOURCE_RESOURCE_NAME, reader -> {
+            throw new RuntimeException();
+        }, (f, e) -> null));
     }
 
     @Test
@@ -128,6 +143,10 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
         assertThrows(RuntimeException.class, () -> this.sourcePathProcessor.processInResourceContent(JAVA_SOURCE_RESOURCE_NAME, content -> {
             throw new RuntimeException();
         }));
+
+        assertSame(empty(), this.sourcePathProcessor.processInResourceContent(JAVA_SOURCE_RESOURCE_NAME, content -> {
+            throw new RuntimeException();
+        }, (f, e) -> null));
     }
 
     @Test
@@ -142,6 +161,12 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
         assertThrows(RuntimeException.class, () -> this.classOutputProcessor.processInResourceOutputStream(this.randomResourceName, outputStream -> {
             throw new RuntimeException();
         }));
+
+        this.classOutputProcessor.processInResourceOutputStream(this.randomResourceName, outputStream -> {
+            throw new RuntimeException();
+        }, (f, e) -> {
+            assertNotNull(e);
+        });
     }
 
     @Test
@@ -156,6 +181,12 @@ class ResourceProcessorTest extends AbstractAnnotationProcessingTest {
         assertThrows(RuntimeException.class, () -> this.classOutputProcessor.processInResourceWriter(randomResourceName, writer -> {
             throw new RuntimeException();
         }));
+
+        this.classOutputProcessor.processInResourceWriter(this.randomResourceName, writer -> {
+            throw new RuntimeException();
+        }, (f, e) -> {
+            assertNotNull(e);
+        });
     }
 
     @Test
