@@ -77,9 +77,9 @@ import static org.springframework.context.annotation.ScopedProxyMode.INTERFACES;
 public class TestServiceImpl extends GenericTestService implements TestService, AutoCloseable, Serializable {
 
     @Autowired
-    ApplicationContext context;
+    protected ApplicationContext context;
 
-    Environment environment;
+    protected Environment environment;
 
     public TestServiceImpl() {
         this(null);
