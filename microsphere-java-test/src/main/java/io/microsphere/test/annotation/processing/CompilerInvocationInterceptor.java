@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static java.util.ServiceLoader.load;
 
 
@@ -43,14 +44,17 @@ class CompilerInvocationInterceptor implements InvocationInterceptor {
     @Override
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        Set<Class<?>> compiledClasses = new LinkedHashSet<>();
+        Set<Class<?>> compiledClassesSet = new LinkedHashSet<>();
         AbstractAnnotationProcessingTest test = (AbstractAnnotationProcessingTest) invocationContext.getTarget().get();
         Class<?> testClass = extensionContext.getTestClass().get();
         ClassLoader classLoader = testClass.getClassLoader();
-        compiledClasses.add(testClass);
-        test.addCompiledClasses(compiledClasses);
+        compiledClassesSet.add(testClass);
+        test.addCompiledClasses(compiledClassesSet);
+
+        Class<?>[] compiledClasses = compiledClassesSet.toArray(EMPTY_CLASS_ARRAY);
+
         Compiler compiler = new Compiler();
-        compiler.sourcePaths(testClass);
+        compiler.sourcePaths(compiledClasses);
 
         List<Processor> processors = new LinkedList<>();
         processors.add(new AnnotationProcessingTestProcessor(test, invocation, invocationContext, extensionContext));
@@ -58,6 +62,6 @@ class CompilerInvocationInterceptor implements InvocationInterceptor {
         ServiceLoader<Processor> loadedProcessors = load(Processor.class, classLoader);
         loadedProcessors.forEach(processors::add);
         compiler.processors(processors.toArray(new Processor[0]));
-        compiler.compile(compiledClasses.toArray(new Class[0]));
+        compiler.compile(compiledClasses);
     }
 }
