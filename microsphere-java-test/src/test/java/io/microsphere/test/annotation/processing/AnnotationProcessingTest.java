@@ -18,8 +18,10 @@
 package io.microsphere.test.annotation.processing;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
@@ -38,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see AbstractAnnotationProcessingTest
  * @since 1.0.0
  */
-public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest {
+public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest implements TestExecutionExceptionHandler {
 
     @Test
     void test() {
@@ -72,6 +74,7 @@ public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest {
     }
 
     @Test
+    @ExtendWith(AnnotationProcessingTest.class)
     void testOnFailure() {
         throw new RuntimeException("For testing");
     }
@@ -81,6 +84,16 @@ public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest {
         super.afterTest(invocationContext, extensionContext, result, failure);
         if (failure != null) {
             assertEquals("For testing", failure.getMessage());
+        }
+    }
+
+    @Override
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        if (throwable != null) {
+            Method method = context.getTestMethod().get();
+            if ("testOnFailure".equals(method.getName())) {
+                // ingnore
+            }
         }
     }
 }
