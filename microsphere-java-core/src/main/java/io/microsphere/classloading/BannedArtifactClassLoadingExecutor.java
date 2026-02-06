@@ -83,15 +83,14 @@ public class BannedArtifactClassLoadingExecutor {
     public void execute() {
         List<MavenArtifact> bannedArtifactConfigs = loadBannedArtifactConfigs(this.classLoader);
         List<Artifact> artifacts = artifactDetector.detect(false);
-        artifacts.stream()
-                .forEach(artifact -> {
-                    URL classPathURL = artifact.getLocation();
-                    for (MavenArtifact bannedArtifactConfig : bannedArtifactConfigs) {
-                        if (bannedArtifactConfig.matches(artifact)) {
-                            removeClassPathURL(classLoader, classPathURL);
-                        }
-                    }
-                });
+        artifacts.forEach(artifact -> {
+            URL classPathURL = artifact.getLocation();
+            for (MavenArtifact bannedArtifactConfig : bannedArtifactConfigs) {
+                if (bannedArtifactConfig.matches(artifact)) {
+                    removeClassPathURL(classLoader, classPathURL);
+                }
+            }
+        });
     }
 
     static List<MavenArtifact> loadBannedArtifactConfigs(ClassLoader classLoader) {
