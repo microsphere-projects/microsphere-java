@@ -110,17 +110,20 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
             throw new IndexOutOfBoundsException();
         }
 
-        if (pos >= count) {
-            return -1;
+        if (len == 0) {
+            return 0;
         }
 
         int avail = count - pos;
+
+        if (avail < 1) {
+            return -1;
+        }
+
         if (len > avail) {
             len = avail;
         }
-        if (len <= 0) {
-            return 0;
-        }
+
         arraycopy(buf, pos, b, off, len);
         pos += len;
         return len;

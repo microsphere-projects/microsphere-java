@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import static java.lang.Integer.MAX_VALUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -58,7 +59,7 @@ class FastByteArrayInputStreamTest {
     }
 
     @Test
-    void testRead1() {
+    void testReadWithRange() {
         byte[] bytes = new byte[8];
         int offset = 0;
         int length = inputStream.available();
@@ -66,8 +67,12 @@ class FastByteArrayInputStreamTest {
         assertEquals(TEST_VALUE, new String(bytes, offset, length));
 
         length = TEST_VALUE.length() - TEST_OFFSET;
-        assertEquals(length, inputStream2.read(bytes, offset, length));
+        assertEquals(length, inputStream2.read(bytes, offset, length * 2));
         assertEquals("llo", new String(bytes, offset, length));
+
+        assertEquals(0, inputStream2.read(bytes, offset, 0));
+
+        assertEquals(-1, inputStream2.read(bytes, offset, length));
     }
 
     @Test
@@ -92,8 +97,10 @@ class FastByteArrayInputStreamTest {
 
     @Test
     void testSkip() {
+        assertEquals(0, inputStream.skip(-1));
         assertEquals(0, inputStream.skip(0));
         assertEquals(1, inputStream.skip(1));
+        assertEquals(4, inputStream.skip(MAX_VALUE));
     }
 
     @Test
@@ -120,7 +127,10 @@ class FastByteArrayInputStreamTest {
 
     @Test
     void testEquals() {
+        assertFalse(inputStream.equals(null));
+        assertFalse(inputStream.equals("test"));
         assertEquals(inputStream, inputStream2);
+        assertEquals(inputStream, inputStream);
     }
 
     @Test
