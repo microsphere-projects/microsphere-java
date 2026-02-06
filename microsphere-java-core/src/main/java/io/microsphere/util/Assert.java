@@ -502,4 +502,7 @@ public abstract class Assert {
     private static String nullSafeGet(Supplier<String> messageSupplier) {
         return messageSupplier == null ? null : messageSupplier.get();
     }
+
+    private Assert() {
+    }
 }
