@@ -27,6 +27,7 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static java.lang.Long.valueOf;
+import static java.util.Objects.nonNull;
 
 /**
  * A {@link ProcessIdResolver} implementation for retrieving the process ID using the SUN JVM internal APIs.
@@ -81,7 +82,7 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
 
     @Override
     public boolean supports() {
-        return JVM_FIELD != null;
+        return nonNull(JVM_FIELD);
     }
 
     @Override
@@ -89,9 +90,7 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
         RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
         Object jvm = getFieldValue(runtimeMXBean, JVM_FIELD);
         Integer processId = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
-        if (logger.isTraceEnabled()) {
-            logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
-        }
+        logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
         return valueOf(processId.longValue());
     }
 
