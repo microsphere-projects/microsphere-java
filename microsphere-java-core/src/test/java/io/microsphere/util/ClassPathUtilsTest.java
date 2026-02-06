@@ -4,13 +4,14 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.lang.ClassDataRepository;
 import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Set;
+import java.util.function.Predicate;
 
+import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
@@ -57,16 +58,22 @@ class ClassPathUtilsTest extends AbstractTestCase {
         assertNotNull(location);
         log(location);
 
-        //Primitive type
+        // Primitive type
         location = getRuntimeClassLocation(int.class);
         assertNull(location);
 
-        //Array type
+        // Array type
         location = getRuntimeClassLocation(int[].class);
         assertNull(location);
 
+        // Synthetic type
+        Predicate<String> predicate = t -> true;
+        predicate = predicate.negate();
+        location = getRuntimeClassLocation(predicate.getClass());
+        assertNull(location);
 
-        Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
+
+        Set<String> classNames = INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
             if (!isLoadedClass(TEST_CLASS_LOADER, className)) {
                 location = getRuntimeClassLocation(className);

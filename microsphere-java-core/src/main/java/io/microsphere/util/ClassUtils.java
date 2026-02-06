@@ -18,6 +18,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -2124,6 +2127,93 @@ public abstract class ClassUtils implements Utils {
             return null;
         }
         return castType.isInstance(object) ? castType.cast(object) : null;
+    }
+
+    /**
+     * Gets the protection domain of the specified class.
+     * <p>
+     * This method returns the {@link ProtectionDomain} of the given class.
+     * The protection domain encapsulates the security information associated
+     * with the class, such as the code source and permissions. If the class
+     * is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ProtectionDomain pd = ClassUtils.getProtectionDomain(String.class);
+     * // Returns the protection domain of the String class
+     *
+     * ProtectionDomain nullPd = ClassUtils.getProtectionDomain(null);
+     * // Returns null since the input class is null
+     * }</pre>
+     *
+     * @param type the class to get the protection domain from, may be {@code null}
+     * @return the protection domain of the specified class, or {@code null} if the class is {@code null}
+     * @see Class#getProtectionDomain()
+     */
+    @Nullable
+    public static ProtectionDomain getProtectionDomain(@Nullable Class<?> type) {
+        return type == null ? null : type.getProtectionDomain();
+    }
+
+    /**
+     * Gets the code source of the specified class.
+     * <p>
+     * This method returns the {@link CodeSource} of the given class.
+     * The code source represents the location (URL) from which the class was loaded,
+     * along with the certificates associated with the code. If the class is {@code null}
+     * or if the protection domain of the class is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * CodeSource codeSource = ClassUtils.getCodeSource(String.class);
+     * // Returns the code source of the String class
+     *
+     * CodeSource nullCodeSource = ClassUtils.getCodeSource(null);
+     * // Returns null since the input class is null
+     * }</pre>
+     *
+     * @param type the class to get the code source from, may be {@code null}
+     * @return the code source of the specified class, or {@code null} if the class is {@code null}
+     * or if the protection domain is {@code null}
+     * @see ProtectionDomain#getCodeSource()
+     * @see Class#getProtectionDomain()
+     */
+    @Nullable
+    public static CodeSource getCodeSource(@Nullable Class<?> type) {
+        ProtectionDomain protectionDomain = getProtectionDomain(type);
+        return protectionDomain == null ? null : protectionDomain.getCodeSource();
+    }
+
+    /**
+     * Gets the code source location of the specified class.
+     * <p>
+     * This method returns the location (URL) from which the given class was loaded.
+     * The location is obtained from the {@link CodeSource} associated with the class's
+     * {@link ProtectionDomain}. If the class is {@code null}, or if the protection domain
+     * or code source is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * URL location = ClassUtils.getCodeSourceLocation(String.class);
+     * // Returns the URL location from which the String class was loaded
+     *
+     * URL nullLocation = ClassUtils.getCodeSourceLocation(null);
+     * // Returns null since the input class is null
+     * }</pre>
+     *
+     * @param type the class to get the code source location from, may be {@code null}
+     * @return the code source location of the specified class, or {@code null} if the class is {@code null},
+     * or if the protection domain or code source is {@code null}
+     * @see CodeSource#getLocation()
+     * @see Class#getProtectionDomain()
+     */
+    @Nullable
+    public static URL getCodeSourceLocation(@Nullable Class<?> type) {
+        CodeSource codeSource = getCodeSource(type);
+        return codeSource == null ? null : codeSource.getLocation();
     }
 
     private ClassUtils() {

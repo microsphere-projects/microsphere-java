@@ -50,6 +50,9 @@ import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static io.microsphere.util.ClassUtils.getClasses;
+import static io.microsphere.util.ClassUtils.getCodeSource;
+import static io.microsphere.util.ClassUtils.getCodeSourceLocation;
+import static io.microsphere.util.ClassUtils.getProtectionDomain;
 import static io.microsphere.util.ClassUtils.getSimpleName;
 import static io.microsphere.util.ClassUtils.getTopComponentType;
 import static io.microsphere.util.ClassUtils.getType;
@@ -83,6 +86,7 @@ import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -774,6 +778,27 @@ class ClassUtilsTest extends AbstractTestCase {
         assertNull(cast("test", null));
         assertNull(cast("test", Integer.class));
         assertEquals("test", cast("test", CharSequence.class));
+    }
+
+    @Test
+    void testGetProtectionDomain() {
+        assertNull(getProtectionDomain(null));
+        assertNotNull(getProtectionDomain(String.class));
+        assertNotNull(getProtectionDomain(ClassUtilsTest.class));
+    }
+
+    @Test
+    void testGetCodeSource() {
+        assertNull(getCodeSource(null));
+        assertNull(getCodeSource(String.class));
+        assertNotNull(getCodeSource(ClassUtilsTest.class));
+    }
+
+    @Test
+    void testGetCodeSourceLocation() {
+        assertNull(getCodeSourceLocation(null));
+        assertNull(getCodeSourceLocation(String.class));
+        assertNotNull(getCodeSourceLocation(ClassUtilsTest.class));
     }
 
     private void assertFindClassNamesMethod
