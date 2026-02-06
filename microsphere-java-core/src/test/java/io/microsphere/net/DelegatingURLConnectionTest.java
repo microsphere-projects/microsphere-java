@@ -16,7 +16,6 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,11 +26,16 @@ import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.io.IOUtils.copyToString;
+import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
+import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -96,207 +100,213 @@ class DelegatingURLConnectionTest {
 
     @Test
     void testGetURL() {
-        assertEquals(url, urlConnection.getURL());
+        assertEquals(url, this.urlConnection.getURL());
     }
 
     @Test
     void testGetContentLength() {
-        assertEquals(19, urlConnection.getContentLength());
+        assertEquals(19, this.urlConnection.getContentLength());
     }
 
     @Test
     void testGetContentLengthLong() {
-        assertEquals(19, urlConnection.getContentLengthLong());
+        assertEquals(19, this.urlConnection.getContentLengthLong());
     }
 
     @Test
     void testGetContentType() {
-        assertEquals("content/unknown", urlConnection.getContentType());
+        assertEquals("content/unknown", this.urlConnection.getContentType());
     }
 
     @Test
     void testGetContentEncoding() {
-        assertNull(urlConnection.getContentEncoding());
+        assertNull(this.urlConnection.getContentEncoding());
     }
 
     @Test
     void testGetExpiration() {
-        assertEquals(0, urlConnection.getExpiration());
+        assertEquals(0, this.urlConnection.getExpiration());
     }
 
     @Test
     void testGetDate() {
-        assertEquals(0, urlConnection.getDate());
+        assertEquals(0, this.urlConnection.getDate());
     }
 
     @Test
     void testGetLastModified() {
-        assertFalse(urlConnection.getLastModified() > currentTimeMillis());
+        assertFalse(this.urlConnection.getLastModified() > currentTimeMillis());
     }
 
     @Test
     void testGetHeaderField() {
-        assertNull(urlConnection.getHeaderField(NOT_EXISTS_HEADER_NAME));
-        assertEquals("19", urlConnection.getHeaderField(CONTENT_LENGTH_HEADER_NAME));
-        assertNotNull(urlConnection.getHeaderField(LAST_MODIFIED_HEADER_NAME));
+        assertNull(this.urlConnection.getHeaderField(NOT_EXISTS_HEADER_NAME));
+        assertEquals("19", this.urlConnection.getHeaderField(CONTENT_LENGTH_HEADER_NAME));
+        assertNotNull(this.urlConnection.getHeaderField(LAST_MODIFIED_HEADER_NAME));
     }
 
     @Test
     void testGetHeaderFields() {
-        assertNotNull(urlConnection.getHeaderFields());
+        assertNotNull(this.urlConnection.getHeaderFields());
     }
 
     @Test
     void testGetHeaderFieldInt() {
-        assertEquals(19, urlConnection.getHeaderFieldInt(CONTENT_LENGTH_HEADER_NAME, 10));
-        assertEquals(1, urlConnection.getHeaderFieldInt(NOT_EXISTS_HEADER_NAME, 1));
+        assertEquals(19, this.urlConnection.getHeaderFieldInt(CONTENT_LENGTH_HEADER_NAME, 10));
+        assertEquals(1, this.urlConnection.getHeaderFieldInt(NOT_EXISTS_HEADER_NAME, 1));
     }
 
     @Test
     void testGetHeaderFieldLong() {
-        assertEquals(19, urlConnection.getHeaderFieldLong(CONTENT_LENGTH_HEADER_NAME, 10));
-        assertEquals(1, urlConnection.getHeaderFieldLong(NOT_EXISTS_HEADER_NAME, 1));
+        assertEquals(19, this.urlConnection.getHeaderFieldLong(CONTENT_LENGTH_HEADER_NAME, 10));
+        assertEquals(1, this.urlConnection.getHeaderFieldLong(NOT_EXISTS_HEADER_NAME, 1));
     }
 
     @Test
     void testGetHeaderFieldDate() {
         long now = currentTimeMillis();
-        assertTrue(now > urlConnection.getHeaderFieldDate(LAST_MODIFIED_HEADER_NAME, now));
-        assertEquals(now, urlConnection.getHeaderFieldDate(NOT_EXISTS_HEADER_NAME, now));
+        assertTrue(now > this.urlConnection.getHeaderFieldDate(LAST_MODIFIED_HEADER_NAME, now));
+        assertEquals(now, this.urlConnection.getHeaderFieldDate(NOT_EXISTS_HEADER_NAME, now));
     }
 
     @Test
     void testGetHeaderFieldKey() {
-        assertEquals(CONTENT_LENGTH_HEADER_NAME, urlConnection.getHeaderFieldKey(0));
-        assertEquals(LAST_MODIFIED_HEADER_NAME, urlConnection.getHeaderFieldKey(1));
-        assertNull(urlConnection.getHeaderFieldKey(2));
+        assertEquals(CONTENT_LENGTH_HEADER_NAME, this.urlConnection.getHeaderFieldKey(0));
+        assertEquals(LAST_MODIFIED_HEADER_NAME, this.urlConnection.getHeaderFieldKey(1));
+        assertNull(this.urlConnection.getHeaderFieldKey(2));
     }
 
     @Test
     void testGetHeaderFieldWithInt() {
-        assertEquals("19", urlConnection.getHeaderField(0));
-        assertNotNull(urlConnection.getHeaderField(1));
-        assertNull(urlConnection.getHeaderFieldKey(2));
+        assertEquals("19", this.urlConnection.getHeaderField(0));
+        assertNotNull(this.urlConnection.getHeaderField(1));
+        assertNull(this.urlConnection.getHeaderFieldKey(2));
     }
 
     @Test
     void testGetContent() throws IOException {
-        urlConnection.getContent();
+        this.urlConnection.getContent();
     }
 
     @Test
     void testGetContentWithClassArray() throws IOException {
-        urlConnection.getContent(new Class[0]);
+        this.urlConnection.getContent(new Class[0]);
     }
 
     @Test
     void testGetPermission() throws IOException {
-        assertNotNull(urlConnection.getPermission());
+        assertNotNull(this.urlConnection.getPermission());
     }
 
     @Test
     void testGetInputStream() throws Exception {
         String encoding = "UTF-8";
         String data = "name = 测试名称";
-        assertEquals(data, IOUtils.toString(urlConnection.getInputStream(), encoding));
+        assertEquals(data, copyToString(this.urlConnection.getInputStream(), encoding));
     }
 
     @Test
-    void testGetOutputStream() throws Exception {
-        assertThrows(Exception.class, urlConnection::getOutputStream);
+    void testGetOutputStream() throws IOException {
+        assertThrows(Exception.class, this.urlConnection::getOutputStream);
+
+        attach();
+        URL url = new URL(TEST_CONSOLE_URL);
+        URLConnection delegate = url.openConnection();
+        this.urlConnection = new DelegatingURLConnection(delegate);
+        assertSame(out, this.urlConnection.getOutputStream());
     }
 
     @Test
     void testToString() {
-        assertNotNull(urlConnection.toString());
+        assertNotNull(this.urlConnection.toString());
     }
 
     @Test
     void testSetDoInput() {
-        urlConnection.setDoInput(true);
+        this.urlConnection.setDoInput(true);
     }
 
     @Test
     void testGetDoInput() {
         testSetDoInput();
-        assertTrue(urlConnection.getDoInput());
+        assertTrue(this.urlConnection.getDoInput());
     }
 
     @Test
     void testSetDoOutput() {
-        urlConnection.setDoOutput(true);
+        this.urlConnection.setDoOutput(true);
     }
 
     @Test
     void testGetDoOutput() {
         testSetDoOutput();
-        assertTrue(urlConnection.getDoOutput());
+        assertTrue(this.urlConnection.getDoOutput());
     }
 
     @Test
     void testSetAllowUserInteraction() {
-        urlConnection.setAllowUserInteraction(true);
+        this.urlConnection.setAllowUserInteraction(true);
     }
 
     @Test
     void testGetAllowUserInteraction() {
         testSetAllowUserInteraction();
-        assertTrue(urlConnection.getAllowUserInteraction());
+        assertTrue(this.urlConnection.getAllowUserInteraction());
     }
 
     @Test
     void testSetUseCaches() {
-        urlConnection.setUseCaches(true);
+        this.urlConnection.setUseCaches(true);
     }
 
     @Test
     void testGetUseCaches() {
         testSetUseCaches();
-        assertTrue(urlConnection.getUseCaches());
+        assertTrue(this.urlConnection.getUseCaches());
     }
 
     @Test
     void testSetIfModifiedSince() {
         long now = currentTimeMillis();
-        urlConnection.setIfModifiedSince(now);
+        this.urlConnection.setIfModifiedSince(now);
     }
 
     @Test
     void testGetIfModifiedSince() {
         testSetIfModifiedSince();
-        assertTrue(currentTimeMillis() >= urlConnection.getIfModifiedSince());
+        assertTrue(currentTimeMillis() >= this.urlConnection.getIfModifiedSince());
     }
 
     @Test
     void testSetDefaultUseCaches() {
-        urlConnection.setDefaultUseCaches(true);
+        this.urlConnection.setDefaultUseCaches(true);
     }
 
     @Test
     void testGetDefaultUseCaches() {
-        urlConnection.setDefaultUseCaches(true);
-        assertTrue(urlConnection.getDefaultUseCaches());
+        this.urlConnection.setDefaultUseCaches(true);
+        assertTrue(this.urlConnection.getDefaultUseCaches());
     }
 
     @Test
     void testSetRequestProperty() {
-        urlConnection.setRequestProperty("key-1", "value-1");
+        this.urlConnection.setRequestProperty("key-1", "value-1");
     }
 
     @Test
     void testAddRequestProperty() {
-        urlConnection.addRequestProperty("key-1", "value-1-1");
-        urlConnection.addRequestProperty("key-2", "value-2");
+        this.urlConnection.addRequestProperty("key-1", "value-1-1");
+        this.urlConnection.addRequestProperty("key-2", "value-2");
     }
 
     @Test
     void testGetRequestProperty() {
-        assertNull(urlConnection.getRequestProperty("key-1"));
+        assertNull(this.urlConnection.getRequestProperty("key-1"));
     }
 
     @Test
     void testGetRequestProperties() {
-        Map<String, List<String>> requestProperties = urlConnection.getRequestProperties();
+        Map<String, List<String>> requestProperties = this.urlConnection.getRequestProperties();
         assertNotNull(requestProperties);
     }
 }
