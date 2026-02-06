@@ -1,24 +1,33 @@
 package io.microsphere.reflect;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.test.Data;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS;
+import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInGeneralJVM;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunJVM;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassName;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInGeneralJVM;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInSunJVM;
+import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
 import static io.microsphere.reflect.ReflectionUtils.isSupportedSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.readFieldsAsMap;
 import static io.microsphere.reflect.ReflectionUtils.toList;
+import static io.microsphere.reflect.ReflectionUtils.toObject;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ReflectionUtils} Test
@@ -30,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 class ReflectionUtilsTest extends AbstractTestCase {
 
     @Test
-    void testGetCallerClassX() throws Exception {
+    void testGetCallerClassX() {
         Class<?> expectedClass = ReflectionUtilsTest.class;
 
         Class<?> callerClass = getCallerClass();
@@ -90,5 +99,36 @@ class ReflectionUtilsTest extends AbstractTestCase {
         value.put("c", "c");
         map = readFieldsAsMap(value);
         assertFalse(map.isEmpty());
+
+        T t = new T();
+        t.self = t;
+        t.other = new T();
+
+        map = readFieldsAsMap(t);
+        assertFalse(map.isEmpty());
+    }
+
+    @Test
+    void testToObject() {
+        assertNull(toObject(null));
+        assertEquals("test", toObject("test"));
+        assertEquals(ofList("a", "b", "c"), toObject(ofArray("a", "b", "c")));
+    }
+
+    @Test
+    void testIsInaccessibleObjectException() {
+        assertFalse(isInaccessibleObjectException(new RuntimeException()));
+        assertFalse(isInaccessibleObjectException((Throwable) null));
+        assertFalse(isInaccessibleObjectException((Class) null));
+        assertFalse(isInaccessibleObjectException(Class.class));
+        assertEquals(INACCESSIBLE_OBJECT_EXCEPTION_CLASS != null, isInaccessibleObjectException(INACCESSIBLE_OBJECT_EXCEPTION_CLASS));
+        assertTrue(isInaccessibleObjectException(INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME));
+    }
+
+    static class T extends Data {
+
+        private T self;
+
+        private T other;
     }
 }

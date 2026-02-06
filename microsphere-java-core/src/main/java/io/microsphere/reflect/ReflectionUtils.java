@@ -12,18 +12,21 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.reflect.MemberUtils.isStatic;
+import static io.microsphere.reflect.TypeUtils.getTypeName;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.Class.forName;
-import static java.lang.reflect.Modifier.isStatic;
+import static java.lang.Thread.currentThread;
+import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -128,7 +131,7 @@ public abstract class ReflectionUtils implements Utils {
     static {
         int invocationFrame = 0;
         // Use java.lang.StackTraceElement to calculate frame
-        StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+        StackTraceElement[] stackTraceElements = currentThread().getStackTrace();
         for (StackTraceElement stackTraceElement : stackTraceElements) {
             String className = stackTraceElement.getClassName();
             if (TYPE.getName().equals(className)) {
@@ -217,7 +220,7 @@ public abstract class ReflectionUtils implements Utils {
      * @return specified invocation frame class
      */
     static String getCallerClassNameInGeneralJVM(int invocationFrame) throws IndexOutOfBoundsException {
-        StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+        StackTraceElement[] elements = currentThread().getStackTrace();
         if (invocationFrame < elements.length) {
             StackTraceElement targetStackTraceElement = elements[invocationFrame];
             return targetStackTraceElement.getClassName();
@@ -387,16 +390,14 @@ public abstract class ReflectionUtils implements Utils {
         return list;
     }
 
-    private static Object toObject(Object object) {
-        if (object == null) {
-            return object;
+    static Object toObject(Object object) {
+        if (object != null) {
+            Class<?> type = object.getClass();
+            if (type.isArray()) {
+                return toList(object);
+            }
         }
-        Class<?> type = object.getClass();
-        if (type.isArray()) {
-            return toList(object);
-        } else {
-            return object;
-        }
+        return object;
     }
 
 
@@ -445,31 +446,27 @@ public abstract class ReflectionUtils implements Utils {
     @Nonnull
     @Immutable
     public static Map<String, Object> readFieldsAsMap(Object object) {
-        Map<String, Object> fieldsAsMap = new LinkedHashMap();
+        if (object == null) {
+            return emptyMap();
+        }
         Class<?> type = object.getClass();
         Field[] fields = type.getDeclaredFields();
+        Map<String, Object> fieldsAsMap = newLinkedHashMap(fields.length);
         for (Field field : fields) {
 
-            if (isStatic(field.getModifiers())) { // To filter static fields
+            if (isStatic(field)) { // To filter static fields
                 continue;
             }
 
-            trySetAccessible(field);
-
-            try {
-                String fieldName = field.getName();
-                Object fieldValue = field.get(object);
-                if (fieldValue != null && fieldValue != object) {
-                    Class<?> fieldValueType = fieldValue.getClass();
-                    if (!isPrimitive(fieldValueType)
-                            && !isSimpleType(fieldValueType)
-                            && !Objects.equals(object.getClass(), fieldValueType)) {
-                        fieldValue = readFieldsAsMap(fieldValue);
-                    }
-                    fieldsAsMap.put(fieldName, fieldValue);
+            String fieldName = field.getName();
+            Object fieldValue = getFieldValue(object, field);
+            Class<?> fieldValueType = field.getType();
+            if (fieldValue != object) {
+                if (!isPrimitive(fieldValueType) && !isSimpleType(fieldValueType)
+                        && !object.getClass().equals(fieldValueType)) {
+                    fieldValue = readFieldsAsMap(fieldValue);
                 }
-            } catch (IllegalAccessException e) {
-                throw new IllegalStateException(e);
+                fieldsAsMap.put(fieldName, fieldValue);
             }
         }
         return unmodifiableMap(fieldsAsMap);
@@ -502,10 +499,39 @@ public abstract class ReflectionUtils implements Utils {
      * {@link java.lang.reflect.InaccessibleObjectException}, <code>false</code> otherwise.
      */
     public static boolean isInaccessibleObjectException(Throwable failure) {
-        return failure != null && INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME.equals(failure.getClass().getName());
+        return isInaccessibleObjectException(getType(failure));
+    }
+
+    /**
+     * Checks whether the specified {@link Class} represents
+     * {@link java.lang.reflect.InaccessibleObjectException}.
+     *
+     * <p>This method is useful when dealing with reflection operations that may fail due to module system
+     * restrictions introduced in JDK 9+. It avoids direct dependency on the presence of the class, which
+     * may not be available in earlier JDK versions.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Class<?> exceptionClass = SomeException.class;
+     * if (ReflectionUtils.isInaccessibleObjectException(exceptionClass)) {
+     *     System.err.println("The class represents InaccessibleObjectException");
+     * } else {
+     *     System.out.println("The class does not represent InaccessibleObjectException");
+     * }
+     * }</pre>
+     *
+     * @param throwableClass The {@link Class} to check.
+     * @return <code>true</code> if the specified {@link Class} represents
+     * {@link java.lang.reflect.InaccessibleObjectException}, <code>false</code> otherwise.
+     */
+    public static boolean isInaccessibleObjectException(Class<?> throwableClass) {
+        return isInaccessibleObjectException(getTypeName(throwableClass));
+    }
+
+    static boolean isInaccessibleObjectException(String className) {
+        return INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME.equals(className);
     }
 
     private ReflectionUtils() {
     }
-
 }
