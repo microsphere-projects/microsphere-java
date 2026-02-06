@@ -19,12 +19,13 @@ package io.microsphere.classloading;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.newURLClassLoader;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -44,16 +45,26 @@ class ServiceLoadingURLClassPathHandleTest {
     }
 
     @Test
-    void test() throws IOException {
-        ServiceLoadingURLClassPathHandle handle = new ServiceLoadingURLClassPathHandle();
-        assertTrue(handle.supports());
+    void testSupports() {
+        assertTrue(this.handle.supports());
+    }
+
+    @Test
+    void testGetURLs() {
         ClassLoader classLoader = getDefaultClassLoader();
         URL[] urls = handle.getURLs(classLoader);
         assertNotNull(urls);
 
+        assertArrayEquals(EMPTY_URL_ARRAY, handle.getURLs(null));
+    }
+
+    @Test
+    void testRemoveURL() {
+        ClassLoader classLoader = getDefaultClassLoader();
+        URL[] urls = this.handle.getURLs(classLoader);
         URLClassLoader urlClassLoader = newURLClassLoader(urls);
         for (URL url : urls) {
-            assertTrue(handle.removeURL(urlClassLoader, url));
+            assertTrue(this.handle.removeURL(urlClassLoader, url));
         }
     }
 }
