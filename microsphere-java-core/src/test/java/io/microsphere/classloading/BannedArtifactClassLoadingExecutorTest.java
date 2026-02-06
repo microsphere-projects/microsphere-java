@@ -18,6 +18,15 @@ package io.microsphere.classloading;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
+
+import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfig;
+import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfigs;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link BannedArtifactClassLoadingExecutor} Test
  *
@@ -26,10 +35,25 @@ import org.junit.jupiter.api.Test;
  */
 class BannedArtifactClassLoadingExecutorTest {
 
-    private BannedArtifactClassLoadingExecutor detector = new BannedArtifactClassLoadingExecutor();
-
     @Test
     void testDetect() {
+        BannedArtifactClassLoadingExecutor detector = new BannedArtifactClassLoadingExecutor();
         detector.execute();
+    }
+
+    @Test
+    void testLoadBannedArtifactConfigsOnFailed() {
+        ClassLoader classLoader = new ClassLoader() {
+            @Override
+            public Enumeration<URL> getResources(String name) throws IOException {
+                throw new IOException("For testing");
+            }
+        };
+        assertTrue(loadBannedArtifactConfigs(classLoader).isEmpty());
+    }
+
+    @Test
+    void testLoadBannedArtifactConfigOnFailed() {
+        assertThrows(IllegalArgumentException.class, () -> loadBannedArtifactConfig("invalid-definition"));
     }
 }

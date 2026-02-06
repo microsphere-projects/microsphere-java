@@ -81,21 +81,20 @@ public class BannedArtifactClassLoadingExecutor {
     }
 
     public void execute() {
-        List<MavenArtifact> bannedArtifactConfigs = loadBannedArtifactConfigs();
+        List<MavenArtifact> bannedArtifactConfigs = loadBannedArtifactConfigs(this.classLoader);
         List<Artifact> artifacts = artifactDetector.detect(false);
-        for (Artifact artifact : artifacts) {
-            URL classPathURL = artifact.getLocation();
-            if (classPathURL != null) {
-                for (MavenArtifact bannedArtifactConfig : bannedArtifactConfigs) {
-                    if (bannedArtifactConfig.matches(artifact)) {
-                        removeClassPathURL(classLoader, classPathURL);
+        artifacts.stream()
+                .forEach(artifact -> {
+                    URL classPathURL = artifact.getLocation();
+                    for (MavenArtifact bannedArtifactConfig : bannedArtifactConfigs) {
+                        if (bannedArtifactConfig.matches(artifact)) {
+                            removeClassPathURL(classLoader, classPathURL);
+                        }
                     }
-                }
-            }
-        }
+                });
     }
 
-    private List<MavenArtifact> loadBannedArtifactConfigs() {
+    static List<MavenArtifact> loadBannedArtifactConfigs(ClassLoader classLoader) {
         List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try {
             Enumeration<URL> configResources = classLoader.getResources(CONFIG_LOCATION);
@@ -110,7 +109,7 @@ public class BannedArtifactClassLoadingExecutor {
         return bannedArtifactConfigs;
     }
 
-    private List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
+    static List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
         List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try (InputStream inputStream = configResource.openStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING))
@@ -127,14 +126,10 @@ public class BannedArtifactClassLoadingExecutor {
         return bannedArtifactConfigs;
     }
 
-    /**
-     * @param definition
-     * @return
-     */
-    private MavenArtifact loadBannedArtifactConfig(String definition) {
+    static MavenArtifact loadBannedArtifactConfig(String definition) throws IllegalArgumentException {
         String[] gav = split(definition.trim(), COLON);
         if (gav.length != 3) {
-            throw new RuntimeException("The definition of the banned artifact must contain groupId, artifactId and version : " + definition);
+            throw new IllegalArgumentException("The definition of the banned artifact must contain groupId, artifactId and version : " + definition);
         }
         String groupId = gav[0];
         String artifactId = gav[1];
