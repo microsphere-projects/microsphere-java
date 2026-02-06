@@ -882,6 +882,5 @@ public abstract class StringUtils implements Utils {
     }
 
     private StringUtils() {
-        super();
     }
 }
