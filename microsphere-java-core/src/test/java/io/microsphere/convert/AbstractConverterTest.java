@@ -44,7 +44,13 @@ class AbstractConverterTest extends BaseConverterTest<Object, Object> {
 
             @Override
             protected Integer resolvePriority() {
+                super.resolvePriority();
                 return null;
+            }
+
+            @Override
+            public int getPriority() {
+                return super.getPriority();
             }
         };
     }
@@ -76,4 +82,8 @@ class AbstractConverterTest extends BaseConverterTest<Object, Object> {
         assertNotEquals(this.converter, new Object());
     }
 
+    @Test
+    void testEquals() {
+        assertEquals(this.converter, this.converter);
+    }
 }
