@@ -1,14 +1,12 @@
 package io.microsphere.management;
 
 
-import io.microsphere.logging.Logger;
 import io.microsphere.process.ProcessIdResolver;
 import io.microsphere.util.ServiceLoaderUtils;
 import io.microsphere.util.Utils;
 
-import java.util.List;
+import java.util.Objects;
 
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.process.ProcessIdResolver.UNKNOWN_PROCESS_ID;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 
@@ -22,29 +20,16 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
  */
 public abstract class ManagementUtils implements Utils {
 
-    private static final Logger logger = getLogger(ManagementUtils.class);
-
     static final long currentProcessId = resolveCurrentProcessId();
 
     private static long resolveCurrentProcessId() {
-        List<ProcessIdResolver> resolvers = loadServicesList(ProcessIdResolver.class);
-        Long processId = null;
-        for (ProcessIdResolver resolver : resolvers) {
-            if (resolver.supports()) {
-                if ((processId = resolver.current()) != null) {
-                    log(resolver, processId);
-                    break;
-                }
-            }
-        }
-        return processId == null ? UNKNOWN_PROCESS_ID : processId;
-    }
-
-    static void log(ProcessIdResolver resolver, Long processId) {
-        if (logger.isTraceEnabled()) {
-            logger.trace("The process id was resolved by ProcessIdResolver[class : '{}' , priority : {}] successfully : {}",
-                    resolver.getClass().getName(), resolver.getPriority(), processId);
-        }
+        return loadServicesList(ProcessIdResolver.class)
+                .stream()
+                .filter(ProcessIdResolver::supports)
+                .map(ProcessIdResolver::current)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(UNKNOWN_PROCESS_ID);
     }
 
     /**
