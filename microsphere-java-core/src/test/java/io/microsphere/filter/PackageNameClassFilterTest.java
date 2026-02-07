@@ -20,5 +20,11 @@ class PackageNameClassFilterTest {
         assertTrue(filter.accept(PackageNameClassFilterTest.class));
         assertFalse(filter.accept(String.class));
         assertFalse(filter.accept(null));
+
+        filter = new PackageNameClassFilter("io.microsphere", false);
+        assertFalse(filter.accept(PackageNameClassFilterTest.class));
+
+        filter = new PackageNameClassFilter("io.microsphere.filter", false);
+        assertTrue(filter.accept(PackageNameClassFilterTest.class));
     }
 }
