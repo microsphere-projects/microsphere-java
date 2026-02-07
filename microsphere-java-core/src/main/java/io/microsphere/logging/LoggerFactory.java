@@ -21,9 +21,11 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static java.util.Collections.sort;
+import static java.util.Objects.nonNull;
 import static java.util.ServiceLoader.load;
 
 /**
@@ -74,7 +76,8 @@ public abstract class LoggerFactory implements Prioritized {
 
     static List<LoggerFactory> loadAvailableFactories() {
         List<LoggerFactory> factories = loadFactories();
-        factories.removeIf(factory -> !factory.isAvailable());
+        Predicate<LoggerFactory> predicate = LoggerFactory::isAvailable;
+        factories.removeIf(predicate.negate());
         return factories;
     }
 
@@ -112,7 +115,7 @@ public abstract class LoggerFactory implements Prioritized {
      * @return <code>true</code> if available
      */
     protected boolean isAvailable() {
-        return getDelegateLoggerClass() != null;
+        return nonNull(getDelegateLoggerClass());
     }
 
     /**
