@@ -24,13 +24,16 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import static io.microsphere.reflect.AccessibleObjectUtils.canAccess;
+import static io.microsphere.reflect.AccessibleObjectUtils.handleInaccessibleObjectExceptionIfFound;
 import static io.microsphere.reflect.AccessibleObjectUtils.setAccessible;
+import static io.microsphere.reflect.AccessibleObjectUtils.tryCanAccess;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -84,6 +87,10 @@ class AccessibleObjectUtilsTest {
     @Test
     void testCanAccessOnNonPublicMembers() {
         assertFalse(canAccess(null, tryCanAccessMethod));
+
+        Method cloneMethod = findMethod(Object.class, "clone");
+        assertFalse(canAccess(null, cloneMethod));
+        assertFalse(canAccess(test, cloneMethod));
     }
 
     @Test
@@ -97,5 +104,21 @@ class AccessibleObjectUtilsTest {
     void testTrySetAccessibleOnNonPublicMembers() {
         assertTrue(trySetAccessible(tryCanAccessMethod));
         assertTrue(trySetAccessible(abstractProcessorConstructor));
+    }
+
+    @Test
+    void testTrySetAccessibleOnFailed() {
+        assertFalse(trySetAccessible(null, null));
+    }
+
+    @Test
+    void testTryCanAccessOnFailed() {
+        assertNull(tryCanAccess(null, null));
+        assertNull(tryCanAccess(null, null, null));
+    }
+
+    @Test
+    void testHandleInaccessibleObjectExceptionIfFound() {
+        handleInaccessibleObjectExceptionIfFound(new RuntimeException("For testing"));
     }
 }
