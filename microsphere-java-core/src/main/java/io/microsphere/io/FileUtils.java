@@ -13,13 +13,13 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import static io.microsphere.constants.FileConstants.FILE_EXTENSION_CHAR;
+import static io.microsphere.constants.FileConstants.FILE_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
-import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.substringAfterLast;
 import static java.io.File.separatorChar;
 import static java.nio.file.Files.isSymbolicLink;
 
@@ -97,11 +97,7 @@ public abstract class FileUtils implements Utils {
      */
     @Nullable
     public static String getFileExtension(String fileName) {
-        if (isBlank(fileName)) {
-            return null;
-        }
-        int index = fileName.lastIndexOf(FILE_EXTENSION_CHAR);
-        return index > -1 ? fileName.substring(index + 1) : null;
+        return substringAfterLast(fileName, FILE_EXTENSION);
     }
 
     /**

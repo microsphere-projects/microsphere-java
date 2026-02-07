@@ -1,6 +1,7 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,7 @@ import static io.microsphere.io.FileUtils.isSymlink;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
@@ -114,63 +116,14 @@ class FileUtilsTest extends AbstractTestCase {
 
     @Test
     void testDeleteDirectoryOnIOException() throws Exception {
-        ExecutorService executor = newSingleThreadExecutor();
-        executor.submit(this::testDeleteDirectoryOnIOException0);
-        shutdown(executor);
-        executor.awaitTermination(5, SECONDS);
+        handleDirectoryOnIOException(FileUtils::deleteDirectory);
     }
 
-    File testDeleteDirectoryOnIOException0() throws Exception {
+    @Test
+    void testDeleteDirectoryOnLink() throws IOException {
         File testDir = createRandomTempDirectory();
-
-        ExecutorService fileCreationExecutor = newSingleThreadExecutor();
-
-        AtomicBoolean creatingFile = new AtomicBoolean(true);
-
-        long waitTime = 50L;
-
-        fileCreationExecutor.submit(() -> {
-            while (creatingFile.get()) {
-                createRandomFile(testDir);
-            }
-            return null;
-        });
-
-        AtomicReference<IOException> ioExceptionReference = new AtomicReference<>();
-
-        AtomicBoolean deletingDirectory = new AtomicBoolean(true);
-
-        ExecutorService directoryDeletionExecutor = newSingleThreadExecutor();
-
-        directoryDeletionExecutor.submit(() -> {
-            while (deletingDirectory.get()) {
-                try {
-                    deleteDirectory(testDir);
-                    sleep(waitTime / 10);
-                } catch (IOException e) {
-                    ioExceptionReference.set(e);
-                    creatingFile.set(false);
-                    deletingDirectory.set(false);
-                    break;
-                }
-            }
-            return null;
-        });
-
-        for (int i = 0; i < 100; i++) {
-            if (creatingFile.get()) {
-                sleep(waitTime);
-            }
-        }
-
-        shutdown(fileCreationExecutor);
-        shutdown(directoryDeletionExecutor);
-
-        assertNotNull(ioExceptionReference.get());
-        assertFalse(creatingFile.get());
-        assertFalse(deletingDirectory.get());
-
-        return testDir;
+        File linkDir = makeLinkFile(testDir);
+        assertEquals(1, deleteDirectory(linkDir));
     }
 
     @Test
@@ -195,6 +148,11 @@ class FileUtilsTest extends AbstractTestCase {
     void testCleanDirectoryOnFile() throws IOException {
         File tempFile = createRandomTempFile();
         assertEquals(0, cleanDirectory(tempFile));
+    }
+
+    @Test
+    void testCleanDirectoryOnIOException() throws Exception {
+        handleDirectoryOnIOException(FileUtils::cleanDirectory);
     }
 
     @Test
@@ -237,13 +195,16 @@ class FileUtilsTest extends AbstractTestCase {
         // status : 0 -> init
         // status : 1 -> writing
         // status : 2 -> deleting
-        AtomicInteger status = new AtomicInteger(0);
+        int init = 0;
+        int writing = 1;
+        int deleting = 2;
+        AtomicInteger status = new AtomicInteger(init);
 
         executor.submit(() -> {
             synchronized (testFile) {
                 try (FileOutputStream outputStream = new FileOutputStream(testFile, true)) {
                     outputStream.write('a');
-                    status.set(1);
+                    status.set(writing);
                     // wait for notification
                     testFile.wait();
                 }
@@ -252,15 +213,15 @@ class FileUtilsTest extends AbstractTestCase {
         });
 
         executor.submit(() -> {
-            while (status.get() != 1) {
+            while (status.get() != writing) {
             }
             assertThrows(IOException.class, () -> forceDelete(testFile));
-            status.set(2);
+            status.set(deleting);
             return null;
         });
 
         executor.submit(() -> {
-            while (status.get() != 2) {
+            while (status.get() != deleting) {
             }
             synchronized (testFile) {
                 testFile.notify();
@@ -299,16 +260,10 @@ class FileUtilsTest extends AbstractTestCase {
 
     @Test
     void testIsSymlink() throws IOException {
-        if (IS_OS_WINDOWS) {
-            assertFalse(isSymlink(new File("")));
-        } else {
-            File tempDir = createRandomTempDirectory();
-            File targetFile = createRandomFile(tempDir);
-            File linkFile = new File(tempDir, "link");
-            ProcessExecutor processExecutor = new ProcessExecutor("ln", "-s", targetFile.getAbsolutePath(), linkFile.getAbsolutePath());
-            processExecutor.execute(System.out);
-            assertTrue(isSymlink(linkFile));
-        }
+        File tempDir = createRandomTempDirectory();
+        File targetFile = createRandomFile(tempDir);
+        File linkFile = makeLinkFile(targetFile);
+        assertTrue(isSymlink(linkFile));
     }
 
     @Test
@@ -320,6 +275,87 @@ class FileUtilsTest extends AbstractTestCase {
     void testGetCanonicalFile() {
         File tempFile = newRandomTempFile();
         assertEquals(getCanonicalFile(tempFile), getCanonicalFile(getCanonicalFile(tempFile)));
+    }
+
+    File makeLinkFile(File targetFile) throws IOException {
+        File tempDir = createRandomTempDirectory();
+        File linkFile = new File(tempDir, "link");
+        boolean directory = targetFile.isDirectory();
+        String targetPatth = targetFile.getAbsolutePath();
+        String linkPath = linkFile.getAbsolutePath();
+        final ProcessExecutor processExecutor;
+        if (IS_OS_WINDOWS) {
+            processExecutor = directory ?
+                    new ProcessExecutor("mklink", "/D", targetPatth, linkPath) :
+                    new ProcessExecutor("mklink", targetPatth, linkPath);
+        } else {
+            processExecutor = new ProcessExecutor("ln", "-s", targetPatth, linkPath);
+        }
+        processExecutor.execute(System.out);
+        return linkFile;
+    }
+
+    void handleDirectoryOnIOException(ThrowableConsumer<File> directoryHandler) throws Exception {
+        ExecutorService executor = newSingleThreadExecutor();
+        executor.submit(() -> handleDirectoryOnIOException0(directoryHandler));
+        shutdown(executor);
+        executor.awaitTermination(3, SECONDS);
+    }
+
+    File handleDirectoryOnIOException0(ThrowableConsumer<File> directoryHandler) throws Exception {
+        File testDir = createRandomTempDirectory();
+
+        ExecutorService fileCreationExecutor = newSingleThreadExecutor();
+
+        AtomicBoolean creatingFile = new AtomicBoolean(true);
+
+        long waitTime = 50L;
+
+        fileCreationExecutor.submit(() -> {
+            while (creatingFile.get()) {
+                createRandomFile(testDir);
+            }
+            return null;
+        });
+
+        AtomicReference<IOException> ioExceptionReference = new AtomicReference<>();
+
+        AtomicBoolean deletingDirectory = new AtomicBoolean(true);
+
+        ExecutorService directoryDeletionExecutor = newSingleThreadExecutor();
+
+        directoryDeletionExecutor.submit(() -> {
+            while (deletingDirectory.get()) {
+                try {
+                    directoryHandler.accept(testDir);
+                    sleep(waitTime / 10);
+                } catch (IOException e) {
+                    ioExceptionReference.set(e);
+                    creatingFile.set(false);
+                    deletingDirectory.set(false);
+                    logger.trace(e.getMessage(), e);
+                    break;
+                } catch (Throwable e) {
+                    throw wrap(e, Exception.class);
+                }
+            }
+            return null;
+        });
+
+        for (int i = 0; i < 100; i++) {
+            if (creatingFile.get()) {
+                sleep(waitTime);
+            }
+        }
+
+        shutdown(fileCreationExecutor);
+        shutdown(directoryDeletionExecutor);
+
+        assertNotNull(ioExceptionReference.get());
+        assertFalse(creatingFile.get());
+        assertFalse(deletingDirectory.get());
+
+        return testDir;
     }
 
 }
