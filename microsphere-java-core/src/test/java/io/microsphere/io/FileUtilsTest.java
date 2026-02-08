@@ -4,7 +4,6 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +46,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * {@link FileUtils} Test
