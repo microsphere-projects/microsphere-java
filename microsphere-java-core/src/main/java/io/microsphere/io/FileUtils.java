@@ -10,8 +10,8 @@ import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 import static io.microsphere.constants.FileConstants.FILE_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
@@ -21,6 +21,7 @@ import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static java.io.File.separatorChar;
+import static java.nio.file.Files.delete;
 import static java.nio.file.Files.isSymbolicLink;
 
 /**
@@ -160,17 +161,8 @@ public abstract class FileUtils implements Utils {
      */
     public static int cleanDirectory(File directory) throws IOException {
         int deletedFilesCount = 0;
-        IOException exception = null;
         for (File file : listFiles(directory)) {
-            try {
-                deletedFilesCount += forceDelete(file);
-            } catch (IOException ioe) {
-                exception = ioe;
-            }
-        }
-
-        if (null != exception) {
-            throw exception;
+            deletedFilesCount += forceDelete(file);
         }
         return deletedFilesCount;
     }
@@ -186,30 +178,22 @@ public abstract class FileUtils implements Utils {
      *   <li>{@code forceDelete(new File("/tmp/file.txt"))} deletes the file and returns {@code 1}</li>
      *   <li>{@code forceDelete(new File("/tmp/testDir"))} deletes the directory and all its contents,
      *       returning the total count of deleted files and directories.</li>
-     *   <li>{@code forceDelete(new File("/nonexistent/file"))} throws a {@link FileNotFoundException}</li>
+     *   <li>{@code forceDelete(new File("/nonexistent/file"))} throws a {@link NoSuchFileException}</li>
      * </ul>
      *
      * @param file the file or directory to delete, must not be {@code null}
      * @return the number of deleted files and directories
-     * @throws NullPointerException  if the file is {@code null}
-     * @throws FileNotFoundException if the file does not exist
-     * @throws IOException           if deletion fails for any reason
+     * @throws NullPointerException if the file is {@code null}
+     * @throws NoSuchFileException  if the file does not exist
+     * @throws IOException          if deletion fails for any reason
      */
-    public static int forceDelete(File file) throws IOException {
+    public static int forceDelete(File file) throws NoSuchFileException, IOException {
         final int deletedFilesCount;
         if (file.isDirectory()) {
             deletedFilesCount = deleteDirectory(file);
         } else {
-            boolean filePresent = file.exists();
-            if (file.delete()) {
-                deletedFilesCount = 1;
-            } else {
-                if (!filePresent) {
-                    throw new FileNotFoundException("File does not exist: " + file);
-                }
-                String message = "Unable to delete file: " + file;
-                throw new IOException(message);
-            }
+            delete(file.toPath());
+            deletedFilesCount = 1;
         }
         return deletedFilesCount;
     }

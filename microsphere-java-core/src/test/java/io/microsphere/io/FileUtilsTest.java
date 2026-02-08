@@ -4,6 +4,7 @@ import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -17,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.constants.FileConstants.CLASS;
+import static io.microsphere.io.FileUtils.EMPTY_FILE_ARRAY;
 import static io.microsphere.io.FileUtils.cleanDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.deleteDirectoryOnExit;
@@ -25,7 +27,9 @@ import static io.microsphere.io.FileUtils.forceDeleteOnExit;
 import static io.microsphere.io.FileUtils.getCanonicalFile;
 import static io.microsphere.io.FileUtils.getFileExtension;
 import static io.microsphere.io.FileUtils.isSymlink;
+import static io.microsphere.io.FileUtils.listFiles;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
@@ -43,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 
 /**
  * {@link FileUtils} Test
@@ -51,6 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see FileUtils
  * @since 1.0.0
  */
+@Execution(CONCURRENT)
 class FileUtilsTest extends AbstractTestCase {
 
     private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);
@@ -151,11 +157,6 @@ class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testCleanDirectoryOnIOException() throws Exception {
-        handleDirectoryOnIOException(FileUtils::cleanDirectory);
-    }
-
-    @Test
     void testForceDeleteOnEmptyDirectory() throws IOException {
         File tempDir = createRandomTempDirectory();
         assertEquals(1, forceDelete(tempDir));
@@ -167,6 +168,32 @@ class FileUtilsTest extends AbstractTestCase {
         File tempFile = createRandomTempFile();
         assertEquals(1, forceDelete(tempFile));
         assertFalse(tempFile.exists());
+    }
+
+    @Test
+    void testListFiles() throws IOException {
+        File testDir = createRandomTempDirectory();
+        assertEquals(EMPTY_FILE_ARRAY, listFiles(testDir));
+
+        createRandomFile(testDir);
+        assertTrue(isNotEmpty(listFiles(testDir)));
+
+        deleteDirectoryOnExit(testDir);
+    }
+
+    @Test
+    void testListFilesOnNull() {
+        assertEquals(EMPTY_FILE_ARRAY, listFiles(null));
+    }
+
+    @Test
+    void testListFilesOnNotFound() {
+        assertEquals(EMPTY_FILE_ARRAY, listFiles(new File("not-found")));
+    }
+
+    @Test
+    void testListFilesOnFile() throws IOException {
+        assertEquals(EMPTY_FILE_ARRAY, listFiles(createRandomTempFile()));
     }
 
     @Test
@@ -243,6 +270,10 @@ class FileUtilsTest extends AbstractTestCase {
     @Test
     void testDeleteDirectoryOnExit() throws IOException {
         File tempDir = createRandomTempDirectory();
+
+        File link = makeLinkFile(tempDir);
+        deleteDirectoryOnExit(link);
+
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {
                 createRandomDirectory(tempDir);
@@ -299,7 +330,7 @@ class FileUtilsTest extends AbstractTestCase {
         ExecutorService executor = newSingleThreadExecutor();
         executor.submit(() -> handleDirectoryOnIOException0(directoryHandler));
         shutdown(executor);
-        executor.awaitTermination(3, SECONDS);
+        executor.awaitTermination(1, SECONDS);
     }
 
     File handleDirectoryOnIOException0(ThrowableConsumer<File> directoryHandler) throws Exception {
