@@ -56,7 +56,6 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
  * @see FileUtils
  * @since 1.0.0
  */
-@Execution(CONCURRENT)
 class FileUtilsTest extends AbstractTestCase {
 
     private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);
