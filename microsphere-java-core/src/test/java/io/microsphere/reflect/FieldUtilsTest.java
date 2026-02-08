@@ -107,6 +107,15 @@ class FieldUtilsTest {
         assertFindField(ReflectionTest.class, "staticField", false);
     }
 
+    @Test
+    void testFindFieldsOnNull() {
+        assertNull(findField(null, null));
+    }
+
+    @Test
+    void testFindFieldsOnObjectClass() {
+        assertNull(findField(Object.class, null));
+    }
 
     @Test
     void testFindAllFields() {
@@ -201,10 +210,16 @@ class FieldUtilsTest {
     }
 
     @Test
+    void testGetFieldValueOnNull() {
+        Object fieldValue = getFieldValue(null, (Field) null);
+        assertNull(fieldValue);
+    }
+
+    @Test
     void testSetFieldValue() {
         Integer value = 999;
         setFieldValue(value, "value", 2);
-        assertEquals(value.intValue(), 2);
+        assertEquals(value.intValue(), setFieldValue(value, "value", 2));
 
         assertSetFieldValue(test, "privateField", "test");
         assertSetFieldValue(test, "packagePrivateField", "test");
@@ -274,6 +289,7 @@ class FieldUtilsTest {
 
     private void assertGetFieldValue(ReflectionTest test, String fieldName) {
         assertEquals(fieldName, getFieldValue(test, fieldName));
+        assertEquals(fieldName, getFieldValue(test, fieldName, (Object) null));
     }
 
     private void assertGetFieldValue(ReflectionTest test, String fieldName, Object defaultValue) {
