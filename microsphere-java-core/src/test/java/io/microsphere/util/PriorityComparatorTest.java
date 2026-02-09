@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Priority;
 
+import static io.microsphere.util.PriorityComparator.compare;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -33,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class PriorityComparatorTest {
 
     @Test
-    void test() {
+    void testCompileWithObject() {
         PriorityComparator comparator = PriorityComparator.INSTANCE;
         assertEquals(0, comparator.compare(new NoPriority(), new NoPriority()));
         assertEquals(0, comparator.compare(new PriorityOneType(), new PriorityOneType()));
@@ -41,6 +42,16 @@ class PriorityComparatorTest {
         assertEquals(-1, comparator.compare(new NoPriority(), new PriorityOneType()));
         assertEquals(-1, comparator.compare(new PriorityOneType(), new PriorityTwoType()));
         assertEquals(1, comparator.compare(new PriorityTwoType(), new PriorityOneType()));
+    }
+
+    @Test
+    void testCompileWithSameTypes() {
+        assertEquals(0, compare(null, null, null));
+    }
+
+    @Test
+    void testCompileWithNullPriorityClass() {
+        assertEquals(0, compare(Object.class, String.class, null));
     }
 
     static class NoPriority {
