@@ -2,7 +2,6 @@ package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.function.ThrowableConsumer;
-import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -33,7 +32,6 @@ import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
-import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.Executors.newFixedThreadPool;
@@ -303,24 +301,6 @@ class FileUtilsTest extends AbstractTestCase {
     void testGetCanonicalFile() {
         File tempFile = newRandomTempFile();
         assertEquals(getCanonicalFile(tempFile), getCanonicalFile(getCanonicalFile(tempFile)));
-    }
-
-    File makeLinkFile(File targetFile) throws IOException {
-        File tempDir = createRandomTempDirectory();
-        File linkFile = new File(tempDir, "link");
-        boolean directory = targetFile.isDirectory();
-        String targetPatth = targetFile.getAbsolutePath();
-        String linkPath = linkFile.getAbsolutePath();
-        final ProcessExecutor processExecutor;
-        if (IS_OS_WINDOWS) {
-            processExecutor = directory ?
-                    new ProcessExecutor("mklink", "/D", targetPatth, linkPath) :
-                    new ProcessExecutor("mklink", targetPatth, linkPath);
-        } else {
-            processExecutor = new ProcessExecutor("ln", "-s", targetPatth, linkPath);
-        }
-        processExecutor.execute(System.out);
-        return linkFile;
     }
 
     void handleDirectoryOnIOException(ThrowableConsumer<File> directoryHandler) throws Exception {

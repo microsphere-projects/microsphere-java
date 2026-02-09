@@ -5,6 +5,7 @@ package io.microsphere;
 
 import io.microsphere.lang.function.ThrowableAction;
 import io.microsphere.logging.Logger;
+import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Disabled;
 
 import java.io.File;
@@ -32,6 +33,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
+import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
@@ -176,6 +178,24 @@ public abstract class AbstractTestCase {
 
     protected File newTempFile(String path) {
         return new File(TEST_TEMP_DIR, path);
+    }
+
+    protected File makeLinkFile(File targetFile) throws IOException {
+        File tempDir = createRandomTempDirectory();
+        File linkFile = new File(tempDir, "link");
+        boolean directory = targetFile.isDirectory();
+        String targetPatth = targetFile.getAbsolutePath();
+        String linkPath = linkFile.getAbsolutePath();
+        final ProcessExecutor processExecutor;
+        if (IS_OS_WINDOWS) {
+            processExecutor = directory ?
+                    new ProcessExecutor("mklink", "/D", targetPatth, linkPath) :
+                    new ProcessExecutor("mklink", targetPatth, linkPath);
+        } else {
+            processExecutor = new ProcessExecutor("ln", "-s", targetPatth, linkPath);
+        }
+        processExecutor.execute(System.out);
+        return linkFile;
     }
 
     protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
