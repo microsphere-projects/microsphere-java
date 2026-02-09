@@ -163,6 +163,8 @@ public class ProcessExecutor {
                 copy(processInputStream, targetOutputStream);
                 // Copy the error input stream
                 copy(processErrorInputStream, targetOutputStream);
+                process.waitFor(timeout, timeUnit);
+
                 exitValue = process.exitValue();
                 if (exitValue != 0) {
                     throw new IOException();
