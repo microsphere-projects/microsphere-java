@@ -21,6 +21,7 @@ import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
 import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.process.ProcessManager.INSTANCE;
+import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.lang.Long.getLong;
@@ -163,11 +164,15 @@ public class ProcessExecutor {
                 copy(processInputStream, targetOutputStream);
                 // Copy the error input stream
                 copy(processErrorInputStream, targetOutputStream);
+
+                // wait for the process being executed
                 process.waitFor(timeout, timeUnit);
 
+                // try to exit with value
                 exitValue = process.exitValue();
                 if (exitValue != 0) {
-                    throw new IOException();
+                    String message = format("The command['{}'] execution is exited with invalid value : ", commandLine, exitValue);
+                    throw new IOException(message);
                 }
             } finally {
                 processManager.removeUnfinishedProcess(process, options);

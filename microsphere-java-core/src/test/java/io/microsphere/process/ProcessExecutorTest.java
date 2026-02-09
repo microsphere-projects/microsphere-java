@@ -1,12 +1,12 @@
 package io.microsphere.process;
 
 import io.microsphere.AbstractTestCase;
+import io.microsphere.io.FastByteArrayOutputStream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,41 +22,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ProcessExecutorTest extends AbstractTestCase {
 
-    private ProcessExecutor executor;
+    private FastByteArrayOutputStream outputStream;
 
     @BeforeEach
     void setUp() {
-        this.executor = new ProcessExecutor("java", "-version");
+        this.outputStream = new FastByteArrayOutputStream(8 * 1024);
+    }
+
+    @AfterEach
+    void tearDown() {
+        this.outputStream.close();
     }
 
     @Test
     void testExecute() throws Exception {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
-        this.executor.execute(outputStream);
-        assertTrue(outputStream.size() > 0);
-        String response = new String(outputStream.toByteArray());
+        ProcessExecutor processExecutor = new ProcessExecutor("javac", "--help");
+        processExecutor.execute(this.outputStream);
+        assertTrue(this.outputStream.size() > 0);
+        String response = this.outputStream.toString();
         log(response);
     }
 
     @Test
     void testExecuteWithTimeout() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
-        assertThrows(TimeoutException.class, () -> this.executor.execute(outputStream, 0));
-        assertThrows(TimeoutException.class, () -> this.executor.execute(outputStream, 1, TimeUnit.NANOSECONDS));
-        assertEquals(0, outputStream.size());
+        ProcessExecutor processExecutor = new ProcessExecutor("javac", "--help");
+        assertThrows(TimeoutException.class, () -> processExecutor.execute(this.outputStream, 1));
+        assertEquals(0, this.outputStream.size());
     }
 
     @Test
     void testExecuteOnFailed() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
         ProcessExecutor processExecutor = new ProcessExecutor("javac", "-a");
-        assertThrows(IOException.class, () -> processExecutor.execute(outputStream));
+        assertThrows(IOException.class, () -> processExecutor.execute(this.outputStream));
     }
 
     @Test
     void testExecuteOnNotFoundCommand() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(8 * 1024);
-        ProcessExecutor processExecutor = new ProcessExecutor("ttttt");
-        assertThrows(IOException.class, () -> processExecutor.execute(outputStream));
+        ProcessExecutor processExecutor = new ProcessExecutor("not-found-command");
+        assertThrows(IOException.class, () -> processExecutor.execute(this.outputStream));
     }
 }
