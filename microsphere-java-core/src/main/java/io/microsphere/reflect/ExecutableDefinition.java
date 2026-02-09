@@ -66,8 +66,6 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
     @Nonnull
     protected final String[] parameterClassNames;
 
-    private transient boolean resolvedParameterTypes;
-
     @Nonnull
     private transient Class<?>[] parameterTypes;
 
@@ -137,17 +135,17 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      */
     @Nonnull
     public final Class<?>[] getParameterTypes() {
-        if (!this.resolvedParameterTypes && this.parameterTypes == null) {
+        if (this.parameterTypes == null) {
             this.parameterTypes = resolveParameterTypes(this.parameterClassNames);
-            this.resolvedParameterTypes = true;
         }
         return this.parameterTypes.clone();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExecutableDefinition)) return false;
-        if (!super.equals(o)) return false;
+        if (!super.equals(o)) {
+            return false;
+        }
 
         ExecutableDefinition that = (ExecutableDefinition) o;
         return arrayEquals(this.parameterClassNames, that.parameterClassNames);

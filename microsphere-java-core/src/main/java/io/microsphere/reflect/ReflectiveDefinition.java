@@ -32,6 +32,7 @@ import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.Version.ofVersion;
 import static java.util.Objects.hash;
+import static java.util.Objects.nonNull;
 
 /**
  * The abstract definition class for Java Reflection.
@@ -101,8 +102,6 @@ public abstract class ReflectiveDefinition implements Serializable {
     @Nonnull
     protected final String className;
 
-    private transient boolean resolved;
-
     @Nullable
     private transient Class<?> resolvedClass;
 
@@ -142,7 +141,6 @@ public abstract class ReflectiveDefinition implements Serializable {
         this.since = since;
         this.deprecation = deprecation;
         this.className = className;
-        this.resolved = false;
     }
 
     /**
@@ -182,10 +180,9 @@ public abstract class ReflectiveDefinition implements Serializable {
      */
     @Nullable
     public final Class<?> getResolvedClass() {
-        if (!resolved && resolvedClass == null) {
+        if (resolvedClass == null) {
             ClassLoader classLoader = getClassLoader(getClass());
             resolvedClass = resolveClass(className, classLoader, true);
-            resolved = true;
         }
         return resolvedClass;
     }
@@ -194,7 +191,7 @@ public abstract class ReflectiveDefinition implements Serializable {
      * Whether the member is deprecated
      */
     public final boolean isDeprecated() {
-        return deprecation != null;
+        return nonNull(deprecation);
     }
 
     /**
@@ -206,7 +203,13 @@ public abstract class ReflectiveDefinition implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ReflectiveDefinition)) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (!(this.getClass().isInstance(o))) {
+            return false;
+        }
 
         ReflectiveDefinition that = (ReflectiveDefinition) o;
         return this.since.equals(that.since)
