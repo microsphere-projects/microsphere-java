@@ -1811,22 +1811,19 @@ public abstract class ClassUtils implements Utils {
             return null;
         }
         if (type.isArray()) {
-            try {
-                Class<?> cl = type;
-                int dimensions = 0;
-                while (cl.isArray()) {
-                    dimensions++;
-                    cl = cl.getComponentType();
-                }
-                String name = getTypeName(cl);
-                StringBuilder sb = new StringBuilder(name.length() + dimensions * 2);
-                sb.append(name);
-                for (int i = 0; i < dimensions; i++) {
-                    sb.append("[]");
-                }
-                return sb.toString();
-            } catch (Throwable e) {
+            Class<?> cl = type;
+            int dimensions = 0;
+            while (cl.isArray()) {
+                dimensions++;
+                cl = cl.getComponentType();
             }
+            String name = getTypeName(cl);
+            StringBuilder sb = new StringBuilder(name.length() + dimensions * 2);
+            sb.append(name);
+            for (int i = 0; i < dimensions; i++) {
+                sb.append("[]");
+            }
+            return sb.toString();
         }
         return type.getName();
     }
