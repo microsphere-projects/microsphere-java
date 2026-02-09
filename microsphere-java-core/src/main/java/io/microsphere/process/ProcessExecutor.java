@@ -1,18 +1,33 @@
 package io.microsphere.process;
 
+import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.io.FastByteArrayInputStream;
+import io.microsphere.io.FastByteArrayOutputStream;
+import io.microsphere.logging.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
+import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
+import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
+import static io.microsphere.io.IOUtils.copy;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.process.ProcessManager.INSTANCE;
-import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
-import static java.lang.Long.MAX_VALUE;
+import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.lang.Long.getLong;
+import static java.lang.Long.parseLong;
 import static java.lang.Runtime.getRuntime;
-import static java.lang.System.currentTimeMillis;
+import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * {@link Process} Executor
@@ -43,7 +58,37 @@ import static java.lang.System.currentTimeMillis;
  */
 public class ProcessExecutor {
 
-    private static final long waitForTimeInSecond = getLong("process.executor.wait.for", 1);
+    private static final Logger logger = getLogger(ProcessExecutor.class);
+
+    private static final ExecutorService executor = newSingleThreadExecutor(newThreadFactory("process-exec", true));
+
+    /**
+     * The default proeprty value for the timeout of process execution : 30 seconds
+     */
+    public static final String DEFAULT_PROCESS_EXECUTION_TIMEOUT_PROPERTY_VAUE = "30000";
+
+    /**
+     * The default value for the timeout of process execution : 30 seconds
+     */
+    public static final long DEFAULT_PROCESS_EXECUTION_TIMEOUT = parseLong(DEFAULT_PROCESS_EXECUTION_TIMEOUT_PROPERTY_VAUE);
+
+    /**
+     * The property name for the timeout of process execution : "process.execution.timeout"
+     *
+     * @see #DEFAULT_PROCESS_EXECUTION_TIMEOUT_PROPERTY_VAUE
+     * @see #DEFAULT_PROCESS_EXECUTION_TIMEOUT
+     */
+    @ConfigurationProperty(
+            type = long.class,
+            defaultValue = DEFAULT_PROCESS_EXECUTION_TIMEOUT_PROPERTY_VAUE,
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
+    public static final String PROCESS_EXECUTION_TIMEOUT_PROPERTY_NAME = "process.execution.timeout";
+
+    /**
+     * the timeout of process execution
+     */
+    public static final long DEFAULT_TIMEOUT = getLong(PROCESS_EXECUTION_TIMEOUT_PROPERTY_NAME, DEFAULT_PROCESS_EXECUTION_TIMEOUT);
 
     private final ProcessManager processManager = INSTANCE;
 
@@ -53,7 +98,9 @@ public class ProcessExecutor {
 
     private final String options;
 
-    private boolean finished;
+    static {
+        shutdownOnExit(executor);
+    }
 
     /**
      * Constructor
@@ -74,23 +121,17 @@ public class ProcessExecutor {
 
     /**
      * Execute current process.
-     * <p/>
-     * //     * @param inputStream  input stream keeps output stream from process
      *
      * @param outputStream output stream for process normal or error input stream.
-     * @throws IOException if process execution is failed.
+     * @throws IOException      if process execution is failed.
+     * @throws TimeoutException if the execution is timeout over specified {@link #DEFAULT_TIMEOUT}
      */
-    public void execute(OutputStream outputStream) throws IOException {
-        try {
-            this.execute(outputStream, MAX_VALUE);
-        } catch (TimeoutException e) {
-        }
+    public void execute(OutputStream outputStream) throws IOException, TimeoutException {
+        this.execute(outputStream, DEFAULT_TIMEOUT);
     }
 
     /**
      * Execute current process.
-     * <p/>
-     * //     * @param inputStream  input stream keeps output stream from process
      *
      * @param outputStream          output stream for process normal or error input stream.
      * @param timeoutInMilliseconds milliseconds timeout
@@ -98,64 +139,48 @@ public class ProcessExecutor {
      * @throws TimeoutException if the execution is timeout over specified <code>timeoutInMilliseconds</code>
      */
     public void execute(OutputStream outputStream, long timeoutInMilliseconds) throws IOException, TimeoutException {
-        Process process = runtime.exec(commandLine);
-        long startTime = currentTimeMillis();
-        long endTime = -1L;
-        InputStream processInputStream = process.getInputStream();
-        InputStream processErrorInputStream = process.getErrorStream();
-//        OutputStream processOutputStream = process.getOutputStream();
-        int exitValue = -1;
-        while (!finished) {
-            long costTime = endTime - startTime;
-            if (costTime > timeoutInMilliseconds) {
-                finished = true;
-                processManager.destroy(process);
-                String message = format("Execution is timeout[{} ms]!", timeoutInMilliseconds);
-                throw new TimeoutException(message);
-            }
+        execute(outputStream, timeoutInMilliseconds, MILLISECONDS);
+    }
+
+    /**
+     * Execute current process.
+     *
+     * @param outputStream output stream for process normal or error input stream.
+     * @param timeout      the timeout value
+     * @param timeUnit     {@link TimeUnit}
+     * @throws IOException      if process execution is failed.
+     * @throws TimeoutException if the execution is timeout over specified <code>timeout</code> and <code>timeUnit</code>
+     */
+    public void execute(OutputStream outputStream, long timeout, TimeUnit timeUnit) throws IOException, TimeoutException {
+
+        Future<byte[]> future = executor.submit(() -> {
+            Process process = runtime.exec(commandLine);
+            InputStream processInputStream = process.getInputStream();
+            InputStream processErrorInputStream = process.getErrorStream();
+            FastByteArrayOutputStream targetOutputStream = new FastByteArrayOutputStream();
+            int exitValue = -1;
             try {
                 processManager.addUnfinishedProcess(process, options);
-                while (processInputStream.available() > 0) {
-                    outputStream.write(processInputStream.read());
-                }
-                while (processErrorInputStream.available() > 0) {
-                    outputStream.write(processErrorInputStream.read());
-                }
+                // Copy the standard input stream
+                copy(processInputStream, targetOutputStream);
+                // Copy the error input stream
+                copy(processErrorInputStream, targetOutputStream);
                 exitValue = process.exitValue();
                 if (exitValue != 0) {
                     throw new IOException();
                 }
-                finished = true;
-            } catch (IllegalThreadStateException e) {
-                // Process is not finished yet;
-                // Sleep a little to save on CPU cycles
-                waitFor(waitForTimeInSecond);
-                endTime = currentTimeMillis();
             } finally {
                 processManager.removeUnfinishedProcess(process, options);
+                logger.trace("The command['{}'] is executed with exit value : {}", commandLine, exitValue);
             }
-        }
-    }
+            return targetOutputStream.toByteArray();
+        });
 
-    /**
-     * Wait for specified seconds
-     *
-     * @param seconds specified seconds
-     */
-    private void waitFor(long seconds) {
         try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            Thread.interrupted();
+            byte[] bytes = future.get(timeout, timeUnit);
+            copy(new FastByteArrayInputStream(bytes), outputStream);
+        } catch (InterruptedException | ExecutionException e) {
+            throw wrap(e, IOException.class);
         }
-    }
-
-    /**
-     * Check current process finish or not.
-     *
-     * @return <code>true</code> if current process finished
-     */
-    public boolean isFinished() {
-        return finished;
     }
 }

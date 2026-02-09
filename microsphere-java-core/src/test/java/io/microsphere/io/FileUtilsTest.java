@@ -121,7 +121,7 @@ class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testDeleteDirectoryOnLink() throws IOException {
+    void testDeleteDirectoryOnLink() throws Exception {
         File testDir = createRandomTempDirectory();
         File linkDir = makeLinkFile(testDir);
         assertEquals(1, deleteDirectory(linkDir));
@@ -263,7 +263,7 @@ class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testDeleteDirectoryOnExit() throws IOException {
+    void testDeleteDirectoryOnExit() throws Exception {
         File tempDir = createRandomTempDirectory();
 
         File link = makeLinkFile(tempDir);
@@ -285,7 +285,7 @@ class FileUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsSymlink() throws IOException {
+    void testIsSymlink() throws Exception {
         File tempDir = createRandomTempDirectory();
         File targetFile = createRandomFile(tempDir);
         File linkFile = makeLinkFile(targetFile);

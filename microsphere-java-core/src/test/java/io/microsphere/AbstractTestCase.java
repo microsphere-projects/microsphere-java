@@ -180,7 +180,7 @@ public abstract class AbstractTestCase {
         return new File(TEST_TEMP_DIR, path);
     }
 
-    protected File makeLinkFile(File targetFile) throws IOException {
+    protected File makeLinkFile(File targetFile) throws Exception {
         File tempDir = createRandomTempDirectory();
         File linkFile = new File(tempDir, "link");
         boolean directory = targetFile.isDirectory();

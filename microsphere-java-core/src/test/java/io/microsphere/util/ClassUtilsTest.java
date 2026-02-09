@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -514,7 +513,7 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testFindClassNamesInClassPathWithFilePath() throws IOException {
+    void testFindClassNamesInClassPathWithFilePath() throws Exception {
         assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInClassPath);
         assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInClassPath);
 
