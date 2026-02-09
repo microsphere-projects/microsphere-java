@@ -60,8 +60,6 @@ public class ProcessExecutor {
 
     private static final Logger logger = getLogger(ProcessExecutor.class);
 
-    private static final ExecutorService executor = newSingleThreadExecutor(newThreadFactory("process-exec", true));
-
     /**
      * The default proeprty value for the timeout of process execution : 30 seconds
      */
@@ -94,13 +92,11 @@ public class ProcessExecutor {
 
     private final Runtime runtime = getRuntime();
 
-    private final String commandLine;
-
     private final String options;
 
-    static {
-        shutdownOnExit(executor);
-    }
+    private final String commandLine;
+
+    private final ExecutorService executor;
 
     /**
      * Constructor
@@ -116,7 +112,9 @@ public class ProcessExecutor {
             }
         }
         this.options = optionsBuilder.toString();
+        this.executor = newSingleThreadExecutor(newThreadFactory("process-exec", true));
         this.commandLine = command + this.options;
+        shutdownOnExit(this.executor);
     }
 
     /**
