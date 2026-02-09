@@ -26,9 +26,10 @@ import java.net.URLStreamHandlerFactory;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
-import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
 import static io.microsphere.reflect.FieldUtils.findField;
-import static java.lang.Class.forName;
+import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.ClassUtils.newInstance;
 
 /**
  * Standard implementation of {@link URLStreamHandlerFactory} that creates a new instance of
@@ -68,35 +69,26 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
 
     @Override
     public URLStreamHandler createURLStreamHandler(String protocol) {
-        URLStreamHandler handler = createURLStreamHandlerFromDefaultFactory(protocol);
+        return createURLStreamHandler(defaultFactoryField, protocol);
+    }
+
+    URLStreamHandler createURLStreamHandler(Field defaultFactoryField, String protocol) {
+        URLStreamHandler handler = createURLStreamHandlerFromDefaultFactory(defaultFactoryField, protocol);
         if (handler == null) { // <= JDK 8 works
             String name = DEFAULT_HANDLER_PACKAGE_PREFIX + DOT + protocol + DOT + "Handler";
-            try {
-                Object o = forName(name).newInstance();
-                return (URLStreamHandler) o;
-            } catch (Exception x) {
-                // For compatibility, all Exceptions are ignored.
-                // any number of exceptions can get thrown here
-            }
+            Class<?> handlerClass = resolveClass(name);
+            return (URLStreamHandler) newInstance(handlerClass);
         }
         return handler;
     }
 
-    URLStreamHandler createURLStreamHandlerFromDefaultFactory(String protocol) {
+    URLStreamHandler createURLStreamHandlerFromDefaultFactory(Field defaultFactoryField, String protocol) {
         if (defaultFactoryField == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The 'defaultFactory' field can't be found in the class URL.");
-            }
+            logger.trace("The 'defaultFactory' field can't be found in the class URL.");
             return null;
         }
-        URLStreamHandler handler = null;
-        try {
-            trySetAccessible(defaultFactoryField);
-            URLStreamHandlerFactory factory = (URLStreamHandlerFactory) defaultFactoryField.get(null);
-            handler = factory.createURLStreamHandler(protocol);
-        } catch (Exception e) {
-            // ignore
-        }
+        URLStreamHandlerFactory factory = getStaticFieldValue(defaultFactoryField);
+        URLStreamHandler handler = factory.createURLStreamHandler(protocol);
         return handler;
     }
 }
