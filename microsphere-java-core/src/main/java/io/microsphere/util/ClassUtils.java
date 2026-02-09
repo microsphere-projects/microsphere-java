@@ -7,6 +7,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
+import io.microsphere.io.FileUtils;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
@@ -33,6 +34,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
@@ -42,6 +44,7 @@ import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
@@ -1062,12 +1065,19 @@ public abstract class ClassUtils implements Utils {
     @Immutable
     public static Set<String> findClassNamesInClassPath(@Nullable String classPath, boolean recursive) {
         String protocol = resolveProtocol(classPath);
-        final String resolvedClassPath;
-        if (FILE_PROTOCOL.equals(protocol)) {
+        String resolvedClassPath = classPath;
+
+        if (JAR_PROTOCOL.equals(protocol)) {
+            String path = substringAfter(classPath, protocol + COLON_CHAR);
+            return findClassNamesInClassPath(path, recursive);
+        } else if (FILE_PROTOCOL.equals(protocol)) {
+            String prefix = protocol + COLON_CHAR;
             resolvedClassPath = substringBetween(classPath, protocol + COLON_CHAR, ARCHIVE_ENTRY_SEPARATOR);
-        } else {
-            resolvedClassPath = classPath;
+            if (resolvedClassPath == null) {
+                resolvedClassPath = substringAfter(classPath, prefix);
+            }
         }
+
         File classesFileHolder = new File(resolvedClassPath); // File or Directory
         return findClassNamesInClassPath(classesFileHolder, recursive);
     }
@@ -1105,17 +1115,12 @@ public abstract class ClassUtils implements Utils {
         Set<String> classNames = emptySet();
         if (classPath.isDirectory()) { // Directory
             classNames = findClassNamesInDirectory(classPath, recursive);
-        } else if (classPath.isFile()) { // File
-            if (JAR_FILE_EXTENSION_FILTER.accept(classPath)) { // JarFile
-                classNames = findClassNamesInJarFile(classPath, recursive);
-            }
+        } else if (JAR_FILE_EXTENSION_FILTER.accept(classPath)) {  // JarFile
+            classNames = findClassNamesInJarFile(classPath, recursive);
         }
 
-        if (isEmpty(classNames)) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("No Class was found in the classPath : '{}' , recursive : {}", classPath, recursive);
-            }
-        }
+        logger.trace("To find the class names in the class path['{}' , recursive : {}] : {}", classPath, recursive, classNames);
+
         return classNames;
     }
 
@@ -1197,10 +1202,11 @@ public abstract class ClassUtils implements Utils {
         try {
             JarFile jarFile_ = new JarFile(jarFile);
             Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-            if (isEmpty(jarEntries)) {
+            int size = size(jarEntries);
+            if (size == 0) {
                 classNames = emptySet();
             } else {
-                classNames = newLinkedHashSet();
+                classNames = newLinkedHashSet(size);
                 for (JarEntry jarEntry : jarEntries) {
                     String jarEntryName = jarEntry.getName();
                     String className = resolveClassName(jarEntryName);
@@ -1212,10 +1218,8 @@ public abstract class ClassUtils implements Utils {
             }
         } catch (Exception e) {
             classNames = emptySet();
-            if (logger.isTraceEnabled()) {
-                logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} ," +
-                        " recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", jarFile, recursive, e);
-            }
+            logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} ," +
+                    " recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", jarFile, recursive, e);
         }
         return classNames;
     }
@@ -1239,7 +1243,7 @@ public abstract class ClassUtils implements Utils {
      * @param classesDirectory the root directory containing compiled classes, must not be {@code null}
      * @param classFile        the class file to resolve the name for, must not be {@code null}
      * @return the fully qualified class name, never {@code null}
-     * @see #resolveRelativePath(File, File)
+     * @see FileUtils#resolveRelativePath(File, File)
      * @see #resolveClassName(String)
      */
     protected static String resolveClassName(File classesDirectory, File classFile) {
@@ -1714,7 +1718,10 @@ public abstract class ClassUtils implements Utils {
      */
     @Nullable
     public static Class<?> getClass(@Nullable Object object) {
-        return object == null ? null : object.getClass();
+        if (object == null) {
+            return null;
+        }
+        return object instanceof Class ? (Class) object : object.getClass();
     }
 
     /**
@@ -1862,7 +1869,11 @@ public abstract class ClassUtils implements Utils {
         if (array) {
             return getSimpleName(type.getComponentType()) + "[]";
         }
-        String simpleName = type.getName();
+        return getSimpleName(type, type.getName());
+    }
+
+    static String getSimpleName(Class<?> type, String className) {
+        String simpleName = className;
         Class<?> enclosingClass = type.getEnclosingClass();
         if (enclosingClass == null) { // top level class
             simpleName = simpleName.substring(simpleName.lastIndexOf(DOT_CHAR) + 1);
@@ -1871,16 +1882,20 @@ public abstract class ClassUtils implements Utils {
             simpleName = simpleName.substring(ecName.length());
             // Remove leading "\$[0-9]*" from the name
             int length = simpleName.length();
-            if (length < 1 || simpleName.charAt(0) != DOLLAR_CHAR) throw new InternalError("Malformed class name");
+            if (length < 1 || simpleName.charAt(0) != DOLLAR_CHAR) {
+                throw new InternalError("Malformed class name");
+            }
             int index = 1;
-            while (index < length && isAsciiDigit(simpleName.charAt(index))) index++;
+            while (index < length && isAsciiDigit(simpleName.charAt(index))) {
+                index++;
+            }
             // Eventually, this is the empty string iff this is an anonymous class
             return simpleName.substring(index);
         }
         return simpleName;
     }
 
-    private static boolean isAsciiDigit(char c) {
+    static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';
     }
 
@@ -2218,5 +2233,4 @@ public abstract class ClassUtils implements Utils {
 
     private ClassUtils() {
     }
-
 }

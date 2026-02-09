@@ -5,14 +5,17 @@ package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.ClassDataRepository;
+import io.microsphere.test.A;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.nio.CharBuffer;
 import java.util.AbstractCollection;
 import java.util.AbstractMap;
@@ -26,7 +29,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
@@ -40,13 +45,17 @@ import static io.microsphere.util.ArrayUtils.EMPTY_LONG_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_SHORT_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ClassUtils.ARRAY_SUFFIX;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
 import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.cast;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.findAllClasses;
+import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
+import static io.microsphere.util.ClassUtils.findClassNamesInJarFile;
 import static io.microsphere.util.ClassUtils.getAllClasses;
+import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
 import static io.microsphere.util.ClassUtils.getClasses;
@@ -60,6 +69,7 @@ import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isAbstractClass;
 import static io.microsphere.util.ClassUtils.isArray;
+import static io.microsphere.util.ClassUtils.isAsciiDigit;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isClass;
@@ -80,6 +90,7 @@ import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveType;
 import static io.microsphere.util.ClassUtils.resolveWrapperType;
 import static io.microsphere.util.ClassUtils.tryResolveWrapperType;
+import static java.lang.Integer.valueOf;
 import static java.lang.Thread.State.NEW;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
@@ -183,6 +194,9 @@ class ClassUtilsTest extends AbstractTestCase {
         assertFalse(isGeneralClass(Override.class));
         // test enum
         assertFalse(isGeneralClass(TimeUnit.class));
+        // test synthetic
+        Predicate p = a -> true;
+        assertFalse(isGeneralClass(p.negate().getClass()));
         // test primitive
         assertFalse(isGeneralClass(int.class));
         // test array
@@ -445,6 +459,11 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testIsWrapperTypeWithObject() {
+        assertTrue(isWrapperType(valueOf(1)));
+    }
+
+    @Test
     void testArrayTypeEquals() {
         assertFalse(arrayTypeEquals(null, null));
         assertFalse(arrayTypeEquals(Object.class, Object.class));
@@ -495,9 +514,26 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testFindClassNamesInClassPath() {
+    void testFindClassNamesInClassPathWithFilePath() throws IOException {
         assertFindClassNamesMethod(ClassUtilsTest.class, ClassUtils::findClassNamesInClassPath);
         assertFindClassNamesMethod(Nonnull.class, ClassUtils::findClassNamesInClassPath);
+
+        File tempFile = createRandomTempFile();
+        assertTrue(findClassNamesInClassPath(tempFile, true).isEmpty());
+        assertTrue(findClassNamesInClassPath(tempFile, false).isEmpty());
+
+
+        File link = makeLinkFile(tempFile);
+        assertTrue(findClassNamesInClassPath(link, false).isEmpty());
+    }
+
+    @Test
+    void testFindClassNamesInClassPathWithStringPath() {
+        URL location = getCodeSourceLocation(Nonnull.class);
+        assertFindClassNamesInClassPath(location);
+
+        location = getResource("javax/annotation/Nonnull.class");
+        assertFindClassNamesInClassPath(location);
     }
 
     @Test
@@ -511,8 +547,30 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testFindClassNamesInEmptyJarFile() {
+        URL resource = getResource("META-INF/empty.sar");
+        File emptyJarFile = new File(resource.getFile());
+        assertTrue(findClassNamesInJarFile(emptyJarFile, true).isEmpty());
+        assertTrue(findClassNamesInJarFile(emptyJarFile, false).isEmpty());
+    }
+
+    @Test
+    void testFindClassNamesInEmptyClassNameJarFile() {
+        URL resource = getResource("META-INF/empty-class-name.sar");
+        File emptyClassNameJarFile = new File(resource.getFile());
+        assertTrue(findClassNamesInJarFile(emptyClassNameJarFile, true).isEmpty());
+        assertTrue(findClassNamesInJarFile(emptyClassNameJarFile, false).isEmpty());
+    }
+
+    @Test
     void testResolveClassName() {
         assertEquals("java.lang.String", resolveClassName("java/lang/String.class"));
+        assertEquals("java.lang.String", resolveClassName("/java/lang/String.class"));
+    }
+
+    @Test
+    void testResolveClassNameOnNull() {
+        assertNull(resolveClassName(null));
     }
 
     @Test
@@ -539,6 +597,17 @@ class ClassUtilsTest extends AbstractTestCase {
     void testGetAllInterfaces() {
         assertSame(emptyList(), getAllInterfaces(null));
         assertSame(emptyList(), getAllInterfaces(int.class));
+    }
+
+    @Test
+    void testGetAllInheritedTypes() {
+        List<Class<?>> types = getAllInheritedTypes(A.class);
+        assertEquals(ofList(Object.class, Serializable.class), types);
+    }
+
+    @Test
+    void testGetAllInheritedTypesOnNull() {
+        assertEquals(emptyList(), getAllInheritedTypes(null));
     }
 
     @Test
@@ -702,6 +771,32 @@ class ClassUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testGetSimpleNameOnNull() {
+        assertNull(getSimpleName(null));
+    }
+
+    @Test
+    void testGetSimpleNameOnMalformedClassName() {
+        assertThrows(InternalError.class, () -> getSimpleName(Thread.State.class, "java.lang.Thread"));
+        assertThrows(InternalError.class, () -> getSimpleName(Thread.State.class, "java.lang.Thread."));
+    }
+
+    @Test
+    void testIsAsciiDigit() {
+        for (int i = 0; i <= 9; i++) {
+            assertTrue(isAsciiDigit((char) ('0' + i)));
+        }
+
+        for (int i = 1; i <= 9; i++) {
+            assertFalse(isAsciiDigit((char) ('0' - i)));
+        }
+
+        for (int i = 1; i <= 9; i++) {
+            assertFalse(isAsciiDigit((char) ('9' + i)));
+        }
+    }
+
+    @Test
     void testGetTopComponentType() {
         assertNull(getTopComponentType((Object) null));
         assertNull(getTopComponentType(null));
@@ -728,14 +823,17 @@ class ClassUtilsTest extends AbstractTestCase {
     void testGetType() {
         assertNull(getType(null));
         assertSame(String.class, getType(""));
-        assertSame(Class.class, getType(String.class));
+        assertSame(String.class, getType(String.class));
+        assertSame(Class.class, getType(Class.class));
+
     }
 
     @Test
     void testGetClass() {
         assertNull(ClassUtils.getClass(null));
         assertSame(String.class, ClassUtils.getClass(""));
-        assertSame(Class.class, ClassUtils.getClass(String.class));
+        assertSame(String.class, ClassUtils.getClass(String.class));
+        assertSame(Class.class, ClassUtils.getClass(Class.class));
     }
 
     @Test
@@ -744,7 +842,7 @@ class ClassUtilsTest extends AbstractTestCase {
         assertSame(EMPTY_CLASS_ARRAY, getTypes());
         assertSame(EMPTY_CLASS_ARRAY, getTypes(EMPTY_OBJECT_ARRAY));
 
-        assertArrayEquals(ofArray(String.class, Integer.class), getTypes("", Integer.valueOf((1))));
+        assertArrayEquals(ofArray(String.class, Integer.class), getTypes("", valueOf((1))));
     }
 
     @Test
@@ -753,7 +851,7 @@ class ClassUtilsTest extends AbstractTestCase {
         assertSame(EMPTY_CLASS_ARRAY, getClasses());
         assertSame(EMPTY_CLASS_ARRAY, getClasses(EMPTY_OBJECT_ARRAY));
 
-        assertArrayEquals(ofArray(String.class, Integer.class), getClasses("", Integer.valueOf((1))));
+        assertArrayEquals(ofArray(String.class, Integer.class), getClasses("", valueOf((1))));
     }
 
     @Test
@@ -769,6 +867,7 @@ class ClassUtilsTest extends AbstractTestCase {
     @Test
     void testNewInstance() {
         assertEquals("test", newInstance(String.class, "test"));
+        assertEquals(valueOf(1), newInstance(Integer.class, valueOf(1)));
         assertThrows(IllegalArgumentException.class, () -> newInstance(String.class, 1));
     }
 
@@ -818,5 +917,10 @@ class ClassUtilsTest extends AbstractTestCase {
         assertFalse(findClassNamesFunction.apply(new File(path), true).isEmpty());
     }
 
+    private void assertFindClassNamesInClassPath(URL location) {
+        String path = location.toString();
+        Set<String> classNamesInClassPath = findClassNamesInClassPath(path, true);
+        assertFalse(classNamesInClassPath.isEmpty());
+    }
 }
 
