@@ -26,6 +26,7 @@ import java.util.Objects;
 
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;
+import static io.microsphere.util.Assert.assertNotNull;
 import static java.util.Objects.hash;
 
 /**
@@ -96,12 +97,13 @@ public final class Deprecation implements Serializable {
     }
 
     Deprecation(@Nullable Version since, @Nullable String replacement, @Nullable String reason,
-                @Nullable String link, @Nullable Level level) {
+                @Nullable String link, @Nonnull Level level) {
+        assertNotNull(level, () -> "the 'level' must not be null");
         this.since = since;
         this.replacement = replacement;
         this.reason = reason;
         this.link = link;
-        this.level = level == null ? DEFAULT : level;
+        this.level = level;
     }
 
     @Nullable
@@ -129,10 +131,14 @@ public final class Deprecation implements Serializable {
         return level;
     }
 
-
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Deprecation)) return false;
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Deprecation)) {
+            return false;
+        }
         Deprecation that = (Deprecation) o;
         return Objects.equals(since, that.since)
                 && Objects.equals(replacement, that.replacement)
