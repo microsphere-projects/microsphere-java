@@ -36,7 +36,7 @@ class ProcessExecutorTest extends AbstractTestCase {
 
     @Test
     void testExecute() throws Exception {
-        ProcessExecutor processExecutor = new ProcessExecutor("javac", "--help");
+        ProcessExecutor processExecutor = new ProcessExecutor("java", "-version");
         processExecutor.execute(this.outputStream);
         assertTrue(this.outputStream.size() > 0);
         String response = this.outputStream.toString();

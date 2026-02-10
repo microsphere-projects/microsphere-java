@@ -171,7 +171,7 @@ public class ProcessExecutor {
                 // try to exit with value
                 exitValue = process.exitValue();
                 if (exitValue != 0) {
-                    String message = format("The command['{}'] execution is exited with invalid value : ", commandLine, exitValue);
+                    String message = format("The command['{}'] execution is exited with invalid value : {}", commandLine, exitValue);
                     throw new IOException(message);
                 }
             } finally {
