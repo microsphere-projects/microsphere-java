@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
 
-    private static final Logger logger = LoggerFactory.getLogger(MethodDefinitionTest.class);
+    private static final Logger logger = getLogger(MethodDefinitionTest.class);
 
     @Override
     protected List<Object> getTailConstructorArguments() {
