@@ -22,6 +22,8 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
+import static java.util.Objects.nonNull;
+
 /**
  * A concrete implementation of {@link ReflectiveDefinition} representing the definition of a Java class.
  *
@@ -89,8 +91,7 @@ public final class ClassDefinition extends ReflectiveDefinition {
     }
 
     @Override
-    public final boolean isPresent() {
-        return super.getResolvedClass() != null;
+    public boolean isPresent() {
+        return nonNull(super.getResolvedClass());
     }
-
 }
