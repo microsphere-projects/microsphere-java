@@ -3,6 +3,8 @@
  */
 package io.microsphere.filter;
 
+import java.util.function.Predicate;
+
 /**
  * The {@code Filter<T>} interface represents a generic filtering mechanism that can be applied to objects of type {@code T}.
  * <p>
@@ -29,7 +31,7 @@ package io.microsphere.filter;
  * @since 1.0.0
  */
 @FunctionalInterface
-public interface Filter<T> {
+public interface Filter<T> extends Predicate<T> {
 
     /**
      * Does accept filtered object?
@@ -38,4 +40,9 @@ public interface Filter<T> {
      * @return
      */
     boolean accept(T filteredObject);
+
+    @Override
+    default boolean test(T t) {
+        return accept(t);
+    }
 }
