@@ -30,7 +30,6 @@ import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-import static java.util.Collections.emptyMap;
 
 /**
  * A {@link URLStreamHandlerFactory} implementation that uses the JDK's {@link ServiceLoader}
@@ -84,18 +83,10 @@ public class ServiceLoaderURLStreamHandlerFactory extends DelegatingURLStreamHan
 
     @Nonnull
     @Immutable
-    private static Map<String, ExtendableProtocolURLStreamHandler> loadHandlers() {
+    static Map<String, ExtendableProtocolURLStreamHandler> loadHandlers() {
         List<ExtendableProtocolURLStreamHandler> handlers = loadServicesList(ExtendableProtocolURLStreamHandler.class);
-
-        int size = handlers.size();
-        if (size < 1) {
-            return emptyMap();
-        }
-
         Map<String, ExtendableProtocolURLStreamHandler> handlersMap = toFixedMap(
                 handlers, handler -> immutableEntry(handler.getProtocol(), handler));
-
         return handlersMap;
-
     }
 }
