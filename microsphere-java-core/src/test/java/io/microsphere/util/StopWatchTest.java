@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StopWatch.Task.start;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class StopWatchTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(StopWatchTest.class);
+    private static final Logger logger = getLogger(StopWatchTest.class);
 
     private static final String testName = "test";
 
