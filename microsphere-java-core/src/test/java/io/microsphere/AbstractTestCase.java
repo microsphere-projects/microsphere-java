@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
@@ -40,6 +39,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static java.util.UUID.randomUUID;
 import static java.util.concurrent.ThreadLocalRandom.current;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -128,44 +128,42 @@ public abstract class AbstractTestCase {
 
     protected final Logger logger = getLogger(getClass());
 
-    public void log(Object object) {
+    protected void log(Object object) {
         if (logger.isTraceEnabled()) {
             logger.trace(valueOf(object));
         }
     }
 
-    public void log(String object, Object... args) {
+    protected void log(String object, Object... args) {
         if (logger.isTraceEnabled()) {
             logger.trace(object, args);
         }
     }
 
     protected File createRandomTempDirectory() {
-        File tempDir = newTempFile(buildRandomFileName());
-        assertTrue(tempDir.mkdir());
-        return tempDir;
+        return createRandomDirectory(TEST_TEMP_DIR);
+    }
+
+    protected File createRandomTempFile() throws IOException {
+        return createRandomFile(TEST_TEMP_DIR);
+    }
+
+    protected File newRandomTempFile() {
+        return newRandomFile(TEST_TEMP_DIR);
     }
 
     protected File createRandomDirectory(File parentDir) {
         File tempDir = newRandomFile(parentDir);
         assertTrue(tempDir.mkdir());
+        tempDir.deleteOnExit();
         return tempDir;
-    }
-
-    protected File createRandomTempFile() throws IOException {
-        File randomTempFile = newRandomTempFile();
-        assertTrue(randomTempFile.createNewFile());
-        return randomTempFile;
     }
 
     protected File createRandomFile(File parentDir) throws IOException {
         File randomFile = newRandomFile(parentDir);
         assertTrue(randomFile.createNewFile());
+        randomFile.deleteOnExit();
         return randomFile;
-    }
-
-    protected File newRandomTempFile() {
-        return newTempFile(buildRandomFileName());
     }
 
     protected File newRandomFile(File parentDir) {
@@ -173,11 +171,7 @@ public abstract class AbstractTestCase {
     }
 
     protected String buildRandomFileName() {
-        return UUID.randomUUID().toString();
-    }
-
-    protected File newTempFile(String path) {
-        return new File(TEST_TEMP_DIR, path);
+        return randomUUID().toString();
     }
 
     protected File makeLinkFile(File targetFile) throws Exception {
