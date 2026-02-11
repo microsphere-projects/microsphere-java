@@ -16,12 +16,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
@@ -73,12 +75,8 @@ public abstract class JarUtils implements Utils {
      */
     @Nullable
     public static JarFile toJarFile(URL jarURL) throws IOException {
-        JarFile jarFile = null;
         final String jarAbsolutePath = resolveJarAbsolutePath(jarURL);
-        if (jarAbsolutePath == null)
-            return null;
-        jarFile = new JarFile(jarAbsolutePath);
-        return jarFile;
+        return jarAbsolutePath == null ? null : new JarFile(jarAbsolutePath);
     }
 
     /**
@@ -341,14 +339,11 @@ public abstract class JarUtils implements Utils {
         final String relativePath = resolveRelativePath(jarResourceURL);
         final JarEntry jarEntry = jarFile.getJarEntry(relativePath);
         final boolean isDirectory = jarEntry.isDirectory();
-        List<JarEntry> jarEntriesList = filter(jarFile, new JarEntryFilter() {
-            @Override
-            public boolean accept(JarEntry filteredObject) {
-                String name = filteredObject.getName();
-                if (isDirectory && name.equals(relativePath)) {
-                    return true;
-                } else return name.startsWith(relativePath);
-            }
+        List<JarEntry> jarEntriesList = filter(jarFile, entry -> {
+            String name = entry.getName();
+            if (isDirectory && name.equals(relativePath)) {
+                return true;
+            } else return name.startsWith(relativePath);
         });
 
         jarEntriesList = doFilter(jarEntriesList, jarEntryFilter);
@@ -356,30 +351,31 @@ public abstract class JarUtils implements Utils {
         doExtract(jarFile, jarEntriesList, targetDirectory);
     }
 
-    protected static void doExtract(JarFile jarFile, Iterable<JarEntry> jarEntries, File targetDirectory) throws IOException {
-        if (jarEntries != null) {
-            for (JarEntry jarEntry : jarEntries) {
-                String jarEntryName = jarEntry.getName();
-                File targetFile = new File(targetDirectory, jarEntryName);
-                if (jarEntry.isDirectory()) {
-                    targetFile.mkdirs();
-                } else {
-                    InputStream inputStream = null;
-                    OutputStream outputStream = null;
-                    try {
-                        inputStream = jarFile.getInputStream(jarEntry);
-                        if (inputStream != null) {
-                            File parentFile = targetFile.getParentFile();
-                            if (!parentFile.exists()) {
-                                parentFile.mkdirs();
-                            }
-                            outputStream = new FileOutputStream(targetFile);
-                            copy(inputStream, outputStream);
+    protected static void doExtract(JarFile jarFile, Collection<JarEntry> jarEntries, File targetDirectory) throws IOException {
+        if (jarFile == null || isEmpty(jarEntries)) {
+            return;
+        }
+        for (JarEntry jarEntry : jarEntries) {
+            String jarEntryName = jarEntry.getName();
+            File targetFile = new File(targetDirectory, jarEntryName);
+            if (jarEntry.isDirectory()) {
+                targetFile.mkdirs();
+            } else {
+                InputStream inputStream = null;
+                OutputStream outputStream = null;
+                try {
+                    inputStream = jarFile.getInputStream(jarEntry);
+                    if (inputStream != null) {
+                        File parentFile = targetFile.getParentFile();
+                        if (!parentFile.exists()) {
+                            parentFile.mkdirs();
                         }
-                    } finally {
-                        close(outputStream);
-                        close(inputStream);
+                        outputStream = new FileOutputStream(targetFile);
+                        copy(inputStream, outputStream);
                     }
+                } finally {
+                    close(outputStream);
+                    close(inputStream);
                 }
             }
         }
@@ -387,5 +383,4 @@ public abstract class JarUtils implements Utils {
 
     private JarUtils() {
     }
-
 }
