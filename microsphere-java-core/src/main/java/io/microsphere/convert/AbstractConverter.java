@@ -21,11 +21,11 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassUtils.getAllClasses;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ExceptionUtils.wrap;
@@ -87,7 +87,7 @@ import static java.util.Objects.hash;
  */
 public abstract class AbstractConverter<S, T> implements Converter<S, T> {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     @Nullable
     private Integer priority;
@@ -102,14 +102,12 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
         if (source == null) {
             return null;
         }
-        T target = null;
+        T target;
         try {
             target = doConvert(source);
         } catch (Throwable e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The source[value : {}] can't be converted by the Converter[class : '{}']", source, getTypeName(getClass()));
-            }
-            throw wrap(e, RuntimeException.class);
+            logger.warn("The source[value : {}] can't be converted by the Converter[class : '{}']", source, getTypeName(getClass()));
+            throw wrap(e, IllegalArgumentException.class);
         }
         return target;
     }
@@ -155,7 +153,12 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof AbstractConverter)) return false;
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof AbstractConverter)) {
+            return false;
+        }
 
         AbstractConverter<?, ?> that = (AbstractConverter<?, ?>) o;
         return Objects.equals(getSourceType(), that.getSourceType())
