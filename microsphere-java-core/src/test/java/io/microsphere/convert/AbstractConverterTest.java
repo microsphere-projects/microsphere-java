@@ -84,7 +84,7 @@ class AbstractConverterTest extends BaseConverterTest<String, String> {
             }
         };
 
-        assertThrows(IllegalArgumentException.class, () -> converter.convert(getSource()));
+        assertThrows(RuntimeException.class, () -> converter.convert(getSource()));
     }
 
     @Test

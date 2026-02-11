@@ -107,7 +107,7 @@ public abstract class AbstractConverter<S, T> implements Converter<S, T> {
             target = doConvert(source);
         } catch (Throwable e) {
             logger.warn("The source[value : {}] can't be converted by the Converter[class : '{}']", source, getTypeName(getClass()));
-            throw wrap(e, IllegalArgumentException.class);
+            throw wrap(e, RuntimeException.class);
         }
         return target;
     }
