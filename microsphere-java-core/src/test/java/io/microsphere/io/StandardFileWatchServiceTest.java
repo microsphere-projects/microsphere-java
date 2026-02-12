@@ -19,6 +19,7 @@ package io.microsphere.io;
 import io.microsphere.AbstractTestCase;
 import io.microsphere.io.event.DefaultFileChangedListener;
 import io.microsphere.io.event.FileChangedEvent;
+import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.io.event.LoggingFileChangedListener;
 import io.microsphere.lang.function.ThrowableAction;
@@ -37,19 +38,32 @@ import java.util.concurrent.atomic.AtomicReference;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
+import static io.microsphere.io.StandardFileWatchService.ALL_WATCH_EVENT_KINDS;
+import static io.microsphere.io.StandardFileWatchService.toKind;
+import static io.microsphere.io.StandardFileWatchService.toWatchEventKinds;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
+import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.values;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.ForkJoinPool.commonPool;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link StandardFileWatchService} Test For File
@@ -76,6 +90,34 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
     }
 
     @Test
+    void testToWatchEventKinds() {
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds());
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds(new Kind[0]));
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds((Kind[]) null));
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds(CREATED, DELETED, MODIFIED));
+        assertArrayEquals(ofArray(ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE), toWatchEventKinds(CREATED, MODIFIED, DELETED));
+    }
+
+    @Test
+    void testToWatchEventKind() {
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds());
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds(new Kind[0]));
+        assertArrayEquals(ALL_WATCH_EVENT_KINDS, toWatchEventKinds((Kind[]) null));
+    }
+
+    @Test
+    void testToKind() {
+        assertEquals(CREATED, toKind(ENTRY_CREATE));
+        assertEquals(MODIFIED, toKind(ENTRY_MODIFY));
+        assertEquals(DELETED, toKind(ENTRY_DELETE));
+    }
+
+    @Test
+    void testToKindOnOverflow() {
+        assertThrows(IllegalArgumentException.class, () -> toKind(OVERFLOW));
+    }
+
+    @Test
     void testFile() throws Exception {
         URL resource = getResource(super.classLoader, "test.txt");
         String resourceFilePath = resource.getFile();
@@ -93,8 +135,13 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
 
             // start StandardFileWatchService
             fileWatchService.start();
+
+            assertTrue(fileWatchService.isStarted());
+
             // start again
             assertThrows(IllegalStateException.class, fileWatchService::start);
+
+            assertTrue(fileWatchService.isStarted());
 
             // copy file
             Path sourcePath = sourceFile.toPath();
@@ -103,6 +150,10 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
 
             // await for completion
             countDownLatch.await();
+
+            fileWatchService.stop();
+
+            assertFalse(fileWatchService.isStarted());
         }
     }
 
@@ -131,7 +182,11 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
 
             fileWatchService.start();
 
+            assertTrue(fileWatchService.isStarted());
+
             assertThrows(IllegalStateException.class, fileWatchService::start);
+
+            assertTrue(fileWatchService.isStarted());
 
             // create a test file
             File testFile = createRandomFile(testDir);
@@ -146,6 +201,10 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
             while (fileReference.get() == null) {
                 // spin
             }
+
+            fileWatchService.stop();
+
+            assertFalse(fileWatchService.isStarted());
         }
     }
 
