@@ -21,11 +21,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassPathUtils;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -38,7 +33,6 @@ import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
 import static io.microsphere.util.ClassUtils.resolvePackageName;
-import static io.microsphere.util.StringUtils.isNotBlank;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
@@ -93,9 +87,6 @@ public class ClassDataRepository {
     private final Map<String, String> classNameToClassPathsMap = initClassNameToClassPathsMap();
 
     private final Map<String, Set<String>> packageNameToClassNamesMap = initPackageNameToClassNamesMap();
-
-    private ClassDataRepository() {
-    }
 
     /**
      * Get all package names in {@link ClassPathUtils#getClassPaths() class paths}
@@ -199,35 +190,6 @@ public class ClassDataRepository {
         return unmodifiableSet(allClassNames);
     }
 
-    /**
-     * Get {@link Class}'s code source location URL
-     *
-     * @param type
-     * @return If , return <code>null</code>.
-     * @throws NullPointerException If <code>type</code> is <code>null</code> , {@link NullPointerException} will be thrown.
-     */
-    public URL getCodeSourceLocation(Class<?> type) throws NullPointerException {
-
-        URL codeSourceLocation = null;
-        ClassLoader classLoader = type.getClassLoader();
-
-        if (classLoader == null) { // Bootstrap ClassLoader or type is primitive or void
-            String path = findClassPath(type);
-            if (isNotBlank(path)) {
-                try {
-                    codeSourceLocation = new File(path).toURI().toURL();
-                } catch (MalformedURLException ignored) {
-                    codeSourceLocation = null;
-                }
-            }
-        } else {
-            ProtectionDomain protectionDomain = type.getProtectionDomain();
-            CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
-            codeSourceLocation = codeSource == null ? null : codeSource.getLocation();
-        }
-        return codeSourceLocation;
-    }
-
     @Nonnull
     @Immutable
     private Map<String, Set<String>> initClassPathToClassNamesMap() {
@@ -279,5 +241,8 @@ public class ClassDataRepository {
         }
 
         return unmodifiableMap(packageNameToClassNamesMap);
+    }
+
+    private ClassDataRepository() {
     }
 }
