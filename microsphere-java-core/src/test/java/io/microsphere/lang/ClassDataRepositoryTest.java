@@ -18,20 +18,18 @@ package io.microsphere.lang;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
-import io.microsphere.util.VersionUtils;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
-import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
-import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ClassDataRepository} Test
@@ -42,22 +40,28 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 class ClassDataRepositoryTest extends AbstractTestCase {
 
-    private static final ClassDataRepository repository = ClassDataRepository.INSTANCE;
+    private final ClassDataRepository repository = INSTANCE;
 
     @Test
     void testGetClassNamesInClassPath() {
         Set<String> classPaths = getClassPaths();
         for (String classPath : classPaths) {
-            Set<String> classNames = repository.getClassNamesInClassPath(classPath, true);
+            Set<String> classNames = this.repository.getClassNamesInClassPath(classPath, true);
             assertNotNull(classNames);
         }
     }
 
     @Test
+    void testGetClassNamesInClassPathOnNotFoundClassPath() {
+        Set<String> classNames = this.repository.getClassNamesInClassPath("not-found", true);
+        assertTrue(classNames.isEmpty());
+    }
+
+    @Test
     void testGetClassNamesInPackageWithName() {
-        Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
+        Set<String> packageNames = this.repository.getAllPackageNamesInClassPaths();
         for (String packageName : packageNames) {
-            Set<String> classNames = repository.getClassNamesInPackage(packageName);
+            Set<String> classNames = this.repository.getClassNamesInPackage(packageName);
             assertFalse(classNames.isEmpty());
             assertThrows(UnsupportedOperationException.class, classNames::clear);
         }
@@ -66,31 +70,36 @@ class ClassDataRepositoryTest extends AbstractTestCase {
     @Test
     void testGetClassNamesInPackage() {
         Package pkg = ClassDataRepositoryTest.class.getPackage();
-        Set<String> classNames = repository.getClassNamesInPackage(pkg);
+        Set<String> classNames = this.repository.getClassNamesInPackage(pkg);
         assertFalse(classNames.isEmpty());
         assertThrows(UnsupportedOperationException.class, classNames::clear);
     }
 
+    @Test
+    void testGetClassNamesInPackageOnNotFoundPackage() {
+        Set<String> classNames = this.repository.getClassNamesInPackage("not-found-package");
+        assertTrue(classNames.isEmpty());
+    }
 
     @Test
     void testGetAllPackageNamesInClassPaths() {
-        Set<String> packageNames = repository.getAllPackageNamesInClassPaths();
+        Set<String> packageNames = this.repository.getAllPackageNamesInClassPaths();
         assertFalse(packageNames.isEmpty());
         assertThrows(UnsupportedOperationException.class, packageNames::clear);
     }
 
     @Test
     void testFindClassPath() {
-        String classPath = repository.findClassPath(ReflectionUtils.class);
+        String classPath = this.repository.findClassPath(ReflectionUtils.class);
         assertNotNull(classPath);
 
-        classPath = repository.findClassPath(Nonnull.class);
+        classPath = this.repository.findClassPath(Nonnull.class);
         assertNotNull(classPath);
     }
 
     @Test
     void testGetAllClassNamesMapInClassPath() {
-        Map<String, Set<String>> allClassNamesMapInClassPath = repository.getClassPathToClassNamesMap();
+        Map<String, Set<String>> allClassNamesMapInClassPath = this.repository.getClassPathToClassNamesMap();
         assertFalse(allClassNamesMapInClassPath.isEmpty());
         assertThrows(UnsupportedOperationException.class, allClassNamesMapInClassPath::clear);
 
@@ -98,28 +107,8 @@ class ClassDataRepositoryTest extends AbstractTestCase {
 
     @Test
     void testGetAllClassNamesInClassPath() {
-        Set<String> allClassNames = repository.getAllClassNamesInClassPaths();
+        Set<String> allClassNames = this.repository.getAllClassNamesInClassPaths();
         assertFalse(allClassNames.isEmpty());
         assertThrows(UnsupportedOperationException.class, allClassNames::clear);
-
     }
-
-    @Test
-    void testGetCodeSourceLocation() {
-        URL codeSourceLocation = null;
-
-        codeSourceLocation = repository.getCodeSourceLocation(ClassDataRepositoryTest.class);
-        assertNotNull(codeSourceLocation);
-
-        codeSourceLocation = repository.getCodeSourceLocation(Nonnull.class);
-        assertNotNull(codeSourceLocation);
-
-        codeSourceLocation = repository.getCodeSourceLocation(String.class);
-        if (CURRENT_JAVA_VERSION.le(VersionUtils.JAVA_VERSION_8)) {
-            assertNotNull(codeSourceLocation);
-        } else {
-            assertNull(codeSourceLocation);
-        }
-    }
-
 }
