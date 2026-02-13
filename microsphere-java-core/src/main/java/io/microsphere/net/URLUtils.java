@@ -60,6 +60,7 @@ import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
@@ -264,12 +265,13 @@ public abstract class URLUtils implements Utils {
     }
 
     static String resolvePathFromFile(URL url) {
+        return resolvePathFromFile(url, IS_OS_WINDOWS);
+    }
+
+    static String resolvePathFromFile(URL url, boolean isOsWindows) {
         String path = buildPath(url);
-        if (IS_OS_WINDOWS) {
-            int index = path.indexOf(SLASH_CHAR);
-            if (index == 0) {
-                path = path.substring(1);
-            }
+        if (isOsWindows) {
+            path = substringAfter(path, SLASH);
         }
         return path;
     }
