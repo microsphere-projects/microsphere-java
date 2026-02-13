@@ -27,6 +27,7 @@ import java.util.StringJoiner;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
@@ -38,6 +39,7 @@ import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.WAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.ZIP_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
@@ -69,6 +71,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link URL} Utility class
@@ -243,86 +246,6 @@ public abstract class URLUtils implements Utils {
         return resolvePath(url, false);
     }
 
-    static String resolvePath(URL url, boolean includeArchiveEntryPath) {
-        String protocol = url.getProtocol();
-
-        switch (protocol) {
-            case FILE_PROTOCOL:
-                return resolvePathFromFile(url);
-            case JAR_PROTOCOL:
-                return resolvePathFromJar(url, includeArchiveEntryPath);
-        }
-
-        String path = url.getPath();
-
-        // path may contain the matrix parameters
-        int indexOfMatrixString = indexOfMatrixString(path);
-        // path removes the matrix parameters if present
-        path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
-
-        return path;
-    }
-
-    static String resolvePathFromFile(URL url) {
-        return resolvePathFromFile(url, IS_OS_WINDOWS);
-    }
-
-    static String resolvePathFromFile(URL url, boolean isOsWindows) {
-        String path = buildPath(url);
-        if (isOsWindows) {
-            path = substringAfter(path, SLASH);
-        }
-        return path;
-    }
-
-    static String buildPath(URL url) {
-        String authority = url.getAuthority();
-        String path = url.getPath();
-        int length = 0;
-        int authorityLength = length(authority);
-        if (authorityLength > 0) {
-            length += authority.length() + 1;
-        }
-        int pathLength = length(path);
-        if (pathLength > 0) {
-            length += pathLength;
-        }
-        StringBuilder pathBuilder = new StringBuilder(length);
-        if (authorityLength > 0) {
-            pathBuilder.append(SLASH_CHAR)
-                    .append(authority);
-        }
-        if (pathLength > 0) {
-            pathBuilder.append(path);
-        }
-        return pathBuilder.toString();
-    }
-
-    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
-        String path = buildPath(url);
-        int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
-        if (filePrefixIndex == 0) { //  path starts with "file:/"
-            path = path.substring(FILE_URL_PREFIX_LENGTH);
-        }
-
-        // path removes the archive entry path if present
-        if (!includeArchiveEntryPath) {
-            int indexOfArchiveEntry = indexOfArchiveEntry(path);
-            path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
-        }
-
-        int indexOfColon = path.indexOf(COLON_CHAR);
-        if (indexOfColon == -1) { // the path on the Unix/Linux
-            // path adds the leading slash if not present
-            int indexOfSlash = path.indexOf(SLASH_CHAR);
-            if (indexOfSlash != 0) {
-                path = SLASH_CHAR + path;
-            }
-        } // else the path on the Windows
-
-        return path;
-    }
-
     /**
      * Resolves the archive file from the specified URL.
      *
@@ -364,7 +287,7 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static File resolveArchiveDirectory(URL resourceURL) {
-        String resourcePath = new File(resourceURL.getFile()).toString();
+        String resourcePath = buildPath(resourceURL);
         Set<String> classPaths = getClassPaths();
         File archiveDirectory = null;
         for (String classPath : classPaths) {
@@ -745,7 +668,7 @@ public abstract class URLUtils implements Utils {
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
             JarFile jarFile = toJarFile(url);
-            flag = jarFile != null;
+            flag = nonNull(jarFile);
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
@@ -788,19 +711,43 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}.
      */
     public static boolean isArchiveURL(URL url) {
-        String protocol = url.getProtocol();
-        boolean flag = false;
-        switch (protocol) {
-            case JAR_PROTOCOL:
-            case WAR_PROTOCOL:
-            case EAR_PROTOCOL:
-                flag = true;
-                break;
-            case FILE_PROTOCOL:
-                JarFile jarFile = toJarFile(url);
-                flag = jarFile != null;
+        if (isJarURL(url)) {
+            return true;
         }
-        return flag;
+        String protocol = url.getProtocol();
+        return isArchiveProtocol(protocol);
+    }
+
+    /**
+     * Determines whether the specified protocol represents an archive type.
+     *
+     * <p>This method checks if the given protocol matches known archive protocols such as "jar", "zip", "war", or "ear".
+     * These protocols are commonly used to reference compressed or packaged resources.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Valid archive protocols
+     * boolean result = URLUtils.isArchiveProtocol("jar");
+     * System.out.println(result); // Output: true
+     *
+     * result = URLUtils.isArchiveProtocol("war");
+     * System.out.println(result); // Output: true
+     *
+     * // Non-archive protocol
+     * result = URLUtils.isArchiveProtocol("http");
+     * System.out.println(result); // Output: false
+     *
+     * // Case-sensitive check
+     * result = URLUtils.isArchiveProtocol("JAR");
+     * System.out.println(result); // Output: false
+     * }</pre>
+     *
+     * @param protocol The protocol string to check.
+     * @return {@code true} if the protocol is an archive type; otherwise, {@code false}.
+     */
+    public static boolean isArchiveProtocol(String protocol) {
+        return JAR_PROTOCOL.equals(protocol) || ZIP_PROTOCOL.equals(protocol) || WAR_PROTOCOL.equals(protocol)
+                || EAR_PROTOCOL.equals(protocol);
     }
 
     /**
@@ -1578,6 +1525,86 @@ public abstract class URLUtils implements Utils {
         }
     }
 
+    static String resolvePath(URL url, boolean includeArchiveEntryPath) {
+        String protocol = url.getProtocol();
+
+        switch (protocol) {
+            case FILE_PROTOCOL:
+                return resolvePathFromFile(url);
+            case JAR_PROTOCOL:
+                return resolvePathFromJar(url, includeArchiveEntryPath);
+        }
+
+        String path = url.getPath();
+
+        // path may contain the matrix parameters
+        int indexOfMatrixString = indexOfMatrixString(path);
+        // path removes the matrix parameters if present
+        path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
+
+        return path;
+    }
+
+    static String resolvePathFromFile(URL url) {
+        return resolvePathFromFile(url, IS_OS_WINDOWS);
+    }
+
+    static String resolvePathFromFile(URL url, boolean isOsWindows) {
+        String path = buildPath(url);
+        if (isOsWindows) {
+            path = substringAfter(path, SLASH);
+        }
+        return path;
+    }
+
+    static String buildPath(URL url) {
+        String authority = url.getAuthority();
+        String path = url.getPath();
+        int length = 0;
+        int authorityLength = length(authority);
+        if (authorityLength > 0) {
+            length += authority.length() + 1;
+        }
+        int pathLength = length(path);
+        if (pathLength > 0) {
+            length += pathLength;
+        }
+        StringBuilder pathBuilder = new StringBuilder(length);
+        if (authorityLength > 0) {
+            pathBuilder.append(SLASH_CHAR)
+                    .append(authority);
+        }
+        if (pathLength > 0) {
+            pathBuilder.append(path);
+        }
+        return pathBuilder.toString();
+    }
+
+    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
+        String path = buildPath(url);
+        int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
+        if (filePrefixIndex == 0) { //  path starts with "file:/"
+            path = path.substring(FILE_URL_PREFIX_LENGTH);
+        }
+
+        // path removes the archive entry path if present
+        if (!includeArchiveEntryPath) {
+            int indexOfArchiveEntry = indexOfArchiveEntry(path);
+            path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
+        }
+
+        int indexOfColon = path.indexOf(COLON_CHAR);
+        if (indexOfColon == -1) { // the path on the Unix/Linux
+            // path adds the leading slash if not present
+            int indexOfSlash = path.indexOf(SLASH_CHAR);
+            if (indexOfSlash != 0) {
+                path = SLASH_CHAR + path;
+            }
+        } // else the path on the Windows
+
+        return path;
+    }
+
     static String resolvePath(String value, int indexOfMatrixString) {
         return indexOfMatrixString > -1 ? value.substring(0, indexOfMatrixString) : value;
     }
@@ -1703,7 +1730,7 @@ public abstract class URLUtils implements Utils {
 
     protected static String getFirst(Map<String, List<String>> parameters, String name) {
         List<String> values = parameters.get(name);
-        return values == null || values.isEmpty() ? null : values.get(0);
+        return first(values);
     }
 
     private static int indexOfArchiveEntry(String path) {
