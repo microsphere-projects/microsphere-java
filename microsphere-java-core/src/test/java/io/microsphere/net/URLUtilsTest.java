@@ -25,10 +25,17 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH;
+import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FTP_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.HTTP_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.WAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.ZIP_PROTOCOL;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
+import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
@@ -42,6 +49,7 @@ import static io.microsphere.net.URLUtils.encode;
 import static io.microsphere.net.URLUtils.getMutableURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.getSubProtocol;
 import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
+import static io.microsphere.net.URLUtils.isArchiveProtocol;
 import static io.microsphere.net.URLUtils.isArchiveURL;
 import static io.microsphere.net.URLUtils.isDirectoryURL;
 import static io.microsphere.net.URLUtils.isJarURL;
@@ -60,12 +68,14 @@ import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.net.URLUtils.resolveSubProtocols;
 import static io.microsphere.net.URLUtils.toExternalForm;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.SystemUtils.USER_DIR;
+import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
 import static java.nio.file.Paths.get;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -160,7 +170,7 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testResolveBasePathOnArchiveEntry() throws MalformedURLException {
+    void testResolveBasePathOnArchiveEntry() {
         String basePath = resolveBasePath(classArchiveEntryURL);
         assertNotNull(basePath);
         assertTrue(new File(basePath).exists());
@@ -176,6 +186,12 @@ class URLUtilsTest extends AbstractTestCase {
     void testResolveArchiveFileOnClassFile() {
         File archiveFile = resolveArchiveFile(classFileURL);
         assertTrue(archiveFile.exists());
+    }
+
+    @Test
+    void testResolveArchiveFileOnNotFoundJar() {
+        URL url = ofURL("jar:file:/not-found.jar!/com/acme");
+        assertNull(resolveArchiveFile(url));
     }
 
     @Test
@@ -300,8 +316,13 @@ class URLUtilsTest extends AbstractTestCase {
     void testIsDirectoryURL() {
         assertFalse(isDirectoryURL(null));
 
-        URL resourceURL = getClassResource(classLoader, StringUtils.class);
         assertFalse(isDirectoryURL(classFileURL));
+
+        URL resourceURL = getClassResource(classLoader, StringUtils.class);
+        assertFalse(isDirectoryURL(resourceURL));
+
+        resourceURL = getResource(this.classLoader, PACKAGE, "javax.annotation");
+        assertTrue(isDirectoryEntry(resourceURL));
 
         String externalForm = null;
         externalForm = substringBeforeLast(resourceURL.toExternalForm(), StringUtils.class.getSimpleName() + CLASS_EXTENSION);
@@ -335,25 +356,55 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsJarURLOnArchiveFile() throws MalformedURLException {
+    void testIsJarURLOnArchiveFile() {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
         assertTrue(isJarURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
     }
 
     @Test
-    void testIsArchiveURLOnJar() throws MalformedURLException {
+    void testIsJarURLOnHttp() {
+        URL url = ofURL("http://localhost");
+        assertFalse(isJarURL(url));
+    }
+
+    @Test
+    void testIsJarURLOnNPE() {
+        assertThrows(NullPointerException.class, () -> isJarURL(null));
+    }
+
+    @Test
+    void testIsArchiveURLOnJar() {
         assertTrue(isArchiveURL(classArchiveEntryURL));
     }
+//
+//    @Test
+//    void testIsArchiveURLOnWar() {
+//        testIsArchiveURL(WAR_PROTOCOL);
+//    }
+//
+//    @Test
+//    void testIsArchiveURLOnEar() {
+//        testIsArchiveURL(EAR_PROTOCOL);
+//    }
 
     @Test
-    void testIsArchiveURLOnFile() throws MalformedURLException {
-        File archiveFile = resolveArchiveFile(classArchiveEntryURL);
-        assertTrue(isArchiveURL(ofURL(FILE_URL_PREFIX + archiveFile.getAbsolutePath())));
+    void testIsArchiveURLOnFile() {
+        testIsArchiveURL(FILE_PROTOCOL);
     }
 
     @Test
-    void testIsArchiveURLOnNotJar() throws MalformedURLException {
+    void testIsArchiveURLOnNotJar() {
         assertFalse(isArchiveURL(classFileURL));
+    }
+
+    @Test
+    void testIsArchiveProtocol() {
+        assertTrue(isArchiveProtocol(JAR_PROTOCOL));
+        assertTrue(isArchiveProtocol(ZIP_PROTOCOL));
+        assertTrue(isArchiveProtocol(WAR_PROTOCOL));
+        assertTrue(isArchiveProtocol(EAR_PROTOCOL));
+        assertFalse(isArchiveProtocol(FTP_PROTOCOL));
+        assertFalse(isArchiveProtocol(FILE_PROTOCOL));
     }
 
     @Test
@@ -409,26 +460,26 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testToExternalFormWithMatrixString() throws MalformedURLException {
+    void testToExternalFormWithMatrixString() {
         testToExternalForm(TEST_HTTP_WITH_MATRIX_STRING);
     }
 
     @Test
-    void testToExternalFormWithQueryString() throws MalformedURLException {
+    void testToExternalFormWithQueryString() {
         testToExternalForm(TEST_HTTP_WITH_QUERY_STRING);
     }
 
     @Test
-    void testToExternalFormWithPath() throws MalformedURLException {
+    void testToExternalFormWithPath() {
         testToExternalForm(TEST_HTTP_WITH_PATH);
     }
 
     @Test
-    void testToExternalFormWithRef() throws MalformedURLException {
+    void testToExternalFormWithRef() {
         testToExternalForm(TEST_HTTP_WITH_PATH_HASH);
     }
 
-    private void testToExternalForm(String urlString) throws MalformedURLException {
+    private void testToExternalForm(String urlString) {
         testToExternalForm(ofURL(urlString));
     }
 
@@ -447,7 +498,7 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testResolveSubProtocolsFromMatrixString() throws MalformedURLException {
+    void testResolveSubProtocolsFromMatrixString() {
         URL url = ofURL(TEST_HTTP_WITH_SP_MATRIX);
         List<String> subProtocols = resolveSubProtocols(url);
         assertEquals(2, subProtocols.size());
@@ -456,7 +507,7 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testResolveSubProtocolsFromProtocol() throws MalformedURLException {
+    void testResolveSubProtocolsFromProtocol() {
         new Handler();
         URL url = ofURL("console:text:properties://localhost");
         List<String> subProtocols = resolveSubProtocols(url);
@@ -485,6 +536,11 @@ class URLUtilsTest extends AbstractTestCase {
         assertResolvePath(classPathURL);
         assertResolvePath(classFileURL);
     }
+//
+//    @Test
+//    void testResolvePathWith() {
+//        assertResolvePath(classArchiveEntryURL, false);
+//    }
 
     @Test
     void testResolvePathWithMatrixString() {
@@ -607,8 +663,13 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     private void assertResolvePath(URL url, boolean includeArchiveEntryPath) {
-        String path = URLUtils.resolvePath(url, includeArchiveEntryPath);
+        String path = resolvePath(url, includeArchiveEntryPath);
         assertEquals(new File(path), new File(url.getPath()));
+    }
+
+    void testIsArchiveURL(String protocol) {
+        File archiveFile = resolveArchiveFile(classArchiveEntryURL);
+        assertTrue(isArchiveURL(ofURL(protocol + COLON_CHAR + SLASH_CHAR + archiveFile.getAbsolutePath())));
     }
 
 }
