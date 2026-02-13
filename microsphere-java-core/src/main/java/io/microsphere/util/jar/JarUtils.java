@@ -34,6 +34,7 @@ import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -214,6 +215,9 @@ public abstract class JarUtils implements Utils {
     @Nullable
     public static JarEntry findJarEntry(URL jarURL) throws IOException {
         JarFile jarFile = toJarFile(jarURL);
+        if (jarFile == null) {
+            return null;
+        }
         final String relativePath = resolveRelativePath(jarURL);
         JarEntry jarEntry = jarFile.getJarEntry(relativePath);
         return jarEntry;
@@ -349,6 +353,50 @@ public abstract class JarUtils implements Utils {
         jarEntriesList = doFilter(jarEntriesList, jarEntryFilter);
 
         doExtract(jarFile, jarEntriesList, targetDirectory);
+    }
+
+
+    /**
+     * Determines whether the specified URL points to a directory entry within a JAR file.
+     *
+     * <p>
+     * This method checks if the given URL represents a directory entry in a JAR archive.
+     * It supports only the "jar" protocol. For URLs with the "jar" protocol, it resolves
+     * the JAR file and verifies if the relative path corresponds to a directory entry.
+     * If the relative path is empty, it is treated as the root directory of the JAR.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * URL jarURL = new URL("jar:file:/path/to/file.jar!/");
+     * boolean isDirectory = JarUtils.isDirectoryEntry(jarURL);
+     * System.out.println(isDirectory);  // Output: true
+     *
+     * URL fileURL = new URL("jar:file:/path/to/file.jar!/com/example/");
+     * isDirectory = JarUtils.isDirectoryEntry(fileURL);
+     * System.out.println(isDirectory);  // Output: true
+     *
+     * URL resourceURL = new URL("jar:file:/path/to/file.jar!/com/example/resource.txt");
+     * isDirectory = JarUtils.isDirectoryEntry(resourceURL);
+     * System.out.println(isDirectory);  // Output: false
+     * }</pre>
+     *
+     * @param url the URL to check; must not be {@code null}
+     * @return {@code true} if the URL points to a directory entry in a JAR file, {@code false} otherwise
+     * @throws IOException if an I/O error occurs while resolving the JAR file or entry
+     */
+    public static boolean isDirectoryEntry(URL url) throws IOException {
+        String protocol = url.getProtocol();
+        if (JAR_PROTOCOL.equals(protocol)) {
+            final String relativePath = resolveRelativePath(url);
+            if (EMPTY.equals(relativePath)) { // root directory in jar
+                return true;
+            } else {
+                JarEntry jarEntry = findJarEntry(url);
+                return jarEntry != null && jarEntry.isDirectory();
+            }
+        }
+        return false;
     }
 
     protected static void doExtract(JarFile jarFile, Collection<JarEntry> jarEntries, File targetDirectory) throws IOException {
