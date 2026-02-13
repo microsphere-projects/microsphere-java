@@ -21,12 +21,14 @@ import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.jar.JarUtils.MANIFEST_RESOURCE_PATH;
 import static io.microsphere.util.jar.JarUtils.assertJarURLProtocol;
 import static io.microsphere.util.jar.JarUtils.doExtract;
 import static io.microsphere.util.jar.JarUtils.extract;
 import static io.microsphere.util.jar.JarUtils.filter;
 import static io.microsphere.util.jar.JarUtils.findJarEntry;
+import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
 import static io.microsphere.util.jar.JarUtils.resolveJarAbsolutePath;
 import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static io.microsphere.util.jar.JarUtils.toJarFile;
@@ -37,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link JarUtils} Test
@@ -156,5 +159,25 @@ class JarUtilsTest extends AbstractTestCase {
         JarFile jarFile = toJarFile(resourceURL);
         List<JarEntry> jarEntries = filter(jarFile, null);
         doExtract(toJarFile(this.resourceURL), jarEntries, this.targetDirectory);
+    }
+
+    @Test
+    void testIsDirectoryEntry() throws IOException {
+        File tempFile = createRandomTempFile();
+        resourceURL = tempFile.toURI().toURL();
+        assertFalse(isDirectoryEntry(resourceURL));
+
+        URL resourceURL = getResource(this.classLoader, PACKAGE, "javax.annotation");
+        assertTrue(isDirectoryEntry(resourceURL));
+
+        String path = substringBeforeLast(resourceURL.toString(), "javax/annotation");
+        resourceURL = ofURL(path);
+        assertTrue(isDirectoryEntry(resourceURL));
+
+        resourceURL = getClassResource(this.classLoader, Nonnull.class);
+        assertFalse(isDirectoryEntry(resourceURL));
+
+        resourceURL = ofURL("jar:file:/path/to/file.jar!/com/acme/");
+        assertFalse(isDirectoryEntry(resourceURL));
     }
 }
