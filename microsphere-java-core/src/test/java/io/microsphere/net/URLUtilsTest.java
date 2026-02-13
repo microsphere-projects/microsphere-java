@@ -297,7 +297,9 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testIsDirectoryURL() throws Exception {
+    void testIsDirectoryURL() {
+        assertFalse(isDirectoryURL(null));
+
         URL resourceURL = getClassResource(classLoader, StringUtils.class);
         assertFalse(isDirectoryURL(classFileURL));
 
