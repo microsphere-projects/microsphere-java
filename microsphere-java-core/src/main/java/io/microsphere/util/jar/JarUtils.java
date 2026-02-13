@@ -8,6 +8,8 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.logging.Logger;
+import io.microsphere.net.URLUtils;
 import io.microsphere.util.Utils;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.copy;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.normalizePath;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
@@ -48,6 +51,8 @@ import static java.util.Collections.unmodifiableList;
  * @since 1.0.0
  */
 public abstract class JarUtils implements Utils {
+
+    private static final Logger logger = getLogger(URLUtils.class);
 
     /**
      * The resource path of Manifest file in JAR archive.
@@ -72,12 +77,21 @@ public abstract class JarUtils implements Utils {
      *
      * @param jarURL the URL pointing to a JAR file or entry; must not be {@code null}
      * @return a new {@link JarFile} instance if resolved successfully, or {@code null} if resolution fails
-     * @throws IOException if an I/O error occurs while creating the JAR file
+     * @throws IllegalArgumentException if the URL protocol is neither "jar" nor "file"
      */
     @Nullable
-    public static JarFile toJarFile(URL jarURL) throws IOException {
+    public static JarFile toJarFile(URL jarURL) throws IllegalArgumentException {
         final String jarAbsolutePath = resolveJarAbsolutePath(jarURL);
-        return jarAbsolutePath == null ? null : new JarFile(jarAbsolutePath);
+        if (jarAbsolutePath == null) {
+            return null;
+        }
+        JarFile jarFile = null;
+        try {
+            jarFile = new JarFile(jarAbsolutePath);
+        } catch (IOException e) {
+            logger.trace("The JarFile can't be open from the url : {}", jarURL, e);
+        }
+        return jarFile;
     }
 
     /**
@@ -210,10 +224,9 @@ public abstract class JarUtils implements Utils {
      *
      * @param jarURL the URL pointing to a resource within a JAR file; must not be {@code null}
      * @return the resolved {@link JarEntry} if found, or {@code null} if no such entry exists
-     * @throws IOException if an I/O error occurs while reading the JAR file or resolving the entry
      */
     @Nullable
-    public static JarEntry findJarEntry(URL jarURL) throws IOException {
+    public static JarEntry findJarEntry(URL jarURL) {
         JarFile jarFile = toJarFile(jarURL);
         if (jarFile == null) {
             return null;
@@ -385,7 +398,7 @@ public abstract class JarUtils implements Utils {
      * @return {@code true} if the URL points to a directory entry in a JAR file, {@code false} otherwise
      * @throws IOException if an I/O error occurs while resolving the JAR file or entry
      */
-    public static boolean isDirectoryEntry(URL url) throws IOException {
+    public static boolean isDirectoryEntry(URL url) {
         String protocol = url.getProtocol();
         if (JAR_PROTOCOL.equals(protocol)) {
             final String relativePath = resolveRelativePath(url);
