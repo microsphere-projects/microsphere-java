@@ -33,6 +33,7 @@ import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
+import static io.microsphere.net.URLUtils.buildPath;
 import static io.microsphere.net.URLUtils.buildURI;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.close;
@@ -53,6 +54,7 @@ import static io.microsphere.net.URLUtils.resolveBasePath;
 import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveParameters;
 import static io.microsphere.net.URLUtils.resolvePath;
+import static io.microsphere.net.URLUtils.resolvePathFromFile;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.net.URLUtils.resolveSubProtocols;
@@ -96,9 +98,15 @@ class URLUtilsTest extends AbstractTestCase {
 
     private static final String TEST_HTTP_WITH_PATH_HASH = TEST_HTTP_WITH_PATH + "#hash";
 
-    private static final String TEST_HTTP_WITH_QUERY_STRING = TEST_HTTP_BASE + "?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
+    private static final String TEST_QUERY_STRING = "?q=java&oq=java&sourceid=chrome&es_sm=122&ie=UTF-8";
 
-    private static final String TEST_HTTP_WITH_MATRIX_STRING = TEST_HTTP_BASE + ";q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
+    private static final String TEST_MATRIX_STRING = ";q=java;oq=java;sourceid=chrome;es_sm=122;ie=UTF-8";
+
+    private static final String TEST_HTTP_WITH_QUERY_STRING = TEST_HTTP_BASE + TEST_QUERY_STRING;
+
+    private static final String TEST_HTTP_WITH_MATRIX_STRING = TEST_HTTP_BASE + TEST_MATRIX_STRING;
+
+    private static final String TEST_HTTP_WITH_MATRIX_QUERY_STRING = TEST_HTTP_BASE + TEST_MATRIX_STRING + TEST_QUERY_STRING;
 
     private static final String TEST_HTTP_WITH_SP_MATRIX = TEST_HTTP_BASE + ";_sp=text;_sp=properties";
 
@@ -205,6 +213,10 @@ class URLUtilsTest extends AbstractTestCase {
         expectedParametersMap.put("es_sm", ofList("122"));
         expectedParametersMap.put("ie", ofList("UTF-8"));
 
+        assertEquals(expectedParametersMap, parametersMap);
+
+        url = TEST_HTTP_WITH_MATRIX_QUERY_STRING;
+        parametersMap = resolveMatrixParameters(url);
         assertEquals(expectedParametersMap, parametersMap);
 
         url = TEST_HTTP_WITH_QUERY_STRING;
@@ -559,6 +571,34 @@ class URLUtilsTest extends AbstractTestCase {
         assertSame(emptyMap(), resolveParameters(EMPTY_STRING, AND_CHAR));
     }
 
+    @Test
+    void testResolvePathFromFile() {
+        URL url = ofURL("file:///D:/test");
+        assertEquals("D:/test", resolvePathFromFile(url, true));
+
+        ofURL("file://D:/test");
+        assertEquals("D:/test", resolvePathFromFile(url, true));
+
+        ofURL("file:/D:/test");
+        assertEquals("D:/test", resolvePathFromFile(url, true));
+
+        ofURL("file:test");
+        assertEquals("D:/test", resolvePathFromFile(url, true));
+
+        ofURL("file://D:/test");
+        assertEquals("/D:/test", resolvePathFromFile(url, false));
+    }
+
+    @Test
+    void testBuildPath() {
+        URL url = ofURL("file:///D:/test");
+        String path = buildPath(url);
+        assertEquals(url.getPath(), path);
+
+        url = ofURL("file:");
+        path = buildPath(url);
+        assertEquals(url.getPath(), path);
+    }
 
     private void assertResolvePath(URL url) {
         assertResolvePath(url, true);
