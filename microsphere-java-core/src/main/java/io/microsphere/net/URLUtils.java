@@ -12,7 +12,6 @@ import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
@@ -64,7 +62,8 @@ import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringAfterLast;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
-import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
+import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
+import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -697,28 +696,18 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}
      */
     public static boolean isDirectoryURL(URL url) {
-        boolean isDirectory = false;
-        if (url != null) {
-            String protocol = url.getProtocol();
-            try {
-                if (JAR_PROTOCOL.equals(protocol)) {
-                    JarFile jarFile = toJarFile(url); // Test whether valid jar or not
-                    final String relativePath = resolveRelativePath(url);
-                    if (EMPTY.equals(relativePath)) { // root directory in jar
-                        isDirectory = true;
-                    } else {
-                        JarEntry jarEntry = jarFile.getJarEntry(relativePath);
-                        isDirectory = jarEntry != null && jarEntry.isDirectory();
-                    }
-                } else if (FILE_PROTOCOL.equals(protocol)) {
-                    File classPathFile = new File(url.toURI());
-                    isDirectory = classPathFile.isDirectory();
-                }
-            } catch (Exception e) {
-                isDirectory = false;
-            }
+        if (url == null) {
+            return false;
         }
-        return isDirectory;
+        if (isDirectoryEntry(url)) {
+            return true;
+        }
+        String protocol = url.getProtocol();
+        if (FILE_PROTOCOL.equals(protocol)) {
+            File classPathFile = new File(buildPath(url));
+            return classPathFile.isDirectory();
+        }
+        return false;
     }
 
     /**
@@ -812,60 +801,6 @@ public abstract class URLUtils implements Utils {
                 flag = jarFile != null;
         }
         return flag;
-    }
-
-    /**
-     * Converts the provided URL to a {@link JarFile} instance if it refers to a valid JAR file.
-     *
-     * <p>This method attempts to open the URL as a JAR file. If the URL uses the "file" protocol,
-     * it checks whether the corresponding file exists and is a valid JAR. For other protocols (e.g., "jar"),
-     * it tries to extract and open the underlying JAR file.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * // Example 1: Valid JAR file URL
-     * URL jarURL = new URL("file:/path/to/archive.jar");
-     * JarFile jarFile = URLUtils.toJarFile(jarURL);
-     * if (jarFile != null) {
-     *     System.out.println("Successfully opened JAR file.");
-     * } else {
-     *     System.out.println("Failed to open JAR file.");
-     * }
-     *
-     * // Example 2: Invalid JAR file URL
-     * URL invalidURL = new URL("file:/path/to/invalid.jar");
-     * jarFile = URLUtils.toJarFile(invalidURL);
-     * System.out.println(jarFile == null); // Output: true
-     *
-     * // Example 3: URL with "jar" protocol
-     * URL urlWithJarProtocol = new URL("jar:file:/path/to/archive.jar!/entry/path");
-     * jarFile = URLUtils.toJarFile(urlWithJarProtocol);
-     * System.out.println(jarFile != null); // Output: true
-     * }</pre>
-     *
-     * @param url The URL to convert into a JAR file.
-     * @return A non-null {@link JarFile} if the URL refers to a valid JAR file; otherwise, returns {@code null}.
-     * @throws NullPointerException if the provided URL is {@code null}.
-     */
-    @Nullable
-    public static JarFile toJarFile(URL url) {
-        String path = buildPath(url);
-        File file = new File(path);
-        if (!file.exists()) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The JarFile is not existed from the url : {}", url);
-            }
-            return null;
-        }
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(file);
-        } catch (IOException e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The JarFile can't be open from the url : {}", url);
-            }
-        }
-        return jarFile;
     }
 
     /**
