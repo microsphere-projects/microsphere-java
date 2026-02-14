@@ -1,6 +1,7 @@
 package io.microsphere.process;
 
 import io.microsphere.AbstractTestCase;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -23,6 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @since 1.0.0
  */
 class ProcessManagerTest extends AbstractTestCase {
+
+    @BeforeEach
+    void setUp() {
+        INSTANCE.unfinishedProcessesCache.clear();
+    }
 
     @Test
     void test() {
