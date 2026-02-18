@@ -248,6 +248,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class, Target.class));
         assertTrue(isMetaAnnotation(DataAccess.class, Target.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ofArray(ServiceMode.class)));
+        assertFalse(isMetaAnnotation(DataAccess.class, ofArray(Since.class)));
     }
 
     @Test
@@ -271,6 +272,13 @@ class AnnotationUtilsTest extends AbstractTestCase {
     @Test
     void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnEmpty() {
         assertFalse(isMetaAnnotation(DataAccess.class, TEST_EMPTY_LIST));
+    }
+
+    @Test
+    void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnNativeAnnotations() {
+        NATIVE_ANNOTATION_TYPES.forEach(a -> {
+            assertFalse(isMetaAnnotation(a, TEST_EMPTY_LIST));
+        });
     }
 
     @Test
@@ -509,6 +517,17 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testExistsOnEmptyIterable() {
+        assertFalse(exists(emptyList(), DataAccess.class));
+        assertFalse(exists((Iterable) emptyList(), DataAccess.class));
+    }
+
+    @Test
+    void testExistsOnNotFound() {
+        assertFalse(exists(annotationsOfA, Override.class));
+    }
+
+    @Test
     void testIsAnnotatedPresentWithArray() {
         assertTrue(isAnnotationPresent(ofArray(A.class), DataAccess.class));
         assertTrue(isAnnotationPresent(ofArray(B.class), DataAccess.class));
@@ -575,6 +594,16 @@ class AnnotationUtilsTest extends AbstractTestCase {
     void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement) null, ofList(DataAccess.class, Since.class)));
         assertFalse(isAnnotationPresent(B.class, TEST_NULL_ITERABLE));
+    }
+
+    @Test
+    void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnEmpty() {
+        assertFalse(isAnnotationPresent(B.class, emptyList()));
+    }
+
+    @Test
+    void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNotFound() {
+        assertFalse(isAnnotationPresent(B.class, ofList(Override.class)));
     }
 
     @Test

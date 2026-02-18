@@ -58,6 +58,7 @@ import static io.microsphere.util.ClassUtils.findAllInheritedClasses;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link Annotation} Utilities class
@@ -1652,7 +1653,7 @@ public abstract class AnnotationUtils implements Utils {
      * @return {@code true} if the {@link jdk.internal.reflect.CallerSensitive} annotation is present; {@code false} otherwise
      */
     public static boolean isCallerSensitivePresent() {
-        return CALLER_SENSITIVE_ANNOTATION_CLASS != null;
+        return nonNull(CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
 
     private AnnotationUtils() {
