@@ -21,6 +21,8 @@ import io.microsphere.event.Event;
 
 import java.io.File;
 
+import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * The event raised when the {@link File file} is changed
  *
@@ -42,9 +44,7 @@ public class FileChangedEvent extends Event {
      */
     public FileChangedEvent(File file, Kind kind) throws IllegalArgumentException {
         super(file);
-        if (kind == null) {
-            throw new IllegalArgumentException("The 'kind' argument must not be null");
-        }
+        assertNotNull(kind, () -> "The 'kind' argument must not be null");
         this.kind = kind;
     }
 
