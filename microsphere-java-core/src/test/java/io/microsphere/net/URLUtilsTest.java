@@ -71,6 +71,7 @@ import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.net.URLUtils.resolveSubProtocols;
 import static io.microsphere.net.URLUtils.toExternalForm;
+import static io.microsphere.net.URLUtils.truncateMatrixString;
 import static io.microsphere.net.console.HandlerTest.TEST_CONSOLE_URL;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
@@ -622,6 +623,9 @@ class URLUtilsTest extends AbstractTestCase {
     void testFindMutableURLStreamHandlerFactory() {
         CompositeURLStreamHandlerFactory compositeFactory = new CompositeURLStreamHandlerFactory();
         assertNull(findMutableURLStreamHandlerFactory(compositeFactory));
+
+        compositeFactory.addURLStreamHandlerFactory(new StandardURLStreamHandlerFactory());
+        assertNull(findMutableURLStreamHandlerFactory(compositeFactory));
     }
 
     @Test
@@ -674,6 +678,12 @@ class URLUtilsTest extends AbstractTestCase {
 
         ofURL("file://D:/test");
         assertEquals("/D:/test", resolvePathFromFile(url, false));
+    }
+
+    @Test
+    void testTruncateMatrixString() {
+        assertEquals(TEST_HTTP_BASE, truncateMatrixString(TEST_HTTP_WITH_SP_MATRIX));
+        assertEquals(TEST_HTTP_BASE, truncateMatrixString(TEST_HTTP_BASE));
     }
 
     @Test
