@@ -47,6 +47,7 @@ import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
+import static io.microsphere.constants.SymbolConstants.SEMICOLON;
 import static io.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -55,6 +56,7 @@ import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
+import static io.microsphere.util.ClassUtils.cast;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -62,6 +64,7 @@ import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringAfterLast;
+import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
@@ -210,12 +213,8 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static String doResolveArchiveEntryPath(String path) {
-        int beginIndex = indexOfArchiveEntry(path);
-        if (beginIndex > -1) {
-            String relativePath = path.substring(beginIndex + ARCHIVE_ENTRY_SEPARATOR_LENGTH);
-            return decode(relativePath);
-        }
-        return null;
+        String archiveEntryPath = substringAfter(path, ARCHIVE_ENTRY_SEPARATOR);
+        return EMPTY == archiveEntryPath ? null : decode(archiveEntryPath);
     }
 
     /**
@@ -953,14 +952,14 @@ public abstract class URLUtils implements Utils {
         }
 
         if (hasPath) {
-            int indexOfMatrixString = indexOfMatrixString(path);
+            int indexOfMatrixString = path.indexOf(SEMICOLON_CHAR);
             if (indexOfMatrixString > -1) {
                 hasMatrix = true;
                 Map<String, List<String>> matrixParameters = resolveMatrixParameters(path);
                 List<String> subProtocols = matrixParameters.getOrDefault(SUB_PROTOCOL_MATRIX_NAME, emptyList());
                 protocol = reformProtocol(protocol, subProtocols);
                 matrix = buildMatrixString(matrixParameters);
-                path = resolvePath(path, indexOfMatrixString);
+                path = path.substring(0, indexOfMatrixString);
             }
         }
 
@@ -1185,9 +1184,7 @@ public abstract class URLUtils implements Utils {
         }
         for (int i = 0; i <= indexOfColon; i++) {
             if (isWhitespace(url.charAt(i))) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
-                }
+                logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
                 return null;
             }
         }
@@ -1535,14 +1532,7 @@ public abstract class URLUtils implements Utils {
                 return resolvePathFromJar(url, includeArchiveEntryPath);
         }
 
-        String path = url.getPath();
-
-        // path may contain the matrix parameters
-        int indexOfMatrixString = indexOfMatrixString(path);
-        // path removes the matrix parameters if present
-        path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
-
-        return path;
+        return truncateMatrixString(url.getPath());
     }
 
     static String resolvePathFromFile(URL url) {
@@ -1589,8 +1579,7 @@ public abstract class URLUtils implements Utils {
 
         // path removes the archive entry path if present
         if (!includeArchiveEntryPath) {
-            int indexOfArchiveEntry = indexOfArchiveEntry(path);
-            path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
+            path = substringBefore(path, ARCHIVE_ENTRY_SEPARATOR);
         }
 
         int indexOfColon = path.indexOf(COLON_CHAR);
@@ -1605,17 +1594,9 @@ public abstract class URLUtils implements Utils {
         return path;
     }
 
-    static String resolvePath(String value, int indexOfMatrixString) {
-        return indexOfMatrixString > -1 ? value.substring(0, indexOfMatrixString) : value;
-    }
-
     protected static String truncateMatrixString(String value) {
-        int lastIndex = indexOfMatrixString(value);
-        return lastIndex > -1 ? value.substring(0, lastIndex) : value;
-    }
-
-    protected static int indexOfMatrixString(String value) {
-        return value == null ? -1 : value.indexOf(SEMICOLON_CHAR);
+        String str = substringAfterLast(value, SEMICOLON);
+        return str == EMPTY ? value : str;
     }
 
     protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory() {
@@ -1634,7 +1615,7 @@ public abstract class URLUtils implements Utils {
         return factory;
     }
 
-    private static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(CompositeURLStreamHandlerFactory compositeFactory) {
+    static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(CompositeURLStreamHandlerFactory compositeFactory) {
         MutableURLStreamHandlerFactory target = null;
         for (URLStreamHandlerFactory factory : compositeFactory.getFactories()) {
             target = findMutableURLStreamHandlerFactory(factory);
@@ -1646,10 +1627,7 @@ public abstract class URLUtils implements Utils {
     }
 
     private static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
-        if (factory instanceof MutableURLStreamHandlerFactory) {
-            return (MutableURLStreamHandlerFactory) factory;
-        }
-        return null;
+        return cast(factory, MutableURLStreamHandlerFactory.class);
     }
 
     protected static void clearURLStreamHandlerFactory() {
@@ -1731,10 +1709,6 @@ public abstract class URLUtils implements Utils {
     protected static String getFirst(Map<String, List<String>> parameters, String name) {
         List<String> values = parameters.get(name);
         return first(values);
-    }
-
-    private static int indexOfArchiveEntry(String path) {
-        return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
     }
 
     private URLUtils() {
