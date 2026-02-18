@@ -75,7 +75,11 @@ public class FileExtensionFilter implements IOFileFilter {
             return false;
         }
 
-        return IS_OS_WINDOWS ? fileExtension.equalsIgnoreCase(extension) : fileExtension.equals(extension);
+        return matches(fileExtension, !IS_OS_WINDOWS);
+    }
+
+    protected boolean matches(String fileExtension, boolean caseSensitive) {
+        return caseSensitive ? fileExtension.equals(extension) : fileExtension.equalsIgnoreCase(extension);
     }
 
     /**
@@ -87,4 +91,5 @@ public class FileExtensionFilter implements IOFileFilter {
     public static FileExtensionFilter of(String extension) {
         return new FileExtensionFilter(extension);
     }
+
 }
