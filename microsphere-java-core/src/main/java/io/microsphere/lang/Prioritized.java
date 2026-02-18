@@ -61,15 +61,18 @@ public interface Prioritized extends Comparable<Prioritized> {
     Comparator<Object> COMPARATOR = (one, two) -> {
         boolean b1 = one instanceof Prioritized;
         boolean b2 = two instanceof Prioritized;
-        if (b1 && !b2) {        // one is Prioritized, two is not
-            return -1;
-        } else if (b2 && !b1) { // two is Prioritized, one is not
+
+        if (b1) {     // one is Prioritized
+            if (b2) { // two is also Prioritized
+                return ((Prioritized) one).compareTo((Prioritized) two);
+            } else {  // two is not Prioritized yet
+                return -1;
+            }
+        } else if (b2) {     // one is not Prioritized, and two is Prioritized
             return 1;
-        } else if (b1 && b2) {  //  one and two both are Prioritized
-            return ((Prioritized) one).compareTo((Prioritized) two);
-        } else {                // no different
-            return 0;
         }
+
+        return 0;  // no different
     };
 
     /**
