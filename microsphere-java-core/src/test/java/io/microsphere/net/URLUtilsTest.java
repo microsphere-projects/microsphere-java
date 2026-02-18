@@ -652,6 +652,10 @@ class URLUtilsTest extends AbstractTestCase {
         URL url = ofURL("http://acme.com:8080/x.jar");
         String path = resolvePathFromJar(url, true);
         assertEquals("/acme.com:8080/x.jar", path);
+
+        url = ofURL("file:/dir/x.jar");
+        path = resolvePathFromJar(url, false);
+        assertEquals("/dir/x.jar", path);
     }
 
     @Test
