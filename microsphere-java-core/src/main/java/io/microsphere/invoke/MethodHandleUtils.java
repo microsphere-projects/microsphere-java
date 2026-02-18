@@ -249,6 +249,7 @@ public abstract class MethodHandleUtils implements Utils {
     }
 
     static class LookupKey {
+
         final Class<?> requestedClass;
 
         final int allowedModes;
@@ -260,10 +261,15 @@ public abstract class MethodHandleUtils implements Utils {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof LookupKey)) {
+                return false;
+            }
             LookupKey lookupKey = (LookupKey) o;
-            return allowedModes == lookupKey.allowedModes && Objects.equals(requestedClass, lookupKey.requestedClass);
+            return allowedModes == lookupKey.allowedModes &&
+                    Objects.equals(requestedClass, lookupKey.requestedClass);
         }
 
         @Override
@@ -332,9 +338,7 @@ public abstract class MethodHandleUtils implements Utils {
      * @param args         the arguments of {@link MethodHandle#invokeExact(Object...)}
      */
     public static void handleInvokeExactFailure(Throwable e, MethodHandle methodHandle, Object... args) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("Failed to invokeExact on the {} with arguments : {}", methodHandle, arrayToString(args), e);
-        }
+        logger.warn("Failed to invokeExact on the {} with arguments : {}", methodHandle, arrayToString(args), e);
     }
 
     protected static MethodHandle find(Class<?> requestedClass, String methodName, Class[] parameterTypes,
