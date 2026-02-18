@@ -64,6 +64,7 @@ import static io.microsphere.util.AnnotationUtils.isSameType;
 import static io.microsphere.util.AnnotationUtils.isType;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
+import static java.lang.System.arraycopy;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
@@ -422,6 +423,14 @@ class AnnotationUtilsTest extends AbstractTestCase {
     @Test
     void testFindAttributeValueOnAttributeNotFound() {
         assertNull(findAttributeValue(annotationsOfA, "value"));
+    }
+
+    @Test
+    void testFindAttributeValueOnNullAnnnotationElement() {
+        int length = annotationsOfA.length;
+        Annotation[] annotations = new Annotation[length + 1];
+        arraycopy(annotationsOfA, 0, annotations, 0, length);
+        assertNull(findAttributeValue(annotations, "value"));
     }
 
     @Test
