@@ -31,10 +31,8 @@ class StackTraceUtilsTest {
 
     @Test
     void testGetCallerClassNameOnStackWalkerSupportedForTesting() {
-        StackTraceUtils.stackWalkerSupportedForTesting = false;
-        assertEquals(getCallerClassNameInGeneralJVM(), getCallerClassName());
+        assertEquals(getCallerClassNameInGeneralJVM(), getCallerClassName(null, 0));
         assertEquals(CALLER_CLASS_NAME, getCallerClassName());
-        StackTraceUtils.stackWalkerSupportedForTesting = true;
     }
 
     @Test
