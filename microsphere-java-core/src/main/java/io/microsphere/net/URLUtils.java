@@ -1595,7 +1595,7 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static String truncateMatrixString(String value) {
-        String str = substringAfterLast(value, SEMICOLON);
+        String str = substringBefore(value, SEMICOLON);
         return str == EMPTY ? value : str;
     }
 
