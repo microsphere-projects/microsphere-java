@@ -23,6 +23,7 @@ import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
@@ -41,11 +42,13 @@ import static io.microsphere.net.URLUtils.FILE_URL_PREFIX;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.buildMatrixString;
 import static io.microsphere.net.URLUtils.buildPath;
+import static io.microsphere.net.URLUtils.buildString;
 import static io.microsphere.net.URLUtils.buildURI;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.close;
 import static io.microsphere.net.URLUtils.decode;
 import static io.microsphere.net.URLUtils.encode;
+import static io.microsphere.net.URLUtils.findMutableURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.getMutableURLStreamHandlerFactory;
 import static io.microsphere.net.URLUtils.getSubProtocol;
 import static io.microsphere.net.URLUtils.getURLStreamHandlerFactory;
@@ -63,6 +66,7 @@ import static io.microsphere.net.URLUtils.resolveMatrixParameters;
 import static io.microsphere.net.URLUtils.resolveParameters;
 import static io.microsphere.net.URLUtils.resolvePath;
 import static io.microsphere.net.URLUtils.resolvePathFromFile;
+import static io.microsphere.net.URLUtils.resolvePathFromJar;
 import static io.microsphere.net.URLUtils.resolveProtocol;
 import static io.microsphere.net.URLUtils.resolveQueryParameters;
 import static io.microsphere.net.URLUtils.resolveSubProtocols;
@@ -73,6 +77,7 @@ import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
+import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static io.microsphere.util.SystemUtils.USER_DIR;
 import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
@@ -536,11 +541,6 @@ class URLUtilsTest extends AbstractTestCase {
         assertResolvePath(classPathURL);
         assertResolvePath(classFileURL);
     }
-//
-//    @Test
-//    void testResolvePathWith() {
-//        assertResolvePath(classArchiveEntryURL, false);
-//    }
 
     @Test
     void testResolvePathWithMatrixString() {
@@ -559,6 +559,12 @@ class URLUtilsTest extends AbstractTestCase {
         assertEquals(1, compositeFactory.getFactories().size());
         assertSame(factory, compositeFactory.getFactories().get(0));
         assertEquals(CompositeURLStreamHandlerFactory.class, compositeFactory.getClass());
+    }
+
+    @Test
+    void testAttachURLStreamHandlerFactoryOnNull() {
+        attachURLStreamHandlerFactory(null);
+        assertNull(getURLStreamHandlerFactory());
     }
 
     @Test
@@ -613,10 +619,22 @@ class URLUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testFindMutableURLStreamHandlerFactory() {
+        CompositeURLStreamHandlerFactory compositeFactory = new CompositeURLStreamHandlerFactory();
+        assertNull(findMutableURLStreamHandlerFactory(compositeFactory));
+    }
+
+    @Test
     void testClearURLStreamHandlerFactory() {
         testGetMutableURLStreamHandlerFactoryFromAttached();
         clearURLStreamHandlerFactory();
         testGetMutableURLStreamHandlerFactory();
+    }
+
+    @Test
+    void testResolveParameters() {
+        assertEquals(ofMap("a", ofList("1"), "b", ofList("2")), resolveParameters("a=1&b=2", AND_CHAR));
+        assertEquals(ofMap("a", ofList(""), "b", ofList("2")), resolveParameters("a&b=2", AND_CHAR));
     }
 
     @Test
@@ -627,6 +645,13 @@ class URLUtilsTest extends AbstractTestCase {
     @Test
     void testResolveParametersOnEmptyString() {
         assertSame(emptyMap(), resolveParameters(EMPTY_STRING, AND_CHAR));
+    }
+
+    @Test
+    void testResolvePathFromJar() {
+        URL url = ofURL("http://acme.com:8080/x.jar");
+        String path = resolvePathFromJar(url, true);
+        assertEquals("/acme.com:8080/x.jar", path);
     }
 
     @Test
@@ -656,6 +681,12 @@ class URLUtilsTest extends AbstractTestCase {
         url = ofURL("file:");
         path = buildPath(url);
         assertEquals(url.getPath(), path);
+    }
+
+    @Test
+    void testBuildString() {
+        assertNull(buildString(null, EMPTY_STRING_ARRAY, AND_CHAR, COLON_CHAR));
+        assertNull(buildString(null, null, AND_CHAR, COLON_CHAR));
     }
 
     private void assertResolvePath(URL url) {
