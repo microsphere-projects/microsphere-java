@@ -22,6 +22,7 @@ import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -88,7 +89,7 @@ public abstract class MethodHandleUtils implements Utils {
 
     /**
      * A single-bit mask representing {@code module} access,
-     * which may contribute to the result of {@link MethodHandles.Lookup#lookupModes lookupModes}.
+     * which may contribute to the result of {@link Lookup#lookupModes lookupModes}.
      * The value is {@code 0x10}, which does not correspond meaningfully to
      * any particular {@linkplain Modifier modifier bit}.
      * In conjunction with the {@code PUBLIC} modifier bit, a {@code Lookup}
@@ -96,17 +97,17 @@ public abstract class MethodHandleUtils implements Utils {
      * lookup class and public types in packages exported by other modules
      * to the module of the class to be looked up.
      * <p>
-     * If this lookup mode is set, the {@linkplain MethodHandles.Lookup#previousrequestedClass()
+     * If this lookup mode is set, the {@linkplain Lookup#previousrequestedClass()
      * previous lookup class} is always {@code null}.
      *
-     * @see MethodHandles.Lookup#MODULE
+     * @see Lookup#MODULE
      * @since 9
      */
     public static final int MODULE = PACKAGE << 1;
 
     /**
      * A single-bit mask representing {@code unconditional} access
-     * which may contribute to the result of {@link MethodHandles.Lookup#lookupModes lookupModes}.
+     * which may contribute to the result of {@link Lookup#lookupModes lookupModes}.
      * The value is {@code 0x20}, which does not correspond meaningfully to
      * any particular {@linkplain Modifier modifier bit}.
      * A {@code Lookup} with this lookup mode assumes {@linkplain
@@ -116,18 +117,18 @@ public abstract class MethodHandleUtils implements Utils {
      * java.lang.Module#isExported(String) exported unconditionally}.
      *
      * <p>
-     * If this lookup mode is set, the {@linkplain MethodHandles.Lookup#previousrequestedClass()
+     * If this lookup mode is set, the {@linkplain Lookup#previousrequestedClass()
      * previous lookup class} is always {@code null}.
      *
-     * @see MethodHandles.Lookup#publicLookup()
-     * @see MethodHandles.Lookup#UNCONDITIONAL
+     * @see Lookup#publicLookup()
+     * @see Lookup#UNCONDITIONAL
      * @since 9
      */
     public static final int UNCONDITIONAL = PACKAGE << 2;
 
     /**
      * A single-bit mask representing {@code original} access
-     * which may contribute to the result of {@link MethodHandles.Lookup#lookupModes lookupModes}.
+     * which may contribute to the result of {@link Lookup#lookupModes lookupModes}.
      * The value is {@code 0x40}, which does not correspond meaningfully to
      * any particular {@linkplain Modifier modifier bit}.
      *
@@ -136,9 +137,9 @@ public abstract class MethodHandleUtils implements Utils {
      * created by the original lookup class by calling
      * {@link MethodHandles#lookup()} method or by a bootstrap method
      * invoked by the VM.  The {@code Lookup} object with this lookup
-     * mode has {@linkplain MethodHandles.Lookup#hasFullPrivilegeAccess() full privilege access}.
+     * mode has {@linkplain Lookup#hasFullPrivilegeAccess() full privilege access}.
      *
-     * @see MethodHandles.Lookup#ORIGINAL
+     * @see Lookup#ORIGINAL
      * @since 16
      */
     public static final int ORIGINAL = PACKAGE << 3;
@@ -150,61 +151,61 @@ public abstract class MethodHandleUtils implements Utils {
     public static final int ALL_MODES = (PUBLIC | PRIVATE | PROTECTED | PACKAGE | MODULE | UNCONDITIONAL | ORIGINAL);
 
     /**
-     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class)} since JDK 7
+     * The {@link Constructor} for {@link Lookup#Lookup(Class)} since JDK 7
      */
-    private static final Constructor<MethodHandles.Lookup> lookupConstructor1 = getDeclaredConstructor(MethodHandles.Lookup.class, Class.class);
+    private static final Constructor<Lookup> lookupConstructor1 = getDeclaredConstructor(Lookup.class, Class.class);
 
     /**
-     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class, int)} since JDK 7
+     * The {@link Constructor} for {@link Lookup#Lookup(Class, int)} since JDK 7
      */
-    private static final Constructor<MethodHandles.Lookup> lookupConstructor2 = findConstructor(MethodHandles.Lookup.class, Class.class, int.class);
+    private static final Constructor<Lookup> lookupConstructor2 = findConstructor(Lookup.class, Class.class, int.class);
 
     /**
-     * The {@link Constructor} for {@link MethodHandles.Lookup#Lookup(Class, Class, int)} since JDK 14
+     * The {@link Constructor} for {@link Lookup#Lookup(Class, Class, int)} since JDK 14
      */
-    private static final Constructor<MethodHandles.Lookup> lookupConstructor3 = findConstructor(MethodHandles.Lookup.class, Class.class, Class.class, int.class);
+    private static final Constructor<Lookup> lookupConstructor3 = findConstructor(Lookup.class, Class.class, Class.class, int.class);
 
-    private static final ConcurrentMap<LookupKey, MethodHandles.Lookup> lookupCache = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<LookupKey, Lookup> lookupCache = new ConcurrentHashMap<>();
 
     /**
-     * The {@link MethodHandles.Lookup} for {@link MethodHandles#publicLookup()}
+     * The {@link Lookup} for {@link MethodHandles#publicLookup()}
      */
-    public static final MethodHandles.Lookup PUBLIC_LOOKUP = publicLookup();
+    public static final Lookup PUBLIC_LOOKUP = publicLookup();
 
     /**
-     * The allowed {@link MethodHandles.Lookup} modes enumeration
+     * The allowed {@link Lookup} modes enumeration
      *
-     * @see MethodHandles.Lookup#PUBLIC
-     * @see MethodHandles.Lookup#PRIVATE
-     * @see MethodHandles.Lookup#PROTECTED
-     * @see MethodHandles.Lookup#PACKAGE
-     * @see MethodHandles.Lookup#MODULE
-     * @see MethodHandles.Lookup#UNCONDITIONAL
-     * @see MethodHandles.Lookup#ORIGINAL
-     * @see MethodHandles.Lookup#TRUSTED
-     * @see MethodHandles.Lookup#ALL_MODES
+     * @see Lookup#PUBLIC
+     * @see Lookup#PRIVATE
+     * @see Lookup#PROTECTED
+     * @see Lookup#PACKAGE
+     * @see Lookup#MODULE
+     * @see Lookup#UNCONDITIONAL
+     * @see Lookup#ORIGINAL
+     * @see Lookup#TRUSTED
+     * @see Lookup#ALL_MODES
      */
     public enum LookupMode {
 
         /**
-         * @see MethodHandles.Lookup#PUBLIC
+         * @see Lookup#PUBLIC
          */
-        PUBLIC(MethodHandles.Lookup.PUBLIC),
+        PUBLIC(Lookup.PUBLIC),
 
         /**
-         * @see MethodHandles.Lookup#PRIVATE
+         * @see Lookup#PRIVATE
          */
-        PRIVATE(MethodHandles.Lookup.PRIVATE),
+        PRIVATE(Lookup.PRIVATE),
 
         /**
-         * @see MethodHandles.Lookup#PROTECTED
+         * @see Lookup#PROTECTED
          */
-        PROTECTED(MethodHandles.Lookup.PROTECTED),
+        PROTECTED(Lookup.PROTECTED),
 
         /**
-         * @see MethodHandles.Lookup#PACKAGE
+         * @see Lookup#PACKAGE
          */
-        PACKAGE(MethodHandles.Lookup.PACKAGE),
+        PACKAGE(Lookup.PACKAGE),
 
         /**
          * @see MethodHandleUtils#MODULE
@@ -283,31 +284,31 @@ public abstract class MethodHandleUtils implements Utils {
     }
 
     /**
-     * Create an instance of {@link MethodHandles.Lookup} by the specified lookup class
+     * Create an instance of {@link Lookup} by the specified lookup class
      * with {@link #ALL_MODES all accesses (public, private, protected and package)}
      *
      * @param requestedClass the class to be looked up
      * @return non-null
      */
-    public static MethodHandles.Lookup lookup(Class<?> requestedClass) {
+    public static Lookup lookup(Class<?> requestedClass) {
         return lookup(requestedClass, LookupMode.ALL);
     }
 
     /**
-     * Create an instance of {@link MethodHandles.Lookup} by the specified lookup class
+     * Create an instance of {@link Lookup} by the specified lookup class
      * with {@link #ALL_MODES all access (public, private, protected and package)}
      *
      * @param requestedClass the class to be looked up
      * @return non-null
      */
-    public static MethodHandles.Lookup lookup(Class<?> requestedClass, LookupMode... lookupModes) {
+    public static Lookup lookup(Class<?> requestedClass, LookupMode... lookupModes) {
         int allowedModes = getModes(lookupModes);
         LookupKey key = buildKey(requestedClass, allowedModes);
         return lookupCache.computeIfAbsent(key, MethodHandleUtils::newLookup);
     }
 
     /**
-     * The convenient method to find {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)}
+     * The convenient method to find {@link Lookup#findVirtual(Class, String, MethodType)}
      *
      * @param requestedClass the class to be looked up
      * @param methodName     the target method name
@@ -319,7 +320,7 @@ public abstract class MethodHandleUtils implements Utils {
     }
 
     /**
-     * The convenient method to find {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)}
+     * The convenient method to find {@link Lookup#findStatic(Class, String, MethodType)}
      *
      * @param requestedClass the class to be looked up
      * @param methodName     the target method name
@@ -342,7 +343,7 @@ public abstract class MethodHandleUtils implements Utils {
     }
 
     protected static MethodHandle find(Class<?> requestedClass, String methodName, Class[] parameterTypes,
-                                       ThrowableBiFunction<MethodHandles.Lookup, MethodType, MethodHandle> function) {
+                                       ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         Method method = findMethod(requestedClass, methodName, parameterTypes);
         if (method == null) {
             return NOT_FOUND_METHOD_HANDLE;
@@ -350,11 +351,11 @@ public abstract class MethodHandleUtils implements Utils {
         if (isiCandidateMethod(method)) {
             return findPublic(method, function);
         }
-        MethodHandles.Lookup lookup = lookup(requestedClass);
+        Lookup lookup = lookup(requestedClass);
         return MethodHandlesLookupUtils.find(lookup, requestedClass, methodName, parameterTypes, function);
     }
 
-    private static MethodHandles.Lookup newLookup(LookupKey key) {
+    private static Lookup newLookup(LookupKey key) {
         if (lookupConstructor3 != null) {
             return newInstance(lookupConstructor3, key.requestedClass, key.requestedClass, key.allowedModes);
         }

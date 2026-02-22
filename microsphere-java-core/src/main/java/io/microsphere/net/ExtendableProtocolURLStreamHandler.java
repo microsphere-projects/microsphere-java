@@ -18,7 +18,6 @@ package io.microsphere.net;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.lang.Prioritized;
 
 import java.io.IOException;
 import java.net.Proxy;
@@ -36,6 +35,7 @@ import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUOTE;
+import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static io.microsphere.net.URLUtils.DEFAULT_HANDLER_PACKAGE_PREFIX;
 import static io.microsphere.net.URLUtils.HANDLER_CONVENTION_CLASS_NAME;
 import static io.microsphere.net.URLUtils.HANDLER_PACKAGES_PROPERTY_NAME;
@@ -240,7 +240,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     private void initSubProtocolURLConnectionFactories() {
         List<SubProtocolURLConnectionFactory> factories = this.factories;
         initSubProtocolURLConnectionFactories(factories);
-        sort(factories, Prioritized.COMPARATOR);
+        sort(factories, COMPARATOR);
     }
 
     /**

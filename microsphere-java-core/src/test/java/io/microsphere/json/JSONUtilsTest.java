@@ -70,6 +70,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.Byte.valueOf;
 import static java.lang.Character.valueOf;
+import static java.lang.Void.TYPE;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -387,7 +388,7 @@ class JSONUtilsTest {
         assertTrue(isUnknownClass(Void.class));
 
         assertFalse(isUnknownClass(String.class));
-        assertFalse(isUnknownClass(Void.TYPE));
+        assertFalse(isUnknownClass(TYPE));
         assertFalse(isUnknownClass(null));
     }
 

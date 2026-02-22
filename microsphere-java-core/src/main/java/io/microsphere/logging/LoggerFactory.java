@@ -83,7 +83,7 @@ public abstract class LoggerFactory implements Prioritized {
 
     static List<LoggerFactory> loadFactories() {
         List<LoggerFactory> factories = newLinkedList(load(LoggerFactory.class, classLoader));
-        sort(factories, Prioritized.COMPARATOR);
+        sort(factories, COMPARATOR);
         return factories;
     }
 

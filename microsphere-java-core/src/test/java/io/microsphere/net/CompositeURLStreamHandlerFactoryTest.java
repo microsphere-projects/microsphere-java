@@ -1,6 +1,5 @@
 package io.microsphere.net;
 
-import io.microsphere.lang.Prioritized;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,6 +8,7 @@ import java.net.URLStreamHandlerFactory;
 import java.util.List;
 
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -67,7 +67,7 @@ class CompositeURLStreamHandlerFactoryTest {
 
     @Test
     void testGetComparator() {
-        assertSame(Prioritized.COMPARATOR, compositeFactory.getComparator());
+        assertSame(COMPARATOR, compositeFactory.getComparator());
     }
 
     @Test

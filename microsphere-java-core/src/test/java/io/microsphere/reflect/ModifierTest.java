@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.Modifier.MANDATED;
 import static io.microsphere.reflect.Modifier.isAbstract;
 import static io.microsphere.reflect.Modifier.isAnnotation;
 import static io.microsphere.reflect.Modifier.isBridge;
@@ -191,7 +192,7 @@ class ModifierTest {
 
     @Test
     void testIsMandated() {
-        assertTrue(isMandated(Modifier.MANDATED.getValue()));
+        assertTrue(isMandated(MANDATED.getValue()));
         assertFalse(isMandated(Object.class.getModifiers()));
     }
 

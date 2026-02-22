@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 
@@ -119,7 +120,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
      * @return {@link Prioritized#COMPARATOR} as default
      */
     protected Comparator<? super URLStreamHandlerFactory> getComparator() {
-        return Prioritized.COMPARATOR;
+        return COMPARATOR;
     }
 
     private void sortFactories(List<URLStreamHandlerFactory> factories) {

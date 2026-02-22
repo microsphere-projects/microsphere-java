@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -49,12 +51,12 @@ class SimpleTypeModelTest {
 
     @Test
     void testSetGetBoolean() {
-        Boolean testValue = Boolean.TRUE;
+        Boolean testValue = TRUE;
         model.setZ(testValue);
         assertEquals(testValue, model.getZ(), "getZ should return the set value");
 
-        model.setZ(Boolean.FALSE);
-        assertEquals(Boolean.FALSE, model.getZ(), "getZ should return the set value");
+        model.setZ(FALSE);
+        assertEquals(FALSE, model.getZ(), "getZ should return the set value");
     }
 
     @Test
