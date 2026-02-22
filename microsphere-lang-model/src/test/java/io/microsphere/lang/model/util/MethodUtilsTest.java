@@ -86,7 +86,7 @@ class MethodUtilsTest extends UtilTest {
 
     @Override
     protected void beforeTest(ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) {
-        super.beforeTest(invocationContext,extensionContext);
+        super.beforeTest(invocationContext, extensionContext);
         TypeElement type = getTypeElement(Object.class);
         List<ExecutableElement> methods = getDeclaredMethods(type);
         this.objectMethods = methods;
@@ -352,11 +352,6 @@ class MethodUtilsTest extends UtilTest {
 
         overrideMethod = getOverrideMethod(processingEnv, testTypeElement, declaringMethod);
         assertEquals(methods.get(0), overrideMethod);
-    }
-
-    @Test
-    void testFilterMethods() {
-
     }
 
     @Test
