@@ -31,6 +31,7 @@ import static io.microsphere.lang.model.util.MessagerUtils.printMessage;
 import static io.microsphere.lang.model.util.MessagerUtils.printNote;
 import static io.microsphere.lang.model.util.MessagerUtils.printWarning;
 import static javax.tools.Diagnostic.Kind.OTHER;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * {@link MessagerUtils} Test
@@ -52,31 +53,31 @@ class MessagerUtilsTest extends UtilTest {
 
     @Test
     void testPrintNote() {
-        printNote(this.processingEnv, "Hello, {}!", "printNote");
-        printNote(this.messager, "Hello, {}!", "printNote");
+        assertDoesNotThrow(() -> printNote(this.processingEnv, "Hello, {}!", "printNote"));
+        assertDoesNotThrow(() -> printNote(this.messager, "Hello, {}!", "printNote"));
     }
 
     @Test
     void testPrintWarning() {
-        printWarning(this.processingEnv, "Hello, {}!", "printWarning");
-        printWarning(this.messager, "Hello, {}!", "printWarning");
+        assertDoesNotThrow(() -> printWarning(this.processingEnv, "Hello, {}!", "printWarning"));
+        assertDoesNotThrow(() -> printWarning(this.messager, "Hello, {}!", "printWarning"));
     }
 
     @Test
     void testPrintMandatoryWarning() {
-        printMandatoryWarning(this.processingEnv, "Hello, {}!", "printMandatoryWarning");
-        printMandatoryWarning(this.messager, "Hello, {}!", "printMandatoryWarning");
+        assertDoesNotThrow(() -> printMandatoryWarning(this.processingEnv, "Hello, {}!", "printMandatoryWarning"));
+        assertDoesNotThrow(() -> printMandatoryWarning(this.messager, "Hello, {}!", "printMandatoryWarning"));
     }
 
     @Test
     void testPrintError() {
-        printError(this.processingEnv, "Hello, {}!", "printError");
-        printError(this.messager, "Hello, {}!", "printError");
+        assertDoesNotThrow(() -> printError(this.processingEnv, "Hello, {}!", "printError"));
+        assertDoesNotThrow(() -> printError(this.messager, "Hello, {}!", "printError"));
     }
 
     @Test
     void testPrintMessage() {
-        printMessage(this.processingEnv, OTHER, "Hello, {}!", "printMessage");
-        printMessage(this.messager, OTHER, "Hello, {}!", "printMessage");
+        assertDoesNotThrow(() -> printMessage(this.processingEnv, OTHER, "Hello, {}!", "printMessage"));
+        assertDoesNotThrow(() -> printMessage(this.messager, OTHER, "Hello, {}!", "printMessage"));
     }
 }
