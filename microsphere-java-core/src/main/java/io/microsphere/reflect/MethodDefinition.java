@@ -28,6 +28,7 @@ import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.Version.of;
 
 /**
  * The definition class of Java {@link Method}, providing a structured way to define and resolve methods
@@ -74,7 +75,7 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      * @param parameterClassNames the parameter class names
      */
     public MethodDefinition(String since, Deprecation deprecation, String declaredClassName, String methodName, String... parameterClassNames) {
-        this(Version.of(since), deprecation, declaredClassName, methodName, parameterClassNames);
+        this(of(since), deprecation, declaredClassName, methodName, parameterClassNames);
     }
 
     /**

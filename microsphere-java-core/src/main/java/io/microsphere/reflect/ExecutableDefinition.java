@@ -30,6 +30,7 @@ import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.Version.of;
 import static java.util.Objects.hash;
 
 /**
@@ -89,7 +90,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      */
     protected ExecutableDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
                                    @Nonnull String name, @Nonnull String... parameterClassNames) {
-        this(Version.of(since), deprecation, declaredClassName, name, parameterClassNames);
+        this(of(since), deprecation, declaredClassName, name, parameterClassNames);
     }
 
     /**

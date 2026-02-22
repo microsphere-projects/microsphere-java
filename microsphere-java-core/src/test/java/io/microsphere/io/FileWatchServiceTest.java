@@ -1,13 +1,13 @@
 package io.microsphere.io;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.LoggingFileChangedListener;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.io.event.FileChangedEvent.Kind.values;
 
 /**
  * {@link FileWatchService} Test
@@ -25,7 +25,7 @@ class FileWatchServiceTest extends AbstractTestCase {
     @Test
     void testWatch() {
         File file = newRandomTempFile();
-        service.watch(file, new LoggingFileChangedListener(), FileChangedEvent.Kind.values());
-        service.watch(file, ofList(new LoggingFileChangedListener()), FileChangedEvent.Kind.values());
+        service.watch(file, new LoggingFileChangedListener(), values());
+        service.watch(file, ofList(new LoggingFileChangedListener()), values());
     }
 }

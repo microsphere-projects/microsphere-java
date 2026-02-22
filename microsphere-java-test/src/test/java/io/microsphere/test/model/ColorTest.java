@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.test.model.Color.BLUE;
 import static io.microsphere.test.model.Color.RED;
 import static io.microsphere.test.model.Color.YELLOW;
+import static io.microsphere.test.model.Color.values;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -92,7 +93,7 @@ class ColorTest {
     @Test
     void testAllEnumConstantsExist() {
         // Verify that we can retrieve all enum constants
-        Color[] allColors = Color.values();
+        Color[] allColors = values();
         assertEquals(3, allColors.length, "There should be exactly 3 color constants");
         
         // Verify that all expected colors are present

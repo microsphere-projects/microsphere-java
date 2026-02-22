@@ -26,6 +26,8 @@ import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
 import static java.lang.Class.forName;
 import static java.lang.Thread.currentThread;
+import static java.lang.reflect.Array.get;
+import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 
@@ -381,10 +383,10 @@ public abstract class ReflectionUtils implements Utils {
      */
     @Nonnull
     public static <T> List<T> toList(Object array) throws IllegalArgumentException {
-        int length = Array.getLength(array);
+        int length = getLength(array);
         List<T> list = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
-            Object element = Array.get(array, i);
+            Object element = get(array, i);
             list.add((T) toObject(element));
         }
         return list;

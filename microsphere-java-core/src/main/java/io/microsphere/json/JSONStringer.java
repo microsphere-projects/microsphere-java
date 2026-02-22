@@ -27,6 +27,7 @@ import static io.microsphere.json.JSONStringer.Scope.EMPTY_OBJECT;
 import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_ARRAY;
 import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.util.ClassUtils.getTypeName;
+import static java.lang.String.format;
 import static java.util.Arrays.fill;
 
 /**
@@ -373,7 +374,7 @@ public class JSONStringer {
 
                 default:
                     if (c <= 0x1F) {
-                        this.out.append(String.format("\\u%04x", (int) c));
+                        this.out.append(format("\\u%04x", (int) c));
                     } else {
                         this.out.append(c);
                     }

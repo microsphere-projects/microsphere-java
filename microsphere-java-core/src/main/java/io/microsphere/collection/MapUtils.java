@@ -40,6 +40,7 @@ import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.lang.Float.MIN_VALUE;
+import static java.lang.String.valueOf;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
 import static java.util.Collections.unmodifiableMap;
@@ -1184,7 +1185,7 @@ public abstract class MapUtils implements Utils {
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String propertyName = entry.getKey();
-            String propertyValue = String.valueOf(entry.getValue());
+            String propertyValue = valueOf(entry.getValue());
             int index = propertyName.indexOf(DOT_CHAR);
             if (index > 0) {
                 String actualPropertyName = propertyName.substring(0, index);

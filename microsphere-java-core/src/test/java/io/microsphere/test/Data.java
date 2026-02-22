@@ -20,6 +20,10 @@ package io.microsphere.test;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static java.lang.Double.compare;
+import static java.lang.Float.compare;
+
 /**
  * Data Model
  *
@@ -162,15 +166,15 @@ public class Data {
         Data data = (Data) o;
         return age == data.age
                 && male == data.male
-                && Double.compare(height, data.height) == 0
-                && Float.compare(weight, data.weight) == 0
+                && compare(height, data.height) == 0
+                && compare(weight, data.weight) == 0
                 && birth == data.birth
                 && index == data.index
                 && grade == data.grade
                 && sex == data.sex
                 && Objects.equals(this.name, data.name)
                 && Objects.equals(this.object, data.object)
-                && Arrays.equals(names, data.names);
+                && arrayEquals(names, data.names);
     }
 
     @Override

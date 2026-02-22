@@ -19,9 +19,8 @@ package io.microsphere.convert.multiple;
 
 import io.microsphere.convert.Converter;
 
-import java.lang.reflect.Array;
-
 import static java.lang.reflect.Array.newInstance;
+import static java.lang.reflect.Array.set;
 
 /**
  * The class to convert {@link String} to array-type object
@@ -44,7 +43,7 @@ public class StringToArrayConverter implements StringToMultiValueConverter {
         Object array = newInstance(componentType, size);
 
         for (int i = 0; i < size; i++) {
-            Array.set(array, i, converter.convert(segments[i]));
+            set(array, i, converter.convert(segments[i]));
         }
 
         return array;

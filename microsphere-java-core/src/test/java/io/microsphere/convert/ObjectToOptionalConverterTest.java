@@ -21,6 +21,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,7 +47,7 @@ class ObjectToOptionalConverterTest {
 
     @Test
     void testConvert() {
-        assertEquals(Optional.of("1"), converter.convert("1"));
-        assertEquals(Optional.empty(), converter.convert(null));
+        assertEquals(of("1"), converter.convert("1"));
+        assertEquals(empty(), converter.convert(null));
     }
 }

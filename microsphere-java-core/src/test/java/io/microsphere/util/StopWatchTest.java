@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StopWatch.Task.start;
+import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -57,9 +58,9 @@ class StopWatchTest {
     @Test
     void test() throws InterruptedException {
         stopWatch.start("1");
-        Thread.sleep(100);
+        sleep(100);
         stopWatch.start("2");
-        Thread.sleep(10);
+        sleep(10);
         stopWatch.stop();
         stopWatch.stop();
         Task currentTask = stopWatch.getCurrentTask();

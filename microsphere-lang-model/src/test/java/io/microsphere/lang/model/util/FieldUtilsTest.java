@@ -48,6 +48,7 @@ import static io.microsphere.lang.model.util.FieldUtils.isEnumMemberField;
 import static io.microsphere.lang.model.util.FieldUtils.isField;
 import static io.microsphere.lang.model.util.FieldUtils.isNonStaticField;
 import static io.microsphere.lang.model.util.MethodUtils.findMethod;
+import static io.microsphere.test.model.Color.values;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
@@ -266,7 +267,7 @@ class FieldUtilsTest extends UtilTest {
     @Test
     void testIsNonStaticFieldOnStaticField() {
         TypeElement type = getTypeElement(Color.class);
-        for (Color color : Color.values()) {
+        for (Color color : values()) {
             assertFalse(isNonStaticField(findField(type, color.name())));
         }
     }

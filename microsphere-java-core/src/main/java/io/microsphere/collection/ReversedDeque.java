@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 
 import static io.microsphere.util.ArrayUtils.reverse;
 import static io.microsphere.util.ArrayUtils.toArrayReversed;
+import static java.util.Spliterator.ORDERED;
 
 /**
  * Reverse ordered {@link Deque} based on JDK 21 {@link java.util.ReverseOrderDequeView}
@@ -64,7 +65,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
 
     @Override
     public Spliterator<E> spliterator() {
-        return Spliterators.spliterator(this, Spliterator.ORDERED);
+        return Spliterators.spliterator(this, ORDERED);
     }
 
     // ========== Collection ==========

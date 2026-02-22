@@ -17,8 +17,8 @@
 package io.microsphere.io;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.lang.System.arraycopy;
 import static java.util.Objects.hash;
 
@@ -159,7 +159,7 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
         if (!(obj instanceof FastByteArrayInputStream)) {
             return false;
         }
-        return Arrays.equals(this.buf, ((FastByteArrayInputStream) obj).buf);
+        return arrayEquals(this.buf, ((FastByteArrayInputStream) obj).buf);
     }
 
     @Override
