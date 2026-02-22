@@ -24,6 +24,7 @@ import static io.microsphere.lang.model.util.LoggerUtils.error;
 import static io.microsphere.lang.model.util.LoggerUtils.info;
 import static io.microsphere.lang.model.util.LoggerUtils.trace;
 import static io.microsphere.lang.model.util.LoggerUtils.warn;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -41,36 +42,36 @@ class LoggerUtilsTest {
 
     @Test
     void testTrace() {
-        trace("Hello,World");
-        trace("Hello,{}", "World");
-        trace("{},{}", "Hello", "World");
+        assertDoesNotThrow(() -> trace("Hello,World"));
+        assertDoesNotThrow(() -> trace("Hello,{}", "World"));
+        assertDoesNotThrow(() -> trace("{},{}", "Hello", "World"));
     }
 
     @Test
     void testDebug() {
-        debug("Hello,World");
-        debug("Hello,{}", "World");
-        debug("{},{}", "Hello", "World");
+        assertDoesNotThrow(() -> debug("Hello,World"));
+        assertDoesNotThrow(() -> debug("Hello,{}", "World"));
+        assertDoesNotThrow(() -> debug("{},{}", "Hello", "World"));
     }
 
     @Test
     void testInfo() {
-        info("Hello,World");
-        info("Hello,{}", "World");
-        info("{},{}", "Hello", "World");
+        assertDoesNotThrow(() -> info("Hello,World"));
+        assertDoesNotThrow(() -> info("Hello,{}", "World"));
+        assertDoesNotThrow(() -> info("{},{}", "Hello", "World"));
     }
 
     @Test
     void testWarn() {
-        warn("Hello,World");
-        warn("Hello,{}", "World");
-        warn("{},{}", "Hello", "World");
+        assertDoesNotThrow(() -> warn("Hello,World"));
+        assertDoesNotThrow(() -> warn("Hello,{}", "World"));
+        assertDoesNotThrow(() -> warn("{},{}", "Hello", "World"));
     }
 
     @Test
     void testError() {
-        error("Hello,World");
-        error("Hello,{}", "World");
-        error("{},{}", "Hello", "World");
+        assertDoesNotThrow(() -> error("Hello,World"));
+        assertDoesNotThrow(() -> error("Hello,{}", "World"));
+        assertDoesNotThrow(() -> error("{},{}", "Hello", "World"));
     }
 }
