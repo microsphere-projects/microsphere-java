@@ -8,7 +8,6 @@ import io.microsphere.logging.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -184,7 +183,7 @@ public class ProcessExecutor {
         try {
             byte[] bytes = future.get(timeout, timeUnit);
             copy(new FastByteArrayInputStream(bytes), outputStream);
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Exception e) {
             throw wrap(e, IOException.class);
         }
     }
