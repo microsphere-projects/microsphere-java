@@ -28,6 +28,7 @@ import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.ListUtils.ofArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -68,7 +69,7 @@ class DelegatingIteratorTest {
     @Test
     void testRemove() {
         while (this.delegatingIterator.hasNext()) {
-            this.delegatingIterator.next();
+            assertNotNull(this.delegatingIterator.next());
             this.delegatingIterator.remove();
         }
     }
