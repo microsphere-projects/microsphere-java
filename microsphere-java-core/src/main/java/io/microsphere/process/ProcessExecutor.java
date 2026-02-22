@@ -184,6 +184,9 @@ public class ProcessExecutor {
             byte[] bytes = future.get(timeout, timeUnit);
             copy(new FastByteArrayInputStream(bytes), outputStream);
         } catch (Exception e) {
+            if (e instanceof TimeoutException) {
+                throw (TimeoutException) e;
+            }
             throw wrap(e, IOException.class);
         }
     }
