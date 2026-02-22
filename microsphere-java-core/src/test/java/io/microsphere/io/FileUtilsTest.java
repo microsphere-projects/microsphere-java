@@ -268,6 +268,7 @@ class FileUtilsTest extends AbstractTestCase {
 
         File link = makeLinkFile(tempDir);
         deleteDirectoryOnExit(link);
+        assertTrue(link.exists());
 
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {
@@ -276,7 +277,9 @@ class FileUtilsTest extends AbstractTestCase {
                 createRandomFile(tempDir);
             }
         }
+
         deleteDirectoryOnExit(tempDir);
+        assertTrue(link.exists());
     }
 
     @Test
