@@ -31,6 +31,7 @@ import java.util.Collection;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -76,6 +77,7 @@ public class AnnotationProcessingTest extends AbstractAnnotationProcessingTest i
     @Test
     @ExtendWith(AnnotationProcessingTest.class)
     void testOnFailure() {
+        assertNotNull(AnnotationProcessingTest.class);
         throw new RuntimeException("For testing");
     }
 
