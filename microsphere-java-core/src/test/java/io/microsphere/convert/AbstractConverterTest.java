@@ -23,6 +23,7 @@ import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -73,6 +74,7 @@ class AbstractConverterTest extends BaseConverterTest<String, String> {
 
     @Test
     void testConvertIfPossible() {
+        assertNotNull(this.converter);
     }
 
     @Test
