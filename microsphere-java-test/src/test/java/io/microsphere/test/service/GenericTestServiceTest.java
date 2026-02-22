@@ -1,9 +1,11 @@
 package io.microsphere.test.service;
 
+import io.microsphere.test.model.Model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -39,11 +41,9 @@ class GenericTestServiceTest {
         // Example: Testing a method inherited from DefaultTestService
         // Assuming DefaultTestService has a method like model(Model model)
         // Uncomment and adapt the following lines if such a method exists:
-        /*
         Model inputModel = new Model();
         Model outputModel = genericTestService.model(inputModel);
         assertSame(inputModel, outputModel, "The inherited model method should return the same Model object.");
-        */
     }
 
     /**
@@ -52,7 +52,7 @@ class GenericTestServiceTest {
      */
     @Test
     void testEventListenerImplementation() {
-        assertTrue(genericTestService instanceof java.util.EventListener, 
-                   "GenericTestService should implement the EventListener interface.");
+        assertTrue(genericTestService instanceof java.util.EventListener,
+                "GenericTestService should implement the EventListener interface.");
     }
 }
