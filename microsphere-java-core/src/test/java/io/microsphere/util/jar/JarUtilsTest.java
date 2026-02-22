@@ -33,6 +33,7 @@ import static io.microsphere.util.jar.JarUtils.resolveJarAbsolutePath;
 import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -135,30 +136,30 @@ class JarUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testExtractWithURL() throws IOException {
-        extract(this.resourceURL, this.targetDirectory, (JarEntryFilter) filteredObject -> !filteredObject.isDirectory());
+    void testExtractWithURL() {
+        assertDoesNotThrow(() -> extract(this.resourceURL, this.targetDirectory, (JarEntryFilter) filteredObject -> !filteredObject.isDirectory()));
 
         URL resourceURL = getResource(this.classLoader, PACKAGE, "javax.annotation");
-        extract(resourceURL, this.targetDirectory, (JarEntryFilter) filteredObject -> !filteredObject.isDirectory());
+        assertDoesNotThrow(() -> extract(resourceURL, this.targetDirectory, (JarEntryFilter) filteredObject -> !filteredObject.isDirectory()));
     }
 
     @Test
-    void testDoExtractOnNullJarFile() throws IOException {
-        doExtract(null, null, this.targetDirectory);
+    void testDoExtractOnNullJarFile() {
+        assertDoesNotThrow(() -> doExtract(null, null, this.targetDirectory));
     }
 
     @Test
-    void testDoExtractWithoutJarEntry() throws IOException {
+    void testDoExtractWithoutJarEntry() {
         JarFile jarFile = toJarFile(this.resourceURL);
-        doExtract(jarFile, null, this.targetDirectory);
+        assertDoesNotThrow(() -> doExtract(jarFile, null, this.targetDirectory));
     }
 
     @Test
-    void testDoExtractOnMissingMatch() throws IOException {
+    void testDoExtractOnMissingMatch() {
         URL resourceURL = getClassResource(this.classLoader, Test.class);
         JarFile jarFile = toJarFile(resourceURL);
         List<JarEntry> jarEntries = filter(jarFile, null);
-        doExtract(toJarFile(this.resourceURL), jarEntries, this.targetDirectory);
+        assertDoesNotThrow(() -> doExtract(toJarFile(this.resourceURL), jarEntries, this.targetDirectory));
     }
 
     @Test
