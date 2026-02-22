@@ -214,7 +214,7 @@ public abstract class URLUtils implements Utils {
 
     protected static String doResolveArchiveEntryPath(String path) {
         String archiveEntryPath = substringAfter(path, ARCHIVE_ENTRY_SEPARATOR);
-        return EMPTY == archiveEntryPath ? null : decode(archiveEntryPath);
+        return EMPTY.equals(archiveEntryPath) ? null : decode(archiveEntryPath);
     }
 
     /**
