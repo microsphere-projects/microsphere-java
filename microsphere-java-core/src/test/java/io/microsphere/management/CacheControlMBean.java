@@ -28,4 +28,6 @@ public interface CacheControlMBean {
 
     @Units("bytes")
     long getCacheSize();
+
+    void setCacheSize(@Units("bytes") long cacheSize);
 }
