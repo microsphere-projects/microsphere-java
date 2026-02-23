@@ -561,7 +561,10 @@ public abstract class JmxUtils implements Utils {
      * @see MBeanOperationInfo#methodSignature(Method)
      */
     public static MBeanParameterInfo[] methodSignature(Method method) {
-        Parameter[] parameters = method.getParameters();
+        return signature(method.getParameters());
+    }
+
+    public static MBeanParameterInfo[] signature(Parameter[] parameters) {
         return of(parameters)
                 .map(MBeanParameterInfoBuilder::parameter)
                 .map(MBeanParameterInfoBuilder::build)
