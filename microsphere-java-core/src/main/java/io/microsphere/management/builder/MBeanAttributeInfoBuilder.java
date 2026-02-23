@@ -57,6 +57,11 @@ public class MBeanAttributeInfoBuilder extends MBeanFeatureInfoBuilder<MBeanAttr
         super();
     }
 
+    public MBeanAttributeInfoBuilder attributeType(String attributeType) {
+        this.attributeType = attributeType;
+        return this;
+    }
+
     public MBeanAttributeInfoBuilder write(boolean isWritable) {
         this.write = isWritable;
         return this;
@@ -83,8 +88,6 @@ public class MBeanAttributeInfoBuilder extends MBeanFeatureInfoBuilder<MBeanAttr
 
     public static MBeanAttributeInfoBuilder attribute(@Nonnull String attributeType) {
         assertNotNull(attributeType, () -> "The 'attributeType' must not be null");
-        MBeanAttributeInfoBuilder builder = new MBeanAttributeInfoBuilder();
-        builder.attributeType = attributeType;
-        return builder;
+        return new MBeanAttributeInfoBuilder().attributeType(attributeType);
     }
 }
