@@ -18,6 +18,7 @@
 package io.microsphere.management.builder;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanFeatureInfo;
@@ -37,7 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see MBeanFeatureInfoBuilderTest
  * @since 1.0.0
  */
-public class AbstractMBeanFeatureInfoBuilderTest<B extends MBeanFeatureInfoBuilder> {
+@Disabled
+abstract class AbstractMBeanFeatureInfoBuilderTest<B extends MBeanFeatureInfoBuilder> {
 
     static final String TEST_NAME = "test-name";
 
