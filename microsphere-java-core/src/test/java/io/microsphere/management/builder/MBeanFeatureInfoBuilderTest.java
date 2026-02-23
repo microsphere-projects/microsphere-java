@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import javax.management.modelmbean.DescriptorSupport;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link MBeanFeatureInfoBuilder} Test
@@ -43,20 +44,20 @@ class MBeanFeatureInfoBuilderTest {
 
     @Test
     void testName() {
-        this.builder.name("test");
+        assertSame(this.builder, this.builder.name("test"));
         assertEquals("test", this.builder.name);
     }
 
     @Test
     void testDescription() {
-        this.builder.description("test");
+        assertSame(this.builder, this.builder.description("test"));
         assertEquals("test", this.builder.description);
     }
 
     @Test
     void testDescriptor() {
         DescriptorSupport descriptor = new DescriptorSupport();
-        this.builder.descriptor(descriptor);
+        assertSame(this.builder, this.builder.descriptor(descriptor));
         assertEquals(descriptor, this.builder.descriptor);
     }
 }
