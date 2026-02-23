@@ -18,13 +18,11 @@
 package io.microsphere.management.builder;
 
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanAttributeInfo;
 import javax.management.modelmbean.DescriptorSupport;
 
-import static io.microsphere.management.builder.MBeanAttributeInfoBuilder.attribute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -36,14 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see MBeanAttributeInfoBuilder
  * @since 1.0.0
  */
-class MBeanAttributeInfoBuilderTest {
-
-    private MBeanAttributeInfoBuilder builder;
-
-    @BeforeEach
-    void setUp() {
-        this.builder = attribute(Boolean.class);
-    }
+class MBeanAttributeInfoBuilderTest extends AbstractMBeanFeatureInfoBuilderTest<MBeanAttributeInfoBuilder> {
 
     @Test
     void testBuild() {
@@ -51,6 +42,7 @@ class MBeanAttributeInfoBuilderTest {
         String descrption = "NoDesc";
         DescriptorSupport descriptor = new DescriptorSupport();
 
+        assertSame(this.builder, this.builder.attributeType("java.lang.Boolean"));
         assertSame(this.builder, this.builder.name(name));
         assertSame(this.builder, this.builder.description(descrption));
         assertSame(this.builder, this.builder.descriptor(descriptor));
