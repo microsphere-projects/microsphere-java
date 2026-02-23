@@ -66,4 +66,8 @@ public class MBeanFeatureInfoBuilder<B extends MBeanFeatureInfoBuilder> {
         this.descriptor = descriptor;
         return (B) this;
     }
+
+    public MBeanFeatureInfo build() {
+        return new MBeanFeatureInfo(this.name, this.description, this.descriptor);
+    }
 }
