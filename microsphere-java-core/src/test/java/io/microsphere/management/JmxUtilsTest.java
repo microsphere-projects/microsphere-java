@@ -20,13 +20,28 @@ import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javax.management.Attribute;
+import javax.management.AttributeList;
+import javax.management.AttributeNotFoundException;
+import javax.management.Descriptor;
+import javax.management.DynamicMBean;
+import javax.management.ImmutableDescriptor;
+import javax.management.InvalidAttributeValueException;
+import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanException;
+import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
+import java.lang.annotation.Annotation;
 import java.lang.management.PlatformManagedObject;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Optional;
 
 import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_ATTRIBUTE_ARRAY;
+import static io.microsphere.management.JmxUtils.descriptorForAnnotations;
+import static io.microsphere.management.JmxUtils.descriptorForElement;
 import static io.microsphere.management.JmxUtils.getAttribute;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
 import static io.microsphere.management.JmxUtils.getCompilationMXBean;
@@ -39,6 +54,8 @@ import static io.microsphere.management.JmxUtils.getMemoryPoolMXBeans;
 import static io.microsphere.management.JmxUtils.getOperatingSystemMXBean;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.management.JmxUtils.getThreadMXBean;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.management.ManagementFactory.CLASS_LOADING_MXBEAN_NAME;
 import static java.lang.management.ManagementFactory.COMPILATION_MXBEAN_NAME;
 import static java.lang.management.ManagementFactory.GARBAGE_COLLECTOR_MXBEAN_DOMAIN_TYPE;
@@ -49,8 +66,11 @@ import static java.lang.management.ManagementFactory.RUNTIME_MXBEAN_NAME;
 import static java.lang.management.ManagementFactory.THREAD_MXBEAN_NAME;
 import static java.lang.management.ManagementFactory.getPlatformMBeanServer;
 import static java.util.Collections.emptyMap;
+import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
 import static javax.management.ObjectName.getInstance;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -183,6 +203,85 @@ class JmxUtilsTest extends AbstractTestCase {
         assertNull(value);
     }
 
+    @Test
+    void testGetAttributeOnUnreadableAttribute() throws Exception {
+        String attributeName = "a";
+        String descrption = "NoDesc";
+        MBeanAttributeInfo attribute = new MBeanAttributeInfo(attributeName, "java.lang.String", descrption, false, false, false);
+        MBeanAttributeInfo[] attributes = ofArray(attribute);
+
+        MBeanInfo mBeanInfo = new MBeanInfo("Test", descrption, attributes, ofArray(), ofArray(), ofArray());
+        ObjectName objectName = getInstance("io.microsphere.management:type=Test");
+
+        DynamicMBean dynamicMBean = new DynamicMBean() {
+            @Override
+            public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
+                return null;
+            }
+
+            @Override
+            public void setAttribute(Attribute attribute) throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException {
+
+            }
+
+            @Override
+            public AttributeList getAttributes(String[] attributes) {
+                return null;
+            }
+
+            @Override
+            public AttributeList setAttributes(AttributeList attributes) {
+                return null;
+            }
+
+            @Override
+            public Object invoke(String actionName, Object[] params, String[] signature) throws MBeanException, ReflectionException {
+                return null;
+            }
+
+            @Override
+            public MBeanInfo getMBeanInfo() {
+                return mBeanInfo;
+            }
+        };
+
+        mBeanServer.registerMBean(dynamicMBean, objectName);
+
+        Object value = getAttribute(mBeanServer, objectName, attributeName);
+        assertNull(value);
+    }
+
+    @Test
+    void testGetAttributeOnReflectionException() {
+
+    }
+
+    @Test
+    void testDescriptorForElement() {
+        Method method = findMethod(CacheControlMBean.class, "getCacheSize");
+        Descriptor descriptor = descriptorForElement(method);
+        assertInstanceOf(ImmutableDescriptor.class, descriptor);
+        ImmutableDescriptor immutableDescriptor = (ImmutableDescriptor) descriptor;
+        assertArrayEquals(ofArray("units"), immutableDescriptor.getFieldNames());
+        assertEquals("bytes", immutableDescriptor.getFieldValue("units"));
+    }
+
+    @Test
+    void testDescriptorForElementOnNoDisciptorKeyAnnotated() {
+        Method method = findMethod(CacheControlMBean.class, "toString");
+        Descriptor descriptor = descriptorForElement(method);
+        assertSame(EMPTY_DESCRIPTOR, descriptor);
+    }
+
+    @Test
+    void testDescriptorForAnnotationsOnNull() {
+        assertSame(EMPTY_DESCRIPTOR, descriptorForAnnotations(null));
+    }
+
+    @Test
+    void testDescriptorForAnnotationsOnEmptyAnnotations() {
+        assertSame(EMPTY_DESCRIPTOR, descriptorForAnnotations(new Annotation[0]));
+    }
 
     private void assertPlatformMXBean(Optional<? extends PlatformManagedObject> platformMXBean, String name) throws Throwable {
         if (platformMXBean.isPresent()) {
