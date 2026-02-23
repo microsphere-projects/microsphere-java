@@ -21,9 +21,12 @@ package io.microsphere.management.builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.management.MBeanFeatureInfo;
 import javax.management.modelmbean.DescriptorSupport;
 
+import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -33,31 +36,61 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see MBeanFeatureInfoBuilder
  * @since 1.0.0
  */
-class MBeanFeatureInfoBuilderTest {
+class MBeanFeatureInfoBuilderTest<B extends MBeanFeatureInfoBuilder> {
+
+    static final String TEST_NAME = "test-name";
+
+    static final String TEST_DESCRIPTION = "test-desc";
+
+    static final DescriptorSupport TEST_DESCRIPTOR = new DescriptorSupport();
+
 
     private MBeanFeatureInfoBuilder builder;
 
     @BeforeEach
     void setUp() {
-        this.builder = new MBeanFeatureInfoBuilder();
+        this.builder = builder();
+    }
+
+    protected B builder() {
+        return (B) new MBeanFeatureInfoBuilder();
     }
 
     @Test
     void testName() {
-        assertSame(this.builder, this.builder.name("test"));
-        assertEquals("test", this.builder.name);
+        assertSame(this.builder, this.builder.name(TEST_NAME));
+        assertEquals(TEST_NAME, this.builder.name);
     }
 
     @Test
     void testDescription() {
-        assertSame(this.builder, this.builder.description("test"));
-        assertEquals("test", this.builder.description);
+        assertSame(this.builder, this.builder.description(TEST_DESCRIPTION));
+        assertEquals(TEST_DESCRIPTION, this.builder.description);
     }
 
     @Test
     void testDescriptor() {
-        DescriptorSupport descriptor = new DescriptorSupport();
-        assertSame(this.builder, this.builder.descriptor(descriptor));
-        assertEquals(descriptor, this.builder.descriptor);
+        assertSame(this.builder, this.builder.descriptor(TEST_DESCRIPTOR));
+        assertEquals(TEST_DESCRIPTOR, this.builder.descriptor);
+    }
+
+    @Test
+    void testBuild() {
+        MBeanFeatureInfo info = this.builder.build();
+        assertNull(info.getName());
+        assertNull(info.getDescription());
+        assertSame(EMPTY_DESCRIPTOR, info.getDescriptor());
+
+        assertSame(this.builder, this.builder.name(TEST_NAME));
+        info = this.builder.build();
+        assertSame(TEST_NAME, info.getName());
+
+        assertSame(this.builder, this.builder.description(TEST_DESCRIPTION));
+        info = this.builder.build();
+        assertEquals(TEST_DESCRIPTION, info.getDescription());
+
+        assertSame(this.builder, this.builder.descriptor(TEST_DESCRIPTOR));
+        info = this.builder.build();
+        assertEquals(TEST_DESCRIPTOR, info.getDescriptor());
     }
 }
