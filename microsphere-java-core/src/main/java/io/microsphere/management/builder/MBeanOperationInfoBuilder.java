@@ -19,21 +19,12 @@ package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nonnull;
 
-import javax.management.Descriptor;
 import javax.management.MBeanFeatureInfo;
 import javax.management.MBeanOperationInfo;
-import javax.management.MBeanParameterInfo;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.function.Consumer;
 
-import static io.microsphere.collection.ListUtils.newLinkedList;
-import static io.microsphere.management.JmxUtils.descriptorForElement;
-import static io.microsphere.management.JmxUtils.methodSignature;
 import static io.microsphere.management.builder.MBeanOperationInfoBuilder.Impact.UNKNOWN;
-import static io.microsphere.management.builder.MBeanParameterInfoBuilder.parameter;
 import static io.microsphere.util.ClassUtils.getTypeName;
-import static java.util.Collections.addAll;
 
 /**
  * {@link MBeanOperationInfo} Builder
@@ -44,19 +35,13 @@ import static java.util.Collections.addAll;
  * @see MBeanFeatureInfoBuilder
  * @since 1.0.0
  */
-public class MBeanOperationInfoBuilder extends MBeanFeatureInfoBuilder<MBeanOperationInfoBuilder> {
+public class MBeanOperationInfoBuilder extends MBeanExecutableInfoBuilder<MBeanOperationInfoBuilder> {
 
     /**
      * The method's return value.
      */
     @Nonnull
     private String type;
-
-    /**
-     * The signature of the method, that is, the class names
-     * of the arguments.
-     */
-    private final List<MBeanParameterInfo> parameters = newLinkedList();
 
     /**
      * The impact of the method, one of {@link MBeanOperationInfo#INFO}, {@link MBeanOperationInfo#ACTION},
@@ -69,28 +54,13 @@ public class MBeanOperationInfoBuilder extends MBeanFeatureInfoBuilder<MBeanOper
         impact(UNKNOWN);
     }
 
-    MBeanOperationInfoBuilder signature(MBeanParameterInfo[] signature) {
-        this.parameters.clear();
-        addAll(this.parameters, signature);
-        return this;
-    }
-
-    public MBeanOperationInfoBuilder param(Class<?> type, Consumer<MBeanParameterInfoBuilder> parameterBuilderConsumer) {
-        MBeanParameterInfoBuilder builder = parameter(type);
-        parameterBuilderConsumer.accept(builder);
-        MBeanParameterInfo build = builder.build();
-        this.parameters.add(build);
-        return this;
-    }
-
     public MBeanOperationInfoBuilder impact(Impact impact) {
         this.impact = impact.getValue();
         return this;
     }
 
     public MBeanOperationInfo build() {
-        return new MBeanOperationInfo(this.name, this.description, this.parameters.toArray(new MBeanParameterInfo[0]),
-                this.type, this.impact, this.descriptor);
+        return new MBeanOperationInfo(this.name, this.description, toSignature(), this.type, this.impact, this.descriptor);
     }
 
     public static MBeanOperationInfoBuilder operation(Class<?> type) {
@@ -105,14 +75,7 @@ public class MBeanOperationInfoBuilder extends MBeanFeatureInfoBuilder<MBeanOper
 
     public static MBeanOperationInfoBuilder operation(Method method) {
         Class<?> returnType = method.getReturnType();
-        String name = method.getName();
-        Descriptor descriptor = descriptorForElement(method);
-        MBeanParameterInfo[] signature = methodSignature(method);
-        return operation(returnType)
-                .name(name)
-                .signature(signature)
-                .descriptor(descriptor)
-                .description(method.toString());
+        return operation(returnType).from(method);
     }
 
     public enum Impact {
