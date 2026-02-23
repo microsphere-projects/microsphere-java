@@ -19,9 +19,13 @@ package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nonnull;
 
+import javax.management.Descriptor;
 import javax.management.MBeanFeatureInfo;
 import javax.management.MBeanParameterInfo;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
 
+import static io.microsphere.management.JmxUtils.descriptorForAnnotations;
 import static io.microsphere.util.ClassUtils.getTypeName;
 
 /**
@@ -57,5 +61,15 @@ public class MBeanParameterInfoBuilder extends MBeanFeatureInfoBuilder<MBeanPara
         MBeanParameterInfoBuilder builder = new MBeanParameterInfoBuilder();
         builder.type = type;
         return builder;
+    }
+
+    public static MBeanParameterInfoBuilder parameter(Parameter parameter) {
+        Annotation[] annotations = parameter.getAnnotations();
+        Descriptor descriptor = descriptorForAnnotations(annotations);
+        String name = parameter.getName();
+        return parameter(parameter.getType())
+                .name(name)
+                .descriptor(descriptor)
+                .description(parameter.toString());
     }
 }

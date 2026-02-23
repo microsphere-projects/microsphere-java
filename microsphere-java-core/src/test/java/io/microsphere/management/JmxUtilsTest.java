@@ -30,6 +30,7 @@ import javax.management.InvalidAttributeValueException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
+import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
@@ -54,6 +55,7 @@ import static io.microsphere.management.JmxUtils.getMemoryPoolMXBeans;
 import static io.microsphere.management.JmxUtils.getOperatingSystemMXBean;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.management.JmxUtils.getThreadMXBean;
+import static io.microsphere.management.JmxUtils.methodSignature;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.management.ManagementFactory.CLASS_LOADING_MXBEAN_NAME;
@@ -281,6 +283,20 @@ class JmxUtilsTest extends AbstractTestCase {
     @Test
     void testDescriptorForAnnotationsOnEmptyAnnotations() {
         assertSame(EMPTY_DESCRIPTOR, descriptorForAnnotations(new Annotation[0]));
+    }
+
+    @Test
+    void testMethodSignature() {
+        String methodName = "setCacheSize";
+        Method method = findMethod(CacheControlMBean.class, methodName, long.class);
+        MBeanParameterInfo[] signature = methodSignature(method);
+        assertEquals(1, signature.length);
+        MBeanParameterInfo info = signature[0];
+
+        assertEquals("cacheSize", info.getName());
+        assertEquals(long.class.getName(), info.getType());
+        assertEquals("long cacheSize", info.getDescription());
+        assertInstanceOf(ImmutableDescriptor.class, info.getDescriptor());
     }
 
     private void assertPlatformMXBean(Optional<? extends PlatformManagedObject> platformMXBean, String name) throws Throwable {

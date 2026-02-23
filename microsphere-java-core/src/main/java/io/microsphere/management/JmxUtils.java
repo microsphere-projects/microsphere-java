@@ -20,6 +20,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.management.builder.MBeanParameterInfoBuilder;
 import io.microsphere.util.Utils;
 
 import javax.management.AttributeNotFoundException;
@@ -30,6 +31,8 @@ import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
@@ -46,6 +49,7 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -62,6 +66,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Stream.of;
 import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
 
 /**
@@ -552,12 +557,29 @@ public abstract class JmxUtils implements Utils {
     }
 
 
+    /**
+     * @see MBeanOperationInfo#methodSignature(Method)
+     */
+    public static MBeanParameterInfo[] methodSignature(Method method) {
+        Parameter[] parameters = method.getParameters();
+        return of(parameters)
+                .map(MBeanParameterInfoBuilder::parameter)
+                .map(MBeanParameterInfoBuilder::build)
+                .toArray(MBeanParameterInfo[]::new);
+    }
+
+    /**
+     * @see com.sun.jmx.mbeanserver.Introspector#descriptorForElement(AnnotatedElement)
+     */
     @Nonnull
     public static Descriptor descriptorForElement(AnnotatedElement annotatedElement) {
         Annotation[] annotations = annotatedElement.getAnnotations();
         return descriptorForAnnotations(annotations);
     }
 
+    /**
+     * @see com.sun.jmx.mbeanserver.Introspector#descriptorForAnnotations(Annotation[])
+     */
     @Nonnull
     public static Descriptor descriptorForAnnotations(Annotation[] annotations) {
         int length = length(annotations);
