@@ -1,6 +1,5 @@
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -9,6 +8,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING_ARRAY;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see SetUtils
  * @since 1.0.0
  */
-class SetUtilsTest extends AbstractTestCase {
+class SetUtilsTest {
 
     private static final String[] ELEMENTS = new String[]{"a", "b", "c"};
 
@@ -165,5 +165,4 @@ class SetUtilsTest extends AbstractTestCase {
         assertTrue(set.contains("c"));
         assertFalse(set.contains("d"));
     }
-
 }
