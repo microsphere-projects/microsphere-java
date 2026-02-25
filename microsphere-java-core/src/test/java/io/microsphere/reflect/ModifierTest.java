@@ -16,7 +16,7 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.util.AbstractList;
@@ -99,7 +99,7 @@ class ModifierTest {
 
     @Test
     void testIsProtected() throws NoSuchFieldException {
-        assertTrue(isProtected(AbstractTestCase.class.getDeclaredField("logger").getModifiers()));
+        assertTrue(isProtected(Loggable.class.getDeclaredField("logger").getModifiers()));
         assertFalse(isProtected(String.class.getModifiers()));
     }
 
