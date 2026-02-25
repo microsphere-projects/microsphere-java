@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import io.microsphere.AbstractTestCase;
-import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -30,7 +29,6 @@ import java.util.List;
 
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.EMPTY_ANNOTATION_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_ARRAY;
 import static io.microsphere.util.ArrayUtils.EMPTY_BOOLEAN_OBJECT_ARRAY;
@@ -91,8 +89,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 class ArrayUtilsTest extends AbstractTestCase {
-
-    private static final Logger logger = getLogger(ArrayUtilsTest.class);
 
     @Test
     void testConstants() {
@@ -909,9 +905,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -919,9 +913,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -929,9 +921,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnCharArray() {
         char[] values = ofChars('A');
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -939,9 +929,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -949,9 +937,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnIntArray() {
         int[] values = ofInts(1);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -959,9 +945,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -969,9 +953,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -979,9 +961,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -989,9 +969,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithConsumerOnObjectArray() {
         Object[] values = of("A");
         forEach(values, (value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(value : {})", value);
-            }
+            log("forEach(value : {})", value);
         });
     }
 
@@ -999,9 +977,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnBooleanArray() {
         boolean[] values = ofBooleans(true);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1009,9 +985,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnByteArray() {
         byte[] values = ofBytes((byte) 1);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1019,9 +993,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnCharArray() {
         char[] values = ofChars('A');
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1029,9 +1001,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnShortArray() {
         short[] values = ofShorts((short) 1);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1039,9 +1009,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnIntArray() {
         int[] values = ofInts(1);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1049,9 +1017,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnLongArray() {
         long[] values = ofLongs(1L);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1059,9 +1025,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnFloatArray() {
         float[] values = ofFloats(1F);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1069,9 +1033,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnDoubleArray() {
         double[] values = ofDoubles(1D);
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
@@ -1079,9 +1041,7 @@ class ArrayUtilsTest extends AbstractTestCase {
     void testForEachWithBiConsumerOnObjectArray() {
         Object[] values = of("A");
         forEach(values, (index, value) -> {
-            if (logger.isTraceEnabled()) {
-                logger.trace("forEach(index : {} , value : {})", index, value);
-            }
+            log("forEach(index : {} , value : {})", index, value);
         });
     }
 
