@@ -16,13 +16,11 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -35,8 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @since 1.0.0
  */
 class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
-
-    private static final Logger logger = getLogger(MethodDefinitionTest.class);
 
     @Override
     protected List<Object> getTailConstructorArguments() {
@@ -61,13 +57,6 @@ class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefini
     void testInvoke() {
         for (MethodDefinition definition : definitions) {
             assertNull(definition.invoke(this, definition.toString()));
-        }
-    }
-
-
-    private void log(String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(message);
         }
     }
 }
