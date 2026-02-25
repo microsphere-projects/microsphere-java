@@ -18,13 +18,13 @@
 package io.microsphere.io.event;
 
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 
+import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see LoggingFileChangedListener
  * @since 1.0.0
  */
-class LoggingFileChangedListenerTest extends AbstractTestCase {
+class LoggingFileChangedListenerTest {
 
     private LoggingFileChangedListener listener;
 
