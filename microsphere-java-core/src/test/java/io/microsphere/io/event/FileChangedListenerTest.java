@@ -1,6 +1,6 @@
 package io.microsphere.io.event;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.util.ValueHolder;
 import org.junit.jupiter.api.AfterEach;
@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.io.FileUtils.forceDelete;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
@@ -27,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see FileChangedListener
  * @since
  */
-class FileChangedListenerTest extends AbstractTestCase {
+class FileChangedListenerTest extends Loggable {
 
     private FileChangedListener listener;
 
