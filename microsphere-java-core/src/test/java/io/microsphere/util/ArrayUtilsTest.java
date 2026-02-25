@@ -16,7 +16,7 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -27,6 +27,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_OBJECT_ARRAY;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.util.ArrayUtils.EMPTY_ANNOTATION_ARRAY;
@@ -88,7 +89,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class ArrayUtilsTest extends AbstractTestCase {
+class ArrayUtilsTest extends Loggable {
 
     @Test
     void testConstants() {
