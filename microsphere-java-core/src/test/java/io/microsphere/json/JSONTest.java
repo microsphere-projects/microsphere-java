@@ -18,9 +18,9 @@
 package io.microsphere.json;
 
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.AbstractTestCase.random;
 import static io.microsphere.json.JSON.checkDouble;
 import static io.microsphere.json.JSON.toBoolean;
 import static io.microsphere.json.JSON.toDouble;
@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see JSON
  * @since 1.0.0
  */
-class JSONTest extends AbstractTestCase {
+class JSONTest {
 
     @Test
     void testCheckDouble() throws Throwable {
