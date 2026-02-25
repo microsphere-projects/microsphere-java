@@ -18,7 +18,6 @@
 package io.microsphere.beans;
 
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.test.MultipleValueData;
 import org.junit.jupiter.api.Test;
@@ -33,6 +32,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.microsphere.AbstractTestCase.newRandomTempFile;
 import static io.microsphere.beans.BeanUtils.findPropertyDescriptor;
 import static io.microsphere.beans.BeanUtils.findWriteMethod;
 import static io.microsphere.beans.BeanUtils.getBeanMetadata;
@@ -62,7 +62,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see BeanUtils
  * @since 1.0.0
  */
-class BeanUtilsTest extends AbstractTestCase {
+class BeanUtilsTest {
 
     @Test
     void testGetBeanMetadata() {
