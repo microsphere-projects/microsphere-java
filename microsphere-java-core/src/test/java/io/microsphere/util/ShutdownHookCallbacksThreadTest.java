@@ -18,9 +18,10 @@ class ShutdownHookCallbacksThreadTest {
     void testRun() {
         ShutdownHookCallbacksThread thread = INSTANCE;
 
+        ShutdownHookUtilsTest test = new ShutdownHookUtilsTest();
         int times = 3;
         for (int i = 0; i < times; i++) {
-            addShutdownHookCallback(new ShutdownHookUtilsTest.ShutdownHookCallback(i));
+            addShutdownHookCallback(new ShutdownHookCallback(i));
         }
 
         thread.run();
