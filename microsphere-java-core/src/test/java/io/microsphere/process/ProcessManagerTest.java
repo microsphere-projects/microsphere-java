@@ -1,6 +1,6 @@
 package io.microsphere.process;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see ProcessManager
  * @since 1.0.0
  */
-class ProcessManagerTest extends AbstractTestCase {
+class ProcessManagerTest extends Loggable {
 
     @BeforeEach
     void setUp() {
