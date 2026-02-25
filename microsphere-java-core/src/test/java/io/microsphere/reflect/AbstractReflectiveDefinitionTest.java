@@ -1,5 +1,6 @@
 package io.microsphere.reflect;
 
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> {
+public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> extends AbstractTestCase {
 
     private final List<Object>[] headConstructorArgumentsArray = ofArray(
             ofList(SINCE, getClassName()),
