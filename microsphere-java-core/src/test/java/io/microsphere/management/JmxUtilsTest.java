@@ -41,6 +41,10 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_ATTRIBUTE_ARRAY;
+import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_ATTRIBUTE_INFO_ARRAY;
+import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_CONSTRUCTOR_INFO_ARRAY;
+import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_NOTIFICATION_INFO_ARRAY;
+import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_OPERATION_INFO_ARRAY;
 import static io.microsphere.management.JmxUtils.descriptorForAnnotations;
 import static io.microsphere.management.JmxUtils.descriptorForElement;
 import static io.microsphere.management.JmxUtils.getAttribute;
@@ -57,6 +61,7 @@ import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.management.JmxUtils.getThreadMXBean;
 import static io.microsphere.management.JmxUtils.methodSignature;
 import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.management.ManagementFactory.CLASS_LOADING_MXBEAN_NAME;
 import static java.lang.management.ManagementFactory.COMPILATION_MXBEAN_NAME;
@@ -100,6 +105,15 @@ class JmxUtilsTest extends AbstractTestCase {
         objectName = getInstance("java.lang:type=ClassLoading");
         notFoundObjectName = getInstance("java.lang:type=NotFound");
         notFoundAttributeName = "NotFound";
+    }
+
+    @Test
+    void testConstants() {
+        assertTrue(isEmpty(EMPTY_MBEAN_ATTRIBUTE_ARRAY));
+        assertTrue(isEmpty(EMPTY_MBEAN_ATTRIBUTE_INFO_ARRAY));
+        assertTrue(isEmpty(EMPTY_MBEAN_OPERATION_INFO_ARRAY));
+        assertTrue(isEmpty(EMPTY_MBEAN_CONSTRUCTOR_INFO_ARRAY));
+        assertTrue(isEmpty(EMPTY_MBEAN_NOTIFICATION_INFO_ARRAY));
     }
 
     @Test
