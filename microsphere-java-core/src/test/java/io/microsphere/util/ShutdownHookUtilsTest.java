@@ -16,8 +16,7 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
-import io.microsphere.lang.Prioritized;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class ShutdownHookUtilsTest extends AbstractTestCase {
+class ShutdownHookUtilsTest extends Loggable {
 
     @BeforeEach
     void setUp() {
@@ -147,22 +146,4 @@ class ShutdownHookUtilsTest extends AbstractTestCase {
         thread.start();
     }
 
-    class ShutdownHookCallback implements Runnable, Prioritized {
-
-        private final int priority;
-
-        ShutdownHookCallback(int priority) {
-            this.priority = priority;
-        }
-
-        @Override
-        public void run() {
-            log("Run an instance of ShutdownHookCallback[priority : {}] : {}", priority, this);
-        }
-
-        @Override
-        public int getPriority() {
-            return priority;
-        }
-    }
 }
