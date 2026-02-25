@@ -60,8 +60,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ListUtilsTest extends AbstractTestCase {
 
-    private static final Logger logger = getLogger(ListUtilsTest.class);
-
     private static final List<String> TEST_LIST = asList("A", "B", "C");
 
     @Test
@@ -190,7 +188,7 @@ class ListUtilsTest extends AbstractTestCase {
         MutableInteger mutableInteger = MutableInteger.of(0);
         Iterator<String> iterator = list.iterator();
         forEach(list, (index, value) -> {
-            logger.trace("forEach(index = {} , value = '{}')", index, value);
+            log("forEach(index = {} , value = '{}')", index, value);
             assertEquals(index, mutableInteger.getAndIncrement());
             assertTrue(iterator.hasNext());
             assertEquals(iterator.next(), value);
@@ -198,7 +196,7 @@ class ListUtilsTest extends AbstractTestCase {
 
         Iterator<String> iterator2 = list.iterator();
         forEach(list, (value) -> {
-            logger.trace("forEach(value = '{}')", value);
+            log("forEach(value = '{}')", value);
             assertTrue(iterator2.hasNext());
             assertEquals(iterator2.next(), value);
         });
