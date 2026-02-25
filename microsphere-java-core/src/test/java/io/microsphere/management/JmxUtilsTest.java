@@ -16,7 +16,6 @@
  */
 package io.microsphere.management;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -95,7 +94,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class JmxUtilsTest extends AbstractTestCase {
+class JmxUtilsTest {
 
     private static MBeanServer mBeanServer;
 
@@ -309,6 +308,7 @@ class JmxUtilsTest extends AbstractTestCase {
         MBeanAttributeInfo mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, notFoundObjectName, notFoundAttributeName);
         assertNull(mBeanAttributeInfo);
     }
+
     @Test
     void testFindMBeanAttributeInfoOnNotFoundAttribute() {
         MBeanAttributeInfo mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, objectName, notFoundAttributeName);
