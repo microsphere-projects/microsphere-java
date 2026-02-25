@@ -1,6 +1,5 @@
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.test.BF3;
 import io.microsphere.test.StringBF2;
 import io.microsphere.test.StringIntegerF1;
@@ -15,6 +14,7 @@ import java.lang.reflect.TypeVariable;
 import java.util.List;
 import java.util.function.BiFunction;
 
+import static io.microsphere.AbstractTestCase.assertValues;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static io.microsphere.util.TypeFinder.Include.HIERARCHICAL;
 import static io.microsphere.util.TypeFinder.Include.INTERFACES;
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see io.microsphere.util.ClassFinder
  * @since 1.0.0
  */
-class TypeFinderTest extends AbstractTestCase {
+class TypeFinderTest {
 
     @Test
     void testConstructorOnNullType() {
