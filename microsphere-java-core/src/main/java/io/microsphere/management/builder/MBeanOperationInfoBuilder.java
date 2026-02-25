@@ -41,13 +41,13 @@ public class MBeanOperationInfoBuilder extends MBeanExecutableInfoBuilder<MBeanO
      * The method's return value.
      */
     @Nonnull
-    private String type;
+    String returnType;
 
     /**
      * The impact of the method, one of {@link MBeanOperationInfo#INFO}, {@link MBeanOperationInfo#ACTION},
      * {@link MBeanOperationInfo#ACTION_INFO} and {@link MBeanOperationInfo#UNKNOWN}.
      */
-    private int impact;
+    int impact;
 
     MBeanOperationInfoBuilder() {
         super();
@@ -60,7 +60,7 @@ public class MBeanOperationInfoBuilder extends MBeanExecutableInfoBuilder<MBeanO
     }
 
     public MBeanOperationInfo build() {
-        return new MBeanOperationInfo(this.name, this.description, toSignature(), this.type, this.impact, this.descriptor);
+        return new MBeanOperationInfo(this.name, this.description, toSignature(), this.returnType, this.impact, this.descriptor);
     }
 
     public static MBeanOperationInfoBuilder operation(Class<?> type) {
@@ -69,7 +69,7 @@ public class MBeanOperationInfoBuilder extends MBeanExecutableInfoBuilder<MBeanO
 
     public static MBeanOperationInfoBuilder operation(String type) {
         MBeanOperationInfoBuilder builder = new MBeanOperationInfoBuilder();
-        builder.type = type;
+        builder.returnType = type;
         return builder;
     }
 
