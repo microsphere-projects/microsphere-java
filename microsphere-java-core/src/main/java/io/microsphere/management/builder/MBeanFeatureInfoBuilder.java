@@ -17,53 +17,33 @@
 
 package io.microsphere.management.builder;
 
-import javax.management.Descriptor;
+import io.microsphere.annotation.Nullable;
+
 import javax.management.MBeanFeatureInfo;
 
 /**
  * {@link MBeanFeatureInfo} Builder
  *
+ * @param <B> the builder class
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see MBeanFeatureInfo
  * @since 1.0.0
  */
-public class MBeanFeatureInfoBuilder<B extends MBeanFeatureInfoBuilder> {
+public class MBeanFeatureInfoBuilder<B extends MBeanFeatureInfoBuilder> extends MBeanDescribableBuilder<B> {
 
     /**
      * The name of the feature.
-     *
-     * @serial The name of the feature.
+     * <p>
+     * The name of the feature.
      */
+    @Nullable
     protected String name;
-
-    /**
-     * The human-readable description of the feature.
-     *
-     * @serial The human-readable description of the feature.
-     */
-    protected String description;
-
-    /**
-     * @serial The Descriptor for this MBeanFeatureInfo.  This field
-     * can be null, which is equivalent to an empty Descriptor.
-     */
-    protected Descriptor descriptor;
 
     MBeanFeatureInfoBuilder() {
     }
 
     public B name(String name) {
         this.name = name;
-        return (B) this;
-    }
-
-    public B description(String description) {
-        this.description = description;
-        return (B) this;
-    }
-
-    public B descriptor(Descriptor descriptor) {
-        this.descriptor = descriptor;
         return (B) this;
     }
 
