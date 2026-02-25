@@ -16,7 +16,7 @@
  */
 package io.microsphere.io;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import io.microsphere.io.event.DefaultFileChangedListener;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedEvent.Kind;
@@ -35,6 +35,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static io.microsphere.AbstractTestCase.createRandomFile;
+import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
@@ -71,7 +73,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StandardFileWatchServiceTest extends AbstractTestCase {
+class StandardFileWatchServiceTest extends Loggable {
 
     private File testDir;
 
