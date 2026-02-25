@@ -344,7 +344,7 @@ class FileUtilsTest extends AbstractTestCase {
                     ioExceptionReference.set(e);
                     creatingFile.set(false);
                     deletingDirectory.set(false);
-                    logger.trace(e.getMessage(), e);
+                    log(e.getMessage(), e);
                     break;
                 } catch (Throwable e) {
                     throw wrap(e, Exception.class);
