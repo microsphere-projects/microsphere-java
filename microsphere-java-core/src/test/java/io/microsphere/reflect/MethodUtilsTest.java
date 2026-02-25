@@ -17,10 +17,12 @@
 package io.microsphere.reflect;
 
 import io.microsphere.lang.Prioritized;
+import io.microsphere.test.Data;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Method;
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -29,14 +31,19 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.MemberUtils.PUBLIC_MEMBER_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.BANNED_METHODS_PROPERTY_NAME;
 import static io.microsphere.reflect.MethodUtils.FINAL_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.GET_METHOD_NAME_PREFIX;
+import static io.microsphere.reflect.MethodUtils.IS_METHOD_NAME_PREFIX;
 import static io.microsphere.reflect.MethodUtils.NON_PRIVATE_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.NON_STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.OBJECT_DECLARED_METHODS;
+import static io.microsphere.reflect.MethodUtils.OBJECT_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
 import static io.microsphere.reflect.MethodUtils.PUBLIC_METHOD_PREDICATE;
+import static io.microsphere.reflect.MethodUtils.SET_METHOD_NAME_PREFIX;
 import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.banMethod;
 import static io.microsphere.reflect.MethodUtils.buildKey;
@@ -53,12 +60,18 @@ import static io.microsphere.reflect.MethodUtils.findOverriddenMethod;
 import static io.microsphere.reflect.MethodUtils.getAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.getAllMethods;
 import static io.microsphere.reflect.MethodUtils.getDeclaredMethods;
+import static io.microsphere.reflect.MethodUtils.getMethodName;
 import static io.microsphere.reflect.MethodUtils.getMethods;
 import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.initBannedMethods;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.reflect.MethodUtils.isGetterMethod;
+import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.reflect.MethodUtils.isObjectMethod;
+import static io.microsphere.reflect.MethodUtils.isSetterMethod;
+import static io.microsphere.reflect.MethodUtils.matchesParameterCount;
+import static io.microsphere.reflect.MethodUtils.matchesReturnType;
 import static io.microsphere.reflect.MethodUtils.overrides;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ClassUtils.PRIMITIVE_TYPES;
@@ -96,6 +109,24 @@ class MethodUtilsTest {
     static void afterAll() {
         System.getProperties().remove(BANNED_METHODS_PROPERTY_NAME);
         clearBannedMethods();
+    }
+
+    @Test
+    void testConstants() {
+        assertEquals("get", GET_METHOD_NAME_PREFIX);
+        assertEquals("set", SET_METHOD_NAME_PREFIX);
+        assertEquals("is", IS_METHOD_NAME_PREFIX);
+        assertEquals("microsphere.reflect.banned-methods", BANNED_METHODS_PROPERTY_NAME);
+
+        assertEquals(ofList(Object.class.getMethods()), OBJECT_PUBLIC_METHODS);
+        assertEquals(ofList(Object.class.getDeclaredMethods()), OBJECT_DECLARED_METHODS);
+
+        assertNotNull(OBJECT_METHOD_PREDICATE);
+        assertNotNull(PUBLIC_METHOD_PREDICATE);
+        assertNotNull(STATIC_METHOD_PREDICATE);
+        assertNotNull(NON_STATIC_METHOD_PREDICATE);
+        assertNotNull(FINAL_METHOD_PREDICATE);
+        assertNotNull(NON_PRIVATE_METHOD_PREDICATE);
     }
 
     @Test
@@ -547,9 +578,8 @@ class MethodUtilsTest {
     void test() {
         Method[] methods = TestSubInterface.class.getDeclaredMethods();
         methods = TestInterface.class.getDeclaredMethods();
-        System.out.println(methods);
+        assertNotNull(methods);
     }
-
 
     /**
      * Test {@link MethodUtils#getSignature(Method)}
@@ -583,6 +613,119 @@ class MethodUtilsTest {
         assertIsObjectMethod(true, Object.class, "toString");
         assertIsObjectMethod(false, String.class, "toString");
         assertIsObjectMethod(false, String.class, "notFound");
+    }
+
+    @Test
+    void testIsIsMethod() {
+        Method method = findMethod(RuntimeMXBean.class, "isBootClassPathSupported");
+        assertTrue(isIsMethod(method));
+
+        method = findMethod(MethodUtils.class, "isIsMethod", Method.class);
+        assertFalse(isIsMethod(method));
+
+        method = getMethod("isMethod");
+        assertFalse(isIsMethod(method));
+
+        method = getMethod("toString");
+        assertFalse(isIsMethod(method));
+
+        assertFalse(isIsMethod(null));
+    }
+
+    @Test
+    void testIsGetterMethod() {
+        Method method = findMethod(RuntimeMXBean.class, "getName");
+        assertTrue(isGetterMethod(method));
+
+        method = findMethod(MethodUtils.class, "getMethodName", Method.class);
+        assertFalse(isGetterMethod(method));
+
+        method = getMethod("get");
+        assertFalse(isGetterMethod(method));
+
+        method = getMethod("toString");
+        assertFalse(isGetterMethod(method));
+
+        assertFalse(isGetterMethod(null));
+    }
+
+    @Test
+    void testIsSetterMethod() {
+        Method method = findMethod(Data.class, "setName", String.class);
+        assertTrue(isSetterMethod(method));
+
+        method = getMethod("set");
+        assertFalse(isSetterMethod(method));
+
+        method = getMethod("setValue", Object.class);
+        assertFalse(isSetterMethod(method));
+
+        method = getMethod("toString");
+        assertFalse(isSetterMethod(method));
+
+        assertFalse(isSetterMethod(null));
+    }
+
+    @Test
+    void testGetMethodName() {
+        assertGetMethodName("toString");
+        assertGetMethodName("hashCode");
+        assertGetMethodName("clone");
+        assertGetMethodName("not-found-method");
+    }
+
+    @Test
+    void testMatchesParameterCount() {
+        assertMatchesParameterCount(0, "toString");
+        assertMatchesParameterCount(1, "toString");
+        assertMatchesParameterCount(0, "hashCode");
+        assertMatchesParameterCount(1, "hashCode");
+        assertMatchesParameterCount(1, "equals", Object.class);
+        assertMatchesParameterCount(0, "not-found-method");
+    }
+
+    @Test
+    void testMatchesReturnType() {
+        assertMatchesReturnType(String.class, "toString");
+        assertMatchesReturnType(int.class, "hashCode");
+        assertMatchesReturnType(boolean.class, "equals", Object.class);
+        assertMatchesReturnType(void.class, "not-found-method");
+    }
+
+    private void assertMatchesReturnType(Class<?> expectedReturnType, String methodName, Class<?>... parameterTypes) {
+        Method method = getMethod(methodName, parameterTypes);
+        if (method == null) {
+            assertFalse(matchesReturnType(method, expectedReturnType));
+        } else {
+            assertTrue(matchesReturnType(method, expectedReturnType));
+        }
+    }
+
+    void assertMatchesParameterCount(int execptedCount, String methodName, Class<?>... parameterTypes) {
+        Method method = getMethod(methodName, parameterTypes);
+        int parameterCount = parameterTypes.length;
+        if (method == null) {
+            assertFalse(matchesParameterCount(method, execptedCount));
+        } else {
+            if (execptedCount == parameterCount) {
+                assertTrue(matchesParameterCount(method, execptedCount));
+            } else {
+                assertFalse(matchesParameterCount(method, execptedCount));
+            }
+        }
+    }
+
+    void assertGetMethodName(String methodName) {
+        Method method = getMethod(methodName);
+        if (method == null) {
+            assertNull(getMethodName(method));
+        } else {
+            assertEquals(methodName, getMethodName(method));
+        }
+    }
+
+    Method getMethod(String methodName, Class<?>... parameterTypes) {
+        return findMethod(MethodUtilsTest.class, methodName, parameterTypes);
     }
 
     private void assertIsObjectMethod(boolean expected, Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
@@ -657,5 +800,18 @@ class MethodUtilsTest {
 
     interface TestSubInterface extends TestInterface {
         void subMethod();
+    }
+
+    void isMethod() {
+    }
+
+    void get() {
+    }
+
+    void set() {
+    }
+
+    Object setValue(Object value) {
+        return value;
     }
 }
