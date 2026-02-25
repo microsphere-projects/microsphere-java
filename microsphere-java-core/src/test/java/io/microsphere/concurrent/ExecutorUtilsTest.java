@@ -1,6 +1,6 @@
 package io.microsphere.concurrent;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import io.microsphere.util.ShutdownHookUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ExecutorUtils
  * @since 1.0.0
  */
-class ExecutorUtilsTest extends AbstractTestCase {
+class ExecutorUtilsTest extends Loggable {
 
     private ExecutorService executorService;
 
