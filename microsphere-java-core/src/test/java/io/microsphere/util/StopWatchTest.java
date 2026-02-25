@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.AbstractTestCase;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.StopWatch.Task;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,9 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StopWatchTest {
-
-    private static final Logger logger = getLogger(StopWatchTest.class);
+class StopWatchTest extends AbstractTestCase {
 
     private static final String testName = "test";
 
@@ -75,7 +74,7 @@ class StopWatchTest {
         assertTrue(task.getElapsedNanos() > 0);
         assertTrue(stopWatch.getTotalTimeNanos() > 0);
         assertTrue(stopWatch.getTotalTime(MILLISECONDS) > 0);
-        logger.info(stopWatch.toString());
+        log(stopWatch.toString());
     }
 
     @Test
