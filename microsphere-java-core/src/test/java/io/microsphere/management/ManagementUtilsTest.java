@@ -1,6 +1,5 @@
 package io.microsphere.management;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.management.ManagementUtils.currentProcessId;
@@ -15,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ManagementUtils
  * @since 1.0.0
  */
-class ManagementUtilsTest extends AbstractTestCase {
+class ManagementUtilsTest {
 
     @Test
     void testGetCurrentProcessId() {
@@ -23,5 +22,4 @@ class ManagementUtilsTest extends AbstractTestCase {
         assertTrue(processId > 0);
         assertEquals(currentProcessId, getCurrentProcessId());
     }
-
 }
