@@ -34,25 +34,25 @@ import static io.microsphere.util.ClassUtils.getTypeName;
 public class MBeanAttributeInfoBuilder extends MBeanFeatureInfoBuilder<MBeanAttributeInfoBuilder> {
 
     /**
-     * @serial The actual attribute type.
+     * The actual attribute type.
      */
     @Nonnull
-    private String attributeType;
+    String type;
 
     /**
-     * @serial The attribute write right.
+     * The attribute write right.
      */
-    private boolean write;
+    boolean write;
 
     /**
-     * @serial The attribute read right.
+     * The attribute read right.
      */
-    private boolean read;
+    boolean read;
 
     /**
-     * @serial Indicates if this method is a "is"
+     * Indicates if this method is a "is"
      */
-    private boolean is;
+    boolean is;
 
     MBeanAttributeInfoBuilder() {
         super();
@@ -74,7 +74,7 @@ public class MBeanAttributeInfoBuilder extends MBeanFeatureInfoBuilder<MBeanAttr
     }
 
     public MBeanAttributeInfo build() {
-        return new MBeanAttributeInfo(this.name, this.attributeType, this.description, this.read, this.write,
+        return new MBeanAttributeInfo(this.name, this.type, this.description, this.read, this.write,
                 this.is, this.descriptor);
     }
 
@@ -85,7 +85,7 @@ public class MBeanAttributeInfoBuilder extends MBeanFeatureInfoBuilder<MBeanAttr
     public static MBeanAttributeInfoBuilder attribute(@Nonnull String attributeType) {
         assertNotNull(attributeType, () -> "The 'attributeType' must not be null");
         MBeanAttributeInfoBuilder builder = new MBeanAttributeInfoBuilder();
-        builder.attributeType = attributeType;
+        builder.type = attributeType;
         return builder;
     }
 }
