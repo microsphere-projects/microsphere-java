@@ -16,12 +16,13 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReadOnlyIterator
  * @since 1.0.0
  */
-public abstract class ReadOnlyIteratorTest extends AbstractTestCase {
+public abstract class ReadOnlyIteratorTest extends Loggable {
 
     Iterator instance = createIterator();
 
