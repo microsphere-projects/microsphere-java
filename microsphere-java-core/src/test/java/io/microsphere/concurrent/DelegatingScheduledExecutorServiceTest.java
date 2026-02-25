@@ -1,6 +1,6 @@
 package io.microsphere.concurrent;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingScheduledExecutorService
  * @since 1.0.0
  */
-class DelegatingScheduledExecutorServiceTest extends AbstractTestCase {
+class DelegatingScheduledExecutorServiceTest extends Loggable {
 
     private ScheduledExecutorService delegate = newSingleThreadScheduledExecutor();
 
