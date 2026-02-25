@@ -17,15 +17,11 @@
 
 package io.microsphere.management.builder;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanFeatureInfo;
-import javax.management.modelmbean.DescriptorSupport;
 
-import static io.microsphere.reflect.JavaType.from;
-import static io.microsphere.util.ClassUtils.newInstance;
 import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -39,45 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @since 1.0.0
  */
 @Disabled
-abstract class AbstractMBeanFeatureInfoBuilderTest<B extends MBeanFeatureInfoBuilder> {
+abstract class AbstractMBeanFeatureInfoBuilderTest<B extends MBeanFeatureInfoBuilder> extends AbstractMBeanDescribableBuilderTest<B> {
 
     static final String TEST_NAME = "test-name";
-
-    static final String TEST_DESCRIPTION = "test-desc";
-
-    static final DescriptorSupport TEST_DESCRIPTOR = new DescriptorSupport();
-
-    protected B builder;
-
-    @BeforeEach
-    void setUp() {
-        this.builder = builder();
-    }
-
-    protected B builder() {
-        Class<B> builderClass = from(getClass())
-                .as(AbstractMBeanFeatureInfoBuilderTest.class)
-                .getGenericType(0)
-                .toClass();
-        return newInstance(builderClass);
-    }
 
     @Test
     void testName() {
         assertSame(this.builder, this.builder.name(TEST_NAME));
         assertEquals(TEST_NAME, this.builder.name);
-    }
-
-    @Test
-    void testDescription() {
-        assertSame(this.builder, this.builder.description(TEST_DESCRIPTION));
-        assertEquals(TEST_DESCRIPTION, this.builder.description);
-    }
-
-    @Test
-    void testDescriptor() {
-        assertSame(this.builder, this.builder.descriptor(TEST_DESCRIPTOR));
-        assertEquals(TEST_DESCRIPTOR, this.builder.descriptor);
     }
 
     @Test
@@ -87,9 +52,9 @@ abstract class AbstractMBeanFeatureInfoBuilderTest<B extends MBeanFeatureInfoBui
         assertNull(info.getDescription());
         assertSame(EMPTY_DESCRIPTOR, info.getDescriptor());
 
-        assertSame(this.builder, this.builder.name(TEST_NAME));
+        assertSame(this.builder, this.builder.name(AbstractMBeanFeatureInfoBuilderTest.TEST_NAME));
         info = this.builder.build();
-        assertSame(TEST_NAME, info.getName());
+        assertSame(AbstractMBeanFeatureInfoBuilderTest.TEST_NAME, info.getName());
 
         assertSame(this.builder, this.builder.description(TEST_DESCRIPTION));
         info = this.builder.build();
