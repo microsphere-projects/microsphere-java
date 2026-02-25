@@ -1,6 +1,6 @@
 package io.microsphere.reflect;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> extends AbstractTestCase {
+public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> extends Loggable {
 
     private final List<Object>[] headConstructorArgumentsArray = ofArray(
             ofList(SINCE, getClassName()),
