@@ -18,7 +18,7 @@
 package io.microsphere.convert;
 
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see AbstractConverter
  * @since 1.0.0
  */
-abstract class BaseConverterTest<S, T> extends AbstractTestCase {
+abstract class BaseConverterTest<S, T> extends Loggable {
 
     protected AbstractConverter<S, T> converter;
 
