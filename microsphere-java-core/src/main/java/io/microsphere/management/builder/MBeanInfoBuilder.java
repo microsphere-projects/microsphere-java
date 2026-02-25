@@ -36,7 +36,6 @@ import java.util.function.Consumer;
 
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.util.ClassUtils.getTypeName;
-import static java.beans.Introspector.decapitalize;
 import static java.util.Objects.nonNull;
 
 /**
@@ -76,8 +75,7 @@ public class MBeanInfoBuilder extends MBeanDescribableBuilder<MBeanInfoBuilder> 
     public MBeanInfoBuilder attribute(PropertyDescriptor propertyDescriptor) {
         String propertyName = propertyDescriptor.getName();
         Class<?> propertyType = propertyDescriptor.getPropertyType();
-        String attributeName = decapitalize(propertyName);
-        return attribute(attributeName, propertyType, builder -> {
+        return attribute(propertyName, propertyType, builder -> {
             Method readMethod = propertyDescriptor.getReadMethod();
             builder.is(isIsMethod(readMethod));
             builder.read(nonNull(readMethod));
