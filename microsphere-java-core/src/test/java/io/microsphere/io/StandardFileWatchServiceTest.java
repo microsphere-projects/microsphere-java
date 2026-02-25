@@ -35,6 +35,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.AbstractTestCase.createRandomFile;
 import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
@@ -121,7 +122,7 @@ class StandardFileWatchServiceTest extends Loggable {
 
     @Test
     void testFile() throws Exception {
-        URL resource = getResource(super.classLoader, "test.txt");
+        URL resource = getResource(TEST_CLASS_LOADER, "test.txt");
         String resourceFilePath = resource.getFile();
         File sourceFile = new File(resourceFilePath);
 
