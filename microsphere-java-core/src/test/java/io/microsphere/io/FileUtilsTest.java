@@ -1,6 +1,6 @@
 package io.microsphere.io;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import io.microsphere.lang.function.ThrowableConsumer;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +13,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
+import static io.microsphere.AbstractTestCase.createRandomDirectory;
+import static io.microsphere.AbstractTestCase.createRandomFile;
+import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
+import static io.microsphere.AbstractTestCase.createRandomTempFile;
+import static io.microsphere.AbstractTestCase.makeLinkFile;
+import static io.microsphere.AbstractTestCase.newRandomTempFile;
+import static io.microsphere.AbstractTestCase.random;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.constants.FileConstants.CLASS;
@@ -52,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see FileUtils
  * @since 1.0.0
  */
-class FileUtilsTest extends AbstractTestCase {
+class FileUtilsTest extends Loggable {
 
     private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);
 
