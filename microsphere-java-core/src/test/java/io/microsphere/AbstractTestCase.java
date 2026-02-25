@@ -4,7 +4,6 @@
 package io.microsphere;
 
 import io.microsphere.lang.function.ThrowableAction;
-import io.microsphere.logging.Logger;
 import io.microsphere.process.ProcessExecutor;
 import org.junit.jupiter.api.Disabled;
 
@@ -28,13 +27,11 @@ import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
 import static io.microsphere.collection.QueueUtils.singletonQueue;
 import static io.microsphere.collection.SetUtils.newHashSet;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
 import static io.microsphere.util.SystemUtils.JAVA_IO_TMPDIR;
-import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
@@ -53,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @Disabled
-public abstract class AbstractTestCase {
+public abstract class AbstractTestCase extends Loggable {
 
     public static final String TEST_ELEMENT = "test";
 
@@ -125,20 +122,6 @@ public abstract class AbstractTestCase {
     }
 
     protected final ClassLoader classLoader = getClassLoader(getClass());
-
-    protected final Logger logger = getLogger(getClass());
-
-    protected void log(Object object) {
-        if (logger.isTraceEnabled()) {
-            logger.trace(valueOf(object));
-        }
-    }
-
-    protected void log(String object, Object... args) {
-        if (logger.isTraceEnabled()) {
-            logger.trace(object, args);
-        }
-    }
 
     protected File createRandomTempDirectory() {
         return createRandomDirectory(TEST_TEMP_DIR);
