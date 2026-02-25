@@ -1,6 +1,5 @@
 package io.microsphere.reflect;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.test.Data;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReflectionUtilsTest
  * @since 1.0.0
  */
-class ReflectionUtilsTest extends AbstractTestCase {
+class ReflectionUtilsTest {
 
     @Test
     void testGetCallerClassX() {
