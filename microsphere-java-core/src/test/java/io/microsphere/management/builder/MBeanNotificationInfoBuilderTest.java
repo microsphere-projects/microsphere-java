@@ -26,7 +26,6 @@ import static io.microsphere.management.builder.MBeanNotificationInfoBuilder.get
 import static io.microsphere.management.builder.MBeanNotificationInfoBuilder.notification;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
-import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -58,20 +57,26 @@ class MBeanNotificationInfoBuilderTest extends AbstractMBeanFeatureInfoBuilderTe
 
     @Test
     void testNotification() {
-        Class<?>[] types = ofArray(String.class, Integer.class, long.class);
+        assertNotification(String.class, Integer.class, long.class);
+
+        assertNotification(EMPTY_CLASS_ARRAY);
+    }
+
+    void assertNotification(Class<?>... types) {
         MBeanNotificationInfoBuilder builder = notification(types);
+        String[] classNames = getClassNames(types);
+        assertNotification(builder, classNames);
+
+        builder = notification(classNames);
+        assertNotification(builder, classNames);
+    }
+
+    void assertNotification(MBeanNotificationInfoBuilder builder, String... classNames) {
         MBeanNotificationInfo info = builder.build();
         assertNull(info.getName());
         assertNull(info.getDescription());
         assertNotNull(info.getDescriptor());
 
-        assertArrayEquals(getClassNames(types), info.getNotifTypes());
-
-        builder = notification(EMPTY_CLASS_ARRAY);
-        info = builder.build();
-        assertNull(info.getName());
-        assertNull(info.getDescription());
-        assertNotNull(info.getDescriptor());
-        assertTrue(isEmpty(info.getNotifTypes()));
+        assertArrayEquals(classNames, info.getNotifTypes());
     }
 }
