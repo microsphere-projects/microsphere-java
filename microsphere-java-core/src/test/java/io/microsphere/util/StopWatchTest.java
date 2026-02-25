@@ -16,14 +16,12 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
-import io.microsphere.logging.Logger;
+import io.microsphere.Loggable;
 import io.microsphere.util.StopWatch.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.SPACE;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.StopWatch.Task.start;
 import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
@@ -42,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StopWatchTest extends AbstractTestCase {
+class StopWatchTest extends Loggable {
 
     private static final String testName = "test";
 
