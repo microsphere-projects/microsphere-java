@@ -123,41 +123,41 @@ public abstract class AbstractTestCase extends Loggable {
 
     protected final ClassLoader classLoader = getClassLoader(getClass());
 
-    protected File createRandomTempDirectory() {
+    public static File createRandomTempDirectory() {
         return createRandomDirectory(TEST_TEMP_DIR);
     }
 
-    protected File createRandomTempFile() throws IOException {
+    public static File createRandomTempFile() throws IOException {
         return createRandomFile(TEST_TEMP_DIR);
     }
 
-    protected File newRandomTempFile() {
+    public static File newRandomTempFile() {
         return newRandomFile(TEST_TEMP_DIR);
     }
 
-    protected File createRandomDirectory(File parentDir) {
+    public static File createRandomDirectory(File parentDir) {
         File tempDir = newRandomFile(parentDir);
         assertTrue(tempDir.mkdir());
         tempDir.deleteOnExit();
         return tempDir;
     }
 
-    protected File createRandomFile(File parentDir) throws IOException {
+    public static File createRandomFile(File parentDir) throws IOException {
         File randomFile = newRandomFile(parentDir);
         assertTrue(randomFile.createNewFile());
         randomFile.deleteOnExit();
         return randomFile;
     }
 
-    protected File newRandomFile(File parentDir) {
-        return new File(parentDir, buildRandomFileName());
+    public static File newRandomFile(File parentDir) {
+        return new File(parentDir, randomFileName());
     }
 
-    protected String buildRandomFileName() {
+    public static String randomFileName() {
         return randomUUID().toString();
     }
 
-    protected File makeLinkFile(File targetFile) throws Exception {
+    public static File makeLinkFile(File targetFile) throws Exception {
         File tempDir = createRandomTempDirectory();
         File linkFile = new File(tempDir, "link");
         boolean directory = targetFile.isDirectory();
