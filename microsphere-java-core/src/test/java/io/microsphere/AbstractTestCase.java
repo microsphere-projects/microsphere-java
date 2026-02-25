@@ -175,7 +175,7 @@ public abstract class AbstractTestCase extends Loggable {
         return linkFile;
     }
 
-    protected void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
+    public static void assertThrowable(ThrowableAction action, Consumer<Throwable> failureHandler) {
         Throwable failure = null;
         try {
             action.execute();
@@ -186,16 +186,16 @@ public abstract class AbstractTestCase extends Loggable {
         failureHandler.accept(failure);
     }
 
-    protected void assertValues(List<?> values, Object... expectedValues) {
+    public static void assertValues(List<?> values, Object... expectedValues) {
         assertValues(values, expectedValues.length, expectedValues);
     }
 
-    protected void assertValues(List<?> values, int expectedSize, Object... expectedTypes) {
+    public static void assertValues(List<?> values, int expectedSize, Object... expectedTypes) {
         assertEquals(expectedSize, values.size());
         assertEquals(newHashSet(expectedTypes), newHashSet(values));
     }
 
-    protected void assertType(Type expect, Type actual) {
+    public static void assertType(Type expect, Type actual) {
         assertEquals(asClass(expect), asClass(actual));
     }
 }
