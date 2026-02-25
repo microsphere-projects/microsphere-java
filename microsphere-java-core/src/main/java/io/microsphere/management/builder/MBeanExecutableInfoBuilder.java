@@ -53,7 +53,7 @@ public abstract class MBeanExecutableInfoBuilder<B extends MBeanExecutableInfoBu
      * The signature of the method, that is, the class names
      * of the arguments.
      */
-    private final List<MBeanParameterInfo> parameters = newLinkedList();
+    protected final List<MBeanParameterInfo> parameters = newLinkedList();
 
     MBeanExecutableInfoBuilder() {
         super();
