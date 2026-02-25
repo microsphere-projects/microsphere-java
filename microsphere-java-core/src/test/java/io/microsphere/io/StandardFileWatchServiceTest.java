@@ -256,9 +256,7 @@ class StandardFileWatchServiceTest extends AbstractTestCase {
         try {
             future.get(100, MILLISECONDS);
         } catch (Exception e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("Failed to async(timeout : 100ms) : {}", e.getMessage(), e);
-            }
+            log("Failed to async(timeout : 100ms) : {}", e.getMessage(), e);
             future.cancel(true);
         }
     }
