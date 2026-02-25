@@ -17,10 +17,11 @@
 
 package io.microsphere.io;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
+import static io.microsphere.AbstractTestCase.random;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see StringBuilderWriter
  * @since 1.0.0
  */
-class StringBuilderWriterTest extends AbstractTestCase {
+class StringBuilderWriterTest {
 
     private StringBuilderWriter writer;
 
