@@ -16,9 +16,8 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import io.microsphere.lang.MutableInteger;
-import io.microsphere.logging.Logger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -27,6 +26,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_ENUMERATION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERATOR;
+import static io.microsphere.AbstractTestCase.TEST_NULL_LIST;
 import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.ListUtils.forEach;
 import static io.microsphere.collection.ListUtils.isList;
@@ -37,7 +40,7 @@ import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.ListUtils.ofArrayList;
 import static io.microsphere.collection.ListUtils.ofLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
-import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.lang.MutableInteger.of;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyIterator;
@@ -58,7 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
-class ListUtilsTest extends AbstractTestCase {
+class ListUtilsTest extends Loggable {
 
     private static final List<String> TEST_LIST = asList("A", "B", "C");
 
@@ -185,7 +188,7 @@ class ListUtilsTest extends AbstractTestCase {
     @Test
     void testForEach() {
         List<String> list = TEST_LIST;
-        MutableInteger mutableInteger = MutableInteger.of(0);
+        MutableInteger mutableInteger = of(0);
         Iterator<String> iterator = list.iterator();
         forEach(list, (index, value) -> {
             log("forEach(index = {} , value = '{}')", index, value);
