@@ -16,14 +16,11 @@
  */
 package io.microsphere.event;
 
-import io.microsphere.AbstractTestCase;
-import io.microsphere.logging.Logger;
+import io.microsphere.Loggable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.microsphere.logging.LoggerFactory.getLogger;
-
-public abstract class AbstractEventListener<E extends Event> extends AbstractTestCase implements EventListener<E> {
+public abstract class AbstractEventListener<E extends Event> extends Loggable implements EventListener<E> {
 
     private final AtomicInteger eventOccurs = new AtomicInteger(0);
 
