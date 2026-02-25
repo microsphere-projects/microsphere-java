@@ -3,7 +3,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.test.A;
 import org.junit.jupiter.api.Test;
@@ -30,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+import static io.microsphere.AbstractTestCase.createRandomTempFile;
+import static io.microsphere.AbstractTestCase.makeLinkFile;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.constants.SymbolConstants.SPACE;
@@ -109,7 +110,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassUtilsTest
  * @since 1.0.0
  */
-class ClassUtilsTest extends AbstractTestCase {
+class ClassUtilsTest {
 
     @Test
     void testConstants() {
@@ -922,4 +923,3 @@ class ClassUtilsTest extends AbstractTestCase {
         assertFalse(classNamesInClassPath.isEmpty());
     }
 }
-
