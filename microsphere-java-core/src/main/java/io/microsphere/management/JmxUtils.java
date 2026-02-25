@@ -30,7 +30,9 @@ import javax.management.ImmutableDescriptor;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
@@ -86,6 +88,14 @@ public abstract class JmxUtils implements Utils {
     private static final Logger logger = getLogger(JmxUtils.class);
 
     public static final MBeanAttribute[] EMPTY_MBEAN_ATTRIBUTE_ARRAY = new MBeanAttribute[0];
+
+    public static final MBeanAttributeInfo[] EMPTY_MBEAN_ATTRIBUTE_INFO_ARRAY = new MBeanAttributeInfo[0];
+
+    public static final MBeanOperationInfo[] EMPTY_MBEAN_OPERATION_INFO_ARRAY = new MBeanOperationInfo[0];
+
+    public static final MBeanConstructorInfo[] EMPTY_MBEAN_CONSTRUCTOR_INFO_ARRAY = new MBeanConstructorInfo[0];
+
+    public static final MBeanNotificationInfo[] EMPTY_MBEAN_NOTIFICATION_INFO_ARRAY = new MBeanNotificationInfo[0];
 
     private static ClassLoadingMXBean classLoadingMXBean;
 
