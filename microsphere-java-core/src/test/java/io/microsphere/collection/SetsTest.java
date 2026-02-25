@@ -1,8 +1,8 @@
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_OBJECT_ARRAY;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.Sets.ofSet;
 import static java.util.Collections.emptySet;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Sets
  * @since 1.0.0
  */
-class SetsTest extends AbstractTestCase {
+class SetsTest {
 
     @Test
     void testOfSet0() {
