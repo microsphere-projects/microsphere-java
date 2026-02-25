@@ -17,7 +17,7 @@
 
 package io.microsphere.lang.function;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  * @see ThrowableBiConsumer
  * @since 1.0.0
  */
-class ThrowableBiConsumerTest extends AbstractTestCase {
+class ThrowableBiConsumerTest extends Loggable {
 
     @Test
     void testAccept() throws Throwable {
