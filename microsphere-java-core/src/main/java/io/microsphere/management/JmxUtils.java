@@ -453,7 +453,7 @@ public abstract class JmxUtils implements Utils {
      */
     @Nullable
     public static Object getAttribute(MBeanServer mBeanServer, ObjectName objectName, MBeanAttributeInfo attributeInfo) {
-        return doGetAttribute(mBeanServer, objectName, attributeInfo, attributeInfo.getName());
+        return doGetAttribute(mBeanServer, objectName, attributeInfo.getName());
     }
 
     /**
@@ -481,7 +481,7 @@ public abstract class JmxUtils implements Utils {
      */
     @Nullable
     public static Object getAttribute(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
-        return doGetAttribute(mBeanServer, objectName, null, attributeName);
+        return doGetAttribute(mBeanServer, objectName, attributeName);
     }
 
     /**
@@ -618,21 +618,11 @@ public abstract class JmxUtils implements Utils {
         return EMPTY_DESCRIPTOR;
     }
 
-    protected static Object doGetAttribute(MBeanServer mBeanServer, ObjectName objectName,
-                                           @Nullable MBeanAttributeInfo attributeInfo, String attributeName) {
-        MBeanAttributeInfo mBeanAttributeInfo = attributeInfo;
-        if (mBeanAttributeInfo == null) {
-            mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, objectName, attributeName);
-        }
-
-        if (mBeanAttributeInfo == null || !mBeanAttributeInfo.isReadable()) {
-            return null;
-        }
-
+    protected static Object doGetAttribute(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
         Object attributeValue = null;
         try {
             attributeValue = mBeanServer.getAttribute(objectName, attributeName);
-        } catch (ReflectionException | InstanceNotFoundException e) {
+        } catch (ReflectionException | InstanceNotFoundException | AttributeNotFoundException e) {
             handleException(e, mBeanServer, objectName);
         } catch (Throwable e) {
             throw wrap(e, RuntimeException.class);
