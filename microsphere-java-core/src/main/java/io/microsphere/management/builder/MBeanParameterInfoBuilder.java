@@ -43,7 +43,7 @@ public class MBeanParameterInfoBuilder extends MBeanFeatureInfoBuilder<MBeanPara
      * The type or class name of the data.
      */
     @Nonnull
-    private String type;
+    String type;
 
     MBeanParameterInfoBuilder() {
         super();
