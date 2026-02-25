@@ -66,6 +66,7 @@ import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static io.microsphere.util.SystemUtils.getSystemProperty;
@@ -84,7 +85,22 @@ public abstract class MethodUtils implements Utils {
     private static final Logger logger = getLogger(MethodUtils.class);
 
     /**
-     * The property name of banned methods
+     * The prefix of the "GETTER" method name : "get"
+     */
+    public static final String GET_METHOD_NAME_PREFIX = "get";
+
+    /**
+     * The prefix of the "SETTER" method name : "set"
+     */
+    public static final String SET_METHOD_NAME_PREFIX = "set";
+
+    /**
+     * The prefix of the "IS" method name : "is"
+     */
+    public static final String IS_METHOD_NAME_PREFIX = "is";
+
+    /**
+     * The property name of banned methods : "microsphere.reflect.banned-methods"
      * <h3>Example Usage</h3>
      * <pre>{@code
      * System.setProperty(BANNED_METHODS_PROPERTY_NAME, "java.lang.String#substring() | java.lang.String#substring(int,int)")
@@ -1269,6 +1285,51 @@ public abstract class MethodUtils implements Utils {
     public static boolean isCallerSensitiveMethod(Method method) {
         return isAnnotationPresent(method, CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
+
+    public static boolean isIsMethod(Method method) {
+        if (startsWith(getMethodName(method), IS_METHOD_NAME_PREFIX)) {
+            if (isNoArgMethod(method)) {
+                return matchesReturnType(method, boolean.class);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isGetterMethod(Method method) {
+        if (startsWith(getMethodName(method), GET_METHOD_NAME_PREFIX)) {
+            if (isNoArgMethod(method)) {
+                return !matchesReturnType(method, void.class);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSetterMethod(Method method) {
+        if (startsWith(getMethodName(method), SET_METHOD_NAME_PREFIX)) {
+            if (matchesParameterCount(method, 1)) {
+                return matchesReturnType(method, void.class);
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public static String getMethodName(@Nullable Method method) {
+        return method == null ? null : method.getName();
+    }
+
+    public static boolean matchesParameterCount(@Nullable Method method, int parameterCount) {
+        return method == null ? false : method.getParameterCount() == parameterCount;
+    }
+
+    public static boolean matchesReturnType(@Nullable Method method, @Nullable Class<?> returnType) {
+        return method == null ? false : Objects.equals(returnType, method.getReturnType());
+    }
+
+    static boolean isNoArgMethod(Method method) {
+        return matchesParameterCount(method, 0);
+    }
+
 
     static void filterDeclaredMethodsHierarchically(Class<?> targetClass, Predicate<? super Method> methodToFilter, List<Method> methodsToCollect) {
         filterDeclaredMethods(targetClass, methodToFilter, methodsToCollect);
