@@ -16,9 +16,9 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.Version.Operator.of;
 import static io.microsphere.util.Version.ofVersion;
@@ -56,7 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see VersionUtils
  * @since 1.0.0
  */
-class VersionUtilsTest extends AbstractTestCase {
+class VersionUtilsTest {
 
     private static final String TEST_VERSION_STRING_1_1_0 = "1.1.0";
 
