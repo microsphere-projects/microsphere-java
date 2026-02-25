@@ -16,7 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.annotation.Since;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +33,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_ANNOTATION_CLASSES;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_LIST;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ANNOTATION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ANNOTATION_CLASS;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ANNOTATION_CLASSES;
+import static io.microsphere.AbstractTestCase.TEST_NULL_COLLECTION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_LIST;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
@@ -92,7 +99,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class AnnotationUtilsTest extends AbstractTestCase {
+class AnnotationUtilsTest {
 
     private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);
 
