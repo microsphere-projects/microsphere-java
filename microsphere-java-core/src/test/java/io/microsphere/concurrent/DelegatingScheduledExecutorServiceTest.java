@@ -1,6 +1,6 @@
 package io.microsphere.concurrent;
 
-import io.microsphere.logging.Logger;
+import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static io.microsphere.collection.Lists.ofList;
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,9 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingScheduledExecutorService
  * @since 1.0.0
  */
-class DelegatingScheduledExecutorServiceTest {
-
-    private static final Logger logger = getLogger(DelegatingScheduledExecutorServiceTest.class);
+class DelegatingScheduledExecutorServiceTest extends AbstractTestCase {
 
     private ScheduledExecutorService delegate = newSingleThreadScheduledExecutor();
 
@@ -43,7 +40,7 @@ class DelegatingScheduledExecutorServiceTest {
 
         // test schedule(Runnable...)
         Future future = instance.schedule(() -> {
-            logger.debug("schedule");
+            log("schedule");
         }, 1, MILLISECONDS);
 
         assertNull(future.get());
@@ -54,20 +51,20 @@ class DelegatingScheduledExecutorServiceTest {
 
         // test scheduleAtFixedRate
         future = instance.scheduleAtFixedRate(() -> {
-            logger.debug("scheduleAtFixedRate");
+            log("scheduleAtFixedRate");
         }, 1, 1, MILLISECONDS);
 
         future.cancel(true);
 
         // test scheduleWithFixedDelay
         future = instance.scheduleWithFixedDelay(() -> {
-            logger.debug("scheduleWithFixedDelay");
+            log("scheduleWithFixedDelay");
         }, 1, 1, MILLISECONDS);
 
 
         // test submit
         future = instance.submit(() -> {
-            logger.debug("submit");
+            log("submit");
         });
         future.get();
 
@@ -93,7 +90,7 @@ class DelegatingScheduledExecutorServiceTest {
 
         // test execute
         instance.execute(() -> {
-            logger.debug("execute");
+            log("execute");
         });
 
         // test shutdownNow
