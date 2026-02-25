@@ -3,7 +3,7 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
@@ -29,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
-class ClassPathUtilsTest extends AbstractTestCase {
+class ClassPathUtilsTest extends Loggable {
 
     @Test
     void testGetBootstrapClassPaths() {
