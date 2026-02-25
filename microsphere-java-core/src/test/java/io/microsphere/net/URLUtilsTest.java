@@ -3,7 +3,6 @@
  */
 package io.microsphere.net;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +20,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -100,7 +101,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see URLUtilsTest
  * @since 1.0.0
  */
-class URLUtilsTest extends AbstractTestCase {
+class URLUtilsTest {
 
     private static final String TEST_PATH = "/abc/def";
 
@@ -159,7 +160,7 @@ class URLUtilsTest extends AbstractTestCase {
 
     @Test
     void testResolveArchiveEntryPath() {
-        URL resourceURL = getClassResource(classLoader, Nonnull.class);
+        URL resourceURL = getClassResource(TEST_CLASS_LOADER, Nonnull.class);
         String expectedPath = "javax/annotation/Nonnull.class";
         String relativePath = resolveArchiveEntryPath(resourceURL);
         assertEquals(expectedPath, relativePath);
@@ -324,10 +325,10 @@ class URLUtilsTest extends AbstractTestCase {
 
         assertFalse(isDirectoryURL(classFileURL));
 
-        URL resourceURL = getClassResource(classLoader, StringUtils.class);
+        URL resourceURL = getClassResource(TEST_CLASS_LOADER, StringUtils.class);
         assertFalse(isDirectoryURL(resourceURL));
 
-        resourceURL = getResource(this.classLoader, PACKAGE, "javax.annotation");
+        resourceURL = getResource(TEST_CLASS_LOADER, PACKAGE, "javax.annotation");
         assertTrue(isDirectoryEntry(resourceURL));
 
         String externalForm = null;
@@ -335,10 +336,10 @@ class URLUtilsTest extends AbstractTestCase {
         resourceURL = ofURL(externalForm);
         assertTrue(isDirectoryURL(resourceURL));
 
-        resourceURL = getClassResource(classLoader, String.class);
+        resourceURL = getClassResource(TEST_CLASS_LOADER, String.class);
         assertFalse(isDirectoryURL(resourceURL));
 
-        resourceURL = getClassResource(classLoader, getClass());
+        resourceURL = getClassResource(TEST_CLASS_LOADER, getClass());
         assertFalse(isDirectoryURL(resourceURL));
 
         externalForm = substringBeforeLast(resourceURL.toExternalForm(), getClass().getSimpleName() + CLASS_EXTENSION);
