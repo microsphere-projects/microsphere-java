@@ -16,7 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
@@ -38,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see Version
  * @since 1.0.0
  */
-class VersionTest extends AbstractTestCase {
+class VersionTest {
 
     private static final int MAJOR = 1;
 
