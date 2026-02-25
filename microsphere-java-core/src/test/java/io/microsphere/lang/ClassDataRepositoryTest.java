@@ -16,7 +16,6 @@
  */
 package io.microsphere.lang;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.reflect.ReflectionUtils;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassDataRepository
  * @since 1.0.0
  */
-class ClassDataRepositoryTest extends AbstractTestCase {
+class ClassDataRepositoryTest {
 
     private final ClassDataRepository repository = INSTANCE;
 
