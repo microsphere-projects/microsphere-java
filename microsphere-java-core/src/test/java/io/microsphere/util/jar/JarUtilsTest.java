@@ -3,7 +3,6 @@
  */
 package io.microsphere.util.jar;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.filter.JarEntryFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +15,8 @@ import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
+import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
@@ -49,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see JarUtilsTest
  * @since 1.0.0
  */
-class JarUtilsTest extends AbstractTestCase {
+class JarUtilsTest {
 
     private File targetDirectory;
 
