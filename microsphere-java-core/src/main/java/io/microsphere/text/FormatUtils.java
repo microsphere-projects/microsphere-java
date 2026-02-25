@@ -2,6 +2,7 @@ package io.microsphere.text;
 
 import io.microsphere.util.Utils;
 
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.isBlank;
 import static java.lang.String.valueOf;
 
@@ -62,11 +63,11 @@ public abstract class FormatUtils implements Utils {
         if (isBlank(pattern)) {
             return pattern;
         }
-        int offset = placeholder.length();
-        int argsLength = args == null ? 0 : args.length;
+        int argsLength = length(args);
         if (argsLength == 0) {
             return pattern;
         }
+        int offset = placeholder.length();
         StringBuilder stringBuilder = new StringBuilder(pattern);
         int index = -1;
         for (int i = 0; i < argsLength; i++) {
