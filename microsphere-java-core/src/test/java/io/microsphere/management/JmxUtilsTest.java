@@ -34,10 +34,13 @@ import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import javax.management.RuntimeMBeanException;
+import javax.management.StandardMBean;
 import java.lang.annotation.Annotation;
 import java.lang.management.PlatformManagedObject;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_ATTRIBUTE_ARRAY;
@@ -47,6 +50,7 @@ import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_NOTIFICATION_INFO_A
 import static io.microsphere.management.JmxUtils.EMPTY_MBEAN_OPERATION_INFO_ARRAY;
 import static io.microsphere.management.JmxUtils.descriptorForAnnotations;
 import static io.microsphere.management.JmxUtils.descriptorForElement;
+import static io.microsphere.management.JmxUtils.findMBeanAttributeInfo;
 import static io.microsphere.management.JmxUtils.getAttribute;
 import static io.microsphere.management.JmxUtils.getClassLoadingMXBean;
 import static io.microsphere.management.JmxUtils.getCompilationMXBean;
@@ -60,6 +64,7 @@ import static io.microsphere.management.JmxUtils.getOperatingSystemMXBean;
 import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.management.JmxUtils.getThreadMXBean;
 import static io.microsphere.management.JmxUtils.methodSignature;
+import static io.microsphere.management.builder.MBeanInfoBuilder.mbeanInfo;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -81,6 +86,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -220,19 +226,17 @@ class JmxUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testGetAttributeOnUnreadableAttribute() throws Exception {
-        String attributeName = "a";
-        String descrption = "NoDesc";
-        MBeanAttributeInfo attribute = new MBeanAttributeInfo(attributeName, "java.lang.String", descrption, false, false, false);
-        MBeanAttributeInfo[] attributes = ofArray(attribute);
+    void testGetAttributeOnReflectionException() throws Exception {
+        String attributeName = "test";
 
-        MBeanInfo mBeanInfo = new MBeanInfo("Test", descrption, attributes, ofArray(), ofArray(), ofArray());
+        MBeanInfo mBeanInfo = mbeanInfo("Test")
+                .build();
+
         ObjectName objectName = getInstance("io.microsphere.management:type=Test");
-
         DynamicMBean dynamicMBean = new DynamicMBean() {
             @Override
             public Object getAttribute(String attribute) throws AttributeNotFoundException, MBeanException, ReflectionException {
-                return null;
+                throw new ReflectionException(new Exception(), "For testing");
             }
 
             @Override
@@ -268,8 +272,47 @@ class JmxUtilsTest extends AbstractTestCase {
     }
 
     @Test
-    void testGetAttributeOnReflectionException() {
+    void testGetAttributeOnInstanceNotFoundException() throws Exception {
+        ObjectName objectName = getInstance("io.microsphere.management:type=Test");
+        Object value = getAttribute(mBeanServer, objectName, notFoundAttributeName);
+        assertNull(value);
+    }
 
+    @Test
+    void testGetAttributeOnExecutionException() throws Exception {
+        String attributeName = "CacheSize";
+
+        ObjectName objectName = getInstance("io.microsphere.management:type=CacheControl");
+        CacheControl cacheControl = new CacheControl();
+
+        cacheControl.setCacheSize(-1);
+
+        StandardMBean standardMBean = new StandardMBean(cacheControl, CacheControlMBean.class);
+
+        mBeanServer.registerMBean(standardMBean, objectName);
+
+        assertThrows(RuntimeMBeanException.class, () -> getAttribute(mBeanServer, objectName, attributeName));
+    }
+
+    @Test
+    void testFindMBeanAttributeInfo() {
+        Map<String, MBeanAttribute> mBeanAttributesMap = getMBeanAttributesMap(mBeanServer, objectName);
+        for (Entry<String, MBeanAttribute> entry : mBeanAttributesMap.entrySet()) {
+            MBeanAttribute mBeanAttribute = entry.getValue();
+            MBeanAttributeInfo mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, objectName, entry.getKey());
+            assertEquals(mBeanAttribute.getAttributeInfo(), mBeanAttributeInfo);
+        }
+    }
+
+    @Test
+    void testFindMBeanAttributeInfoOnNotFoundMBeanInfo() {
+        MBeanAttributeInfo mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, notFoundObjectName, notFoundAttributeName);
+        assertNull(mBeanAttributeInfo);
+    }
+    @Test
+    void testFindMBeanAttributeInfoOnNotFoundAttribute() {
+        MBeanAttributeInfo mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, objectName, notFoundAttributeName);
+        assertNull(mBeanAttributeInfo);
     }
 
     @Test
