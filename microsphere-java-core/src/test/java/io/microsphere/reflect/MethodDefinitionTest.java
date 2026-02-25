@@ -59,4 +59,8 @@ class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefini
             assertNull(definition.invoke(this, definition.toString()));
         }
     }
+
+    private void log(String message) {
+        super.log(message);
+    }
 }
