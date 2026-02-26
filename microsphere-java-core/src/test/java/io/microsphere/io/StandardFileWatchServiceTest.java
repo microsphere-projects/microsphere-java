@@ -17,6 +17,7 @@
 package io.microsphere.io;
 
 import io.microsphere.Loggable;
+import io.microsphere.LoggingTest;
 import io.microsphere.io.event.DefaultFileChangedListener;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedEvent.Kind;
@@ -74,7 +75,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StandardFileWatchServiceTest implements Loggable {
+class StandardFileWatchServiceTest extends LoggingTest implements Loggable {
 
     private File testDir;
 
