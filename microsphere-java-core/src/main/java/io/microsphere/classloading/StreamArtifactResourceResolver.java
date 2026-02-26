@@ -113,7 +113,9 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
         Artifact artifact = null;
         try {
             if (archiveFile == null) {
-                logger.trace("The resourceURL['{}'] can't be resolved to be an archive file", resourceURL);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The resourceURL['{}'] can't be resolved to be an archive file", resourceURL);
+                }
                 artifactMetadataData = readArtifactMetadataDataFromResource(resourceURL, classLoader);
             } else {
                 artifactMetadataData = readArtifactMetadataDataFromArchiveFile(archiveFile);
@@ -149,7 +151,9 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
         JarFile jarFile = new JarFile(archiveFile);
         JarEntry jarEntry = findArtifactMetadataEntry(jarFile);
         if (jarEntry == null) {
-            logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
+            }
             return null;
         }
         return jarFile.getInputStream(jarEntry);
@@ -159,7 +163,9 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
     protected InputStream readArtifactMetadataDataFromDirectory(File directory) throws IOException {
         File artifactMetadataFile = findArtifactMetadata(directory);
         if (artifactMetadataFile == null) {
-            logger.trace("The artifact metadata file can't be found in the directory[path: '{}']", directory);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifact metadata file can't be found in the directory[path: '{}']", directory);
+            }
             return null;
         }
         return new FileInputStream(artifactMetadataFile);
