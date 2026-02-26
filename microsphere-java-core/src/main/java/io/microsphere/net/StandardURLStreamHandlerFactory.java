@@ -86,7 +86,9 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
 
     URLStreamHandler createURLStreamHandlerFromDefaultFactory(Field defaultFactoryField, String protocol) {
         if (defaultFactoryField == null) {
-            logger.trace("The 'defaultFactory' field can't be found in the class URL.");
+            if (logger.isTraceEnabled()) {
+                logger.trace("The 'defaultFactory' field can't be found in the class URL.");
+            }
             return null;
         }
         URLStreamHandlerFactory factory = getStaticFieldValue(defaultFactoryField);
