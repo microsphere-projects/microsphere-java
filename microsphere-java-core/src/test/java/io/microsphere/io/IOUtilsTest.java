@@ -1,5 +1,6 @@
 package io.microsphere.io;
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see IOUtils
  * @since 1.0.0
  */
-class IOUtilsTest {
+class IOUtilsTest extends LoggingTest {
 
     private static final String TEST_VALUE = "Hello";
 
