@@ -245,7 +245,9 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
         Kind kind = toKind(watchEventKind);
         FileChangedEvent fileChangedEvent = new FileChangedEvent(file, kind);
         eventDispatcher.dispatch(fileChangedEvent);
-        logger.trace("The {} was dispatched", fileChangedEvent);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The {} was dispatched", fileChangedEvent);
+        }
     }
 
     private void registerDirectoriesToWatchService(WatchService watchService) throws Exception {
@@ -254,8 +256,10 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
             FileChangedMetadata metadata = entry.getValue();
             WatchEvent.Kind[] kinds = metadata.watchEventKinds;
             directoryPath.register(watchService, kinds);
-            logger.trace("The directory[path : '{}' , event kinds : {}] registers the WatchService : {}",
-                    directoryPath, arrayToString(kinds), watchService);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The directory[path : '{}' , event kinds : {}] registers the WatchService : {}",
+                        directoryPath, arrayToString(kinds), watchService);
+            }
         }
     }
 
