@@ -207,7 +207,9 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
         }
         String version = resolveVersion(mainAttributes);
         Artifact artifact = create(artifactId, version, resourceURL);
-        logger.trace("The artifactId was resolved from the resource URL['{}']: {}", artifactId, artifact);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The artifactId was resolved from the resource URL['{}']: {}", artifactId, artifact);
+        }
         return artifact;
     }
 
