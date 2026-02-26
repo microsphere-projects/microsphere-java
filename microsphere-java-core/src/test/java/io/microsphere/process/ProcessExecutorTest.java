@@ -1,6 +1,7 @@
 package io.microsphere.process;
 
 import io.microsphere.Loggable;
+import io.microsphere.LoggingTest;
 import io.microsphere.io.FastByteArrayOutputStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ProcessExecutorTest
  * @since 1.0.0
  */
-class ProcessExecutorTest implements Loggable {
+class ProcessExecutorTest extends LoggingTest implements Loggable {
 
     private FastByteArrayOutputStream outputStream;
 
