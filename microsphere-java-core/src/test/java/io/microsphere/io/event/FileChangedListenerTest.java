@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see FileChangedListener
  * @since
  */
-class FileChangedListenerTest extends Loggable {
+class FileChangedListenerTest implements Loggable {
 
     private FileChangedListener listener;
 

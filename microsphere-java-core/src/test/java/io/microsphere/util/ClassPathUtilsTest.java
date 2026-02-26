@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
-class ClassPathUtilsTest extends Loggable {
+class ClassPathUtilsTest implements Loggable {
 
     @Test
     void testGetBootstrapClassPaths() {

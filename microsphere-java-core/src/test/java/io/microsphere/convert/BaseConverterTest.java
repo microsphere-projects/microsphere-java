@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see AbstractConverter
  * @since 1.0.0
  */
-abstract class BaseConverterTest<S, T> extends Loggable {
+abstract class BaseConverterTest<S, T> implements Loggable {
 
     protected AbstractConverter<S, T> converter;
 

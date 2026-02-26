@@ -61,7 +61,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
-class ListUtilsTest extends Loggable {
+class ListUtilsTest implements Loggable {
 
     private static final List<String> TEST_LIST = asList("A", "B", "C");
 

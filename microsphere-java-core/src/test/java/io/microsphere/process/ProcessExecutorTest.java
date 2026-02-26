@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ProcessExecutorTest
  * @since 1.0.0
  */
-class ProcessExecutorTest extends Loggable {
+class ProcessExecutorTest implements Loggable {
 
     private FastByteArrayOutputStream outputStream;
 

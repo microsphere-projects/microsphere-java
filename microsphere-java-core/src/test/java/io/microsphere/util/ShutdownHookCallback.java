@@ -27,7 +27,7 @@ import io.microsphere.lang.Prioritized;
  * @see ShutdownHookUtils
  * @since 1.0.0
  */
-class ShutdownHookCallback extends Loggable implements Runnable, Prioritized {
+class ShutdownHookCallback implements Loggable, Runnable, Prioritized {
 
     private final int priority;
 

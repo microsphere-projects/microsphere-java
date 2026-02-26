@@ -27,7 +27,7 @@ import org.junit.jupiter.api.Test;
  * @see ThrowableBiConsumer
  * @since 1.0.0
  */
-class ThrowableBiConsumerTest extends Loggable {
+class ThrowableBiConsumerTest implements Loggable {
 
     @Test
     void testAccept() throws Throwable {

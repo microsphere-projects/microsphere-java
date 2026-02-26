@@ -60,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see FileUtils
  * @since 1.0.0
  */
-class FileUtilsTest extends Loggable {
+class FileUtilsTest implements Loggable {
 
     private final URL classFileResource = getClassResource(TEST_CLASS_LOADER, FileUtilsTest.class);
 

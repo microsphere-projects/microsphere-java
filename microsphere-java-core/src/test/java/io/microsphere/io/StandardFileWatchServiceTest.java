@@ -74,7 +74,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StandardFileWatchServiceTest extends Loggable {
+class StandardFileWatchServiceTest implements Loggable {
 
     private File testDir;
 

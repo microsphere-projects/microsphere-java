@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see ProcessManager
  * @since 1.0.0
  */
-class ProcessManagerTest extends Loggable {
+class ProcessManagerTest implements Loggable {
 
     @BeforeEach
     void setUp() {

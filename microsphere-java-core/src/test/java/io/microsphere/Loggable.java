@@ -29,23 +29,24 @@ import static java.lang.String.valueOf;
  * @see Logger
  * @since 1.0.0
  */
-public abstract class Loggable {
+public interface Loggable {
 
-    protected final Logger logger = getLogger(getClass());
-
-    protected void log(Object object) {
+    default void log(Object object) {
+        Logger logger = getLogger(getClass());
         if (logger.isTraceEnabled()) {
             logger.trace(valueOf(object));
         }
     }
 
-    protected void log(String object, Object... args) {
+    default void log(String object, Object... args) {
+        Logger logger = getLogger(getClass());
         if (logger.isTraceEnabled()) {
             logger.trace(object, args);
         }
     }
 
-    protected void log(String message, Throwable t) {
+    default void log(String message, Throwable t) {
+        Logger logger = getLogger(getClass());
         if (logger.isTraceEnabled()) {
             logger.trace(message, t);
         }

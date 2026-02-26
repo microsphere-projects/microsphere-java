@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> extends Loggable {
+public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> implements Loggable {
 
     private final List<Object>[] headConstructorArgumentsArray = ofArray(
             ofList(SINCE, getClassName()),

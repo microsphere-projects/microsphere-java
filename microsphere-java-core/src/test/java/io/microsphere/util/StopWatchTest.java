@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StopWatchTest extends Loggable {
+class StopWatchTest implements Loggable {
 
     private static final String testName = "test";
 
