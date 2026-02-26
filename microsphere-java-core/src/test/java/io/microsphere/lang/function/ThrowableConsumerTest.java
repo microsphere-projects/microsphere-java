@@ -62,6 +62,12 @@ class ThrowableConsumerTest {
     }
 
     @Test
+    void testExecute3OnHandleException() {
+        execute("For testing", throwableConsumer, (t, e) -> {
+        });
+    }
+
+    @Test
     void testExecute3OnException() {
         assertThrows(RuntimeException.class, () -> execute("For testing", m -> {
             throw new Exception(m);
