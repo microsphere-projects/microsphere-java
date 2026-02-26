@@ -646,7 +646,9 @@ public abstract class TypeUtils implements Utils {
     }
 
     @Nonnull
-    private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int hierarchicalTypesSize, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
+    private static Map<Class, TypeArgument[]> resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes,
+                                                                      int hierarchicalTypesSize, Class baseClass,
+                                                                      TypeVariable<Class>[] baseTypeParameters) {
 
         int size = hierarchicalTypesSize + 1;
 
@@ -663,14 +665,18 @@ public abstract class TypeUtils implements Utils {
         return typeArgumentsMap;
     }
 
-    private static void resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int index, int hierarchicalTypesSize, Map<Class, TypeArgument[]> typeArgumentsMap, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
+    private static void resolveTypeArgumentsMap(Type type, List<Type> hierarchicalTypes, int index,
+                                                int hierarchicalTypesSize, Map<Class, TypeArgument[]> typeArgumentsMap,
+                                                Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
         ParameterizedType pType = asParameterizedType(type);
         if (pType != null) {
             resolveTypeArgumentsMap(pType, hierarchicalTypes, index, hierarchicalTypesSize, typeArgumentsMap, baseClass, baseTypeParameters);
         }
     }
 
-    private static void resolveTypeArgumentsMap(ParameterizedType type, List<Type> hierarchicalTypes, int index, int hierarchicalTypesSize, Map<Class, TypeArgument[]> typeArgumentsMap, Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
+    private static void resolveTypeArgumentsMap(ParameterizedType type, List<Type> hierarchicalTypes, int index,
+                                                int hierarchicalTypesSize, Map<Class, TypeArgument[]> typeArgumentsMap,
+                                                Class baseClass, TypeVariable<Class>[] baseTypeParameters) {
         Class klass = asClass(type);
 
         int baseTypeArgumentsLength = baseTypeParameters.length;
@@ -1192,7 +1198,7 @@ public abstract class TypeUtils implements Utils {
             return emptyList();
         }
         List<Type> typeArguments = newLinkedList();
-        while (targetClass != null && targetClass != Object.class) {
+        while (targetClass != Object.class) {
             typeArguments.addAll(resolveTypeArguments(targetClass.getGenericSuperclass()));
             typeArguments.addAll(resolveTypeArguments(targetClass.getGenericInterfaces()));
             targetClass = targetClass.getSuperclass();

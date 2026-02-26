@@ -16,12 +16,9 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.Iterator;
-
-import static io.microsphere.collection.CollectionUtils.singletonIterator;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * {@link EnumerationIteratorAdapter} Test
@@ -29,11 +26,11 @@ import static io.microsphere.collection.CollectionUtils.singletonIterator;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class EnumerationIteratorAdapterTest extends AbstractTestCase {
+class EnumerationIteratorAdapterTest {
 
     @Test
     void test() {
-        Iterator<String> iterator = singletonIterator(TEST_ELEMENT);
-
+        EnumerationIteratorAdapter adapter = new EnumerationIteratorAdapter(null);
+        assertFalse(adapter.hasNext());
     }
 }

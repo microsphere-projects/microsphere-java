@@ -22,11 +22,12 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Calendar;
 import java.util.logging.LogManager;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.logging.LoggerFactory.loadAvailableFactories;
+import static java.util.Calendar.YEAR;
+import static java.util.Calendar.getInstance;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -65,7 +66,7 @@ class LoggerFactoryTest {
     private void log(Logger logger) {
         assertLevel(logger);
         log(logger, "Hello,World");
-        log(logger, "Hello,World {}", Calendar.getInstance().get(Calendar.YEAR));
+        log(logger, "Hello,World {}", getInstance().get(YEAR));
         log(logger, "Hello,World", new Throwable("Testing"));
     }
 

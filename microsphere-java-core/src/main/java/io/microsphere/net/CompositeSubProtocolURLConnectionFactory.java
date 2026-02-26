@@ -25,6 +25,7 @@ import java.net.URLConnection;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static java.util.Collections.sort;
 
 /**
@@ -116,7 +117,7 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
 
     private void sortFactories() {
         List<SubProtocolURLConnectionFactory> factories = this.factories;
-        sort(factories, Prioritized.COMPARATOR);
+        sort(factories, COMPARATOR);
     }
 
     @Override

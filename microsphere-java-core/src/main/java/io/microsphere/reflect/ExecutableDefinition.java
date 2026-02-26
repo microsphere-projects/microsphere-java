@@ -30,6 +30,7 @@ import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.Version.of;
 import static java.util.Objects.hash;
 
 /**
@@ -66,8 +67,6 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
     @Nonnull
     protected final String[] parameterClassNames;
 
-    private transient boolean resolvedParameterTypes;
-
     @Nonnull
     private transient Class<?>[] parameterTypes;
 
@@ -91,7 +90,7 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      */
     protected ExecutableDefinition(@Nonnull String since, @Nonnull Deprecation deprecation, @Nonnull String declaredClassName,
                                    @Nonnull String name, @Nonnull String... parameterClassNames) {
-        this(Version.of(since), deprecation, declaredClassName, name, parameterClassNames);
+        this(of(since), deprecation, declaredClassName, name, parameterClassNames);
     }
 
     /**
@@ -137,17 +136,17 @@ public abstract class ExecutableDefinition<E extends Executable> extends MemberD
      */
     @Nonnull
     public final Class<?>[] getParameterTypes() {
-        if (!this.resolvedParameterTypes && this.parameterTypes == null) {
+        if (this.parameterTypes == null) {
             this.parameterTypes = resolveParameterTypes(this.parameterClassNames);
-            this.resolvedParameterTypes = true;
         }
         return this.parameterTypes.clone();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof ExecutableDefinition)) return false;
-        if (!super.equals(o)) return false;
+        if (!super.equals(o)) {
+            return false;
+        }
 
         ExecutableDefinition that = (ExecutableDefinition) o;
         return arrayEquals(this.parameterClassNames, that.parameterClassNames);

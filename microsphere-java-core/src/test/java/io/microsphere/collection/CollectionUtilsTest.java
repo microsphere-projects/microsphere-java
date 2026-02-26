@@ -16,7 +16,7 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -25,6 +25,24 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_COLLECTION;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_DEQUE;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_LIST;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_QUEUE;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_SET;
+import static io.microsphere.AbstractTestCase.TEST_NULL_COLLECTION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_DEQUE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ENUMERATION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERATOR;
+import static io.microsphere.AbstractTestCase.TEST_NULL_LIST;
+import static io.microsphere.AbstractTestCase.TEST_NULL_QUEUE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_SET;
+import static io.microsphere.AbstractTestCase.TEST_SINGLETON_DEQUE;
+import static io.microsphere.AbstractTestCase.TEST_SINGLETON_LIST;
+import static io.microsphere.AbstractTestCase.TEST_SINGLETON_QUEUE;
+import static io.microsphere.AbstractTestCase.TEST_SINGLETON_SET;
 import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.CollectionUtils.emptyDeque;
 import static io.microsphere.collection.CollectionUtils.emptyIterable;
@@ -56,7 +74,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class CollectionUtilsTest extends AbstractTestCase {
+class CollectionUtilsTest extends Loggable {
 
     @Test
     void testIsEmpty() {
@@ -260,5 +278,4 @@ class CollectionUtilsTest extends AbstractTestCase {
         assertSame(QueueUtils.emptyDeque(), emptyDeque());
         assertSame(EMPTY_DEQUE, emptyDeque());
     }
-
 }

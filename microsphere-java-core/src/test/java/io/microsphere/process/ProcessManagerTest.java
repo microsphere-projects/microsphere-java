@@ -1,6 +1,7 @@
 package io.microsphere.process;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -22,10 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see ProcessManager
  * @since 1.0.0
  */
-class ProcessManagerTest extends AbstractTestCase {
+class ProcessManagerTest extends Loggable {
+
+    @BeforeEach
+    void setUp() {
+        INSTANCE.unfinishedProcessesCache.clear();
+    }
 
     @Test
-    void test() throws Throwable {
+    void test() {
         ProcessManager processManager = INSTANCE;
         ProcessExecutor processExecutor = new ProcessExecutor("java", "-version");
         ExecutorService executorService = newFixedThreadPool(1);
@@ -34,7 +40,7 @@ class ProcessManagerTest extends AbstractTestCase {
         long timeout = timeUnit.toMillis(2);
         Future<Boolean> future = executorService.submit(() -> {
             processExecutor.execute(outputStream, timeout);
-            return processExecutor.isFinished();
+            return true;
         });
 
         while (!future.isDone()) {

@@ -16,7 +16,6 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.annotation.Since;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +33,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_ANNOTATION_CLASSES;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_LIST;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ANNOTATION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ANNOTATION_CLASS;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ANNOTATION_CLASSES;
+import static io.microsphere.AbstractTestCase.TEST_NULL_COLLECTION;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_LIST;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.reflect.MethodUtils.OBJECT_PUBLIC_METHODS;
@@ -64,6 +71,7 @@ import static io.microsphere.util.AnnotationUtils.isSameType;
 import static io.microsphere.util.AnnotationUtils.isType;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.isPresent;
+import static java.lang.System.arraycopy;
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.CONSTRUCTOR;
 import static java.lang.annotation.ElementType.FIELD;
@@ -91,7 +99,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class AnnotationUtilsTest extends AbstractTestCase {
+class AnnotationUtilsTest {
 
     private static final Method stringEqualsMethod = findMethod(String.class, "equals", Object.class);
 
@@ -247,6 +255,7 @@ class AnnotationUtilsTest extends AbstractTestCase {
         assertTrue(isMetaAnnotation(DataAccess.class, ServiceMode.class, Target.class));
         assertTrue(isMetaAnnotation(DataAccess.class, Target.class, ServiceMode.class));
         assertTrue(isMetaAnnotation(DataAccess.class, ofArray(ServiceMode.class)));
+        assertFalse(isMetaAnnotation(DataAccess.class, ofArray(Since.class)));
     }
 
     @Test
@@ -270,6 +279,13 @@ class AnnotationUtilsTest extends AbstractTestCase {
     @Test
     void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnEmpty() {
         assertFalse(isMetaAnnotation(DataAccess.class, TEST_EMPTY_LIST));
+    }
+
+    @Test
+    void testIsMetaAnnotationWithAnnotationTypeAndIterableOfMetadataAnnotationTypesOnNativeAnnotations() {
+        NATIVE_ANNOTATION_TYPES.forEach(a -> {
+            assertFalse(isMetaAnnotation(a, TEST_EMPTY_LIST));
+        });
     }
 
     @Test
@@ -425,6 +441,14 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testFindAttributeValueOnNullAnnnotationElement() {
+        int length = annotationsOfA.length;
+        Annotation[] annotations = new Annotation[length + 1];
+        arraycopy(annotationsOfA, 0, annotations, 0, length);
+        assertNull(findAttributeValue(annotations, "value"));
+    }
+
+    @Test
     void testGetAttributeValue() {
         ElementType[] elementTypes = getAttributeValue(DataAccess.class.getAnnotation(Target.class), "value");
         assertEquals(1, elementTypes.length);
@@ -500,6 +524,17 @@ class AnnotationUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testExistsOnEmptyIterable() {
+        assertFalse(exists(emptyList(), DataAccess.class));
+        assertFalse(exists((Iterable) emptyList(), DataAccess.class));
+    }
+
+    @Test
+    void testExistsOnNotFound() {
+        assertFalse(exists(annotationsOfA, Override.class));
+    }
+
+    @Test
     void testIsAnnotatedPresentWithArray() {
         assertTrue(isAnnotationPresent(ofArray(A.class), DataAccess.class));
         assertTrue(isAnnotationPresent(ofArray(B.class), DataAccess.class));
@@ -566,6 +601,16 @@ class AnnotationUtilsTest extends AbstractTestCase {
     void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNull() {
         assertFalse(isAnnotationPresent((AnnotatedElement) null, ofList(DataAccess.class, Since.class)));
         assertFalse(isAnnotationPresent(B.class, TEST_NULL_ITERABLE));
+    }
+
+    @Test
+    void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnEmpty() {
+        assertFalse(isAnnotationPresent(B.class, emptyList()));
+    }
+
+    @Test
+    void testIsAnnotatedPresentWithAnnotatedElementAndAnnotationTypesOnNotFound() {
+        assertFalse(isAnnotationPresent(B.class, ofList(Override.class)));
     }
 
     @Test

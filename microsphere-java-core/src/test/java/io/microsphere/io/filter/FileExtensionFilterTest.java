@@ -27,25 +27,37 @@ class FileExtensionFilterTest {
 
     @BeforeEach
     void setUp() {
-        instance = of("txt");
+        this.instance = of("txt");
     }
 
     @Test
     void testAcceptOnNull() {
-        assertFalse(instance.accept(null));
+        assertFalse(this.instance.accept(null));
     }
 
     @Test
     void testAcceptOnDirectory() {
-        assertFalse(instance.accept(new File(JAVA_HOME)));
-        assertFalse(instance.accept(new File(USER_DIR)));
-        assertFalse(instance.accept(new File(JAVA_IO_TMPDIR)));
+        assertFalse(this.instance.accept(new File(JAVA_HOME)));
+        assertFalse(this.instance.accept(new File(USER_DIR)));
+        assertFalse(this.instance.accept(new File(JAVA_IO_TMPDIR)));
     }
 
     @Test
     void testAcceptOnFile() throws IOException {
         File testFile = createTempFile("test", ".txt");
-        assertTrue(instance.accept(testFile));
+        assertTrue(this.instance.accept(testFile));
         testFile.deleteOnExit();
+
+        testFile = createTempFile("test", "");
+        assertFalse(this.instance.accept(testFile));
+        testFile.deleteOnExit();
+    }
+
+    @Test
+    void testMatches() {
+        assertTrue(this.instance.matches("txt", true));
+        assertFalse(this.instance.matches("TXT", true));
+        assertTrue(this.instance.matches("txt", false));
+        assertTrue(this.instance.matches("TXT", false));
     }
 }

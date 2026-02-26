@@ -20,6 +20,12 @@ import io.microsphere.lang.Prioritized;
 
 import java.util.logging.Level;
 
+import static java.util.logging.Level.ALL;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 /**
  * A {@link LoggerFactory} implementation that creates and manages instances of JDK logging ({@link java.util.logging.Logger}).
  *
@@ -75,77 +81,77 @@ public class JDKLoggerFactory extends LoggerFactory {
 
         @Override
         public boolean isTraceEnabled() {
-            return isLoggable(Level.ALL);
+            return isLoggable(ALL);
         }
 
         @Override
         public void trace(String message) {
-            log(Level.ALL, message);
+            log(ALL, message);
         }
 
         @Override
         public void trace(String message, Throwable t) {
-            log(Level.ALL, message, t);
+            log(ALL, message, t);
         }
 
         @Override
         public boolean isDebugEnabled() {
-            return isLoggable(Level.FINE);
+            return isLoggable(FINE);
         }
 
         @Override
         public void debug(String message) {
-            log(Level.FINE, message);
+            log(FINE, message);
         }
 
         @Override
         public void debug(String message, Throwable t) {
-            log(Level.FINE, message, t);
+            log(FINE, message, t);
         }
 
         @Override
         public boolean isInfoEnabled() {
-            return this.isLoggable(Level.INFO);
+            return this.isLoggable(INFO);
         }
 
         @Override
         public void info(String message) {
-            log(Level.INFO, message);
+            log(INFO, message);
         }
 
         @Override
         public void info(String message, Throwable t) {
-            log(Level.INFO, message, t);
+            log(INFO, message, t);
         }
 
         @Override
         public boolean isWarnEnabled() {
-            return isLoggable(Level.WARNING);
+            return isLoggable(WARNING);
         }
 
         @Override
         public void warn(String message) {
-            log(Level.WARNING, message);
+            log(WARNING, message);
         }
 
         @Override
         public void warn(String message, Throwable t) {
-            log(Level.WARNING, message, t);
+            log(WARNING, message, t);
         }
 
         @Override
         public boolean isErrorEnabled() {
-            return isLoggable(Level.SEVERE);
+            return isLoggable(SEVERE);
         }
 
         @Override
         public void error(String message) {
-            log(Level.SEVERE, message);
+            log(SEVERE, message);
         }
 
         @Override
         public void error(String message, Throwable t) {
-            log(Level.SEVERE, message, t);
+            log(SEVERE, message, t);
         }
 
         boolean isLoggable(Level level) {

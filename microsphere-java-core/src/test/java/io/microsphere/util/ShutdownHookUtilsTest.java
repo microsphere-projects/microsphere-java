@@ -16,15 +16,13 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.lang.Prioritized;
-import io.microsphere.logging.Logger;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Queue;
 
-import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ShutdownHookUtils.SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static io.microsphere.util.ShutdownHookUtils.clearShutdownHookCallbacks;
@@ -44,9 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class ShutdownHookUtilsTest {
-
-    private static final Logger logger = getLogger(ShutdownHookUtilsTest.class);
+class ShutdownHookUtilsTest extends Loggable {
 
     @BeforeEach
     void setUp() {
@@ -125,7 +121,7 @@ class ShutdownHookUtilsTest {
                 Thread currentThread = Thread.currentThread();
                 synchronized (currentThread) {
                     try {
-                        logger.info("Thread[name : '{}'] is about to be waited...", currentThread.getName());
+                        log("Thread[name : '{}'] is about to be waited...", currentThread.getName());
                         currentThread.wait();
                         assertTrue(getShutdownHookCallbacks().isEmpty());
                         assertFalse(removeShutdownHookCallback(this));
@@ -140,7 +136,7 @@ class ShutdownHookUtilsTest {
 
         addShutdownHookCallback(() -> {
             synchronized (thread) {
-                logger.info("Thread[name : '{}'] is about to notify a waited Thread[name: '{}']...", Thread.currentThread().getName(), thread.getName());
+                log("Thread[name : '{}'] is about to notify a waited Thread[name: '{}']...", Thread.currentThread().getName(), thread.getName());
                 thread.notify();
             }
         });
@@ -150,23 +146,4 @@ class ShutdownHookUtilsTest {
         thread.start();
     }
 
-    static class ShutdownHookCallback implements Runnable, Prioritized {
-
-        private final int priority;
-
-        ShutdownHookCallback(int priority) {
-            this.priority = priority;
-        }
-
-        @Override
-        public void run() {
-            logger.trace("Run an instance of ShutdownHookCallback[priority : {}] : {}", priority, this);
-        }
-
-        @Override
-        public int getPriority() {
-            return priority;
-        }
-
-    }
 }

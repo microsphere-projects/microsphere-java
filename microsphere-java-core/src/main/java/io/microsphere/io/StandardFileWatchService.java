@@ -22,6 +22,7 @@ import io.microsphere.event.EventDispatcher;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.io.event.FileChangedListener;
+import io.microsphere.logging.Logger;
 
 import java.io.File;
 import java.nio.file.FileSystem;
@@ -36,7 +37,7 @@ import java.util.TreeSet;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.MapUtils.newTreeMap;
@@ -49,6 +50,9 @@ import static io.microsphere.event.EventDispatcher.parallel;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.lang.System.getProperty;
 import static java.nio.file.FileSystems.getDefault;
@@ -57,8 +61,8 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 /**
  * /**
@@ -103,6 +107,8 @@ import static java.util.concurrent.Executors.newSingleThreadExecutor;
  */
 public class StandardFileWatchService implements FileWatchService, AutoCloseable {
 
+    private static final Logger logger = getLogger(StandardFileWatchService.class);
+
     /**
      * The default thread name prefix : "microsphere-file-watch-service"
      */
@@ -124,7 +130,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     )
     public static final String THREAD_NAME_PREFIX = getProperty(THREAD_NAME_PREFIX_PROPERTY_NAME, DEFAULT_THREAD_NAME_PREFIX);
 
-    private static final WatchEvent.Kind<?>[] ALL_WATCH_EVENT_KINDS = {
+    static final WatchEvent.Kind<?>[] ALL_WATCH_EVENT_KINDS = {
             ENTRY_CREATE,
             ENTRY_DELETE,
             ENTRY_MODIFY
@@ -132,15 +138,15 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
 
     private WatchService watchService;
 
-    private final ExecutorService eventLoopExecutor;
-
     private final Executor eventHandlerExecutor;
+
+    private final ExecutorService eventLoopExecutor;
 
     private final Map<Path, FileChangedMetadata> fileChangedMetadataCache = newTreeMap();
 
-    private volatile boolean started;
+    private final AtomicBoolean started;
 
-    private Future eventLoopFuture;
+    private volatile Future eventLoopFuture;
 
     public StandardFileWatchService() {
         this(DIRECT_EXECUTOR);
@@ -151,18 +157,19 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     }
 
     public StandardFileWatchService(Executor eventHandlerExecutor, ExecutorService eventLoopExecutor) {
-        this.eventLoopExecutor = eventLoopExecutor;
         this.eventHandlerExecutor = eventHandlerExecutor;
+        this.eventLoopExecutor = eventLoopExecutor;
+        this.started = new AtomicBoolean(false);
         // shutdown the ExecutorService when JVM exits
         shutdownOnExit(eventLoopExecutor, eventHandlerExecutor);
     }
 
     public void start() throws Exception {
-        if (started) {
+        if (!this.started.compareAndSet(false, true)) {
             throw new IllegalStateException("StandardFileWatchService has started");
         }
 
-        started = true;
+        logger.info("Start to watch the file system.");
 
         FileSystem fileSystem = getDefault();
 
@@ -176,9 +183,32 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
 
     }
 
+    public void stop() throws Exception {
+        // set the flag "started" to false
+        while (this.started.compareAndSet(true, false)) {
+            // wait for the event loop to complete
+            this.eventLoopExecutor.awaitTermination(100, MILLISECONDS);
+            // if the event loop is not done, try to cancel the task
+            this.eventLoopFuture.cancel(true);
+        }
+    }
+
+    public boolean isStarted() {
+        return this.started.get();
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.stop();
+        IOUtils.close(this.watchService);
+        this.fileChangedMetadataCache.clear();
+        shutdown(this.eventLoopExecutor);
+        shutdown(this.eventHandlerExecutor);
+    }
+
     private void dispatchFileChangedEvents(WatchService watchService) {
-        eventLoopFuture = eventLoopExecutor.submit(() -> {
-            while (started) {
+        this.eventLoopFuture = this.eventLoopExecutor.submit(() -> {
+            while (isStarted()) {
                 WatchKey watchKey = null;
                 try {
                     watchKey = watchService.take();
@@ -188,7 +218,8 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
                             Path dirPath = (Path) watchable;
                             Path fileRelativePath = (Path) event.context();
 
-                            FileChangedMetadata metadata = fileChangedMetadataCache.get(dirPath);
+                            FileChangedMetadata metadata = this.fileChangedMetadataCache.get(dirPath);
+
                             if (metadata != null) {
                                 Path filePath = dirPath.resolve(fileRelativePath);
                                 if (isDirectory(dirPath, NOFOLLOW_LINKS) || metadata.filePaths.contains(filePath)) {
@@ -214,14 +245,17 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
         Kind kind = toKind(watchEventKind);
         FileChangedEvent fileChangedEvent = new FileChangedEvent(file, kind);
         eventDispatcher.dispatch(fileChangedEvent);
+        logger.trace("The {} was dispatched", fileChangedEvent);
     }
 
     private void registerDirectoriesToWatchService(WatchService watchService) throws Exception {
-        for (Map.Entry<Path, FileChangedMetadata> entry : fileChangedMetadataCache.entrySet()) {
+        for (Map.Entry<Path, FileChangedMetadata> entry : this.fileChangedMetadataCache.entrySet()) {
             Path directoryPath = entry.getKey();
             FileChangedMetadata metadata = entry.getValue();
             WatchEvent.Kind[] kinds = metadata.watchEventKinds;
             directoryPath.register(watchService, kinds);
+            logger.trace("The directory[path : '{}' , event kinds : {}] registers the WatchService : {}",
+                    directoryPath, arrayToString(kinds), watchService);
         }
     }
 
@@ -235,7 +269,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
 
     private FileChangedMetadata getMetadata(Path filePath, Kind... kinds) {
         final Path dirPath = isDirectory(filePath, NOFOLLOW_LINKS) ? filePath : filePath.getParent();
-        return fileChangedMetadataCache.computeIfAbsent(dirPath, k -> {
+        return this.fileChangedMetadataCache.computeIfAbsent(dirPath, k -> {
             FileChangedMetadata metadata = new FileChangedMetadata();
             metadata.eventDispatcher = parallel(this.eventHandlerExecutor);
             metadata.watchEventKinds = toWatchEventKinds(kinds);
@@ -244,7 +278,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     }
 
     @Nonnull
-    private WatchEvent.Kind<?>[] toWatchEventKinds(Kind[] kinds) {
+    static WatchEvent.Kind<?>[] toWatchEventKinds(Kind... kinds) {
         int size = length(kinds);
         if (size < 1) {
             return ALL_WATCH_EVENT_KINDS;
@@ -258,8 +292,8 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     }
 
     @Nonnull
-    private WatchEvent.Kind<?> toWatchEventKind(Kind kind) {
-        WatchEvent.Kind<?> watchEventKind = OVERFLOW;
+    static WatchEvent.Kind<?> toWatchEventKind(Kind kind) {
+        final WatchEvent.Kind<?> watchEventKind;
         switch (kind) {
             case CREATED:
                 watchEventKind = ENTRY_CREATE;
@@ -267,7 +301,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
             case MODIFIED:
                 watchEventKind = ENTRY_MODIFY;
                 break;
-            case DELETED:
+            default:
                 watchEventKind = ENTRY_DELETE;
                 break;
         }
@@ -275,40 +309,19 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
     }
 
     @Nonnull
-    private Kind toKind(WatchEvent.Kind<?> watchEventKind) {
+    static Kind toKind(WatchEvent.Kind<?> watchEventKind) {
         final Kind kind;
         if (ENTRY_CREATE.equals(watchEventKind)) {
             kind = CREATED;
         } else if (ENTRY_MODIFY.equals(watchEventKind)) {
             kind = MODIFIED;
-        } else {
+        } else if (ENTRY_DELETE.equals(watchEventKind)) {
             kind = DELETED;
+        } else {
+            String errorMessage = format("The invalid kind of WatchEvent : {}", watchEventKind);
+            throw new IllegalArgumentException(errorMessage);
         }
         return kind;
-    }
-
-    public void stop() throws Exception {
-        if (started) {
-            // set the flag "started" to false
-            started = false;
-            // wait for the event loop to complete
-            if (!eventLoopExecutor.awaitTermination(100, TimeUnit.MILLISECONDS)) {
-                // if the event loop is not done, try to cancel the task
-                eventLoopFuture.cancel(true);
-            }
-
-            if (watchService != null) {
-                watchService.close();
-            }
-            fileChangedMetadataCache.clear();
-            shutdown(eventLoopExecutor);
-            shutdown(eventHandlerExecutor);
-        }
-    }
-
-    @Override
-    public void close() throws Exception {
-        this.stop();
     }
 
     private static class FileChangedMetadata {

@@ -19,7 +19,6 @@ package io.microsphere.util;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-import io.microsphere.lang.ClassDataRepository;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -36,11 +35,11 @@ import static io.microsphere.constants.SymbolConstants.LESS_THAN;
 import static io.microsphere.constants.SymbolConstants.LESS_THAN_OR_EQUAL_TO;
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.constants.SymbolConstants.SPACE_CHAR;
-import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Assert.assertTrue;
+import static io.microsphere.util.ClassUtils.getCodeSourceLocation;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.Version.Operator.EQ;
 import static io.microsphere.util.Version.Operator.GE;
@@ -404,8 +403,7 @@ public class Version implements Comparable<Version>, Serializable {
         Package targetPackage = targetClass.getPackage();
         String version = targetPackage.getImplementationVersion();
         if (version == null) {
-            ClassDataRepository repository = INSTANCE;
-            URL classResource = repository.getCodeSourceLocation(targetClass);
+            URL classResource = getCodeSourceLocation(targetClass);
             String errorMessage = format("The 'Implementation-Version' manifest attribute can't be fetched from the jar file[class resource : '{}'] by the target class[name :'{}']", classResource, targetClass.getName());
             throw new IllegalArgumentException(errorMessage);
         }

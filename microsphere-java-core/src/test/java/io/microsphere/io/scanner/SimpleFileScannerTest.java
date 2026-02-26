@@ -3,7 +3,6 @@
  */
 package io.microsphere.io.scanner;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.io.filter.DirectoryFileFilter;
 import io.microsphere.io.filter.NameFileFilter;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @see SimpleFileScanner
  * @since 1.0.0
  */
-class SimpleFileScannerTest extends AbstractTestCase {
+class SimpleFileScannerTest {
 
     private static final SimpleFileScanner simpleFileScanner = INSTANCE;
 

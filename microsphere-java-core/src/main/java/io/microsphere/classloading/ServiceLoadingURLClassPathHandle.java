@@ -21,6 +21,7 @@ import java.util.List;
 
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link URLClassPathHandle} implementation based on the Service Loading mechanism
@@ -34,17 +35,16 @@ public class ServiceLoadingURLClassPathHandle implements URLClassPathHandle {
 
     public ServiceLoadingURLClassPathHandle() {
         List<URLClassPathHandle> urlClassPathHandles = loadServicesList(URLClassPathHandle.class);
-        for (URLClassPathHandle urlClassPathHandle : urlClassPathHandles) {
-            if (urlClassPathHandle.supports()) {
-                this.delegate = urlClassPathHandle;
-                break;
-            }
-        }
+        this.delegate = urlClassPathHandles
+                .stream()
+                .filter(URLClassPathHandle::supports)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public boolean supports() {
-        return delegate != null;
+        return nonNull(this.delegate);
     }
 
     @Override

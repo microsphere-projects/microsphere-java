@@ -83,12 +83,12 @@ class MemberUtilsTest {
 
     @Test
     void testIsAbstractOnNonAbstract() {
-        assertFalse(isStatic(findMethod(ReflectionTest.class, "privateMethod")));
+        assertFalse(isAbstract(findMethod(ReflectionTest.class, "privateMethod")));
     }
 
     @Test
     void testIsAbstractOnNull() {
-        assertFalse(isStatic(null));
+        assertFalse(isAbstract(null));
     }
 
     @Test

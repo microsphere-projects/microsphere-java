@@ -33,6 +33,7 @@ import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Predicates.or;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.of;
 
 /**
  * The utilities class for {@link Stream}
@@ -62,7 +63,7 @@ public interface Streams {
      */
     @Nonnull
     static <T> Stream<T> stream(T... values) {
-        return Stream.of(values);
+        return of(values);
     }
 
     /**

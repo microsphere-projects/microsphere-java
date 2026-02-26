@@ -55,31 +55,15 @@ import static java.util.Collections.emptyIterator;
  * @see Collections#emptyIterator()
  */
 @Immutable
-public class EmptyIterator<E> implements Iterator<E> {
+public class EmptyIterator<E> extends DelegatingIterator<E> {
 
     /**
      * The singleton of {@link EmptyIterator}
      */
     public static final EmptyIterator INSTANCE = new EmptyIterator();
 
-    private final Iterator<E> delegate;
 
     public EmptyIterator() {
-        this.delegate = emptyIterator();
-    }
-
-    @Override
-    public boolean hasNext() {
-        return delegate.hasNext();
-    }
-
-    @Override
-    public E next() {
-        return delegate.next();
-    }
-
-    @Override
-    public void remove() {
-        delegate.remove();
+        super(emptyIterator());
     }
 }
