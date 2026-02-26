@@ -175,7 +175,9 @@ public class ProcessExecutor {
                 }
             } finally {
                 processManager.removeUnfinishedProcess(process, options);
-                logger.trace("The command['{}'] is executed with exit value : {}", commandLine, exitValue);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The command['{}'] is executed with exit value : {}", commandLine, exitValue);
+                }
             }
             return targetOutputStream.toByteArray();
         });
