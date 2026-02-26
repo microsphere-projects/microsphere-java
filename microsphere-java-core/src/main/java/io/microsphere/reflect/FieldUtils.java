@@ -115,7 +115,9 @@ public abstract class FieldUtils implements Utils {
             // ignore, try the super class
             field = findField(klass.getSuperclass(), fieldName);
         }
-        logger.trace("To find the field[name :'{}'] from the class : '{}'", fieldName, klass);
+        if (logger.isTraceEnabled()) {
+            logger.trace("To find the field[name :'{}'] from the class : '{}'", fieldName, klass);
+        }
         return field;
     }
 
@@ -682,14 +684,18 @@ public abstract class FieldUtils implements Utils {
     static void handleIllegalAccessException(IllegalAccessException e, Object instance, Field field, boolean accessible) {
         String errorMessage = format("The instance [object : {} , class : {} ] can't access the field[name : '{}' , type : {} , accessible : {}]",
                 instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()), accessible);
-        logger.trace(errorMessage);
+        if (logger.isTraceEnabled()) {
+            logger.trace(errorMessage);
+        }
         throw new IllegalStateException(errorMessage, e);
     }
 
     static void handleIllegalArgumentException(IllegalArgumentException e, Object instance, Field field) {
         String errorMessage = format("The instance[object : {} , class : {}] can't match the field[name : '{}' , type : {}]",
                 instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()));
-        logger.trace(errorMessage);
+        if (logger.isTraceEnabled()) {
+            logger.trace(errorMessage);
+        }
         throw new IllegalArgumentException(errorMessage, e);
     }
 
