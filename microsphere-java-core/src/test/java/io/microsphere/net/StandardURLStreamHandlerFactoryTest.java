@@ -18,6 +18,7 @@
 package io.microsphere.net;
 
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see StandardURLStreamHandlerFactory
  * @since 1.0.0
  */
-class StandardURLStreamHandlerFactoryTest {
+class StandardURLStreamHandlerFactoryTest extends LoggingTest {
 
     private StandardURLStreamHandlerFactory factory;
 
