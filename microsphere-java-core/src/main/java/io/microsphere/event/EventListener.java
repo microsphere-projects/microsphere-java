@@ -22,8 +22,9 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
+import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
-
+import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
 
 /**
  * The {@link Event Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
@@ -128,7 +129,7 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
     static Class<? extends Event> findEventType(Class<?> listenerClass) {
         Class<? extends Event> eventType = null;
 
-        if (listenerClass != null && EventListener.class.isAssignableFrom(listenerClass)) {
+        if (isAssignableFrom(EventListener.class, listenerClass)) {
             eventType = getAllParameterizedTypes(listenerClass)
                     .stream()
                     .map(EventListener::findEventType)
@@ -174,15 +175,13 @@ public interface EventListener<E extends Event> extends java.util.EventListener,
         Class<? extends Event> eventType = null;
 
         Type rawType = parameterizedType.getRawType();
-        if ((rawType instanceof Class) && EventListener.class.isAssignableFrom((Class) rawType)) {
+        if (isAssignableFrom(EventListener.class, rawType)) {
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
             for (Type typeArgument : typeArguments) {
-                if (typeArgument instanceof Class) {
-                    Class argumentClass = (Class) typeArgument;
-                    if (Event.class.isAssignableFrom(argumentClass)) {
-                        eventType = argumentClass;
-                        break;
-                    }
+                Class argumentClass = asClass(typeArgument);
+                if (isAssignableFrom(Event.class, argumentClass)) {
+                    eventType = argumentClass;
+                    break;
                 }
             }
         }

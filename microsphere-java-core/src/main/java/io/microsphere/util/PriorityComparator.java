@@ -16,12 +16,14 @@
  */
 package io.microsphere.util;
 
+import java.lang.annotation.Annotation;
 import java.util.Comparator;
 import java.util.Objects;
 
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.ClassUtils.getType;
 
 /**
  * A {@link Comparator} implementation that sorts objects based on the value of the
@@ -59,16 +61,20 @@ public class PriorityComparator implements Comparator<Object> {
 
     @Override
     public int compare(Object o1, Object o2) {
-        return compare(asClass(o1), asClass(o2));
+        return compare(getType(o1), getType(o2));
     }
 
-    public static int compare(Class<?> type1, Class<?> type2) {
-        if (Objects.equals(type1, type2) || PRIORITY_CLASS == null) {
+    static int compare(Class<?> type1, Class<?> type2) {
+        return compare(type1, type2, PRIORITY_CLASS);
+    }
+
+    static int compare(Class<?> type1, Class<?> type2, Class<? extends Annotation> priorityClass) {
+        if (Objects.equals(type1, type2) || priorityClass == null) {
             return 0;
         }
 
-        Object priority1 = findAnnotation(type1, PRIORITY_CLASS);
-        Object priority2 = findAnnotation(type2, PRIORITY_CLASS);
+        Object priority1 = findAnnotation(type1, priorityClass);
+        Object priority2 = findAnnotation(type2, priorityClass);
 
         int priorityValue1 = getValue(priority1);
         int priorityValue2 = getValue(priority2);
@@ -76,13 +82,8 @@ public class PriorityComparator implements Comparator<Object> {
         return Integer.compare(priorityValue1, priorityValue2);
     }
 
-    private static Class<?> asClass(Object object) {
-        return object instanceof Class ? (Class) object : object.getClass();
-    }
-
-    private static int getValue(Object priority) {
+    static int getValue(Object priority) {
         int value = priority == null ? UNDEFINED_VALUE : invokeMethod(priority, "value");
         return value < 0 ? UNDEFINED_VALUE : value;
     }
-
 }

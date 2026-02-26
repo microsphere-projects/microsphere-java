@@ -19,7 +19,9 @@ package io.microsphere.event;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.event.EventListener.findEventType;
+import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 /**
@@ -39,7 +41,24 @@ class EventListenerTest {
     }
 
     @Test
-    void testOnEvent() {
+    void testFindEventTypeOnNull() {
+        assertNull(findEventType((Class) null));
+    }
+
+    @Test
+    void testGetPriority() {
+        EventListener<Event> listener = new EventListener<Event>() {
+            @Override
+            public void onEvent(Event event) {
+            }
+
+            @Override
+            public int getPriority() {
+                return EventListener.super.getPriority();
+            }
+        };
+
+        assertEquals(NORMAL_PRIORITY, listener.getPriority());
     }
 
 }

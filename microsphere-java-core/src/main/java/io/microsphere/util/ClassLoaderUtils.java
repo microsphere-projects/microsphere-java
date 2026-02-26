@@ -562,7 +562,7 @@ public abstract class ClassLoaderUtils implements Utils {
         if (isBlank(className)) {
             return null;
         }
-        Class<?> klass = null;
+        Class<?> klass;
         try {
             klass = classLoader.loadClass(className);
         } catch (Throwable e) {

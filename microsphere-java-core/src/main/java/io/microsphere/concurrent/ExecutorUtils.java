@@ -16,6 +16,7 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.util.ShutdownHookUtils;
 import io.microsphere.util.Utils;
 
@@ -23,6 +24,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ArrayUtils.forEach;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 
@@ -36,6 +38,8 @@ import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
  * @since 1.0.0
  */
 public abstract class ExecutorUtils implements Utils {
+
+    private static final Logger logger = getLogger(ExecutorUtils.class);
 
     /**
      * Registers a shutdown hook to gracefully shut down the given {@link Executor} instances when the JVM exits.
@@ -131,6 +135,7 @@ public abstract class ExecutorUtils implements Utils {
         if (!executorService.isShutdown()) {
             executorService.shutdown();
         }
+        logger.trace("The ExecutorService({}) has been shutdown", executorService);
         return true;
     }
 

@@ -24,7 +24,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.JavaFileManager;
 import java.util.function.BiFunction;
 
-import static io.microsphere.annotation.processor.util.MessagerUtils.printMandatoryWarning;
+import static io.microsphere.lang.model.util.MessagerUtils.printMandatoryWarning;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 
 /**

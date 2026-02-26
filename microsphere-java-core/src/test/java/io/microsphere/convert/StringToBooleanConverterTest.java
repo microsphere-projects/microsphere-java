@@ -19,6 +19,7 @@ package io.microsphere.convert;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.convert.StringToBooleanConverter.INSTANCE;
+import static java.lang.Boolean.TRUE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +43,7 @@ class StringToBooleanConverterTest extends BaseConverterTest<String, Boolean> {
 
     @Override
     protected Boolean getTarget() throws Throwable {
-        return Boolean.TRUE;
+        return TRUE;
     }
 
     @Test

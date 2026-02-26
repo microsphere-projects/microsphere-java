@@ -24,7 +24,9 @@ import static io.microsphere.constants.SymbolConstants.DOT;
 public class PackageNameClassFilter implements ClassFilter {
 
     private final String packageName;
+
     private final boolean includedSubPackages;
+
     private final String subPackageNamePrefix;
 
     /**

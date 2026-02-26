@@ -167,7 +167,7 @@ public abstract class AccessibleObjectUtils implements Utils {
         return accessible;
     }
 
-    private static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {
+    static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {
         boolean accessible = false;
         try {
             accessible = (boolean) methodHandle.invokeExact(accessibleObject);
@@ -177,11 +177,15 @@ public abstract class AccessibleObjectUtils implements Utils {
         return accessible;
     }
 
-    private static Boolean tryCanAccess(Object object, AccessibleObject accessibleObject) {
+    static Boolean tryCanAccess(Object object, AccessibleObject accessibleObject) {
+        return tryCanAccess(canAccessMethodHandle, object, accessibleObject);
+    }
+
+    static Boolean tryCanAccess(MethodHandle methodHandle, Object object, AccessibleObject accessibleObject) {
         Boolean access = null;
-        if (canAccessMethodHandle != null) { // JDK 9+
+        if (methodHandle != null) { // JDK 9+
             try {
-                access = (boolean) canAccessMethodHandle.invokeExact(accessibleObject, object);
+                access = (boolean) methodHandle.invokeExact(accessibleObject, object);
             } catch (Throwable e) {
                 logger.error("It's failed to invokeExact on {} with object : {} , accessible object : {}", canAccessMethodHandle, object, accessibleObject, e);
             }
@@ -189,7 +193,7 @@ public abstract class AccessibleObjectUtils implements Utils {
         return access;
     }
 
-    private static void handleInaccessibleObjectExceptionIfFound(Throwable e) {
+    static void handleInaccessibleObjectExceptionIfFound(Throwable e) {
         if (isInaccessibleObjectException(e)) {
             String rawErrorMessage = e.getMessage();
             String moduleName = substringBetween(rawErrorMessage, "module ", SPACE);
