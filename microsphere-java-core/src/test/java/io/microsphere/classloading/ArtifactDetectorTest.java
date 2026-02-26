@@ -17,6 +17,7 @@
 package io.microsphere.classloading;
 
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -33,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ArtifactDetector
  * @since 1.0.0
  */
-class ArtifactDetectorTest {
+class ArtifactDetectorTest extends LoggingTest {
 
     @Test
     void testDetect() {
