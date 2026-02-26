@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import static io.microsphere.AbstractTestCase.assertValues;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -26,9 +27,13 @@ import static io.microsphere.util.TypeFinder.Include.values;
 import static io.microsphere.util.TypeFinder.classFinder;
 import static io.microsphere.util.TypeFinder.classGetSuperClassFunction;
 import static io.microsphere.util.TypeFinder.genericTypeFinder;
+import static io.microsphere.util.TypeFinder.genericTypeGetInterfacesFunction;
+import static io.microsphere.util.TypeFinder.genericTypeGetSuperClassFunction;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -212,6 +217,27 @@ class TypeFinderTest {
 
         superTypes = typeFinder.getSuperTypes(null, true, false);
         assertSame(emptyList(), superTypes);
+    }
+
+    @Test
+    void testGenericTypeGetSuperClassFunctionWithNull() {
+        assertNull(genericTypeGetSuperClassFunction.apply(null));
+    }
+
+    @Test
+    void testGenericTypeGetInterfacesFunction() {
+        assertNull(genericTypeGetInterfacesFunction.apply(null));
+    }
+
+    @Test
+    void testAddSuperTypes() {
+        TypeFinder<Type> typeFinder = genericTypeFinder(String.class, values());
+        List<Type> types = newArrayList();
+        typeFinder.addSuperTypes(types, String.class, false, false, false);
+        assertTrue(types.isEmpty());
+
+        typeFinder.addSuperTypes(types, String.class, false, true, true);
+        assertFalse(types.isEmpty());
     }
 
     private void assertGenericInterfaces(List<Type> types) {
