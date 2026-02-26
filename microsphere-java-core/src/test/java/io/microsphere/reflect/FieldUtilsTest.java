@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class FieldUtilsTest {
+class FieldUtilsTest extends LoggingTest {
 
     private static String value = "1";
 
