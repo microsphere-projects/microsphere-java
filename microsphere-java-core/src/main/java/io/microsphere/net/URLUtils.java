@@ -1184,7 +1184,9 @@ public abstract class URLUtils implements Utils {
         }
         for (int i = 0; i <= indexOfColon; i++) {
             if (isWhitespace(url.charAt(i))) {
-                logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
+                }
                 return null;
             }
         }
