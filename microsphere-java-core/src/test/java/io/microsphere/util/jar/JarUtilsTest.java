@@ -3,6 +3,7 @@
  */
 package io.microsphere.util.jar;
 
+import io.microsphere.LoggingTest;
 import io.microsphere.filter.JarEntryFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see JarUtilsTest
  * @since 1.0.0
  */
-class JarUtilsTest {
+class JarUtilsTest extends LoggingTest {
 
     private File targetDirectory;
 
