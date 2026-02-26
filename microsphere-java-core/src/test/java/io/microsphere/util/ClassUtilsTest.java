@@ -3,6 +3,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.LoggingTest;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.test.A;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassUtilsTest
  * @since 1.0.0
  */
-class ClassUtilsTest {
+class ClassUtilsTest extends LoggingTest {
 
     @Test
     void testConstants() {
