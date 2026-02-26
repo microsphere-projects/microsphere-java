@@ -17,8 +17,8 @@
 package io.microsphere.io;
 
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.lang.System.arraycopy;
 import static java.util.Objects.hash;
 
@@ -110,17 +110,20 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
             throw new IndexOutOfBoundsException();
         }
 
-        if (pos >= count) {
-            return -1;
+        if (len == 0) {
+            return 0;
         }
 
         int avail = count - pos;
+
+        if (avail < 1) {
+            return -1;
+        }
+
         if (len > avail) {
             len = avail;
         }
-        if (len <= 0) {
-            return 0;
-        }
+
         arraycopy(buf, pos, b, off, len);
         pos += len;
         return len;
@@ -156,7 +159,7 @@ public class FastByteArrayInputStream extends ByteArrayInputStream {
         if (!(obj instanceof FastByteArrayInputStream)) {
             return false;
         }
-        return Arrays.equals(this.buf, ((FastByteArrayInputStream) obj).buf);
+        return arrayEquals(this.buf, ((FastByteArrayInputStream) obj).buf);
     }
 
     @Override

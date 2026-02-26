@@ -1,0 +1,67 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.microsphere.test.annotation.processing;
+
+import io.microsphere.jdk.tools.compiler.Compiler;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+
+import javax.annotation.processing.Processor;
+import java.lang.reflect.Method;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.Set;
+
+import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
+import static java.util.ServiceLoader.load;
+
+
+/**
+ * {@link InvocationInterceptor} based on Java {@link Compiler}
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @since 1.0.0
+ */
+class CompilerInvocationInterceptor implements InvocationInterceptor {
+
+    @Override
+    public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
+                                    ExtensionContext extensionContext) throws Throwable {
+        Set<Class<?>> compiledClassesSet = new LinkedHashSet<>();
+        AbstractAnnotationProcessingTest test = (AbstractAnnotationProcessingTest) invocationContext.getTarget().get();
+        Class<?> testClass = extensionContext.getTestClass().get();
+        ClassLoader classLoader = testClass.getClassLoader();
+        compiledClassesSet.add(testClass);
+        test.addCompiledClasses(compiledClassesSet);
+
+        Class<?>[] compiledClasses = compiledClassesSet.toArray(EMPTY_CLASS_ARRAY);
+
+        Compiler compiler = new Compiler();
+        compiler.sourcePaths(compiledClasses);
+
+        List<Processor> processors = new LinkedList<>();
+        processors.add(new AnnotationProcessingTestProcessor(test, invocation, invocationContext, extensionContext));
+        // Loads the SPI instances of Processor
+        ServiceLoader<Processor> loadedProcessors = load(Processor.class, classLoader);
+        loadedProcessors.forEach(processors::add);
+        compiler.processors(processors.toArray(new Processor[0]));
+        compiler.compile(compiledClasses);
+    }
+}

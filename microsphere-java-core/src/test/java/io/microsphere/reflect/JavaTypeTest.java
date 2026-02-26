@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.StringIntegerBooleanHashMap;
 import io.microsphere.test.StringIntegerHashMap;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
+import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.reflect.JavaType.fromField;
@@ -246,7 +248,7 @@ class JavaTypeTest {
 
     private static void assertJavaType(JavaType javaType) {
         // assert JavaType.Kind ==  PARAMETERIZED_TYPE
-        assertEquals(JavaType.Kind.PARAMETERIZED_TYPE, javaType.getKind());
+        assertEquals(Kind.PARAMETERIZED_TYPE, javaType.getKind());
         // assert Type == ParameterizedType
         Type fieldType = javaType.getType();
         assertTrue(ParameterizedType.class.isInstance(fieldType));
@@ -267,7 +269,7 @@ class JavaTypeTest {
 
         // as Cloneable -> JavaType Cloneable : Interface type - Cloneable.class
         JavaType targetType = javaType.as(Cloneable.class);
-        assertEquals(JavaType.Kind.CLASS, targetType.getKind());
+        assertEquals(CLASS, targetType.getKind());
         assertEquals(Cloneable.class, targetType.getRawType());
         assertEquals(Cloneable.class, targetType.toClass());
         // assert source
@@ -298,12 +300,12 @@ class JavaTypeTest {
         assertEquals(2, genericJavaTypes.length);
         // First - Integer.class
         JavaType genericJavaType0 = genericJavaTypes[0];
-        assertEquals(JavaType.Kind.CLASS, genericJavaType0.getKind());
+        assertEquals(CLASS, genericJavaType0.getKind());
         assertEquals(Integer.class, genericJavaType0.getType());
         // Second - ParameterizedType(List<String>>)
         //          Raw Type == java.util.List
         JavaType genericJavaType1 = genericJavaTypes[1];
-        assertEquals(JavaType.Kind.PARAMETERIZED_TYPE, genericJavaType1.getKind());
+        assertEquals(Kind.PARAMETERIZED_TYPE, genericJavaType1.getKind());
         Type genericRawType1 = genericJavaType1.getRawType();
         assertEquals(List.class, genericRawType1);
         // genericType1 == ParameterizedType(List<String>>)

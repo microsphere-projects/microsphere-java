@@ -17,7 +17,7 @@
 
 package io.microsphere.lang.function;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -27,12 +27,12 @@ import org.junit.jupiter.api.Test;
  * @see ThrowableBiConsumer
  * @since 1.0.0
  */
-class ThrowableBiConsumerTest extends AbstractTestCase {
+class ThrowableBiConsumerTest extends Loggable {
 
     @Test
     void testAccept() throws Throwable {
         ThrowableBiConsumer<String, Integer> consumer = (s, i) -> {
-            logger.info("The String is : {}, the Integer is : {}", s, i);
+            log("The String is : {}, the Integer is : {}", s, i);
         };
         consumer.accept("Mercy", 1);
     }
@@ -40,10 +40,10 @@ class ThrowableBiConsumerTest extends AbstractTestCase {
     @Test
     void testAndThen() throws Throwable {
         ThrowableBiConsumer<String, Integer> consumer = (s, i) -> {
-            logger.info("The String is : {}, the Integer is : {}", s, i);
+            log("The String is : {}, the Integer is : {}", s, i);
         };
         consumer.andThen((s, i) -> {
-            logger.info("andThen -> The String is : {}, the Integer is : {}", s, i);
+            log("andThen -> The String is : {}, the Integer is : {}", s, i);
         }).accept("Mercy", 1);
     }
 }

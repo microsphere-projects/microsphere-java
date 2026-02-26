@@ -26,6 +26,8 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 
+import static io.microsphere.util.ArrayUtils.arrayEquals;
+
 /**
  * Multi-Value Data
  *
@@ -107,7 +109,7 @@ public class MultipleValueData {
                 && Objects.equals(integerSet, that.integerSet)
                 && CollectionUtils.equals(dataQueue, that.dataQueue)
                 && Objects.equals(classEnumeration, that.classEnumeration)
-                && Arrays.equals(objects, that.objects);
+                && arrayEquals(objects, that.objects);
     }
 
     @Override

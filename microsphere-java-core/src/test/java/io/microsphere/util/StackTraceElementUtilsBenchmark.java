@@ -25,8 +25,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
+import static io.microsphere.util.StackTraceUtils.getCallerClassName;
 import static io.microsphere.util.StackTraceUtils.getCallerClassNameInGeneralJVM;
-import static io.microsphere.util.StackTraceUtils.getCallerClassNames;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openjdk.jmh.annotations.Mode.AverageTime;
@@ -53,6 +53,6 @@ public class StackTraceElementUtilsBenchmark {
 
     @Benchmark
     public void testGetCallerClassName() {
-        getCallerClassNames();
+        getCallerClassName();
     }
 }

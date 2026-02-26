@@ -21,6 +21,7 @@ import io.microsphere.annotation.ConfigurationProperty;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Objects;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -31,6 +32,7 @@ import static io.microsphere.constants.SymbolConstants.COMMA;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.jar.JarUtils.MANIFEST_RESOURCE_PATH;
 import static java.lang.System.getProperty;
+import static java.util.stream.Stream.of;
 
 /**
  * {@link ArtifactResourceResolver} implementation that reads artifact metadata from JAR manifest files.
@@ -197,48 +199,33 @@ public class ManifestArtifactResourceResolver extends StreamArtifactResourceReso
         return resolveArtifactMetaInfoInManifest(manifest, resourceURL);
     }
 
-    private Artifact resolveArtifactMetaInfoInManifest(Manifest manifest, URL resourceURL) throws IOException {
+    Artifact resolveArtifactMetaInfoInManifest(Manifest manifest, URL resourceURL) {
         Attributes mainAttributes = manifest.getMainAttributes();
-        String artifactId = resolveArtifactId(mainAttributes, resourceURL);
+        String artifactId = resolveArtifactId(mainAttributes);
         if (artifactId == null) {
             return null;
         }
         String version = resolveVersion(mainAttributes);
-        return create(artifactId, version, resourceURL);
+        Artifact artifact = create(artifactId, version, resourceURL);
+        logger.trace("The artifactId was resolved from the resource URL['{}']: {}", artifactId, artifact);
+        return artifact;
     }
 
-    private String resolveArtifactId(Attributes attributes, URL artifactResourceURL) {
-        String artifactId = null;
-
-        for (String artifactIdAttributeName : ARTIFACT_ID_ATTRIBUTE_NAMES) {
-            artifactId = attributes.getValue(artifactIdAttributeName);
-            if (artifactId != null) {
-                break;
-            }
-        }
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("The artifactId was resolved from the '{}' of resource URL['{}'] of  : {} , attributes : {}",
-                    MANIFEST_RESOURCE_PATH,
-                    artifactResourceURL.getPath(),
-                    artifactId,
-                    attributes.entrySet()
-            );
-        }
-
+    private String resolveArtifactId(Attributes attributes) {
+        String artifactId = of(ARTIFACT_ID_ATTRIBUTE_NAMES)
+                .map(attributes::getValue)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
         return artifactId;
     }
 
     private String resolveVersion(Attributes attributes) {
-        String version = null;
-
-        for (String versionAttributeName : VERSION_ATTRIBUTE_NAMES) {
-            version = attributes.getValue(versionAttributeName);
-            if (version != null) {
-                break;
-            }
-        }
-
+        String version = of(VERSION_ATTRIBUTE_NAMES)
+                .map(attributes::getValue)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
         return version;
     }
 }
