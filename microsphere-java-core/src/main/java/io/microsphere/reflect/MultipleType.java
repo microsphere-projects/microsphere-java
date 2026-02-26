@@ -61,8 +61,12 @@ public class MultipleType {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MultipleType)) {
+            return false;
+        }
         MultipleType that = (MultipleType) o;
         return arrayEquals(types, that.types);
     }

@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Assert.assertTrue;
+import static java.util.Objects.hash;
 
 /**
  * {@link Type} Argument
@@ -59,20 +60,26 @@ public class TypeArgument {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof TypeArgument)) {
+            return false;
+        }
 
         TypeArgument that = (TypeArgument) o;
 
-        if (index != that.index) return false;
+        if (index != that.index) {
+            return false;
+        }
+
         return Objects.equals(type, that.type);
     }
 
     @Override
     public int hashCode() {
-        int result = type != null ? type.hashCode() : 0;
-        result = 31 * result + index;
-        return result;
+        return hash(this.type, this.index);
     }
 
 

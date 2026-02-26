@@ -1,6 +1,6 @@
 package io.microsphere.performance;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Disabled;
 
 /**
@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Disabled;
  * @since 1.0.0
  */
 @Disabled
-public abstract class AbstractPerformanceTest extends AbstractTestCase {
+public abstract class AbstractPerformanceTest extends Loggable {
 
     protected <T> void execute(PerformanceAction<T> action) {
         long startTime = System.nanoTime();

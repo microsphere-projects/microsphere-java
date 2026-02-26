@@ -23,13 +23,37 @@
 
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-annotation-processor</artifactId>
+                <artifactId>microsphere-java-annotations</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-java-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.microsphere-projects</groupId>
+                <artifactId>microsphere-jdk-tools</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.microsphere-projects</groupId>
+                <artifactId>microsphere-java-test</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.microsphere-projects</groupId>
+                <artifactId>microsphere-lang-model</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.microsphere-projects</groupId>
+                <artifactId>microsphere-annotation-processor</artifactId>
                 <version>${revision}</version>
             </dependency>
 

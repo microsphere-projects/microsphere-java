@@ -10,8 +10,6 @@ import io.microsphere.annotation.Nullable;
 
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
-import java.security.CodeSource;
-import java.security.ProtectionDomain;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.ofSet;
@@ -21,6 +19,7 @@ import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.ClassUtils.getCodeSourceLocation;
 import static io.microsphere.util.StringUtils.split;
 import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.util.Collections.emptySet;
@@ -189,13 +188,7 @@ public abstract class ClassPathUtils implements Utils {
         ClassLoader classLoader = type.getClassLoader();
         URL location = null;
         if (classLoader != null) { // Non-Bootstrap
-            try {
-                ProtectionDomain protectionDomain = type.getProtectionDomain();
-                CodeSource codeSource = protectionDomain.getCodeSource();
-                location = codeSource == null ? null : codeSource.getLocation();
-            } catch (SecurityException exception) {
-
-            }
+            location = getCodeSourceLocation(type);
         } else if (!type.isPrimitive() && !type.isArray() && !type.isSynthetic()) { // Bootstrap ClassLoader
             // Class was loaded by Bootstrap ClassLoader
             location = getClassResource(getSystemClassLoader(), type.getName());

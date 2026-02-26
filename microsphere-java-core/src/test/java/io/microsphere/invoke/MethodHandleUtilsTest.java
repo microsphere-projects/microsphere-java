@@ -16,17 +16,24 @@
  */
 package io.microsphere.invoke;
 
+import io.microsphere.invoke.MethodHandleUtils.LookupKey;
 import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
+import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.PROTECTED;
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.PUBLIC;
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
 import static io.microsphere.invoke.MethodHandleUtils.findStatic;
 import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.invoke.MethodHandleUtils.handleInvokeExactFailure;
 import static io.microsphere.invoke.MethodHandleUtils.lookup;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
@@ -94,6 +101,26 @@ public class MethodHandleUtilsTest {
     void testHandleInvokeExactFailure() {
         MethodHandle methodHandle = findVirtual(MethodHandleUtilsTest.class, "privateMethod");
         handleInvokeExactFailure(new Throwable("testing"), methodHandle);
+    }
+
+    @Test
+    void testLookupKeyEquals() {
+        LookupKey key = buildKey(getClass(), getModes(PUBLIC));
+        assertFalse(key.equals(null));
+        assertFalse(key.equals(this));
+
+        assertNotEquals(key, buildKey(String.class, getModes(PUBLIC)));
+        assertNotEquals(key, buildKey(getClass(), getModes(PROTECTED)));
+
+        assertEquals(key, key);
+        assertEquals(key, buildKey(getClass(), getModes(PUBLIC)));
+    }
+
+    @Test
+    void testLookupKeyHashCode() {
+        LookupKey key = buildKey(getClass(), getModes(PUBLIC));
+        LookupKey key2 = buildKey(getClass(), getModes(PUBLIC));
+        assertEquals(key.hashCode(), key2.hashCode());
     }
 
     private void testFindVirtual(String methodName) throws Throwable {

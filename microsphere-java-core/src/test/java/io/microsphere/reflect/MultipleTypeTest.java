@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.reflect.MultipleType.of;
 import static java.util.Objects.hash;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link MultipleType} Test
@@ -25,18 +27,20 @@ class MultipleTypeTest {
 
     @Test
     void testHashCode() {
-        assertEquals(hash(String.class, Object.class), multipleType.hashCode());
+        assertEquals(hash(String.class, Object.class), this.multipleType.hashCode());
     }
 
     @Test
     void testEquals() {
-        assertEquals(of(String.class, Object.class), multipleType);
+        assertTrue(this.multipleType.equals(this.multipleType));
+        assertFalse(this.multipleType.equals(null));
+        assertEquals(of(String.class, Object.class), this.multipleType);
         assertEquals(of(String.class, Object.class, Integer.class), of(String.class, Object.class, Integer.class));
-        assertNotEquals(of(String.class, Object.class, Integer.class), multipleType);
+        assertNotEquals(of(String.class, Object.class, Integer.class), this.multipleType);
     }
 
     @Test
     void testToString() {
-        assertEquals("MultipleType : [class java.lang.String, class java.lang.Object]", multipleType.toString());
+        assertEquals("MultipleType : [class java.lang.String, class java.lang.Object]", this.multipleType.toString());
     }
 }

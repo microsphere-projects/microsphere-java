@@ -22,21 +22,21 @@ jobs:
         java: [ '8', '11' , '17' , '21' , '25' ]
     steps:
       - name: Checkout Source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup JDK ${{ matrix.Java }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.java }}
-          cache: maven
 
       - name: Build with Maven
-        run: mvn
+        run: ./mvnw
           --batch-mode
           --update-snapshots
           --file pom.xml
           -Drevision=0.0.1-SNAPSHOT
+          -Dsurefire.useSystemClassLoader=false
           test
           --activate-profiles test,coverage
 

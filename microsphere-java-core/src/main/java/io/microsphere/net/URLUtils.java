@@ -12,7 +12,6 @@ import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.size;
+import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
@@ -40,6 +39,7 @@ import static io.microsphere.constants.ProtocolConstants.EAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.WAR_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.ZIP_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.AND_CHAR;
 import static io.microsphere.constants.SymbolConstants.COLON;
@@ -47,6 +47,7 @@ import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.EQUAL_CHAR;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING;
 import static io.microsphere.constants.SymbolConstants.QUERY_STRING_CHAR;
+import static io.microsphere.constants.SymbolConstants.SEMICOLON;
 import static io.microsphere.constants.SymbolConstants.SEMICOLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.SHARP_CHAR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -55,20 +56,25 @@ import static io.microsphere.reflect.FieldUtils.setStaticFieldValue;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
+import static io.microsphere.util.ClassUtils.cast;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.StringUtils.substringAfter;
 import static io.microsphere.util.StringUtils.substringAfterLast;
+import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
-import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
+import static io.microsphere.util.jar.JarUtils.isDirectoryEntry;
+import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static java.lang.Character.isWhitespace;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link URL} Utility class
@@ -207,12 +213,8 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static String doResolveArchiveEntryPath(String path) {
-        int beginIndex = indexOfArchiveEntry(path);
-        if (beginIndex > -1) {
-            String relativePath = path.substring(beginIndex + ARCHIVE_ENTRY_SEPARATOR_LENGTH);
-            return decode(relativePath);
-        }
-        return null;
+        String archiveEntryPath = substringAfter(path, ARCHIVE_ENTRY_SEPARATOR);
+        return EMPTY.equals(archiveEntryPath) ? null : decode(archiveEntryPath);
     }
 
     /**
@@ -241,85 +243,6 @@ public abstract class URLUtils implements Utils {
     public static String resolveBasePath(URL url) throws NullPointerException {
         // NPE check
         return resolvePath(url, false);
-    }
-
-    static String resolvePath(URL url, boolean includeArchiveEntryPath) {
-        String protocol = url.getProtocol();
-
-        switch (protocol) {
-            case FILE_PROTOCOL:
-                return resolvePathFromFile(url);
-            case JAR_PROTOCOL:
-                return resolvePathFromJar(url, includeArchiveEntryPath);
-        }
-
-        String path = url.getPath();
-
-        // path may contain the matrix parameters
-        int indexOfMatrixString = indexOfMatrixString(path);
-        // path removes the matrix parameters if present
-        path = indexOfMatrixString > -1 ? path.substring(0, indexOfMatrixString) : path;
-
-        return path;
-    }
-
-    static String resolvePathFromFile(URL url) {
-        String path = buildPath(url);
-        if (IS_OS_WINDOWS) {
-            int index = path.indexOf(SLASH_CHAR);
-            if (index == 0) {
-                path = path.substring(1);
-            }
-        }
-        return path;
-    }
-
-    static String buildPath(URL url) {
-        String authority = url.getAuthority();
-        String path = url.getPath();
-        int length = 0;
-        int authorityLength = length(authority);
-        if (authorityLength > 0) {
-            length += authority.length() + 1;
-        }
-        int pathLength = length(path);
-        if (pathLength > 0) {
-            length += pathLength;
-        }
-        StringBuilder pathBuilder = new StringBuilder(length);
-        if (authorityLength > 0) {
-            pathBuilder.append(SLASH_CHAR)
-                    .append(authority);
-        }
-        if (pathLength > 0) {
-            pathBuilder.append(path);
-        }
-        return pathBuilder.toString();
-    }
-
-    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
-        String path = buildPath(url);
-        int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
-        if (filePrefixIndex == 0) { //  path starts with "file:/"
-            path = path.substring(FILE_URL_PREFIX_LENGTH);
-        }
-
-        // path removes the archive entry path if present
-        if (!includeArchiveEntryPath) {
-            int indexOfArchiveEntry = indexOfArchiveEntry(path);
-            path = indexOfArchiveEntry > -1 ? path.substring(0, indexOfArchiveEntry) : path;
-        }
-
-        int indexOfColon = path.indexOf(COLON_CHAR);
-        if (indexOfColon == -1) { // the path on the Unix/Linux
-            // path adds the leading slash if not present
-            int indexOfSlash = path.indexOf(SLASH_CHAR);
-            if (indexOfSlash != 0) {
-                path = SLASH_CHAR + path;
-            }
-        } // else the path on the Windows
-
-        return path;
     }
 
     /**
@@ -363,7 +286,7 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static File resolveArchiveDirectory(URL resourceURL) {
-        String resourcePath = new File(resourceURL.getFile()).toString();
+        String resourcePath = buildPath(resourceURL);
         Set<String> classPaths = getClassPaths();
         File archiveDirectory = null;
         for (String classPath : classPaths) {
@@ -695,28 +618,18 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}
      */
     public static boolean isDirectoryURL(URL url) {
-        boolean isDirectory = false;
-        if (url != null) {
-            String protocol = url.getProtocol();
-            try {
-                if (JAR_PROTOCOL.equals(protocol)) {
-                    JarFile jarFile = toJarFile(url); // Test whether valid jar or not
-                    final String relativePath = resolveRelativePath(url);
-                    if (EMPTY.equals(relativePath)) { // root directory in jar
-                        isDirectory = true;
-                    } else {
-                        JarEntry jarEntry = jarFile.getJarEntry(relativePath);
-                        isDirectory = jarEntry != null && jarEntry.isDirectory();
-                    }
-                } else if (FILE_PROTOCOL.equals(protocol)) {
-                    File classPathFile = new File(url.toURI());
-                    isDirectory = classPathFile.isDirectory();
-                }
-            } catch (Exception e) {
-                isDirectory = false;
-            }
+        if (url == null) {
+            return false;
         }
-        return isDirectory;
+        if (isDirectoryEntry(url)) {
+            return true;
+        }
+        String protocol = url.getProtocol();
+        if (FILE_PROTOCOL.equals(protocol)) {
+            File classPathFile = new File(buildPath(url));
+            return classPathFile.isDirectory();
+        }
+        return false;
     }
 
     /**
@@ -754,7 +667,7 @@ public abstract class URLUtils implements Utils {
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
             JarFile jarFile = toJarFile(url);
-            flag = jarFile != null;
+            flag = nonNull(jarFile);
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }
@@ -797,73 +710,43 @@ public abstract class URLUtils implements Utils {
      * @throws NullPointerException if the provided URL is {@code null}.
      */
     public static boolean isArchiveURL(URL url) {
-        String protocol = url.getProtocol();
-        boolean flag = false;
-        switch (protocol) {
-            case JAR_PROTOCOL:
-            case WAR_PROTOCOL:
-            case EAR_PROTOCOL:
-                flag = true;
-                break;
-            case FILE_PROTOCOL:
-                JarFile jarFile = toJarFile(url);
-                flag = jarFile != null;
+        if (isJarURL(url)) {
+            return true;
         }
-        return flag;
+        String protocol = url.getProtocol();
+        return isArchiveProtocol(protocol);
     }
 
     /**
-     * Converts the provided URL to a {@link JarFile} instance if it refers to a valid JAR file.
+     * Determines whether the specified protocol represents an archive type.
      *
-     * <p>This method attempts to open the URL as a JAR file. If the URL uses the "file" protocol,
-     * it checks whether the corresponding file exists and is a valid JAR. For other protocols (e.g., "jar"),
-     * it tries to extract and open the underlying JAR file.</p>
+     * <p>This method checks if the given protocol matches known archive protocols such as "jar", "zip", "war", or "ear".
+     * These protocols are commonly used to reference compressed or packaged resources.</p>
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * // Example 1: Valid JAR file URL
-     * URL jarURL = new URL("file:/path/to/archive.jar");
-     * JarFile jarFile = URLUtils.toJarFile(jarURL);
-     * if (jarFile != null) {
-     *     System.out.println("Successfully opened JAR file.");
-     * } else {
-     *     System.out.println("Failed to open JAR file.");
-     * }
+     * // Valid archive protocols
+     * boolean result = URLUtils.isArchiveProtocol("jar");
+     * System.out.println(result); // Output: true
      *
-     * // Example 2: Invalid JAR file URL
-     * URL invalidURL = new URL("file:/path/to/invalid.jar");
-     * jarFile = URLUtils.toJarFile(invalidURL);
-     * System.out.println(jarFile == null); // Output: true
+     * result = URLUtils.isArchiveProtocol("war");
+     * System.out.println(result); // Output: true
      *
-     * // Example 3: URL with "jar" protocol
-     * URL urlWithJarProtocol = new URL("jar:file:/path/to/archive.jar!/entry/path");
-     * jarFile = URLUtils.toJarFile(urlWithJarProtocol);
-     * System.out.println(jarFile != null); // Output: true
+     * // Non-archive protocol
+     * result = URLUtils.isArchiveProtocol("http");
+     * System.out.println(result); // Output: false
+     *
+     * // Case-sensitive check
+     * result = URLUtils.isArchiveProtocol("JAR");
+     * System.out.println(result); // Output: false
      * }</pre>
      *
-     * @param url The URL to convert into a JAR file.
-     * @return A non-null {@link JarFile} if the URL refers to a valid JAR file; otherwise, returns {@code null}.
-     * @throws NullPointerException if the provided URL is {@code null}.
+     * @param protocol The protocol string to check.
+     * @return {@code true} if the protocol is an archive type; otherwise, {@code false}.
      */
-    @Nullable
-    public static JarFile toJarFile(URL url) {
-        String path = buildPath(url);
-        File file = new File(path);
-        if (!file.exists()) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The JarFile is not existed from the url : {}", url);
-            }
-            return null;
-        }
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(file);
-        } catch (IOException e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The JarFile can't be open from the url : {}", url);
-            }
-        }
-        return jarFile;
+    public static boolean isArchiveProtocol(String protocol) {
+        return JAR_PROTOCOL.equals(protocol) || ZIP_PROTOCOL.equals(protocol) || WAR_PROTOCOL.equals(protocol)
+                || EAR_PROTOCOL.equals(protocol);
     }
 
     /**
@@ -1069,14 +952,14 @@ public abstract class URLUtils implements Utils {
         }
 
         if (hasPath) {
-            int indexOfMatrixString = indexOfMatrixString(path);
+            int indexOfMatrixString = path.indexOf(SEMICOLON_CHAR);
             if (indexOfMatrixString > -1) {
                 hasMatrix = true;
                 Map<String, List<String>> matrixParameters = resolveMatrixParameters(path);
                 List<String> subProtocols = matrixParameters.getOrDefault(SUB_PROTOCOL_MATRIX_NAME, emptyList());
                 protocol = reformProtocol(protocol, subProtocols);
                 matrix = buildMatrixString(matrixParameters);
-                path = resolvePath(path, indexOfMatrixString);
+                path = path.substring(0, indexOfMatrixString);
             }
         }
 
@@ -1301,9 +1184,7 @@ public abstract class URLUtils implements Utils {
         }
         for (int i = 0; i <= indexOfColon; i++) {
             if (isWhitespace(url.charAt(i))) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
-                }
+                logger.trace("The protocol content should not contain the whitespace[url : '{}' , index : {}]", url, i);
                 return null;
             }
         }
@@ -1641,17 +1522,80 @@ public abstract class URLUtils implements Utils {
         }
     }
 
-    static String resolvePath(String value, int indexOfMatrixString) {
-        return indexOfMatrixString > -1 ? value.substring(0, indexOfMatrixString) : value;
+    static String resolvePath(URL url, boolean includeArchiveEntryPath) {
+        String protocol = url.getProtocol();
+
+        switch (protocol) {
+            case FILE_PROTOCOL:
+                return resolvePathFromFile(url);
+            case JAR_PROTOCOL:
+                return resolvePathFromJar(url, includeArchiveEntryPath);
+        }
+
+        return truncateMatrixString(url.getPath());
+    }
+
+    static String resolvePathFromFile(URL url) {
+        return resolvePathFromFile(url, IS_OS_WINDOWS);
+    }
+
+    static String resolvePathFromFile(URL url, boolean isOsWindows) {
+        String path = buildPath(url);
+        if (isOsWindows) {
+            path = substringAfter(path, SLASH);
+        }
+        return path;
+    }
+
+    static String buildPath(URL url) {
+        String authority = url.getAuthority();
+        String path = url.getPath();
+        int length = 0;
+        int authorityLength = length(authority);
+        if (authorityLength > 0) {
+            length += authority.length() + 1;
+        }
+        int pathLength = length(path);
+        if (pathLength > 0) {
+            length += pathLength;
+        }
+        StringBuilder pathBuilder = new StringBuilder(length);
+        if (authorityLength > 0) {
+            pathBuilder.append(SLASH_CHAR)
+                    .append(authority);
+        }
+        if (pathLength > 0) {
+            pathBuilder.append(path);
+        }
+        return pathBuilder.toString();
+    }
+
+    static String resolvePathFromJar(URL url, boolean includeArchiveEntryPath) {
+        String path = buildPath(url);
+        int filePrefixIndex = path.indexOf(FILE_URL_PREFIX);
+        if (filePrefixIndex == 0) { //  path starts with "file:/"
+            path = path.substring(FILE_URL_PREFIX_LENGTH);
+        }
+
+        // path removes the archive entry path if present
+        if (!includeArchiveEntryPath) {
+            path = substringBefore(path, ARCHIVE_ENTRY_SEPARATOR);
+        }
+
+        int indexOfColon = path.indexOf(COLON_CHAR);
+        if (indexOfColon == -1) { // the path on the Unix/Linux
+            // path adds the leading slash if not present
+            int indexOfSlash = path.indexOf(SLASH_CHAR);
+            if (indexOfSlash != 0) {
+                path = SLASH_CHAR + path;
+            }
+        } // else the path on the Windows
+
+        return path;
     }
 
     protected static String truncateMatrixString(String value) {
-        int lastIndex = indexOfMatrixString(value);
-        return lastIndex > -1 ? value.substring(0, lastIndex) : value;
-    }
-
-    protected static int indexOfMatrixString(String value) {
-        return value == null ? -1 : value.indexOf(SEMICOLON_CHAR);
+        return substringBefore(value, SEMICOLON);
     }
 
     protected static MutableURLStreamHandlerFactory getMutableURLStreamHandlerFactory() {
@@ -1670,7 +1614,7 @@ public abstract class URLUtils implements Utils {
         return factory;
     }
 
-    private static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(CompositeURLStreamHandlerFactory compositeFactory) {
+    static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(CompositeURLStreamHandlerFactory compositeFactory) {
         MutableURLStreamHandlerFactory target = null;
         for (URLStreamHandlerFactory factory : compositeFactory.getFactories()) {
             target = findMutableURLStreamHandlerFactory(factory);
@@ -1682,10 +1626,7 @@ public abstract class URLUtils implements Utils {
     }
 
     private static MutableURLStreamHandlerFactory findMutableURLStreamHandlerFactory(URLStreamHandlerFactory factory) {
-        if (factory instanceof MutableURLStreamHandlerFactory) {
-            return (MutableURLStreamHandlerFactory) factory;
-        }
-        return null;
+        return cast(factory, MutableURLStreamHandlerFactory.class);
     }
 
     protected static void clearURLStreamHandlerFactory() {
@@ -1766,11 +1707,7 @@ public abstract class URLUtils implements Utils {
 
     protected static String getFirst(Map<String, List<String>> parameters, String name) {
         List<String> values = parameters.get(name);
-        return values == null || values.isEmpty() ? null : values.get(0);
-    }
-
-    private static int indexOfArchiveEntry(String path) {
-        return path.indexOf(ARCHIVE_ENTRY_SEPARATOR);
+        return first(values);
     }
 
     private URLUtils() {

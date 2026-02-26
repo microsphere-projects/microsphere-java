@@ -56,6 +56,8 @@ import static io.microsphere.util.SystemUtils.IS_OS_WINDOWS;
  */
 public class FileExtensionFilter implements IOFileFilter {
 
+    private static final boolean CASE_SENSITIVE = !IS_OS_WINDOWS;
+
     private final String extension;
 
     protected FileExtensionFilter(String extension) {
@@ -75,7 +77,11 @@ public class FileExtensionFilter implements IOFileFilter {
             return false;
         }
 
-        return IS_OS_WINDOWS ? fileExtension.equalsIgnoreCase(extension) : fileExtension.equals(extension);
+        return matches(fileExtension, CASE_SENSITIVE);
+    }
+
+    protected boolean matches(String fileExtension, boolean caseSensitive) {
+        return caseSensitive ? fileExtension.equals(extension) : fileExtension.equalsIgnoreCase(extension);
     }
 
     /**
@@ -87,4 +93,5 @@ public class FileExtensionFilter implements IOFileFilter {
     public static FileExtensionFilter of(String extension) {
         return new FileExtensionFilter(extension);
     }
+
 }

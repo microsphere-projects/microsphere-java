@@ -16,7 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.convert.Converter;
 import io.microsphere.convert.StringToIntegerConverter;
 import io.microsphere.convert.StringToStringConverter;
@@ -43,6 +42,7 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
+import static io.microsphere.AbstractTestCase.assertValues;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.TypeUtils.GENERIC_ARRAY_TYPE_FILTER;
@@ -112,7 +112,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class TypeUtilsTest extends AbstractTestCase {
+class TypeUtilsTest {
 
     @Test
     void testConstantFilters() {
@@ -1094,6 +1094,3 @@ class TypeUtilsTest extends AbstractTestCase {
     }
 
 }
-
-
-// MyHashMap<A, B> -> HashMap<A, B>

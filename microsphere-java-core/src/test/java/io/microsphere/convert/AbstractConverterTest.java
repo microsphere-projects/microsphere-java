@@ -23,6 +23,8 @@ import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link AbstractConverter} Test
@@ -31,31 +33,37 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  * @see AbstractConverter
  * @since 1.0.0
  */
-class AbstractConverterTest extends BaseConverterTest<Object, Object> {
+class AbstractConverterTest extends BaseConverterTest<String, String> {
 
     @Override
-    protected AbstractConverter<Object, Object> createConverter() {
-        return new AbstractConverter<Object, Object>() {
+    protected AbstractConverter<String, String> createConverter() {
+        return new AbstractConverter<String, String>() {
 
             @Override
-            protected Object doConvert(Object source) throws Throwable {
+            protected String doConvert(String source) throws Throwable {
                 return source;
             }
 
             @Override
             protected Integer resolvePriority() {
+                super.resolvePriority();
                 return null;
+            }
+
+            @Override
+            public int getPriority() {
+                return super.getPriority();
             }
         };
     }
 
     @Override
-    protected Object getSource() throws Throwable {
+    protected String getSource() throws Throwable {
         return "test";
     }
 
     @Override
-    protected Object getTarget() throws Throwable {
+    protected String getTarget() throws Throwable {
         return "test";
     }
 
@@ -65,8 +73,20 @@ class AbstractConverterTest extends BaseConverterTest<Object, Object> {
     }
 
     @Test
-    void testConvertIfPossible() throws Throwable {
+    void testConvertIfPossible() {
+        assertNotNull(this.converter);
+    }
 
+    @Test
+    void testConvertOnFailed() {
+        AbstractConverter<String, String> converter = new AbstractConverter<String, String>() {
+            @Override
+            protected String doConvert(String source) throws Throwable {
+                throw new Throwable("For testing");
+            }
+        };
+
+        assertThrows(RuntimeException.class, () -> converter.convert(getSource()));
     }
 
     @Test
@@ -76,4 +96,10 @@ class AbstractConverterTest extends BaseConverterTest<Object, Object> {
         assertNotEquals(this.converter, new Object());
     }
 
+    @Test
+    void testEquals() {
+        assertEquals(this.converter, this.converter);
+        assertNotEquals(this.converter, StringToBooleanConverter.INSTANCE);
+        assertNotEquals(this.converter, ObjectToStringConverter.INSTANCE);
+    }
 }
