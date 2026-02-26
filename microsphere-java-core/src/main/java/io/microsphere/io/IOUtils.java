@@ -367,7 +367,9 @@ public abstract class IOUtils implements Utils {
             byteCount += bytesRead;
         }
         out.flush();
-        logger.trace("Copied {} bytes[buffer size : {}] from InputStream[{}] to OutputStream[{}]", byteCount, BUFFER_SIZE, in, out);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Copied {} bytes[buffer size : {}] from InputStream[{}] to OutputStream[{}]", byteCount, BUFFER_SIZE, in, out);
+        }
         return byteCount;
     }
 
