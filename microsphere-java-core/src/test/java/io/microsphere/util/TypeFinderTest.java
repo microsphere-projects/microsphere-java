@@ -8,6 +8,7 @@ import io.microsphere.test.StringIntegerToBooleanClass;
 import io.microsphere.util.TypeFinder.Include;
 import org.junit.jupiter.api.Test;
 
+import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -15,12 +16,15 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import static io.microsphere.AbstractTestCase.assertValues;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.TypeUtils.NON_OBJECT_TYPE_FILTER;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.TypeFinder.Include.HIERARCHICAL;
 import static io.microsphere.util.TypeFinder.Include.INTERFACES;
 import static io.microsphere.util.TypeFinder.Include.SUPER_CLASS;
 import static io.microsphere.util.TypeFinder.Include.values;
 import static io.microsphere.util.TypeFinder.classFinder;
+import static io.microsphere.util.TypeFinder.classGetSuperClassFunction;
 import static io.microsphere.util.TypeFinder.genericTypeFinder;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * {@link TypeFinder} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see io.microsphere.util.ClassFinder
  * @since 1.0.0
  */
 class TypeFinderTest {
@@ -185,6 +188,30 @@ class TypeFinderTest {
         assertEquals(6, types.size());
         assertEquals(StringIntegerToBooleanClass.class, types.get(0));
         assertGenericInterfaces(types);
+    }
+
+    @Test
+    void testGetSuperTypes() {
+        TypeFinder<Class<?>> typeFinder = new TypeFinder(String.class, classGetSuperClassFunction,
+                t -> ofArray(Serializable.class, Serializable.class, Comparable.class), true, true, true, true);
+        List<Class<?>> superTypes = typeFinder.getSuperTypes(String.class, true, true);
+        assertEquals(ofList(Object.class, Serializable.class, Comparable.class), superTypes);
+    }
+
+    @Test
+    void testGetSuperTypesWithNullType() {
+        TypeFinder<Type> typeFinder = genericTypeFinder(StringIntegerToBooleanClass.class, values());
+        List<Type> superTypes = typeFinder.getSuperTypes(null, true, true);
+        assertSame(emptyList(), superTypes);
+
+        superTypes = typeFinder.getSuperTypes(null, false, true);
+        assertSame(emptyList(), superTypes);
+
+        superTypes = typeFinder.getSuperTypes(null, false, false);
+        assertSame(emptyList(), superTypes);
+
+        superTypes = typeFinder.getSuperTypes(null, true, false);
+        assertSame(emptyList(), superTypes);
     }
 
     private void assertGenericInterfaces(List<Type> types) {
