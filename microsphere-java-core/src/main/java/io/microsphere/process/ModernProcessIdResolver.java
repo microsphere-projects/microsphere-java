@@ -64,7 +64,9 @@ public class ModernProcessIdResolver implements ProcessIdResolver {
     public Long current() {
         Object processHandle = invokeStaticMethod(PROCESS_HANDLE_CLASS, "current");
         Long pid = invokeMethod(processHandle, PROCESS_HANDLE_CLASS, "pid");
-        logger.trace("The PID was resolved from the method 'java.lang.ProcessHandle#pid()' : {}", pid);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The PID was resolved from the method 'java.lang.ProcessHandle#pid()' : {}", pid);
+        }
         return pid;
     }
 
