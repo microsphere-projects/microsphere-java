@@ -509,8 +509,6 @@ public abstract class FieldUtils implements Utils {
      * @param instance The object instance from which to retrieve the field value
      * @param field    The {@link Field} object representing the field to retrieve
      * @return The value of the field if found and accessible; otherwise, {@code null}
-     * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
-     *                                  field is inaccessible
      * @throws IllegalArgumentException if the specified object is not an instance of the class or interface declaring
      *                                  the underlying field (or a subclass or implementor thereof)
      */
@@ -525,10 +523,9 @@ public abstract class FieldUtils implements Utils {
         try {
             accessible = trySetAccessible(field);
             fieldValue = (V) field.get(instance);
-        } catch (IllegalAccessException e) {
-            handleIllegalAccessException(e, instance, field, accessible);
-        } catch (IllegalArgumentException e) {
-            handleIllegalArgumentException(e, instance, field);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            handleFieldException(e, instance, field);
+            throw new IllegalArgumentException(e);
         }
 
         return fieldValue;
@@ -612,7 +609,6 @@ public abstract class FieldUtils implements Utils {
      * @param field    The {@link Field} object representing the field to modify
      * @param value    The new value to assign to the field
      * @return The previous value of the field before modification, or {@code null} if the field was not found or inaccessible
-     * @throws IllegalStateException    If this Field object is enforcing Java language access control and the underlying field is inaccessible
      * @throws IllegalArgumentException If the specified object is not an instance of the class or interface declaring the underlying field
      */
     @Nullable
@@ -622,17 +618,15 @@ public abstract class FieldUtils implements Utils {
         }
 
         V previousValue = null;
-        boolean accessible = false;
         try {
-            accessible = trySetAccessible(field);
+            trySetAccessible(field);
             previousValue = (V) field.get(instance);
             if (!Objects.equals(previousValue, value)) {
                 field.set(instance, value);
             }
-        } catch (IllegalAccessException e) {
-            handleIllegalAccessException(e, instance, field, accessible);
-        } catch (IllegalArgumentException e) {
-            handleIllegalArgumentException(e, instance, field);
+        } catch (IllegalAccessException | IllegalArgumentException e) {
+            handleFieldException(e, instance, field);
+            throw new IllegalArgumentException(e);
         }
 
         return previousValue;
@@ -681,22 +675,11 @@ public abstract class FieldUtils implements Utils {
         }
     }
 
-    static void handleIllegalAccessException(IllegalAccessException e, Object instance, Field field, boolean accessible) {
-        String errorMessage = format("The instance [object : {} , class : {} ] can't access the field[name : '{}' , type : {} , accessible : {}]",
-                instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()), accessible);
+    static void handleFieldException(Exception e, Object instance, Field field) {
         if (logger.isTraceEnabled()) {
-            logger.trace(errorMessage);
+            logger.trace("The instance[object : {} , class : {}] can't match the field[name : '{}' , type : {}]",
+                    instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()), e);
         }
-        throw new IllegalStateException(errorMessage, e);
-    }
-
-    static void handleIllegalArgumentException(IllegalArgumentException e, Object instance, Field field) {
-        String errorMessage = format("The instance[object : {} , class : {}] can't match the field[name : '{}' , type : {}]",
-                instance, getTypeName(instance.getClass()), field.getName(), getTypeName(field.getType()));
-        if (logger.isTraceEnabled()) {
-            logger.trace(errorMessage);
-        }
-        throw new IllegalArgumentException(errorMessage, e);
     }
 
     private FieldUtils() {
