@@ -100,7 +100,7 @@ public class SimpleFileScanner {
                     filesSet.add(subFile);
                 }
                 if (recursive && subFile.isDirectory()) {
-                    filesSet.addAll(this.scan(subFile, recursive, ioFileFilter));
+                    filesSet.addAll(scan(subFile, recursive, ioFileFilter));
                 }
             }
         }
