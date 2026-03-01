@@ -297,7 +297,7 @@ public abstract class ReflectionUtils implements Utils {
     }
 
     private static List<String> getCallerClassNamesInStackWalker(Stream<?> stackFrames) {
-        return stackFrames.limit(5)
+        return stackFrames.limit(9)
                 .map(ReflectionUtils::getClassName)
                 .collect(Collectors.toList());
     }
@@ -442,7 +442,7 @@ public abstract class ReflectionUtils implements Utils {
         if (callerClass != null) {
             return callerClass;
         }
-        String className = getCallerClassName(stackWalkerInstance,  1);
+        String className = getCallerClassName(stackWalkerInstance, invocationFrame + 2);
         return resolveClass(className);
     }
 
