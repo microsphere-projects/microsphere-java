@@ -7,6 +7,7 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
+import java.lang.invoke.MethodHandle;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -14,17 +15,24 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MemberUtils.isStatic;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.reflect.TypeUtils.getTypeName;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getType;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.ClassUtils.isSimpleType;
-import static java.lang.Class.forName;
+import static io.microsphere.util.StackTraceUtils.getStackTrace;
 import static java.lang.Thread.currentThread;
 import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
@@ -60,9 +68,21 @@ public abstract class ReflectionUtils implements Utils {
     public static final String SUN_REFLECT_REFLECTION_CLASS_NAME = "sun.reflect.Reflection";
 
     /**
+     * The {@link Class} of sun.reflect.Reflection
+     */
+    @Nullable
+    public static final Class<?> SUN_REFLECT_REFLECTION_CLASS = resolveClass(SUN_REFLECT_REFLECTION_CLASS_NAME);
+
+    /**
      * sun.reflect.Reflection method name
      */
     private static final String getCallerClassMethodName = "getCallerClass";
+
+    /**
+     * The {@link MethodHandle} of Reflection#getCallerClass(int)
+     */
+    @Nullable
+    private static final MethodHandle getCallerClassMethodHandle = findPublicStatic(SUN_REFLECT_REFLECTION_CLASS, getCallerClassMethodName, int.class);
 
     /**
      * sun.reflect.Reflection invocation frame
@@ -77,12 +97,60 @@ public abstract class ReflectionUtils implements Utils {
     /**
      * Is Supported sun.reflect.Reflection ?
      */
-    private static final boolean supportedSunReflectReflection;
+    private static final boolean supportedSunReflectReflection = getCallerClassMethodHandle != null;
 
     /**
-     * sun.reflect.Reflection#getCallerClass(int) method
+     * The class name of {@linkplain java.lang.StackWalker} that was introduced in JDK 9.
      */
-    private static final Method getCallerClassMethod;
+    public static final String STACK_WALKER_CLASS_NAME = "java.lang.StackWalker";
+
+    /**
+     * The class name of {@linkplain java.lang.StackWalker.StackFrame} that was introduced in JDK 9.
+     */
+    public static final String STACK_WALKER_STACK_FRAME_CLASS_NAME = "java.lang.StackWalker$StackFrame";
+
+    /**
+     * The {@link Class} of {@linkplain java.lang.StackWalker} that was introduced in JDK 9.
+     * (optional)
+     */
+    @Nullable
+    public static final Class<?> STACK_WALKER_CLASS = resolveClass(STACK_WALKER_CLASS_NAME);
+
+    /**
+     * The {@link Class} of {@linkplain java.lang.StackWalker.StackFrame} that was introduced in JDK 9.
+     * (optional)
+     */
+    @Nullable
+    public static final Class<?> STACK_WALKER_STACK_FRAME_CLASS = resolveClass(STACK_WALKER_STACK_FRAME_CLASS_NAME);
+
+    /**
+     * The {@link Method method} name of {@linkplain java.lang.StackWalker#getInstance()}
+     */
+    static final String GET_INSTANCE_METHOD_NAME = "getInstance";
+
+    /**
+     * The {@link Method method} name of {{@linkplain java.lang.StackWalker#walk(java.util.function.Function)}
+     */
+    static final String WALK_METHOD_NAME = "walk";
+
+    /**
+     * The {@link Method method} name of {@linkplain java.lang.StackWalker.StackFrame#getClassName()}
+     */
+    static final String GET_CLASS_NAME_METHOD_NAME = "getClassName";
+
+    static final Method WALK_METHOD = findMethod(STACK_WALKER_CLASS, WALK_METHOD_NAME, Function.class);
+
+    static final Method GET_CLASS_NAME_METHOD = findMethod(STACK_WALKER_STACK_FRAME_CLASS, GET_CLASS_NAME_METHOD_NAME);
+
+    @Nullable
+    private static Object stackWalkerInstance;
+
+    /**
+     * {@linkplain java.lang.StackWalker} invocation frame.
+     */
+    private static final int stackWalkerInvocationFrame;
+
+    private static final Function<Stream<?>, Object> getClassNamesFunction = ReflectionUtils::getCallerClassNamesInStackWalker;
 
     /**
      * The class name of {@linkplain java.lang.reflect.InaccessibleObjectException} since JDK 9
@@ -96,40 +164,44 @@ public abstract class ReflectionUtils implements Utils {
     @Nullable
     public static final Class<? extends Throwable> INACCESSIBLE_OBJECT_EXCEPTION_CLASS = (Class<? extends Throwable>) resolveClass(INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME);
 
+    // Initialize java.lang.StackWalker
+    static {
+        int invocationFrame = 0;
+        if (STACK_WALKER_CLASS != null) {
+            stackWalkerInstance = invokeStaticMethod(STACK_WALKER_CLASS, GET_INSTANCE_METHOD_NAME);
+            List<String> stackFrameClassNames = getCallerClassNamesInStackWalker();
+            for (String stackFrameClassName : stackFrameClassNames) {
+                if (TYPE.getName().equals(stackFrameClassName)) {
+                    break;
+                }
+                invocationFrame++;
+            }
+        }
+        stackWalkerInvocationFrame = invocationFrame + 2;
+    }
+
     // Initialize sun.reflect.Reflection
     static {
-        Method method = null;
-        boolean supported = false;
         int invocationFrame = 0;
-        try {
-            // Use sun.reflect.Reflection to calculate frame
-            Class<?> type = forName(SUN_REFLECT_REFLECTION_CLASS_NAME);
-            method = type.getMethod(getCallerClassMethodName, int.class);
-            method.setAccessible(true);
-            // Adapt SUN JDK ,The value of invocation frame in JDK 6/7/8 may be different
+        if (supportedSunReflectReflection) {
+            // Adapt SUN JDK ,The value of invocation frame in JDK 7/8 may be different
             for (int i = 0; i < 9; i++) {
-                Class<?> callerClass = (Class<?>) method.invoke(null, i);
+                Class<?> callerClass = getCallerClassInSunReflectReflection(i);
                 if (TYPE.equals(callerClass)) {
                     invocationFrame = i;
                     break;
                 }
             }
-            supported = true;
-        } catch (Throwable e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The class '{}' or its' method '{}({})' can't be initialized.", SUN_REFLECT_REFLECTION_CLASS_NAME, getCallerClassMethodName, int.class, e);
-            }
         }
+
         // set method info
-        getCallerClassMethod = method;
-        supportedSunReflectReflection = supported;
         // getCallerClass() -> getCallerClass(int)
         // Plugs 1 , because Invocation getCallerClass() method was considered as increment invocation frame
         // Plugs 1 , because Invocation getCallerClass(int) method was considered as increment invocation frame
         sunReflectReflectionInvocationFrame = invocationFrame + 2;
     }
 
-    // Initialize StackTraceElement
+    // Initialize java.lang.StackTraceElement
     static {
         int invocationFrame = 0;
         // Use java.lang.StackTraceElement to calculate frame
@@ -141,10 +213,7 @@ public abstract class ReflectionUtils implements Utils {
             }
             invocationFrame++;
         }
-        // getCallerClass() -> getCallerClass(int)
-        // Plugs 1 , because Invocation getCallerClass() method was considered as increment invocation frame
-        // Plugs 1 , because Invocation getCallerClass(int) method was considered as increment invocation frame
-        stackTraceElementInvocationFrame = invocationFrame + 2;
+        stackTraceElementInvocationFrame = invocationFrame;
     }
 
     /**
@@ -198,21 +267,56 @@ public abstract class ReflectionUtils implements Utils {
      */
     @Nonnull
     public static String getCallerClassName() {
-        if (supportedSunReflectReflection) {
-            Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
-            if (callerClass != null) return callerClass.getName();
+        Class<?> callerClass = getCallerClassInSunReflectReflection(sunReflectReflectionInvocationFrame);
+        return callerClass == null ? getCallerClassName(stackWalkerInstance, 1) : callerClass.getName();
+    }
+
+    @Nullable
+    static String getCallerClassName(Object stackWalkerInstance, int frameOffSet) {
+        if (stackWalkerInstance == null) {
+            // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+            // Plugs 1 , because Invocation getCallerClassName() method was considered as increment invocation frame
+            // Plugs 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+            return getCallerClassNameInStackTrace(stackTraceElementInvocationFrame + 3 + frameOffSet);
         }
-        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
+        List<String> callerClassNames = getCallerClassNamesInStackWalker(stackWalkerInstance);
+        int frame = stackWalkerInvocationFrame + frameOffSet;
+        if (frame < callerClassNames.size()) {
+            return callerClassNames.get(frame);
+        }
+        return null;
+    }
+
+    @Nonnull
+    static List<String> getCallerClassNamesInStackWalker(@Nonnull Object stackWalkerInstance) {
+        return invokeMethod(stackWalkerInstance, WALK_METHOD, getClassNamesFunction);
+    }
+
+    static List<String> getCallerClassNamesInStackWalker() {
+        return invokeMethod(stackWalkerInstance, WALK_METHOD, getClassNamesFunction);
+    }
+
+    private static List<String> getCallerClassNamesInStackWalker(Stream<?> stackFrames) {
+        return stackFrames.limit(5)
+                .map(ReflectionUtils::getClassName)
+                .collect(Collectors.toList());
+    }
+
+    private static String getClassName(Object stackFrame) {
+        return invokeMethod(stackFrame, GET_CLASS_NAME_METHOD);
     }
 
     /**
      * General implementation, get the calling class name
      *
      * @return call class name
-     * @see #getCallerClassNameInGeneralJVM(int)
+     * @see #getCallerClassNameInStackTrace(int)
      */
-    static String getCallerClassNameInGeneralJVM() {
-        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame);
+    static String getCallerClassNameInStackTrace() {
+        // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+        // Plugs 1 , because Invocation getCallerClassNameInStackTrace() method was considered as increment invocation frame
+        // Plugs 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        return getCallerClassNameInStackTrace(stackTraceElementInvocationFrame + 3);
     }
 
     /**
@@ -221,44 +325,13 @@ public abstract class ReflectionUtils implements Utils {
      * @param invocationFrame invocation frame
      * @return specified invocation frame class
      */
-    static String getCallerClassNameInGeneralJVM(int invocationFrame) throws IndexOutOfBoundsException {
-        StackTraceElement[] elements = currentThread().getStackTrace();
+    static String getCallerClassNameInStackTrace(int invocationFrame) throws IndexOutOfBoundsException {
+        StackTraceElement[] elements = getStackTrace();
         if (invocationFrame < elements.length) {
             StackTraceElement targetStackTraceElement = elements[invocationFrame];
             return targetStackTraceElement.getClassName();
         }
         return null;
-    }
-
-    static Class<?> getCallerClassInSunJVM(int realFramesToSkip) throws UnsupportedOperationException {
-        if (!supportedSunReflectReflection) {
-            throw new UnsupportedOperationException("Requires SUN's JVM!");
-        }
-        Class<?> callerClass = null;
-        if (getCallerClassMethod != null) {
-            try {
-                callerClass = (Class<?>) getCallerClassMethod.invoke(null, realFramesToSkip);
-            } catch (Exception ignored) {
-            }
-        }
-        return callerClass;
-    }
-
-    /**
-     * Get caller class in General JVM
-     *
-     * @param invocationFrame invocation frame
-     * @return caller class
-     * @see #getCallerClassNameInGeneralJVM(int)
-     */
-    static Class<?> getCallerClassInGeneralJVM(int invocationFrame) {
-        String className = getCallerClassNameInGeneralJVM(invocationFrame + 1);
-        Class<?> targetClass = null;
-        try {
-            targetClass = className == null ? null : forName(className);
-        } catch (Throwable ignored) {
-        }
-        return targetClass;
     }
 
     /**
@@ -284,24 +357,46 @@ public abstract class ReflectionUtils implements Utils {
      */
     @Nonnull
     public static Class<?> getCallerClass() throws IllegalStateException {
+        Class<?> callerClass = getCallerClassInSunReflectReflection(sunReflectReflectionInvocationFrame);
+        if (callerClass != null) {
+            return callerClass;
+        }
+        String className = getCallerClassName(stackWalkerInstance, 1);
+        return resolveClass(className);
+    }
+
+    @Nullable
+    static Class<?> getCallerClassInSunReflectReflection(int realFramesToSkip) {
         if (supportedSunReflectReflection) {
-            Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
-            if (callerClass != null) {
-                return callerClass;
+            try {
+                return (Class<?>) getCallerClassMethodHandle.invokeExact(realFramesToSkip);
+            } catch (Throwable ignored) {
             }
         }
-        return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
+        return null;
+    }
+
+    /**
+     * Get caller class in General JVM
+     *
+     * @param invocationFrame invocation frame
+     * @return caller class
+     * @see #getCallerClassNameInStackTrace(int)
+     */
+    static Class<?> getCallerClassInStatckTrace(int invocationFrame) {
+        String className = getCallerClassNameInStackTrace(invocationFrame + 1);
+        return className == null ? null : resolveClass(className);
     }
 
     /**
      * Get caller class In SUN HotSpot JVM
      *
      * @return Caller Class
-     * @throws UnsupportedOperationException If JRE is not a SUN HotSpot JVM
-     * @see #getCallerClassInSunJVM(int)
+     * @see #getCallerClassInSunReflectReflection(int)
      */
-    static Class<?> getCallerClassInSunJVM() throws UnsupportedOperationException {
-        return getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
+    @Nullable
+    static Class<?> getCallerClassInSunReflectReflection() throws UnsupportedOperationException {
+        return getCallerClassInSunReflectReflection(sunReflectReflectionInvocationFrame);
     }
 
     /**
@@ -309,11 +404,12 @@ public abstract class ReflectionUtils implements Utils {
      *
      * @return Caller Class
      * @throws UnsupportedOperationException If JRE is not a SUN HotSpot JVM
-     * @see #getCallerClassInSunJVM(int)
+     * @see #getCallerClassInSunReflectReflection(int)
      */
-    static String getCallerClassNameInSunJVM() throws UnsupportedOperationException {
-        Class<?> callerClass = getCallerClassInSunJVM(sunReflectReflectionInvocationFrame);
-        return callerClass.getName();
+    @Nullable
+    static String getCallerClassNameInSunReflectReflection() throws UnsupportedOperationException {
+        Class<?> callerClass = getCallerClassInSunReflectReflection(sunReflectReflectionInvocationFrame);
+        return callerClass == null ? null : callerClass.getName();
     }
 
     /**
@@ -340,24 +436,24 @@ public abstract class ReflectionUtils implements Utils {
      * @return The class of the caller at the specified invocation frame.
      * @throws IllegalStateException if an error occurs while determining the caller class.
      */
+    @Nullable
     public static Class<?> getCallerClass(int invocationFrame) {
-        if (supportedSunReflectReflection) {
-            Class<?> callerClass = getCallerClassInSunJVM(invocationFrame + 1);
-            if (callerClass != null) {
-                return callerClass;
-            }
+        Class<?> callerClass = getCallerClassInSunReflectReflection(invocationFrame + 1);
+        if (callerClass != null) {
+            return callerClass;
         }
-        return getCallerClassInGeneralJVM(invocationFrame + 1);
+        String className = getCallerClassName(stackWalkerInstance, invocationFrame + 1);
+        return resolveClass(className);
     }
 
     /**
-     * Get caller class in General JVM
+     * Get caller class from {@link Thread#getStackTrace() stack traces}
      *
      * @return Caller Class
-     * @see #getCallerClassInGeneralJVM(int)
+     * @see #getCallerClassInStatckTrace(int)
      */
-    static Class<?> getCallerClassInGeneralJVM() {
-        return getCallerClassInGeneralJVM(stackTraceElementInvocationFrame);
+    static Class<?> getCallerClassInStatckTrace() {
+        return getCallerClassInStatckTrace(stackTraceElementInvocationFrame + 3);
     }
 
     /**
