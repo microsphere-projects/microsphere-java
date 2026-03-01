@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
 
+import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.Thread.currentThread;
 
 /**
@@ -28,6 +29,82 @@ import static java.lang.Thread.currentThread;
  * @since 1.0.0
  */
 public abstract class StackTraceUtils implements Utils {
+
+    private static final Class<?> TYPE = StackTraceUtils.class;
+
+    /**
+     * {@link StackTraceElement} invocation frame offset
+     */
+    private static final int invocationFrameOffset;
+
+    // Initialize java.lang.StackTraceElement
+    static {
+        int offset = 0;
+        // Use java.lang.StackTraceElement to calculate frame
+        StackTraceElement[] stackTraceElements = getStackTrace();
+        for (; ; offset++) {
+            StackTraceElement stackTraceElement = stackTraceElements[offset];
+            String className = stackTraceElement.getClassName();
+            if (TYPE.getName().equals(className)) {
+                break;
+            }
+        }
+        invocationFrameOffset = offset;
+    }
+
+    /**
+     * Get caller class from {@link Thread#getStackTrace() stack traces}
+     *
+     * @return Caller Class
+     * @see #getCallerClassInStatckTrace(int)
+     */
+    public static Class<?> getCallerClassInStatckTrace() {
+        // Plus 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassInStatckTrace(int) method was considered as increment invocation frame
+        return getCallerClassInStatckTrace(invocationFrameOffset + 3);
+    }
+
+    /**
+     * General implementation, get the calling class name
+     *
+     * @return call class name
+     * @see #getCallerClassNameInStackTrace(int)
+     */
+    public static String getCallerClassNameInStackTrace() {
+        // Plus 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace() method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        return getCallerClassNameInStackTrace(invocationFrameOffset + 3);
+    }
+
+    /**
+     * Get caller class in General JVM
+     *
+     * @param invocationFrame invocation frame
+     * @return caller class
+     * @see #getCallerClassNameInStackTrace(int)
+     */
+    public static Class<?> getCallerClassInStatckTrace(int invocationFrame) {
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        String className = getCallerClassNameInStackTrace(invocationFrame + 1);
+        return className == null ? null : resolveClass(className);
+    }
+
+    /**
+     * General implementation, get the calling class name by specifying the calling level value
+     *
+     * @param invocationFrame invocation frame
+     * @return specified invocation frame class
+     */
+    public static String getCallerClassNameInStackTrace(int invocationFrame) throws IndexOutOfBoundsException {
+        StackTraceElement[] elements = getStackTrace();
+        if (invocationFrame < elements.length) {
+            StackTraceElement targetStackTraceElement = elements[invocationFrame];
+            return targetStackTraceElement.getClassName();
+        }
+        return null;
+    }
 
     /**
      * Get the {@link StackTraceElement} array on the current thread
