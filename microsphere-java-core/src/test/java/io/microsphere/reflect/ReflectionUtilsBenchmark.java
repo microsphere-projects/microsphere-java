@@ -25,6 +25,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunReflectReflection;
+import static io.microsphere.reflect.ReflectionUtils.getCallerClassNamesInStackWalker;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openjdk.jmh.annotations.Mode.AverageTime;
@@ -44,13 +46,23 @@ import static org.openjdk.jmh.annotations.Mode.AverageTime;
 @State(Scope.Thread)
 public class ReflectionUtilsBenchmark {
 
+//    @Benchmark
+//    public void getCallerClassDirectly() {
+//        sun.reflect.Reflection.getCallerClass(1);
+//    }
+
     @Benchmark
-    public void getCallerClassNameInSunJVM() {
-        ReflectionUtils.getCallerClassNameInSunJVM();
+    public void getCallerClassOnMethodHanle() {
+        getCallerClassInSunReflectReflection();
     }
 
     @Benchmark
-    public void getCallerClassNameInGeneralJVM() {
-        ReflectionUtils.getCallerClassNameInGeneralJVM();
+    public void getCallerClassNameInStackWalker() {
+        getCallerClassNamesInStackWalker();
+    }
+
+    @Benchmark
+    public void getCallerClassNameOnStackTrace() {
+        ReflectionUtils.getCallerClassNameInStackTrace();
     }
 }
