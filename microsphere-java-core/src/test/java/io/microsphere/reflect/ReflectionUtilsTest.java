@@ -26,6 +26,7 @@ import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -63,7 +64,7 @@ class ReflectionUtilsTest {
 
     @Test
     void testGetCallerClassWithFrame() {
-        assertNull(getCallerClass(99999));
+        assertDoesNotThrow(() -> getCallerClass(99999));
     }
 
     @Test

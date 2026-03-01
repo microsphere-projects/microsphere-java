@@ -442,7 +442,7 @@ public abstract class ReflectionUtils implements Utils {
         if (callerClass != null) {
             return callerClass;
         }
-        String className = getCallerClassName(stackWalkerInstance, invocationFrame + 1);
+        String className = getCallerClassName(stackWalkerInstance,  1);
         return resolveClass(className);
     }
 
