@@ -47,12 +47,12 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
+import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -288,7 +288,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static ClassLoader getCallerClassLoader() {
-        return getCallerClassLoader(4);
+        return getCallerClassLoader(5);
     }
 
     /**
@@ -1757,7 +1757,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     static ClassLoader getCallerClassLoader(int invocationFrame) {
         ClassLoader classLoader = null;
-        Class<?> callerClass = getCallerClass(invocationFrame);
+        Class<?> callerClass = getCallerClassInStatckTrace(invocationFrame);
         if (callerClass != null) {
             classLoader = callerClass.getClassLoader();
         }
