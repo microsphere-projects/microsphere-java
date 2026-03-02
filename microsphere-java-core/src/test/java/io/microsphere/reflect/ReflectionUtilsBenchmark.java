@@ -27,6 +27,7 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNamesInStackWalker;
+import static io.microsphere.util.StackTraceUtils.getCallerClassNameInStackTrace;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openjdk.jmh.annotations.Mode.AverageTime;
@@ -63,6 +64,6 @@ public class ReflectionUtilsBenchmark {
 
     @Benchmark
     public void getCallerClassNameOnStackTrace() {
-        ReflectionUtils.getCallerClassNameInStackTrace();
+        getCallerClassNameInStackTrace();
     }
 }
