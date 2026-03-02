@@ -11,10 +11,8 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS;
 import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
-import static io.microsphere.reflect.ReflectionUtils.getCallerClassInStatckTrace;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassName;
-import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInStackTrace;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNameInSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassNamesInStackWalker;
 import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
@@ -23,10 +21,11 @@ import static io.microsphere.reflect.ReflectionUtils.readFieldsAsMap;
 import static io.microsphere.reflect.ReflectionUtils.toList;
 import static io.microsphere.reflect.ReflectionUtils.toObject;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
+import static io.microsphere.util.StackTraceUtils.getCallerClassNameInStackTrace;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -53,18 +52,13 @@ class ReflectionUtilsTest {
 
         Class<?> callerClassInSunReflectReflection = getCallerClassInSunReflectReflection();
         if (isSupportedSunReflectReflection()) {
-            assertEquals(callerClassInSunReflectReflection, callerClass);
+            assertEquals(CALLER_CLASS, callerClassInSunReflectReflection);
         } else {
             assertNull(callerClassInSunReflectReflection);
         }
 
         Class<?> callerClassInStatckTrace = getCallerClassInStatckTrace();
         assertEquals(callerClassInStatckTrace, callerClass);
-    }
-
-    @Test
-    void testGetCallerClassWithFrame() {
-        assertDoesNotThrow(() -> getCallerClass(99999));
     }
 
     @Test
@@ -83,7 +77,7 @@ class ReflectionUtilsTest {
 
     @Test
     void testGetCallerClassNameOnStackWalkerSupportedForTesting() {
-        assertEquals(getCallerClassNameInStackTrace(), getCallerClassName(null, 0));
+        assertEquals(getCallerClassNameInStackTrace(), getCallerClassName(null, 1));
         assertEquals(CALLER_CLASS_NAME, getCallerClassName());
     }
 
@@ -94,17 +88,6 @@ class ReflectionUtilsTest {
         } else {
             assertTrue(getCallerClassNamesInStackWalker().contains(CALLER_CLASS_NAME));
         }
-    }
-
-    @Test
-    void testGetCallerClassNameInStackTrace() {
-        String callerClassName = getCallerClassNameInStackTrace();
-        assertEquals(CALLER_CLASS_NAME, callerClassName);
-    }
-
-    @Test
-    void testGetCallerClassInStatckTraceWithFrame() {
-        assertNull(getCallerClassInStatckTrace(99999));
     }
 
     @Test
