@@ -257,7 +257,7 @@ public abstract class ClassLoaderUtils implements Utils {
         ClassLoader classLoader = null;
         try {
             if (loadedClass == null) {
-                classLoader = getCallerClassLoader(4);
+                classLoader = getCallerClassLoader(5);
             } else {
                 classLoader = loadedClass.getClassLoader();
             }
