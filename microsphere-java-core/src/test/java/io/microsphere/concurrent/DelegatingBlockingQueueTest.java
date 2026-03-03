@@ -1,5 +1,6 @@
 package io.microsphere.concurrent;
 
+import io.microsphere.collection.MutableQueueTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
@@ -30,14 +31,30 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingBlockingQueue
  * @since 1.0.0
  */
-class DelegatingBlockingQueueTest {
+class DelegatingBlockingQueueTest extends MutableQueueTest<DelegatingBlockingQueue<Object>> {
 
     private BlockingQueue<Integer> delegate = new LinkedBlockingDeque<>();
 
-    private DelegatingBlockingQueue<Integer> queue = new DelegatingBlockingQueue<>(delegate);
+    private DelegatingBlockingQueue<Integer> queue = new DelegatingBlockingQueue<>(this.delegate);
+
+    @Override
+    protected DelegatingBlockingQueue newInstance() {
+        return this.queue;
+    }
+
+    @Override
+    protected DelegatingBlockingQueue newComparedInstance(DelegatingBlockingQueue source) {
+        return new DelegatingBlockingQueue(source);
+    }
+
+    @Override
+    protected boolean supportsNullElement() {
+        return false;
+    }
 
     @Test
     void test() throws Throwable {
+        this.queue.clear();
 
         // test add
         assertTrue(queue.add(1));
