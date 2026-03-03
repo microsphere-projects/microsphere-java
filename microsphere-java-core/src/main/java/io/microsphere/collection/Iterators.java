@@ -31,7 +31,13 @@ import java.util.Objects;
  */
 public abstract class Iterators implements Utils {
 
-
+    /**
+     * Equals two {@link Iterator Iterators}
+     *
+     * @param one     {@link Iterator}
+     * @param another {@link Iterator}
+     * @return <code>true</code> if equals
+     */
     public static boolean equals(Iterator<?> one, Iterator<?> another) {
         if (one == another) {
             return true;
