@@ -1,6 +1,6 @@
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.LoggingTest;
 import io.microsphere.event.EchoEventListener;
 import io.microsphere.event.EchoEventListener2;
 import io.microsphere.event.EventListener;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.SERVICE_LOADER_CACHED;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.ServiceLoaderUtils.loadLastService;
@@ -26,11 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ServiceLoaderUtilsTest
  * @since 1.0.0
  */
-class ServiceLoaderUtilsTest extends AbstractTestCase {
+class ServiceLoaderUtilsTest extends LoggingTest {
 
     private static final Class<EventListener> TEST_CLASS = EventListener.class;
 
     private static final boolean TEST_CACHED = SERVICE_LOADER_CACHED;
+
+    private static final ClassLoader classLoader = getClassLoader(ServiceLoaderUtilsTest.class);
 
     @Test
     void testLoadServicesListWithServiceType() {
