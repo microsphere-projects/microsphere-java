@@ -16,6 +16,9 @@
  */
 package io.microsphere.concurrent;
 
+import io.microsphere.lang.DelegatingWrapper;
+import io.microsphere.lang.Wrapper;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -47,57 +50,58 @@ import java.util.stream.Stream;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class DelegatingBlockingQueue<E> implements BlockingQueue<E> {
+public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingWrapper {
 
     private final BlockingQueue<E> delegate;
 
     public DelegatingBlockingQueue(BlockingQueue<E> delegate) {
-        this.delegate = delegate;
+        BlockingQueue<E> unwrapper = Wrapper.tryUnwrap(delegate, BlockingQueue.class);
+        this.delegate = unwrapper == null ? delegate : unwrapper;
     }
 
     @Override
     public Iterator<E> iterator() {
-        return delegate.iterator();
+        return this.delegate.iterator();
     }
 
     @Override
     public Object[] toArray() {
-        return delegate.toArray();
+        return this.delegate.toArray();
     }
 
     @Override
     public <T> T[] toArray(T[] a) {
-        return delegate.toArray(a);
+        return this.delegate.toArray(a);
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return delegate.containsAll(c);
+        return this.delegate.containsAll(c);
     }
 
     @Override
     public boolean addAll(Collection<? extends E> c) {
-        return delegate.addAll(c);
+        return this.delegate.addAll(c);
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return delegate.removeAll(c);
+        return this.delegate.removeAll(c);
     }
 
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
-        return delegate.removeIf(filter);
+        return this.delegate.removeIf(filter);
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return delegate.retainAll(c);
+        return this.delegate.retainAll(c);
     }
 
     @Override
     public void clear() {
-        delegate.clear();
+        this.delegate.clear();
     }
 
     @Override
@@ -112,121 +116,126 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E> {
             DelegatingBlockingQueue that = (DelegatingBlockingQueue) o;
             return this.delegate.equals(that.delegate);
         }
-        return delegate.equals(o);
+        return this.delegate.equals(o);
     }
 
     @Override
     public int hashCode() {
-        return delegate.hashCode();
+        return this.delegate.hashCode();
     }
 
     @Override
     public Spliterator<E> spliterator() {
-        return delegate.spliterator();
+        return this.delegate.spliterator();
     }
 
     @Override
     public Stream<E> stream() {
-        return delegate.stream();
+        return this.delegate.stream();
     }
 
     @Override
     public Stream<E> parallelStream() {
-        return delegate.parallelStream();
+        return this.delegate.parallelStream();
     }
 
     @Override
     public boolean add(E e) {
-        return delegate.add(e);
+        return this.delegate.add(e);
     }
 
     @Override
     public boolean offer(E e) {
-        return delegate.offer(e);
+        return this.delegate.offer(e);
     }
 
     @Override
     public void put(E e) throws InterruptedException {
-        delegate.put(e);
+        this.delegate.put(e);
     }
 
     @Override
     public boolean offer(E e, long timeout, TimeUnit unit) throws InterruptedException {
-        return delegate.offer(e, timeout, unit);
+        return this.delegate.offer(e, timeout, unit);
     }
 
     @Override
     public E take() throws InterruptedException {
-        return delegate.take();
+        return this.delegate.take();
     }
 
     @Override
     public E poll(long timeout, TimeUnit unit) throws InterruptedException {
-        return delegate.poll(timeout, unit);
+        return this.delegate.poll(timeout, unit);
     }
 
     @Override
     public int remainingCapacity() {
-        return delegate.remainingCapacity();
+        return this.delegate.remainingCapacity();
     }
 
     @Override
     public boolean remove(Object o) {
-        return delegate.remove(o);
+        return this.delegate.remove(o);
     }
 
     @Override
     public boolean contains(Object o) {
-        return delegate.contains(o);
+        return this.delegate.contains(o);
     }
 
     @Override
     public int drainTo(Collection<? super E> c) {
-        return delegate.drainTo(c);
+        return this.delegate.drainTo(c);
     }
 
     @Override
     public int drainTo(Collection<? super E> c, int maxElements) {
-        return delegate.drainTo(c, maxElements);
+        return this.delegate.drainTo(c, maxElements);
     }
 
     @Override
     public E remove() {
-        return delegate.remove();
+        return this.delegate.remove();
     }
 
     @Override
     public E poll() {
-        return delegate.poll();
+        return this.delegate.poll();
     }
 
     @Override
     public E element() {
-        return delegate.element();
+        return this.delegate.element();
     }
 
     @Override
     public E peek() {
-        return delegate.peek();
+        return this.delegate.peek();
     }
 
     @Override
     public int size() {
-        return delegate.size();
+        return this.delegate.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return delegate.isEmpty();
+        return this.delegate.isEmpty();
     }
 
     @Override
     public void forEach(Consumer<? super E> action) {
-        delegate.forEach(action);
+        this.delegate.forEach(action);
     }
 
     @Override
     public String toString() {
-        return delegate.toString();
+        return this.delegate.toString();
+    }
+
+    @Override
+    public Object getDelegate() {
+        return this.delegate;
     }
 }
