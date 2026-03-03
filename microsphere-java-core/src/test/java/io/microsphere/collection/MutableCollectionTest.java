@@ -20,10 +20,10 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -54,10 +54,14 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     protected abstract C newInstance();
 
+    protected C newComparedInstance(C source) {
+        return (C) newArrayList(source);
+    }
+
     protected void init(C instance) {
-        this.instance.add("A");
-        this.instance.add("B");
-        this.instance.add("C");
+        instance.add("A");
+        instance.add("B");
+        instance.add("C");
     }
 
     @Test
@@ -122,9 +126,11 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
         assertTrue(this.instance.remove("B"));
         assertTrue(this.instance.remove("C"));
         assertFalse(this.instance.remove("D"));
-        this.instance.add(null);
-        assertTrue(this.instance.remove(null));
-        assertFalse(this.instance.remove(null));
+        if (supportsNullElement()) {
+            this.instance.add(null);
+            assertTrue(this.instance.remove(null));
+            assertFalse(this.instance.remove(null));
+        }
     }
 
     @Test
@@ -186,15 +192,16 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
         assertFalse(this.instance.equals(new Object()));
         assertFalse(this.instance.equals(ofList("A", "B")));
         assertFalse(this.instance.equals(ofList("A", "B", "D")));
-        assertTrue(this.instance.equals(new ArrayList<>(instance)));
+        assertTrue(this.instance.equals(newComparedInstance(instance)));
     }
 
     @Test
     void testHashCode() {
-        assertEquals(this.instance.hashCode(), new ArrayList<>(instance).hashCode());
-
-        this.instance.add(null);
-        assertEquals(this.instance.hashCode(), new ArrayList<>(instance).hashCode());
+        assertEquals(this.instance.hashCode(), newComparedInstance(instance).hashCode());
+        if (supportsNullElement()) {
+            this.instance.add(null);
+        }
+        assertEquals(this.instance.hashCode(), newComparedInstance(instance).hashCode());
     }
 
     @Test
@@ -208,7 +215,7 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     @Test
     void testToString() {
-        assertEquals(this.instance.toString(), new ArrayList<>(instance).toString());
+        assertEquals(this.instance.toString(), newComparedInstance(instance).toString());
     }
 
     @Test
@@ -224,5 +231,9 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
     @Test
     void testParallelStream() {
         assertArrayEquals(ofArray("A", "B", "C"), this.instance.parallelStream().toArray());
+    }
+
+    protected boolean supportsNullElement() {
+        return true;
     }
 }
