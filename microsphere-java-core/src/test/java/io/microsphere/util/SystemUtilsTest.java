@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.LoggingTest;
 import io.microsphere.reflect.MemberUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -108,7 +109,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see 1.0.0
  * @since 1.0.0
  */
-class SystemUtilsTest {
+class SystemUtilsTest extends LoggingTest {
 
     private static final Class<SystemUtils> CLASS = SystemUtils.class;
 
