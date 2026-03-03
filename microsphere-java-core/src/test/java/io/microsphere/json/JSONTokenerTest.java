@@ -209,7 +209,7 @@ class JSONTokenerTest {
 
     @Test
     void testReadEscapeCharacter() throws JSONException {
-        JSONTokener t = new JSONTokener("ntbnrf\'\"\\u0041");
+        JSONTokener t = new JSONTokener("ntbnrf\'\"\\u0041c");
         assertEquals('\n', t.readEscapeCharacter());
         assertEquals('\t', t.readEscapeCharacter());
         assertEquals('\b', t.readEscapeCharacter());
@@ -220,6 +220,7 @@ class JSONTokenerTest {
         assertEquals('"', t.readEscapeCharacter());
         assertEquals('\\', t.readEscapeCharacter());
         assertEquals('A', t.readEscapeCharacter());
+        assertEquals('c', t.readEscapeCharacter());
     }
 
     @Test
