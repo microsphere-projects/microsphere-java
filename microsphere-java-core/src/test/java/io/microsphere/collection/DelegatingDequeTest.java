@@ -48,6 +48,9 @@ class DelegatingDequeTest extends MutableDequeTest<Deque<Object>> {
         DelegatingDeque<Object> delegatingDeque = (DelegatingDeque<Object>) this.instance;
         Deque<Object> reversedDeque = delegatingDeque.reversed();
         assertArrayEquals(ofArray("C", "B", "A"), reversedDeque.toArray());
+
+        reversedDeque = delegatingDeque.reversed(null);
+        assertArrayEquals(ofArray("C", "B", "A"), reversedDeque.toArray());
     }
 
     @Test
