@@ -180,12 +180,7 @@ public class ReversedDeque<E> extends DelegatingDeque<E> {
 
         Iterator<E> iterator = iterator();
         Iterator<E> otherIterator = ((Iterable<E>) o).iterator();
-        while (iterator.hasNext() && otherIterator.hasNext()) {
-            if (!Objects.equals(iterator.next(), otherIterator.next())) {
-                return false;
-            }
-        }
-        return true;
+        return Iterators.equals(iterator, otherIterator);
     }
 
     @Override
