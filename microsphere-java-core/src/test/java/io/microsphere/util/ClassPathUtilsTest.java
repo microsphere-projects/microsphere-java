@@ -17,11 +17,14 @@ import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.ClassPathUtils.getRuntimeClassLocation;
+import static io.microsphere.util.ClassPathUtils.resolveClassPaths;
 import static java.lang.management.ManagementFactory.getRuntimeMXBean;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link ClassPathUtils} {@link Test}
@@ -89,5 +92,11 @@ class ClassPathUtilsTest implements Loggable {
         URL location = getRuntimeClassLocation(String.class.getName());
         assertNotNull(location);
         log(location);
+    }
+
+    @Test
+    void testResolveClassPaths() {
+        assertSame(emptySet(), resolveClassPaths(false, () -> null));
+        assertSame(emptySet(), resolveClassPaths(true, () -> ""));
     }
 }
