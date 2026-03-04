@@ -1360,9 +1360,8 @@ public abstract class MethodUtils implements Utils {
             }
         }
         if (logger.isTraceEnabled()) {
-            logger.trace("The target method[name : '{}' , parameter types : {}] {} found in the methods : {}",
-                    methodName, arrayToString(parameterTypes), targetMethod == null ? "can't be" : "is",
-                    arrayToString(methods));
+            logger.trace("To find the target method[name : '{}' , parameter types : {} , methods : {}] : {}",
+                    methodName, arrayToString(parameterTypes), arrayToString(methods), targetMethod);
         }
         return targetMethod;
     }
@@ -1410,7 +1409,7 @@ public abstract class MethodUtils implements Utils {
 
         final Class<?>[] parameterTypes;
 
-        MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
+        MethodKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
             this.declaredClass = declaredClass;
             this.methodName = methodName;
             this.parameterTypes = parameterTypes == null ? EMPTY_CLASS_ARRAY : parameterTypes;
@@ -1418,28 +1417,31 @@ public abstract class MethodUtils implements Utils {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof MethodKey)) {
+                return false;
+            }
 
             MethodKey methodKey = (MethodKey) o;
 
-            if (!Objects.equals(declaredClass, methodKey.declaredClass)) return false;
-            if (!Objects.equals(methodName, methodKey.methodName)) return false;
-            // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            return arrayEquals(parameterTypes, methodKey.parameterTypes);
+            return Objects.equals(this.declaredClass, methodKey.declaredClass)
+                    && Objects.equals(this.methodName, methodKey.methodName)
+                    && arrayEquals(this.parameterTypes, methodKey.parameterTypes);
         }
 
         @Override
         public int hashCode() {
-            int result = declaredClass != null ? declaredClass.hashCode() : 0;
-            result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
-            result = 31 * result + hash(parameterTypes);
+            int result = hash(this.declaredClass);
+            result = 31 * result + hash(this.methodName);
+            result = 31 * result + hash(this.parameterTypes);
             return result;
         }
 
         @Override
         public String toString() {
-            return buildSignature(declaredClass, methodName, parameterTypes);
+            return buildSignature(this.declaredClass, this.methodName, this.parameterTypes);
         }
     }
 
