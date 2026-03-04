@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see Artifact
  * @since 1.0.0
  */
-class ArtifactTest  {
+class ArtifactTest {
 
     private static final String ARTIFACT_ID = "microsphere-core";
 
@@ -81,6 +81,7 @@ class ArtifactTest  {
 
     @Test
     void testEquals() {
+        assertTrue(artifact.equals(artifact));
         assertTrue(artifact.equals(create(ARTIFACT_ID, VERSION, LOCATION)));
 
         assertFalse(artifact.equals(null));
