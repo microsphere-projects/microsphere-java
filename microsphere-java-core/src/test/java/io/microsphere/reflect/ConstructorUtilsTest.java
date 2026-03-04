@@ -1,5 +1,6 @@
 package io.microsphere.reflect;
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConstructorUtils
  * @since 1.0.0
  */
-class ConstructorUtilsTest {
+class ConstructorUtilsTest extends LoggingTest {
 
     @Test
     void testIsNonPrivateConstructorWithoutParameters() {
