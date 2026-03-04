@@ -69,4 +69,11 @@ class ReversedDequeTest extends MutableDequeTest<Deque<Object>> {
     void testParallelStream() {
         assertArrayEquals(ofArray("C", "B", "A"), this.instance.parallelStream().toArray());
     }
+
+    @Test
+    @Override
+    void testRemove() {
+        this.instance.remove(null);
+        super.testRemove();
+    }
 }

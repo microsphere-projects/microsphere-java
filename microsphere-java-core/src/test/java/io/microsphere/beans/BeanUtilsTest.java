@@ -18,7 +18,7 @@
 package io.microsphere.beans;
 
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.LoggingTest;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.test.MultipleValueData;
 import org.junit.jupiter.api.Test;
@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static io.microsphere.AbstractTestCase.newRandomTempFile;
 import static io.microsphere.beans.BeanUtils.findPropertyDescriptor;
 import static io.microsphere.beans.BeanUtils.findWriteMethod;
 import static io.microsphere.beans.BeanUtils.getBeanMetadata;
@@ -44,6 +45,8 @@ import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static io.microsphere.lang.MutableInteger.of;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -60,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see BeanUtils
  * @since 1.0.0
  */
-class BeanUtilsTest extends AbstractTestCase {
+class BeanUtilsTest extends LoggingTest {
 
     @Test
     void testGetBeanMetadata() {
@@ -89,6 +92,9 @@ class BeanUtilsTest extends AbstractTestCase {
         BeanMetadata beanMetadata = getBeanMetadata(MultipleValueData.class);
         Method writeMethod = findWriteMethod(beanMetadata, "stringList");
         assertNotNull(writeMethod);
+
+        writeMethod = findWriteMethod(beanMetadata, "not-found");
+        assertNull(writeMethod);
     }
 
     @Test
@@ -117,7 +123,7 @@ class BeanUtilsTest extends AbstractTestCase {
         assertEquals("test", propertiesMap.get("name"));
         assertEquals("value", propertiesMap.get("value"));
         assertEquals("defaultValue", propertiesMap.get("defaultValue"));
-        assertEquals(Boolean.TRUE, propertiesMap.get("required"));
+        assertEquals(TRUE, propertiesMap.get("required"));
         assertEquals("description", propertiesMap.get("description"));
 
         Map<String, Object> metadataMap = (Map<String, Object>) propertiesMap.get("metadata");
@@ -131,7 +137,7 @@ class BeanUtilsTest extends AbstractTestCase {
     void testResolvePropertiesAsMapWithTestBean() {
         TestBean testBean = new TestBean();
         testBean.booleanValue = true;
-        testBean.booleanObject = Boolean.FALSE;
+        testBean.booleanObject = FALSE;
         testBean.string = "string";
         testBean.stringBuilder = new StringBuilder("stringBuilder");
         testBean.atomicInteger = new AtomicInteger(1);
@@ -150,7 +156,7 @@ class BeanUtilsTest extends AbstractTestCase {
 
         Map<String, Object> propertiesMap = resolvePropertiesAsMap(testBean);
         assertEquals(true, propertiesMap.get("booleanValue"));
-        assertEquals(Boolean.FALSE, propertiesMap.get("booleanObject"));
+        assertEquals(FALSE, propertiesMap.get("booleanObject"));
         assertEquals("string", propertiesMap.get("string"));
         assertEquals("stringBuilder", propertiesMap.get("stringBuilder").toString());
         assertEquals(1, ((AtomicInteger) propertiesMap.get("atomicInteger")).get());

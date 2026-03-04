@@ -443,6 +443,7 @@ class JSONObjectTest {
         assertEquals("0", numberToString(Double.valueOf(0.0)));
         assertEquals("0", numberToString(Integer.valueOf(0)));
         assertEquals("-0", numberToString(NEGATIVE_ZERO));
+        assertEquals("1.23", numberToString(Double.valueOf(1.23)));
     }
 
     @Test

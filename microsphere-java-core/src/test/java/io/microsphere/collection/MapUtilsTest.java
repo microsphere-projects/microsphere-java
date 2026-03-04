@@ -411,6 +411,9 @@ class MapUtilsTest {
         assertEquals("2", fMap.get("2"));
         assertEquals("3", fMap.get("3"));
 
+        map = ofMap("A", 1, "A.B", 2, "A.B.C", 3);
+        nestedMap = nestedMap(map);
+        assertEquals("1", nestedMap.get("A"));
     }
 
     @Test
@@ -418,6 +421,7 @@ class MapUtilsTest {
         assertEquals(emptyMap(), extraProperties(null));
         assertEquals(emptyMap(), extraProperties(emptyMap()));
         assertEquals(emptyMap(), extraProperties(newHashMap()));
+        assertEquals(emptyMap(), extraProperties(ofMap("A", 1)));
     }
 
     static void assertOfMap(Map map) {

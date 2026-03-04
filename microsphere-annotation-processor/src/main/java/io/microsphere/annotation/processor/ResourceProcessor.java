@@ -34,8 +34,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static io.microsphere.annotation.processor.util.MessagerUtils.printNote;
-import static io.microsphere.annotation.processor.util.MessagerUtils.printWarning;
+import static io.microsphere.lang.model.util.MessagerUtils.printNote;
+import static io.microsphere.lang.model.util.MessagerUtils.printWarning;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;

@@ -16,13 +16,14 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_OBJECT_ARRAY;
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.Assert.assertArrayIndex;
@@ -48,7 +49,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see Assert
  * @since 1.0.0
  */
-class AssertTest extends AbstractTestCase {
+class AssertTest {
 
     @Test
     void testAssertTrue() {

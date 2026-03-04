@@ -44,7 +44,10 @@ public class ProcessManager {
      */
     public static final ProcessManager INSTANCE = new ProcessManager();
 
-    private final ConcurrentMap<Process, String> unfinishedProcessesCache = new ConcurrentHashMap<>();
+    final ConcurrentMap<Process, String> unfinishedProcessesCache = new ConcurrentHashMap<>();
+
+    private ProcessManager() {
+    }
 
     protected ProcessManager addUnfinishedProcess(Process process, String arguments) {
         unfinishedProcessesCache.putIfAbsent(process, arguments);
@@ -54,10 +57,6 @@ public class ProcessManager {
     protected ProcessManager removeUnfinishedProcess(Process process, String arguments) {
         unfinishedProcessesCache.remove(process, arguments);
         return this;
-    }
-
-    public void destroy(Process process) {
-        process.destroy();
     }
 
     /**

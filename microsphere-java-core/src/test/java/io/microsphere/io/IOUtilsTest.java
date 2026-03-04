@@ -1,6 +1,6 @@
 package io.microsphere.io;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +11,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.nio.charset.Charset;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.io.IOUtils.BUFFER_SIZE;
 import static io.microsphere.io.IOUtils.DEFAULT_BUFFER_SIZE;
 import static io.microsphere.io.IOUtils.close;
@@ -31,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see IOUtils
  * @since 1.0.0
  */
-class IOUtilsTest extends AbstractTestCase {
+class IOUtilsTest extends LoggingTest {
 
     private static final String TEST_VALUE = "Hello";
 

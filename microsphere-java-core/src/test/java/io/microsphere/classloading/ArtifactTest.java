@@ -16,12 +16,12 @@
  */
 package io.microsphere.classloading;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.net.URL;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.classloading.Artifact.UNKNOWN;
 import static io.microsphere.classloading.Artifact.WILDCARD;
 import static io.microsphere.classloading.Artifact.create;
@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see Artifact
  * @since 1.0.0
  */
-class ArtifactTest extends AbstractTestCase {
+class ArtifactTest {
 
     private static final String ARTIFACT_ID = "microsphere-core";
 
@@ -81,6 +81,7 @@ class ArtifactTest extends AbstractTestCase {
 
     @Test
     void testEquals() {
+        assertTrue(artifact.equals(artifact));
         assertTrue(artifact.equals(create(ARTIFACT_ID, VERSION, LOCATION)));
 
         assertFalse(artifact.equals(null));

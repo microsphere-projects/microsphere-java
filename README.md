@@ -37,23 +37,30 @@ frameworks like Spring, making it a versatile addition to any Java developer's t
 - JMX
 - Versioning
 - Annotation processing
+- Tools
+- Testing
 
 ## Modules
 
 The framework is organized into several key modules:
 
- Module                           | Purpose                                                                                         
-----------------------------------|-------------------------------------------------------------------------------------------------
- microsphere-java-core            | Provides core utilities across various domains like annotations, collections, concurrency, etc. 
- microsphere-annotation-processor | Offers annotation processing capabilities for compile-time code generation                      
- microsphere-java-dependencies    | Manages dependency versions across the project                                                  
- microsphere-java-parent          | Parent POM with shared configurations                                                           
+ Module                           | Purpose                                                                                             
+----------------------------------|-----------------------------------------------------------------------------------------------------
+ microsphere-java-annotations     | Provides the common annotations for Microsphere Java projects.                                      
+ microsphere-java-core            | Provides the core utilities across various domains like annotations, collections, concurrency, etc. 
+ microsphere-java-model           | Provides the components and utilities across Java Language Model API.                               
+ microsphere-jdk-tools            | Offers the components for Java tools.                                                               
+ microsphere-annotation-processor | Offers annotation processing capabilities for compile-time code generation.                         
+ microsphere-java-test            | Provides the models and components for Java testing.                                                
+ microsphere-java-dependencies    | Manages dependency versions across the project.                                                     
+ microsphere-java-parent          | Parent POM with shared configurations.                                                              
 
 ## Getting Started
 
 The easiest way to get started is by adding the Microsphere Java BOM (Bill of Materials) to your project's pom.xml:
 
 ```xml
+
 <dependencyManagement>
     <dependencies>
         ...
@@ -73,6 +80,7 @@ The easiest way to get started is by adding the Microsphere Java BOM (Bill of Ma
 Then add the specific modules you need:
 
 ```xml
+
 <dependencies>
     <!-- Core utilities -->
     <dependency>
@@ -159,8 +167,12 @@ We welcome your contributions! Please read [Code of Conduct](./CODE_OF_CONDUCT.m
 
 ### JavaDoc
 
+- [microsphere-java-annotations](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-annotations)
 - [microsphere-java-core](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-core)
+- [microsphere-java-model](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-model)
+- [microsphere-jdk-tools](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-jdk-tools)
 - [microsphere-annotation-processor](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-annotation-processor)
+- [microsphere-java-test](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-test)
 
 ## License
 

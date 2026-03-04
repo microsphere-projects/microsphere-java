@@ -668,6 +668,10 @@ public abstract class ListUtils implements Utils {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
+    public static <T> boolean addIfAbsent(List<T> values, T newValue) {
+        return values.contains(newValue) ? false : values.add(newValue);
+    }
+
     private ListUtils() {
     }
 }

@@ -16,7 +16,7 @@
  */
 package io.microsphere.lang.function;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.ThrowableAction.execute;
@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-class ThrowableActionTest extends AbstractTestCase {
+class ThrowableActionTest implements Loggable {
 
     private final ThrowableAction action = () -> {
-        logger.trace("ThrowableAction#execute()");
+        log("ThrowableAction#execute()");
     };
 
     private final ThrowableAction exceptionalAction = () -> {

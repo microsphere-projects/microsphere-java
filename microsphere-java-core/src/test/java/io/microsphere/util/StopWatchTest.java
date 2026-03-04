@@ -16,14 +16,14 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
+import io.microsphere.Loggable;
 import io.microsphere.util.StopWatch.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.StopWatch.Task.start;
+import static java.lang.Thread.sleep;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -40,9 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class StopWatchTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(StopWatchTest.class);
+class StopWatchTest implements Loggable {
 
     private static final String testName = "test";
 
@@ -51,30 +49,30 @@ class StopWatchTest {
 
     @BeforeEach
     void setUp() {
-        stopWatch = new StopWatch(testName);
+        this.stopWatch = new StopWatch(testName);
     }
 
     @Test
     void test() throws InterruptedException {
-        stopWatch.start("1");
-        Thread.sleep(100);
-        stopWatch.start("2");
-        Thread.sleep(10);
-        stopWatch.stop();
-        stopWatch.stop();
-        Task currentTask = stopWatch.getCurrentTask();
+        this.stopWatch.start("1");
+        sleep(100);
+        this.stopWatch.start("2");
+        sleep(10);
+        this.stopWatch.stop();
+        this.stopWatch.stop();
+        Task currentTask = this.stopWatch.getCurrentTask();
         assertNull(currentTask);
-        assertEquals(testName, stopWatch.getId());
-        assertEquals(0, stopWatch.getRunningTasks().size());
-        assertEquals(2, stopWatch.getCompletedTasks().size());
-        Task task = stopWatch.getCompletedTasks().get(1);
+        assertEquals(testName, this.stopWatch.getId());
+        assertEquals(0, this.stopWatch.getRunningTasks().size());
+        assertEquals(2, this.stopWatch.getCompletedTasks().size());
+        Task task = this.stopWatch.getCompletedTasks().get(1);
         assertEquals("1", task.getTaskName());
         assertFalse(task.isReentrant());
         assertTrue(task.getStartTimeNanos() > 0);
         assertTrue(task.getElapsedNanos() > 0);
-        assertTrue(stopWatch.getTotalTimeNanos() > 0);
-        assertTrue(stopWatch.getTotalTime(MILLISECONDS) > 0);
-        logger.info(stopWatch.toString());
+        assertTrue(this.stopWatch.getTotalTimeNanos() > 0);
+        assertTrue(this.stopWatch.getTotalTime(MILLISECONDS) > 0);
+        log(this.stopWatch.toString());
     }
 
     @Test
@@ -108,35 +106,48 @@ class StopWatchTest {
 
     @Test
     void testStartOnNullTaskName() {
-        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(null));
+        assertThrows(IllegalArgumentException.class, () -> this.stopWatch.start(null));
     }
 
     @Test
     void testStartOnEmptyTaskName() {
-        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(""));
+        assertThrows(IllegalArgumentException.class, () -> this.stopWatch.start(""));
     }
 
     @Test
     void testStartOnBlankTaskName() {
-        assertThrows(IllegalArgumentException.class, () -> stopWatch.start(SPACE));
+        assertThrows(IllegalArgumentException.class, () -> this.stopWatch.start(SPACE));
     }
 
     @Test
     void testStartOnAlreadyRunning() {
         assertThrows(IllegalStateException.class, () -> {
-            stopWatch.start("1");
-            stopWatch.start("1");
+            this.stopWatch.start("1");
+            this.stopWatch.start("1");
         });
     }
 
     @Test
     void testStartOnReentrant() {
-        stopWatch.start("1", true);
-        stopWatch.start("1");
+        this.stopWatch.start("1", true);
+        this.stopWatch.start("1");
     }
 
     @Test
     void testStopOnNoTaskRunning() {
-        assertThrows(IllegalStateException.class, stopWatch::stop);
+        assertThrows(IllegalStateException.class, this.stopWatch::stop);
+    }
+
+    @Test
+    void testGetCurrentTask() {
+        this.stopWatch.start("1", true);
+        Task currentTask = this.stopWatch.getCurrentTask();
+        assertEquals("1", currentTask.getTaskName());
+
+        currentTask = this.stopWatch.getCurrentTask(true);
+        assertEquals("1", currentTask.getTaskName());
+
+        assertNull(this.stopWatch.getCurrentTask());
+        assertNull(this.stopWatch.getCurrentTask(true));
     }
 }

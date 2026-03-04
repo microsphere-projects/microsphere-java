@@ -16,11 +16,11 @@
  */
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 
+import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EmptyIterator.INSTANCE;
@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class IterableAdapterTest extends AbstractTestCase {
+class IterableAdapterTest {
 
     @Test
     void test() {

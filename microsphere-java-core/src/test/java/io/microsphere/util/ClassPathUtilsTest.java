@@ -3,23 +3,28 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
-import io.microsphere.lang.ClassDataRepository;
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Set;
+import java.util.function.Predicate;
 
+import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
+import static io.microsphere.lang.ClassDataRepository.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.isLoadedClass;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.ClassPathUtils.getRuntimeClassLocation;
+import static io.microsphere.util.ClassPathUtils.resolveClassPaths;
 import static java.lang.management.ManagementFactory.getRuntimeMXBean;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link ClassPathUtils} {@link Test}
@@ -28,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see ClassPathUtilsTest
  * @since 1.0.0
  */
-class ClassPathUtilsTest extends AbstractTestCase {
+class ClassPathUtilsTest implements Loggable {
 
     @Test
     void testGetBootstrapClassPaths() {
@@ -57,16 +62,22 @@ class ClassPathUtilsTest extends AbstractTestCase {
         assertNotNull(location);
         log(location);
 
-        //Primitive type
+        // Primitive type
         location = getRuntimeClassLocation(int.class);
         assertNull(location);
 
-        //Array type
+        // Array type
         location = getRuntimeClassLocation(int[].class);
         assertNull(location);
 
+        // Synthetic type
+        Predicate<String> predicate = t -> true;
+        predicate = predicate.negate();
+        location = getRuntimeClassLocation(predicate.getClass());
+        assertNull(location);
 
-        Set<String> classNames = ClassDataRepository.INSTANCE.getAllClassNamesInClassPaths();
+
+        Set<String> classNames = INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
             if (!isLoadedClass(TEST_CLASS_LOADER, className)) {
                 location = getRuntimeClassLocation(className);
@@ -81,5 +92,11 @@ class ClassPathUtilsTest extends AbstractTestCase {
         URL location = getRuntimeClassLocation(String.class.getName());
         assertNotNull(location);
         log(location);
+    }
+
+    @Test
+    void testResolveClassPaths() {
+        assertSame(emptySet(), resolveClassPaths(false, () -> null));
+        assertSame(emptySet(), resolveClassPaths(true, () -> ""));
     }
 }

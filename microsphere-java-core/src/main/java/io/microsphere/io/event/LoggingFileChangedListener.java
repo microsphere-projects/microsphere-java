@@ -67,8 +67,6 @@ public class LoggingFileChangedListener implements FileChangedListener {
     }
 
     private void log(FileChangedEvent event) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(event.toString());
-        }
+        logger.debug(event.toString());
     }
 }

@@ -86,6 +86,7 @@ class MavenArtifactTest {
 
     @Test
     void testEquals() {
+        assertTrue(artifact.equals(artifact));
         assertTrue(artifact.equals(create(GROUP_ID, ARTIFACT_ID, VERSION, LOCATION)));
 
         assertFalse(artifact.equals(null));
@@ -116,5 +117,6 @@ class MavenArtifactTest {
         assertFalse(create(HYPHEN, ARTIFACT_ID, VERSION).matches(artifact));
         assertFalse(create(GROUP_ID, HYPHEN, VERSION).matches(artifact));
         assertFalse(create(GROUP_ID, ARTIFACT_ID, HYPHEN).matches(artifact));
+        assertFalse(create(GROUP_ID, ARTIFACT_ID, HYPHEN).matches(null));
     }
 }

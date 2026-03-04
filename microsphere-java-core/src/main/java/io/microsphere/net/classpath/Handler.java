@@ -26,6 +26,7 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
+import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 
 /**
@@ -45,7 +46,7 @@ public class Handler extends ExtendableProtocolURLStreamHandler {
 
         String classPath = path;
 
-        if (authority != null && !authority.isEmpty()) {
+        if (isNotEmpty(authority)) {
             classPath = authority + path;
         }
 

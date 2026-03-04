@@ -25,6 +25,7 @@ import io.microsphere.util.Version;
 import java.lang.reflect.Member;
 
 import static io.microsphere.util.Version.ofVersion;
+import static java.util.Objects.nonNull;
 
 /**
  * The definition class for Java Reflection {@link Member}.
@@ -80,8 +81,6 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
 
     @Nullable
     private transient M member;
-
-    private boolean resolvedMember;
 
     /**
      * @param since             the 'since' version
@@ -166,22 +165,22 @@ public abstract class MemberDefinition<M extends Member> extends ReflectiveDefin
      */
     @Nullable
     public final M getMember() {
-        if (!resolvedMember && member == null) {
+        if (member == null) {
             member = resolveMember();
-            resolvedMember = true;
         }
         return member;
     }
 
     @Override
     public boolean isPresent() {
-        return getMember() != null;
+        return nonNull(getMember());
     }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof MemberDefinition)) return false;
-        if (!super.equals(o)) return false;
+        if (!super.equals(o)) {
+            return false;
+        }
 
         MemberDefinition<?> that = (MemberDefinition<?>) o;
         return this.name.equals(that.name);

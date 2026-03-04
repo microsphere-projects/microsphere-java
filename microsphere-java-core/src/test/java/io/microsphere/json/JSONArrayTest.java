@@ -30,6 +30,7 @@ import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.Boolean.TRUE;
 import static java.lang.Double.NaN;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -115,6 +116,12 @@ class JSONArrayTest {
     @Test
     void testConstructorWithArrayOnNotArray() {
         assertThrows(JSONException.class, () -> new JSONArray(new Object()));
+    }
+
+    @Test
+    void testConstructorWithJSONTokener() {
+        assertDoesNotThrow(() -> new JSONArray(new JSONTokener("[1,2,3]")));
+        assertThrows(JSONException.class, () -> new JSONArray(new JSONTokener("{}")));
     }
 
     @Test

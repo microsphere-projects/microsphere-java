@@ -18,6 +18,7 @@ package io.microsphere.io.event;
 
 import io.microsphere.event.Event;
 import io.microsphere.event.EventListener;
+import io.microsphere.io.event.FileChangedEvent.Kind;
 
 /**
  * A listener interface for receiving file change events.
@@ -94,7 +95,7 @@ import io.microsphere.event.EventListener;
 public interface FileChangedListener extends EventListener<FileChangedEvent> {
 
     default void onEvent(FileChangedEvent event) {
-        FileChangedEvent.Kind kind = event.getKind();
+        Kind kind = event.getKind();
         switch (kind) {
             case CREATED:
                 onFileCreated(event);
@@ -102,7 +103,7 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
             case MODIFIED:
                 onFileModified(event);
                 break;
-            case DELETED:
+            default:
                 onFileDeleted(event);
                 break;
         }
@@ -111,7 +112,7 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
     /**
      * Invoked when the file has been created
      *
-     * @param event the {@link FileChangedEvent.Kind#CREATED created} {@link FileChangedEvent event}
+     * @param event the {@link Kind#CREATED created} {@link FileChangedEvent event}
      */
     default void onFileCreated(FileChangedEvent event) {
     }
@@ -119,7 +120,7 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
     /**
      * Invoked when the file has been modified
      *
-     * @param event the {@link FileChangedEvent.Kind#MODIFIED modified} {@link FileChangedEvent event}
+     * @param event the {@link Kind#MODIFIED modified} {@link FileChangedEvent event}
      */
     default void onFileModified(FileChangedEvent event) {
     }
@@ -127,7 +128,7 @@ public interface FileChangedListener extends EventListener<FileChangedEvent> {
     /**
      * Invoked when the file has been deleted
      *
-     * @param event the {@link FileChangedEvent.Kind#DELETED deleted} {@link FileChangedEvent event}
+     * @param event the {@link Kind#DELETED deleted} {@link FileChangedEvent event}
      */
     default void onFileDeleted(FileChangedEvent event) {
     }

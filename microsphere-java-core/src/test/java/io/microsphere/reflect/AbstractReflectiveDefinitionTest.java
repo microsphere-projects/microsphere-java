@@ -1,5 +1,6 @@
 package io.microsphere.reflect;
 
+import io.microsphere.Loggable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +13,9 @@ import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.lang.DeprecationTest.DEPRECATION;
 import static io.microsphere.lang.DeprecationTest.SINCE;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.Version.ofVersion;
+import static java.lang.Boolean.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -28,14 +31,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> {
+public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> implements Loggable {
 
-    private final List<Object>[] headConstructorArgumentsArray = new List[]{
+    private final List<Object>[] headConstructorArgumentsArray = ofArray(
             ofList(SINCE, getClassName()),
             ofList(ofVersion(SINCE), getClassName()),
             ofList(SINCE, DEPRECATION, getClassName()),
-            ofList(ofVersion(SINCE), DEPRECATION, getClassName())
-    };
+            ofList(ofVersion(SINCE), DEPRECATION, getClassName()),
+            ofList(ofVersion("2.0.0"), DEPRECATION, getClassName())
+    );
 
     protected List<D> definitions;
 
@@ -85,6 +89,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
         assertNull(definitions.get(1).getDeprecation());
         assertNotNull(definitions.get(2).getDeprecation());
         assertNotNull(definitions.get(3).getDeprecation());
+        assertNotNull(definitions.get(4).getDeprecation());
     }
 
     @Test
@@ -98,6 +103,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     void testGetResolvedClass() {
         for (D definition : definitions) {
             assertNotNull(definition.getResolvedClass());
+            assertNotNull(definition.getResolvedClass());
         }
     }
 
@@ -107,33 +113,40 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
         assertFalse(definitions.get(1).isDeprecated());
         assertTrue(definitions.get(2).isDeprecated());
         assertTrue(definitions.get(3).isDeprecated());
+        assertTrue(definitions.get(4).isDeprecated());
     }
 
     @Test
     void testIsPresent() {
         for (D definition : definitions) {
-            assertNotNull(definition.isPresent());
+            assertNotNull(valueOf(definition.isPresent()));
         }
     }
 
     @Test
-    void testTestEquals() {
+    void testEquals() {
+        assertEquals(definitions.get(0), definitions.get(0));
         assertEquals(definitions.get(0), definitions.get(1));
         assertEquals(definitions.get(2), definitions.get(3));
         assertNotEquals(definitions.get(0), definitions.get(2));
+        assertNotEquals(definitions.get(0), definitions.get(2));
+        assertNotEquals(definitions.get(0), definitions.get(4));
+        assertFalse(definitions.get(0).equals(this));
     }
 
     @Test
-    void testTestHashCode() {
+    void testHashCode() {
         assertEquals(definitions.get(0).hashCode(), definitions.get(1).hashCode());
         assertEquals(definitions.get(2).hashCode(), definitions.get(3).hashCode());
         assertNotEquals(definitions.get(0).hashCode(), definitions.get(2).hashCode());
+        assertNotEquals(definitions.get(0).hashCode(), definitions.get(4).hashCode());
     }
 
     @Test
-    void testTestToString() {
+    void testToString() {
         assertEquals(definitions.get(0).toString(), definitions.get(1).toString());
         assertEquals(definitions.get(2).toString(), definitions.get(3).toString());
         assertNotEquals(definitions.get(0).toString(), definitions.get(2).toString());
+        assertNotEquals(definitions.get(0).toString(), definitions.get(4).toString());
     }
 }

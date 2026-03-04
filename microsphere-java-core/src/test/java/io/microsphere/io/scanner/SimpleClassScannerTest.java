@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link SimpleClassScannerTest}
+ * {@link SimpleClassScanner} Test
  *
  * @author <a href="mercyblitz@gmail.com">Mercy<a/>
- * @see SimpleClassScannerTest
+ * @see SimpleClassScanner
  * @since 1.0.0
  */
 class SimpleClassScannerTest extends AbstractTestCase {
@@ -52,6 +52,8 @@ class SimpleClassScannerTest extends AbstractTestCase {
         URL nonnullClassResource = getClassResource(classLoader, Nonnull.class);
         Set<Class<?>> classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, nonnullClassResource, false);
         assertFalse(classesSet.isEmpty());
-    }
 
+        classesSet = simpleClassScanner.scan(TEST_CLASS_LOADER, nonnullClassResource, true);
+        assertFalse(classesSet.isEmpty());
+    }
 }

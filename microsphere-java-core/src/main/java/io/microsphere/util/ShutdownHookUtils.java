@@ -379,6 +379,10 @@ public abstract class ShutdownHookUtils implements Utils {
     @Nonnull
     private static Map<Thread, Thread> shutdownHookThreadsMap() {
         Class<?> applicationShutdownHooksClass = resolveClass(TARGET_CLASS_NAME, getSystemClassLoader());
+        return shutdownHookThreadsMap(applicationShutdownHooksClass);
+    }
+
+    static Map<Thread, Thread> shutdownHookThreadsMap(Class<?> applicationShutdownHooksClass) {
         return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);
     }
 
