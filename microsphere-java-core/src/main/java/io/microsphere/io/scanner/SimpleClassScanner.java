@@ -104,7 +104,6 @@ public class SimpleClassScanner {
         return scan(classLoader, packageName, recursive, false);
     }
 
-
     /**
      * scan {@link Class} set under specified package name or its' sub-packages in {@link ClassLoader}, if
      * <code>requiredLoad</code> indicates <code>true</code> , try to load those classes.
