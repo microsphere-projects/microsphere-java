@@ -21,10 +21,13 @@ import org.junit.jupiter.api.Test;
 import java.sql.SQLException;
 
 import static io.microsphere.text.FormatUtils.format;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ExceptionUtils.create;
 import static io.microsphere.util.ExceptionUtils.getStackTrace;
+import static io.microsphere.util.ExceptionUtils.resolveArguments;
 import static io.microsphere.util.ExceptionUtils.throwTarget;
 import static io.microsphere.util.ExceptionUtils.wrap;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -102,6 +105,24 @@ class ExceptionUtilsTest {
         assertThrows(RuntimeException.class, () -> throwTarget(new Exception("Hello,World"), RuntimeException.class));
     }
 
+    @Test
+    void testResolveArguments() {
+        Exception e = new Exception();
+
+        Object[] arguments = resolveArguments(e);
+        assertArrayEquals(ofArray(e), arguments);
+
+        String message = "For testing...";
+        e = new Exception(message);
+        arguments = resolveArguments(e);
+        assertArrayEquals(ofArray(message, e), arguments);
+
+        Exception cause = new Exception();
+        e = new Exception(message, cause);
+        arguments = resolveArguments(e);
+        assertArrayEquals(ofArray(message, cause), arguments);
+    }
+
     private <T extends Throwable, TT extends Throwable> void assertWrap(T source, Class<TT> thrownType, Class<? extends Throwable> causeType) {
         TT throwable = wrap(source, thrownType);
         assertTrue(thrownType.isAssignableFrom(throwable.getClass()));
@@ -138,7 +159,6 @@ class ExceptionUtilsTest {
         assertEquals(message, t.getMessage());
         assertEquals(cause, t.getCause());
     }
-
 
     private <T extends Throwable> void assertCreate(Class<T> throwableClass, Throwable cause, String messagePattern, Object... args) {
         String message = format(messagePattern, args);
