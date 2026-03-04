@@ -94,6 +94,7 @@ class ParameterizedTypeImplTest {
     void testEqualsOnDifferentType() {
         assertNotEquals(topLevelType, of(Map.class, actualTypeArguments, String.class));
         assertNotEquals(of(Dictionary.class, actualTypeArguments, String.class), of(Map.class, actualTypeArguments, String.class));
+        assertNotEquals(of(Map.class, actualTypeArguments, String.class), of(Map.class, new Type[]{String.class, String.class}, String.class));
         assertNotEquals(topLevelType, nestedType);
         assertNotEquals(topLevelType, complexType);
         assertNotEquals(topLevelType, Object.class);
