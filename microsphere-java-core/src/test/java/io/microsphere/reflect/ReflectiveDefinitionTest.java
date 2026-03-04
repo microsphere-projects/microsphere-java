@@ -42,6 +42,7 @@ class ReflectiveDefinitionTest extends AbstractReflectiveDefinitionTest<Reflecti
     }
 
     @Test
+    @Override
     void testEquals() {
         super.testEquals();
         ReflectiveDefinitionImpl df1 = new ReflectiveDefinitionImpl(SINCE, DEPRECATION, "df1");
