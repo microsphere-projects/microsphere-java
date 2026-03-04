@@ -123,7 +123,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    void testTestEquals() {
+    void testEquals() {
         assertEquals(definitions.get(0), definitions.get(0));
         assertEquals(definitions.get(0), definitions.get(1));
         assertEquals(definitions.get(2), definitions.get(3));
@@ -134,7 +134,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    void testTestHashCode() {
+    void testHashCode() {
         assertEquals(definitions.get(0).hashCode(), definitions.get(1).hashCode());
         assertEquals(definitions.get(2).hashCode(), definitions.get(3).hashCode());
         assertNotEquals(definitions.get(0).hashCode(), definitions.get(2).hashCode());
@@ -142,7 +142,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    void testTestToString() {
+    void testToString() {
         assertEquals(definitions.get(0).toString(), definitions.get(1).toString());
         assertEquals(definitions.get(2).toString(), definitions.get(3).toString());
         assertNotEquals(definitions.get(0).toString(), definitions.get(2).toString());
