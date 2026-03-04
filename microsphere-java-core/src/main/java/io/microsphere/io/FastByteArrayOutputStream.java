@@ -60,7 +60,7 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
      * Attempts to allocate larger arrays may result in
      * OutOfMemoryError: Requested array size exceeds VM limit
      */
-    private static final int MAX_ARRAY_SIZE = MAX_VALUE - 8;
+    static final int MAX_ARRAY_SIZE = MAX_VALUE - 8;
 
     /**
      * {@inheritDoc}
@@ -107,10 +107,14 @@ public class FastByteArrayOutputStream extends ByteArrayOutputStream {
         int newCapacity = oldCapacity << 1;
         if (newCapacity - minCapacity < 0)
             newCapacity = minCapacity;
+        assertCapacity(newCapacity);
+        buf = copyOf(buf, newCapacity);
+    }
+
+    void assertCapacity(int newCapacity) {
         if (newCapacity - MAX_ARRAY_SIZE > 0) {
             throw new OutOfMemoryError();
         }
-        buf = copyOf(buf, newCapacity);
     }
 
     /**
