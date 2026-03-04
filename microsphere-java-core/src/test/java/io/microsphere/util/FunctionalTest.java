@@ -18,10 +18,13 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Objects;
+
 import static io.microsphere.util.Functional.of;
 import static io.microsphere.util.Functional.value;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * {@link Functional} Test
@@ -66,6 +69,12 @@ class FunctionalTest {
     @Test
     void testOfWithNameAndValueSupplier() {
         assertValue(of("test", () -> 1).on(v -> v > 0).as(String::valueOf), "1");
+    }
+
+    @Test
+    void testNullValue() {
+        Functional<Object> test = of("test", () -> null);
+        assertSame(test, test.on(Objects::nonNull));
     }
 
     private <T> void assertValue(Functional<T> functional, T expected) {
