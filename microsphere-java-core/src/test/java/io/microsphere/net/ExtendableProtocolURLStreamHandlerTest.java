@@ -22,7 +22,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -43,6 +46,7 @@ import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -151,6 +155,17 @@ class ExtendableProtocolURLStreamHandlerTest {
         URL url = new URL(TEST_URL);
         assertNull(url.openConnection());
         assertEquals(TEST_URL, url.toString());
+
+    }
+
+    @Test
+    void testOpenConnectionOnNull() throws IOException {
+        URL url = new URL(TEST_URL);
+        this.handler.customizeSubProtocolURLConnectionFactories(factories -> {
+            factories.add(0, new FalseSubProtocolURLConnectionFactory());
+            factories.add(1, new NullSubProtocolURLConnectionFactory());
+        });
+        assertNull(this.handler.openConnection(url));
     }
 
     @Test
@@ -234,6 +249,46 @@ class ExtendableProtocolURLStreamHandlerTest {
         assertEquals("io.microsphere.net.test.Handler {defaultPort = -1 , protocol = 'test'}", handler.toString());
     }
 
+    @Test
+    void testAssertPackage() {
+        assertThrows(IllegalArgumentException.class, () -> assertPackage(""));
+        assertThrows(IllegalArgumentException.class, () -> assertPackage("Test"));
+    }
+
+    @Test
+    void testReformSpec() throws MalformedURLException {
+        String spec = TEST_URL_WITH_SP + "?a=b";
+        URL url = new URL(spec);
+        String s = this.handler.reformSpec(url, spec, 0, 1, spec.length());
+        assertNotNull(s);
+    }
+
     private static class MemberClass extends ExtendableProtocolURLStreamHandler {
+    }
+
+    static class FalseSubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
+
+        @Override
+        public boolean supports(URL url, List<String> subProtocols) {
+            return false;
+        }
+
+        @Override
+        public URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException {
+            return null;
+        }
+    }
+
+    static class NullSubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
+
+        @Override
+        public boolean supports(URL url, List<String> subProtocols) {
+            return true;
+        }
+
+        @Override
+        public URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException {
+            return null;
+        }
     }
 }
