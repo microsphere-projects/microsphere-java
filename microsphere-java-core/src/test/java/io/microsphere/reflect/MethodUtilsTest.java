@@ -69,6 +69,7 @@ import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.initBannedMethods;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.reflect.MethodUtils.isCallerSensitiveMethod;
 import static io.microsphere.reflect.MethodUtils.isGetterMethod;
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.reflect.MethodUtils.isObjectMethod;
@@ -193,6 +194,9 @@ class MethodUtilsTest extends LoggingTest {
         Predicate<? super Method> predicate = excludedDeclaredClass(Object.class);
         for (Method method : ReflectionTest.class.getDeclaredMethods()) {
             assertTrue(predicate.test(method));
+        }
+        for (Method method : Object.class.getDeclaredMethods()) {
+            assertFalse(predicate.test(method));
         }
     }
 
@@ -761,6 +765,14 @@ class MethodUtilsTest extends LoggingTest {
         assertNotEquals(key1, key2);
         assertNotEquals(key1, key3);
         assertNotEquals(key1, "String");
+    }
+
+    @Test
+    void testIsCallerSensitiveMethod() {
+        Method[] methods = MethodUtilsTest.class.getMethods();
+        for (Method method : methods) {
+            assertFalse(isCallerSensitiveMethod(method));
+        }
     }
 
     private void assertMethodKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {

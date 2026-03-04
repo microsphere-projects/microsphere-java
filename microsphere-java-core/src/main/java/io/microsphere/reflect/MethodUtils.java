@@ -945,15 +945,11 @@ public abstract class MethodUtils implements Utils {
             throw new NullPointerException("The 'method' must not be null");
         }
         R result = null;
-        boolean accessible = false;
         RuntimeException failure = null;
         try {
-            accessible = trySetAccessible(method);
+            trySetAccessible(method);
             result = (R) method.invoke(instance, arguments);
-        } catch (IllegalAccessException e) {
-            String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
-            failure = new IllegalStateException(errorMessage, e);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, arrayToString(arguments));
             failure = new IllegalArgumentException(errorMessage, e);
         } catch (InvocationTargetException e) {
