@@ -209,6 +209,11 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
     }
 
     @Test
+    void testGetDefaultClassLoaderWithNull() {
+        assertSame(getSystemClassLoader(), getDefaultClassLoader(null));
+    }
+
+    @Test
     void testGetClassLoader() {
         ClassLoader classLoader = currentClass.getClassLoader();
         // ClassLoaderUtilsTest -> classLoader
@@ -309,6 +314,9 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
         assertEquals(Double.class, type);
 
         type = findLoadedClass(classLoader, "java/lang/String.class");
+        assertNull(type);
+
+        type = findLoadedClass(classLoader, "com.acme.NotFound");
         assertNull(type);
     }
 
@@ -702,7 +710,8 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
         assertEquals("io/microsphere/util/ClassLoaderUtilsTest.class", CLASS.normalize(name));
 
         assertNull(CLASS.resolve(null));
-        assertNull(CLASS.resolve(name));}
+        assertNull(CLASS.resolve(name));
+    }
 
     @Test
     void testPackageResourceType() {

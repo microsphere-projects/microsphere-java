@@ -213,6 +213,10 @@ public abstract class ClassLoaderUtils implements Utils {
         if (classLoader == null) {
             classLoader = ClassLoaderUtils.class.getClassLoader();
         }
+        return getDefaultClassLoader(classLoader);
+    }
+
+    static ClassLoader getDefaultClassLoader(ClassLoader classLoader) {
         // classLoader is null indicates the bootstrap ClassLoader
         return classLoader == null ? getSystemClassLoader() : classLoader;
     }
