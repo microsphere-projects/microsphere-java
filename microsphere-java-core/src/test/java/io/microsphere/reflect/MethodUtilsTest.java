@@ -756,15 +756,15 @@ class MethodUtilsTest extends LoggingTest {
         assertMethodKey(ReflectionTest.class, "publicMethod", int.class);
         assertMethodKey(Appendable.class, "append", CharSequence.class, int.class, int.class);
 
-
-        MethodKey key1 = new MethodKey(String.class, "toString");
+        MethodKey key = new MethodKey(String.class, "valueOf", boolean.class);
+        MethodKey key1 = new MethodKey(String.class, "valueOf", char.class);
         MethodKey key2 = new MethodKey(String.class, "equals", Object.class);
         MethodKey key3 = new MethodKey(Object.class, "equals", Object.class);
 
-
+        assertNotEquals(key, key1);
         assertNotEquals(key1, key2);
         assertNotEquals(key1, key3);
-        assertNotEquals(key1, "String");
+        assertNotEquals(key1, this);
     }
 
     @Test
