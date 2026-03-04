@@ -71,6 +71,7 @@ class ReversedDequeTest extends MutableDequeTest<Deque<Object>> {
     }
 
     @Test
+    @Override
     void testRemove() {
         this.instance.remove(null);
         super.testRemove();
