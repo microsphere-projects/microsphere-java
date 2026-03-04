@@ -15,6 +15,7 @@ import static io.microsphere.lang.DeprecationTest.SINCE;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.Version.ofVersion;
+import static java.lang.Boolean.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -118,7 +119,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     @Test
     void testIsPresent() {
         for (D definition : definitions) {
-            assertNotNull(definition.isPresent());
+            assertNotNull(valueOf(definition.isPresent()));
         }
     }
 
