@@ -2,16 +2,12 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.util.StackTraceUtils.getCallerClassName;
-import static io.microsphere.util.StackTraceUtils.getCallerClassNameInGeneralJVM;
-import static io.microsphere.util.StackTraceUtils.getCallerClassNames;
-import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
-import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
-import static java.lang.Integer.MAX_VALUE;
+import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
+import static io.microsphere.util.StackTraceUtils.getCallerClassNameInStackTrace;
+import static io.microsphere.util.StackTraceUtils.getStackTrace;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link StackTraceUtils} Test
@@ -22,37 +18,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class StackTraceUtilsTest {
 
-    private static final String CALLER_CLASS_NAME = StackTraceUtilsTest.class.getName();
+    private static final Class<?> CALLER_CLASS = StackTraceUtilsTest.class;
+
+    private static final String CALLER_CLASS_NAME = CALLER_CLASS.getName();
 
     @Test
-    void testGetCallerClassName() {
-        assertEquals(CALLER_CLASS_NAME, getCallerClassName());
+    void testGetCallerClassInStatckTrace() {
+        Class<?> callerClassInStatckTrace = getCallerClassInStatckTrace();
+        assertEquals(CALLER_CLASS, callerClassInStatckTrace);
     }
 
     @Test
-    void testGetCallerClassNameOnStackWalkerSupportedForTesting() {
-        assertEquals(getCallerClassNameInGeneralJVM(), getCallerClassName(null, 0));
-        assertEquals(CALLER_CLASS_NAME, getCallerClassName());
-    }
-
-    @Test
-    void testGetCallerClassNames() {
-        if (testCurrentJavaVersion("<", JAVA_VERSION_9)) {
-            assertThrows(NullPointerException.class, () -> getCallerClassNames());
-        } else {
-            assertTrue(getCallerClassNames().contains(CALLER_CLASS_NAME));
-        }
-    }
-
-    @Test
-    void testGetCallerClassNameInGeneralJVM() {
-        String callerClassName = getCallerClassNameInGeneralJVM();
+    void testGetCallerClassNameInStackTrace() {
+        String callerClassName = getCallerClassNameInStackTrace();
         assertEquals(CALLER_CLASS_NAME, callerClassName);
     }
 
     @Test
-    void testGetCallerClassNameInGeneralJVMOnOverStack() {
-        assertNull(getCallerClassNameInGeneralJVM(MAX_VALUE));
+    void testGetCallerClassInStatckTraceWithFrame() {
+        assertNull(getCallerClassInStatckTrace(99999));
     }
 
+    @Test
+    void testGetStackTrace() {
+        assertNotNull(getStackTrace());
+    }
 }

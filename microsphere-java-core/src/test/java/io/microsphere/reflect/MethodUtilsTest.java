@@ -16,7 +16,9 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.LoggingTest;
 import io.microsphere.lang.Prioritized;
+import io.microsphere.reflect.MethodUtils.MethodKey;
 import io.microsphere.test.Data;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +30,7 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static io.microsphere.AbstractTestCase.JACOCO_AGENT_INSTRUCTED;
@@ -66,6 +69,7 @@ import static io.microsphere.reflect.MethodUtils.getSignature;
 import static io.microsphere.reflect.MethodUtils.initBannedMethods;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.reflect.MethodUtils.isCallerSensitiveMethod;
 import static io.microsphere.reflect.MethodUtils.isGetterMethod;
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.reflect.MethodUtils.isObjectMethod;
@@ -80,6 +84,7 @@ import static java.lang.System.setProperty;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -92,7 +97,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class MethodUtilsTest {
+class MethodUtilsTest extends LoggingTest {
 
     private static final int JACOCO_ADDED_METHOD_COUNT;
 
@@ -189,6 +194,9 @@ class MethodUtilsTest {
         Predicate<? super Method> predicate = excludedDeclaredClass(Object.class);
         for (Method method : ReflectionTest.class.getDeclaredMethods()) {
             assertTrue(predicate.test(method));
+        }
+        for (Method method : Object.class.getDeclaredMethods()) {
+            assertFalse(predicate.test(method));
         }
     }
 
@@ -495,6 +503,9 @@ class MethodUtilsTest {
         Method valueOfMethod2 = findMethod(String.class, "valueOf", int.class);
         assertFalse(overrides(valueOfMethod1, valueOfMethod2));
         assertFalse(overrides(valueOfMethod2, valueOfMethod1));
+
+        assertFalse(overrides(findMethod(Object.class, "equals", Object.class),
+                findMethod(Objects.class, "equals", Object.class, Object.class)));
     }
 
     @Test
@@ -572,6 +583,12 @@ class MethodUtilsTest {
         overrider = findMethod(ArrayList.class, "size");
         overridden = findMethod(AbstractList.class, "size");
         assertEquals(overridden, findNearestOverriddenMethod(overrider));
+    }
+
+    @Test
+    void testFindNearestOverriddenMethodOnObject() {
+        Method overrider = findMethod(Object.class, "toString");
+        assertNull(findNearestOverriddenMethod(overrider));
     }
 
     @Test
@@ -738,12 +755,31 @@ class MethodUtilsTest {
         assertMethodKey(String.class, "toString");
         assertMethodKey(ReflectionTest.class, "publicMethod", int.class);
         assertMethodKey(Appendable.class, "append", CharSequence.class, int.class, int.class);
+
+        MethodKey key = new MethodKey(String.class, "valueOf", boolean.class);
+        MethodKey key1 = new MethodKey(String.class, "valueOf", char.class);
+        MethodKey key2 = new MethodKey(String.class, "equals", Object.class);
+        MethodKey key3 = new MethodKey(Object.class, "equals", Object.class);
+
+        assertNotEquals(key, key1);
+        assertNotEquals(key1, key2);
+        assertNotEquals(key1, key3);
+        assertFalse(key1.equals(this));
+    }
+
+    @Test
+    void testIsCallerSensitiveMethod() {
+        Method[] methods = MethodUtilsTest.class.getMethods();
+        for (Method method : methods) {
+            assertFalse(isCallerSensitiveMethod(method));
+        }
     }
 
     private void assertMethodKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
-        MethodUtils.MethodKey methodKey1 = buildKey(declaredClass, methodName, parameterTypes);
-        MethodUtils.MethodKey methodKey2 = buildKey(declaredClass, methodName, parameterTypes.length == 0 ? null : parameterTypes);
+        MethodKey methodKey1 = buildKey(declaredClass, methodName, parameterTypes);
+        MethodKey methodKey2 = buildKey(declaredClass, methodName, parameterTypes.length == 0 ? null : parameterTypes);
 
+        assertTrue(methodKey1.equals(methodKey1));
         assertEquals(methodKey1, methodKey2);
         assertEquals(methodKey1.hashCode(), methodKey2.hashCode());
         assertEquals(methodKey1.toString(), methodKey2.toString());

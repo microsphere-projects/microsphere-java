@@ -89,7 +89,9 @@ public abstract class JarUtils implements Utils {
         try {
             jarFile = new JarFile(jarAbsolutePath);
         } catch (IOException e) {
-            logger.trace("The JarFile can't be open from the url : {}", jarURL, e);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The JarFile can't be open from the url : {}", jarURL, e);
+            }
         }
         return jarFile;
     }

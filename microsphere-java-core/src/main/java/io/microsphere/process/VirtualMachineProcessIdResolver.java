@@ -90,7 +90,9 @@ public class VirtualMachineProcessIdResolver implements ProcessIdResolver {
         RuntimeMXBean runtimeMXBean = getRuntimeMXBean();
         Object jvm = getFieldValue(runtimeMXBean, JVM_FIELD);
         Integer processId = invokeMethod(jvm, GET_PROCESS_ID_METHOD_NAME);
-        logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The PID was resolved from the native method 'sun.management.VMManagementImpl#getProcessId()' : {}", processId);
+        }
         return valueOf(processId.longValue());
     }
 

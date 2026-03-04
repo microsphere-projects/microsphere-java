@@ -17,22 +17,8 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.annotation.Nullable;
-import io.microsphere.logging.Logger;
 
-import java.lang.reflect.Method;
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.reflect.MethodUtils.findMethod;
-import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
-import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
-import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static java.lang.Thread.currentThread;
 
 /**
@@ -46,120 +32,78 @@ public abstract class StackTraceUtils implements Utils {
 
     private static final Class<?> TYPE = StackTraceUtils.class;
 
-    private static final Logger logger = getLogger(TYPE);
-
-    private static final boolean IS_JDK_9_OR_LATER = CURRENT_JAVA_VERSION.ge(JAVA_VERSION_9);
-
     /**
-     * The class name of {@linkplain java.lang.StackWalker} that was introduced in JDK 9.
+     * {@link StackTraceElement} invocation frame offset
      */
-    public static final String STACK_WALKER_CLASS_NAME = "java.lang.StackWalker";
-
-    /**
-     * The class name of {@linkplain java.lang.StackWalker.Option} that was introduced in JDK 9.
-     */
-    public static final String STACK_WALKER_OPTION_CLASS_NAME = "java.lang.StackWalker$Option";
-
-    /**
-     * The class name of {@linkplain java.lang.StackWalker.StackFrame} that was introduced in JDK 9.
-     */
-    public static final String STACK_WALKER_STACK_FRAME_CLASS_NAME = "java.lang.StackWalker$StackFrame";
-
-    /**
-     * The {@link Class} of {@linkplain java.lang.StackWalker} that was introduced in JDK 9.
-     * (optional)
-     */
-    public static final @Nullable Class<?> STACK_WALKER_CLASS = resolveClass(STACK_WALKER_CLASS_NAME);
-
-    /**
-     * The {@link Class} of {@linkplain java.lang.StackWalker.Option} that was introduced in JDK 9.
-     * (optional)
-     */
-    public static final @Nullable Class<?> STACK_WALKER_OPTION_CLASS = resolveClass(STACK_WALKER_OPTION_CLASS_NAME);
-
-    /**
-     * The {@link Class} of {@linkplain java.lang.StackWalker.StackFrame} that was introduced in JDK 9.
-     * (optional)
-     */
-    public static final @Nullable Class<?> STACK_WALKER_STACK_FRAME_CLASS = resolveClass(STACK_WALKER_STACK_FRAME_CLASS_NAME);
-
-    /**
-     * The name of {@linkplain java.lang.StackWalker.Option#RETAIN_CLASS_REFERENCE}
-     */
-    static final String RETAIN_CLASS_REFERENCE_OPTION_NAME = "RETAIN_CLASS_REFERENCE";
-
-    /**
-     * The name of {@linkplain java.lang.StackWalker.Option#SHOW_REFLECT_FRAMES}
-     */
-    static final String SHOW_REFLECT_FRAMES_OPTION_NAME = "SHOW_REFLECT_FRAMES";
-
-    /**
-     * The name of {@linkplain java.lang.StackWalker.Option#SHOW_HIDDEN_FRAMES}
-     */
-    static final String SHOW_HIDDEN_FRAMES_OPTION_NAME = "SHOW_HIDDEN_FRAMES";
-
-    /**
-     * The {@link Method method} name of {@linkplain java.lang.StackWalker#getInstance()}
-     */
-    static final String GET_INSTANCE_METHOD_NAME = "getInstance";
-
-    /**
-     * The {@link Method method} name of {{@linkplain java.lang.StackWalker#walk(java.util.function.Function)}
-     */
-    static final String WALK_METHOD_NAME = "walk";
-
-    /**
-     * The {@link Method method} name of {@linkplain java.lang.StackWalker.StackFrame#getClassName()}
-     */
-    static final String GET_CLASS_NAME_METHOD_NAME = "getClassName";
-
-    static final Method WALK_METHOD = findMethod(STACK_WALKER_CLASS, WALK_METHOD_NAME, Function.class);
-
-    static final Method GET_CLASS_NAME_METHOD = findMethod(STACK_WALKER_STACK_FRAME_CLASS, GET_CLASS_NAME_METHOD_NAME);
-
-    private static @Nullable Object stackWalkerInstance;
-
-    private static final Function<Stream<?>, Object> getClassNamesFunction = StackTraceUtils::getCallerClassNames;
-
-    /**
-     * {@link StackTraceElement} invocation frame.
-     */
-    private static final int stackTraceElementInvocationFrame;
-
-    /**
-     * {@linkplain java.lang.StackWalker} invocation frame.
-     */
-    private static final int stackWalkerInvocationFrame;
-
-    // Initialize java.lang.StackWalker
-    static {
-        int invocationFrame = 0;
-        if (IS_JDK_9_OR_LATER) {
-            stackWalkerInstance = invokeStaticMethod(STACK_WALKER_CLASS, GET_INSTANCE_METHOD_NAME);
-            List<String> stackFrameClassNames = getCallerClassNames();
-            for (String stackFrameClassName : stackFrameClassNames) {
-                if (TYPE.getName().equals(stackFrameClassName)) {
-                    break;
-                }
-                invocationFrame++;
-            }
-        }
-        stackWalkerInvocationFrame = invocationFrame + 2;
-    }
+    private static final int invocationFrameOffset;
 
     // Initialize java.lang.StackTraceElement
     static {
-        int invocationFrame = 0;
+        int offset = 0;
         // Use java.lang.StackTraceElement to calculate frame
         StackTraceElement[] stackTraceElements = getStackTrace();
-        for (StackTraceElement stackTraceElement : stackTraceElements) {
+        for (; ; offset++) {
+            StackTraceElement stackTraceElement = stackTraceElements[offset];
             String className = stackTraceElement.getClassName();
             if (TYPE.getName().equals(className)) {
                 break;
             }
-            invocationFrame++;
         }
-        stackTraceElementInvocationFrame = invocationFrame;
+        invocationFrameOffset = offset;
+    }
+
+    /**
+     * Get caller class from {@link Thread#getStackTrace() stack traces}
+     *
+     * @return Caller Class
+     * @see #getCallerClassInStatckTrace(int)
+     */
+    public static Class<?> getCallerClassInStatckTrace() {
+        // Plus 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassInStatckTrace(int) method was considered as increment invocation frame
+        return getCallerClassInStatckTrace(invocationFrameOffset + 3);
+    }
+
+    /**
+     * General implementation, get the calling class name
+     *
+     * @return call class name
+     * @see #getCallerClassNameInStackTrace(int)
+     */
+    public static String getCallerClassNameInStackTrace() {
+        // Plus 1 , because Invocation getStackTrace() method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace() method was considered as increment invocation frame
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        return getCallerClassNameInStackTrace(invocationFrameOffset + 3);
+    }
+
+    /**
+     * Get caller class in General JVM
+     *
+     * @param invocationFrame invocation frame
+     * @return caller class
+     * @see #getCallerClassNameInStackTrace(int)
+     */
+    public static Class<?> getCallerClassInStatckTrace(int invocationFrame) {
+        // Plus 1 , because Invocation getCallerClassNameInStackTrace(int) method was considered as increment invocation frame
+        String className = getCallerClassNameInStackTrace(invocationFrame + 1);
+        return className == null ? null : resolveClass(className);
+    }
+
+    /**
+     * General implementation, get the calling class name by specifying the calling level value
+     *
+     * @param invocationFrame invocation frame
+     * @return specified invocation frame class
+     */
+    public static String getCallerClassNameInStackTrace(int invocationFrame) throws IndexOutOfBoundsException {
+        StackTraceElement[] elements = getStackTrace();
+        if (invocationFrame < elements.length) {
+            StackTraceElement targetStackTraceElement = elements[invocationFrame];
+            return targetStackTraceElement.getClassName();
+        }
+        return null;
     }
 
     /**
@@ -186,83 +130,6 @@ public abstract class StackTraceUtils implements Utils {
     @Nonnull
     public static StackTraceElement[] getStackTrace() {
         return currentThread().getStackTrace();
-    }
-
-    /**
-     * Retrieves the fully qualified name of the class that called this method.
-     *
-     * <p>This method utilizes either {@link java.lang.StackWalker} (available in JDK 9+) or falls back to
-     * using {@link StackTraceElement} to determine the caller's class name. It ensures compatibility across different JVM versions.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * String callerClassName = StackTraceUtils.getCallerClassName();
-     * System.out.println("Caller class: " + callerClassName);
-     * }</pre>
-     *
-     * @return the fully qualified name of the calling class
-     * @throws IndexOutOfBoundsException if the stack trace does not have enough frames to determine the caller
-     */
-    public static String getCallerClassName() {
-        return getCallerClassName(stackWalkerInstance, 1);
-    }
-
-    static String getCallerClassName(Object stackWalkerInstance, int frameOffSet) {
-        if (stackWalkerInstance == null) {
-            // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
-            // Plugs 1 , because Invocation getCallerClassName() method was considered as increment invocation frame
-            // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM(int) method was considered as increment invocation frame
-            return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame + 3 + frameOffSet);
-        }
-        List<String> callerClassNames = getCallerClassNames(stackWalkerInstance);
-        String className = callerClassNames.get(stackWalkerInvocationFrame + frameOffSet);
-        return className;
-    }
-
-    static List<String> getCallerClassNames(Object stackWalkerInstance) {
-        return invokeMethod(stackWalkerInstance, WALK_METHOD, getClassNamesFunction);
-    }
-
-    static List<String> getCallerClassNames() {
-        return invokeMethod(stackWalkerInstance, WALK_METHOD, getClassNamesFunction);
-    }
-
-    private static List<String> getCallerClassNames(Stream<?> stackFrames) {
-        return stackFrames.limit(5)
-                .map(StackTraceUtils::getClassName)
-                .collect(Collectors.toList());
-    }
-
-    private static String getClassName(Object stackFrame) {
-        return invokeMethod(stackFrame, GET_CLASS_NAME_METHOD);
-    }
-
-    /**
-     * General implementation, get the calling class name
-     *
-     * @return call class name
-     * @see #getCallerClassNameInGeneralJVM(int)
-     */
-    static String getCallerClassNameInGeneralJVM() {
-        // Plugs 1 , because Invocation getStackTrace() method was considered as increment invocation frame
-        // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM() method was considered as increment invocation frame
-        // Plugs 1 , because Invocation getCallerClassNameInGeneralJVM(int) method was considered as increment invocation frame
-        return getCallerClassNameInGeneralJVM(stackTraceElementInvocationFrame + 3);
-    }
-
-    /**
-     * General implementation, get the calling class name by specifying the calling level value
-     *
-     * @param invocationFrame invocation frame
-     * @return specified invocation frame class
-     */
-    static String getCallerClassNameInGeneralJVM(int invocationFrame) throws IndexOutOfBoundsException {
-        StackTraceElement[] elements = getStackTrace();
-        if (invocationFrame < elements.length) {
-            StackTraceElement targetStackTraceElement = elements[invocationFrame];
-            return targetStackTraceElement.getClassName();
-        }
-        return null;
     }
 
     private StackTraceUtils() {

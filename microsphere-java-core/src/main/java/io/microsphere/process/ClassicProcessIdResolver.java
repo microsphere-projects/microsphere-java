@@ -82,7 +82,9 @@ public class ClassicProcessIdResolver implements ProcessIdResolver {
     @Override
     public Long current() {
         Long processId = valueOf(processIdValue);
-        logger.trace("The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", runtimeName, processId);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The PID was resolved from the method 'java.lang.management.RuntimeMXBean#getName()' = {} : {}", runtimeName, processId);
+        }
         return processId;
     }
 

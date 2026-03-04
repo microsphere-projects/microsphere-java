@@ -30,6 +30,7 @@ import static io.microsphere.AbstractTestCase.TEST_NULL_ENUMERATION;
 import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
 import static io.microsphere.AbstractTestCase.TEST_NULL_ITERATOR;
 import static io.microsphere.AbstractTestCase.TEST_NULL_LIST;
+import static io.microsphere.collection.ListUtils.addIfAbsent;
 import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.ListUtils.forEach;
 import static io.microsphere.collection.ListUtils.isList;
@@ -61,7 +62,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ListUtils
  * @since 1.0.0
  */
-class ListUtilsTest extends Loggable {
+class ListUtilsTest implements Loggable {
 
     private static final List<String> TEST_LIST = asList("A", "B", "C");
 
@@ -203,5 +204,13 @@ class ListUtilsTest extends Loggable {
             assertTrue(iterator2.hasNext());
             assertEquals(iterator2.next(), value);
         });
+    }
+
+    @Test
+    void testAddIfAbsent() {
+        List<String> values = newArrayList();
+        assertTrue(addIfAbsent(values, "A"));
+        assertFalse(addIfAbsent(values, "A"));
+        assertTrue(addIfAbsent(values, "B"));
     }
 }

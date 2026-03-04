@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.ListUtils.addIfAbsent;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;
@@ -34,6 +35,7 @@ import static io.microsphere.reflect.TypeUtils.isObjectType;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.contains;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -169,7 +171,7 @@ public class TypeFinder<T> {
         }
 
         T[] interfaceTypes = includedGenericInterfaces ? getInterfaces(type) : (T[]) EMPTY_TYPE_ARRAY;
-        int interfaceTypesLength = interfaceTypes.length;
+        int interfaceTypesLength = length(interfaceTypes);
 
         int size = interfaceTypesLength + (hasSuperclass ? 1 : 0);
 
@@ -180,16 +182,12 @@ public class TypeFinder<T> {
         List<T> types = newArrayList(size);
 
         if (hasSuperclass) {
-            if (!types.contains(superclass)) {
-                types.add(superclass);
-            }
+            types.add(superclass);
         }
 
         for (int i = 0; i < interfaceTypesLength; i++) {
             T interfaceType = interfaceTypes[i];
-            if (!types.contains(interfaceType)) {
-                types.add(interfaceType);
-            }
+            addIfAbsent(types, interfaceType);
         }
         return types;
     }
@@ -225,9 +223,8 @@ public class TypeFinder<T> {
 
         for (int i = 0; i < superTypesSize; i++) {
             T superType = superTypes.get(i);
-            if (!allTypes.contains(superType)) {
-                allTypes.add(superType);
-            }
+            addIfAbsent(allTypes, superType);
+
             if (includeHierarchicalTypes) {
                 addSuperTypes(allTypes, superType, true, includeSuperclass, includeInterfaces);
             }
@@ -273,5 +270,4 @@ public class TypeFinder<T> {
         return new TypeFinder(type, genericTypeGetSuperClassFunction, genericTypeGetInterfacesFunction, includeSelf,
                 includeHierarchicalTypes, includeSuperclass, includeInterfaces);
     }
-
 }

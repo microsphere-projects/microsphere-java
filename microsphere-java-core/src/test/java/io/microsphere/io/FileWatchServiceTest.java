@@ -17,7 +17,7 @@ import static io.microsphere.io.event.FileChangedEvent.Kind.values;
  * @see FileWatchService
  * @since 1.0.0
  */
-class FileWatchServiceTest extends Loggable {
+class FileWatchServiceTest implements Loggable {
 
     private FileWatchService service = (file, listener, kinds) -> {
         log("Watching : {} , listener : {} , kinds : {}", file, listener, kinds);

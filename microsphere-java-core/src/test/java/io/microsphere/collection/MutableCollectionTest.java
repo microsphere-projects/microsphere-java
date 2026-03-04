@@ -20,10 +20,10 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -54,6 +54,10 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     protected abstract C newInstance();
 
+    protected C newComparedInstance(C source) {
+        return (C) newArrayList(source);
+    }
+
     protected void init(C instance) {
         instance.add("A");
         instance.add("B");
@@ -62,25 +66,25 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     @Test
     void testSize() {
-        assertEquals(3, instance.size());
+        assertEquals(3, this.instance.size());
     }
 
     @Test
     void testIsEmpty() {
-        assertFalse(instance.isEmpty());
+        assertFalse(this.instance.isEmpty());
     }
 
     @Test
     void testContains() {
-        assertTrue(instance.contains("A"));
-        assertTrue(instance.contains("B"));
-        assertTrue(instance.contains("C"));
-        assertFalse(instance.contains("D"));
+        assertTrue(this.instance.contains("A"));
+        assertTrue(this.instance.contains("B"));
+        assertTrue(this.instance.contains("C"));
+        assertFalse(this.instance.contains("D"));
     }
 
     @Test
     void testIterator() {
-        Iterator<Object> iterator = instance.iterator();
+        Iterator<Object> iterator = this.instance.iterator();
         assertTrue(iterator.hasNext());
         assertEquals("A", iterator.next());
         assertTrue(iterator.hasNext());
@@ -92,115 +96,118 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     @Test
     void testToArray() {
-        Object[] array = instance.toArray();
+        Object[] array = this.instance.toArray();
         assertEquals(3, array.length);
         assertArray("A", "B", "C");
     }
 
     @Test
     void testToArrayWithArray() {
-        Object[] array = instance.toArray(EMPTY_OBJECT_ARRAY);
+        Object[] array = this.instance.toArray(EMPTY_OBJECT_ARRAY);
         assertEquals(3, array.length);
         assertArray("A", "B", "C");
     }
 
     void assertArray(Object... array) {
-        assertArrayEquals(array, instance.toArray());
+        assertArrayEquals(array, this.instance.toArray());
     }
 
     @Test
     void testAdd() {
         testSize();
-        assertTrue(instance.add("D"));
-        assertEquals(4, instance.size());
+        assertTrue(this.instance.add("D"));
+        assertEquals(4, this.instance.size());
     }
 
     @Test
     void testRemove() {
-        assertTrue(instance.remove("A"));
-        assertFalse(instance.remove("A"));
-        assertTrue(instance.remove("B"));
-        assertTrue(instance.remove("C"));
-        assertFalse(instance.remove("D"));
-        instance.add(null);
-        assertTrue(instance.remove(null));
-        assertFalse(instance.remove(null));
+        assertTrue(this.instance.remove("A"));
+        assertFalse(this.instance.remove("A"));
+        assertTrue(this.instance.remove("B"));
+        assertTrue(this.instance.remove("C"));
+        assertFalse(this.instance.remove("D"));
+        if (supportsNullElement()) {
+            this.instance.add(null);
+            assertTrue(this.instance.remove(null));
+            assertFalse(this.instance.remove(null));
+        }
     }
 
     @Test
     void testContainsAll() {
-        assertTrue(instance.containsAll(asList("A")));
-        assertTrue(instance.containsAll(asList("A", "B")));
-        assertTrue(instance.containsAll(asList("A", "B", "C")));
-        assertFalse(instance.containsAll(asList("A", "B", "C", "D")));
-        assertTrue(instance.containsAll(emptyList()));
+        assertTrue(this.instance.containsAll(asList("A")));
+        assertTrue(this.instance.containsAll(asList("A", "B")));
+        assertTrue(this.instance.containsAll(asList("A", "B", "C")));
+        assertFalse(this.instance.containsAll(asList("A", "B", "C", "D")));
+        assertTrue(this.instance.containsAll(emptyList()));
     }
 
     @Test
     void testAddAll() {
         testSize();
-        assertTrue(instance.addAll(asList("A")));
-        assertEquals(4, instance.size());
-        assertTrue(instance.addAll(asList("B", "C")));
-        assertEquals(6, instance.size());
+        assertTrue(this.instance.addAll(asList("A")));
+        assertEquals(4, this.instance.size());
+        assertTrue(this.instance.addAll(asList("B", "C")));
+        assertEquals(6, this.instance.size());
     }
 
     @Test
     void testRemoveAll() {
         testSize();
-        assertTrue(instance.removeAll(asList("A")));
-        assertEquals(2, instance.size());
-        assertTrue(instance.removeAll(asList("B", "C")));
-        assertTrue(instance.isEmpty());
+        assertTrue(this.instance.removeAll(asList("A")));
+        assertEquals(2, this.instance.size());
+        assertTrue(this.instance.removeAll(asList("B", "C")));
+        assertTrue(this.instance.isEmpty());
     }
 
     @Test
     void testRemoveIf() {
         testSize();
-        assertTrue(instance.removeIf(element -> element.equals("A")));
-        assertEquals(2, instance.size());
-        assertTrue(instance.removeIf(element -> element.equals("B")));
-        assertEquals(1, instance.size());
-        assertTrue(instance.removeIf(element -> element.equals("C")));
-        assertTrue(instance.isEmpty());
+        assertTrue(this.instance.removeIf(element -> element.equals("A")));
+        assertEquals(2, this.instance.size());
+        assertTrue(this.instance.removeIf(element -> element.equals("B")));
+        assertEquals(1, this.instance.size());
+        assertTrue(this.instance.removeIf(element -> element.equals("C")));
+        assertTrue(this.instance.isEmpty());
     }
 
     @Test
     void testRetainAll() {
         testSize();
-        assertTrue(instance.retainAll(asList("A", "B")));
-        assertEquals(2, instance.size());
-        assertTrue(instance.retainAll(asList("A")));
-        assertEquals(1, instance.size());
+        assertTrue(this.instance.retainAll(asList("A", "B")));
+        assertEquals(2, this.instance.size());
+        assertTrue(this.instance.retainAll(asList("A")));
+        assertEquals(1, this.instance.size());
     }
 
     @Test
     void testClear() {
         testSize();
-        instance.clear();
-        assertTrue(instance.isEmpty());
+        this.instance.clear();
+        assertTrue(this.instance.isEmpty());
     }
 
     @Test
     void testEquals() {
-        assertFalse(instance.equals(new Object()));
-        assertFalse(instance.equals(ofList("A", "B")));
-        assertFalse(instance.equals(ofList("A", "B", "D")));
-        assertTrue(instance.equals(new ArrayList<>(instance)));
+        assertFalse(this.instance.equals(new Object()));
+        assertFalse(this.instance.equals(ofList("A", "B")));
+        assertFalse(this.instance.equals(ofList("A", "B", "D")));
+        assertTrue(this.instance.equals(newComparedInstance(instance)));
     }
 
     @Test
     void testHashCode() {
-        assertEquals(instance.hashCode(), new ArrayList<>(instance).hashCode());
-
-        instance.add(null);
-        assertEquals(instance.hashCode(), new ArrayList<>(instance).hashCode());
+        assertEquals(this.instance.hashCode(), newComparedInstance(instance).hashCode());
+        if (supportsNullElement()) {
+            this.instance.add(null);
+        }
+        assertEquals(this.instance.hashCode(), newComparedInstance(instance).hashCode());
     }
 
     @Test
     void testForEach() {
-        Iterator<Object> iterator = instance.iterator();
-        instance.forEach(e -> {
+        Iterator<Object> iterator = this.instance.iterator();
+        this.instance.forEach(e -> {
             assertTrue(iterator.hasNext());
             assertEquals(iterator.next(), e);
         });
@@ -208,7 +215,7 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
 
     @Test
     void testToString() {
-        assertEquals(instance.toString(), new ArrayList<>(instance).toString());
+        assertEquals(this.instance.toString(), newComparedInstance(instance).toString());
     }
 
     @Test
@@ -224,5 +231,9 @@ public abstract class MutableCollectionTest<C extends Collection<Object>> {
     @Test
     void testParallelStream() {
         assertArrayEquals(ofArray("A", "B", "C"), this.instance.parallelStream().toArray());
+    }
+
+    protected boolean supportsNullElement() {
+        return true;
     }
 }

@@ -135,7 +135,9 @@ public abstract class ExecutorUtils implements Utils {
         if (!executorService.isShutdown()) {
             executorService.shutdown();
         }
-        logger.trace("The ExecutorService({}) has been shutdown", executorService);
+        if (logger.isTraceEnabled()) {
+            logger.trace("The ExecutorService({}) has been shutdown", executorService);
+        }
         return true;
     }
 

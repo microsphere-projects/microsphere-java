@@ -226,8 +226,12 @@ public class StopWatch {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof Task)) {
+                return false;
+            }
             Task task = (Task) o;
             return Objects.equals(taskName, task.taskName);
         }

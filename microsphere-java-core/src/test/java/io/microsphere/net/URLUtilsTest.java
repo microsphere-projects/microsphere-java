@@ -3,6 +3,7 @@
  */
 package io.microsphere.net;
 
+import io.microsphere.LoggingTest;
 import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -101,7 +102,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see URLUtilsTest
  * @since 1.0.0
  */
-class URLUtilsTest {
+class URLUtilsTest extends LoggingTest {
 
     private static final String TEST_PATH = "/abc/def";
 

@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReadOnlyIterator
  * @since 1.0.0
  */
-public abstract class ReadOnlyIteratorTest extends Loggable {
+public abstract class ReadOnlyIteratorTest implements Loggable {
 
     Iterator instance = createIterator();
 

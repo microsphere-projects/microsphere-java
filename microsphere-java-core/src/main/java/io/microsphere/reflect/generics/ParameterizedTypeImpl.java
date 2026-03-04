@@ -24,6 +24,7 @@ import java.util.Objects;
 
 import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
+import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Objects.hash;
 
 /**
@@ -180,44 +181,42 @@ public class ParameterizedTypeImpl implements ParameterizedType {
      */
     @Override
     public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
         if (o instanceof ParameterizedType) {
             // Check that information is equivalent
             ParameterizedType that = (ParameterizedType) o;
 
-            if (this == that)
-                return true;
-
             Type thatOwner = that.getOwnerType();
             Type thatRawType = that.getRawType();
 
-            return
-                    Objects.equals(ownerType, thatOwner) &&
-                            Objects.equals(rawType, thatRawType) &&
-                            arrayEquals(actualTypeArguments, // avoid clone
-                                    that.getActualTypeArguments());
-        } else
-            return false;
+            return Objects.equals(this.ownerType, thatOwner)
+                    && Objects.equals(this.rawType, thatRawType)
+                    && arrayEquals(this.actualTypeArguments, that.getActualTypeArguments());
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return hash(actualTypeArguments) ^
-                Objects.hashCode(ownerType) ^
-                Objects.hashCode(rawType);
+        return hash(this.actualTypeArguments) ^
+                Objects.hashCode(this.ownerType) ^
+                Objects.hashCode(this.rawType);
     }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        if (ownerType != null) {
-            if (ownerType instanceof Class)
-                sb.append(((Class) ownerType).getName());
+        if (this.ownerType != null) {
+            if (this.ownerType instanceof Class)
+                sb.append(((Class) this.ownerType).getName());
             else
-                sb.append(ownerType);
+                sb.append(this.ownerType);
 
             sb.append(DOLLAR_CHAR);
 
-            if (ownerType instanceof ParameterizedTypeImpl) {
+            if (this.ownerType instanceof ParameterizedTypeImpl) {
                 // Find simple name of nested type by removing the
                 // shared prefix with owner.
                 sb.append(rawType.getName().replace(((ParameterizedTypeImpl) ownerType).rawType.getName() + DOLLAR_CHAR, ""));
@@ -226,7 +225,7 @@ public class ParameterizedTypeImpl implements ParameterizedType {
         } else
             sb.append(rawType.getName());
 
-        if (actualTypeArguments != null && actualTypeArguments.length > 0) {
+        if (isNotEmpty(actualTypeArguments)) {
             sb.append("<");
             boolean first = true;
             for (Type t : actualTypeArguments) {

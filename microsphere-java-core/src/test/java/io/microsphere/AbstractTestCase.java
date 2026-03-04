@@ -50,7 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @Disabled
-public abstract class AbstractTestCase extends Loggable {
+public abstract class AbstractTestCase implements Loggable {
 
     public static final String TEST_ELEMENT = "test";
 

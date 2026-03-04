@@ -16,10 +16,13 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static io.microsphere.classloading.ArchiveFileArtifactResourceResolver.createArtifact;
 import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -42,6 +45,21 @@ class ArchiveFileArtifactResourceResolverTest extends AbstractArtifactResourceRe
         testResolveOnNullArchiveFile(resolver);
         testResolveOnInvalidFormatArchiveFile(resolver);
         testResolveOnArchiveFile(resolver);
+    }
+
+    @Test
+    void testCreateArtifact() {
+        Artifact artifact = createArtifact("a-1.0.jar", null);
+        assertEquals("a", artifact.getArtifactId());
+        assertEquals("1.0", artifact.getVersion());
+        assertNull(artifact.getLocation());
+
+        artifact = createArtifact("a.jar", null);
+        assertEquals("a", artifact.getArtifactId());
+        assertNull(artifact.getVersion());
+        assertNull(artifact.getLocation());
+
+        assertNull(createArtifact("", null));
     }
 
     void testResolveOnNull(ArchiveFileArtifactResourceResolver resolver) {

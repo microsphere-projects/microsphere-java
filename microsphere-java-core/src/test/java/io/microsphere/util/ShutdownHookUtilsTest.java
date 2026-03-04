@@ -32,8 +32,11 @@ import static io.microsphere.util.ShutdownHookUtils.getShutdownHookThreads;
 import static io.microsphere.util.ShutdownHookUtils.registerShutdownHook;
 import static io.microsphere.util.ShutdownHookUtils.removeShutdownHookCallback;
 import static io.microsphere.util.ShutdownHookUtils.shutdownHookCallbacks;
+import static io.microsphere.util.ShutdownHookUtils.shutdownHookThreadsMap;
+import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -42,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class ShutdownHookUtilsTest extends Loggable {
+class ShutdownHookUtilsTest implements Loggable {
 
     @BeforeEach
     void setUp() {
@@ -87,6 +90,8 @@ class ShutdownHookUtilsTest extends Loggable {
             ShutdownHookCallback shutdownHookCallback = (ShutdownHookCallback) shutdownHookCallbacks.poll();
             assertEquals(i, shutdownHookCallback.getPriority());
         }
+
+        assertFalse(addShutdownHookCallback(null));
     }
 
     @Test
@@ -146,4 +151,8 @@ class ShutdownHookUtilsTest extends Loggable {
         thread.start();
     }
 
+    @Test
+    void testShutdownHookThreadsMapWithNullClass() {
+        assertSame(emptyMap(), shutdownHookThreadsMap(null));
+    }
 }

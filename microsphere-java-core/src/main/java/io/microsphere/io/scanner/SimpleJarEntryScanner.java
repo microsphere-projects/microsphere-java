@@ -5,7 +5,6 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-import io.microsphere.constants.PathConstants;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.jar.JarUtils;
 
@@ -17,6 +16,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.jar.JarUtils.filter;
 import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
@@ -142,10 +142,7 @@ public class SimpleJarEntryScanner {
                 if (jarEntry.isDirectory()) {
                     accept = jarEntryName.equals(relativePath);
                 } else {
-                    int beginIndex = jarEntryName.indexOf(relativePath);
-                    if (beginIndex == 0) {
-                        accept = jarEntryName.indexOf(PathConstants.SLASH, relativePath.length()) < 0;
-                    }
+                    accept = isFileEntry(jarEntryName, relativePath);
                 }
             }
             if (accept) {
@@ -153,5 +150,13 @@ public class SimpleJarEntryScanner {
             }
         }
         return unmodifiableSet(jarEntriesSet);
+    }
+
+    boolean isFileEntry(String jarEntryName, String relativePath) {
+        int beginIndex = jarEntryName.indexOf(relativePath);
+        if (beginIndex == 0) {
+            return jarEntryName.indexOf(SLASH, relativePath.length()) < 0;
+        }
+        return false;
     }
 }

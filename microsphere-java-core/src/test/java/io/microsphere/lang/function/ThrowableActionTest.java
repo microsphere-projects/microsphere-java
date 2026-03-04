@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @since 1.0.0
  */
-class ThrowableActionTest extends Loggable {
+class ThrowableActionTest implements Loggable {
 
     private final ThrowableAction action = () -> {
         log("ThrowableAction#execute()");

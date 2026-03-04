@@ -15,6 +15,7 @@ import static io.microsphere.lang.DeprecationTest.SINCE;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.Version.ofVersion;
+import static java.lang.Boolean.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ReflectiveDefinition
  * @since 1.0.0
  */
-public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> extends Loggable {
+public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefinition> implements Loggable {
 
     private final List<Object>[] headConstructorArgumentsArray = ofArray(
             ofList(SINCE, getClassName()),
@@ -118,12 +119,12 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     @Test
     void testIsPresent() {
         for (D definition : definitions) {
-            assertNotNull(definition.isPresent());
+            assertNotNull(valueOf(definition.isPresent()));
         }
     }
 
     @Test
-    void testTestEquals() {
+    void testEquals() {
         assertEquals(definitions.get(0), definitions.get(0));
         assertEquals(definitions.get(0), definitions.get(1));
         assertEquals(definitions.get(2), definitions.get(3));
@@ -134,7 +135,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    void testTestHashCode() {
+    void testHashCode() {
         assertEquals(definitions.get(0).hashCode(), definitions.get(1).hashCode());
         assertEquals(definitions.get(2).hashCode(), definitions.get(3).hashCode());
         assertNotEquals(definitions.get(0).hashCode(), definitions.get(2).hashCode());
@@ -142,7 +143,7 @@ public abstract class AbstractReflectiveDefinitionTest<D extends ReflectiveDefin
     }
 
     @Test
-    void testTestToString() {
+    void testToString() {
         assertEquals(definitions.get(0).toString(), definitions.get(1).toString());
         assertEquals(definitions.get(2).toString(), definitions.get(3).toString());
         assertNotEquals(definitions.get(0).toString(), definitions.get(2).toString());

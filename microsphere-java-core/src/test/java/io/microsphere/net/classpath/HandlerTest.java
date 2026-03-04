@@ -21,6 +21,7 @@ import io.microsphere.net.ExtendableProtocolURLStreamHandler;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 
@@ -55,11 +56,9 @@ public class HandlerTest extends AbstractExtendableProtocolURLStreamHandlerTest 
     }
 
     @Test
-    void testOpenConnectionOnResourceNotFound() {
-        assertThrows(IOException.class, () -> {
-            URL url = new URL(NOT_FOUND_URL);
-            url.openStream();
-        });
+    void testOpenConnectionOnResourceNotFound() throws MalformedURLException {
+        URL url = new URL(NOT_FOUND_URL);
+        assertThrows(IOException.class, url::openStream);
     }
 
     @Override

@@ -18,6 +18,7 @@
 package io.microsphere.beans;
 
 
+import io.microsphere.LoggingTest;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.test.MultipleValueData;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see BeanUtils
  * @since 1.0.0
  */
-class BeanUtilsTest {
+class BeanUtilsTest extends LoggingTest {
 
     @Test
     void testGetBeanMetadata() {
@@ -91,6 +92,9 @@ class BeanUtilsTest {
         BeanMetadata beanMetadata = getBeanMetadata(MultipleValueData.class);
         Method writeMethod = findWriteMethod(beanMetadata, "stringList");
         assertNotNull(writeMethod);
+
+        writeMethod = findWriteMethod(beanMetadata, "not-found");
+        assertNull(writeMethod);
     }
 
     @Test

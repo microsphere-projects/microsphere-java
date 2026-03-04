@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see DelegatingScheduledExecutorService
  * @since 1.0.0
  */
-class DelegatingScheduledExecutorServiceTest extends Loggable {
+class DelegatingScheduledExecutorServiceTest implements Loggable {
 
     private ScheduledExecutorService delegate = newSingleThreadScheduledExecutor();
 

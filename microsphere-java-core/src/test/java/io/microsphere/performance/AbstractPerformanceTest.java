@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Disabled;
  * @since 1.0.0
  */
 @Disabled
-public abstract class AbstractPerformanceTest extends Loggable {
+public abstract class AbstractPerformanceTest implements Loggable {
 
     protected <T> void execute(PerformanceAction<T> action) {
         long startTime = System.nanoTime();

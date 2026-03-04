@@ -16,9 +16,9 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Proxy;
 import java.util.AbstractList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
@@ -99,7 +99,7 @@ class ModifierTest {
 
     @Test
     void testIsProtected() throws NoSuchFieldException {
-        assertTrue(isProtected(Loggable.class.getDeclaredField("logger").getModifiers()));
+        assertTrue(isProtected(Proxy.class.getDeclaredField("h").getModifiers()));
         assertFalse(isProtected(String.class.getModifiers()));
     }
 

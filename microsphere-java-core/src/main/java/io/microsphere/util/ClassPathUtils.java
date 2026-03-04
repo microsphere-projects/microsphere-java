@@ -11,6 +11,7 @@ import io.microsphere.annotation.Nullable;
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SeparatorConstants.PATH_SEPARATOR;
@@ -66,16 +67,20 @@ public abstract class ClassPathUtils implements Utils {
     @Nonnull
     @Immutable
     private static Set<String> initBootstrapClassPaths() {
-        if (runtimeMXBean.isBootClassPathSupported()) {
-            return resolveClassPaths(runtimeMXBean.getBootClassPath());
-        }
-        return emptySet();
+        return resolveClassPaths(runtimeMXBean.isBootClassPathSupported(), runtimeMXBean::getBootClassPath);
     }
 
     @Nonnull
     @Immutable
     private static Set<String> initClassPaths() {
-        return resolveClassPaths(runtimeMXBean.getClassPath());
+        return resolveClassPaths(true, runtimeMXBean::getClassPath);
+    }
+
+    static Set<String> resolveClassPaths(boolean classPathSupported, Supplier<String> classPathSupplier) {
+        if (classPathSupported) {
+            return resolveClassPaths(classPathSupplier.get());
+        }
+        return emptySet();
     }
 
     @Nonnull

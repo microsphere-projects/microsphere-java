@@ -89,7 +89,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-class ArrayUtilsTest extends Loggable {
+class ArrayUtilsTest implements Loggable {
 
     @Test
     void testConstants() {

@@ -1119,7 +1119,9 @@ public abstract class ClassUtils implements Utils {
             classNames = findClassNamesInJarFile(classPath, recursive);
         }
 
-        logger.trace("To find the class names in the class path['{}' , recursive : {}] : {}", classPath, recursive, classNames);
+        if (logger.isTraceEnabled()) {
+            logger.trace("To find the class names in the class path['{}' , recursive : {}] : {}", classPath, recursive, classNames);
+        }
 
         return classNames;
     }
@@ -1218,8 +1220,10 @@ public abstract class ClassUtils implements Utils {
             }
         } catch (Exception e) {
             classNames = emptySet();
-            logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} ," +
-                    " recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", jarFile, recursive, e);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The class names can't be resolved by SimpleJarEntryScanner#scan(jarFile = {} ," +
+                        " recursive = {} , jarEntryFilter = ClassFileJarEntryFilter)", jarFile, recursive, e);
+            }
         }
         return classNames;
     }

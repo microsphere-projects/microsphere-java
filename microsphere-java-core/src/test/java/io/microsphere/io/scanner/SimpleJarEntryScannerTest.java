@@ -18,6 +18,7 @@ import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -52,5 +53,11 @@ class SimpleJarEntryScannerTest extends AbstractTestCase {
 
         jarEntrySet = simpleJarEntryScanner.scan(jarFile, true, jarEntry -> jarEntry.getName().equals("javax/annotation/Nonnull.class"));
         assertEquals(1, jarEntrySet.size());
+    }
+
+    @Test
+    void testIsFileEntry() {
+        assertTrue(simpleJarEntryScanner.isFileEntry("java/lang/String.class", "java/lang/"));
+        assertFalse(simpleJarEntryScanner.isFileEntry("java/lang/String.class", "java/lang"));
     }
 }

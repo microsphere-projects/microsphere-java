@@ -109,12 +109,9 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
                     URL url = classLoader.getResource(resourceName);
                     if (url != null) {
                         URLConnection connection = url.openConnection();
-                        if (connection != null) {
-                            // Disable caches to get fresh data for
-                            // reloading.
-                            connection.setUseCaches(false);
-                            is = connection.getInputStream();
-                        }
+                        // Disable caches to get fresh data for reloading.
+                        connection.setUseCaches(false);
+                        is = connection.getInputStream();
                     }
                 } else {
                     is = classLoader.getResourceAsStream(resourceName);
@@ -129,14 +126,12 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
             throw (IOException) e.getException();
         }
 
-        if (stream != null) {
-            try {
-                reader = new InputStreamReader(stream, this.getEncoding());
-                bundle = new PropertyResourceBundle(reader);
-            } finally {
-                close(stream);
-                close(reader);
-            }
+        try {
+            reader = new InputStreamReader(stream, this.getEncoding());
+            bundle = new PropertyResourceBundle(reader);
+        } finally {
+            close(stream);
+            close(reader);
         }
 
         return bundle;

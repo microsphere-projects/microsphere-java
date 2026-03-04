@@ -196,7 +196,10 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
     }
 
     static void assertPackage(Class<?> type) {
-        String className = type.getName();
+        assertPackage(type.getName());
+    }
+
+    static void assertPackage(String className) {
         if (className.indexOf(DOT_CHAR) < 0) {
             throw new IllegalArgumentException("The Handler class must not be present at the top package!");
         }

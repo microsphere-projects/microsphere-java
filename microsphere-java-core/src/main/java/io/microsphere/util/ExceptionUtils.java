@@ -301,7 +301,7 @@ public abstract class ExceptionUtils implements Utils {
         throw wrap(source, thrownType);
     }
 
-    private static <T extends Throwable> Object[] resolveArguments(T source) {
+    static <T extends Throwable> Object[] resolveArguments(T source) {
         String message = source.getMessage();
         Throwable cause = source.getCause() == null ? source : source.getCause();
         return message == null ? new Object[]{cause} : new Object[]{message, cause};
