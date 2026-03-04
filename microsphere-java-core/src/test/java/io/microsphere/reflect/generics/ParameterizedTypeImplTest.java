@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Dictionary;
 import java.util.Map;
 
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
@@ -92,6 +93,7 @@ class ParameterizedTypeImplTest {
     @Test
     void testEqualsOnDifferentType() {
         assertNotEquals(topLevelType, of(Map.class, actualTypeArguments, String.class));
+        assertNotEquals(of(Dictionary.class, actualTypeArguments, String.class), of(Map.class, actualTypeArguments, String.class));
         assertNotEquals(topLevelType, nestedType);
         assertNotEquals(topLevelType, complexType);
         assertNotEquals(topLevelType, Object.class);
@@ -137,5 +139,10 @@ class ParameterizedTypeImplTest {
         assertNotEquals(topLevelType.toString(), of(Map.class, actualTypeArguments, String.class).toString());
         assertNotEquals(topLevelType.toString(), nestedType.toString());
         assertNotEquals(topLevelType.toString(), complexType.toString());
+    }
+
+    @Test
+    void testToString() {
+        assertEquals("java.lang.String", of(String.class).toString());
     }
 }
