@@ -16,7 +16,7 @@
  */
 package io.microsphere.classloading;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -25,6 +25,7 @@ import java.net.URL;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.net.URLUtils.ofURL;
+import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,9 +38,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @Disabled
-abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> extends AbstractTestCase {
+abstract class BaseURLClassPathHandleTest<H extends URLClassPathHandle> extends LoggingTest {
 
     protected H handle;
+
+    protected final ClassLoader classLoader = getClassLoader(this.getClass());
 
     @BeforeEach
     void setUp() {
