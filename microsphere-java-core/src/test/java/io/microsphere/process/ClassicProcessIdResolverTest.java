@@ -1,5 +1,6 @@
 package io.microsphere.process;
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassicProcessIdResolver
  * @since 1.0.0
  */
-class ClassicProcessIdResolverTest {
+class ClassicProcessIdResolverTest extends LoggingTest {
 
     private ClassicProcessIdResolver resolver;
 

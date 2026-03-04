@@ -18,6 +18,7 @@ package io.microsphere.event;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.lang.Prioritized;
+import io.microsphere.logging.Logger;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -32,6 +33,10 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static io.microsphere.event.EventListener.findEventType;
+import static io.microsphere.lang.function.ThrowableAction.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
@@ -87,6 +92,8 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     private final Object mutex = new Object();
 
+    protected final Logger logger = getLogger(this.getClass());
+
     private final ConcurrentMap<Class<? extends Event>, List<EventListener>> listenersCache = new ConcurrentHashMap<>();
 
     private final Executor executor;
@@ -95,12 +102,10 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
      * Constructor with an instance of {@link Executor}
      *
      * @param executor {@link Executor}
-     * @throws NullPointerException <code>executor</code> is <code>null</code>
+     * @throws IllegalArgumentException <code>executor</code> is <code>null</code>
      */
     protected AbstractEventDispatcher(Executor executor) {
-        if (executor == null) {
-            throw new NullPointerException("executor must not be null");
-        }
+        assertNotNull(executor, () -> "executor must not be null");
         this.executor = executor;
         this.loadEventListenerInstances();
     }
@@ -181,7 +186,10 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     }
 
     protected void doInListener(EventListener<?> listener, Consumer<Collection<EventListener>> consumer) {
-        Class<? extends Event> eventType = findEventType(listener);
+        doInListener(findEventType(listener), consumer);
+    }
+
+    void doInListener(Class<? extends Event> eventType, Consumer<Collection<EventListener>> consumer) {
         if (eventType != null) {
             synchronized (mutex) {
                 List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
@@ -202,13 +210,9 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
      * @see ServiceLoader#load(Class)
      */
     protected void loadEventListenerInstances() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        try {
-            loadServicesList(EventListener.class, classLoader)
-                    .stream()
-                    .sorted()
-                    .forEach(this::addEventListener);
-        } catch (Throwable ignored) {
-        }
+        execute(() -> loadServicesList(EventListener.class, getDefaultClassLoader())
+                .stream()
+                .sorted()
+                .forEach(this::addEventListener), e -> logger.trace(e.getMessage(), e));
     }
 }

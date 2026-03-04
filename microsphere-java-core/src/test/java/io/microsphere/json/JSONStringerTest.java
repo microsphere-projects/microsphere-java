@@ -28,6 +28,7 @@ import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.json.JSONStringer.Scope.NULL;
 import static java.lang.Boolean.TRUE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -207,12 +208,13 @@ class JSONStringerTest {
     }
 
     @Test
-    void testBeforeValue() throws JSONException {
-    }
-
-    @Test
     void testBeforeValueOnJSONException() throws JSONException {
         jsonStringer.open(EMPTY_OBJECT, "[");
         assertThrows(JSONException.class, jsonStringer::beforeValue);
+    }
+
+    @Test
+    void testToString() {
+        assertNull(jsonStringer.toString());
     }
 }

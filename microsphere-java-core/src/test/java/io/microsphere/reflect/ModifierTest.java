@@ -16,14 +16,15 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Proxy;
 import java.util.AbstractList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.Modifier.MANDATED;
 import static io.microsphere.reflect.Modifier.isAbstract;
 import static io.microsphere.reflect.Modifier.isAnnotation;
 import static io.microsphere.reflect.Modifier.isBridge;
@@ -98,7 +99,7 @@ class ModifierTest {
 
     @Test
     void testIsProtected() throws NoSuchFieldException {
-        assertTrue(isProtected(AbstractTestCase.class.getDeclaredField("logger").getModifiers()));
+        assertTrue(isProtected(Proxy.class.getDeclaredField("h").getModifiers()));
         assertFalse(isProtected(String.class.getModifiers()));
     }
 
@@ -191,7 +192,7 @@ class ModifierTest {
 
     @Test
     void testIsMandated() {
-        assertTrue(isMandated(Modifier.MANDATED.getValue()));
+        assertTrue(isMandated(MANDATED.getValue()));
         assertFalse(isMandated(Object.class.getModifiers()));
     }
 

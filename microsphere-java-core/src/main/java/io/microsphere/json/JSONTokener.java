@@ -19,6 +19,10 @@ package io.microsphere.json;
 import static io.microsphere.json.JSONObject.NULL;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static java.lang.Double.valueOf;
+import static java.lang.Integer.MAX_VALUE;
+import static java.lang.Integer.MIN_VALUE;
+import static java.lang.Long.parseLong;
 
 /**
  * Parses a JSON (<a href="https://www.ietf.org/rfc/rfc4627.txt">RFC 4627</a>) encoded
@@ -117,8 +121,8 @@ public class JSONTokener {
     }
 
     int nextCleanInternal() throws JSONException {
-        while (this.pos < this.in.length()) {
-            int c = this.in.charAt(this.pos++);
+        while (hasNext()) {
+            int c = nextChar();
             switch (c) {
                 case '\t':
                 case ' ':
@@ -131,7 +135,7 @@ public class JSONTokener {
                         return c;
                     }
 
-                    char peek = this.in.charAt(this.pos);
+                    char peek = currentChar();
                     switch (peek) {
                         case '*':
                             // skip a /* c-style comment */
@@ -175,8 +179,8 @@ public class JSONTokener {
      * terminated by "\r\n", the '\n' must be consumed as whitespace by the caller.
      */
     void skipToEndOfLine() {
-        for (; this.pos < this.in.length(); this.pos++) {
-            char c = this.in.charAt(this.pos);
+        for (; hasNext(); this.pos++) {
+            char c = currentChar();
             if (c == '\r' || c == '\n') {
                 this.pos++;
                 break;
@@ -206,8 +210,8 @@ public class JSONTokener {
         /* the index of the first character not yet appended to the builder. */
         int start = this.pos;
 
-        while (this.pos < this.in.length()) {
-            int c = this.in.charAt(this.pos++);
+        while (hasNext()) {
+            int c = nextChar();
             if (c == quote) {
                 if (builder == null) {
                     // a new string avoids leaking memory
@@ -244,7 +248,7 @@ public class JSONTokener {
      * @throws JSONException         if processing of json failed
      */
     char readEscapeCharacter() throws JSONException {
-        char escaped = this.in.charAt(this.pos++);
+        char escaped = nextChar();
         switch (escaped) {
             case 'u':
                 if (this.pos + 4 > this.in.length()) {
@@ -309,8 +313,8 @@ public class JSONTokener {
                 base = 8;
             }
             try {
-                long longValue = Long.parseLong(number, base);
-                if (longValue <= Integer.MAX_VALUE && longValue >= Integer.MIN_VALUE) {
+                long longValue = parseLong(number, base);
+                if (longValue <= MAX_VALUE && longValue >= MIN_VALUE) {
                     return (int) longValue;
                 } else {
                     return longValue;
@@ -326,7 +330,7 @@ public class JSONTokener {
 
         /* ...next try to parse as a floating point... */
         try {
-            return Double.valueOf(literal);
+            return valueOf(literal);
         } catch (NumberFormatException ignored) {
         }
 
@@ -343,8 +347,8 @@ public class JSONTokener {
      */
     String nextToInternal(String excluded) {
         int start = this.pos;
-        for (; this.pos < this.in.length(); this.pos++) {
-            char c = this.in.charAt(this.pos);
+        for (; hasNext(); this.pos++) {
+            char c = currentChar();
             if (c == '\r' || c == '\n' || excluded.indexOf(c) != -1) {
                 return this.in.substring(start, this.pos);
             }
@@ -389,7 +393,7 @@ public class JSONTokener {
             if (separator != ':' && separator != '=') {
                 throw syntaxError("Expected ':' after " + name);
             }
-            if (this.pos < this.in.length() && this.in.charAt(this.pos) == '>') {
+            if (hasNext() && currentChar() == '>') {
                 this.pos++;
             }
 
@@ -486,11 +490,15 @@ public class JSONTokener {
      */
 
     public boolean more() {
-        return this.pos < this.in.length();
+        return hasNext();
     }
 
     public char next() {
-        return this.pos < this.in.length() ? this.in.charAt(this.pos++) : '\0';
+        return hasNext() ? nextChar() : '\0';
+    }
+
+    public boolean hasNext() {
+        return this.pos < this.in.length();
     }
 
     public char next(char c) throws JSONException {
@@ -545,6 +553,18 @@ public class JSONTokener {
         if (--this.pos == -1) {
             this.pos = 0;
         }
+    }
+
+    char currentChar() {
+        return charAt(this.pos);
+    }
+
+    char nextChar() {
+        return charAt(this.pos++);
+    }
+
+    char charAt(int pos) {
+        return this.in.charAt(pos);
     }
 
     public static int dehexchar(char hex) {

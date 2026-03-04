@@ -124,9 +124,7 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
                 artifact = resolve(resourceURL, artifactMetadataData, classLoader);
             }
         } catch (IOException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("The Artifact can't be resolved from the resource URL : {}", resourceURL, e);
-            }
+            logger.error("The Artifact can't be resolved from the resource URL : {}", resourceURL, e);
         } finally {
             // close the InputStream
             close(artifactMetadataData);
@@ -141,13 +139,11 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
 
     @Nullable
     protected InputStream readArtifactMetadataDataFromArchiveFile(File archiveFile) throws IOException {
-        InputStream artifactMetadataData = null;
-        if (archiveFile.isFile()) {
-            artifactMetadataData = readArtifactMetadataDataFromFile(archiveFile);
-        } else if (archiveFile.isDirectory()) {
-            artifactMetadataData = readArtifactMetadataDataFromDirectory(archiveFile);
+        if (archiveFile.isDirectory()) {
+            return readArtifactMetadataDataFromDirectory(archiveFile);
+        } else {
+            return readArtifactMetadataDataFromFile(archiveFile);
         }
-        return artifactMetadataData;
     }
 
     @Nullable

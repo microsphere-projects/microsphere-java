@@ -16,6 +16,7 @@
  */
 package io.microsphere.util;
 
+import io.microsphere.LoggingTest;
 import io.microsphere.reflect.MemberUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,6 @@ import javax.lang.model.SourceVersion;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Stream;
 
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.util.StringUtils.substringAfter;
@@ -96,6 +96,7 @@ import static io.microsphere.util.SystemUtils.getSystemProperty;
 import static io.microsphere.util.SystemUtils.getSystemPropertyFromCopy;
 import static io.microsphere.util.SystemUtils.resetSystemPropertiesCopy;
 import static java.lang.System.getProperty;
+import static java.util.stream.Stream.of;
 import static javax.lang.model.SourceVersion.latest;
 import static javax.lang.model.SourceVersion.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -108,7 +109,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see 1.0.0
  * @since 1.0.0
  */
-class SystemUtilsTest {
+class SystemUtilsTest extends LoggingTest {
 
     private static final Class<SystemUtils> CLASS = SystemUtils.class;
 
@@ -139,7 +140,7 @@ class SystemUtilsTest {
     private static final SourceVersion[] versions = values();
 
     private static Field[] findIsJavaVersionFields() {
-        return Stream.of(CLASS.getFields())
+        return of(CLASS.getFields())
                 .filter(MemberUtils::isStatic)
                 .filter(field -> field.getName().startsWith(IS_JAVA_VERSION_FIELD_NAME_PREFIX))
                 .toArray(Field[]::new);

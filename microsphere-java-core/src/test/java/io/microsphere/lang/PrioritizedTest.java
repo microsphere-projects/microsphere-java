@@ -66,6 +66,10 @@ class PrioritizedTest {
         assertEquals(1, COMPARATOR.compare(null, prioritized));
         assertEquals(-1, COMPARATOR.compare(prioritized, null));
         assertEquals(0, COMPARATOR.compare(null, null));
+        assertEquals(1, COMPARATOR.compare(null, prioritized));
+        assertEquals(0, COMPARATOR.compare(null, "prioritized"));
+        assertEquals(0, COMPARATOR.compare("prioritized", "prioritized"));
+        assertEquals(0, COMPARATOR.compare("prioritized", null));
     }
 
 }

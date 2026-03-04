@@ -18,17 +18,19 @@
     <name>Microsphere :: Java :: Annotation Processor</name>
     <description>Microsphere Annotation Processor</description>
 
-    <properties>
-        <javax.ws.rs.version>2.1</javax.ws.rs.version>
-        <jaxws-api.version>2.3.1</jaxws-api.version>
-    </properties>
-
     <dependencies>
 
         <!-- Microsphere Java Core -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-java-core</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- Microsphere Language Model -->
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-lang-model</artifactId>
             <version>${revision}</version>
         </dependency>
 
@@ -45,6 +47,22 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Microsphere JDK Tools -->
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-jdk-tools</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Microsphere Java Test -->
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-java-test</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -56,7 +74,6 @@
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>javax.ws.rs-api</artifactId>
-            <version>${javax.ws.rs.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -64,7 +81,6 @@
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
-            <version>${jaxws-api.version}</version>
             <scope>test</scope>
         </dependency>
 

@@ -16,6 +16,7 @@
  */
 package io.microsphere.classloading;
 
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * @see AbstractArtifactResourceResolver
  * @since 1.0.0
  */
-abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactResourceResolver> {
+abstract class AbstractArtifactResourceResolverTest<A extends AbstractArtifactResourceResolver> extends LoggingTest {
 
     static final Class<? extends Annotation> TEST_ANNOTATION_CLASS = Nonnull.class;
 

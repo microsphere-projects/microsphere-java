@@ -20,16 +20,25 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.management.builder.MBeanParameterInfoBuilder;
 import io.microsphere.util.Utils;
 
 import javax.management.AttributeNotFoundException;
+import javax.management.Descriptor;
+import javax.management.DescriptorKey;
+import javax.management.ImmutableDescriptor;
 import javax.management.InstanceNotFoundException;
 import javax.management.IntrospectionException;
 import javax.management.MBeanAttributeInfo;
+import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanInfo;
+import javax.management.MBeanNotificationInfo;
+import javax.management.MBeanOperationInfo;
+import javax.management.MBeanParameterInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.management.ReflectionException;
+import java.lang.annotation.Annotation;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.CompilationMXBean;
 import java.lang.management.GarbageCollectorMXBean;
@@ -40,18 +49,27 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Stream.of;
+import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
 
 /**
  * The utilities class for JMX operations, providing convenient methods to interact with MBeans and MXBeans.
@@ -70,6 +88,14 @@ public abstract class JmxUtils implements Utils {
     private static final Logger logger = getLogger(JmxUtils.class);
 
     public static final MBeanAttribute[] EMPTY_MBEAN_ATTRIBUTE_ARRAY = new MBeanAttribute[0];
+
+    public static final MBeanAttributeInfo[] EMPTY_MBEAN_ATTRIBUTE_INFO_ARRAY = new MBeanAttributeInfo[0];
+
+    public static final MBeanOperationInfo[] EMPTY_MBEAN_OPERATION_INFO_ARRAY = new MBeanOperationInfo[0];
+
+    public static final MBeanConstructorInfo[] EMPTY_MBEAN_CONSTRUCTOR_INFO_ARRAY = new MBeanConstructorInfo[0];
+
+    public static final MBeanNotificationInfo[] EMPTY_MBEAN_NOTIFICATION_INFO_ARRAY = new MBeanNotificationInfo[0];
 
     private static ClassLoadingMXBean classLoadingMXBean;
 
@@ -427,7 +453,7 @@ public abstract class JmxUtils implements Utils {
      */
     @Nullable
     public static Object getAttribute(MBeanServer mBeanServer, ObjectName objectName, MBeanAttributeInfo attributeInfo) {
-        return doGetAttribute(mBeanServer, objectName, attributeInfo, attributeInfo.getName());
+        return doGetAttribute(mBeanServer, objectName, attributeInfo.getName());
     }
 
     /**
@@ -455,7 +481,7 @@ public abstract class JmxUtils implements Utils {
      */
     @Nullable
     public static Object getAttribute(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
-        return doGetAttribute(mBeanServer, objectName, null, attributeName);
+        return doGetAttribute(mBeanServer, objectName, attributeName);
     }
 
     /**
@@ -540,53 +566,89 @@ public abstract class JmxUtils implements Utils {
         return mBeanInfo;
     }
 
-    protected static Object doGetAttribute(MBeanServer mBeanServer, ObjectName objectName, @Nullable MBeanAttributeInfo attributeInfo,
-                                           String attributeName) {
-        MBeanAttributeInfo mBeanAttributeInfo = attributeInfo;
-        if (mBeanAttributeInfo == null) {
-            mBeanAttributeInfo = findMBeanAttributeInfo(mBeanServer, objectName, attributeName);
-        }
-        if (mBeanAttributeInfo == null) {
-            return null;
-        }
 
-        if (!mBeanAttributeInfo.isReadable()) {
-            return null;
+    /**
+     * @see MBeanOperationInfo#methodSignature(Method)
+     */
+    public static MBeanParameterInfo[] methodSignature(Method method) {
+        return signature(method.getParameters());
+    }
+
+    public static MBeanParameterInfo[] signature(Parameter[] parameters) {
+        return of(parameters)
+                .map(MBeanParameterInfoBuilder::parameter)
+                .map(MBeanParameterInfoBuilder::build)
+                .toArray(MBeanParameterInfo[]::new);
+    }
+
+    /**
+     * @see com.sun.jmx.mbeanserver.Introspector#descriptorForElement(AnnotatedElement)
+     */
+    @Nonnull
+    public static Descriptor descriptorForElement(AnnotatedElement annotatedElement) {
+        Annotation[] annotations = annotatedElement.getAnnotations();
+        return descriptorForAnnotations(annotations);
+    }
+
+    /**
+     * @see com.sun.jmx.mbeanserver.Introspector#descriptorForAnnotations(Annotation[])
+     */
+    @Nonnull
+    public static Descriptor descriptorForAnnotations(Annotation[] annotations) {
+        int length = length(annotations);
+        if (length > 0) {
+            Map<String, Object> descriptorMap = newFixedHashMap(length);
+            for (int i = 0; i < length; i++) {
+                Annotation annotation = annotations[i];
+                Class<? extends Annotation> annotationType = annotation.annotationType();
+                Method[] methods = annotationType.getMethods();
+                for (Method method : methods) {
+                    DescriptorKey key = method.getAnnotation(DescriptorKey.class);
+                    if (key != null) {
+                        String name = key.value();
+                        Object value = invokeMethod(annotation, method);
+                        descriptorMap.put(name, value);
+                    }
+                }
+            }
+            if (!descriptorMap.isEmpty()) {
+                return new ImmutableDescriptor(descriptorMap);
+            }
         }
+        return EMPTY_DESCRIPTOR;
+    }
+
+    protected static Object doGetAttribute(MBeanServer mBeanServer, ObjectName objectName, String attributeName) {
         Object attributeValue = null;
         try {
             attributeValue = mBeanServer.getAttribute(objectName, attributeName);
-        } catch (ReflectionException | InstanceNotFoundException e) {
+        } catch (ReflectionException | InstanceNotFoundException | AttributeNotFoundException e) {
             handleException(e, mBeanServer, objectName);
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throw wrap(e, RuntimeException.class);
         }
         return attributeValue;
     }
 
     private static void handleException(Exception e, MBeanServer mBeanServer, ObjectName objectName) {
-        if (logger.isWarnEnabled()) {
-            logger.warn("the MBean[name : '{}'] can't be manipulated by the Reflection in the MBeanServer[default domain : '{}' , domains : {}]",
-                    objectName.getCanonicalName(),
-                    mBeanServer.getDefaultDomain(),
-                    arrayToString(mBeanServer.getDomains()),
-                    e
-            );
-        }
+        logger.warn("the MBean[name : '{}'] can't be manipulated by the Reflection in the MBeanServer[default domain : '{}' , domains : {}]",
+                objectName.getCanonicalName(),
+                mBeanServer.getDefaultDomain(),
+                arrayToString(mBeanServer.getDomains()),
+                e
+        );
     }
 
     private static void handleAttributeNotFoundException(AttributeNotFoundException e, MBeanServer mBeanServer,
                                                          ObjectName objectName, MBeanInfo mBeanInfo, String attributeName) {
-
-        if (logger.isWarnEnabled()) {
-            logger.warn("The attribute[name : '{}' ] of MBean[name : '{}'] can't be found in the MBeanServer[default domain : '{}' , domains : {}]",
-                    attributeName,
-                    objectName.getCanonicalName(),
-                    mBeanServer.getDefaultDomain(),
-                    arrayToString(mBeanServer.getDomains()),
-                    e
-            );
-        }
+        logger.warn("The attribute[name : '{}' ] of MBean[name : '{}' , info : {}] can't be found in the MBeanServer[default domain : '{}' , domains : {}]",
+                attributeName,
+                objectName.getCanonicalName(),
+                mBeanInfo,
+                mBeanServer.getDefaultDomain(),
+                arrayToString(mBeanServer.getDomains()),
+                e
+        );
     }
 
     private JmxUtils() {

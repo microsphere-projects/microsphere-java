@@ -3,8 +3,10 @@
  */
 package io.microsphere.util;
 
-import io.microsphere.AbstractTestCase;
+import io.microsphere.Loggable;
+import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_COLLECTION;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_LIST;
+import static io.microsphere.AbstractTestCase.TEST_EMPTY_SET;
+import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
+import static io.microsphere.AbstractTestCase.TEST_NULL_STRING_ARRAY;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
@@ -33,6 +40,9 @@ import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.util.ArrayUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.CLASS;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
 import static io.microsphere.util.ClassLoaderUtils.doLoadClass;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClass;
@@ -88,7 +98,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ClassLoaderUtils
  * @since 1.0.0
  */
-class ClassLoaderUtilsTest extends AbstractTestCase {
+class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
 
     private static final boolean isLessThanJava12 = testCurrentJavaVersion("<", JAVA_VERSION_12);
 
@@ -107,9 +117,16 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
             "///META-INF//services/io.microsphere.event.EventListener"
     );
 
+    private final ClassLoader classLoader = getClassLoader(getClass());
+
     @AfterAll
     static void afterAll() {
         setVerbose(verbose);
+    }
+
+    @AfterEach
+    void reset() {
+        setVerbose(false);
     }
 
     @Test
@@ -192,6 +209,11 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     }
 
     @Test
+    void testGetDefaultClassLoaderWithNull() {
+        assertSame(getSystemClassLoader(), getDefaultClassLoader(null));
+    }
+
+    @Test
     void testGetClassLoader() {
         ClassLoader classLoader = currentClass.getClassLoader();
         // ClassLoaderUtilsTest -> classLoader
@@ -209,6 +231,11 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     void testGetCallerClassLoader() {
         assertSame(currentClass.getClassLoader(), getCallerClassLoader());
+    }
+
+    @Test
+    void testGetCallerClassLoaderOnFrameOutOfBound() {
+        assertNull(getCallerClassLoader(9999));
     }
 
     @Test
@@ -287,6 +314,9 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
         assertEquals(Double.class, type);
 
         type = findLoadedClass(classLoader, "java/lang/String.class");
+        assertNull(type);
+
+        type = findLoadedClass(classLoader, "com.acme.NotFound");
         assertNull(type);
     }
 
@@ -417,6 +447,11 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
     @Test
     void testGetClassResource() {
         assertGetClassResource(this.classLoader);
+    }
+
+    @Test
+    void testGetClassResourceWithClass() {
+        assertNotNull(getClassResource(ClassUtilsTest.class));
     }
 
     @Test
@@ -651,6 +686,45 @@ class ClassLoaderUtilsTest extends AbstractTestCase {
         logOnFindLoadedClassInvocationFailed(null, "NotFound", new Exception("For testing"));
         logOnFindLoadedClassInvocationFailed(null, null, new Exception("For testing"));
         logOnFindLoadedClassInvocationFailed(null, null, null);
+    }
+
+    @Test
+    void testDefaultResourceType() {
+        String name = "test";
+        assertTrue(DEFAULT.supports(name));
+        assertEquals(name, DEFAULT.normalize(name));
+
+        assertNull(DEFAULT.resolve(null));
+        assertEquals(name, DEFAULT.resolve(name));
+    }
+
+    @Test
+    void testClassResourceType() {
+        String name = ClassLoaderUtilsTest.class.getName();
+        assertFalse(CLASS.supports(null));
+        assertFalse(CLASS.supports(""));
+        assertFalse(CLASS.supports(name));
+        assertTrue(CLASS.supports("Test.class"));
+
+        assertNull(CLASS.normalize(null));
+        assertEquals("io/microsphere/util/ClassLoaderUtilsTest.class", CLASS.normalize(name));
+
+        assertNull(CLASS.resolve(null));
+        assertNull(CLASS.resolve(name));
+    }
+
+    @Test
+    void testPackageResourceType() {
+        assertFalse(PACKAGE.supports(null));
+        assertFalse(PACKAGE.supports("/"));
+        assertFalse(PACKAGE.supports("\\"));
+        assertFalse(PACKAGE.supports("Test.class"));
+        assertTrue(PACKAGE.supports(""));
+        assertTrue(PACKAGE.supports("com.acme"));
+
+        assertNull(PACKAGE.normalize(null));
+        assertEquals("io/microsphere/util/", PACKAGE.normalize("io.microsphere.util"));
+        assertEquals("io/microsphere/util/", PACKAGE.normalize("io.microsphere.util."));
     }
 
     private void assertInvokeFindLoadedClassMethod(Class clazz) {

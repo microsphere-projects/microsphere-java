@@ -22,6 +22,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static java.util.Objects.nonNull;
 
 /**
  * A {@link ProcessIdResolver} implementation for modern JDKs (Java 9+).
@@ -56,7 +57,7 @@ public class ModernProcessIdResolver implements ProcessIdResolver {
 
     @Override
     public boolean supports() {
-        return PROCESS_HANDLE_CLASS != null;
+        return nonNull(PROCESS_HANDLE_CLASS);
     }
 
     @Override

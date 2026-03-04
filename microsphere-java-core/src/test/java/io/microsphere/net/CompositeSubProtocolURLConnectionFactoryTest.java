@@ -17,17 +17,21 @@
 package io.microsphere.net;
 
 import io.microsphere.net.console.ConsoleURLConnection;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.Proxy;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
+import static io.microsphere.collection.Lists.ofList;
+import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link CompositeSubProtocolURLConnectionFactory} Test
@@ -37,16 +41,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  */
 class CompositeSubProtocolURLConnectionFactoryTest {
 
+    private CompositeSubProtocolURLConnectionFactory composite;
+
+    @BeforeEach
+    void setUp() {
+        this.composite = new CompositeSubProtocolURLConnectionFactory();
+    }
+
     @Test
     void test() throws IOException {
-        CompositeSubProtocolURLConnectionFactory composite = new CompositeSubProtocolURLConnectionFactory();
+        CompositeSubProtocolURLConnectionFactory composite = this.composite;
         ConsoleSubProtocolURLConnectionFactory instance = new ConsoleSubProtocolURLConnectionFactory();
         composite.add(instance);
 
         URL url = new URL("ftp://...");
         List<String> subProtocols = emptyList();
         if (composite.supports(url, subProtocols)) {
-            URLConnection urlConnection = composite.create(url, subProtocols, Proxy.NO_PROXY);
+            URLConnection urlConnection = composite.create(url, subProtocols, NO_PROXY);
             assertEquals(ConsoleURLConnection.class, urlConnection.getClass());
         }
 
@@ -56,5 +67,30 @@ class CompositeSubProtocolURLConnectionFactoryTest {
         composite.add(instance, instance);
         composite.remove(instance);
         assertFalse(composite.supports(url, subProtocols));
+    }
+
+    @Test
+    void testRemove() {
+        CompositeSubProtocolURLConnectionFactory composite = this.composite;
+        assertFalse(composite.remove(null));
+        assertFalse(composite.remove(composite));
+
+        FalseSubProtocolURLConnectionFactory factory = new FalseSubProtocolURLConnectionFactory();
+        composite.addInternal(factory);
+        assertTrue(composite.remove(factory));
+    }
+
+    @Test
+    void testSupports() throws MalformedURLException {
+        CompositeSubProtocolURLConnectionFactory composite = this.composite;
+
+        URL url = new URL("ftp://...");
+
+        assertFalse(composite.supports(url, ofList("test")));
+
+        FalseSubProtocolURLConnectionFactory factory = new FalseSubProtocolURLConnectionFactory();
+
+        composite.addInternal(factory);
+        assertFalse(composite.supports(url, ofList("test")));
     }
 }

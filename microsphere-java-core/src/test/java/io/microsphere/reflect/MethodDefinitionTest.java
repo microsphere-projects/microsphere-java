@@ -16,8 +16,6 @@
  */
 package io.microsphere.reflect;
 
-import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -35,8 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @since 1.0.0
  */
 class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefinition> {
-
-    private static final Logger logger = LoggerFactory.getLogger(MethodDefinitionTest.class);
 
     @Override
     protected List<Object> getTailConstructorArguments() {
@@ -64,10 +60,7 @@ class MethodDefinitionTest extends AbstractExecutableDefinitionTest<MethodDefini
         }
     }
 
-
     private void log(String message) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(message);
-        }
+        super.log(message);
     }
 }

@@ -7,6 +7,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.filter.ClassFileJarEntryFilter;
+import io.microsphere.io.FileUtils;
 import io.microsphere.io.filter.FileExtensionFilter;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.scanner.SimpleFileScanner;
@@ -18,6 +19,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.ProtectionDomain;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -30,6 +34,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.MapUtils.newFixedLinkedHashMap;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
@@ -39,6 +44,7 @@ import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
 import static io.microsphere.constants.FileConstants.JAR_EXTENSION;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
+import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
@@ -1059,12 +1065,19 @@ public abstract class ClassUtils implements Utils {
     @Immutable
     public static Set<String> findClassNamesInClassPath(@Nullable String classPath, boolean recursive) {
         String protocol = resolveProtocol(classPath);
-        final String resolvedClassPath;
-        if (FILE_PROTOCOL.equals(protocol)) {
+        String resolvedClassPath = classPath;
+
+        if (JAR_PROTOCOL.equals(protocol)) {
+            String path = substringAfter(classPath, protocol + COLON_CHAR);
+            return findClassNamesInClassPath(path, recursive);
+        } else if (FILE_PROTOCOL.equals(protocol)) {
+            String prefix = protocol + COLON_CHAR;
             resolvedClassPath = substringBetween(classPath, protocol + COLON_CHAR, ARCHIVE_ENTRY_SEPARATOR);
-        } else {
-            resolvedClassPath = classPath;
+            if (resolvedClassPath == null) {
+                resolvedClassPath = substringAfter(classPath, prefix);
+            }
         }
+
         File classesFileHolder = new File(resolvedClassPath); // File or Directory
         return findClassNamesInClassPath(classesFileHolder, recursive);
     }
@@ -1102,17 +1115,14 @@ public abstract class ClassUtils implements Utils {
         Set<String> classNames = emptySet();
         if (classPath.isDirectory()) { // Directory
             classNames = findClassNamesInDirectory(classPath, recursive);
-        } else if (classPath.isFile()) { // File
-            if (JAR_FILE_EXTENSION_FILTER.accept(classPath)) { // JarFile
-                classNames = findClassNamesInJarFile(classPath, recursive);
-            }
+        } else if (JAR_FILE_EXTENSION_FILTER.accept(classPath)) {  // JarFile
+            classNames = findClassNamesInJarFile(classPath, recursive);
         }
 
-        if (isEmpty(classNames)) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("No Class was found in the classPath : '{}' , recursive : {}", classPath, recursive);
-            }
+        if (logger.isTraceEnabled()) {
+            logger.trace("To find the class names in the class path['{}' , recursive : {}] : {}", classPath, recursive, classNames);
         }
+
         return classNames;
     }
 
@@ -1194,10 +1204,11 @@ public abstract class ClassUtils implements Utils {
         try {
             JarFile jarFile_ = new JarFile(jarFile);
             Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-            if (isEmpty(jarEntries)) {
+            int size = size(jarEntries);
+            if (size == 0) {
                 classNames = emptySet();
             } else {
-                classNames = newLinkedHashSet();
+                classNames = newLinkedHashSet(size);
                 for (JarEntry jarEntry : jarEntries) {
                     String jarEntryName = jarEntry.getName();
                     String className = resolveClassName(jarEntryName);
@@ -1236,7 +1247,7 @@ public abstract class ClassUtils implements Utils {
      * @param classesDirectory the root directory containing compiled classes, must not be {@code null}
      * @param classFile        the class file to resolve the name for, must not be {@code null}
      * @return the fully qualified class name, never {@code null}
-     * @see #resolveRelativePath(File, File)
+     * @see FileUtils#resolveRelativePath(File, File)
      * @see #resolveClassName(String)
      */
     protected static String resolveClassName(File classesDirectory, File classFile) {
@@ -1711,7 +1722,10 @@ public abstract class ClassUtils implements Utils {
      */
     @Nullable
     public static Class<?> getClass(@Nullable Object object) {
-        return object == null ? null : object.getClass();
+        if (object == null) {
+            return null;
+        }
+        return object instanceof Class ? (Class) object : object.getClass();
     }
 
     /**
@@ -1801,22 +1815,19 @@ public abstract class ClassUtils implements Utils {
             return null;
         }
         if (type.isArray()) {
-            try {
-                Class<?> cl = type;
-                int dimensions = 0;
-                while (cl.isArray()) {
-                    dimensions++;
-                    cl = cl.getComponentType();
-                }
-                String name = getTypeName(cl);
-                StringBuilder sb = new StringBuilder(name.length() + dimensions * 2);
-                sb.append(name);
-                for (int i = 0; i < dimensions; i++) {
-                    sb.append("[]");
-                }
-                return sb.toString();
-            } catch (Throwable e) {
+            Class<?> cl = type;
+            int dimensions = 0;
+            while (cl.isArray()) {
+                dimensions++;
+                cl = cl.getComponentType();
             }
+            String name = getTypeName(cl);
+            StringBuilder sb = new StringBuilder(name.length() + dimensions * 2);
+            sb.append(name);
+            for (int i = 0; i < dimensions; i++) {
+                sb.append("[]");
+            }
+            return sb.toString();
         }
         return type.getName();
     }
@@ -1859,7 +1870,11 @@ public abstract class ClassUtils implements Utils {
         if (array) {
             return getSimpleName(type.getComponentType()) + "[]";
         }
-        String simpleName = type.getName();
+        return getSimpleName(type, type.getName());
+    }
+
+    static String getSimpleName(Class<?> type, String className) {
+        String simpleName = className;
         Class<?> enclosingClass = type.getEnclosingClass();
         if (enclosingClass == null) { // top level class
             simpleName = simpleName.substring(simpleName.lastIndexOf(DOT_CHAR) + 1);
@@ -1868,16 +1883,20 @@ public abstract class ClassUtils implements Utils {
             simpleName = simpleName.substring(ecName.length());
             // Remove leading "\$[0-9]*" from the name
             int length = simpleName.length();
-            if (length < 1 || simpleName.charAt(0) != DOLLAR_CHAR) throw new InternalError("Malformed class name");
+            if (length < 1 || simpleName.charAt(0) != DOLLAR_CHAR) {
+                throw new InternalError("Malformed class name");
+            }
             int index = 1;
-            while (index < length && isAsciiDigit(simpleName.charAt(index))) index++;
+            while (index < length && isAsciiDigit(simpleName.charAt(index))) {
+                index++;
+            }
             // Eventually, this is the empty string iff this is an anonymous class
             return simpleName.substring(index);
         }
         return simpleName;
     }
 
-    private static boolean isAsciiDigit(char c) {
+    static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';
     }
 
@@ -2126,7 +2145,93 @@ public abstract class ClassUtils implements Utils {
         return castType.isInstance(object) ? castType.cast(object) : null;
     }
 
-    private ClassUtils() {
+    /**
+     * Gets the protection domain of the specified class.
+     * <p>
+     * This method returns the {@link ProtectionDomain} of the given class.
+     * The protection domain encapsulates the security information associated
+     * with the class, such as the code source and permissions. If the class
+     * is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ProtectionDomain pd = ClassUtils.getProtectionDomain(String.class);
+     * // Returns the protection domain of the String class
+     *
+     * ProtectionDomain nullPd = ClassUtils.getProtectionDomain(null);
+     * // Returns null since the input class is null
+     * }</pre>
+     *
+     * @param type the class to get the protection domain from, may be {@code null}
+     * @return the protection domain of the specified class, or {@code null} if the class is {@code null}
+     * @see Class#getProtectionDomain()
+     */
+    @Nullable
+    public static ProtectionDomain getProtectionDomain(@Nullable Class<?> type) {
+        return type == null ? null : type.getProtectionDomain();
     }
 
+    /**
+     * Gets the code source of the specified class.
+     * <p>
+     * This method returns the {@link CodeSource} of the given class.
+     * The code source represents the location (URL) from which the class was loaded,
+     * along with the certificates associated with the code. If the class is {@code null}
+     * or if the protection domain of the class is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * CodeSource codeSource = ClassUtils.getCodeSource(String.class);
+     * // Returns the code source of the String class
+     *
+     * CodeSource nullCodeSource = ClassUtils.getCodeSource(null);
+     * // Returns null since the input class is null
+     * }</pre>
+     *
+     * @param type the class to get the code source from, may be {@code null}
+     * @return the code source of the specified class, or {@code null} if the class is {@code null}
+     * or if the protection domain is {@code null}
+     * @see ProtectionDomain#getCodeSource()
+     * @see Class#getProtectionDomain()
+     */
+    @Nullable
+    public static CodeSource getCodeSource(@Nullable Class<?> type) {
+        ProtectionDomain protectionDomain = getProtectionDomain(type);
+        return protectionDomain == null ? null : protectionDomain.getCodeSource();
+    }
+
+    /**
+     * Gets the code source location of the specified class.
+     * <p>
+     * This method returns the location (URL) from which the given class was loaded.
+     * The location is obtained from the {@link CodeSource} associated with the class's
+     * {@link ProtectionDomain}. If the class is {@code null}, or if the protection domain
+     * or code source is {@code null}, this method returns {@code null}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * URL location = ClassUtils.getCodeSourceLocation(String.class);
+     * // Returns the URL location from which the String class was loaded
+     *
+     * URL nullLocation = ClassUtils.getCodeSourceLocation(null);
+     * // Returns null since the input class is null
+     * }</pre>
+     *
+     * @param type the class to get the code source location from, may be {@code null}
+     * @return the code source location of the specified class, or {@code null} if the class is {@code null},
+     * or if the protection domain or code source is {@code null}
+     * @see CodeSource#getLocation()
+     * @see Class#getProtectionDomain()
+     */
+    @Nullable
+    public static URL getCodeSourceLocation(@Nullable Class<?> type) {
+        CodeSource codeSource = getCodeSource(type);
+        return codeSource == null ? null : codeSource.getLocation();
+    }
+
+    private ClassUtils() {
+    }
 }

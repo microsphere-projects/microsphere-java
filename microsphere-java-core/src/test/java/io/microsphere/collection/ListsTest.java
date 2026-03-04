@@ -1,8 +1,8 @@
 package io.microsphere.collection;
 
-import io.microsphere.AbstractTestCase;
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.AbstractTestCase.TEST_NULL_OBJECT_ARRAY;
 import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @see Lists
  * @since 1.0.0
  */
-class ListsTest extends AbstractTestCase {
+class ListsTest {
 
     @Test
     void testOfList0() {

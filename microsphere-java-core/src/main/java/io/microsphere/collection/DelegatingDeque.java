@@ -136,6 +136,10 @@ public class DelegatingDeque<E> extends DelegatingQueue<E> implements Deque<E> {
      * @since Java 21
      */
     public Deque<E> reversed() {
+        return reversed(reversedMethodHandle);
+    }
+
+    protected Deque<E> reversed(MethodHandle reversedMethodHandle) {
         if (reversedMethodHandle == null) {
             return reversedDeque(getDelegate());
         }

@@ -16,7 +16,6 @@
  */
 package io.microsphere.collection;
 
-import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.StringJoiner;
@@ -25,6 +24,7 @@ import static io.microsphere.constants.SymbolConstants.COMMA;
 import static io.microsphere.constants.SymbolConstants.LEFT_SQUARE_BRACKET;
 import static io.microsphere.constants.SymbolConstants.RIGHT_SQUARE_BRACKET;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.lang.String.valueOf;
 import static java.util.Objects.hash;
 
@@ -85,7 +85,7 @@ public class ArrayEnumeration<E> implements Enumeration<E> {
         if (!(o instanceof ArrayEnumeration)) return false;
 
         ArrayEnumeration<?> that = (ArrayEnumeration<?>) o;
-        return Arrays.equals(elements, that.elements);
+        return arrayEquals(elements, that.elements);
     }
 
     @Override

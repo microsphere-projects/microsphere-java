@@ -77,6 +77,11 @@ class ConfigurerTest {
                 .value(() -> 1)
                 .apply(value -> {
                 });
+
+        configure((Object) null)
+                .compare(1)
+                .apply(value -> {
+                });
     }
 
 }

@@ -66,6 +66,7 @@ import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static io.microsphere.util.StringUtils.split;
+import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static io.microsphere.util.SystemUtils.getSystemProperty;
@@ -84,7 +85,22 @@ public abstract class MethodUtils implements Utils {
     private static final Logger logger = getLogger(MethodUtils.class);
 
     /**
-     * The property name of banned methods
+     * The prefix of the "GETTER" method name : "get"
+     */
+    public static final String GET_METHOD_NAME_PREFIX = "get";
+
+    /**
+     * The prefix of the "SETTER" method name : "set"
+     */
+    public static final String SET_METHOD_NAME_PREFIX = "set";
+
+    /**
+     * The prefix of the "IS" method name : "is"
+     */
+    public static final String IS_METHOD_NAME_PREFIX = "is";
+
+    /**
+     * The property name of banned methods : "microsphere.reflect.banned-methods"
      * <h3>Example Usage</h3>
      * <pre>{@code
      * System.setProperty(BANNED_METHODS_PROPERTY_NAME, "java.lang.String#substring() | java.lang.String#substring(int,int)")
@@ -929,15 +945,11 @@ public abstract class MethodUtils implements Utils {
             throw new NullPointerException("The 'method' must not be null");
         }
         R result = null;
-        boolean accessible = false;
         RuntimeException failure = null;
         try {
-            accessible = trySetAccessible(method);
+            trySetAccessible(method);
             result = (R) method.invoke(instance, arguments);
-        } catch (IllegalAccessException e) {
-            String errorMessage = format("The method[signature : '{}' , instance : {}] can't be accessed[accessible : {}]", getSignature(method), instance, accessible);
-            failure = new IllegalStateException(errorMessage, e);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException | IllegalArgumentException e) {
             String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, arrayToString(arguments));
             failure = new IllegalArgumentException(errorMessage, e);
         } catch (InvocationTargetException e) {
@@ -1270,6 +1282,51 @@ public abstract class MethodUtils implements Utils {
         return isAnnotationPresent(method, CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
 
+    public static boolean isIsMethod(Method method) {
+        if (startsWith(getMethodName(method), IS_METHOD_NAME_PREFIX)) {
+            if (isNoArgMethod(method)) {
+                return matchesReturnType(method, boolean.class);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isGetterMethod(Method method) {
+        if (startsWith(getMethodName(method), GET_METHOD_NAME_PREFIX)) {
+            if (isNoArgMethod(method)) {
+                return !matchesReturnType(method, void.class);
+            }
+        }
+        return false;
+    }
+
+    public static boolean isSetterMethod(Method method) {
+        if (startsWith(getMethodName(method), SET_METHOD_NAME_PREFIX)) {
+            if (matchesParameterCount(method, 1)) {
+                return matchesReturnType(method, void.class);
+            }
+        }
+        return false;
+    }
+
+    @Nullable
+    public static String getMethodName(@Nullable Method method) {
+        return method == null ? null : method.getName();
+    }
+
+    public static boolean matchesParameterCount(@Nullable Method method, int parameterCount) {
+        return method == null ? false : method.getParameterCount() == parameterCount;
+    }
+
+    public static boolean matchesReturnType(@Nullable Method method, @Nullable Class<?> returnType) {
+        return method == null ? false : Objects.equals(returnType, method.getReturnType());
+    }
+
+    static boolean isNoArgMethod(Method method) {
+        return matchesParameterCount(method, 0);
+    }
+
+
     static void filterDeclaredMethodsHierarchically(Class<?> targetClass, Predicate<? super Method> methodToFilter, List<Method> methodsToCollect) {
         filterDeclaredMethods(targetClass, methodToFilter, methodsToCollect);
         for (Class<?> interfaceClass : targetClass.getInterfaces()) {
@@ -1299,9 +1356,8 @@ public abstract class MethodUtils implements Utils {
             }
         }
         if (logger.isTraceEnabled()) {
-            logger.trace("The target method[name : '{}' , parameter types : {}] {} found in the methods : {}",
-                    methodName, arrayToString(parameterTypes), targetMethod == null ? "can't be" : "is",
-                    arrayToString(methods));
+            logger.trace("To find the target method[name : '{}' , parameter types : {} , methods : {}] : {}",
+                    methodName, arrayToString(parameterTypes), arrayToString(methods), targetMethod);
         }
         return targetMethod;
     }
@@ -1349,7 +1405,7 @@ public abstract class MethodUtils implements Utils {
 
         final Class<?>[] parameterTypes;
 
-        MethodKey(Class<?> declaredClass, String methodName, Class<?>[] parameterTypes) {
+        MethodKey(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
             this.declaredClass = declaredClass;
             this.methodName = methodName;
             this.parameterTypes = parameterTypes == null ? EMPTY_CLASS_ARRAY : parameterTypes;
@@ -1357,28 +1413,31 @@ public abstract class MethodUtils implements Utils {
 
         @Override
         public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof MethodKey)) {
+                return false;
+            }
 
             MethodKey methodKey = (MethodKey) o;
 
-            if (!Objects.equals(declaredClass, methodKey.declaredClass)) return false;
-            if (!Objects.equals(methodName, methodKey.methodName)) return false;
-            // Probably incorrect - comparing Object[] arrays with Arrays.equals
-            return arrayEquals(parameterTypes, methodKey.parameterTypes);
+            return Objects.equals(this.declaredClass, methodKey.declaredClass)
+                    && Objects.equals(this.methodName, methodKey.methodName)
+                    && arrayEquals(this.parameterTypes, methodKey.parameterTypes);
         }
 
         @Override
         public int hashCode() {
-            int result = declaredClass != null ? declaredClass.hashCode() : 0;
-            result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
-            result = 31 * result + hash(parameterTypes);
+            int result = hash(this.declaredClass);
+            result = 31 * result + hash(this.methodName);
+            result = 31 * result + hash(this.parameterTypes);
             return result;
         }
 
         @Override
         public String toString() {
-            return buildSignature(declaredClass, methodName, parameterTypes);
+            return buildSignature(this.declaredClass, this.methodName, this.parameterTypes);
         }
     }
 

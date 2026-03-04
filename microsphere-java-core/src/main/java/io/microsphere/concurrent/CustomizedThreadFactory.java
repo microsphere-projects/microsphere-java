@@ -19,7 +19,7 @@ package io.microsphere.concurrent;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static java.lang.System.getSecurityManager;
+import static java.lang.Thread.currentThread;
 
 /**
  * A {@link ThreadFactory} implementation that creates threads with customized attributes,
@@ -67,9 +67,7 @@ public class CustomizedThreadFactory implements ThreadFactory {
     private final long stackSize;
 
     protected CustomizedThreadFactory(String namePrefix, boolean daemon, int priority, long stackSize) {
-        SecurityManager s = getSecurityManager();
-        this.group = (s != null) ? s.getThreadGroup() :
-                Thread.currentThread().getThreadGroup();
+        this.group = currentThread().getThreadGroup();
         this.threadNumber = new AtomicInteger(1);
         this.namePrefix = namePrefix + "-thread-";
         this.daemon = daemon;

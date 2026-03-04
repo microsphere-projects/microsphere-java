@@ -119,8 +119,8 @@ public abstract class MethodHandlesLookupUtils implements Utils {
         MethodType methodType = isEmpty(parameterTypes) ? methodType(returnType) : methodType(returnType, parameterTypes);
         return execute(lookup, methodType, function, (l, mt, e) -> {
             Logger logger = getLogger(MethodHandlesLookupUtils.class);
-            if (logger.isWarnEnabled()) {
-                logger.warn("The MethodHandle can't be found by Lookup[{}] on the method : {}", l, method, e);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The MethodHandle can't be found by Lookup[{}] on the method : {}", l, method, e);
             }
             return null;
         });

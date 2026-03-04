@@ -88,8 +88,10 @@ public class ArchiveFileArtifactResourceResolver extends AbstractArtifactResourc
             return null;
         }
 
-        String archiveFileName = archiveFile.getName();
+        return createArtifact(archiveFile.getName(), resourceURL);
+    }
 
+    static Artifact createArtifact(String archiveFileName, URL resourceURL) {
         String fileNameWithoutExtension = substringBeforeLast(archiveFileName, DOT);
 
         String[] parts = split(fileNameWithoutExtension, HYPHEN);
@@ -104,5 +106,4 @@ public class ArchiveFileArtifactResourceResolver extends AbstractArtifactResourc
         String version = length > 1 ? parts[1] : null;
         return create(artifactId, version, resourceURL);
     }
-
 }

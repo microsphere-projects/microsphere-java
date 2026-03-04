@@ -16,15 +16,11 @@
  */
 package io.microsphere.event;
 
-import io.microsphere.logging.Logger;
+import io.microsphere.Loggable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static io.microsphere.logging.LoggerFactory.getLogger;
-
-public abstract class AbstractEventListener<E extends Event> implements EventListener<E> {
-
-    private static final Logger logger = getLogger(AbstractEventListener.class);
+public abstract class AbstractEventListener<E extends Event> implements Loggable, EventListener<E> {
 
     private final AtomicInteger eventOccurs = new AtomicInteger(0);
 
@@ -41,6 +37,6 @@ public abstract class AbstractEventListener<E extends Event> implements EventLis
     }
 
     protected void println(String message) {
-        logger.info("[{}] {}", Thread.currentThread().getName(), message);
+        log("[{}] {}", Thread.currentThread().getName(), message);
     }
 }

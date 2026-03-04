@@ -10,10 +10,10 @@ import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.PropertyResourceBundleControl.newControl;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.System.getProperty;
-import static java.lang.Thread.currentThread;
 import static java.util.Locale.getDefault;
 
 /**
@@ -141,7 +141,7 @@ public abstract class PropertyResourceBundleUtils implements Utils {
      */
     @Nonnull
     public static ResourceBundle getBundle(String baseName, Locale locale, String encoding) {
-        ClassLoader classLoader = currentThread().getContextClassLoader();
+        ClassLoader classLoader = getDefaultClassLoader();
         return getBundle(baseName, locale, classLoader, encoding);
     }
 

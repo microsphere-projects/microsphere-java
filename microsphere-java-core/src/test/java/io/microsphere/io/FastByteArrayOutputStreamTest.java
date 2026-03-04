@@ -27,12 +27,12 @@ class FastByteArrayOutputStreamTest {
 
     @BeforeEach
     void setUp() {
-        outputStream = new FastByteArrayOutputStream(2);
+        this.outputStream = new FastByteArrayOutputStream(2);
     }
 
     @AfterEach
     void tearDown() {
-        outputStream.close();
+        this.outputStream.close();
     }
 
     @Test
@@ -43,44 +43,44 @@ class FastByteArrayOutputStreamTest {
     @Test
     void testWrite() {
         for (byte b : TEST_BYTES) {
-            outputStream.write(b);
+            this.outputStream.write(b);
         }
-        assertArrayEquals(outputStream.toByteArray(), TEST_BYTES);
+        assertArrayEquals(this.outputStream.toByteArray(), TEST_BYTES);
     }
 
     @Test
     void testWrite0() throws IOException {
-        outputStream.write(TEST_BYTES);
-        assertArrayEquals(outputStream.toByteArray(), TEST_BYTES);
+        this.outputStream.write(TEST_BYTES);
+        assertArrayEquals(this.outputStream.toByteArray(), TEST_BYTES);
     }
 
     @Test
     void testWrite0OnNullPointerException() {
-        assertThrows(NullPointerException.class, () -> outputStream.write(null));
+        assertThrows(NullPointerException.class, () -> this.outputStream.write(null));
     }
 
     @Test
     void testWrite0OnIndexOutOfBoundsException() {
-        assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, -1, 0));
-        assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, TEST_BYTES.length + 1, 0));
-        assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, 0, -1));
-        assertThrows(IndexOutOfBoundsException.class, () -> outputStream.write(TEST_BYTES, 0, TEST_BYTES.length + 1));
+        assertThrows(IndexOutOfBoundsException.class, () -> this.outputStream.write(TEST_BYTES, -1, 0));
+        assertThrows(IndexOutOfBoundsException.class, () -> this.outputStream.write(TEST_BYTES, TEST_BYTES.length + 1, 0));
+        assertThrows(IndexOutOfBoundsException.class, () -> this.outputStream.write(TEST_BYTES, 0, -1));
+        assertThrows(IndexOutOfBoundsException.class, () -> this.outputStream.write(TEST_BYTES, 0, TEST_BYTES.length + 1));
     }
 
     @Test
     void testWriteTo() throws IOException {
         FastByteArrayOutputStream toOutputStream = new FastByteArrayOutputStream();
-        outputStream.write(TEST_BYTES);
-        outputStream.writeTo(toOutputStream);
-        assertArrayEquals(outputStream.toByteArray(), toOutputStream.toByteArray());
+        this.outputStream.write(TEST_BYTES);
+        this.outputStream.writeTo(toOutputStream);
+        assertArrayEquals(this.outputStream.toByteArray(), toOutputStream.toByteArray());
     }
 
     @Test
     void testReset() throws IOException {
         testSize();
 
-        outputStream.reset();
-        assertEquals(0, outputStream.size());
+        this.outputStream.reset();
+        assertEquals(0, this.outputStream.size());
     }
 
     @Test
@@ -90,25 +90,30 @@ class FastByteArrayOutputStreamTest {
 
     @Test
     void testSize() throws IOException {
-        assertEquals(0, outputStream.size());
-        outputStream.write(TEST_BYTES);
-        assertEquals(TEST_BYTES.length, outputStream.size());
+        assertEquals(0, this.outputStream.size());
+        this.outputStream.write(TEST_BYTES);
+        assertEquals(TEST_BYTES.length, this.outputStream.size());
     }
 
     @Test
     void testToString() throws IOException {
-        outputStream.write(TEST_BYTES);
-        assertEquals(TEST_VALUE, outputStream.toString());
+        this.outputStream.write(TEST_BYTES);
+        assertEquals(TEST_VALUE, this.outputStream.toString());
     }
 
     @Test
     void testToString1() throws IOException {
-        outputStream.write(TEST_BYTES);
-        assertEquals(TEST_VALUE, outputStream.toString("UTF-8"));
+        this.outputStream.write(TEST_BYTES);
+        assertEquals(TEST_VALUE, this.outputStream.toString("UTF-8"));
     }
 
     @Test
     void testClose() {
         tearDown();
+    }
+
+    @Test
+    void testAssertCapacityOnOutOfMemoryError() {
+        assertThrows(OutOfMemoryError.class, () -> this.outputStream.assertCapacity(Integer.MAX_VALUE));
     }
 }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>0.2.2</version>
+        <version>0.2.3</version>
     </parent>
 
     <groupId>io.github.microsphere-projects</groupId>
@@ -51,14 +51,18 @@
     </scm>
 
     <properties>
-        <revision>0.1.7-SNAPSHOT</revision>
+        <revision>0.1.8-SNAPSHOT</revision>
     </properties>
 
     <modules>
         <module>microsphere-java-parent</module>
         <module>microsphere-java-dependencies</module>
-        <module>microsphere-annotation-processor</module>
+        <module>microsphere-java-annotations</module>
         <module>microsphere-java-core</module>
+        <module>microsphere-jdk-tools</module>
+        <module>microsphere-java-test</module>
+        <module>microsphere-lang-model</module>
+        <module>microsphere-annotation-processor</module>
     </modules>
 
 </project>

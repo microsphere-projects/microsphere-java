@@ -3,18 +3,21 @@
  */
 package io.microsphere.io.scanner;
 
-import io.microsphere.AbstractTestCase;
 import io.microsphere.io.filter.DirectoryFileFilter;
 import io.microsphere.io.filter.NameFileFilter;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Set;
 
+import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
+import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link SimpleFileScanner} {@link Test}
@@ -23,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @see SimpleFileScanner
  * @since 1.0.0
  */
-class SimpleFileScannerTest extends AbstractTestCase {
+class SimpleFileScannerTest {
 
     private static final SimpleFileScanner simpleFileScanner = INSTANCE;
 
@@ -48,5 +51,21 @@ class SimpleFileScannerTest extends AbstractTestCase {
     void testScanOnBinDirectory() {
         Set<File> directories = simpleFileScanner.scan(JAVA_HOME_DIR, true, new NameFileFilter("bin"));
         assertEquals(1, directories.size());
+    }
+
+    @Test
+    void testScanOnEmptyDirectory() {
+        File tempDir = createRandomTempDirectory();
+        Set<File> directories = simpleFileScanner.scan(tempDir, true);
+        assertEquals(1, directories.size());
+        assertTrue(directories.contains(tempDir));
+    }
+
+    @Test
+    void testScanOnFile() throws IOException {
+        File file = createRandomTempFile();
+        Set<File> files = simpleFileScanner.scan(file, true);
+        assertEquals(1, files.size());
+        assertTrue(files.contains(file));
     }
 }

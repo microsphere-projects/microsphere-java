@@ -47,12 +47,12 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
-import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
+import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
@@ -63,6 +63,7 @@ import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
+import static java.util.Objects.nonNull;
 
 
 /**
@@ -208,24 +209,16 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static ClassLoader getDefaultClassLoader() {
-        ClassLoader classLoader = null;
-        try {
-            classLoader = currentThread().getContextClassLoader();
-        } catch (Throwable ignored) {
-        }
-
+        ClassLoader classLoader = currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = ClassLoaderUtils.class.getClassLoader();
         }
+        return getDefaultClassLoader(classLoader);
+    }
 
-        if (classLoader == null) {
-            // classLoader is null indicates the bootstrap ClassLoader
-            try {
-                classLoader = getSystemClassLoader();
-            } catch (Throwable ignored) {
-            }
-        }
-        return classLoader;
+    static ClassLoader getDefaultClassLoader(ClassLoader classLoader) {
+        // classLoader is null indicates the bootstrap ClassLoader
+        return classLoader == null ? getSystemClassLoader() : classLoader;
     }
 
     /**
@@ -254,15 +247,10 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static ClassLoader getClassLoader(@Nullable Class<?> loadedClass) {
-        ClassLoader classLoader = null;
-        try {
-            if (loadedClass == null) {
-                classLoader = getCallerClassLoader(4);
-            } else {
-                classLoader = loadedClass.getClassLoader();
-            }
-        } catch (SecurityException ignored) {
+        if (loadedClass == null) {
+            return getCallerClassLoader(5);
         }
+        ClassLoader classLoader = loadedClass.getClassLoader();
         return classLoader == null ? getDefaultClassLoader() : classLoader;
     }
 
@@ -288,7 +276,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static ClassLoader getCallerClassLoader() {
-        return getCallerClassLoader(4);
+        return getCallerClassLoader(5);
     }
 
     /**
@@ -419,7 +407,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * @return true if the class is already loaded; false otherwise
      */
     public static boolean isLoadedClass(@Nullable ClassLoader classLoader, String className) {
-        return findLoadedClass(classLoader, className) != null;
+        return nonNull(findLoadedClass(classLoader, className));
     }
 
     /**
@@ -562,7 +550,7 @@ public abstract class ClassLoaderUtils implements Utils {
         if (isBlank(className)) {
             return null;
         }
-        Class<?> klass = null;
+        Class<?> klass;
         try {
             klass = classLoader.loadClass(className);
         } catch (Throwable e) {
@@ -611,7 +599,7 @@ public abstract class ClassLoaderUtils implements Utils {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         String normalizedResourceName = resourceType.resolve(resourceName);
         Enumeration<URL> resources = actualClassLoader.getResources(normalizedResourceName);
-        return resources != null && resources.hasMoreElements() ? ofSet(resources) : emptySet();
+        return ofSet(resources);
     }
 
     /**
@@ -1141,7 +1129,7 @@ public abstract class ClassLoaderUtils implements Utils {
         ClassLoader actualClassLoader = findClassLoader(classLoader);
         Field field = findField(classLoaderClass, classesFieldName);
         List<Class<?>> classes = getFieldValue(actualClassLoader, field);
-        return classes == null ? emptySet() : ofSet(classes);
+        return ofSet(classes);
     }
 
     /**
@@ -1757,7 +1745,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     static ClassLoader getCallerClassLoader(int invocationFrame) {
         ClassLoader classLoader = null;
-        Class<?> callerClass = getCallerClass(invocationFrame);
+        Class<?> callerClass = getCallerClassInStatckTrace(invocationFrame);
         if (callerClass != null) {
             classLoader = callerClass.getClassLoader();
         }

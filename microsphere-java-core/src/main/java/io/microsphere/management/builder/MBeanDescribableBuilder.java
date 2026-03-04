@@ -1,0 +1,62 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.microsphere.management.builder;
+
+import io.microsphere.annotation.Nullable;
+
+import javax.management.Descriptor;
+import javax.management.DescriptorRead;
+import javax.management.MBeanFeatureInfo;
+
+/**
+ * MBean Describable Builder
+ *
+ * @param <B> the builder class
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see MBeanFeatureInfo
+ * @since 1.0.0
+ */
+public abstract class MBeanDescribableBuilder<B extends MBeanDescribableBuilder> {
+
+    /**
+     * The human-readable description.
+     **/
+    @Nullable
+    protected String description;
+
+    /**
+     * This field can be null, which is equivalent to an empty Descriptor.
+     */
+    @Nullable
+    protected Descriptor descriptor;
+
+    MBeanDescribableBuilder() {
+    }
+
+    public B description(String description) {
+        this.description = description;
+        return (B) this;
+    }
+
+    public B descriptor(Descriptor descriptor) {
+        this.descriptor = descriptor;
+        return (B) this;
+    }
+
+    public abstract <I extends DescriptorRead> I build();
+}

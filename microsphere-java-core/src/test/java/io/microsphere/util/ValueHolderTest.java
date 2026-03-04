@@ -19,6 +19,7 @@ package io.microsphere.util;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ValueHolder.of;
+import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -80,10 +81,11 @@ class ValueHolderTest {
     void testEquals() {
         ValueHolder valueHolder = of(1);
         assertEquals(valueHolder, valueHolder);
-        assertNotEquals(1, valueHolder);
-        assertEquals(of(1), valueHolder);
         assertEquals(of("A"), of("A"));
+        assertEquals(of(1), valueHolder);
         assertEquals(of(null), of(null));
+        assertNotEquals(1, valueHolder);
+        assertNotEquals(valueHolder, valueOf(1));
     }
 
     @Test
