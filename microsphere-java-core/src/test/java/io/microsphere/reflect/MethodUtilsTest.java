@@ -764,7 +764,7 @@ class MethodUtilsTest extends LoggingTest {
         assertNotEquals(key, key1);
         assertNotEquals(key1, key2);
         assertNotEquals(key1, key3);
-        assertNotEquals(key1, this);
+        assertFalse(key1.equals(this));
     }
 
     @Test
@@ -779,7 +779,7 @@ class MethodUtilsTest extends LoggingTest {
         MethodKey methodKey1 = buildKey(declaredClass, methodName, parameterTypes);
         MethodKey methodKey2 = buildKey(declaredClass, methodName, parameterTypes.length == 0 ? null : parameterTypes);
 
-        assertEquals(methodKey1, methodKey1);
+        assertTrue(methodKey1.equals(methodKey1));
         assertEquals(methodKey1, methodKey2);
         assertEquals(methodKey1.hashCode(), methodKey2.hashCode());
         assertEquals(methodKey1.toString(), methodKey2.toString());
