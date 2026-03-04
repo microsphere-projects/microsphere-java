@@ -9,17 +9,17 @@ import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.lang.ClassDataRepository;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.net.URLUtils.ofURL;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.PACKAGE;
@@ -123,41 +123,37 @@ public class SimpleClassScanner {
 
         final String packageResourceName = PACKAGE.resolve(packageName);
 
-        try {
-            Set<String> classNames = new LinkedHashSet();
-            // Find in class loader
-            Set<URL> resourceURLs = getResources(classLoader, PACKAGE, packageName);
+        Set<String> classNames = new LinkedHashSet();
+        // Find in class loader
+        Set<URL> resourceURLs = execute(() -> getResources(classLoader, PACKAGE, packageName));
 
-            if (resourceURLs.isEmpty()) {
-                //Find in class path
-                ClassDataRepository repository = ClassDataRepository.INSTANCE;
-                List<String> classNamesInPackage = new ArrayList<>(repository.getClassNamesInPackage(packageName));
+        if (resourceURLs.isEmpty()) {
+            //Find in class path
+            ClassDataRepository repository = ClassDataRepository.INSTANCE;
+            List<String> classNamesInPackage = newArrayList(repository.getClassNamesInPackage(packageName));
 
-                if (!classNamesInPackage.isEmpty()) {
-                    String classPath = repository.findClassPath(classNamesInPackage.get(0));
-                    URL resourceURL = new File(classPath).toURI().toURL();
-                    resourceURLs = new HashSet();
-                    resourceURLs.add(resourceURL);
-                }
+            if (!classNamesInPackage.isEmpty()) {
+                String classPath = repository.findClassPath(classNamesInPackage.get(0));
+                URL resourceURL = execute(() -> new File(classPath).toURI().toURL());
+                resourceURLs = new HashSet();
+                resourceURLs.add(resourceURL);
             }
-
-            for (URL resourceURL : resourceURLs) {
-                URL classPathURL = resolveClassPathURL(resourceURL, packageResourceName);
-                String classPath = classPathURL.getFile();
-                Set<String> classNamesInClassPath = findClassNamesInClassPath(classPath, true);
-                classNames.addAll(filterClassNames(classNamesInClassPath, packageName, recursive));
-            }
-
-            for (String className : classNames) {
-                Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
-                if (class_ != null) {
-                    classesSet.add(class_);
-                }
-            }
-
-        } catch (IOException e) {
-
         }
+
+        for (URL resourceURL : resourceURLs) {
+            URL classPathURL = resolveClassPathURL(resourceURL, packageResourceName);
+            String classPath = classPathURL.getFile();
+            Set<String> classNamesInClassPath = findClassNamesInClassPath(classPath, true);
+            classNames.addAll(filterClassNames(classNamesInClassPath, packageName, recursive));
+        }
+
+        for (String className : classNames) {
+            Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
+            if (class_ != null) {
+                classesSet.add(class_);
+            }
+        }
+
         return unmodifiableSet(classesSet);
     }
 
