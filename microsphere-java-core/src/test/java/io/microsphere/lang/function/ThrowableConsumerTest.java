@@ -19,6 +19,7 @@ package io.microsphere.lang.function;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.ThrowableConsumer.execute;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -37,7 +38,7 @@ class ThrowableConsumerTest {
 
     @Test
     void testExecute1() {
-        consumer.execute("Hello,World");
+        assertDoesNotThrow(() -> consumer.execute("Hello,World"));
     }
 
     @Test
@@ -47,7 +48,7 @@ class ThrowableConsumerTest {
 
     @Test
     void testExecute2() {
-        execute("Hello,World", consumer);
+        assertDoesNotThrow(() -> execute("Hello,World", consumer));
     }
 
     @Test
@@ -57,14 +58,14 @@ class ThrowableConsumerTest {
 
     @Test
     void testExecute3() {
-        execute("Hello,World", consumer, (t, e) -> {
-        });
+        assertDoesNotThrow(() -> execute("Hello,World", consumer, (t, e) -> {
+        }));
     }
 
     @Test
     void testExecute3OnHandleException() {
-        execute("For testing", throwableConsumer, (t, e) -> {
-        });
+        assertDoesNotThrow(() -> execute("For testing", throwableConsumer, (t, e) -> {
+        }));
     }
 
     @Test
