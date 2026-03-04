@@ -23,9 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -266,29 +264,4 @@ class ExtendableProtocolURLStreamHandlerTest {
     private static class MemberClass extends ExtendableProtocolURLStreamHandler {
     }
 
-    static class FalseSubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
-
-        @Override
-        public boolean supports(URL url, List<String> subProtocols) {
-            return false;
-        }
-
-        @Override
-        public URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException {
-            return null;
-        }
-    }
-
-    static class NullSubProtocolURLConnectionFactory implements SubProtocolURLConnectionFactory {
-
-        @Override
-        public boolean supports(URL url, List<String> subProtocols) {
-            return true;
-        }
-
-        @Override
-        public URLConnection create(URL url, List<String> subProtocols, Proxy proxy) throws IOException {
-            return null;
-        }
-    }
 }

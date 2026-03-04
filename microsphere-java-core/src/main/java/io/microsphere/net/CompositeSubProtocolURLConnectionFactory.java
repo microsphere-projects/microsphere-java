@@ -131,12 +131,12 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
         return factory.create(url, subProtocols, proxy);
     }
 
-    private SubProtocolURLConnectionFactory selectFactory(URL url, List<String> subProtocols) {
+    SubProtocolURLConnectionFactory selectFactory(URL url, List<String> subProtocols) {
         int index = selectFactoryIndex(url, subProtocols);
         return factories.get(index);
     }
 
-    private int selectFactoryIndex(URL url, List<String> subProtocols) {
+    int selectFactoryIndex(URL url, List<String> subProtocols) {
         int index = -1;
         int size = factories.size();
         for (int i = 0; i < size; i++) {
