@@ -29,7 +29,7 @@
         <logback.version>1.5.32</logback.version>
         <!-- Testing -->
         <junit.version>6.0.3</junit.version>
-        <mockito.version>5.22.0</mockito.version>
+        <mockito.version>5.23.0</mockito.version>
         <jmh.version>1.37</jmh.version>
     </properties>
 
