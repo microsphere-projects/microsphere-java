@@ -197,7 +197,7 @@ public final class Deprecation implements Serializable {
         private String link;
 
         @Nonnull
-        private Level level;
+        private Level level = DEFAULT;
 
         protected Builder() {
         }
