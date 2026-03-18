@@ -82,4 +82,25 @@ class PredicatesTest {
     void testOrOnNull() {
         assertTrue(or(null).test(null));
     }
+
+    @Test
+    void testAndWithSinglePredicate() {
+        Predicate<Object> predicate = alwaysTrue();
+        assertTrue(and(predicate).test(null));
+        Predicate<Object> falsePredicate = alwaysFalse();
+        assertFalse(and(falsePredicate).test(null));
+    }
+
+    @Test
+    void testOrWithSinglePredicate() {
+        Predicate<Object> predicate = alwaysTrue();
+        assertTrue(or(predicate).test(null));
+        Predicate<Object> falsePredicate = alwaysFalse();
+        assertFalse(or(falsePredicate).test(null));
+    }
+
+    @Test
+    void testEmptyPredicateArrayConstant() {
+        assertEmptyArray(Predicates.EMPTY_PREDICATE_ARRAY);
+    }
 }

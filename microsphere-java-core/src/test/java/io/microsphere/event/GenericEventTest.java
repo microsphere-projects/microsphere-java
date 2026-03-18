@@ -18,7 +18,11 @@ package io.microsphere.event;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -36,6 +40,41 @@ class GenericEventTest {
 
         assertEquals("Hello,World", event.getSource());
         assertTrue(event.getTimestamp() >= timestamp);
+    }
+
+    @Test
+    void testNullSourceThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> new GenericEvent<>(null));
+    }
+
+    @Test
+    void testTimestampBounds() {
+        long before = System.currentTimeMillis();
+        GenericEvent<String> event = new GenericEvent<>("Test");
+        long after = System.currentTimeMillis();
+        assertTrue(event.getTimestamp() >= before);
+        assertTrue(event.getTimestamp() <= after);
+    }
+
+    @Test
+    void testTimestampOrdering() throws InterruptedException {
+        GenericEvent<String> event1 = new GenericEvent<>("First");
+        Thread.sleep(1);
+        GenericEvent<String> event2 = new GenericEvent<>("Second");
+        assertTrue(event2.getTimestamp() >= event1.getTimestamp());
+    }
+
+    @Test
+    void testWithIntegerSource() {
+        GenericEvent<Integer> event = new GenericEvent<>(42);
+        assertEquals(42, event.getSource());
+    }
+
+    @Test
+    void testWithListSource() {
+        List<String> source = Arrays.asList("a", "b", "c");
+        GenericEvent<List<String>> event = new GenericEvent<>(source);
+        assertEquals(source, event.getSource());
     }
 
 }

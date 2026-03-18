@@ -14,39 +14,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.lang;
+package io.microsphere.convert;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.lang.Wrapper.tryUnwrap;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static io.microsphere.convert.StringToByteConverter.INSTANCE;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- * {@link Wrapper} Test
+ * {@link StringToByteConverter} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see DelegatingWrapper
  * @since 1.0.0
  */
-class WrapperTest {
+class StringToByteConverterTest extends BaseConverterTest<String, Byte> {
 
-    @Test
-    void test() {
-        String delegate = "Hello";
-        Wrapper wrapper = new DelegatingWrapperImpl(delegate);
-        assertEquals(delegate, tryUnwrap(wrapper, String.class));
-        assertNull(tryUnwrap(wrapper, DelegatingWrapperImpl.class));
+    @Override
+    protected AbstractConverter<String, Byte> createConverter() {
+        return INSTANCE;
+    }
+
+    @Override
+    protected String getSource() throws Throwable {
+        return "1";
+    }
+
+    @Override
+    protected Byte getTarget() throws Throwable {
+        return Byte.valueOf("1");
     }
 
     @Test
-    void testOnNull() {
-        assertNull(tryUnwrap(null, String.class));
+    void testConvertOnFailed() {
+        assertThrows(NumberFormatException.class, () -> converter.convert("abc"));
     }
-
-    @Test
-    void testOnNonWrapper() {
-        assertNull(tryUnwrap("not a wrapper", String.class));
-    }
-
 }
