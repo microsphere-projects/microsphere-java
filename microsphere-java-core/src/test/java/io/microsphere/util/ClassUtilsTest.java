@@ -53,9 +53,13 @@ import static io.microsphere.util.ClassUtils.arrayTypeEquals;
 import static io.microsphere.util.ClassUtils.cast;
 import static io.microsphere.util.ClassUtils.concreteClassCache;
 import static io.microsphere.util.ClassUtils.findAllClasses;
+import static io.microsphere.util.ClassUtils.findAllInheritedClasses;
+import static io.microsphere.util.ClassUtils.findAllInterfaces;
+import static io.microsphere.util.ClassUtils.findAllSuperClasses;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
 import static io.microsphere.util.ClassUtils.findClassNamesInJarFile;
 import static io.microsphere.util.ClassUtils.getAllClasses;
+import static io.microsphere.util.ClassUtils.getAllInheritedClasses;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getAllInterfaces;
 import static io.microsphere.util.ClassUtils.getAllSuperClasses;
@@ -598,6 +602,53 @@ class ClassUtilsTest extends LoggingTest {
     void testGetAllInterfaces() {
         assertSame(emptyList(), getAllInterfaces(null));
         assertSame(emptyList(), getAllInterfaces(int.class));
+        List<Class<?>> interfaces = getAllInterfaces(String.class);
+        assertTrue(interfaces.contains(Serializable.class));
+        assertTrue(interfaces.contains(Comparable.class));
+        assertTrue(interfaces.contains(CharSequence.class));
+    }
+
+    @Test
+    void testGetAllInheritedClasses() {
+        assertSame(emptyList(), getAllInheritedClasses(null));
+        assertSame(emptyList(), getAllInheritedClasses(int.class));
+        List<Class<?>> inherited = getAllInheritedClasses(String.class);
+        assertTrue(inherited.contains(Object.class));
+        assertTrue(inherited.contains(Serializable.class));
+        assertTrue(inherited.contains(Comparable.class));
+        assertTrue(inherited.contains(CharSequence.class));
+    }
+
+    @Test
+    void testFindAllSuperClasses() {
+        assertSame(emptyList(), findAllSuperClasses(null));
+        assertSame(emptyList(), findAllSuperClasses(int.class));
+        List<Class<?>> superClasses = findAllSuperClasses(TreeMap.class);
+        assertTrue(superClasses.contains(AbstractMap.class));
+        assertTrue(superClasses.contains(Object.class));
+        assertFalse(superClasses.contains(Map.class));
+    }
+
+    @Test
+    void testFindAllInterfaces() {
+        assertSame(emptyList(), findAllInterfaces(null));
+        assertSame(emptyList(), findAllInterfaces(int.class));
+        List<Class<?>> interfaces = findAllInterfaces(TreeMap.class);
+        assertTrue(interfaces.contains(Map.class));
+        assertTrue(interfaces.contains(SortedMap.class));
+        assertTrue(interfaces.contains(NavigableMap.class));
+        assertFalse(interfaces.contains(AbstractMap.class));
+    }
+
+    @Test
+    void testFindAllInheritedClasses() {
+        assertSame(emptyList(), findAllInheritedClasses(null));
+        assertSame(emptyList(), findAllInheritedClasses(int.class));
+        List<Class<?>> inherited = findAllInheritedClasses(TreeMap.class);
+        assertTrue(inherited.contains(AbstractMap.class));
+        assertTrue(inherited.contains(Object.class));
+        assertTrue(inherited.contains(Map.class));
+        assertTrue(inherited.contains(NavigableMap.class));
     }
 
     @Test

@@ -123,6 +123,39 @@ public class DeprecationTest {
 
     }
 
+    @Test
+    void testBuilderDefaultLevel() {
+        Deprecation deprecation = Deprecation.builder()
+                .since(SINCE)
+                .build();
+        assertEquals(DEFAULT, deprecation.getLevel());
+    }
+
+    @Test
+    void testBuilderNullLevelDefaultsToDefault() {
+        Deprecation deprecation = Deprecation.builder()
+                .since(SINCE)
+                .level(null)
+                .build();
+        assertEquals(DEFAULT, deprecation.getLevel());
+    }
+
+    @Test
+    void testBuilderAllFields() {
+        Deprecation deprecation = Deprecation.builder()
+                .since(SINCE)
+                .replacement(REPLACEMENT)
+                .reason(REASON)
+                .link(LINK)
+                .level(LEVEL)
+                .build();
+        assertEquals(Version.of(SINCE), deprecation.getSince());
+        assertEquals(REPLACEMENT, deprecation.getReplacement());
+        assertEquals(REASON, deprecation.getReason());
+        assertEquals(LINK, deprecation.getLink());
+        assertEquals(LEVEL, deprecation.getLevel());
+    }
+
     private void assertObjectMethods(Deprecation deprecation) {
         Deprecation copy = new Deprecation(deprecation);
         assertEquals(deprecation, copy);

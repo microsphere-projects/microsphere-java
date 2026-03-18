@@ -21,9 +21,15 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.util.Version.Operator.EQ;
+import static io.microsphere.util.Version.Operator.GE;
+import static io.microsphere.util.Version.Operator.GT;
+import static io.microsphere.util.Version.Operator.LE;
+import static io.microsphere.util.Version.Operator.LT;
 import static io.microsphere.util.Version.getValue;
 import static io.microsphere.util.Version.getVersion;
 import static io.microsphere.util.Version.of;
+import static io.microsphere.util.Version.ofVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -310,6 +316,63 @@ class VersionTest {
     void testGetPreRelease() {
         assertEquals("alpha", TEST_ALPHA_PRE_RELEASE_VERSION.getPreRelease());
         assertEquals("beta", TEST_BETA_PRE_RELEASE_VERSION.getPreRelease());
+    }
+
+    @Test
+    void testOfVersion() {
+        assertEquals(of(MAJOR), ofVersion(MAJOR));
+        assertEquals(of(MAJOR, MINOR), ofVersion(MAJOR, MINOR));
+        assertEquals(of(MAJOR, MINOR, PATCH), ofVersion(MAJOR, MINOR, PATCH));
+        assertEquals(of(MAJOR, MINOR, PATCH, ALPHA_PRE_RELEASE), ofVersion(MAJOR, MINOR, PATCH, ALPHA_PRE_RELEASE));
+        assertEquals(of(VERSION), ofVersion(VERSION));
+    }
+
+    @Test
+    void testIsGreaterThan() {
+        assertTrue(TEST_VERSION.isGreaterThan(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_VERSION.isGreaterThan(TEST_VERSION));
+        assertFalse(TEST_VERSION.isGreaterThan(null));
+    }
+
+    @Test
+    void testIsGreaterOrEqual() {
+        assertTrue(TEST_VERSION.isGreaterOrEqual(TEST_VERSION));
+        assertTrue(TEST_VERSION.isGreaterOrEqual(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_VERSION.isGreaterOrEqual(of(MAJOR, MINOR, PATCH + 1)));
+        assertFalse(TEST_VERSION.isGreaterOrEqual(null));
+    }
+
+    @Test
+    void testIsLessThan() {
+        assertTrue(TEST_VERSION.isLessThan(of(MAJOR, MINOR, PATCH + 1)));
+        assertFalse(TEST_VERSION.isLessThan(TEST_VERSION));
+        assertFalse(TEST_VERSION.isLessThan(null));
+    }
+
+    @Test
+    void testIsLessOrEqual() {
+        assertTrue(TEST_VERSION.isLessOrEqual(TEST_VERSION));
+        assertTrue(TEST_VERSION.isLessOrEqual(of(MAJOR, MINOR, PATCH + 1)));
+        assertFalse(TEST_VERSION.isLessOrEqual(of(MAJOR, MINOR, PATCH - 1)));
+        assertFalse(TEST_VERSION.isLessOrEqual(null));
+    }
+
+    @Test
+    void testEqualsVersion() {
+        assertTrue(TEST_VERSION.equals(TEST_VERSION));
+        assertTrue(TEST_VERSION.equals(of(MAJOR, MINOR, PATCH)));
+        assertFalse(TEST_VERSION.equals(of(MAJOR + 1, MINOR, PATCH)));
+        assertFalse(TEST_VERSION.equals((Version) null));
+    }
+
+    @Test
+    void testOperatorOf() {
+        assertEquals(EQ, Version.Operator.of("="));
+        assertEquals(LT, Version.Operator.of("<"));
+        assertEquals(LE, Version.Operator.of("<="));
+        assertEquals(GT, Version.Operator.of(">"));
+        assertEquals(GE, Version.Operator.of(">="));
+        assertThrows(IllegalArgumentException.class, () -> Version.Operator.of("!="));
     }
 
     void assertToString(String version) {

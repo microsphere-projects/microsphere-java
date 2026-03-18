@@ -14,39 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.lang;
+package io.microsphere.json;
 
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.lang.Wrapper.tryUnwrap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link Wrapper} Test
+ * {@link JSONException} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see DelegatingWrapper
  * @since 1.0.0
  */
-class WrapperTest {
+class JSONExceptionTest {
 
     @Test
-    void test() {
-        String delegate = "Hello";
-        Wrapper wrapper = new DelegatingWrapperImpl(delegate);
-        assertEquals(delegate, tryUnwrap(wrapper, String.class));
-        assertNull(tryUnwrap(wrapper, DelegatingWrapperImpl.class));
+    void testConstructorWithMessage() {
+        String message = "Test JSON error";
+        JSONException exception = new JSONException(message);
+        assertEquals(message, exception.getMessage());
     }
 
     @Test
-    void testOnNull() {
-        assertNull(tryUnwrap(null, String.class));
+    void testIsCheckedException() {
+        JSONException exception = new JSONException("error");
+        assertInstanceOf(Exception.class, exception);
     }
 
     @Test
-    void testOnNonWrapper() {
-        assertNull(tryUnwrap("not a wrapper", String.class));
+    void testNullMessage() {
+        JSONException exception = new JSONException(null);
+        assertNull(exception.getMessage());
     }
 
 }
