@@ -27,6 +27,7 @@ import java.util.List;
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -65,6 +66,30 @@ class ClassPathResourceConfigurationPropertyLoaderTest extends LoggingTest {
         ClassPathResourceConfigurationPropertyLoader loader = new ClassPathResourceConfigurationPropertyLoader("Not-Found-Resource") {
         };
         assertTrue(loader.load().isEmpty());
+    }
+
+    @Test
+    void testLoadWithNotFoundResourceAndAllResources() throws Throwable {
+        ClassPathResourceConfigurationPropertyLoader loader = new ClassPathResourceConfigurationPropertyLoader("Not-Found-Resource", true) {
+        };
+        assertTrue(loader.load().isEmpty());
+    }
+
+    @Test
+    void testLoadWithClassLoaderAndAllResources() throws Throwable {
+        ClassPathResourceConfigurationPropertyLoader loader = new ClassPathResourceConfigurationPropertyLoader(
+                ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE,
+                getClassLoader(this.getClass()),
+                true
+        ) {
+        };
+        assertConfigurationProperties(loader);
+    }
+
+    @Test
+    void testIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new ClassPathResourceConfigurationPropertyLoader("") {
+        });
     }
 
     void assertConfigurationProperties(ClassPathResourceConfigurationPropertyLoader loader) throws Throwable {
