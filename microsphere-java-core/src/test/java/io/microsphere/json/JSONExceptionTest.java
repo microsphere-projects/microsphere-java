@@ -14,43 +14,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.classloading;
+package io.microsphere.json;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.classloading.AbstractURLClassPathHandle.DEFAULT_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link AbstractURLClassPathHandle} Test
+ * {@link JSONException} Test
  *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see AbstractURLClassPathHandle
  * @since 1.0.0
  */
-@Disabled
-abstract class AbstractURLClassPathHandleTest extends BaseURLClassPathHandleTest<AbstractURLClassPathHandle> {
+class JSONExceptionTest {
 
     @Test
-    abstract void testGetURLClassPathClassName();
-
-    @Test
-    abstract void testGetUrlsFieldName();
-
-    @Override
-    @Test
-    void testGetPriority() {
-        assertEquals(DEFAULT_PRIORITY, handle.getPriority());
+    void testConstructorWithMessage() {
+        String message = "Test JSON error";
+        JSONException exception = new JSONException(message);
+        assertEquals(message, exception.getMessage());
     }
 
     @Test
-    void testSetPriority() {
-        int newPriority = 42;
-        handle.setPriority(newPriority);
-        assertEquals(newPriority, handle.getPriority());
-        // Restore default priority
-        handle.setPriority(DEFAULT_PRIORITY);
-        assertEquals(DEFAULT_PRIORITY, handle.getPriority());
+    void testIsCheckedException() {
+        JSONException exception = new JSONException("error");
+        assertInstanceOf(Exception.class, exception);
     }
+
+    @Test
+    void testNullMessage() {
+        JSONException exception = new JSONException(null);
+        assertNull(exception.getMessage());
+    }
+
 }

@@ -8,8 +8,6 @@
 [![Codecov](https://codecov.io/gh/microsphere-projects/microsphere-java/branch/main/graph/badge.svg)](https://app.codecov.io/gh/microsphere-projects/microsphere-java)
 ![Maven](https://img.shields.io/maven-central/v/io.github.microsphere-projects/microsphere-java.svg)
 ![License](https://img.shields.io/github/license/microsphere-projects/microsphere-java.svg)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/microsphere-projects/microsphere-java.svg)](http://isitmaintained.com/project/microsphere-projects/microsphere-java "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/microsphere-projects/microsphere-java.svg)](http://isitmaintained.com/project/microsphere-projects/microsphere-java "Percentage of issues still open")
 
 ## Introduction
 
@@ -169,7 +167,7 @@ We welcome your contributions! Please read [Code of Conduct](./CODE_OF_CONDUCT.m
 
 - [microsphere-java-annotations](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-annotations)
 - [microsphere-java-core](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-core)
-- [microsphere-java-model](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-model)
+- [microsphere-lang-modell](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-lang-model)
 - [microsphere-jdk-tools](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-jdk-tools)
 - [microsphere-annotation-processor](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-annotation-processor)
 - [microsphere-java-test](https://javadoc.io/doc/io.github.microsphere-projects/microsphere-java-test)

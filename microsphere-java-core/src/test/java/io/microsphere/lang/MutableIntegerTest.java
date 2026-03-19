@@ -142,4 +142,31 @@ class MutableIntegerTest {
         assertFalse(a.equals(null));
         assertFalse(a.equals("not an IntegerAdder"));
     }
+
+    @Test
+    void testZeroValue() {
+        MutableInteger zero = of(0);
+        assertEquals(0, zero.get());
+        assertEquals(0, zero.hashCode());
+        assertEquals("0", zero.toString());
+        assertEquals(0, zero.intValue());
+        assertEquals(0L, zero.longValue());
+        assertEquals(0.0f, zero.floatValue());
+        assertEquals(0.0d, zero.doubleValue());
+    }
+
+    @Test
+    void testNegativeValue() {
+        MutableInteger neg = of(-10);
+        assertEquals(-10, neg.get());
+        assertEquals(-9, neg.incrementAndGet());
+        assertEquals(-10, neg.decrementAndGet());
+        assertEquals(-5, neg.addAndGet(5));
+    }
+
+    @Test
+    void testEqualsWithSelf() {
+        MutableInteger a = of(10);
+        assertTrue(a.equals(a));
+    }
 }
