@@ -446,4 +446,66 @@ class JSONArrayTest {
         assertEquals(jsonArray.hashCode(), jsonArray.hashCode());
         assertEquals(ofList(1, 2, 3).hashCode(), jsonArray.hashCode());
     }
+
+    @Test
+    void testPutDoubleOnInvalidValue() {
+        assertThrows(JSONException.class, () -> jsonArray.put(NaN));
+        assertThrows(JSONException.class, () -> jsonArray.put(Double.POSITIVE_INFINITY));
+        assertThrows(JSONException.class, () -> jsonArray.put(Double.NEGATIVE_INFINITY));
+    }
+
+    @Test
+    void testPutDoubleWithIndexOnInvalidValue() {
+        assertThrows(JSONException.class, () -> jsonArray.put(0, NaN));
+        assertThrows(JSONException.class, () -> jsonArray.put(0, Double.POSITIVE_INFINITY));
+        assertThrows(JSONException.class, () -> jsonArray.put(0, Double.NEGATIVE_INFINITY));
+    }
+
+    @Test
+    void testOptBooleanWithFallback() {
+        jsonArray.put(true);
+        jsonArray.put("false");
+        assertTrue(jsonArray.optBoolean(0, false));
+        assertFalse(jsonArray.optBoolean(1, true));
+        assertTrue(jsonArray.optBoolean(2, true));
+        assertFalse(jsonArray.optBoolean(-1, false));
+    }
+
+    @Test
+    void testOptDoubleWithFallback() throws JSONException {
+        jsonArray.put(1.0);
+        jsonArray.put("not-a-number");
+        assertEquals(1.0, jsonArray.optDouble(0, 99.0));
+        assertEquals(99.0, jsonArray.optDouble(1, 99.0));
+        assertEquals(99.0, jsonArray.optDouble(2, 99.0));
+        assertEquals(99.0, jsonArray.optDouble(-1, 99.0));
+    }
+
+    @Test
+    void testOptIntWithFallback() throws JSONException {
+        jsonArray.put(42);
+        jsonArray.put("not-a-number");
+        assertEquals(42, jsonArray.optInt(0, 99));
+        assertEquals(99, jsonArray.optInt(1, 99));
+        assertEquals(99, jsonArray.optInt(2, 99));
+        assertEquals(99, jsonArray.optInt(-1, 99));
+    }
+
+    @Test
+    void testOptLongWithFallback() throws JSONException {
+        jsonArray.put(42L);
+        jsonArray.put("not-a-number");
+        assertEquals(42L, jsonArray.optLong(0, 99L));
+        assertEquals(99L, jsonArray.optLong(1, 99L));
+        assertEquals(99L, jsonArray.optLong(2, 99L));
+        assertEquals(99L, jsonArray.optLong(-1, 99L));
+    }
+
+    @Test
+    void testOptStringWithFallback() {
+        jsonArray.put("Hello");
+        assertEquals("Hello", jsonArray.optString(0, "default"));
+        assertEquals("default", jsonArray.optString(1, "default"));
+        assertEquals("default", jsonArray.optString(-1, "default"));
+    }
 }

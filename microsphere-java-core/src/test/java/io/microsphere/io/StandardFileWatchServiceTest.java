@@ -52,6 +52,7 @@ import static io.microsphere.io.event.FileChangedEvent.Kind.values;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
+import static io.microsphere.collection.Lists.ofList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
@@ -262,6 +263,53 @@ class StandardFileWatchServiceTest extends LoggingTest implements Loggable {
         } catch (Exception e) {
             log("Failed to async(timeout : 100ms) : {}", e.getMessage(), e);
             future.cancel(true);
+        }
+    }
+
+    @Test
+    void testIsStartedBeforeStart() {
+        StandardFileWatchService fileWatchService = new StandardFileWatchService();
+        assertFalse(fileWatchService.isStarted());
+    }
+
+    @Test
+    void testCloseWithoutStart() throws Exception {
+        StandardFileWatchService fileWatchService = new StandardFileWatchService();
+        assertFalse(fileWatchService.isStarted());
+        fileWatchService.close();
+        assertFalse(fileWatchService.isStarted());
+    }
+
+    @Test
+    void testWatchWithMultipleListeners() throws Exception {
+        AtomicReference<File> fileReference = new AtomicReference<>();
+
+        try (StandardFileWatchService fileWatchService = new StandardFileWatchService()) {
+
+            FileChangedListener listener1 = new FileChangedListener() {
+                @Override
+                public void onFileCreated(FileChangedEvent event) {
+                    fileReference.set(event.getFile());
+                }
+            };
+
+            FileChangedListener listener2 = new LoggingFileChangedListener();
+
+            fileWatchService.watch(this.testDir, ofList(listener1, listener2), CREATED);
+
+            fileWatchService.start();
+
+            assertTrue(fileWatchService.isStarted());
+
+            File testFile = createRandomFile(testDir);
+
+            while (!testFile.equals(fileReference.get())) {
+                // spin
+            }
+
+            fileWatchService.stop();
+
+            assertFalse(fileWatchService.isStarted());
         }
     }
 
