@@ -197,4 +197,44 @@ class AbstractDequeTest {
         deque.poll();
         assertEquals(0, deque.size());
     }
+
+    @Test
+    void testRemoveFirstOccurrenceWithMultipleOccurrences() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        multiDeque.add("A");
+        multiDeque.add("B");
+        multiDeque.add("A");
+        // removeFirstOccurrence delegates to remove(o) in AbstractDeque which removes the first occurrence
+        assertTrue(multiDeque.removeFirstOccurrence("A"));
+        assertEquals(2, multiDeque.size());
+        // "B" and the second "A" should remain, in order
+        Iterator<String> it = multiDeque.iterator();
+        assertEquals("B", it.next());
+        assertEquals("A", it.next());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    void testOfferAndPollSequence() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        assertTrue(multiDeque.offer("X"));
+        assertTrue(multiDeque.offer("Y"));
+        assertTrue(multiDeque.offer("Z"));
+        // offer delegates to offerLast; poll delegates to pollFirst (FIFO)
+        assertEquals("X", multiDeque.poll());
+        assertEquals("Y", multiDeque.poll());
+        assertEquals("Z", multiDeque.poll());
+        assertNull(multiDeque.poll());
+    }
+
+    @Test
+    void testPushAndPop() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        multiDeque.push("X");
+        multiDeque.push("Y");
+        // push delegates to addFirst (LIFO)
+        assertEquals("Y", multiDeque.pop());
+        assertEquals("X", multiDeque.pop());
+        assertThrows(NoSuchElementException.class, () -> multiDeque.pop());
+    }
 }
