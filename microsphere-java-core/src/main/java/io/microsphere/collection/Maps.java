@@ -114,11 +114,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap() {
-        if (of0MethodHandle == null) {
+        return ofMap0(of0MethodHandle);
+    }
+
+    static <K, V> Map<K, V> ofMap0(MethodHandle methodHandle) {
+        if (methodHandle == null) {
             return emptyMap();
         }
         try {
-            return (Map<K, V>) of0MethodHandle.invokeExact();
+            return (Map<K, V>) methodHandle.invokeExact();
         } catch (Throwable e) {
             return emptyMap();
         }
@@ -144,11 +148,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1) {
-        if (of1MethodHandle == null) {
+        return ofMap1(of1MethodHandle, k1, v1);
+    }
+
+    static <K, V> Map<K, V> ofMap1(MethodHandle methodHandle, K k1, V v1) {
+        if (methodHandle == null) {
             return singletonMap(k1, v1);
         }
         try {
-            return (Map<K, V>) of1MethodHandle.invokeExact(k1, v1);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1);
         } catch (Throwable e) {
             return singletonMap(k1, v1);
         }
@@ -175,11 +183,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2) {
-        if (of2MethodHandle == null) {
+        return ofMap2(of2MethodHandle, k1, v1, k2, v2);
+    }
+
+    static <K, V> Map<K, V> ofMap2(MethodHandle methodHandle, K k1, V v1, K k2, V v2) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2);
         }
         try {
-            return (Map<K, V>) of2MethodHandle.invokeExact(k1, v1, k2, v2);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2);
         }
@@ -208,11 +220,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3) {
-        if (of3MethodHandle == null) {
+        return ofMap3(of3MethodHandle, k1, v1, k2, v2, k3, v3);
+    }
+
+    static <K, V> Map<K, V> ofMap3(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3);
         }
         try {
-            return (Map<K, V>) of3MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3);
         }
@@ -243,11 +259,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
-        if (of4MethodHandle == null) {
+        return ofMap4(of4MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4);
+    }
+
+    static <K, V> Map<K, V> ofMap4(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4);
         }
         try {
-            return (Map<K, V>) of4MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4);
         }
@@ -280,11 +300,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
-        if (of5MethodHandle == null) {
+        return ofMap5(of5MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
+    }
+
+    static <K, V> Map<K, V> ofMap5(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
         }
         try {
-            return (Map<K, V>) of5MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5);
         }
@@ -319,11 +343,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
-        if (of6MethodHandle == null) {
+        return ofMap6(of6MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
+    }
+
+    static <K, V> Map<K, V> ofMap6(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
         }
         try {
-            return (Map<K, V>) of6MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6);
         }
@@ -361,11 +389,15 @@ public abstract class Maps implements Utils {
     @Nonnull
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
-        if (of7MethodHandle == null) {
+        return ofMap7(of7MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
+    }
+
+    static <K, V> Map<K, V> ofMap7(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
         }
         try {
-            return (Map<K, V>) of7MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7);
         }
@@ -406,11 +438,16 @@ public abstract class Maps implements Utils {
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8) {
-        if (of8MethodHandle == null) {
+        return ofMap8(of8MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
+    }
+
+    static <K, V> Map<K, V> ofMap8(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
+                                    K k8, V v8) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
         }
         try {
-            return (Map<K, V>) of8MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8);
         }
@@ -453,11 +490,16 @@ public abstract class Maps implements Utils {
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8, K k9, V v9) {
-        if (of9MethodHandle == null) {
+        return ofMap9(of9MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
+    }
+
+    static <K, V> Map<K, V> ofMap9(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
+                                    K k8, V v8, K k9, V v9) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
         }
         try {
-            return (Map<K, V>) of9MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9);
         }
@@ -503,11 +545,16 @@ public abstract class Maps implements Utils {
     @Immutable
     public static <K, V> Map<K, V> ofMap(K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
                                          K k8, V v8, K k9, V v9, K k10, V v10) {
-        if (of10MethodHandle == null) {
+        return ofMap10(of10MethodHandle, k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
+    }
+
+    static <K, V> Map<K, V> ofMap10(MethodHandle methodHandle, K k1, V v1, K k2, V v2, K k3, V v3, K k4, V v4, K k5, V v5, K k6, V v6, K k7, V v7,
+                                     K k8, V v8, K k9, V v9, K k10, V v10) {
+        if (methodHandle == null) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
         }
         try {
-            return (Map<K, V>) of10MethodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
+            return (Map<K, V>) methodHandle.invokeExact(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
         } catch (Throwable e) {
             return of(k1, v1, k2, v2, k3, v3, k4, v4, k5, v5, k6, v6, k7, v7, k8, v8, k9, v9, k10, v10);
         }
@@ -539,11 +586,15 @@ public abstract class Maps implements Utils {
         if (length(entries) < 1) {
             return emptyMap();
         }
-        if (ofEntriesMethodHandle == null) {
+        return ofMapEntries(ofEntriesMethodHandle, entries);
+    }
+
+    static <K, V> Map<K, V> ofMapEntries(MethodHandle methodHandle, Map.Entry<? extends K, ? extends V>[] entries) {
+        if (methodHandle == null) {
             return of(entries);
         }
         try {
-            return (Map<K, V>) ofEntriesMethodHandle.invokeExact(entries);
+            return (Map<K, V>) methodHandle.invokeExact(entries);
         } catch (Throwable e) {
             return of(entries);
         }

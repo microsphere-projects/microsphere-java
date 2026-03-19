@@ -538,6 +538,57 @@ class JSONObjectTest {
         assertEquals("null", NULL.toString());
     }
 
+    @Test
+    void testPutDoubleOnInvalidValue() {
+        assertThrows(JSONException.class, () -> jsonObject.put("value", NaN));
+        assertThrows(JSONException.class, () -> jsonObject.put("value", POSITIVE_INFINITY));
+        assertThrows(JSONException.class, () -> jsonObject.put("value", NEGATIVE_INFINITY));
+    }
+
+    @Test
+    void testOptBooleanWithFallback() throws JSONException {
+        jsonObject.put("value", TRUE);
+        assertEquals(true, jsonObject.optBoolean("value", false));
+        assertEquals(false, jsonObject.optBoolean("missing", false));
+        assertEquals(true, jsonObject.optBoolean("missing", true));
+    }
+
+    @Test
+    void testOptDoubleWithFallback() throws JSONException {
+        jsonObject.put("value", Double.valueOf(1.0));
+        assertEquals(1.0, jsonObject.optDouble("value", 99.0));
+        assertEquals(99.0, jsonObject.optDouble("missing", 99.0));
+    }
+
+    @Test
+    void testOptIntWithFallback() throws JSONException {
+        jsonObject.put("value", Integer.valueOf(42));
+        assertEquals(42, jsonObject.optInt("value", 99));
+        assertEquals(99, jsonObject.optInt("missing", 99));
+    }
+
+    @Test
+    void testOptLongWithFallback() throws JSONException {
+        jsonObject.put("value", Long.valueOf(42L));
+        assertEquals(42L, jsonObject.optLong("value", 99L));
+        assertEquals(99L, jsonObject.optLong("missing", 99L));
+    }
+
+    @Test
+    void testOptStringWithFallback() throws JSONException {
+        jsonObject.put("name", "Mercy");
+        assertEquals("Mercy", jsonObject.optString("name", "default"));
+        assertEquals("default", jsonObject.optString("missing", "default"));
+    }
+
+    @Test
+    void testWriteTo() throws JSONException {
+        jsonObject.put("name", "Mercy").put("age", 18);
+        JSONStringer stringer = new JSONStringer();
+        jsonObject.writeTo(stringer);
+        assertEquals("{\"name\":\"Mercy\",\"age\":18}", stringer.toString());
+    }
+
     void assertWrap(Object object) {
         assertEquals(object, wrap(object));
     }

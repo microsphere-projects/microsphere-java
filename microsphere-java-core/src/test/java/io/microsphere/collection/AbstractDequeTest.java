@@ -1,10 +1,28 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.microsphere.collection;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -86,12 +104,39 @@ class AbstractDequeTest {
     }
 
     @Test
+    void testGetFirst() {
+        deque.add(TEST_VALUE);
+        assertSame(TEST_VALUE, deque.getFirst());
+        deque.clear();
+        assertThrows(NoSuchElementException.class, () -> deque.getFirst());
+    }
+
+    @Test
+    void testGetLast() {
+        deque.add(TEST_VALUE);
+        assertSame(TEST_VALUE, deque.getLast());
+        deque.clear();
+        assertThrows(NoSuchElementException.class, () -> deque.getLast());
+    }
+
+    @Test
     void testRemoveFirstOccurrence() {
         assertFalse(deque.removeFirstOccurrence(null));
         deque.add(TEST_VALUE);
         assertFalse(deque.removeFirstOccurrence(""));
         assertTrue(deque.removeFirstOccurrence(TEST_VALUE));
         assertFalse(deque.removeFirstOccurrence(TEST_VALUE));
+    }
+
+    @Test
+    void testRemoveLastOccurrence() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        multiDeque.add("A");
+        multiDeque.add("B");
+        multiDeque.add("A");
+        assertTrue(multiDeque.removeLastOccurrence("A"));
+        assertEquals(2, multiDeque.size());
+        assertFalse(multiDeque.removeLastOccurrence("C"));
     }
 
     @Test
@@ -122,8 +167,74 @@ class AbstractDequeTest {
 
     @Test
     void testPeek() {
+        assertNull(deque.peek());
         assertTrue(deque.offer(TEST_VALUE));
         assertSame(TEST_VALUE, deque.peek());
         assertSame(TEST_VALUE, deque.peek());
+    }
+
+    @Test
+    void testDescendingIterator() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        multiDeque.add("A");
+        multiDeque.add("B");
+        multiDeque.add("C");
+        Iterator<String> iterator = multiDeque.descendingIterator();
+        assertTrue(iterator.hasNext());
+        assertEquals("C", iterator.next());
+        assertTrue(iterator.hasNext());
+        assertEquals("B", iterator.next());
+        assertTrue(iterator.hasNext());
+        assertEquals("A", iterator.next());
+        assertFalse(iterator.hasNext());
+    }
+
+    @Test
+    void testSize() {
+        assertEquals(0, deque.size());
+        deque.add(TEST_VALUE);
+        assertEquals(1, deque.size());
+        deque.poll();
+        assertEquals(0, deque.size());
+    }
+
+    @Test
+    void testRemoveFirstOccurrenceWithMultipleOccurrences() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        multiDeque.add("A");
+        multiDeque.add("B");
+        multiDeque.add("A");
+        // removeFirstOccurrence delegates to remove(o) in AbstractDeque which removes the first occurrence
+        assertTrue(multiDeque.removeFirstOccurrence("A"));
+        assertEquals(2, multiDeque.size());
+        // "B" and the second "A" should remain, in order
+        Iterator<String> it = multiDeque.iterator();
+        assertEquals("B", it.next());
+        assertEquals("A", it.next());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    void testOfferAndPollSequence() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        assertTrue(multiDeque.offer("X"));
+        assertTrue(multiDeque.offer("Y"));
+        assertTrue(multiDeque.offer("Z"));
+        // offer delegates to offerLast; poll delegates to pollFirst (FIFO)
+        assertEquals("X", multiDeque.poll());
+        assertEquals("Y", multiDeque.poll());
+        assertEquals("Z", multiDeque.poll());
+        assertNull(multiDeque.poll());
+    }
+
+    @Test
+    void testPushAndPop() {
+        TestDeque<String> multiDeque = new TestDeque<>();
+        multiDeque.push("X");
+        multiDeque.push("Y");
+        // push delegates to addFirst (LIFO)
+        assertEquals("Y", multiDeque.pop());
+        assertEquals("X", multiDeque.pop());
+        assertThrows(NoSuchElementException.class, () -> multiDeque.pop());
     }
 }

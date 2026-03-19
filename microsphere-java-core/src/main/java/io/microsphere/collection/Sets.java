@@ -119,11 +119,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet() {
-        if (of0MethodHandle == null) {
+        return ofSet0(of0MethodHandle);
+    }
+
+    static <E> Set<E> ofSet0(MethodHandle methodHandle) {
+        if (methodHandle == null) {
             return emptySet();
         }
         try {
-            return (Set<E>) of0MethodHandle.invokeExact();
+            return (Set<E>) methodHandle.invokeExact();
         } catch (Throwable e) {
             return emptySet();
         }
@@ -152,11 +156,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1) {
-        if (of1MethodHandle == null) {
+        return ofSet1(of1MethodHandle, e1);
+    }
+
+    static <E> Set<E> ofSet1(MethodHandle methodHandle, E e1) {
+        if (methodHandle == null) {
             return singleton(e1);
         }
         try {
-            return (Set<E>) of1MethodHandle.invokeExact(e1);
+            return (Set<E>) methodHandle.invokeExact(e1);
         } catch (Throwable e) {
             return singleton(e1);
         }
@@ -185,11 +193,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2) {
-        if (of2MethodHandle == null) {
+        return ofSet2(of2MethodHandle, e1, e2);
+    }
+
+    static <E> Set<E> ofSet2(MethodHandle methodHandle, E e1, E e2) {
+        if (methodHandle == null) {
             return of(e1, e2);
         }
         try {
-            return (Set<E>) of2MethodHandle.invokeExact(e1, e2);
+            return (Set<E>) methodHandle.invokeExact(e1, e2);
         } catch (Throwable e) {
             return of(e1, e2);
         }
@@ -219,11 +231,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3) {
-        if (of3MethodHandle == null) {
+        return ofSet3(of3MethodHandle, e1, e2, e3);
+    }
+
+    static <E> Set<E> ofSet3(MethodHandle methodHandle, E e1, E e2, E e3) {
+        if (methodHandle == null) {
             return of(e1, e2, e3);
         }
         try {
-            return (Set<E>) of3MethodHandle.invokeExact(e1, e2, e3);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3);
         } catch (Throwable e) {
             return of(e1, e2, e3);
         }
@@ -254,11 +270,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4) {
-        if (of4MethodHandle == null) {
+        return ofSet4(of4MethodHandle, e1, e2, e3, e4);
+    }
+
+    static <E> Set<E> ofSet4(MethodHandle methodHandle, E e1, E e2, E e3, E e4) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4);
         }
         try {
-            return (Set<E>) of4MethodHandle.invokeExact(e1, e2, e3, e4);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4);
         }
@@ -279,11 +299,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5) {
-        if (of5MethodHandle == null) {
+        return ofSet5(of5MethodHandle, e1, e2, e3, e4, e5);
+    }
+
+    static <E> Set<E> ofSet5(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5);
         }
         try {
-            return (Set<E>) of5MethodHandle.invokeExact(e1, e2, e3, e4, e5);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5);
         }
@@ -316,11 +340,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6) {
-        if (of6MethodHandle == null) {
+        return ofSet6(of6MethodHandle, e1, e2, e3, e4, e5, e6);
+    }
+
+    static <E> Set<E> ofSet6(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6);
         }
         try {
-            return (Set<E>) of6MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6);
         }
@@ -354,11 +382,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
-        if (of7MethodHandle == null) {
+        return ofSet7(of7MethodHandle, e1, e2, e3, e4, e5, e6, e7);
+    }
+
+    static <E> Set<E> ofSet7(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7);
         }
         try {
-            return (Set<E>) of7MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7);
         }
@@ -393,11 +425,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
-        if (of8MethodHandle == null) {
+        return ofSet8(of8MethodHandle, e1, e2, e3, e4, e5, e6, e7, e8);
+    }
+
+    static <E> Set<E> ofSet8(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
         }
         try {
-            return (Set<E>) of8MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
         }
@@ -433,11 +469,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
-        if (of9MethodHandle == null) {
+        return ofSet9(of9MethodHandle, e1, e2, e3, e4, e5, e6, e7, e8, e9);
+    }
+
+    static <E> Set<E> ofSet9(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         }
         try {
-            return (Set<E>) of9MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         }
@@ -474,11 +514,15 @@ public abstract class Sets implements Utils {
     @Nonnull
     @Immutable
     public static <E> Set<E> ofSet(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
-        if (of10MethodHandle == null) {
+        return ofSet10(of10MethodHandle, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
+    }
+
+    static <E> Set<E> ofSet10(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         }
         try {
-            return (Set<E>) of10MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
+            return (Set<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         }
@@ -509,11 +553,15 @@ public abstract class Sets implements Utils {
         if (length(elements) < 1) {
             return ofSet();
         }
-        if (ofMethodHandle == null) {
+        return ofSetElements(ofMethodHandle, elements);
+    }
+
+    static <E> Set<E> ofSetElements(MethodHandle methodHandle, E[] elements) {
+        if (methodHandle == null) {
             return of(elements);
         }
         try {
-            return (Set<E>) ofMethodHandle.invokeExact(elements);
+            return (Set<E>) methodHandle.invokeExact(elements);
         } catch (Throwable e) {
             return of(elements);
         }

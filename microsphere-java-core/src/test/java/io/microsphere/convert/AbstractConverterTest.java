@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link AbstractConverter} Test
@@ -101,5 +102,26 @@ class AbstractConverterTest extends BaseConverterTest<String, String> {
         assertEquals(this.converter, this.converter);
         assertNotEquals(this.converter, StringToBooleanConverter.INSTANCE);
         assertNotEquals(this.converter, ObjectToStringConverter.INSTANCE);
+    }
+
+    @Test
+    void testHashCode() {
+        AbstractConverter<String, String> another = createConverter();
+        assertEquals(this.converter.hashCode(), another.hashCode());
+        assertNotEquals(this.converter.hashCode(), StringToBooleanConverter.INSTANCE.hashCode());
+        assertNotEquals(this.converter.hashCode(), ObjectToStringConverter.INSTANCE.hashCode());
+    }
+
+    @Test
+    void testResolvePriority() {
+        // When resolvePriority() returns a non-null value, getPriority() returns that value
+        AbstractConverter<String, Integer> converter = new AbstractConverter<String, Integer>() {
+            @Override
+            protected Integer doConvert(String source) {
+                return Integer.parseInt(source);
+            }
+        };
+        // The priority is derived from the type hierarchy and must be negative
+        assertTrue(converter.getPriority() < 0);
     }
 }

@@ -60,4 +60,21 @@ class FileExtensionFilterTest {
         assertTrue(this.instance.matches("txt", false));
         assertTrue(this.instance.matches("TXT", false));
     }
+
+    @Test
+    void testOfWithDotPrefixedExtension() throws IOException {
+        FileExtensionFilter dotPrefixedFilter = of(".txt");
+        File testFile = createTempFile("test", ".txt");
+        assertTrue(dotPrefixedFilter.accept(testFile));
+        testFile.deleteOnExit();
+    }
+
+    @Test
+    void testAcceptFilenameFilter() throws IOException {
+        File tmpDir = new File(JAVA_IO_TMPDIR);
+        File testFile = createTempFile("test", ".txt");
+        assertTrue(this.instance.accept(tmpDir, testFile.getName()));
+        assertFalse(this.instance.accept(tmpDir, "file.xml"));
+        testFile.deleteOnExit();
+    }
 }
