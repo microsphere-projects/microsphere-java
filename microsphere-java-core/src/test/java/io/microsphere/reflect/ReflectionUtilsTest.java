@@ -10,6 +10,12 @@ import java.util.Map;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS;
 import static io.microsphere.reflect.ReflectionUtils.INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME;
+import static io.microsphere.reflect.ReflectionUtils.STACK_WALKER_CLASS;
+import static io.microsphere.reflect.ReflectionUtils.STACK_WALKER_CLASS_NAME;
+import static io.microsphere.reflect.ReflectionUtils.STACK_WALKER_STACK_FRAME_CLASS;
+import static io.microsphere.reflect.ReflectionUtils.STACK_WALKER_STACK_FRAME_CLASS_NAME;
+import static io.microsphere.reflect.ReflectionUtils.SUN_REFLECT_REFLECTION_CLASS;
+import static io.microsphere.reflect.ReflectionUtils.SUN_REFLECT_REFLECTION_CLASS_NAME;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClass;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassInSunReflectReflection;
 import static io.microsphere.reflect.ReflectionUtils.getCallerClassName;
@@ -28,6 +34,7 @@ import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -142,6 +149,49 @@ class ReflectionUtilsTest {
         assertFalse(isInaccessibleObjectException(Class.class));
         assertEquals(INACCESSIBLE_OBJECT_EXCEPTION_CLASS != null, isInaccessibleObjectException(INACCESSIBLE_OBJECT_EXCEPTION_CLASS));
         assertTrue(isInaccessibleObjectException(INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME));
+    }
+
+    @Test
+    void testReadFieldsAsMapOnNull() {
+        assertTrue(readFieldsAsMap(null).isEmpty());
+    }
+
+    @Test
+    void testConstants() {
+        assertEquals("sun.reflect.Reflection", SUN_REFLECT_REFLECTION_CLASS_NAME);
+        assertEquals("java.lang.StackWalker", STACK_WALKER_CLASS_NAME);
+        assertEquals("java.lang.StackWalker$StackFrame", STACK_WALKER_STACK_FRAME_CLASS_NAME);
+        assertEquals("java.lang.reflect.InaccessibleObjectException", INACCESSIBLE_OBJECT_EXCEPTION_CLASS_NAME);
+    }
+
+    @Test
+    void testStackWalkerClassAvailability() {
+        if (testCurrentJavaVersion("<", JAVA_VERSION_9)) {
+            assertNull(STACK_WALKER_CLASS);
+            assertNull(STACK_WALKER_STACK_FRAME_CLASS);
+        } else {
+            assertNotNull(STACK_WALKER_CLASS);
+            assertNotNull(STACK_WALKER_STACK_FRAME_CLASS);
+        }
+    }
+
+    @Test
+    void testSunReflectReflectionClassAvailability() {
+        boolean supported = isSupportedSunReflectReflection();
+        if (supported) {
+            assertNotNull(SUN_REFLECT_REFLECTION_CLASS);
+        }
+        // On JDK 9+, sun.reflect.Reflection#getCallerClass(int) was removed,
+        // so isSupportedSunReflectReflection() returns false even though the class may exist
+    }
+
+    @Test
+    void testGetCallerClassInSunReflectReflectionWithOffset() {
+        if (isSupportedSunReflectReflection()) {
+            assertNotNull(getCallerClassInSunReflectReflection(0));
+        } else {
+            assertNull(getCallerClassInSunReflectReflection(0));
+        }
     }
 
     static class T extends Data {

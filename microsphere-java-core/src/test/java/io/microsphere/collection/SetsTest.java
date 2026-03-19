@@ -7,6 +7,7 @@ import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.Sets.ofSet;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link Sets} Test
@@ -76,5 +77,13 @@ class SetsTest {
     void testOfSet() {
         assertEquals(emptySet(), ofSet(TEST_NULL_OBJECT_ARRAY));
         assertEquals(of(1, 2, 3), ofSet(1, 2, 3));
+    }
+
+    @Test
+    void testOfSetImmutability() {
+        assertThrows(UnsupportedOperationException.class, () -> ofSet().add("x"));
+        assertThrows(UnsupportedOperationException.class, () -> ofSet(1).add(2));
+        assertThrows(UnsupportedOperationException.class, () -> ofSet(1, 2).remove(1));
+        assertThrows(UnsupportedOperationException.class, () -> ofSet(1, 2, 3).clear());
     }
 }

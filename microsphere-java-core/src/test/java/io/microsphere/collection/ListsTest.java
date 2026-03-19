@@ -7,6 +7,7 @@ import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link Lists} Test
@@ -76,5 +77,13 @@ class ListsTest {
     void testOfList() {
         assertEquals(emptyList(), ofList(TEST_NULL_OBJECT_ARRAY));
         assertEquals(of(1, 2, 3), ofList(1, 2, 3));
+    }
+
+    @Test
+    void testOfListImmutability() {
+        assertThrows(UnsupportedOperationException.class, () -> ofList().add("x"));
+        assertThrows(UnsupportedOperationException.class, () -> ofList(1).add(2));
+        assertThrows(UnsupportedOperationException.class, () -> ofList(1, 2).remove(0));
+        assertThrows(UnsupportedOperationException.class, () -> ofList(1, 2, 3).clear());
     }
 }

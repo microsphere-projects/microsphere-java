@@ -11,6 +11,7 @@ import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link Maps} Test
@@ -185,5 +186,23 @@ class MapsTest {
     void testMapOfOnEmptyEntries() {
         Map map = Maps.ofMap(new Map.Entry[0]);
         assertSame(emptyMap(), map);
+    }
+
+    @Test
+    void testOfMapOnSingleEntry() {
+        Map.Entry<String, Integer> entry = ofEntry("A", 1);
+        Map<String, Integer> map = Maps.ofMap(entry);
+        assertEquals(1, map.size());
+        assertEquals(1, map.get("A"));
+        assertNull(map.get("B"));
+        assertOfMap(map);
+    }
+
+    @Test
+    void testOfMapImmutability() {
+        assertThrows(UnsupportedOperationException.class, () -> ofMap().put("k", "v"));
+        assertThrows(UnsupportedOperationException.class, () -> ofMap("A", 1).put("B", 2));
+        assertThrows(UnsupportedOperationException.class, () -> ofMap("A", 1, "B", 2).remove("A"));
+        assertThrows(UnsupportedOperationException.class, () -> ofMap("A", 1, "B", 2, "C", 3).clear());
     }
 }

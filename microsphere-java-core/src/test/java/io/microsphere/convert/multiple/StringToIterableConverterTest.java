@@ -36,8 +36,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * {@link StringToIterableConverter} Test
  *
+ * <p>Tests the abstract {@link StringToIterableConverter} behavior using
+ * {@link StringToCollectionConverter} as the concrete implementation.</p>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see StringToIterableConverter
+ * @see StringToCollectionConverter
  * @since 1.0.0
  */
 class StringToIterableConverterTest {
