@@ -75,8 +75,38 @@ class ThrowableFunctionTest {
     }
 
     @Test
+    void testComposeWithNullBefore() {
+        assertThrows(IllegalArgumentException.class, () -> function.compose(null));
+    }
+
+    @Test
     void testAndThen() throws Throwable {
         assertEquals(1, function.andThen(stringToInteger).apply("1"));
+    }
+
+    @Test
+    void testAndThenWithNullAfter() {
+        assertThrows(IllegalArgumentException.class, () -> function.andThen(null));
+    }
+
+    @Test
+    void testExecute1WithCustomHandlerReturningFallback() {
+        assertEquals("fallback", throwableFunction.execute("For testing", (t, e) -> "fallback"));
+    }
+
+    @Test
+    void testExecute2WithNullFunction() {
+        assertThrows(NullPointerException.class, () -> execute("test", null));
+    }
+
+    @Test
+    void testExecute3WithNullFunction() {
+        assertThrows(IllegalArgumentException.class, () -> execute("test", null, (t, e) -> t));
+    }
+
+    @Test
+    void testExecute3WithNullExceptionHandler() {
+        assertThrows(IllegalArgumentException.class, () -> execute("test", function, null));
     }
 
 }
