@@ -117,11 +117,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList() {
-        if (of0MethodHandle == null) {
+        return ofList0(of0MethodHandle);
+    }
+
+    static <E> List<E> ofList0(MethodHandle methodHandle) {
+        if (methodHandle == null) {
             return emptyList();
         }
         try {
-            return (List<E>) of0MethodHandle.invokeExact();
+            return (List<E>) methodHandle.invokeExact();
         } catch (Throwable e) {
             return emptyList();
         }
@@ -146,11 +150,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1) {
-        if (of1MethodHandle == null) {
+        return ofList1(of1MethodHandle, e1);
+    }
+
+    static <E> List<E> ofList1(MethodHandle methodHandle, E e1) {
+        if (methodHandle == null) {
             return singletonList(e1);
         }
         try {
-            return (List<E>) of1MethodHandle.invokeExact(e1);
+            return (List<E>) methodHandle.invokeExact(e1);
         } catch (Throwable e) {
             return singletonList(e1);
         }
@@ -176,11 +184,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2) {
-        if (of2MethodHandle == null) {
+        return ofList2(of2MethodHandle, e1, e2);
+    }
+
+    static <E> List<E> ofList2(MethodHandle methodHandle, E e1, E e2) {
+        if (methodHandle == null) {
             return of(e1, e2);
         }
         try {
-            return (List<E>) of2MethodHandle.invokeExact(e1, e2);
+            return (List<E>) methodHandle.invokeExact(e1, e2);
         } catch (Throwable e) {
             return of(e1, e2);
         }
@@ -207,11 +219,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3) {
-        if (of3MethodHandle == null) {
+        return ofList3(of3MethodHandle, e1, e2, e3);
+    }
+
+    static <E> List<E> ofList3(MethodHandle methodHandle, E e1, E e2, E e3) {
+        if (methodHandle == null) {
             return of(e1, e2, e3);
         }
         try {
-            return (List<E>) of3MethodHandle.invokeExact(e1, e2, e3);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3);
         } catch (Throwable e) {
             return of(e1, e2, e3);
         }
@@ -239,11 +255,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4) {
-        if (of4MethodHandle == null) {
+        return ofList4(of4MethodHandle, e1, e2, e3, e4);
+    }
+
+    static <E> List<E> ofList4(MethodHandle methodHandle, E e1, E e2, E e3, E e4) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4);
         }
         try {
-            return (List<E>) of4MethodHandle.invokeExact(e1, e2, e3, e4);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4);
         }
@@ -272,11 +292,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5) {
-        if (of5MethodHandle == null) {
+        return ofList5(of5MethodHandle, e1, e2, e3, e4, e5);
+    }
+
+    static <E> List<E> ofList5(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5);
         }
         try {
-            return (List<E>) of5MethodHandle.invokeExact(e1, e2, e3, e4, e5);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5);
         }
@@ -298,11 +322,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6) {
-        if (of6MethodHandle == null) {
+        return ofList6(of6MethodHandle, e1, e2, e3, e4, e5, e6);
+    }
+
+    static <E> List<E> ofList6(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6);
         }
         try {
-            return (List<E>) of6MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6);
         }
@@ -333,11 +361,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
-        if (of7MethodHandle == null) {
+        return ofList7(of7MethodHandle, e1, e2, e3, e4, e5, e6, e7);
+    }
+
+    static <E> List<E> ofList7(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7);
         }
         try {
-            return (List<E>) of7MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7);
         }
@@ -369,11 +401,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
-        if (of8MethodHandle == null) {
+        return ofList8(of8MethodHandle, e1, e2, e3, e4, e5, e6, e7, e8);
+    }
+
+    static <E> List<E> ofList8(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
         }
         try {
-            return (List<E>) of8MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8);
         }
@@ -406,11 +442,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
-        if (of9MethodHandle == null) {
+        return ofList9(of9MethodHandle, e1, e2, e3, e4, e5, e6, e7, e8, e9);
+    }
+
+    static <E> List<E> ofList9(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         }
         try {
-            return (List<E>) of9MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9);
         }
@@ -436,11 +476,15 @@ public abstract class Lists implements Utils {
     @Nonnull
     @Immutable
     static <E> List<E> ofList(E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
-        if (of10MethodHandle == null) {
+        return ofList10(of10MethodHandle, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
+    }
+
+    static <E> List<E> ofList10(MethodHandle methodHandle, E e1, E e2, E e3, E e4, E e5, E e6, E e7, E e8, E e9, E e10) {
+        if (methodHandle == null) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         }
         try {
-            return (List<E>) of10MethodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
+            return (List<E>) methodHandle.invokeExact(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         } catch (Throwable e) {
             return of(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10);
         }
@@ -470,11 +514,15 @@ public abstract class Lists implements Utils {
         if (length(elements) < 1) {
             return ofList();
         }
-        if (ofMethodHandle == null) {
+        return ofListElements(ofMethodHandle, elements);
+    }
+
+    static <E> List<E> ofListElements(MethodHandle methodHandle, E[] elements) {
+        if (methodHandle == null) {
             return of(elements);
         }
         try {
-            return (List<E>) ofMethodHandle.invokeExact(elements);
+            return (List<E>) methodHandle.invokeExact(elements);
         } catch (Throwable e) {
             return of(elements);
         }
