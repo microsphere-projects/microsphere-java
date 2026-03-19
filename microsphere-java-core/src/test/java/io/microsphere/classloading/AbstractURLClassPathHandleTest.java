@@ -43,4 +43,14 @@ abstract class AbstractURLClassPathHandleTest extends BaseURLClassPathHandleTest
     void testGetPriority() {
         assertEquals(DEFAULT_PRIORITY, handle.getPriority());
     }
+
+    @Test
+    void testSetPriority() {
+        int newPriority = 42;
+        handle.setPriority(newPriority);
+        assertEquals(newPriority, handle.getPriority());
+        // Restore default priority
+        handle.setPriority(DEFAULT_PRIORITY);
+        assertEquals(DEFAULT_PRIORITY, handle.getPriority());
+    }
 }

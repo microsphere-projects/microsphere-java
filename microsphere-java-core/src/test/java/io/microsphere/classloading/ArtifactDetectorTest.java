@@ -54,4 +54,18 @@ class ArtifactDetectorTest extends LoggingTest {
         ArtifactDetector instance = new ArtifactDetector(null);
         assertTrue(instance.detect(emptySet()).isEmpty());
     }
+
+    @Test
+    void testDetectWithIncludedJdkLibraries() {
+        ArtifactDetector instance = new ArtifactDetector();
+        List<Artifact> artifacts = instance.detect(true);
+        assertNotNull(artifacts);
+    }
+
+    @Test
+    void testDetectWithExcludedJdkLibraries() {
+        ArtifactDetector instance = new ArtifactDetector();
+        List<Artifact> artifacts = instance.detect(false);
+        assertNotNull(artifacts);
+    }
 }
