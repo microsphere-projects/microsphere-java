@@ -324,8 +324,9 @@ def parse_java_file(filepath, module_name):
     # Parse the class Javadoc
     javadoc_info = parse_javadoc(class_javadoc)
 
-    # Check for @Since annotation on the class
-    since_annotation = SINCE_ANNOTATION_RE.search(content[:class_decl_pos + len(class_decl_match)])
+    # Check for @Since annotation on the class (limit search to nearby context)
+    search_start = max(0, class_decl_pos - 2000)
+    since_annotation = SINCE_ANNOTATION_RE.search(content[search_start:class_decl_pos + len(class_decl_match)])
     annotation_since = since_annotation.group(1) if since_annotation else ""
 
     # Extract extends/implements
