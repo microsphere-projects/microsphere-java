@@ -1,0 +1,76 @@
+name: Generate and Publish Wiki Documentation
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '*/src/main/java/**/*.java'
+      - '.github/scripts/generate-wiki-docs.py'
+      - '.github/workflows/wiki-publish.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-wiki:
+    name: Generate Wiki Documentation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Generate wiki pages
+        run: |
+          python .github/scripts/generate-wiki-docs.py --output wiki-output
+          echo "Generated wiki pages:"
+          ls -la wiki-output/ | head -20
+          echo "Total pages: $(ls wiki-output/*.md | wc -l)"
+
+      - name: Checkout wiki repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository }}.wiki
+          path: wiki-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+      - name: Initialize wiki repository if needed
+        run: |
+          if [ ! -d "wiki-repo/.git" ]; then
+            echo "Wiki repository not found. Creating initial wiki structure..."
+            mkdir -p wiki-repo
+            cd wiki-repo
+            git init
+            git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.wiki.git"
+          fi
+
+      - name: Copy generated pages to wiki
+        run: |
+          # Copy all generated markdown files to the wiki repo
+          cp wiki-output/*.md wiki-repo/
+          echo "Copied wiki pages to wiki repository"
+          ls -la wiki-repo/*.md | head -20
+
+      - name: Push to wiki
+        run: |
+          cd wiki-repo
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to wiki documentation"
+          else
+            TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            git commit -m "Update wiki documentation - ${TIMESTAMP}"
+            git push origin HEAD:master || git push origin HEAD:main
+            echo "Wiki documentation updated successfully"
+          fi

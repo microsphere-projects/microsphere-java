@@ -68,3 +68,7 @@ compiler/.gradle/*
 
 # others
 build.txt
+
+# Wiki generated output
+wiki/
+wiki-output/
