@@ -23,7 +23,15 @@ import static io.microsphere.util.ShutdownHookUtils.clearShutdownHookCallbacks;
 import static io.microsphere.util.ShutdownHookUtils.shutdownHookCallbacks;
 
 /**
- * The Thread for executing the {@link Runnable} callbacks
+ * A {@link Thread} that executes registered shutdown hook {@link Runnable} callbacks
+ * when the JVM begins its shutdown sequence.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ *   // This thread is used internally by ShutdownHookUtils:
+ *   // ShutdownHookUtils.addShutdownHookCallback(() -> System.out.println("Shutting down..."));
+ *   // The ShutdownHookCallbacksThread will execute all registered callbacks on JVM shutdown.
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ShutdownHookUtils#registerShutdownHook()
@@ -38,10 +46,35 @@ class ShutdownHookCallbacksThread extends Thread {
      */
     static final ShutdownHookCallbacksThread INSTANCE = new ShutdownHookCallbacksThread();
 
+    /**
+     * Constructs a new {@link ShutdownHookCallbacksThread} with a default thread name
+     * derived from the class simple name.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Internally constructed as a singleton:
+     *   // ShutdownHookCallbacksThread thread = new ShutdownHookCallbacksThread();
+     *   // thread.getName(); // "ShutdownHookCallbacksThread"
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     ShutdownHookCallbacksThread() {
         setName(getClass().getSimpleName());
     }
 
+    /**
+     * Executes all registered shutdown hook callbacks and then clears the callback registry.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is invoked automatically by the JVM during shutdown:
+     *   // Runtime.getRuntime().addShutdownHook(ShutdownHookCallbacksThread.INSTANCE);
+     *   // All registered callbacks in ShutdownHookUtils.shutdownHookCallbacks will be executed.
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     @Override
     public void run() {
         executeShutdownHookCallbacks();
