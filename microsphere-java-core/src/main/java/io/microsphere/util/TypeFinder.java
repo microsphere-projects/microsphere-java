@@ -112,6 +112,31 @@ public class TypeFinder<T> {
 
     private final Function<T, ? super T[]> getInterfacesFunction;
 
+    /**
+     * Constructs a new {@code TypeFinder} with the specified type and configuration options.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = new TypeFinder<>(
+     *       ArrayList.class,
+     *       (Function) Class::getSuperclass,
+     *       (Function) Class::getInterfaces,
+     *       true,  // includeSelf
+     *       true,  // includeHierarchicalTypes
+     *       true,  // includeSuperclass
+     *       true   // includeInterfaces
+     *   );
+     * }</pre>
+     *
+     * @param type                     the root type to find related types from
+     * @param getSuperClassFunction    a function to retrieve the superclass of a given type
+     * @param getInterfacesFunction    a function to retrieve the interfaces of a given type
+     * @param includeSelf              whether to include the type itself in the results
+     * @param includeHierarchicalTypes whether to recursively include types from the hierarchy
+     * @param includeSuperclass        whether to include the direct superclass
+     * @param includeInterfaces        whether to include the directly implemented interfaces
+     * @since 1.0.0
+     */
     public TypeFinder(T type, Function<T, T> getSuperClassFunction,
                       Function<T, T[]> getInterfacesFunction, boolean includeSelf,
                       boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
@@ -127,12 +152,40 @@ public class TypeFinder<T> {
         this.includeInterfaces = includeInterfaces;
     }
 
+    /**
+     * Returns all related types based on the configuration of this {@code TypeFinder},
+     * without applying any filters.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(ArrayList.class, TypeFinder.Include.HIERARCHICAL);
+     *   List<Class<?>> types = finder.getTypes();
+     *   // types contains AbstractList, AbstractCollection, Object, List, Collection, Iterable, ...
+     * }</pre>
+     *
+     * @return an immutable list of related types, or an empty list if none are found
+     * @since 1.0.0
+     */
     @Nonnull
     @Immutable
     public List<T> getTypes() {
         return findTypes(EMPTY_PREDICATE_ARRAY);
     }
 
+    /**
+     * Finds related types that match all the specified filters.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(HashMap.class, TypeFinder.Include.HIERARCHICAL);
+     *   List<Class<?>> interfaces = finder.findTypes(Class::isInterface);
+     *   // interfaces contains Map, Cloneable, Serializable, ...
+     * }</pre>
+     *
+     * @param typeFilters zero or more predicates to filter the found types; all predicates must match
+     * @return an immutable list of matching types, or an empty list if none match
+     * @since 1.0.0
+     */
     @Nonnull
     @Immutable
     public List<T> findTypes(Predicate<? super T>... typeFilters) {
@@ -140,6 +193,20 @@ public class TypeFinder<T> {
         return types.isEmpty() ? emptyList() : unmodifiableList(types);
     }
 
+    /**
+     * Performs the actual type finding logic by collecting related types and applying filters.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Typically invoked internally by findTypes:
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(LinkedList.class, TypeFinder.Include.HIERARCHICAL);
+     *   List<Class<?>> types = finder.findTypes(t -> t != Object.class);
+     * }</pre>
+     *
+     * @param typeFilters an array of predicates to filter the found types
+     * @return a mutable list of types matching the filters
+     * @since 1.0.0
+     */
     protected List<T> doFindTypes(Predicate<? super T>[] typeFilters) {
 
         List<T> allTypes = newLinkedList();
@@ -160,6 +227,23 @@ public class TypeFinder<T> {
         return allTypes;
     }
 
+    /**
+     * Retrieves the direct super types (superclass and/or interfaces) of the given type.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(ArrayList.class, TypeFinder.Include.HIERARCHICAL);
+     *   // Internally called as:
+     *   // getSuperTypes(ArrayList.class, true, true)
+     *   // returns [AbstractList, List, RandomAccess, Cloneable, Serializable]
+     * }</pre>
+     *
+     * @param type                     the type whose super types are to be retrieved
+     * @param includeSuperclass        whether to include the direct superclass
+     * @param includedGenericInterfaces whether to include the directly implemented interfaces
+     * @return a list of direct super types, or an empty list if none are found
+     * @since 1.0.0
+     */
     protected List<T> getSuperTypes(T type, boolean includeSuperclass, boolean includedGenericInterfaces) {
 
         T superclass = includeSuperclass && type != null ? getSuperClass(type) : null;
@@ -192,14 +276,57 @@ public class TypeFinder<T> {
         return types;
     }
 
+    /**
+     * Returns the superclass of the given type using the configured function.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(HashMap.class, TypeFinder.Include.SUPER_CLASS);
+     *   // Internally: getSuperClass(HashMap.class) returns AbstractMap.class
+     * }</pre>
+     *
+     * @param type the type whose superclass is to be retrieved
+     * @return the superclass of the given type, or {@code null} if none exists
+     * @since 1.0.0
+     */
     protected T getSuperClass(T type) {
         return (T) getSuperClassFunction.apply(type);
     }
 
+    /**
+     * Returns the interfaces directly implemented by the given type using the configured function.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(ArrayList.class, TypeFinder.Include.INTERFACES);
+     *   // Internally: getInterfaces(ArrayList.class) returns [List, RandomAccess, Cloneable, Serializable]
+     * }</pre>
+     *
+     * @param type the type whose interfaces are to be retrieved
+     * @return an array of interfaces implemented by the given type
+     * @since 1.0.0
+     */
     protected T[] getInterfaces(T type) {
         return (T[]) getInterfacesFunction.apply(type);
     }
 
+    /**
+     * Recursively adds the super types of the given type to the accumulated list.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(LinkedList.class, TypeFinder.Include.HIERARCHICAL);
+     *   // Internally, addSuperTypes is called recursively to collect:
+     *   // AbstractSequentialList, AbstractList, AbstractCollection, Object, List, Deque, Queue, ...
+     * }</pre>
+     *
+     * @param allTypes               the accumulated list of types to add to
+     * @param type                   the current type whose super types are being added
+     * @param includeHierarchicalTypes whether to recursively traverse the type hierarchy
+     * @param includeSuperclass      whether to include superclasses
+     * @param includeInterfaces      whether to include interfaces
+     * @since 1.0.0
+     */
     protected void addSuperTypes(List<T> allTypes, T type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         if (isObjectType(type)) {
             return;
@@ -245,6 +372,22 @@ public class TypeFinder<T> {
         return klass == null ? null : klass.getGenericInterfaces();
     };
 
+    /**
+     * Creates a {@code TypeFinder} for {@link Class} types using the specified include options.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(ArrayList.class,
+     *       TypeFinder.Include.SELF, TypeFinder.Include.INTERFACES);
+     *   List<Class<?>> types = finder.getTypes();
+     *   // types contains ArrayList plus its directly implemented interfaces
+     * }</pre>
+     *
+     * @param type     the class to find related types from
+     * @param includes one or more {@link Include} options specifying which types to include
+     * @return a new {@code TypeFinder} configured for the given class and options
+     * @since 1.0.0
+     */
     public static TypeFinder<Class<?>> classFinder(Class type, TypeFinder.Include... includes) {
         assertNotEmpty(includes, () -> "The 'includes' must not be empty");
         assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
@@ -252,12 +395,53 @@ public class TypeFinder<T> {
                 contains(includes, SUPER_CLASS), contains(includes, INTERFACES));
     }
 
+    /**
+     * Creates a {@code TypeFinder} for {@link Class} types with explicit boolean configuration.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Class<?>> finder = TypeFinder.classFinder(HashMap.class,
+     *       true,  // includeSelf
+     *       true,  // includeHierarchicalTypes
+     *       true,  // includeSuperclass
+     *       false  // includeInterfaces
+     *   );
+     *   List<Class<?>> types = finder.getTypes();
+     *   // types contains HashMap, AbstractMap, Object
+     * }</pre>
+     *
+     * @param type                     the class to find related types from
+     * @param includeSelf              whether to include the class itself
+     * @param includeHierarchicalTypes whether to recursively include types from the hierarchy
+     * @param includeSuperclass        whether to include superclasses
+     * @param includeInterfaces        whether to include interfaces
+     * @return a new {@code TypeFinder} configured for the given class and options
+     * @since 1.0.0
+     */
     public static TypeFinder<Class<?>> classFinder(Class type, boolean includeSelf, boolean includeHierarchicalTypes,
                                                    boolean includeSuperclass, boolean includeInterfaces) {
         return new TypeFinder(type, classGetSuperClassFunction, classGetInterfacesFunction, includeSelf,
                 includeHierarchicalTypes, includeSuperclass, includeInterfaces);
     }
 
+    /**
+     * Creates a {@code TypeFinder} for generic {@link Type} instances using the specified include options.
+     * Unlike {@link #classFinder(Class, Include...)}, this method resolves generic superclass and
+     * generic interface types.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Type> finder = TypeFinder.genericTypeFinder(ArrayList.class,
+     *       TypeFinder.Include.SELF, TypeFinder.Include.HIERARCHICAL);
+     *   List<Type> types = finder.getTypes();
+     *   // types contains generic types such as AbstractList<E>, List<E>, Collection<E>, Iterable<E>, ...
+     * }</pre>
+     *
+     * @param type     the type to find related generic types from
+     * @param includes one or more {@link Include} options specifying which types to include
+     * @return a new {@code TypeFinder} configured for the given generic type and options
+     * @since 1.0.0
+     */
     public static TypeFinder<Type> genericTypeFinder(Type type, TypeFinder.Include... includes) {
         assertNotEmpty(includes, () -> "The 'includes' must not be empty");
         assertNoNullElements(includes, () -> "The 'includes' must not contain null element");
@@ -265,6 +449,31 @@ public class TypeFinder<T> {
                 contains(includes, SUPER_CLASS), contains(includes, INTERFACES));
     }
 
+    /**
+     * Creates a {@code TypeFinder} for generic {@link Type} instances with explicit boolean configuration.
+     * Unlike {@link #classFinder(Class, boolean, boolean, boolean, boolean)}, this method resolves
+     * generic superclass and generic interface types.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   TypeFinder<Type> finder = TypeFinder.genericTypeFinder(HashMap.class,
+     *       true,  // includeSelf
+     *       false, // includeHierarchicalTypes
+     *       true,  // includeSuperclass
+     *       true   // includeInterfaces
+     *   );
+     *   List<Type> types = finder.getTypes();
+     *   // types contains HashMap, AbstractMap<K,V>, Map<K,V>, Cloneable, Serializable
+     * }</pre>
+     *
+     * @param type                     the type to find related generic types from
+     * @param includeSelf              whether to include the type itself
+     * @param includeHierarchicalTypes whether to recursively include types from the hierarchy
+     * @param includeSuperclass        whether to include superclasses
+     * @param includeInterfaces        whether to include interfaces
+     * @return a new {@code TypeFinder} configured for the given generic type and options
+     * @since 1.0.0
+     */
     public static TypeFinder<Type> genericTypeFinder(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                                      boolean includeSuperclass, boolean includeInterfaces) {
         return new TypeFinder(type, genericTypeGetSuperClassFunction, genericTypeGetInterfacesFunction, includeSelf,
