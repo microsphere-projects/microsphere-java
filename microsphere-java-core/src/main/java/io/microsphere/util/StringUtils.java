@@ -836,6 +836,27 @@ public abstract class StringUtils implements Utils {
         return isEmpty(collection) ? EMPTY_STRING_ARRAY : collection.toArray(EMPTY_STRING_ARRAY);
     }
 
+    /**
+     * Changes the first character of the given {@code String} to uppercase or lowercase,
+     * depending on the {@code capitalize} flag. The rest of the characters remain unchanged.
+     *
+     * <p>If the input is {@code null} or empty, it is returned as-is. If the first character
+     * is already in the desired case, the original {@code String} instance is returned.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   changeFirstCharacter("hello", true)   // returns "Hello"
+     *   changeFirstCharacter("Hello", false)   // returns "hello"
+     *   changeFirstCharacter("Hello", true)    // returns "Hello" (same instance)
+     *   changeFirstCharacter(null, true)        // returns null
+     *   changeFirstCharacter("", true)          // returns ""
+     * }</pre>
+     *
+     * @param str        the String whose first character is to be changed, may be {@code null}
+     * @param capitalize {@code true} to capitalize the first character, {@code false} to uncapitalize it
+     * @return a new String with the first character changed, or the original if no change is needed
+     * @since 1.0.0
+     */
     static String changeFirstCharacter(String str, boolean capitalize) {
         int len = length(str);
         if (len < 1) {
@@ -858,6 +879,27 @@ public abstract class StringUtils implements Utils {
         return new String(chars);
     }
 
+    /**
+     * Trims whitespace from the given {@code String}, optionally from the leading side,
+     * the trailing side, or both. Whitespace is defined by {@link Character#isWhitespace(char)}.
+     *
+     * <p>If the input is {@code null} or empty, it is returned as-is.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   trimWhitespace("  abc  ", true, true)    // returns "abc"
+     *   trimWhitespace("  abc  ", true, false)   // returns "abc  "
+     *   trimWhitespace("  abc  ", false, true)   // returns "  abc"
+     *   trimWhitespace(null, true, true)          // returns null
+     *   trimWhitespace("", true, true)            // returns ""
+     * }</pre>
+     *
+     * @param str             the {@code String} to trim, may be {@code null}
+     * @param includeLeading  {@code true} to trim leading whitespace
+     * @param includeTrailing {@code true} to trim trailing whitespace
+     * @return the trimmed String, or the original if it is {@code null} or empty
+     * @since 1.0.0
+     */
     static String trimWhitespace(String str, boolean includeLeading, boolean includeTrailing) {
         int len = length(str);
         if (len < 1) {

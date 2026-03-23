@@ -40,6 +40,20 @@ public class HierarchicalClassComparator implements Comparator<Class<?>> {
      */
     public static final Comparator<Class<?>> DESCENT = ASCENT.reversed();
 
+    /**
+     * Constructs a new {@link HierarchicalClassComparator} instance.
+     * Use the {@link #ASCENT} or {@link #DESCENT} singletons for standard usage.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Typically use the provided singletons:
+     *   Comparator<Class<?>> comparator = HierarchicalClassComparator.ASCENT;
+     *   // Or create a subclass:
+     *   HierarchicalClassComparator custom = new HierarchicalClassComparator() {};
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     protected HierarchicalClassComparator() {
     }
 

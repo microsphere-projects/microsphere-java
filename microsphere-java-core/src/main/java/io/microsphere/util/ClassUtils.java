@@ -132,14 +132,58 @@ public abstract class ClassUtils implements Utils {
             Double.class
     );
 
+    /**
+     * An immutable {@link Set} containing all Java primitive types:
+     * {@code void}, {@code boolean}, {@code byte}, {@code char}, {@code short},
+     * {@code int}, {@code long}, {@code float}, and {@code double}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean isPrimitive = ClassUtils.PRIMITIVE_TYPES.contains(int.class);   // true
+     *   boolean isNotPrimitive = ClassUtils.PRIMITIVE_TYPES.contains(Integer.class); // false
+     *   int count = ClassUtils.PRIMITIVE_TYPES.size(); // 9 (includes void)
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     @Nonnull
     @Immutable
     public static final Set<Class<?>> PRIMITIVE_TYPES = ofSet(PRIMITIVE_TYPES_ARRAY);
 
+    /**
+     * An immutable {@link Set} containing all Java primitive wrapper types:
+     * {@link Void}, {@link Boolean}, {@link Byte}, {@link Character}, {@link Short},
+     * {@link Integer}, {@link Long}, {@link Float}, and {@link Double}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean isWrapper = ClassUtils.WRAPPER_TYPES.contains(Integer.class); // true
+     *   boolean isNotWrapper = ClassUtils.WRAPPER_TYPES.contains(int.class);  // false
+     *   for (Class<?> wrapperType : ClassUtils.WRAPPER_TYPES) {
+     *       System.out.println(wrapperType.getSimpleName());
+     *   }
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     @Nonnull
     @Immutable
     public static final Set<Class<?>> WRAPPER_TYPES = ofSet(WRAPPER_TYPES_ARRAY);
 
+    /**
+     * An immutable {@link Set} containing all Java primitive array types:
+     * {@code boolean[]}, {@code char[]}, {@code byte[]}, {@code short[]},
+     * {@code int[]}, {@code long[]}, {@code float[]}, and {@code double[]}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean isPrimArray = ClassUtils.PRIMITIVE_ARRAY_TYPES.contains(int[].class);      // true
+     *   boolean isNotPrimArray = ClassUtils.PRIMITIVE_ARRAY_TYPES.contains(Integer[].class); // false
+     *   int count = ClassUtils.PRIMITIVE_ARRAY_TYPES.size(); // 8
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     @Nonnull
     @Immutable
     public static final Set<Class<?>> PRIMITIVE_ARRAY_TYPES = ofSet(
@@ -251,6 +295,20 @@ public abstract class ClassUtils implements Utils {
         NAME_TO_TYPE_PRIMITIVE_MAP = unmodifiableMap(primitiveTypeNameMap);
     }
 
+    /**
+     * A synchronized {@link WeakHashMap}-backed cache that stores whether a given {@link Class}
+     * is a concrete class. Weak keys allow entries to be garbage-collected when the class is
+     * no longer strongly reachable.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Internal cache used by isConcreteClass(Class):
+     *   boolean concrete = ClassUtils.isConcreteClass(String.class); // true, result cached
+     *   boolean abstractType = ClassUtils.isConcreteClass(Number.class); // false, result cached
+     * }</pre>
+     *
+     * @since 1.0.0
+     */
     static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
 
     private static final FileExtensionFilter JAR_FILE_EXTENSION_FILTER = of(JAR_EXTENSION);
@@ -1873,6 +1931,28 @@ public abstract class ClassUtils implements Utils {
         return getSimpleName(type, type.getName());
     }
 
+    /**
+     * Extracts the simple name of a class from its fully qualified class name, handling
+     * top-level, nested, inner, and anonymous classes. For top-level classes, the portion
+     * after the last dot is returned. For enclosed classes, the leading enclosing class
+     * name and any numeric prefix (used for anonymous classes) are stripped.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   String name1 = ClassUtils.getSimpleName(String.class, "java.lang.String");
+     *   // Returns: "String"
+     *
+     *   // For an inner class like java.util.Map.Entry:
+     *   String name2 = ClassUtils.getSimpleName(Map.Entry.class, "java.util.Map$Entry");
+     *   // Returns: "Entry"
+     * }</pre>
+     *
+     * @param type      the class whose simple name is to be extracted, must not be {@code null}
+     * @param className the fully qualified name of the class
+     * @return the simple name of the class, or an empty string for anonymous classes
+     * @throws InternalError if the class name is malformed for an enclosed class
+     * @since 1.0.0
+     */
     static String getSimpleName(Class<?> type, String className) {
         String simpleName = className;
         Class<?> enclosingClass = type.getEnclosingClass();
@@ -1896,6 +1976,21 @@ public abstract class ClassUtils implements Utils {
         return simpleName;
     }
 
+    /**
+     * Checks whether the specified character is an ASCII digit ({@code '0'} through {@code '9'}).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean digit = ClassUtils.isAsciiDigit('5');  // true
+     *   boolean notDigit = ClassUtils.isAsciiDigit('a'); // false
+     *   boolean zero = ClassUtils.isAsciiDigit('0');   // true
+     *   boolean nine = ClassUtils.isAsciiDigit('9');   // true
+     * }</pre>
+     *
+     * @param c the character to check
+     * @return {@code true} if the character is an ASCII digit, {@code false} otherwise
+     * @since 1.0.0
+     */
     static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';
     }

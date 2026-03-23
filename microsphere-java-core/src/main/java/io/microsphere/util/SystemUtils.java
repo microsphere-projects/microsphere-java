@@ -613,6 +613,20 @@ public abstract class SystemUtils implements Utils {
         systemPropertiesCopy = null;
     }
 
+    /**
+     * Retrieves a system property value from the cached copy of system properties.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // After system properties have been cached:
+     *   String javaVersion = SystemUtils.getSystemPropertyFromCopy("java.version");
+     * }</pre>
+     *
+     * @param key the name of the system property
+     * @return the string value of the system property from the cached copy,
+     *         or {@code null} if the copy is not available or the property is not found
+     * @since 1.0.0
+     */
     protected static String getSystemPropertyFromCopy(String key) {
         return systemPropertiesCopy == null ? null : systemPropertiesCopy.get(key);
     }
