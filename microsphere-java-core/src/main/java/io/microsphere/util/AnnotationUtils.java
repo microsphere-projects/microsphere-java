@@ -739,12 +739,20 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Find all directly declared annotations of the annotated element with filters, not including
-     * meta annotations.
+     * Retrieves all declared annotations from the specified {@link AnnotatedElement}, including those
+     * from its hierarchy, but excluding meta-annotations, applying the given filters.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<Annotation> all = AnnotationUtils.findAllDeclaredAnnotations(
+     *       MyClass.class, annotation -> true);
+     *   System.out.println(all); // all declared annotations on MyClass and its superclasses
+     * }</pre>
      *
      * @param annotatedElement    the annotated element
      * @param annotationsToFilter the annotations to filter
      * @return non-null read-only {@link List}
+     * @since 1.0.0
      */
     /**
      * Retrieves all declared annotations from the specified {@link AnnotatedElement}, including those from its hierarchy,
@@ -1220,10 +1228,20 @@ public abstract class AnnotationUtils implements Utils {
 
     /**
      * Find the attributes map from the specified annotation by the {@link Method attribute method}
+     * filters.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Annotation annotation = ExampleClass.class.getAnnotation(CustomAnnotation.class);
+     *   Map<String, Object> attrs = AnnotationUtils.findAttributesMap(
+     *       annotation, method -> !"toString".equals(method.getName()));
+     *   System.out.println(attrs); // {value=example, count=5}
+     * }</pre>
      *
      * @param annotation         the specified annotation
      * @param attributesToFilter the attribute methods to filter
      * @return non-null read-only {@link Map}
+     * @since 1.0.0
      */
     @Nonnull
     @Immutable

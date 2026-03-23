@@ -216,6 +216,22 @@ public abstract class ClassLoaderUtils implements Utils {
         return getDefaultClassLoader(classLoader);
     }
 
+    /**
+     * Returns the given {@link ClassLoader} if it is non-null, otherwise falls back to
+     * the {@linkplain ClassLoader#getSystemClassLoader() system ClassLoader}. A {@code null}
+     * classLoader typically indicates the bootstrap ClassLoader.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ClassLoader cl = Thread.currentThread().getContextClassLoader();
+     *   ClassLoader effective = ClassLoaderUtils.getDefaultClassLoader(cl);
+     *   // If cl is null (bootstrap), effective will be the system ClassLoader
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} to use, may be {@code null}
+     * @return the provided classLoader if non-null, or the system ClassLoader otherwise
+     * @since 1.0.0
+     */
     static ClassLoader getDefaultClassLoader(ClassLoader classLoader) {
         // classLoader is null indicates the bootstrap ClassLoader
         return classLoader == null ? getSystemClassLoader() : classLoader;
@@ -546,6 +562,29 @@ public abstract class ClassLoaderUtils implements Utils {
         return doLoadClass(actualClassLoader, className);
     }
 
+    /**
+     * Loads a {@link Class} with the specified name using the given {@link ClassLoader}.
+     * Returns {@code null} for blank class names. If the class cannot be loaded, this method
+     * attempts to resolve it as a primitive type before returning {@code null}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ClassLoader cl = Thread.currentThread().getContextClassLoader();
+     *   Class<?> klass = ClassLoaderUtils.doLoadClass(cl, "java.lang.String");
+     *   System.out.println(klass); // class java.lang.String
+     *
+     *   Class<?> primitive = ClassLoaderUtils.doLoadClass(cl, "int");
+     *   System.out.println(primitive); // int
+     *
+     *   Class<?> missing = ClassLoaderUtils.doLoadClass(cl, "  ");
+     *   System.out.println(missing); // null
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} used to load the class
+     * @param className   the fully qualified name of the class to load, may be blank
+     * @return the loaded {@link Class}, or {@code null} if the name is blank or the class cannot be found
+     * @since 1.0.0
+     */
     protected static Class<?> doLoadClass(ClassLoader classLoader, String className) {
         if (isBlank(className)) {
             return null;
@@ -1000,6 +1039,24 @@ public abstract class ClassLoaderUtils implements Utils {
         return unmodifiableSet(doGetInheritableClassLoaders(actualClassLoader));
     }
 
+    /**
+     * Traverses the parent chain of the given {@link ClassLoader} and collects every
+     * ClassLoader in the hierarchy into a {@link Set}, starting from the provided
+     * classLoader up to (but not including) the bootstrap ClassLoader ({@code null} parent).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ClassLoader appCl = ClassLoaderUtils.class.getClassLoader();
+     *   Set<ClassLoader> hierarchy = ClassLoaderUtils.doGetInheritableClassLoaders(appCl);
+     *   // hierarchy contains appCl and its parent (e.g. PlatformClassLoader)
+     *   hierarchy.forEach(cl -> System.out.println(cl));
+     * }</pre>
+     *
+     * @param classLoader the starting {@link ClassLoader}; must not be {@code null}
+     * @return a non-null {@link Set} of ClassLoaders in the inheritance chain
+     * @throws NullPointerException if {@code classLoader} is {@code null}
+     * @since 1.0.0
+     */
     @Nonnull
     static Set<ClassLoader> doGetInheritableClassLoaders(ClassLoader classLoader) throws NullPointerException {
         Set<ClassLoader> classLoadersSet = newLinkedHashSet();
@@ -1752,6 +1809,25 @@ public abstract class ClassLoaderUtils implements Utils {
         return classLoader;
     }
 
+    /**
+     * Resolves the effective {@link ClassLoader} to use. Returns the provided classLoader
+     * if it is non-null; otherwise delegates to {@link #getDefaultClassLoader()} to obtain
+     * a suitable default.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ClassLoader provided = new URLClassLoader(new URL[0]);
+     *   ClassLoader result = ClassLoaderUtils.findClassLoader(provided);
+     *   // result == provided
+     *
+     *   ClassLoader fallback = ClassLoaderUtils.findClassLoader(null);
+     *   // fallback is the thread-context or system ClassLoader
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} to use, may be {@code null}
+     * @return the provided classLoader if non-null, or the default ClassLoader otherwise
+     * @since 1.0.0
+     */
     @Nullable
     static ClassLoader findClassLoader(@Nullable ClassLoader classLoader) {
         return classLoader == null ? getDefaultClassLoader() : classLoader;
@@ -1775,11 +1851,50 @@ public abstract class ClassLoaderUtils implements Utils {
         return loadedClass;
     }
 
+    /**
+     * Logs an error message when the reflective invocation of
+     * {@link ClassLoader#findLoadedClass(String)} fails. The log includes the class name,
+     * the ClassLoader instance, and the current JVM vendor and version for diagnostics.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   try {
+     *       // attempt reflective findLoadedClass invocation
+     *   } catch (Throwable e) {
+     *       ClassLoaderUtils.logOnFindLoadedClassInvocationFailed(
+     *           Thread.currentThread().getContextClassLoader(),
+     *           "com.example.MyClass", e);
+     *   }
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} on which the invocation was attempted
+     * @param className   the name of the class that was being looked up
+     * @param e           the {@link Throwable} that caused the failure
+     * @since 1.0.0
+     */
     static void logOnFindLoadedClassInvocationFailed(ClassLoader classLoader, String className, Throwable e) {
         logger.error("The findLoadedClass(className : '{}' : String) method of java.lang.ClassLoader[{}] can't be invoked in the current JVM[vendor : {} , version : {}]",
                 className, classLoader, JAVA_VENDOR, JAVA_VERSION, e);
     }
 
+    /**
+     * Builds a cache key by concatenating the class name with the hash code of the given
+     * {@link ClassLoader}. This key uniquely identifies a class within a specific ClassLoader
+     * for caching purposes.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ClassLoader cl = Thread.currentThread().getContextClassLoader();
+     *   String key = ClassLoaderUtils.buildCacheKey(cl, "com.example.MyClass");
+     *   // key is something like "com.example.MyClass1234567890"
+     *   System.out.println(key);
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} whose hash code is appended to the key
+     * @param className   the fully qualified class name
+     * @return a cache key string composed of the class name and ClassLoader hash code
+     * @since 1.0.0
+     */
     static String buildCacheKey(ClassLoader classLoader, String className) {
         String cacheKey = className + classLoader.hashCode();
         return cacheKey;
@@ -1829,6 +1944,21 @@ public abstract class ClassLoaderUtils implements Utils {
                 return true;
             }
 
+            /**
+             * Returns the resource name as-is without any transformation, since
+             * the {@code DEFAULT} resource type applies no normalization.
+             *
+             * <h3>Example Usage</h3>
+             * <pre>{@code
+             *   String name = "META-INF/services/com.example.MyService";
+             *   String normalized = ResourceType.DEFAULT.normalize(name);
+             *   // normalized is "META-INF/services/com.example.MyService"
+             * }</pre>
+             *
+             * @param name the resource name to normalize
+             * @return the same resource name, unchanged
+             * @since 1.0.0
+             */
             @Override
             public String normalize(String name) {
                 return name;
@@ -1853,6 +1983,24 @@ public abstract class ClassLoaderUtils implements Utils {
                 return endsWith(name, CLASS_EXTENSION);
             }
 
+            /**
+             * Normalizes a class resource name by replacing package-separator dots with
+             * slashes and ensuring the name ends with the {@code .class} extension.
+             * Returns {@code null} if the input is {@code null}.
+             *
+             * <h3>Example Usage</h3>
+             * <pre>{@code
+             *   String normalized = ResourceType.CLASS.normalize("com.example.MyClass.class");
+             *   // normalized is "com/example/MyClass.class"
+             *
+             *   String withoutExt = ResourceType.CLASS.normalize("com.example.MyClass");
+             *   // withoutExt is "com/example/MyClass.class"
+             * }</pre>
+             *
+             * @param name the class resource name to normalize, may be {@code null}
+             * @return the normalized path-style class resource name, or {@code null} if {@code name} is {@code null}
+             * @since 1.0.0
+             */
             @Override
             public String normalize(String name) {
                 if (name == null) {
@@ -1887,6 +2035,24 @@ public abstract class ClassLoaderUtils implements Utils {
                 return !CLASS.supports(name) && !contains(name, SLASH) && !contains(name, BACK_SLASH);
             }
 
+            /**
+             * Normalizes a package resource name by replacing dots with slashes and
+             * ensuring the result ends with a trailing slash. Returns {@code null}
+             * if the input is {@code null}.
+             *
+             * <h3>Example Usage</h3>
+             * <pre>{@code
+             *   String normalized = ResourceType.PACKAGE.normalize("com.example.mypackage");
+             *   // normalized is "com/example/mypackage/"
+             *
+             *   String alreadySlashed = ResourceType.PACKAGE.normalize("com/example/mypackage/");
+             *   // alreadySlashed is "com/example/mypackage/"
+             * }</pre>
+             *
+             * @param name the dot-separated package name to normalize, may be {@code null}
+             * @return the slash-separated package path ending with a slash, or {@code null} if {@code name} is {@code null}
+             * @since 1.0.0
+             */
             @Override
             String normalize(String name) {
                 if (name == null) {

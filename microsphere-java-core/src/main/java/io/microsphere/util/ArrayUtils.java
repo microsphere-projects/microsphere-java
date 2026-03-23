@@ -1873,6 +1873,21 @@ public abstract class ArrayUtils implements Utils {
         return false;
     }
 
+    /**
+     * Checks if the specified byte array contains the given value using binary search.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   byte[] sorted = {1, 2, 3, 4, 5};
+     *   boolean found = ArrayUtils.contains(sorted, (byte) 3); // returns true
+     *   boolean notFound = ArrayUtils.contains(sorted, (byte) 6); // returns false
+     * }</pre>
+     *
+     * @param values the sorted byte array to search
+     * @param value  the value to find
+     * @return {@code true} if the array contains the value, {@code false} otherwise
+     * @since 1.0.0
+     */
     public static boolean contains(byte[] values, byte value) {
         return binarySearch(values, value) > -1;
     }

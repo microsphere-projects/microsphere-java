@@ -196,6 +196,21 @@ public abstract class JarUtils implements Utils {
         return doFilter(jarEntriesList, jarEntryFilter);
     }
 
+    /**
+     * Filters the given iterable of {@link JarEntry} instances using the specified {@link JarEntryFilter}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<JarEntry> entries = // ... obtain jar entries
+     *   JarEntryFilter filter = entry -> entry.getName().endsWith(".xml");
+     *   List<JarEntry> filtered = JarUtils.doFilter(entries, filter);
+     * }</pre>
+     *
+     * @param jarEntries     the iterable of JAR entries to filter; must not be {@code null}
+     * @param jarEntryFilter the filter to apply; if {@code null}, all entries are included
+     * @return a non-null, read-only list of filtered JAR entries
+     * @since 1.0.0
+     */
     @Nonnull
     @Immutable
     protected static List<JarEntry> doFilter(Iterable<JarEntry> jarEntries, JarEntryFilter jarEntryFilter) {
@@ -414,6 +429,24 @@ public abstract class JarUtils implements Utils {
         return false;
     }
 
+    /**
+     * Extracts the specified JAR entries from the given {@link JarFile} into the target directory,
+     * preserving the original directory structure.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   JarFile jarFile = new JarFile("example.jar");
+     *   List<JarEntry> entries = JarUtils.filter(jarFile, entry -> entry.getName().endsWith(".class"));
+     *   File outputDir = new File("/path/to/output");
+     *   JarUtils.doExtract(jarFile, entries, outputDir);
+     * }</pre>
+     *
+     * @param jarFile         the source JAR file; if {@code null}, no extraction is performed
+     * @param jarEntries      the collection of entries to extract; if empty or {@code null}, no extraction is performed
+     * @param targetDirectory the target directory for extraction; must not be {@code null}
+     * @throws IOException if an I/O error occurs during extraction
+     * @since 1.0.0
+     */
     protected static void doExtract(JarFile jarFile, Collection<JarEntry> jarEntries, File targetDirectory) throws IOException {
         if (jarFile == null || isEmpty(jarEntries)) {
             return;

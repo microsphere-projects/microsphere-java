@@ -26,6 +26,22 @@ package io.microsphere.util;
  */
 public abstract class ThrowableUtils implements Utils {
 
+    /**
+     * Retrieves the root cause of the given {@link Throwable} by traversing the cause chain
+     * until a throwable with no cause is found.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Exception root = new IllegalArgumentException("root");
+     *   Exception wrapped = new RuntimeException("wrapped", root);
+     *   Throwable result = ThrowableUtils.getRootCause(wrapped);
+     *   System.out.println(result.getMessage()); // "root"
+     * }</pre>
+     *
+     * @param throwable the throwable whose root cause is to be determined; must not be {@code null}
+     * @return the root cause of the throwable chain
+     * @since 1.0.0
+     */
     public static Throwable getRootCause(Throwable throwable) {
         Throwable rootCause = throwable;
         while (rootCause.getCause() != null) {
