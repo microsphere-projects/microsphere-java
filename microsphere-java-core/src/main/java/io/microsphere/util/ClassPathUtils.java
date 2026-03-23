@@ -76,6 +76,23 @@ public abstract class ClassPathUtils implements Utils {
         return resolveClassPaths(true, runtimeMXBean::getClassPath);
     }
 
+    /**
+     * Resolves class paths from the given supplier if class path is supported.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Set<String> paths = ClassPathUtils.resolveClassPaths(true, () -> "/lib/a.jar:/lib/b.jar");
+     *   // paths contains ["/lib/a.jar", "/lib/b.jar"]
+     *
+     *   Set<String> empty = ClassPathUtils.resolveClassPaths(false, () -> "");
+     *   // empty set returned when not supported
+     * }</pre>
+     *
+     * @param classPathSupported whether the class path is supported
+     * @param classPathSupplier  the supplier providing the class path string
+     * @return a set of resolved class paths, or an empty set if not supported
+     * @since 1.0.0
+     */
     static Set<String> resolveClassPaths(boolean classPathSupported, Supplier<String> classPathSupplier) {
         if (classPathSupported) {
             return resolveClassPaths(classPathSupplier.get());

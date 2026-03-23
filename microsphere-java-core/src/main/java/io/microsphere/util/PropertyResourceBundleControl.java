@@ -75,6 +75,19 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
 
     private final String encoding;
 
+    /**
+     * Constructs a {@link PropertyResourceBundleControl} with the default encoding.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertyResourceBundleControl control = new PropertyResourceBundleControl();
+     *   String encoding = control.getEncoding();
+     *   System.out.println("Default encoding: " + encoding);
+     * }</pre>
+     *
+     * @throws UnsupportedCharsetException if the default encoding is not supported
+     * @since 1.0.0
+     */
     protected PropertyResourceBundleControl() throws UnsupportedCharsetException {
         this(DEFAULT_ENCODING);
     }
@@ -89,6 +102,21 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
         this.encoding = encoding;
     }
 
+    /**
+     * Returns the list of supported formats for the given base name, restricted to properties files only.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertyResourceBundleControl control = PropertyResourceBundleControl.DEFAULT_CONTROL;
+     *   List<String> formats = control.getFormats("my.resources.Messages");
+     *   System.out.println("Supported formats: " + formats);
+     * }</pre>
+     *
+     * @param baseName the base name of the resource bundle
+     * @return a list containing the properties format
+     * @throws NullPointerException if {@code baseName} is {@code null}
+     * @since 1.0.0
+     */
     public final List<String> getFormats(String baseName) {
         if (baseName == null) {
             throw new NullPointerException();
@@ -96,6 +124,29 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
         return FORMAT_PROPERTIES;
     }
 
+    /**
+     * Creates a new {@link ResourceBundle} instance for the given parameters, reading the properties
+     * file with the configured character encoding.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertyResourceBundleControl control = PropertyResourceBundleControl.DEFAULT_CONTROL;
+     *   ResourceBundle bundle = control.newBundle(
+     *       "my.resources.Messages", Locale.US, "java.properties",
+     *       Thread.currentThread().getContextClassLoader(), false
+     *   );
+     *   System.out.println(bundle.getString("greeting"));
+     * }</pre>
+     *
+     * @param baseName    the base name of the resource bundle
+     * @param locale      the locale for which the resource bundle should be loaded
+     * @param format      the resource bundle format to be loaded
+     * @param classLoader the class loader to use for loading the resource
+     * @param reload      whether to bypass the cache and reload the resource
+     * @return a new {@link ResourceBundle} instance, or {@code null} if the resource is not found
+     * @throws IOException if an I/O error occurs while reading the resource
+     * @since 1.0.0
+     */
     public ResourceBundle newBundle(String baseName, Locale locale, String format, final ClassLoader classLoader, final boolean reload) throws IOException {
         String bundleName = super.toBundleName(baseName, locale);
         final String resourceName = super.toResourceName(bundleName, SUFFIX);

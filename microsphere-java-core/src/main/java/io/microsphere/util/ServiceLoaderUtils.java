@@ -555,6 +555,26 @@ public abstract class ServiceLoaderUtils implements Utils {
         return loadService(serviceType, classLoader, cached, false);
     }
 
+    /**
+     * Loads a single service implementation, either the first or last, based on the sorted order.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Load the first service (used internally by loadFirstService):
+     *   MyService first = ServiceLoaderUtils.loadService(MyService.class, classLoader, false, true);
+     *   // Load the last service (used internally by loadLastService):
+     *   MyService last = ServiceLoaderUtils.loadService(MyService.class, classLoader, false, false);
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the interface or abstract class representing the service
+     * @param classLoader the class loader to use; may be {@code null}
+     * @param cached      whether to use cached service instances
+     * @param first       {@code true} to return the first service, {@code false} for the last
+     * @return the selected service implementation
+     * @throws IllegalArgumentException if no implementation is found
+     * @since 1.0.0
+     */
     static <S> S loadService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached, boolean first) {
         List<S> serviceList = loadServicesAsList(serviceType, classLoader, cached);
         int index = first ? 0 : serviceList.size() - 1;
@@ -586,6 +606,22 @@ public abstract class ServiceLoaderUtils implements Utils {
         return serviceList;
     }
 
+    /**
+     * Loads all service implementations as a list using the specified class loader, without caching.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<MyService> services = ServiceLoaderUtils.loadServicesAsList(
+     *       MyService.class, Thread.currentThread().getContextClassLoader());
+     * }</pre>
+     *
+     * @param <S>         the service type
+     * @param serviceType the interface or abstract class representing the service
+     * @param classLoader the class loader to use; may be {@code null}
+     * @return a sorted list of service implementations
+     * @throws IllegalArgumentException if no implementation is defined
+     * @since 1.0.0
+     */
     static <S> List<S> loadServicesAsList(Class<S> serviceType, @Nullable ClassLoader classLoader) {
         if (classLoader == null) {
             classLoader = getClassLoader(serviceType);

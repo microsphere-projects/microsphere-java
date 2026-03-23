@@ -98,18 +98,71 @@ public class Version implements Comparable<Version>, Serializable {
     @Nullable
     private final String preRelease;
 
+    /**
+     * Creates a new {@link Version} with the specified major version number.
+     * Minor and patch are defaulted to 0.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = new Version(1); // 1.0.0
+     * }</pre>
+     *
+     * @param major the major version number
+     * @since 1.0.0
+     */
     public Version(int major) {
         this(major, 0);
     }
 
+    /**
+     * Creates a new {@link Version} with the specified major and minor version numbers.
+     * Patch is defaulted to 0.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = new Version(1, 2); // 1.2.0
+     * }</pre>
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @since 1.0.0
+     */
     public Version(int major, int minor) {
         this(major, minor, 0);
     }
 
+    /**
+     * Creates a new {@link Version} with the specified major, minor, and patch version numbers.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = new Version(1, 2, 3); // 1.2.3
+     * }</pre>
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @param patch the patch version number
+     * @since 1.0.0
+     */
     public Version(int major, int minor, int patch) {
         this(major, minor, patch, null);
     }
 
+    /**
+     * Creates a new {@link Version} with the specified major, minor, patch, and pre-release components.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = new Version(1, 2, 3, "SNAPSHOT"); // 1.2.3-SNAPSHOT
+     * }</pre>
+     *
+     * @param major      the major version number (must be non-negative)
+     * @param minor      the minor version number (must be non-negative)
+     * @param patch      the patch version number (must be non-negative)
+     * @param preRelease the optional pre-release identifier (e.g., "SNAPSHOT", "alpha")
+     * @throws IllegalArgumentException if major, minor, or patch is negative, or all are zero
+     * @since 1.0.0
+     */
     public Version(int major, int minor, int patch, String preRelease) {
         assertTrue(major >= 0, "The 'major' version must not be a non-negative integer!");
         assertTrue(minor >= 0, "The 'minor' version must not be a non-negative integer!");
@@ -279,6 +332,18 @@ public class Version implements Comparable<Version>, Serializable {
         return equals(version);
     }
 
+    /**
+     * Returns a hash code value for this version.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.of("1.2.3");
+     *   int hash = v.hashCode();
+     * }</pre>
+     *
+     * @return a hash code value for this version
+     * @since 1.0.0
+     */
     @Override
     public int hashCode() {
         int result = major;
@@ -290,6 +355,22 @@ public class Version implements Comparable<Version>, Serializable {
         return result;
     }
 
+    /**
+     * Compares this version with another version for ordering.
+     * Versions are compared by major, then minor, then patch, then pre-release.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v1 = Version.of("1.2.3");
+     *   Version v2 = Version.of("1.3.0");
+     *   int result = v1.compareTo(v2); // negative (v1 < v2)
+     * }</pre>
+     *
+     * @param that the version to compare against
+     * @return a negative integer, zero, or a positive integer as this version
+     *         is less than, equal to, or greater than the specified version
+     * @since 1.0.0
+     */
     @Override
     public int compareTo(Version that) {
         int result = compare(this.major, that.major);
@@ -332,47 +413,199 @@ public class Version implements Comparable<Version>, Serializable {
         return v1.compareTo(v2);
     }
 
+    /**
+     * Returns the string representation of this version in the format "major.minor.patch"
+     * or "major.minor.patch-preRelease" if a pre-release identifier is present.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = new Version(1, 2, 3, "SNAPSHOT");
+     *   String s = v.toString(); // "1.2.3-SNAPSHOT"
+     * }</pre>
+     *
+     * @return the version string
+     * @since 1.0.0
+     */
     @Override
     public String toString() {
         return major + DOT + minor + DOT + patch + (preRelease == null ? "" : "-" + preRelease);
     }
 
+    /**
+     * Creates a {@link Version} with only a major version number.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.of(2); // 2.0.0
+     * }</pre>
+     *
+     * @param major the major version number
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version of(int major) {
         return ofVersion(major);
     }
 
+    /**
+     * Creates a {@link Version} with major and minor version numbers.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.of(1, 2); // 1.2.0
+     * }</pre>
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version of(int major, int minor) {
         return ofVersion(major, minor);
     }
 
+    /**
+     * Creates a {@link Version} with major, minor, and patch version numbers.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.of(1, 2, 3); // 1.2.3
+     * }</pre>
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @param patch the patch version number
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version of(int major, int minor, int patch) {
         return ofVersion(major, minor, patch);
     }
 
+    /**
+     * Creates a {@link Version} with major, minor, patch, and pre-release components.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.of(1, 0, 0, "beta"); // 1.0.0-beta
+     * }</pre>
+     *
+     * @param major      the major version number
+     * @param minor      the minor version number
+     * @param patch      the patch version number
+     * @param preRelease the pre-release identifier
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version of(int major, int minor, int patch, String preRelease) {
         return ofVersion(major, minor, patch, preRelease);
     }
 
+    /**
+     * Parses a version string and creates a {@link Version} instance.
+     * Supports formats: "major", "major.minor", "major.minor.patch", "major.minor.patch-preRelease".
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v1 = Version.of("1.2.3");          // 1.2.3
+     *   Version v2 = Version.of("2.0.0-SNAPSHOT"); // 2.0.0-SNAPSHOT
+     * }</pre>
+     *
+     * @param version the version string to parse
+     * @return a new {@link Version} instance
+     * @throws IllegalArgumentException if the version string is null, blank, or invalid
+     * @since 1.0.0
+     */
     public static Version of(String version) {
         return ofVersion(version);
     }
 
+    /**
+     * Creates a {@link Version} with only a major version number.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.ofVersion(2); // 2.0.0
+     * }</pre>
+     *
+     * @param major the major version number
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version ofVersion(int major) {
         return new Version(major);
     }
 
+    /**
+     * Creates a {@link Version} with major and minor version numbers.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.ofVersion(1, 2); // 1.2.0
+     * }</pre>
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version ofVersion(int major, int minor) {
         return new Version(major, minor);
     }
 
+    /**
+     * Creates a {@link Version} with major, minor, and patch version numbers.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.ofVersion(1, 2, 3); // 1.2.3
+     * }</pre>
+     *
+     * @param major the major version number
+     * @param minor the minor version number
+     * @param patch the patch version number
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version ofVersion(int major, int minor, int patch) {
         return new Version(major, minor, patch);
     }
 
+    /**
+     * Creates a {@link Version} with major, minor, patch, and pre-release components.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = Version.ofVersion(1, 0, 0, "alpha"); // 1.0.0-alpha
+     * }</pre>
+     *
+     * @param major      the major version number
+     * @param minor      the minor version number
+     * @param patch      the patch version number
+     * @param preRelease the pre-release identifier
+     * @return a new {@link Version} instance
+     * @since 1.0.0
+     */
     public static Version ofVersion(int major, int minor, int patch, String preRelease) {
         return new Version(major, minor, patch, preRelease);
     }
 
+    /**
+     * Parses a version string and creates a {@link Version} instance.
+     * Supports formats: "major", "major.minor", "major.minor.patch", "major.minor.patch-preRelease".
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v1 = Version.ofVersion("1.2.3");          // 1.2.3
+     *   Version v2 = Version.ofVersion("2.0.0-SNAPSHOT"); // 2.0.0-SNAPSHOT
+     *   Version v3 = Version.ofVersion("3");              // 3.0.0
+     * }</pre>
+     *
+     * @param version the version string to parse
+     * @return a new {@link Version} instance
+     * @throws IllegalArgumentException if the version string is null, blank, or contains non-numeric parts
+     * @since 1.0.0
+     */
     public static Version ofVersion(String version) {
         assertNotNull(version, () -> "The 'version' argument must not be null!");
         assertNotBlank(version, () -> "The 'version' argument must not be blank!");

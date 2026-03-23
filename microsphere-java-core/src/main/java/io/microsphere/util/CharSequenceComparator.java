@@ -46,6 +46,23 @@ public class CharSequenceComparator implements Comparator<CharSequence> {
     private CharSequenceComparator() {
     }
 
+    /**
+     * Compares two {@link CharSequence} instances lexicographically.
+     * Null values are considered less than non-null values. Two null values are considered equal.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   int result = CharSequenceComparator.INSTANCE.compare("apple", "banana"); // negative
+     *   int equal = CharSequenceComparator.INSTANCE.compare("same", "same");     // 0
+     *   int nullFirst = CharSequenceComparator.INSTANCE.compare(null, "text");   // negative
+     * }</pre>
+     *
+     * @param c1 the first {@link CharSequence} to compare; may be {@code null}
+     * @param c2 the second {@link CharSequence} to compare; may be {@code null}
+     * @return a negative integer, zero, or a positive integer as {@code c1} is less than,
+     *         equal to, or greater than {@code c2}
+     * @since 1.0.0
+     */
     @Override
     public int compare(CharSequence c1, CharSequence c2) {
         String string1 = toString(c1);

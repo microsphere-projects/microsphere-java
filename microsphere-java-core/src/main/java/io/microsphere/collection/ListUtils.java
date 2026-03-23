@@ -668,6 +668,22 @@ public abstract class ListUtils implements Utils {
         forEach(values, (i, e) -> consumer.accept(e));
     }
 
+    /**
+     * Adds the specified element to the list if it is not already present.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<String> list = new ArrayList<>(Arrays.asList("a", "b"));
+     *   ListUtils.addIfAbsent(list, "c"); // returns true, list = ["a", "b", "c"]
+     *   ListUtils.addIfAbsent(list, "a"); // returns false, list unchanged
+     * }</pre>
+     *
+     * @param values   the list to add the element to
+     * @param newValue the element to add
+     * @param <T>      the type of elements in the list
+     * @return {@code true} if the element was added, {@code false} if already present
+     * @since 1.0.0
+     */
     public static <T> boolean addIfAbsent(List<T> values, T newValue) {
         return values.contains(newValue) ? false : values.add(newValue);
     }

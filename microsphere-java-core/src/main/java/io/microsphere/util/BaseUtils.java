@@ -25,6 +25,20 @@ package io.microsphere.util;
 @Deprecated
 public abstract class BaseUtils {
 
+    /**
+     * The base class for utility classes. Instantiation is not supported.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Subclass BaseUtils to create a utility class:
+     *   public class MyUtils extends BaseUtils {
+     *       // utility methods
+     *   }
+     * }</pre>
+     *
+     * @throws IllegalStateException always, as utility classes should not be instantiated
+     * @since 1.0.0
+     */
     protected BaseUtils() throws IllegalStateException {
         throw new IllegalStateException("Not Supported!");
     }

@@ -252,10 +252,37 @@ public abstract class VersionUtils implements Utils {
         return versionOperator.test(baseVersion, comparedVersion);
     }
 
+    /**
+     * Returns the major version string of the currently running Java runtime.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   String majorVersion = VersionUtils.currentJavaMajorVersion();
+     *   System.out.println(majorVersion); // e.g., "17" or "8"
+     * }</pre>
+     *
+     * @return the major version string of the current Java runtime
+     * @since 1.0.0
+     */
     static String currentJavaMajorVersion() {
         return detectJavaMajorVersion(JAVA_VERSION);
     }
 
+    /**
+     * Detects and returns the major version from a Java version string.
+     * Handles both legacy format (e.g., "1.8.0_292") and modern format (e.g., "17.0.1").
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   String major1 = VersionUtils.detectJavaMajorVersion("1.8.0_292"); // "8"
+     *   String major2 = VersionUtils.detectJavaMajorVersion("17.0.1");    // "17"
+     *   String major3 = VersionUtils.detectJavaMajorVersion("21");        // "21"
+     * }</pre>
+     *
+     * @param javaVersion the full Java version string
+     * @return the major version component of the Java version string
+     * @since 1.0.0
+     */
     static String detectJavaMajorVersion(String javaVersion) {
         int firstDotIndex = javaVersion.indexOf(DOT_CHAR);
         if (firstDotIndex > -1) {
