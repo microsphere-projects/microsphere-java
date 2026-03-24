@@ -49,6 +49,7 @@ def _read_java_versions(project_root):
     match = re.search(r'matrix:\s*\n\s*java:\s*\[([^\]]+)\]', content)
     if match:
         return [v.strip().strip("'\"") for v in match.group(1).split(',')]
+    print("WARNING: Could not parse Java versions from matrix in maven-build.yml", file=sys.stderr)
     return []
 
 
@@ -58,7 +59,10 @@ def _read_pom_revision(project_root):
     with open(pom_path, 'r', encoding='utf-8') as f:
         content = f.read()
     match = re.search(r'<revision>([^<]+)</revision>', content)
-    return match.group(1).strip() if match else ""
+    if match:
+        return match.group(1).strip()
+    print("WARNING: Could not find <revision> property in pom.xml", file=sys.stderr)
+    return ""
 
 
 def _read_pom_artifact_id(project_root):
@@ -68,7 +72,10 @@ def _read_pom_artifact_id(project_root):
         content = f.read()
     no_parent = re.sub(r'<parent>.*?</parent>', '', content, flags=re.DOTALL)
     match = re.search(r'<artifactId>([^<]+)</artifactId>', no_parent)
-    return match.group(1).strip() if match else ""
+    if match:
+        return match.group(1).strip()
+    print("WARNING: Could not find <artifactId> in pom.xml", file=sys.stderr)
+    return ""
 
 
 def _read_readme_title(project_root):
@@ -79,6 +86,7 @@ def _read_readme_title(project_root):
             line = line.strip()
             if line.startswith('# '):
                 return line[2:].strip()
+    print("WARNING: Could not find a title heading in README.md", file=sys.stderr)
     return ""
 
 
