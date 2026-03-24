@@ -631,14 +631,14 @@ class AnnotationUtilsTest {
 
     @Test
     void testFindMetaAnnotation() {
-        assertNotNull(findMetaAnnotation(A.class, Monitored.class));
-        assertNotNull(findMetaAnnotation(B.class, Monitored.class));
+        assertFindMetaAnnotation(A.class, Monitored.class);
+        assertFindMetaAnnotation(B.class, Monitored.class);
 
-        assertNotNull(findMetaAnnotation(A.class, ServiceMode.class));
-        assertNotNull(findMetaAnnotation(B.class, ServiceMode.class));
+        assertFindMetaAnnotation(A.class, ServiceMode.class);
+        assertFindMetaAnnotation(B.class, ServiceMode.class);
 
-        assertNotNull(findMetaAnnotation(A.class, Template.class));
-        assertNotNull(findMetaAnnotation(B.class, Template.class));
+        assertFindMetaAnnotation(A.class, Template.class);
+        assertFindMetaAnnotation(B.class, Template.class);
 
         assertNull(findMetaAnnotation(AnnotationUtils.class, Monitored.class));
         assertNull(findMetaAnnotation(AnnotationUtils.class, ServiceMode.class));
@@ -655,6 +655,12 @@ class AnnotationUtilsTest {
 
         assertFindMetaAnnotations(A.class, Template.class);
         assertFindMetaAnnotations(B.class, Template.class);
+    }
+
+    private void assertFindMetaAnnotation(AnnotatedElement annotatedElement, Class<? extends Annotation> metaAnnotationType) {
+        Annotation metaAnnotation = findMetaAnnotation(annotatedElement, metaAnnotationType);
+        assertNotNull(metaAnnotation);
+        assertSame(metaAnnotationType, metaAnnotation.annotationType());
     }
 
     private void assertFindMetaAnnotations(AnnotatedElement annotatedElement, Class<? extends Annotation> metaAnnotationType) {
