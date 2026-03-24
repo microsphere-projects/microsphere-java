@@ -38,8 +38,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
-import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.ListUtils.first;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
@@ -1761,9 +1761,9 @@ public abstract class AnnotationUtils implements Utils {
      * <p>If either the annotated element or the meta-annotation type is {@code null},
      * this method will return {@code null}.</p>
      *
-     * @param annotatedElement the element to search for meta-annotations on
+     * @param annotatedElement   the element to search for meta-annotations on
      * @param metaAnnotationType the type of meta-annotation to look for
-     * @param <A> the type of the meta-annotation to find
+     * @param <A>                the type of the meta-annotation to find
      * @return the first matching meta-annotation of the specified type, or {@code null} if none is found
      */
     @Nullable
@@ -1822,23 +1822,32 @@ public abstract class AnnotationUtils implements Utils {
      * <p>If either the annotated element or the meta-annotation type is {@code null},
      * this method will return an empty list.</p>
      *
-     * @param annotatedElement the element to search for meta-annotations on
+     * @param annotatedElement   the element to search for meta-annotations on
      * @param metaAnnotationType the type of meta-annotation to look for
-     * @param <A> the type of the meta-annotation to find
+     * @param <A>                the type of the meta-annotation to find
      * @return a read-only list of all matching meta-annotations of the specified type, never {@code null}
      */
     @Nonnull
     @Immutable
     public static <A extends Annotation> List<A> findMetaAnnotations(AnnotatedElement annotatedElement, Class<A> metaAnnotationType) {
-        return (List<A>) findDeclaredAnnotations(annotatedElement, annotation -> {
+        List<A> annotations = newLinkedList();
+        findMetaAnnotations(annotatedElement, metaAnnotationType, annotations);
+        return unmodifiableList(annotations);
+    }
+
+    static <A extends Annotation> void findMetaAnnotations(AnnotatedElement annotatedElement, Class<A> metaAnnotationType, List<A> annotations) {
+        findDeclaredAnnotations(annotatedElement, annotation -> {
             Class<? extends Annotation> annotationType = annotation.annotationType();
             if (isNativeAnnotationType(annotationType)) {
                 return false;
             }
             if (annotationType.equals(metaAnnotationType)) {
+                annotations.add((A) annotation);
                 return true;
             }
-            return isNotEmpty(findMetaAnnotations(annotationType, metaAnnotationType));
+            // Recursively find meta-annotations on the annotation type
+            findMetaAnnotations(annotationType, metaAnnotationType, annotations);
+            return false;
         });
     }
 
