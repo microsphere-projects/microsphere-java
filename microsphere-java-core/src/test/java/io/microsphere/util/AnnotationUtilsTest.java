@@ -59,6 +59,8 @@ import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.AnnotationUtils.findAttributeValue;
 import static io.microsphere.util.AnnotationUtils.findAttributesMap;
 import static io.microsphere.util.AnnotationUtils.findDeclaredAnnotations;
+import static io.microsphere.util.AnnotationUtils.findMetaAnnotation;
+import static io.microsphere.util.AnnotationUtils.findMetaAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAllDeclaredAnnotations;
 import static io.microsphere.util.AnnotationUtils.getAttributeValue;
 import static io.microsphere.util.AnnotationUtils.getAttributesMap;
@@ -627,6 +629,39 @@ class AnnotationUtilsTest {
         assertEquals(CALLER_SENSITIVE_ANNOTATION_CLASS != null, isCallerSensitivePresent());
     }
 
+    @Test
+    void testFindMetaAnnotation() {
+        assertNotNull(findMetaAnnotation(A.class, Monitored.class));
+        assertNotNull(findMetaAnnotation(B.class, Monitored.class));
+
+        assertNotNull(findMetaAnnotation(A.class, ServiceMode.class));
+        assertNotNull(findMetaAnnotation(B.class, ServiceMode.class));
+
+        assertNotNull(findMetaAnnotation(A.class, Template.class));
+        assertNotNull(findMetaAnnotation(B.class, Template.class));
+
+        assertNull(findMetaAnnotation(AnnotationUtils.class, Monitored.class));
+        assertNull(findMetaAnnotation(AnnotationUtils.class, ServiceMode.class));
+        assertNull(findMetaAnnotation(AnnotationUtils.class, Template.class));
+    }
+
+    @Test
+    void testFindMetaAnnotations() {
+        assertFindMetaAnnotations(A.class, Monitored.class);
+        assertFindMetaAnnotations(B.class, Monitored.class);
+
+        assertFindMetaAnnotations(A.class, ServiceMode.class);
+        assertFindMetaAnnotations(B.class, ServiceMode.class);
+
+        assertFindMetaAnnotations(A.class, Template.class);
+        assertFindMetaAnnotations(B.class, Template.class);
+    }
+
+    private void assertFindMetaAnnotations(AnnotatedElement annotatedElement, Class<? extends Annotation> metaAnnotationType) {
+        List<? extends Annotation> metaAnnotations = findMetaAnnotations(annotatedElement, metaAnnotationType);
+        assertEquals(1, metaAnnotations.size());
+    }
+
     private void assertFilterAnnotations(Annotation[] annotations) {
         assertEquals(ofList(annotations), filterAnnotations(annotations, annotation -> true));
         assertEquals(ofList(annotations), filterAnnotations(ofList(annotations), annotation -> true));
@@ -639,6 +674,14 @@ class AnnotationUtilsTest {
     @Retention(RUNTIME)
     @Inherited
     @Documented
+    public @interface Template {
+    }
+
+    @Target(TYPE)
+    @Retention(RUNTIME)
+    @Inherited
+    @Documented
+    @Template
     public @interface ServiceMode {
     }
 
