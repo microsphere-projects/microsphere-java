@@ -55,6 +55,9 @@ jobs:
 
       - name: Copy generated pages to wiki
         run: |
+          # Remove all existing markdown files from wiki repo to ensure
+          # pages for renamed or deleted classes are properly cleaned up
+          find wiki-repo -maxdepth 1 -name '*.md' -type f -delete 2>/dev/null || true
           # Copy all generated markdown files to the wiki repo
           cp wiki-output/*.md wiki-repo/
           echo "Copied wiki pages to wiki repository"
