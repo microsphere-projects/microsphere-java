@@ -27,21 +27,74 @@ from collections import OrderedDict
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-MODULES = [
-    "microsphere-java-annotations",
-    "microsphere-java-core",
-    "microsphere-jdk-tools",
-    "microsphere-lang-model",
-    "microsphere-annotation-processor",
-    "microsphere-java-test",
-]
-
-JAVA_VERSIONS = ["8", "11", "17", "21", "25"]
-
-PROJECT_VERSION = "0.1.10-SNAPSHOT"
-
 # Source directory path suffix
 SRC_MAIN_JAVA = os.path.join("src", "main", "java")
+
+
+def _discover_modules(project_root):
+    """Discover module directories that contain Java sources."""
+    modules = []
+    for entry in sorted(os.listdir(project_root)):
+        entry_path = os.path.join(project_root, entry)
+        if os.path.isdir(entry_path) and os.path.isdir(os.path.join(entry_path, SRC_MAIN_JAVA)):
+            modules.append(entry)
+    return modules
+
+
+def _read_java_versions(project_root):
+    """Read Java versions from the CI workflow matrix configuration."""
+    workflow_path = os.path.join(project_root, '.github', 'workflows', 'maven-build.yml')
+    with open(workflow_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    match = re.search(r'matrix:\s*\n\s*java:\s*\[([^\]]+)\]', content)
+    if match:
+        return [v.strip().strip("'\"") for v in match.group(1).split(',')]
+    print("WARNING: Could not parse Java versions from matrix in maven-build.yml", file=sys.stderr)
+    return []
+
+
+def _read_pom_revision(project_root):
+    """Read the 'revision' property from the root pom.xml."""
+    pom_path = os.path.join(project_root, 'pom.xml')
+    with open(pom_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    match = re.search(r'<revision>([^<]+)</revision>', content)
+    if match:
+        return match.group(1).strip()
+    print("WARNING: Could not find <revision> property in pom.xml", file=sys.stderr)
+    return ""
+
+
+def _read_pom_artifact_id(project_root):
+    """Read the project artifactId from the root pom.xml (outside the <parent> block)."""
+    pom_path = os.path.join(project_root, 'pom.xml')
+    with open(pom_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    no_parent = re.sub(r'<parent>.*?</parent>', '', content, flags=re.DOTALL)
+    match = re.search(r'<artifactId>([^<]+)</artifactId>', no_parent)
+    if match:
+        return match.group(1).strip()
+    print("WARNING: Could not find <artifactId> in pom.xml", file=sys.stderr)
+    return ""
+
+
+def _read_readme_title(project_root):
+    """Read the top-level heading from README.md."""
+    readme_path = os.path.join(project_root, 'README.md')
+    with open(readme_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line.startswith('# '):
+                return line[2:].strip()
+    print("WARNING: Could not find a title heading in README.md", file=sys.stderr)
+    return ""
+
+
+MODULES = _discover_modules(PROJECT_ROOT)
+JAVA_VERSIONS = _read_java_versions(PROJECT_ROOT)
+PROJECT_VERSION = _read_pom_revision(PROJECT_ROOT)
+ARTIFACT_ID = _read_pom_artifact_id(PROJECT_ROOT)
+PROJECT_TITLE = _read_readme_title(PROJECT_ROOT)
 
 # Regex patterns
 CLASS_DECL_RE = re.compile(
@@ -417,7 +470,7 @@ def generate_wiki_page(component):
 
     # Source link
     lines.append(f"> **Source:** [`{component.source_path}`]"
-                 f"(https://github.com/microsphere-projects/microsphere-java/blob/main/{component.source_path})")
+                 f"(https://github.com/microsphere-projects/{ARTIFACT_ID}/blob/main/{component.source_path})")
     lines.append("")
 
     # ── Overview ──
@@ -515,12 +568,12 @@ def generate_wiki_page(component):
     lines.append("<dependency>")
     lines.append("    <groupId>io.github.microsphere-projects</groupId>")
     lines.append(f"    <artifactId>{component.module}</artifactId>")
-    lines.append(f"    <version>${{microsphere-java.version}}</version>")
+    lines.append(f"    <version>${{{ARTIFACT_ID}.version}}</version>")
     lines.append("</dependency>")
     lines.append("```")
     lines.append("")
-    lines.append("> **Tip:** Use the BOM (`microsphere-java-dependencies`) for consistent version management. "
-                 "See the [Getting Started](https://github.com/microsphere-projects/microsphere-java#getting-started) guide.")
+    lines.append(f"> **Tip:** Use the BOM (`{ARTIFACT_ID}-dependencies`) for consistent version management. "
+                 f"See the [Getting Started](https://github.com/microsphere-projects/{ARTIFACT_ID}#getting-started) guide.")
     lines.append("")
 
     # ── Import ──
@@ -585,7 +638,7 @@ def generate_wiki_page(component):
     lines.append("---")
     lines.append("")
     lines.append(f"*This documentation was auto-generated from the source code of "
-                 f"[microsphere-java](https://github.com/microsphere-projects/microsphere-java).*")
+                 f"[{ARTIFACT_ID}](https://github.com/microsphere-projects/{ARTIFACT_ID}).*")
     lines.append("")
 
     return '\n'.join(lines)
@@ -594,18 +647,18 @@ def generate_wiki_page(component):
 def generate_home_page(components_by_module):
     """Generate the Home (index) wiki page."""
     lines = []
-    lines.append("# Microsphere Java - API Documentation")
+    lines.append(f"# {PROJECT_TITLE} - API Documentation")
     lines.append("")
-    lines.append("Welcome to the **Microsphere Java** wiki! This documentation is auto-generated "
-                 "from the project source code and provides detailed information about each Java component.")
+    lines.append(f"Welcome to the **{PROJECT_TITLE}** wiki! This documentation is auto-generated "
+                 f"from the project source code and provides detailed information about each Java component.")
     lines.append("")
     lines.append("## Project Information")
     lines.append("")
     lines.append(f"- **Current Version:** `{PROJECT_VERSION}`")
     lines.append(f"- **Java Compatibility:** {', '.join('Java ' + v for v in JAVA_VERSIONS)}")
     lines.append("- **License:** Apache License 2.0")
-    lines.append(f"- **Repository:** [microsphere-projects/microsphere-java]"
-                 f"(https://github.com/microsphere-projects/microsphere-java)")
+    lines.append(f"- **Repository:** [microsphere-projects/{ARTIFACT_ID}]"
+                 f"(https://github.com/microsphere-projects/{ARTIFACT_ID})")
     lines.append("")
 
     # Table of Contents by module
@@ -643,16 +696,16 @@ def generate_home_page(components_by_module):
     # Quick links
     lines.append("## Quick Links")
     lines.append("")
-    lines.append("- [Getting Started](https://github.com/microsphere-projects/microsphere-java#getting-started)")
-    lines.append("- [Building from Source](https://github.com/microsphere-projects/microsphere-java#building-from-source)")
-    lines.append("- [Contributing](https://github.com/microsphere-projects/microsphere-java#contributing)")
+    lines.append(f"- [Getting Started](https://github.com/microsphere-projects/{ARTIFACT_ID}#getting-started)")
+    lines.append(f"- [Building from Source](https://github.com/microsphere-projects/{ARTIFACT_ID}#building-from-source)")
+    lines.append(f"- [Contributing](https://github.com/microsphere-projects/{ARTIFACT_ID}#contributing)")
     lines.append("- [JavaDoc](https://javadoc.io/doc/io.github.microsphere-projects)")
     lines.append("")
     lines.append("---")
     lines.append("")
-    lines.append("*This wiki is auto-generated from the source code of "
-                 "[microsphere-java](https://github.com/microsphere-projects/microsphere-java). "
-                 "To update, trigger the `wiki-publish` workflow.*")
+    lines.append(f"*This wiki is auto-generated from the source code of "
+                 f"[{ARTIFACT_ID}](https://github.com/microsphere-projects/{ARTIFACT_ID}). "
+                 f"To update, trigger the `wiki-publish` workflow.*")
     lines.append("")
 
     return '\n'.join(lines)
@@ -696,7 +749,7 @@ def discover_java_files(project_root, modules):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Generate wiki documentation for microsphere-java")
+    parser = argparse.ArgumentParser(description=f"Generate wiki documentation for {ARTIFACT_ID}")
     parser.add_argument(
         "--output", "-o",
         default=os.path.join(PROJECT_ROOT, "wiki"),
@@ -705,14 +758,14 @@ def main():
     parser.add_argument(
         "--project-root",
         default=PROJECT_ROOT,
-        help="Root directory of the microsphere-java project",
+        help=f"Root directory of the {ARTIFACT_ID} project",
     )
     args = parser.parse_args()
 
     project_root = args.project_root
     output_dir = args.output
 
-    print(f"Microsphere Java Wiki Documentation Generator")
+    print(f"{PROJECT_TITLE} Wiki Documentation Generator")
     print(f"  Project root: {project_root}")
     print(f"  Output dir:   {output_dir}")
     print()
