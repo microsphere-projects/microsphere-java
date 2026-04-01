@@ -36,7 +36,7 @@
     <dependencyManagement>
 
         <dependencies>
-            
+
             <!-- Java Commons Annotations API -->
             <dependency>
                 <groupId>javax.annotation</groupId>
@@ -81,14 +81,27 @@
                 <version>${slf4j.version}</version>
             </dependency>
 
+            <!-- Logback -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-access</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
             <!-- Testing -->
-            
+
             <!-- JUnit BOM -->
             <dependency>
                 <groupId>org.junit</groupId>
