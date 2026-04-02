@@ -112,3 +112,17 @@ jobs:
           git add pom.xml
           git diff --cached --quiet && echo "No changes to commit" || \
             git commit -m "chore: bump version to next patch after publishing ${{ inputs.revision }}" && git push
+
+      - name: Merge release into main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git checkout main; then
+            echo "::error::Branch 'main' does not exist. Skipping merge."
+            exit 1
+          fi
+          if ! git merge --no-ff origin/release -m "chore: merge release into main [skip ci]"; then
+            echo "::error::Merge conflict detected when merging release into main. Manual intervention required."
+            exit 1
+          fi
+          git push origin main
