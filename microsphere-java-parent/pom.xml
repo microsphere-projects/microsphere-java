@@ -19,7 +19,7 @@
     <description>Microsphere Java Parent</description>
 
     <properties>
-        <microsphere-bom.version>0.1.4</microsphere-bom.version>
+        <microsphere-bom.version>0.1.5</microsphere-bom.version>
         <spring-framework.version>7.0.6</spring-framework.version>
     </properties>
 
@@ -36,13 +36,19 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Spring Framework BOM -->
+            <!-- Spring -->
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
+                <artifactId>spring-context</artifactId>
                 <version>${spring-framework.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>${spring-framework.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>
