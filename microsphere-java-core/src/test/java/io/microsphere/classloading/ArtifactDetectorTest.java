@@ -68,8 +68,7 @@ class ArtifactDetectorTest extends LoggingTest {
     @Test
     void testDetectOnResourceURL() {
         ArtifactDetector instance = new ArtifactDetector();
-        assertThrows(NullPointerException.class, () -> instance.detect((URL) null));
-
+        assertNull(instance.detect((URL) null));
         URL url = ofURL("file:///not-found");
         Artifact artifact = instance.detect(url);
         assertNull(artifact);
