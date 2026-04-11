@@ -48,6 +48,7 @@ import static io.microsphere.util.Version.Operator.GE;
 import static io.microsphere.util.Version.Operator.GT;
 import static io.microsphere.util.Version.Operator.LE;
 import static io.microsphere.util.Version.Operator.LT;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static java.lang.Integer.compare;
 import static java.lang.Integer.parseInt;
 
@@ -620,12 +621,20 @@ public class Version implements Comparable<Version>, Serializable {
      *
      * @param classInResource the class contained in the artifact whose version is to be detected
      * @return a new {@link Version} instance
+     * @throws IllegalArgumentException if the version can't be resolved
      */
     public static Version ofVersion(@Nonnull Class<?> classInResource) {
         assertNotNull(classInResource, () -> "The 'classInResource' argument must not be null!");
         ClassLoader classLoader = classInResource.getClassLoader();
+        if (classLoader == null) { // Bootstrap ClassLoader
+            return CURRENT_JAVA_VERSION;
+        }
         ArtifactDetector detector = new ArtifactDetector(classLoader);
         Artifact artifact = detector.detect(classInResource);
+        if (artifact == null) {
+            String errorMessage = format("The version can't be resolved by the {}", classInResource);
+            throw new IllegalArgumentException(errorMessage);
+        }
         String version = artifact.getVersion();
         return ofVersion(version);
     }

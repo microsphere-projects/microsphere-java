@@ -6,7 +6,6 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
-import java.io.File;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -15,9 +14,7 @@ import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.ListUtils.newArrayList;
-import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
@@ -52,9 +49,9 @@ import static java.util.Collections.unmodifiableList;
  *
  * <pre>{@code
  * public class CustomArtifactResolver implements ArtifactResourceResolver {
- *     public Artifact resolve(URL resourceURL) {
- *         if (resourceURL.getProtocol().equals("file")) {
- *             return new FileArtifact(resourceURL); // hypothetical custom artifact
+ *     public Artifact resolve(URL classPathURL) {
+ *         if (classPathURL.getProtocol().equals("file")) {
+ *             return new FileArtifact(classPathURL); // hypothetical custom artifact
  *         }
  *         return null;
  *     }
@@ -112,14 +109,14 @@ public class ArtifactDetector {
 
     @Nonnull
     @Immutable
-    public List<Artifact> detect(@Nullable Set<URL> resourceURLs) {
-        int size = size(resourceURLs);
+    public List<Artifact> detect(@Nullable Set<URL> classPathURLs) {
+        int size = size(classPathURLs);
         if (size < 1) {
             return emptyList();
         }
         List<Artifact> artifactList = newArrayList(size);
-        for (URL resourceURL : resourceURLs) {
-            Artifact artifact = detect(resourceURL);
+        for (URL classPathURL : classPathURLs) {
+            Artifact artifact = detect(classPathURL);
             if (artifact != null) {
                 artifactList.add(artifact);
                 break;
@@ -135,15 +132,7 @@ public class ArtifactDetector {
     }
 
     @Nullable
-    public Artifact detect(@Nonnull URL resourceURL) {
-        File archiveFile = resolveArchiveFile(resourceURL);
-        if (archiveFile == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The URL[{}] is not an archive file, no artifact was found!", resourceURL);
-            }
-            return null;
-        }
-        URL classPathURL = execute(archiveFile.toURI()::toURL);
+    public Artifact detect(@Nonnull URL classPathURL) {
         Artifact artifact = null;
         for (ArtifactResourceResolver artifactResourceResolver : artifactResourceResolvers) {
             artifact = artifactResourceResolver.resolve(classPathURL);
