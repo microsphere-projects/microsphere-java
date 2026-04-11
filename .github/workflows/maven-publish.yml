@@ -64,6 +64,7 @@ jobs:
     needs: build
     permissions:
       contents: write
+      models: read
     steps:
       - name: Checkout Source
         uses: actions/checkout@v5
@@ -81,14 +82,90 @@ jobs:
             git push origin ${{ inputs.revision }}
           fi
 
+      - name: Generate Release Notes with Copilot
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_TAG="${{ inputs.revision }}"
+
+          # Find the previous tag (the one before the current tag)
+          PREV_TAG=$(git describe --tags --abbrev=0 --exclude="${CURRENT_TAG}" HEAD 2>/dev/null || echo "")
+
+          # Collect commits between the previous tag and HEAD
+          if [ -n "$PREV_TAG" ]; then
+            COMMITS=$(git log --oneline "${PREV_TAG}..HEAD" 2>/dev/null || echo "No commits found")
+            SINCE_LABEL="$PREV_TAG"
+          else
+            COMMITS=$(git log --oneline -50 2>/dev/null || echo "No commits found")
+            SINCE_LABEL="the beginning"
+          fi
+
+          # Export for Python (avoids shell-escaping issues with multiline content)
+          export CURRENT_TAG_DATA="$CURRENT_TAG"
+          export PREV_TAG_DATA="$SINCE_LABEL"
+          export COMMITS_DATA="$COMMITS"
+
+          # Call GitHub Copilot via GitHub Models API and capture the summary
+          SUMMARY=$(python3 << 'PYEOF'
+          import json, os, urllib.request, sys
+
+          current_tag = os.environ['CURRENT_TAG_DATA']
+          prev_tag    = os.environ['PREV_TAG_DATA']
+          commits     = os.environ['COMMITS_DATA']
+          token       = os.environ['GH_TOKEN']
+
+          prompt = (
+              f"Generate concise release notes for version {current_tag}.\n\n"
+              f"Commits since {prev_tag}:\n{commits}\n\n"
+              "Format the output as markdown with sections for New Features, Bug Fixes, "
+              "and Other Changes (only include sections that have relevant commits). "
+              "Be concise and clear."
+          )
+
+          payload = json.dumps({
+              "model": "gpt-4o",
+              "messages": [{"role": "user", "content": prompt}]
+          }).encode()
+
+          req = urllib.request.Request(
+              "https://models.inference.ai.azure.com/chat/completions",
+              data=payload,
+              headers={
+                  "Content-Type": "application/json",
+                  "Authorization": f"Bearer {token}"
+              }
+          )
+
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  data = json.loads(resp.read())
+                  print(data["choices"][0]["message"]["content"])
+          except Exception as e:
+              print(f"Failed to generate summary via Copilot: {e}", file=sys.stderr)
+              print(f"_Release notes generation failed. Raw commits since {prev_tag}:_\n\n```\n{commits}\n```")
+          PYEOF
+          )
+
+          # Append the summary (with version header) to release-notes.md
+          NOTES_FILE="release-notes.md"
+          if [ ! -f "$NOTES_FILE" ]; then
+            printf "# Release Notes\n\n" > "$NOTES_FILE"
+          fi
+          printf "## v%s\n\n%s\n\n" "$CURRENT_TAG" "$SUMMARY" >> "$NOTES_FILE"
+
+          # Write the current release notes to a temp file for the Create Release step
+          printf "%s" "$SUMMARY" > /tmp/current-release-notes.md
+
+          echo "Release notes generated and appended to $NOTES_FILE"
+
       - name: Create Release
         run: |
           if gh release view "v${{ inputs.revision }}" >/dev/null 2>&1; then
             echo "Release v${{ inputs.revision }} already exists, skipping."
           else
-            gh release create v${{ inputs.revision }} \
+            gh release create ${{ inputs.revision }} \
               --title "v${{ inputs.revision }}" \
-              --generate-notes \
+              --notes-file /tmp/current-release-notes.md \
               --latest
           fi
         env:
@@ -109,7 +186,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add pom.xml
+          git add pom.xml release-notes.md
           git diff --cached --quiet && echo "No changes to commit" || \
             git commit -m "chore: bump version to next patch after publishing ${{ inputs.revision }}" && git push
 
