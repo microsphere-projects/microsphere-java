@@ -1,0 +1,120 @@
+# This workflow syncs every branch that belongs to the current project
+# from the upstream repository. It can be triggered manually or runs automatically
+# every 5 minutes.
+#
+# Step 1: The GitHub API is queried to determine whether the current repository
+#         is a fork. If it is the upstream (not a fork), the job exits immediately.
+# Step 2: Each branch present in the fork is synced from the upstream parent.
+#         Branches that exist only in the fork (not in upstream) are skipped.
+# Step 3: The schedule runs every 5 minutes.
+
+name: Sync Branches from Upstream
+
+on:
+  push:
+    branches: [ 'main' , "dev" , "dev-1.x" ]
+  schedule:
+    - cron: '*/5 * * * *'
+
+concurrency:
+  group: sync-branches-from-upstream
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    name: Sync branches from upstream
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Check if this repository is a fork
+        id: fork_check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          repo_info=$(gh api "repos/${{ github.repository }}")
+          is_fork=$(echo "$repo_info" | jq -r '.fork')
+          if [ "$is_fork" = "true" ]; then
+            upstream_repo=$(echo "$repo_info" | jq -r '.parent.full_name // empty')
+            if [ -z "$upstream_repo" ]; then
+              echo "::error::Repository is marked as a fork but parent information is missing."
+              exit 1
+            fi
+            echo "This repository is a fork of '${upstream_repo}'."
+            echo "is_fork=true" >> "$GITHUB_OUTPUT"
+            echo "upstream_repo=${upstream_repo}" >> "$GITHUB_OUTPUT"
+          else
+            echo "This repository is not a fork (it is the upstream). Nothing to sync."
+            echo "is_fork=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout Repository
+        if: steps.fork_check.outputs.is_fork == 'true'
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync branches from upstream
+        if: steps.fork_check.outputs.is_fork == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          upstream="${{ steps.fork_check.outputs.upstream_repo }}"
+          echo "Upstream repository: $upstream"
+          git remote add upstream "https://github.com/${upstream}.git"
+
+          echo "Fetching all refs from upstream..."
+          git fetch upstream
+
+          echo "Fetching all refs from origin..."
+          git fetch origin
+
+          # Collect all branches that exist in this project (origin), excluding HEAD pointer.
+          origin_branches=$(git branch -r | grep '^  origin/' | grep -v '^  origin/HEAD' | sed 's|^  origin/||')
+
+          if [ -z "$origin_branches" ]; then
+            echo "No branches found in the repository. Nothing to sync."
+            exit 0
+          fi
+
+          synced=0
+          skipped=0
+          failed=0
+
+          for branch in $origin_branches; do
+            echo "---"
+            # Only sync branches that also exist in upstream.
+            if ! git ls-remote --exit-code upstream "refs/heads/${branch}" > /dev/null 2>&1; then
+              echo "Branch '${branch}' does not exist in upstream – skipping."
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            # If the origin and upstream branches point to the same commit, skip.
+            origin_sha=$(git rev-parse "origin/${branch}")
+            upstream_sha=$(git rev-parse "upstream/${branch}")
+            if [ "$origin_sha" = "$upstream_sha" ]; then
+              echo "Branch '${branch}' is already up to date."
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            echo "Syncing branch '${branch}' from upstream..."
+            if git push origin "upstream/${branch}:refs/heads/${branch}" --force-with-lease; then
+              echo "Branch '${branch}' synced successfully."
+              synced=$((synced + 1))
+            else
+              echo "::warning::Failed to push branch '${branch}'."
+              failed=$((failed + 1))
+            fi
+          done
+
+          echo "==="
+          echo "Sync complete: synced=${synced}, skipped=${skipped}, failed=${failed}"
+          if [ "$failed" -gt 0 ]; then
+            exit 1
+          fi
