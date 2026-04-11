@@ -6,13 +6,15 @@
 #         is a fork. If it is the upstream (not a fork), the job exits immediately.
 # Step 2: Each branch present in the fork is synced from the upstream parent.
 #         Branches that exist only in the fork (not in upstream) are skipped.
+#         If the fork's branch is ahead of upstream (i.e. has newer commits),
+#         the sync is also skipped to avoid overwriting fork-only changes.
 # Step 3: The schedule runs every 5 minutes.
 
 name: Sync Branches from Upstream
 
 on:
   push:
-    branches: [ 'main' , "dev" , "dev-1.x" ]
+    branches: [ 'main' , 'dev' , 'dev-1.x' ]
   schedule:
     - cron: '*/5 * * * *'
 
@@ -99,6 +101,13 @@ jobs:
             upstream_sha=$(git rev-parse "upstream/${branch}")
             if [ "$origin_sha" = "$upstream_sha" ]; then
               echo "Branch '${branch}' is already up to date."
+              skipped=$((skipped + 1))
+              continue
+            fi
+
+            # If the fork branch is ahead of upstream (upstream is an ancestor of origin), skip.
+            if git merge-base --is-ancestor "$upstream_sha" "$origin_sha"; then
+              echo "Branch '${branch}' in fork is ahead of upstream – skipping."
               skipped=$((skipped + 1))
               continue
             fi
