@@ -32,9 +32,11 @@ import static io.microsphere.util.Version.getValue;
 import static io.microsphere.util.Version.getVersion;
 import static io.microsphere.util.Version.of;
 import static io.microsphere.util.Version.ofVersion;
+import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -123,6 +125,15 @@ class VersionTest {
     void testOfVersionOnClassInResource() {
         Version version = ofVersion(Nullable.class);
         assertEquals("3.0.2", version.toString());
+
+        // The Class loaded by Bootstrap ClassLoader
+        version = ofVersion(String.class);
+        assertSame(CURRENT_JAVA_VERSION, version);
+    }
+
+    @Test
+    void testOfVersionOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> ofVersion(Version.class));
     }
 
     @Test
