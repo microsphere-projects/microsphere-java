@@ -1,21 +1,20 @@
 # This workflow automatically merges the 'main' branch into 'dev' and 'release' branches
 # whenever changes are pushed to 'main', without requiring manual confirmation.
 
-name: Merge Main to Dev and Release
+name: Merge Main to branches
 
 on:
   push:
     branches:
       - main
 
-concurrency:
-  group: merge-main-to-branches
-  cancel-in-progress: false
-
 jobs:
-  merge-to-dev:
-    name: Merge main → dev
+  merge-to-branch:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [ 'dev', 'release' ]
+    name: main -> ${{ matrix.branch }}
     permissions:
       contents: write
     steps:
@@ -25,42 +24,16 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Merge main into dev
+      - name: Merge main into ${{ matrix.branch }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git checkout dev; then
-            echo "::error::Branch 'dev' does not exist. Skipping merge."
+          if ! git checkout ${{ matrix.branch }}; then
+            echo "[INFO] Branch '${{ matrix.branch }}' does not exist. Skipping merge."
+            exit 0
+          fi
+          if ! git merge --no-ff origin/main -m "chore: merge main into ${{ matrix.branch }} [skip ci]"; then
+            echo "[ERROR] Merge conflict detected when merging main into ${{ matrix.branch }}. Manual intervention required."
             exit 1
           fi
-          if ! git merge --no-ff origin/main -m "chore: merge main into dev [skip ci]"; then
-            echo "::error::Merge conflict detected when merging main into dev. Manual intervention required."
-            exit 1
-          fi
-          git push origin dev
-
-  merge-to-release:
-    name: Merge main → release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Merge main into release
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          if ! git checkout release; then
-            echo "::error::Branch 'release' does not exist. Skipping merge."
-            exit 1
-          fi
-          if ! git merge --no-ff origin/main -m "chore: merge main into release [skip ci]"; then
-            echo "::error::Merge conflict detected when merging main into release. Manual intervention required."
-            exit 1
-          fi
-          git push origin release
+          git push origin ${{ matrix.branch }}
