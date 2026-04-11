@@ -19,6 +19,8 @@ package io.microsphere.util;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+import io.microsphere.classloading.Artifact;
+import io.microsphere.classloading.ArtifactDetector;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -108,7 +110,6 @@ public class Version implements Comparable<Version>, Serializable {
      * }</pre>
      *
      * @param major the major version number
-     * @since 1.0.0
      */
     public Version(int major) {
         this(major, 0);
@@ -125,7 +126,6 @@ public class Version implements Comparable<Version>, Serializable {
      *
      * @param major the major version number
      * @param minor the minor version number
-     * @since 1.0.0
      */
     public Version(int major, int minor) {
         this(major, minor, 0);
@@ -142,7 +142,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param major the major version number
      * @param minor the minor version number
      * @param patch the patch version number
-     * @since 1.0.0
      */
     public Version(int major, int minor, int patch) {
         this(major, minor, patch, null);
@@ -161,7 +160,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param patch      the patch version number (must be non-negative)
      * @param preRelease the optional pre-release identifier (e.g., "SNAPSHOT", "alpha")
      * @throws IllegalArgumentException if major, minor, or patch is negative, or all are zero
-     * @since 1.0.0
      */
     public Version(int major, int minor, int patch, String preRelease) {
         assertTrue(major >= 0, "The 'major' version must not be a non-negative integer!");
@@ -342,7 +340,6 @@ public class Version implements Comparable<Version>, Serializable {
      * }</pre>
      *
      * @return a hash code value for this version
-     * @since 1.0.0
      */
     @Override
     public int hashCode() {
@@ -368,8 +365,7 @@ public class Version implements Comparable<Version>, Serializable {
      *
      * @param that the version to compare against
      * @return a negative integer, zero, or a positive integer as this version
-     *         is less than, equal to, or greater than the specified version
-     * @since 1.0.0
+     * is less than, equal to, or greater than the specified version
      */
     @Override
     public int compareTo(Version that) {
@@ -424,7 +420,6 @@ public class Version implements Comparable<Version>, Serializable {
      * }</pre>
      *
      * @return the version string
-     * @since 1.0.0
      */
     @Override
     public String toString() {
@@ -441,7 +436,6 @@ public class Version implements Comparable<Version>, Serializable {
      *
      * @param major the major version number
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version of(int major) {
         return ofVersion(major);
@@ -458,7 +452,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param major the major version number
      * @param minor the minor version number
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version of(int major, int minor) {
         return ofVersion(major, minor);
@@ -476,7 +469,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param minor the minor version number
      * @param patch the patch version number
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version of(int major, int minor, int patch) {
         return ofVersion(major, minor, patch);
@@ -495,7 +487,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param patch      the patch version number
      * @param preRelease the pre-release identifier
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version of(int major, int minor, int patch, String preRelease) {
         return ofVersion(major, minor, patch, preRelease);
@@ -514,7 +505,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param version the version string to parse
      * @return a new {@link Version} instance
      * @throws IllegalArgumentException if the version string is null, blank, or invalid
-     * @since 1.0.0
      */
     public static Version of(String version) {
         return ofVersion(version);
@@ -530,7 +520,6 @@ public class Version implements Comparable<Version>, Serializable {
      *
      * @param major the major version number
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version ofVersion(int major) {
         return new Version(major);
@@ -547,7 +536,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param major the major version number
      * @param minor the minor version number
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version ofVersion(int major, int minor) {
         return new Version(major, minor);
@@ -565,7 +553,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param minor the minor version number
      * @param patch the patch version number
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version ofVersion(int major, int minor, int patch) {
         return new Version(major, minor, patch);
@@ -584,7 +571,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param patch      the patch version number
      * @param preRelease the pre-release identifier
      * @return a new {@link Version} instance
-     * @since 1.0.0
      */
     public static Version ofVersion(int major, int minor, int patch, String preRelease) {
         return new Version(major, minor, patch, preRelease);
@@ -604,7 +590,6 @@ public class Version implements Comparable<Version>, Serializable {
      * @param version the version string to parse
      * @return a new {@link Version} instance
      * @throws IllegalArgumentException if the version string is null, blank, or contains non-numeric parts
-     * @since 1.0.0
      */
     public static Version ofVersion(String version) {
         assertNotNull(version, () -> "The 'version' argument must not be null!");
@@ -622,6 +607,27 @@ public class Version implements Comparable<Version>, Serializable {
         int patch = size > 2 ? getValue(majorAndMinorAndPatch[2]) : 0;
 
         return of(major, minor, patch, preRelease);
+    }
+
+    /**
+     * Creates a {@link Version} by detecting the version from the artifact containing the specified class.
+     * This method uses {@link ArtifactDetector} to locate the artifact and retrieve its version.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version version = Version.ofVersion(MyClass.class); // e.g., 1.0.0
+     * }</pre>
+     *
+     * @param classInResource the class contained in the artifact whose version is to be detected
+     * @return a new {@link Version} instance
+     */
+    public static Version ofVersion(@Nonnull Class<?> classInResource) {
+        assertNotNull(classInResource, () -> "The 'classInResource' argument must not be null!");
+        ClassLoader classLoader = classInResource.getClassLoader();
+        ArtifactDetector detector = new ArtifactDetector(classLoader);
+        Artifact artifact = detector.detect(classInResource);
+        String version = artifact.getVersion();
+        return ofVersion(version);
     }
 
     /**

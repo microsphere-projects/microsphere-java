@@ -18,6 +18,8 @@ package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nullable;
+
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.constants.SymbolConstants.SPACE;
@@ -115,6 +117,12 @@ class VersionTest {
         assertEquals(MAJOR, version.getMajor());
         assertEquals(MINOR, version.getMinor());
         assertEquals(PATCH, version.getPatch());
+    }
+
+    @Test
+    void testOfVersionOnClassInResource() {
+        Version version = ofVersion(Nullable.class);
+        assertEquals("3.0.2", version.toString());
     }
 
     @Test
