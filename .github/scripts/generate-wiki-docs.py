@@ -2,7 +2,7 @@
 """
 Microsphere Java Wiki Documentation Generator
 
-Parses Java source files in the microsphere-java project and generates
+Parses Java source files in the project and generates
 Markdown wiki pages for each public Java component (class, interface, enum, annotation).
 
 Each wiki page includes:
