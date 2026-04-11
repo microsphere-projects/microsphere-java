@@ -19,7 +19,7 @@
     <description>Microsphere Java Parent</description>
 
     <properties>
-        <microsphere-bom.version>0.1.5</microsphere-bom.version>
+        <microsphere-bom.version>0.1.6</microsphere-bom.version>
         <spring-framework.version>7.0.6</spring-framework.version>
     </properties>
 
