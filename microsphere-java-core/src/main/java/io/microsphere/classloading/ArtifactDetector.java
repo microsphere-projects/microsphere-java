@@ -138,6 +138,9 @@ public class ArtifactDetector {
     public Artifact detect(@Nonnull URL resourceURL) {
         File archiveFile = resolveArchiveFile(resourceURL);
         if (archiveFile == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The URL[{}] is not an archive file, no artifact was found!", resourceURL);
+            }
             return null;
         }
         URL classPathURL = execute(archiveFile.toURI()::toURL);
