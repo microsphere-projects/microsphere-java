@@ -13,21 +13,21 @@ permissions:
 
 on:
   push:
-    branches: [ 'main', 'dev' ]
+    branches: [ 'main' , 'dev' ]
   pull_request:
-    branches: [ 'main', 'dev' , 'release' ]
+    branches: [ 'main' , 'dev' , 'release' ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11' , '17' , '21' , '25' ]
+        java: [ '8', '11', '17', '21', '25' ]
     steps:
       - name: Checkout Source
         uses: actions/checkout@v5
 
-      - name: Setup JDK ${{ matrix.Java }}
+      - name: Setup Java ${{ matrix.java }}
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'

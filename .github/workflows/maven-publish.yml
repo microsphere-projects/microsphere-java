@@ -119,8 +119,9 @@ jobs:
           prompt = (
               f"Generate concise release notes for version {current_tag}.\n\n"
               f"Commits since {prev_tag}:\n{commits}\n\n"
-              "Format the output as markdown with sections for New Features, Bug Fixes, "
-              "and Other Changes (only include sections that have relevant commits). "
+              "Format the output as markdown with sections if present for New Features, Bug Fixes, "
+              "Documentations, Dependency Updates, Test Improvements, Build and Workflow Enhancements "
+              "and Other Changes(excludes Full Changelog).\n\n"
               "Be concise and clear."
           )
 
@@ -153,20 +154,25 @@ jobs:
           if [ ! -f "$NOTES_FILE" ]; then
             printf "# Release Notes\n\n" > "$NOTES_FILE"
           fi
+          
+          FULL_CHANGELOG="**Full Changelog**: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/compare/$PREV_TAG...$CURRENT_TAG"
+          
           printf "## v%s\n\n%s\n\n" "$CURRENT_TAG" "$SUMMARY" >> "$NOTES_FILE"
-
+          printf "%s" "$FULL_CHANGELOG" >> "$NOTES_FILE"
+          
           # Write the current release notes to a temp file for the Create Release step
-          printf "%s" "$SUMMARY" > /tmp/current-release-notes.md
+          printf "%s\n\n" "$SUMMARY" > /tmp/current-release-notes.md
+          printf "%s" "$FULL_CHANGELOG" >> /tmp/current-release-notes.md
 
           echo "Release notes generated and appended to $NOTES_FILE"
 
       - name: Create Release
         run: |
-          if gh release view "v${{ inputs.revision }}" >/dev/null 2>&1; then
-            echo "Release v${{ inputs.revision }} already exists, skipping."
+          if gh release view "${{ inputs.revision }}" >/dev/null 2>&1; then
+            echo "Release ${{ inputs.revision }} already exists, skipping."
           else
             gh release create ${{ inputs.revision }} \
-              --title "v${{ inputs.revision }}" \
+              --title "${{ inputs.revision }}" \
               --notes-file /tmp/current-release-notes.md \
               --latest
           fi
