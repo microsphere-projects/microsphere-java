@@ -28,3 +28,19 @@
 
 For specific changes, refer to the commit hashes linked above.
 
+## v0.2.8
+
+# Release Notes - Version 0.2.8
+
+## Dependency Updates
+- Bumped `io.github.microsphere-projects:microsphere-all-bom` to version `0.2.0`. ([#270](https://github.com/microsphere-projects/microsphere-all-bom))
+
+## Build and Workflow Enhancements
+- Enhanced GitHub Actions Maven workflow for tidier execution.  
+- Updated `dependabot.yml` for improved dependency management.  
+- Improved release notes generation and release creation process.  
+
+## Other Changes
+- Removed unnecessary newlines in files for improved formatting.  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.7...0.2.8
