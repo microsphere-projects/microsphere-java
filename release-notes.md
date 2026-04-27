@@ -60,4 +60,22 @@ For specific changes, refer to the commit hashes linked above.
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.8...0.2.9
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.8...0.2.9## v0.3.0
+
+# Release Notes - Version 0.3.0
+
+## Dependency Updates
+- Updated Maven wrapper to version 3.9.15 using Aliyun mirror. ([bbba1673](#))
+- Switched Maven wrapper to use the official Maven Central repository. ([ccf5dd64](#))
+- Updated Microsphere BOM dependencies. ([3c12fd82](#))
+- Imported Logging and Testing BOMs to improve dependency management. ([24ea9826](#))
+
+## Build and Workflow Enhancements
+- Merged main into release and vice versa to sync branches. ([67b7c00c](#), [37bb7254](#), [994381b6](#), [aa650593](#))
+- Bumped version to next patch after publishing 0.2.9. ([0e0813e0](#))
+
+---
+
+For more details, refer to the full changelog in the repository.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.9...0.3.0
