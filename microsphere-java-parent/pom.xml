@@ -28,9 +28,18 @@
         <dependencies>
 
             <!-- Microsphere BOMs -->
+
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-logging-bom</artifactId>
+                <artifactId>microsphere-testing-bom</artifactId>
+                <version>${microsphere-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            
+            <dependency>
+                <groupId>io.github.microsphere-projects</groupId>
+                <artifactId>microsphere-javaee-bom</artifactId>
                 <version>${microsphere-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -38,7 +47,7 @@
 
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-testing-bom</artifactId>
+                <artifactId>microsphere-logging-bom</artifactId>
                 <version>${microsphere-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
