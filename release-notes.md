@@ -43,4 +43,21 @@ For specific changes, refer to the commit hashes linked above.
 ## Other Changes
 - Removed unnecessary newlines in files for improved formatting.  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.7...0.2.8
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.7...0.2.8## v0.2.9
+
+# Release Notes for Version 0.2.9
+
+## Dependency Updates
+- **Spring Framework BOM**: Upgraded from `7.0.6` to `7.0.7`. ([#271](https://github.com/microsphere-projects/microsphere-java/pull/271))
+- **microsphere-bom**: Updated to `0.2.1`.
+
+## Build and Workflow Enhancements
+- Upgraded Maven Wrapper to `3.9.14`.  
+- Formatted Java versions matrix spacing for enhanced readability.  
+
+## Other Changes
+- Version bumped to `0.2.9` post-release of `0.2.8` for upcoming development.
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.8...0.2.9
