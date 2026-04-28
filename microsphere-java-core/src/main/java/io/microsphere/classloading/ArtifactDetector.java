@@ -119,7 +119,6 @@ public class ArtifactDetector {
             Artifact artifact = detect(classPathURL);
             if (artifact != null) {
                 artifactList.add(artifact);
-                break;
             }
         }
         return unmodifiableList(artifactList);
@@ -137,12 +136,14 @@ public class ArtifactDetector {
         for (ArtifactResourceResolver artifactResourceResolver : artifactResourceResolvers) {
             artifact = artifactResourceResolver.resolve(classPathURL);
             if (artifact != null) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The {} was detected from the URL of Class-Path : {}", artifact, classPathURL);
+                }
                 break;
             }
         }
         return artifact;
     }
-
 
     protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
         Set<URL> urls = findAllClassPathURLs(classLoader);
