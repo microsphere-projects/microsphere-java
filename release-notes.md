@@ -78,4 +78,20 @@ For specific changes, refer to the commit hashes linked above.
 
 For more details, refer to the full changelog in the repository.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.9...0.3.0
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.9...0.3.0## v0.3.1
+
+# Release Notes - Version 0.3.1
+
+## New Features
+- Collect multiple artifacts and add trace log for enhanced observability. ([db9cb00f](#))
+
+## Dependency Updates
+- Adopt `microsphere-all-bom` to streamline dependencies.  
+- Remove outdated `testing/javaee` BOMs. ([56fa380e](#))
+
+## Other Changes
+- Version bump to prepare for post-0.3.0 development. ([c18526da](#)) 
+
+**Note**: This release includes minor enhancements and dependency refinements to improve overall functionality. 
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.0...0.3.1
