@@ -94,4 +94,18 @@ For more details, refer to the full changelog in the repository.
 
 **Note**: This release includes minor enhancements and dependency refinements to improve overall functionality. 
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.0...0.3.1
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.0...0.3.1## v0.3.2
+
+# Release Notes - Version 0.3.2
+
+## Build and Workflow Enhancements
+- Added Maven server credentials to the CI/CD workflow for improved deployment handling. ([61662808](https://example.com))
+- Adjusted Maven workflows and implemented a minor script fix. ([f0b76c57](https://example.com))
+
+## Dependency Updates
+- Upgraded Microsphere parent and BOM versions for better compatibility. ([c20b4517](https://example.com))
+
+## Other Changes
+- Version bumped to the next patch following 0.3.1 release. ([a9ebadf8](https://example.com))
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.1...0.3.2
