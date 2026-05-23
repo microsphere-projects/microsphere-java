@@ -12,6 +12,8 @@ import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
+import static io.microsphere.collection.ListUtils.first;
+import static io.microsphere.collection.ListUtils.last;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
@@ -577,8 +579,7 @@ public abstract class ServiceLoaderUtils implements Utils {
      */
     static <S> S loadService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached, boolean first) {
         List<S> serviceList = loadServicesAsList(serviceType, classLoader, cached);
-        int index = first ? 0 : serviceList.size() - 1;
-        return serviceList.get(index);
+        return first ? first(serviceList) : last(serviceList);
     }
 
     /**
