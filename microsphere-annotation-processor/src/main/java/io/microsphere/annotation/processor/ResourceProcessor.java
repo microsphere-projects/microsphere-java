@@ -23,6 +23,7 @@ import io.microsphere.lang.function.ThrowableFunction;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager.Location;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -241,6 +242,13 @@ public class ResourceProcessor {
     }
 
     public static boolean exists(FileObject resource) {
-        return resource != null && resource.getLastModified() > 0;
+        if (resource == null) {
+            return false;
+        }
+        try (InputStream inputStream = resource.openInputStream()) {
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
     }
 }

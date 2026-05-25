@@ -25,7 +25,6 @@ import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.lang.Long.getLong;
 import static java.lang.Long.parseLong;
-import static java.lang.Runtime.getRuntime;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
@@ -90,8 +89,6 @@ public class ProcessExecutor {
 
     private final ProcessManager processManager = INSTANCE;
 
-    private final Runtime runtime = getRuntime();
-
     private final String options;
 
     private final String commandLine;
@@ -152,17 +149,18 @@ public class ProcessExecutor {
     public void execute(OutputStream outputStream, long timeout, TimeUnit timeUnit) throws IOException, TimeoutException {
 
         Future<byte[]> future = executor.submit(() -> {
-            Process process = runtime.exec(commandLine);
+            // Use ProcessBuilder with merged stderr so we only need to drain one stream,
+            // avoiding the classic stdout/stderr deadlock caused by sequential draining.
+            Process process = new ProcessBuilder(commandLine.split("\\s+"))
+                    .redirectErrorStream(true)
+                    .start();
             InputStream processInputStream = process.getInputStream();
-            InputStream processErrorInputStream = process.getErrorStream();
             FastByteArrayOutputStream targetOutputStream = new FastByteArrayOutputStream();
             int exitValue = -1;
             try {
                 processManager.addUnfinishedProcess(process, options);
-                // Copy the standard input stream
+                // Copy the merged standard + error output stream
                 copy(processInputStream, targetOutputStream);
-                // Copy the error input stream
-                copy(processErrorInputStream, targetOutputStream);
 
                 // wait for the process being executed
                 process.waitFor(timeout, timeUnit);
@@ -185,10 +183,10 @@ public class ProcessExecutor {
         try {
             byte[] bytes = future.get(timeout, timeUnit);
             copy(new FastByteArrayInputStream(bytes), outputStream);
+        } catch (TimeoutException e) {
+            future.cancel(true);
+            throw e;
         } catch (Exception e) {
-            if (e instanceof TimeoutException) {
-                throw (TimeoutException) e;
-            }
             throw wrap(e, IOException.class);
         }
     }

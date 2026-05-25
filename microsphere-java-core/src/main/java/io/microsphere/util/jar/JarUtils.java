@@ -249,8 +249,14 @@ public abstract class JarUtils implements Utils {
             return null;
         }
         final String relativePath = resolveRelativePath(jarURL);
-        JarEntry jarEntry = jarFile.getJarEntry(relativePath);
-        return jarEntry;
+        try (JarFile jf = jarFile) {
+            return jf.getJarEntry(relativePath);
+        } catch (IOException e) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Failed to close the JarFile opened from the url : {}", jarURL, e);
+            }
+            return null;
+        }
     }
 
     /**
@@ -305,8 +311,9 @@ public abstract class JarUtils implements Utils {
      * @throws IOException if an I/O error occurs during extraction or if the provided file is not a valid JAR
      */
     public static void extract(File jarSourceFile, File targetDirectory, JarEntryFilter jarEntryFilter) throws IOException {
-        final JarFile jarFile = new JarFile(jarSourceFile);
-        extract(jarFile, targetDirectory, jarEntryFilter);
+        try (JarFile jarFile = new JarFile(jarSourceFile)) {
+            extract(jarFile, targetDirectory, jarEntryFilter);
+        }
     }
 
     /**
@@ -370,19 +377,27 @@ public abstract class JarUtils implements Utils {
      */
     public static void extract(URL jarResourceURL, File targetDirectory, JarEntryFilter jarEntryFilter) throws IOException {
         final JarFile jarFile = toJarFile(jarResourceURL);
-        final String relativePath = resolveRelativePath(jarResourceURL);
-        final JarEntry jarEntry = jarFile.getJarEntry(relativePath);
-        final boolean isDirectory = jarEntry.isDirectory();
-        List<JarEntry> jarEntriesList = filter(jarFile, entry -> {
-            String name = entry.getName();
-            if (isDirectory && name.equals(relativePath)) {
-                return true;
-            } else return name.startsWith(relativePath);
-        });
+        if (jarFile == null) {
+            return;
+        }
+        try (JarFile jf = jarFile) {
+            final String relativePath = resolveRelativePath(jarResourceURL);
+            final JarEntry jarEntry = jf.getJarEntry(relativePath);
+            if (jarEntry == null) {
+                return;
+            }
+            final boolean isDirectory = jarEntry.isDirectory();
+            List<JarEntry> jarEntriesList = filter(jf, entry -> {
+                String name = entry.getName();
+                if (isDirectory && name.equals(relativePath)) {
+                    return true;
+                } else return name.startsWith(relativePath);
+            });
 
-        jarEntriesList = doFilter(jarEntriesList, jarEntryFilter);
+            jarEntriesList = doFilter(jarEntriesList, jarEntryFilter);
 
-        doExtract(jarFile, jarEntriesList, targetDirectory);
+            doExtract(jf, jarEntriesList, targetDirectory);
+        }
     }
 
 
@@ -451,9 +466,14 @@ public abstract class JarUtils implements Utils {
         if (jarFile == null || isEmpty(jarEntries)) {
             return;
         }
+        final String targetCanonicalPath = targetDirectory.getCanonicalPath() + File.separator;
         for (JarEntry jarEntry : jarEntries) {
             String jarEntryName = jarEntry.getName();
             File targetFile = new File(targetDirectory, jarEntryName);
+            // Zip Slip protection: ensure the output file stays within the target directory
+            if (!targetFile.getCanonicalPath().startsWith(targetCanonicalPath)) {
+                throw new IOException("JAR entry '" + jarEntryName + "' would be extracted outside of the target directory");
+            }
             if (jarEntry.isDirectory()) {
                 targetFile.mkdirs();
             } else {

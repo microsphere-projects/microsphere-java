@@ -18,6 +18,7 @@ package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nullable;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -148,15 +149,19 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
 
     @Nullable
     protected InputStream readArtifactMetadataDataFromFile(File archiveFile) throws IOException {
-        JarFile jarFile = new JarFile(archiveFile);
-        JarEntry jarEntry = findArtifactMetadataEntry(jarFile);
-        if (jarEntry == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
+        try (JarFile jarFile = new JarFile(archiveFile)) {
+            JarEntry jarEntry = findArtifactMetadataEntry(jarFile);
+            if (jarEntry == null) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The artifact metadata entry can't be resolved from the JarFile[path: '{}']", archiveFile);
+                }
+                return null;
             }
-            return null;
+            // Buffer the entire content so the JarFile can be closed safely
+            try (InputStream inputStream = jarFile.getInputStream(jarEntry)) {
+                return new ByteArrayInputStream(inputStream.readAllBytes());
+            }
         }
-        return jarFile.getInputStream(jarEntry);
     }
 
     @Nullable

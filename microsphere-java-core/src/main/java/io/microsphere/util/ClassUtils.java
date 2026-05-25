@@ -1260,21 +1260,22 @@ public abstract class ClassUtils implements Utils {
         }
         Set<String> classNames;
         try {
-            JarFile jarFile_ = new JarFile(jarFile);
-            Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
-            int size = size(jarEntries);
-            if (size == 0) {
-                classNames = emptySet();
-            } else {
-                classNames = newLinkedHashSet(size);
-                for (JarEntry jarEntry : jarEntries) {
-                    String jarEntryName = jarEntry.getName();
-                    String className = resolveClassName(jarEntryName);
-                    if (isNotBlank(className)) {
-                        classNames.add(className);
+            try (JarFile jarFile_ = new JarFile(jarFile)) {
+                Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
+                int size = size(jarEntries);
+                if (size == 0) {
+                    classNames = emptySet();
+                } else {
+                    classNames = newLinkedHashSet(size);
+                    for (JarEntry jarEntry : jarEntries) {
+                        String jarEntryName = jarEntry.getName();
+                        String className = resolveClassName(jarEntryName);
+                        if (isNotBlank(className)) {
+                            classNames.add(className);
+                        }
                     }
+                    classNames = unmodifiableSet(classNames);
                 }
-                classNames = unmodifiableSet(classNames);
             }
         } catch (Exception e) {
             classNames = emptySet();
