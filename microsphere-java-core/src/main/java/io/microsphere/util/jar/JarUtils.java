@@ -249,6 +249,8 @@ public abstract class JarUtils implements Utils {
             return null;
         }
         final String relativePath = resolveRelativePath(jarURL);
+        // JarEntry is metadata-only (extends ZipEntry) and does not hold a reference back
+        // to the JarFile, so it is safe to close the JarFile after retrieving the entry.
         try (JarFile jf = jarFile) {
             return jf.getJarEntry(relativePath);
         } catch (IOException e) {
