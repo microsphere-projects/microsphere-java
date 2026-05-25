@@ -108,4 +108,26 @@ For more details, refer to the full changelog in the repository.
 ## Other Changes
 - Version bumped to the next patch following 0.3.1 release. ([a9ebadf8](https://example.com))
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.1...0.3.2
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.1...0.3.2## v0.3.3
+
+# Release Notes - Version 0.3.3
+
+## New Features
+- Improved `loadService` method to utilize `ListUtils.first/last` for enhanced readability and efficiency. ([commit](https://github.com/microsphere-projects/commit/1f865f56))
+
+## Documentation
+- Adjusted spacing between badges in README for clearer layout. ([commit](https://github.com/microsphere-projects/commit/299fd82c))
+- Fixed a typo in README ("lang-model"). ([commit](https://github.com/microsphere-projects/commit/91f34cc2))
+
+## Dependency Updates
+- Upgraded `microsphere-all-bom` to version `0.2.4`. ([commit](https://github.com/microsphere-projects/commit/b1d25a40), [commit](https://github.com/microsphere-projects/commit/0d082a7c))
+
+## Build and Workflow Enhancements
+- Merged `main` into `release` branch multiple times to sync updates. ([commit](https://github.com/microsphere-projects/commit/86f7a170), [commit](https://github.com/microsphere-projects/commit/8f6bca60), [commit](https://github.com/microsphere-projects/commit/d650f39b))
+- Merged `release` into `main` to finalize updates. ([commit](https://github.com/microsphere-projects/commit/537a8a55))
+
+---
+
+This update includes general enhancements, improved documentation, and dependency updates to keep the project up-to-date.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.2...0.3.3
