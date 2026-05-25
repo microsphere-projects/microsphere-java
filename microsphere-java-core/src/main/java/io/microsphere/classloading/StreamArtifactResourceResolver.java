@@ -17,8 +17,8 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nullable;
+import io.microsphere.io.FastByteArrayInputStream;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -33,6 +33,7 @@ import static io.microsphere.collection.CollectionUtils.first;
 import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.io.FileUtils.resolveRelativePath;
 import static io.microsphere.io.IOUtils.close;
+import static io.microsphere.io.IOUtils.toByteArray;
 import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -159,7 +160,7 @@ public abstract class StreamArtifactResourceResolver extends AbstractArtifactRes
             }
             // Buffer the entire content so the JarFile can be closed safely
             try (InputStream inputStream = jarFile.getInputStream(jarEntry)) {
-                return new ByteArrayInputStream(inputStream.readAllBytes());
+                return new FastByteArrayInputStream(toByteArray(inputStream));
             }
         }
     }
