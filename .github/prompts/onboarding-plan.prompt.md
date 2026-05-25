@@ -5,9 +5,9 @@ description: 'Help new team members onboard with a phased plan and suggestions f
 
 # Create My Onboarding Plan
 
-I'm a new team member joining ${input:team:Team or project name} and I need help creating a structured onboarding plan.
+I'm a new team member joining [Microsphere Projects](https://github.com/microsphere-projects) and I need help creating a structured onboarding plan.
 
-My background: ${input:background:Briefly describe your experience level - new to tech, experienced developer new to this stack, etc.}
+My background: the experienced developer new to this stack
 
 Please create a personalized phased onboarding plan that includes the following phases.
 
