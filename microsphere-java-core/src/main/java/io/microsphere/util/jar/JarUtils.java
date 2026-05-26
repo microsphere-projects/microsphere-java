@@ -8,6 +8,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
+import io.microsphere.io.IOUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.net.URLUtils;
 import io.microsphere.util.Utils;
@@ -30,6 +31,7 @@ import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.SeparatorConstants.ARCHIVE_ENTRY_SEPARATOR;
+import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
 import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -244,20 +246,18 @@ public abstract class JarUtils implements Utils {
      */
     @Nullable
     public static JarEntry findJarEntry(URL jarURL) {
-        JarFile jarFile = toJarFile(jarURL);
-        if (jarFile == null) {
-            return null;
-        }
-        final String relativePath = resolveRelativePath(jarURL);
-        // JarEntry is metadata-only (extends ZipEntry) and does not hold a reference back
-        // to the JarFile, so it is safe to close the JarFile after retrieving the entry.
-        try (JarFile jf = jarFile) {
-            return jf.getJarEntry(relativePath);
-        } catch (IOException e) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("Failed to close the JarFile opened from the url : {}", jarURL, e);
+        JarFile jarFile = null;
+        try {
+            jarFile = toJarFile(jarURL);
+            if (jarFile == null) {
+                return null;
             }
-            return null;
+            final String relativePath = resolveRelativePath(jarURL);
+            // JarEntry is metadata-only (extends ZipEntry) and does not hold a reference back
+            // to the JarFile, so it is safe to close the JarFile after retrieving the entry.
+            return jarFile.getJarEntry(relativePath);
+        } finally {
+            close(jarFile);
         }
     }
 
@@ -468,7 +468,7 @@ public abstract class JarUtils implements Utils {
         if (jarFile == null || isEmpty(jarEntries)) {
             return;
         }
-        final String targetCanonicalPath = targetDirectory.getCanonicalPath() + File.separator;
+        final String targetCanonicalPath = targetDirectory.getCanonicalPath() + FILE_SEPARATOR;
         for (JarEntry jarEntry : jarEntries) {
             String jarEntryName = jarEntry.getName();
             File targetFile = new File(targetDirectory, jarEntryName);
