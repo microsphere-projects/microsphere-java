@@ -47,6 +47,7 @@ import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.io.File.separatorChar;
@@ -102,6 +103,7 @@ public class Compiler {
         this.sourcePaths = newLinkedHashSet(defaultSourceDirectory);
         this.targetDirectory = targetDirectory;
         this.javaCompiler = getSystemJavaCompiler();
+        assertNotNull(this.javaCompiler, () -> "No Java compiler available. Ensure this process is running on a JDK (not just a JRE).");
     }
 
     public Compiler options(String... options) {
@@ -151,11 +153,12 @@ public class Compiler {
 
     public boolean compile(Class<?>... sourceClasses) throws IOException {
         JavaCompiler javaCompiler = getJavaCompiler();
-        StandardJavaFileManager javaFileManager = getJavaFileManager();
-        CompilationTask task = javaCompiler.getTask(null, javaFileManager,
-                getDiagnosticListener(), getOptions(), null, getJavaFileObjects(javaFileManager, sourceClasses));
-        task.setProcessors(this.getProcessors());
-        return task.call();
+        try (StandardJavaFileManager javaFileManager = getJavaFileManager()) {
+            CompilationTask task = javaCompiler.getTask(null, javaFileManager,
+                    getDiagnosticListener(), getOptions(), null, getJavaFileObjects(javaFileManager, sourceClasses));
+            task.setProcessors(this.getProcessors());
+            return task.call();
+        }
     }
 
     public JavaCompiler getJavaCompiler() {

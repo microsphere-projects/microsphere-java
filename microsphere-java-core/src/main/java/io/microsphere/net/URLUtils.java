@@ -7,6 +7,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
+import io.microsphere.io.IOUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
@@ -666,8 +667,13 @@ public abstract class URLUtils implements Utils {
         String protocol = url.getProtocol();
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
-            JarFile jarFile = toJarFile(url);
-            flag = nonNull(jarFile);
+            JarFile jarFile = null;
+            try {
+                jarFile = toJarFile(url);
+                flag = nonNull(jarFile);
+            } finally {
+                IOUtils.close(jarFile);
+            }
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
         }

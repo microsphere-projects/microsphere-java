@@ -164,7 +164,7 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
             attributesMap.put(attributeName, attributeValue);
         }
 
-        if (nestedAnnotationsAsMap) {
+        if (nestedAnnotationsAsMap || annotationForMapMethod == null) {
             return attributesMap;
         }
 

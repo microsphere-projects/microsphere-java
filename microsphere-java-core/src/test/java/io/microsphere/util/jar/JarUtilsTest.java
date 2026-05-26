@@ -125,16 +125,36 @@ class JarUtilsTest extends LoggingTest {
     }
 
     @Test
-    void testFindJarEntry() throws Exception {
+    void testFindJarEntry() {
         URL resourceURL = getClassResource(this.classLoader, Nonnull.class);
         JarEntry jarEntry = findJarEntry(resourceURL);
         assertNotNull(jarEntry);
     }
 
     @Test
-    void testExtract() throws IOException {
+    void testExtract() {
         String jarAbsolutePath = resolveJarAbsolutePath(this.resourceURL);
-        extract(new File(jarAbsolutePath), this.targetDirectory);
+        assertDoesNotThrow(() -> extract(new File(jarAbsolutePath), this.targetDirectory));
+    }
+
+    @Test
+    void testExtractOnNull() {
+        assertThrows(IllegalArgumentException.class, () -> extract((URL) null, this.targetDirectory, null));
+        assertThrows(IllegalArgumentException.class, () -> extract(this.resourceURL, null, null));
+        assertDoesNotThrow(() -> extract(this.resourceURL, this.targetDirectory, null));
+    }
+
+    @Test
+    void testExtractOnJarFileNotFound() {
+        URL resourceURL = ofURL("jar:file:/path/to/file.jar!/entry");
+        assertDoesNotThrow(() -> extract(resourceURL, this.targetDirectory, null));
+    }
+
+    @Test
+    void testExtractOnJarEntryNotFound() {
+        String resource = this.resourceURL.toString();
+        URL resourceURL = ofURL(resource.replace("Nonnull.class", "NotFound.class"));
+        assertDoesNotThrow(() -> extract(resourceURL, this.targetDirectory, null));
     }
 
     @Test
