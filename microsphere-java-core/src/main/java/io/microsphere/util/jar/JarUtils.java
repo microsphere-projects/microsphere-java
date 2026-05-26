@@ -8,7 +8,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
-import io.microsphere.io.IOUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.net.URLUtils;
 import io.microsphere.util.Utils;
