@@ -1260,8 +1260,8 @@ public abstract class ClassUtils implements Utils {
         }
         Set<String> classNames;
         try {
-            try (JarFile jarFile_ = new JarFile(jarFile)) {
-                Set<JarEntry> jarEntries = INSTANCE.scan(jarFile_, recursive, ClassFileJarEntryFilter.INSTANCE);
+            try (JarFile jf = new JarFile(jarFile)) {
+                Set<JarEntry> jarEntries = INSTANCE.scan(jf, recursive, ClassFileJarEntryFilter.INSTANCE);
                 int size = size(jarEntries);
                 if (size == 0) {
                     classNames = emptySet();
