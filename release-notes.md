@@ -130,4 +130,30 @@ For more details, refer to the full changelog in the repository.
 
 This update includes general enhancements, improved documentation, and dependency updates to keep the project up-to-date.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.2...0.3.3
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.2...0.3.3## v0.3.4
+
+# Release Notes - Version 0.3.4
+
+## Bug Fixes
+- Added null checks and logging in `JarUtils` for improved error handling. ([8a15d444](https://github.com/microsphere-projects/commit/8a15d444))
+- Fixed `JarEntry/JarFile` independence issue with a clarifying comment in `findJarEntry`. ([2595480f](https://github.com/microsphere-projects/commit/2595480f))
+- Applied 10 bug fixes from code review to ensure stability improvements. ([73afeb04](https://github.com/microsphere-projects/commit/73afeb04))
+
+## Documentations
+- Added `onboarding-plan.md` to assist new team members with onboarding. ([d2c3cb4f](https://github.com/microsphere-projects/commit/d2c3cb4f))
+- Rewritten `README.md` with comprehensive content and improved structure. ([51abcbdf](https://github.com/microsphere-projects/commit/51abcbdf))
+
+## Build and Workflow Enhancements
+- Added `.github` agent prompt templates for API, code, and tests. ([4e7efbea](https://github.com/microsphere-projects/commit/4e7efbea), [b6bf6752](https://github.com/microsphere-projects/commit/b6bf6752))
+- Customized onboarding prompt with organization context and background. ([f66b08c8](https://github.com/microsphere-projects/commit/f66b08c8))
+
+## Other Changes
+- Refactored various utilities in `JarUtils` and `StreamArtifactResourceResolver` for clearer, concise code:
+  - Replaced `IOUtils` methods for cleanup and byte array operations. ([b4cae21d](https://github.com/microsphere-projects/commit/b4cae21d), [d69cdf02](https://github.com/microsphere-projects/commit/d69cdf02))
+  - Simplified `ResourceProcessor.exists` logic. ([6f39ef55](https://github.com/microsphere-projects/commit/6f39ef55))
+
+---
+
+✔️ **Upgrade recommended**: Incorporates important bug fixes and clearer documentation updates.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.3...0.3.4
