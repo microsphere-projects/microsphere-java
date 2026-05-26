@@ -38,7 +38,7 @@ import static org.slf4j.LoggerFactory.getILoggerFactory;
  * @since 1.0.0
  */
 @ParameterizedClass
-@ValueSource(strings = {"INFO", "TRACE"})
+@ValueSource(strings = {"TRACE", "INFO", "ERROR"})
 @Disabled
 public abstract class LoggingTest {
 
