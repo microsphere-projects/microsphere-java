@@ -7,12 +7,12 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
+import io.microsphere.io.IOUtils;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ArrayUtils;
 import io.microsphere.util.Utils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -75,6 +75,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.nonNull;
 
 /**
  * {@link URL} Utility class
@@ -666,12 +667,12 @@ public abstract class URLUtils implements Utils {
         String protocol = url.getProtocol();
         boolean flag = false;
         if (FILE_PROTOCOL.equals(protocol)) {
-            try (JarFile jarFile = toJarFile(url)) {
-                flag = jarFile != null;
-            } catch (IOException e) {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("Failed to close the JarFile opened from the url : {}", url, e);
-                }
+            JarFile jarFile = null;
+            try {
+                jarFile = toJarFile(url);
+                flag = nonNull(jarFile);
+            } finally {
+                IOUtils.close(jarFile);
             }
         } else if (JAR_PROTOCOL.equals(protocol)) {
             flag = true;
