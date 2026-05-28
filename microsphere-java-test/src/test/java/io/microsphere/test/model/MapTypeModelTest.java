@@ -10,6 +10,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.collection.MapUtils.newTreeMap;
 import static io.microsphere.test.model.Color.BLUE;
 import static io.microsphere.test.model.Color.RED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetColors() {
-        SortedMap<String, Color> testMap = new TreeMap<>();
+        SortedMap<String, Color> testMap = newTreeMap();
         testMap.put("red_key", RED);
         testMap.put("blue_key", BLUE);
 
@@ -67,7 +68,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetPrimitiveTypeModels() {
-        NavigableMap<Color, PrimitiveTypeModel> testMap = new TreeMap<>();
+        NavigableMap<Color, PrimitiveTypeModel> testMap = newTreeMap();
         testMap.put(RED, new PrimitiveTypeModel());
         testMap.put(BLUE, new PrimitiveTypeModel());
 
