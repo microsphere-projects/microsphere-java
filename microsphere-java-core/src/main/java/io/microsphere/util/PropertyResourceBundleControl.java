@@ -86,7 +86,6 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * }</pre>
      *
      * @throws UnsupportedCharsetException if the default encoding is not supported
-     * @since 1.0.0
      */
     protected PropertyResourceBundleControl() throws UnsupportedCharsetException {
         this(DEFAULT_ENCODING);
@@ -115,7 +114,6 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @param baseName the base name of the resource bundle
      * @return a list containing the properties format
      * @throws NullPointerException if {@code baseName} is {@code null}
-     * @since 1.0.0
      */
     public final List<String> getFormats(String baseName) {
         if (baseName == null) {
@@ -145,7 +143,6 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
      * @param reload      whether to bypass the cache and reload the resource
      * @return a new {@link ResourceBundle} instance, or {@code null} if the resource is not found
      * @throws IOException if an I/O error occurs while reading the resource
-     * @since 1.0.0
      */
     public ResourceBundle newBundle(String baseName, Locale locale, String format, final ClassLoader classLoader, final boolean reload) throws IOException {
         String bundleName = super.toBundleName(baseName, locale);

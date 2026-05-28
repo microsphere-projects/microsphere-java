@@ -682,7 +682,6 @@ public abstract class ListUtils implements Utils {
      * @param newValue the element to add
      * @param <T>      the type of elements in the list
      * @return {@code true} if the element was added, {@code false} if already present
-     * @since 1.0.0
      */
     public static <T> boolean addIfAbsent(List<T> values, T newValue) {
         return values.contains(newValue) ? false : values.add(newValue);

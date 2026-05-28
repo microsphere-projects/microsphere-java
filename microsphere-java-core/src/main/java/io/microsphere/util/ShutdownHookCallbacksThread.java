@@ -57,7 +57,6 @@ class ShutdownHookCallbacksThread extends Thread {
      *   // thread.getName(); // "ShutdownHookCallbacksThread"
      * }</pre>
      *
-     * @since 1.0.0
      */
     ShutdownHookCallbacksThread() {
         setName(getClass().getSimpleName());
@@ -73,7 +72,6 @@ class ShutdownHookCallbacksThread extends Thread {
      *   // All registered callbacks in ShutdownHookUtils.shutdownHookCallbacks will be executed.
      * }</pre>
      *
-     * @since 1.0.0
      */
     @Override
     public void run() {

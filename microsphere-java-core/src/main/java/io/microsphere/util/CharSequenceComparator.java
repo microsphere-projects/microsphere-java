@@ -60,8 +60,7 @@ public class CharSequenceComparator implements Comparator<CharSequence> {
      * @param c1 the first {@link CharSequence} to compare; may be {@code null}
      * @param c2 the second {@link CharSequence} to compare; may be {@code null}
      * @return a negative integer, zero, or a positive integer as {@code c1} is less than,
-     *         equal to, or greater than {@code c2}
-     * @since 1.0.0
+     * equal to, or greater than {@code c2}
      */
     @Override
     public int compare(CharSequence c1, CharSequence c2) {

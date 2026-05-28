@@ -9,7 +9,6 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.ProtocolConstants;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.logging.Logger;
-import io.microsphere.net.URLUtils;
 import io.microsphere.util.Utils;
 
 import java.io.File;
@@ -212,7 +211,6 @@ public abstract class JarUtils implements Utils {
      * @param jarEntries     the iterable of JAR entries to filter; must not be {@code null}
      * @param jarEntryFilter the filter to apply; if {@code null}, all entries are included
      * @return a non-null, read-only list of filtered JAR entries
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
@@ -377,7 +375,7 @@ public abstract class JarUtils implements Utils {
      * @param targetDirectory the directory where the contents should be extracted; must not be {@code null}
      * @param jarEntryFilter  an optional filter to determine which entries to extract; if {@code null}, all entries are extracted
      * @throws IllegalArgumentException if {@code jarResourceURL} or {@code targetDirectory} is {@code null}
-     * @throws IOException          if an I/O error occurs during extraction or resolving the JAR resource
+     * @throws IOException              if an I/O error occurs during extraction or resolving the JAR resource
      */
     public static void extract(@Nonnull URL jarResourceURL, @Nonnull File targetDirectory, @Nullable JarEntryFilter jarEntryFilter)
             throws NullPointerException, IOException {
@@ -474,7 +472,6 @@ public abstract class JarUtils implements Utils {
      * @param targetDirectory the target directory for extraction; must not be {@code null}
      * @throws NullPointerException if {@code targetDirectory} is {@code null}
      * @throws IOException          if an I/O error occurs during extraction
-     * @since 1.0.0
      */
     protected static void doExtract(JarFile jarFile, Collection<JarEntry> jarEntries, File targetDirectory) throws IOException {
         if (jarFile == null || isEmpty(jarEntries)) {

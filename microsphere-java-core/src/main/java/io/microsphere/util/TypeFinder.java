@@ -135,7 +135,6 @@ public class TypeFinder<T> {
      * @param includeHierarchicalTypes whether to recursively include types from the hierarchy
      * @param includeSuperclass        whether to include the direct superclass
      * @param includeInterfaces        whether to include the directly implemented interfaces
-     * @since 1.0.0
      */
     public TypeFinder(T type, Function<T, T> getSuperClassFunction,
                       Function<T, T[]> getInterfacesFunction, boolean includeSelf,
@@ -164,7 +163,6 @@ public class TypeFinder<T> {
      * }</pre>
      *
      * @return an immutable list of related types, or an empty list if none are found
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
@@ -184,7 +182,6 @@ public class TypeFinder<T> {
      *
      * @param typeFilters zero or more predicates to filter the found types; all predicates must match
      * @return an immutable list of matching types, or an empty list if none match
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
@@ -205,7 +202,6 @@ public class TypeFinder<T> {
      *
      * @param typeFilters an array of predicates to filter the found types
      * @return a mutable list of types matching the filters
-     * @since 1.0.0
      */
     protected List<T> doFindTypes(Predicate<? super T>[] typeFilters) {
 
@@ -238,11 +234,10 @@ public class TypeFinder<T> {
      *   // returns [AbstractList, List, RandomAccess, Cloneable, Serializable]
      * }</pre>
      *
-     * @param type                     the type whose super types are to be retrieved
-     * @param includeSuperclass        whether to include the direct superclass
+     * @param type                      the type whose super types are to be retrieved
+     * @param includeSuperclass         whether to include the direct superclass
      * @param includedGenericInterfaces whether to include the directly implemented interfaces
      * @return a list of direct super types, or an empty list if none are found
-     * @since 1.0.0
      */
     protected List<T> getSuperTypes(T type, boolean includeSuperclass, boolean includedGenericInterfaces) {
 
@@ -287,7 +282,6 @@ public class TypeFinder<T> {
      *
      * @param type the type whose superclass is to be retrieved
      * @return the superclass of the given type, or {@code null} if none exists
-     * @since 1.0.0
      */
     protected T getSuperClass(T type) {
         return (T) getSuperClassFunction.apply(type);
@@ -304,7 +298,6 @@ public class TypeFinder<T> {
      *
      * @param type the type whose interfaces are to be retrieved
      * @return an array of interfaces implemented by the given type
-     * @since 1.0.0
      */
     protected T[] getInterfaces(T type) {
         return (T[]) getInterfacesFunction.apply(type);
@@ -320,12 +313,11 @@ public class TypeFinder<T> {
      *   // AbstractSequentialList, AbstractList, AbstractCollection, Object, List, Deque, Queue, ...
      * }</pre>
      *
-     * @param allTypes               the accumulated list of types to add to
-     * @param type                   the current type whose super types are being added
+     * @param allTypes                 the accumulated list of types to add to
+     * @param type                     the current type whose super types are being added
      * @param includeHierarchicalTypes whether to recursively traverse the type hierarchy
-     * @param includeSuperclass      whether to include superclasses
-     * @param includeInterfaces      whether to include interfaces
-     * @since 1.0.0
+     * @param includeSuperclass        whether to include superclasses
+     * @param includeInterfaces        whether to include interfaces
      */
     protected void addSuperTypes(List<T> allTypes, T type, boolean includeHierarchicalTypes, boolean includeSuperclass, boolean includeInterfaces) {
         if (isObjectType(type)) {
@@ -386,7 +378,6 @@ public class TypeFinder<T> {
      * @param type     the class to find related types from
      * @param includes one or more {@link Include} options specifying which types to include
      * @return a new {@code TypeFinder} configured for the given class and options
-     * @since 1.0.0
      */
     public static TypeFinder<Class<?>> classFinder(Class type, TypeFinder.Include... includes) {
         assertNotEmpty(includes, () -> "The 'includes' must not be empty");
@@ -416,7 +407,6 @@ public class TypeFinder<T> {
      * @param includeSuperclass        whether to include superclasses
      * @param includeInterfaces        whether to include interfaces
      * @return a new {@code TypeFinder} configured for the given class and options
-     * @since 1.0.0
      */
     public static TypeFinder<Class<?>> classFinder(Class type, boolean includeSelf, boolean includeHierarchicalTypes,
                                                    boolean includeSuperclass, boolean includeInterfaces) {
@@ -440,7 +430,6 @@ public class TypeFinder<T> {
      * @param type     the type to find related generic types from
      * @param includes one or more {@link Include} options specifying which types to include
      * @return a new {@code TypeFinder} configured for the given generic type and options
-     * @since 1.0.0
      */
     public static TypeFinder<Type> genericTypeFinder(Type type, TypeFinder.Include... includes) {
         assertNotEmpty(includes, () -> "The 'includes' must not be empty");
@@ -472,7 +461,6 @@ public class TypeFinder<T> {
      * @param includeSuperclass        whether to include superclasses
      * @param includeInterfaces        whether to include interfaces
      * @return a new {@code TypeFinder} configured for the given generic type and options
-     * @since 1.0.0
      */
     public static TypeFinder<Type> genericTypeFinder(Type type, boolean includeSelf, boolean includeHierarchicalTypes,
                                                      boolean includeSuperclass, boolean includeInterfaces) {

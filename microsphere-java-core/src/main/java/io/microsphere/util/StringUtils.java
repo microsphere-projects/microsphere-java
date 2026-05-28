@@ -855,7 +855,6 @@ public abstract class StringUtils implements Utils {
      * @param str        the String whose first character is to be changed, may be {@code null}
      * @param capitalize {@code true} to capitalize the first character, {@code false} to uncapitalize it
      * @return a new String with the first character changed, or the original if no change is needed
-     * @since 1.0.0
      */
     static String changeFirstCharacter(String str, boolean capitalize) {
         int len = length(str);
@@ -898,7 +897,6 @@ public abstract class StringUtils implements Utils {
      * @param includeLeading  {@code true} to trim leading whitespace
      * @param includeTrailing {@code true} to trim trailing whitespace
      * @return the trimmed String, or the original if it is {@code null} or empty
-     * @since 1.0.0
      */
     static String trimWhitespace(String str, boolean includeLeading, boolean includeTrailing) {
         int len = length(str);

@@ -616,7 +616,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param classLoader the {@link ClassLoader} used to load the class
      * @param className   the fully qualified name of the class to load, may be blank
      * @return the loaded {@link Class}, or {@code null} if the name is blank or the class cannot be found
-     * @since 1.0.0
      */
     protected static Class<?> doLoadClass(ClassLoader classLoader, String className) {
         if (isBlank(className)) {
@@ -1088,7 +1087,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param classLoader the starting {@link ClassLoader}; must not be {@code null}
      * @return a non-null {@link Set} of ClassLoaders in the inheritance chain
      * @throws NullPointerException if {@code classLoader} is {@code null}
-     * @since 1.0.0
      */
     @Nonnull
     static Set<ClassLoader> doGetInheritableClassLoaders(ClassLoader classLoader) throws NullPointerException {
@@ -1878,7 +1876,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param classLoader the {@link ClassLoader} on which the invocation was attempted
      * @param className   the name of the class that was being looked up
      * @param e           the {@link Throwable} that caused the failure
-     * @since 1.0.0
      */
     static void logOnFindLoadedClassInvocationFailed(ClassLoader classLoader, String className, Throwable e) {
         logger.error("The findLoadedClass(className : '{}' : String) method of java.lang.ClassLoader[{}] can't be invoked in the current JVM[vendor : {} , version : {}]",
@@ -1901,7 +1898,6 @@ public abstract class ClassLoaderUtils implements Utils {
      * @param classLoader the {@link ClassLoader} whose hash code is appended to the key
      * @param className   the fully qualified class name
      * @return a cache key string composed of the class name and ClassLoader hash code
-     * @since 1.0.0
      */
     static String buildCacheKey(ClassLoader classLoader, String className) {
         String cacheKey = className + classLoader.hashCode();
@@ -1965,7 +1961,6 @@ public abstract class ClassLoaderUtils implements Utils {
              *
              * @param name the resource name to normalize
              * @return the same resource name, unchanged
-             * @since 1.0.0
              */
             @Override
             public String normalize(String name) {
@@ -2007,7 +2002,6 @@ public abstract class ClassLoaderUtils implements Utils {
              *
              * @param name the class resource name to normalize, may be {@code null}
              * @return the normalized path-style class resource name, or {@code null} if {@code name} is {@code null}
-             * @since 1.0.0
              */
             @Override
             public String normalize(String name) {
@@ -2059,7 +2053,6 @@ public abstract class ClassLoaderUtils implements Utils {
              *
              * @param name the dot-separated package name to normalize, may be {@code null}
              * @return the slash-separated package path ending with a slash, or {@code null} if {@code name} is {@code null}
-             * @since 1.0.0
              */
             @Override
             String normalize(String name) {
