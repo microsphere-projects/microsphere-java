@@ -31,6 +31,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.getModes;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
@@ -165,7 +166,7 @@ public abstract class MethodHandleUtils implements Utils {
      */
     private static final Constructor<Lookup> lookupConstructor3 = findConstructor(Lookup.class, Class.class, Class.class, int.class);
 
-    private static final ConcurrentMap<LookupKey, Lookup> lookupCache = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<LookupKey, Lookup> lookupCache = newConcurrentHashMap();
 
     /**
      * The {@link Lookup} for {@link MethodHandles#publicLookup()}
