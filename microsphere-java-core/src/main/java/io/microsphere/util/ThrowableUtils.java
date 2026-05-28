@@ -40,7 +40,6 @@ public abstract class ThrowableUtils implements Utils {
      *
      * @param throwable the throwable whose root cause is to be determined; must not be {@code null}
      * @return the root cause of the throwable chain
-     * @since 1.0.0
      */
     public static Throwable getRootCause(Throwable throwable) {
         Throwable rootCause = throwable;
