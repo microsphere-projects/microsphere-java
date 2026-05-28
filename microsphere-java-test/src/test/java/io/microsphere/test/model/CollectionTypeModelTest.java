@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.test.model.Color.BLUE;
 import static io.microsphere.test.model.Color.RED;
 import static io.microsphere.test.model.Color.YELLOW;
@@ -93,7 +94,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetModelArrays() {
-        Set<Model[]> testSet = new HashSet<>();
+        Set<Model[]> testSet = newHashSet();
         testSet.add(new Model[]{new Model(), new Model()});
         testSet.add(new Model[]{new Model()});
         

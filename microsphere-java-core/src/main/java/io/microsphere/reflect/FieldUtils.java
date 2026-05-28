@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filter;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -301,7 +302,7 @@ public abstract class FieldUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
-        Set<Field> allFields = new LinkedHashSet<>();
+        Set<Field> allFields = newLinkedHashSet();
         addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allFields, superType.getFields());
@@ -342,7 +343,7 @@ public abstract class FieldUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
-        Set<Field> allDeclaredFields = new LinkedHashSet<>();
+        Set<Field> allDeclaredFields = newLinkedHashSet();
         addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());

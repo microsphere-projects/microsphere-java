@@ -27,6 +27,7 @@ import java.util.Map;
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
 import static io.microsphere.collection.EnumerationUtils.isEnumeration;
 import static io.microsphere.collection.MapUtils.isMap;
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.json.JSON.checkDouble;
 import static io.microsphere.json.JSON.toBoolean;
 import static io.microsphere.json.JSON.toDouble;

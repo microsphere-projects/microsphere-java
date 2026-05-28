@@ -1215,7 +1215,7 @@ public abstract class ClassUtils implements Utils {
             return emptySet();
         }
 
-        Set<String> classNames = new LinkedHashSet<>();
+        Set<String> classNames = newLinkedHashSet();
 
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);
