@@ -71,6 +71,7 @@ import static io.microsphere.util.ClassLoaderUtils.isVerbose;
 import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassLoaderUtils.logOnFindLoadedClassInvocationFailed;
 import static io.microsphere.util.ClassLoaderUtils.newURLClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.nullSafeClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.ClassLoaderUtils.resolveURLClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.setVerbose;
@@ -191,6 +192,15 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
 
         setVerbose(true);
         assertTrue(isVerbose());
+    }
+
+    @Test
+    void testNullSafeClassLoader() {
+        ClassLoader classLoader = nullSafeClassLoader(null);
+        assertSame(getDefaultClassLoader(), classLoader);
+
+        classLoader = nullSafeClassLoader(this.classLoader);
+        assertSame(this.classLoader, classLoader);
     }
 
     @Test
