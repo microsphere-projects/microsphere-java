@@ -34,6 +34,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.lang.model.util.MessagerUtils.printNote;
 import static io.microsphere.lang.model.util.MessagerUtils.printWarning;
 import static io.microsphere.util.ExceptionUtils.wrap;
@@ -104,7 +105,7 @@ public class ResourceProcessor {
         this.location = location;
         this.filerProcessor = new FilerProcessor(processingEnv);
         this.moduleAndPackage = moduleAndPackage;
-        this.fileObjectsCache = new HashMap<>();
+        this.fileObjectsCache = newHashMap();
     }
 
     public <T> T processInResource(String resourceName, boolean forWriting, ThrowableFunction<Optional<FileObject>, T> resourceCallback) {
