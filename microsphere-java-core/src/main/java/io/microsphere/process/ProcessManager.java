@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -44,7 +45,7 @@ public class ProcessManager {
      */
     public static final ProcessManager INSTANCE = new ProcessManager();
 
-    final ConcurrentMap<Process, String> unfinishedProcessesCache = new ConcurrentHashMap<>();
+    final ConcurrentMap<Process, String> unfinishedProcessesCache = newConcurrentHashMap();
 
     private ProcessManager() {
     }
