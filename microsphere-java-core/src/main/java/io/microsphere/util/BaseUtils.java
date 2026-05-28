@@ -37,7 +37,6 @@ public abstract class BaseUtils {
      * }</pre>
      *
      * @throws IllegalStateException always, as utility classes should not be instantiated
-     * @since 1.0.0
      */
     protected BaseUtils() throws IllegalStateException {
         throw new IllegalStateException("Not Supported!");
