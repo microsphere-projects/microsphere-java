@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static java.util.ServiceLoader.load;
 
@@ -44,7 +45,7 @@ class CompilerInvocationInterceptor implements InvocationInterceptor {
     @Override
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        Set<Class<?>> compiledClassesSet = new LinkedHashSet<>();
+        Set<Class<?>> compiledClassesSet = newLinkedHashSet();
         AbstractAnnotationProcessingTest test = (AbstractAnnotationProcessingTest) invocationContext.getTarget().get();
         Class<?> testClass = extensionContext.getTestClass().get();
         ClassLoader classLoader = testClass.getClassLoader();
