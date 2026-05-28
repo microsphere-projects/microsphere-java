@@ -57,7 +57,6 @@ public class ValueHolder<V> {
      *   System.out.println(holder.getValue()); // Output: null
      * }</pre>
      *
-     * @since 1.0.0
      */
     public ValueHolder() {
     }
@@ -72,7 +71,6 @@ public class ValueHolder<V> {
      * }</pre>
      *
      * @param value the initial value to hold, may be {@code null}
-     * @since 1.0.0
      */
     public ValueHolder(V value) {
         this.value = value;
@@ -88,7 +86,6 @@ public class ValueHolder<V> {
      * }</pre>
      *
      * @return the held value, or {@code null} if no value has been set
-     * @since 1.0.0
      */
     public V getValue() {
         return value;
@@ -105,7 +102,6 @@ public class ValueHolder<V> {
      * }</pre>
      *
      * @param value the value to hold, may be {@code null}
-     * @since 1.0.0
      */
     public void setValue(V value) {
         this.value = value;
@@ -121,7 +117,6 @@ public class ValueHolder<V> {
      *   System.out.println(holder.getValue()); // Output: null
      * }</pre>
      *
-     * @since 1.0.0
      */
     public void reset() {
         setValue(null);
@@ -140,7 +135,6 @@ public class ValueHolder<V> {
      *
      * @param o the object to compare with
      * @return {@code true} if the other object is a {@link ValueHolder} holding an equal value, {@code false} otherwise
-     * @since 1.0.0
      */
     @Override
     public boolean equals(Object o) {
@@ -164,7 +158,6 @@ public class ValueHolder<V> {
      * }</pre>
      *
      * @return the hash code of the held value, or {@code 0} if the value is {@code null}
-     * @since 1.0.0
      */
     @Override
     public int hashCode() {
@@ -182,7 +175,6 @@ public class ValueHolder<V> {
      * }</pre>
      *
      * @return a string representation of this holder and its value
-     * @since 1.0.0
      */
     @Override
     public String toString() {
@@ -203,7 +195,6 @@ public class ValueHolder<V> {
      * @param value the value to hold, may be {@code null}
      * @param <V>   the type of the value
      * @return a new {@link ValueHolder} containing the given value
-     * @since 1.0.0
      */
     public static <V> ValueHolder<V> of(V value) {
         return new ValueHolder<>(value);
