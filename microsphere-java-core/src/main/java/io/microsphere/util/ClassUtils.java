@@ -144,7 +144,6 @@ public abstract class ClassUtils implements Utils {
      *   int count = ClassUtils.PRIMITIVE_TYPES.size(); // 9 (includes void)
      * }</pre>
      *
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
@@ -164,7 +163,6 @@ public abstract class ClassUtils implements Utils {
      *   }
      * }</pre>
      *
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
@@ -182,7 +180,6 @@ public abstract class ClassUtils implements Utils {
      *   int count = ClassUtils.PRIMITIVE_ARRAY_TYPES.size(); // 8
      * }</pre>
      *
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
@@ -307,7 +304,6 @@ public abstract class ClassUtils implements Utils {
      *   boolean abstractType = ClassUtils.isConcreteClass(Number.class); // false, result cached
      * }</pre>
      *
-     * @since 1.0.0
      */
     static final Map<Class<?>, Boolean> concreteClassCache = synchronizedMap(new WeakHashMap<>());
 
@@ -1952,7 +1948,6 @@ public abstract class ClassUtils implements Utils {
      * @param className the fully qualified name of the class
      * @return the simple name of the class, or an empty string for anonymous classes
      * @throws InternalError if the class name is malformed for an enclosed class
-     * @since 1.0.0
      */
     static String getSimpleName(Class<?> type, String className) {
         String simpleName = className;
@@ -1990,7 +1985,6 @@ public abstract class ClassUtils implements Utils {
      *
      * @param c the character to check
      * @return {@code true} if the character is an ASCII digit, {@code false} otherwise
-     * @since 1.0.0
      */
     static boolean isAsciiDigit(char c) {
         return '0' <= c && c <= '9';

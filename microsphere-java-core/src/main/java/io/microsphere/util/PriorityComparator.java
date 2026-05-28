@@ -74,8 +74,7 @@ public class PriorityComparator implements Comparator<Object> {
      * @param o1 the first object to compare
      * @param o2 the second object to compare
      * @return a negative integer, zero, or a positive integer as the first object's priority
-     *         is less than, equal to, or greater than the second object's priority
-     * @since 1.0.0
+     * is less than, equal to, or greater than the second object's priority
      */
     @Override
     public int compare(Object o1, Object o2) {
@@ -94,8 +93,7 @@ public class PriorityComparator implements Comparator<Object> {
      * @param type1 the first class to compare
      * @param type2 the second class to compare
      * @return a negative integer, zero, or a positive integer as the first class's priority
-     *         is less than, equal to, or greater than the second class's priority
-     * @since 1.0.0
+     * is less than, equal to, or greater than the second class's priority
      */
     static int compare(Class<?> type1, Class<?> type2) {
         return compare(type1, type2, PRIORITY_CLASS);
@@ -118,9 +116,8 @@ public class PriorityComparator implements Comparator<Object> {
      * @param type2         the second class to compare
      * @param priorityClass the priority annotation class used to extract priority values
      * @return a negative integer, zero, or a positive integer as the first class's priority
-     *         is less than, equal to, or greater than the second class's priority;
-     *         returns {@code 0} if the classes are equal or the priority annotation class is {@code null}
-     * @since 1.0.0
+     * is less than, equal to, or greater than the second class's priority;
+     * returns {@code 0} if the classes are equal or the priority annotation class is {@code null}
      */
     static int compare(Class<?> type1, Class<?> type2, Class<? extends Annotation> priorityClass) {
         if (Objects.equals(type1, type2) || priorityClass == null) {
@@ -148,7 +145,6 @@ public class PriorityComparator implements Comparator<Object> {
      *
      * @param priority the priority annotation instance, or {@code null} if not annotated
      * @return the priority value, or {@code -1} if the annotation is {@code null} or the value is negative
-     * @since 1.0.0
      */
     static int getValue(Object priority) {
         int value = priority == null ? UNDEFINED_VALUE : invokeMethod(priority, "value");

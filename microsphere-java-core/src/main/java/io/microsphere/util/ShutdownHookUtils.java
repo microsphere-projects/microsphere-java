@@ -383,7 +383,6 @@ public abstract class ShutdownHookUtils implements Utils {
      *   assert callbacks.isEmpty();
      * }</pre>
      *
-     * @since 1.0.0
      */
     static void clearShutdownHookCallbacks() {
         shutdownHookCallbacks.clear();
@@ -410,7 +409,6 @@ public abstract class ShutdownHookUtils implements Utils {
      *
      * @param applicationShutdownHooksClass the {@code java.lang.ApplicationShutdownHooks} class, or {@code null}
      * @return the map of shutdown hook threads, or an empty map if the class is {@code null}
-     * @since 1.0.0
      */
     static Map<Thread, Thread> shutdownHookThreadsMap(Class<?> applicationShutdownHooksClass) {
         return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME);

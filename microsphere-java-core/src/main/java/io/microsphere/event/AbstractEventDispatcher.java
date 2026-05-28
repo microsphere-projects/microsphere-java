@@ -32,6 +32,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.event.EventListener.findEventType;
 import static io.microsphere.lang.function.ThrowableAction.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -94,7 +95,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     protected final Logger logger = getLogger(this.getClass());
 
-    private final ConcurrentMap<Class<? extends Event>, List<EventListener>> listenersCache = new ConcurrentHashMap<>();
+    private final ConcurrentMap<Class<? extends Event>, List<EventListener>> listenersCache = newConcurrentHashMap();
 
     private final Executor executor;
 

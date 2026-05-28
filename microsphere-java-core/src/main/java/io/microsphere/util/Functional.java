@@ -80,7 +80,6 @@ public class Functional<V> {
      *
      * @param name  the descriptive name for this functional instance
      * @param value the value to be operated on
-     * @since 1.0.0
      */
     protected Functional(String name, V value) {
         this.name = name;
@@ -101,7 +100,6 @@ public class Functional<V> {
      *
      * @param predicate the condition to test the value against
      * @return this {@link Functional} instance for fluent chaining
-     * @since 1.0.0
      */
     public Functional<V> on(Predicate<? super V> predicate) {
         if (isSkip()) {
@@ -129,7 +127,6 @@ public class Functional<V> {
      * @param <R>      the type of the transformed result
      * @param function the transformation function to apply to the value
      * @return a new {@link Functional} wrapping the transformed result, or this instance if skipped
-     * @since 1.0.0
      */
     public <R> Functional<R> as(Function<V, R> function) {
         if (isSkip()) {
@@ -151,7 +148,6 @@ public class Functional<V> {
      * }</pre>
      *
      * @param valueConsumer the consumer to apply to the value
-     * @since 1.0.0
      */
     public void apply(Consumer<V> valueConsumer) {
         if (isSkip()) {
@@ -175,7 +171,6 @@ public class Functional<V> {
      * }</pre>
      *
      * @return a string describing this instance
-     * @since 1.0.0
      */
     @Override
     public String toString() {
@@ -200,7 +195,6 @@ public class Functional<V> {
      * @param <V>           the type of the value
      * @param valueSupplier the supplier providing the value
      * @return a new unnamed {@link Functional} instance wrapping the supplied value
-     * @since 1.0.0
      */
     public static <V> Functional<V> value(Supplier<V> valueSupplier) {
         return value(valueSupplier.get());
@@ -220,7 +214,6 @@ public class Functional<V> {
      * @param <V>   the type of the value
      * @param value the value to wrap
      * @return a new unnamed {@link Functional} instance wrapping the value
-     * @since 1.0.0
      */
     public static <V> Functional<V> value(V value) {
         return of(UNNAMED, value);
@@ -242,7 +235,6 @@ public class Functional<V> {
      * @param name          the descriptive name for this functional instance
      * @param valueSupplier the supplier providing the value
      * @return a new named {@link Functional} instance wrapping the supplied value
-     * @since 1.0.0
      */
     public static <V> Functional<V> of(String name, Supplier<V> valueSupplier) {
         return of(name, valueSupplier.get());
@@ -264,7 +256,6 @@ public class Functional<V> {
      * @param name  the descriptive name for this functional instance
      * @param value the value to wrap
      * @return a new named {@link Functional} instance wrapping the value
-     * @since 1.0.0
      */
     public static <V> Functional<V> of(String name, V value) {
         return new Functional<>(name, value);

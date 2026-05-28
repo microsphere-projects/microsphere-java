@@ -101,7 +101,6 @@ public class StopWatch {
      * }</pre>
      *
      * @param id the identifier for this stop watch, used to distinguish output from multiple stop watches
-     * @since 1.0.0
      */
     public StopWatch(String id) {
         this.id = id;
@@ -120,8 +119,7 @@ public class StopWatch {
      *
      * @param taskName the name of the task to start; must not be blank
      * @throws IllegalArgumentException if {@code taskName} is blank
-     * @throws IllegalStateException if a non-reentrant task with the same name is already running
-     * @since 1.0.0
+     * @throws IllegalStateException    if a non-reentrant task with the same name is already running
      */
     public void start(String taskName) throws IllegalArgumentException, IllegalStateException {
         start(taskName, false);
@@ -146,8 +144,7 @@ public class StopWatch {
      * @param reentrant {@code true} to allow reentrant invocations of the same task name,
      *                  {@code false} to throw an exception on duplicate starts
      * @throws IllegalArgumentException if {@code taskName} is blank
-     * @throws IllegalStateException if a non-reentrant task with the same name is already running
-     * @since 1.0.0
+     * @throws IllegalStateException    if a non-reentrant task with the same name is already running
      */
     public void start(String taskName, boolean reentrant) throws IllegalArgumentException, IllegalStateException {
         if (isBlank(taskName)) {
@@ -186,7 +183,6 @@ public class StopWatch {
      * }</pre>
      *
      * @throws IllegalStateException if no task is currently running
-     * @since 1.0.0
      */
     public void stop() throws IllegalStateException {
         Task currentTask = getCurrentTask(true);
@@ -210,7 +206,6 @@ public class StopWatch {
      * }</pre>
      *
      * @return the current running {@link Task}, or {@code null} if no task is running
-     * @since 1.0.0
      */
     public Task getCurrentTask() {
         return getCurrentTask(false);
@@ -230,7 +225,6 @@ public class StopWatch {
      *
      * @param removed {@code true} to remove the task from the running list, {@code false} to only peek
      * @return the current running {@link Task}, or {@code null} if no task is running
-     * @since 1.0.0
      */
     protected Task getCurrentTask(boolean removed) {
         List<Task> runningTasks = this.runningTasks;
@@ -252,7 +246,6 @@ public class StopWatch {
      * }</pre>
      *
      * @return the stop watch identifier
-     * @since 1.0.0
      */
     public String getId() {
         return this.id;
@@ -271,7 +264,6 @@ public class StopWatch {
      * }</pre>
      *
      * @return an unmodifiable list of currently running {@link Task} instances
-     * @since 1.0.0
      */
     public List<Task> getRunningTasks() {
         return unmodifiableList(this.runningTasks);
@@ -290,7 +282,6 @@ public class StopWatch {
      * }</pre>
      *
      * @return an unmodifiable list of completed {@link Task} instances
-     * @since 1.0.0
      */
     public List<Task> getCompletedTasks() {
         return unmodifiableList(this.completedTasks);
@@ -309,7 +300,6 @@ public class StopWatch {
      * }</pre>
      *
      * @return the total elapsed time in nanoseconds
-     * @since 1.0.0
      */
     public long getTotalTimeNanos() {
         return this.totalTimeNanos;
@@ -329,7 +319,6 @@ public class StopWatch {
      *
      * @param timeUnit the desired time unit for the result
      * @return the total elapsed time in the specified time unit
-     * @since 1.0.0
      */
     public long getTotalTime(TimeUnit timeUnit) {
         return NANOSECONDS.convert(this.totalTimeNanos, timeUnit);
@@ -349,7 +338,6 @@ public class StopWatch {
      * }</pre>
      *
      * @return a descriptive string representation of this stop watch
-     * @since 1.0.0
      */
     @Override
     public String toString() {
@@ -409,7 +397,6 @@ public class StopWatch {
          *
          * @param taskName the name of the task
          * @return a new running {@link Task} instance
-         * @since 1.0.0
          */
         public static Task start(String taskName) {
             return start(taskName, false);
@@ -429,7 +416,6 @@ public class StopWatch {
          * @param taskName  the name of the task
          * @param reentrant {@code true} if the task may be started again while running
          * @return a new running {@link Task} instance
-         * @since 1.0.0
          */
         public static Task start(String taskName, boolean reentrant) {
             return new Task(taskName, reentrant);
@@ -446,7 +432,6 @@ public class StopWatch {
          *   System.out.println("Elapsed: " + task.getElapsedNanos() + " ns");
          * }</pre>
          *
-         * @since 1.0.0
          */
         public void stop() {
             this.elapsedNanos = nanoTime() - this.startTimeNanos;
@@ -462,7 +447,6 @@ public class StopWatch {
          * }</pre>
          *
          * @return the task name
-         * @since 1.0.0
          */
         public String getTaskName() {
             return this.taskName;
@@ -478,7 +462,6 @@ public class StopWatch {
          * }</pre>
          *
          * @return {@code true} if the task is reentrant, {@code false} otherwise
-         * @since 1.0.0
          */
         public boolean isReentrant() {
             return this.reentrant;
@@ -494,7 +477,6 @@ public class StopWatch {
          * }</pre>
          *
          * @return the start time in nanoseconds
-         * @since 1.0.0
          */
         public long getStartTimeNanos() {
             return this.startTimeNanos;
@@ -514,7 +496,6 @@ public class StopWatch {
          * }</pre>
          *
          * @return the elapsed time in nanoseconds, or {@code 0} if the task has not been stopped
-         * @since 1.0.0
          */
         public long getElapsedNanos() {
             return this.elapsedNanos;
@@ -533,7 +514,6 @@ public class StopWatch {
          *
          * @param o the object to compare with
          * @return {@code true} if the given object is a {@link Task} with the same name
-         * @since 1.0.0
          */
         @Override
         public boolean equals(Object o) {
@@ -557,7 +537,6 @@ public class StopWatch {
          * }</pre>
          *
          * @return the hash code of this task
-         * @since 1.0.0
          */
         @Override
         public int hashCode() {
@@ -576,7 +555,6 @@ public class StopWatch {
          * }</pre>
          *
          * @return a descriptive string representation of this task
-         * @since 1.0.0
          */
         @Override
         public String toString() {
