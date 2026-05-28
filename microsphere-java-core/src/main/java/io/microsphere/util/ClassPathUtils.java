@@ -91,7 +91,6 @@ public abstract class ClassPathUtils implements Utils {
      * @param classPathSupported whether the class path is supported
      * @param classPathSupplier  the supplier providing the class path string
      * @return a set of resolved class paths, or an empty set if not supported
-     * @since 1.0.0
      */
     static Set<String> resolveClassPaths(boolean classPathSupported, Supplier<String> classPathSupplier) {
         if (classPathSupported) {
