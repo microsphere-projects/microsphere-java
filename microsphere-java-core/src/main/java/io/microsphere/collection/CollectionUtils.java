@@ -29,8 +29,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 
+import static io.microsphere.collection.EmptyIterable.INSTANCE;
 import static io.microsphere.collection.ListUtils.isList;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 
 /**
  * The utilities class for Java Collection
@@ -94,7 +96,7 @@ public abstract class CollectionUtils implements Utils {
      */
     @Nonnull
     public static <E> Iterable<E> toIterable(@Nullable Collection<E> collection) {
-        return collection == null ? EmptyIterable.INSTANCE : collection;
+        return defaultIfNull(collection, () -> INSTANCE);
     }
 
     /**
@@ -325,7 +327,7 @@ public abstract class CollectionUtils implements Utils {
     @Nonnull
     @Immutable
     public static <E> Iterable<E> emptyIterable() {
-        return EmptyIterable.INSTANCE;
+        return INSTANCE;
     }
 
     /**

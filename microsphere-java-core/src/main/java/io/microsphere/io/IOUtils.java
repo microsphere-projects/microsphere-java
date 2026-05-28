@@ -39,7 +39,6 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
-import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Integer.getInteger;
@@ -116,10 +115,10 @@ public abstract class IOUtils implements Utils {
      * @param in the InputStream to read from (may be {@code null} or empty)
      * @return an array of strings representing the lines read from the input stream
      * @throws IOException if an I/O error occurs during reading from the stream
-     * @see #readLines(InputStream, Charset)
+     * @see #readLines(InputStream, String)
      */
     public static String[] readLines(InputStream in) throws IOException {
-        return readLines(in, DEFAULT_CHARSET);
+        return readLines(in, FILE_ENCODING);
     }
 
     /**
@@ -347,7 +346,7 @@ public abstract class IOUtils implements Utils {
      * @throws IOException if an I/O error occurs during reading from the stream
      */
     public static String copyToString(InputStream in, String encoding) throws IOException {
-        String charset = isBlank(encoding) ? FILE_ENCODING : encoding;
+        String charset = defaultIfNull(encoding, FILE_ENCODING);
         return copyToString(in, forName(charset));
     }
 

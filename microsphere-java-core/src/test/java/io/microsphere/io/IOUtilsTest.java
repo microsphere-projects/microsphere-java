@@ -9,7 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
+import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.io.IOUtils.BUFFER_SIZE;
@@ -17,13 +19,17 @@ import static io.microsphere.io.IOUtils.DEFAULT_BUFFER_SIZE;
 import static io.microsphere.io.IOUtils.close;
 import static io.microsphere.io.IOUtils.copy;
 import static io.microsphere.io.IOUtils.copyToString;
+import static io.microsphere.io.IOUtils.readLines;
 import static io.microsphere.io.IOUtils.toByteArray;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
+import static io.microsphere.util.ClassLoaderUtils.getResource;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link IOUtils} Test
@@ -57,6 +63,24 @@ class IOUtilsTest extends LoggingTest {
     }
 
     @Test
+    void testReadLines() throws IOException {
+        String[] lines = readLines(inputStream);
+        assertEquals(1, lines.length);
+        assertEquals(TEST_VALUE, lines[0]);
+    }
+
+    @Test
+    void testReadLinesOnMultipleLines() throws IOException {
+        URL resource = getResource("META-INF/services/io.microsphere.event.EventListener");
+        try (InputStream inputStream = resource.openStream()) {
+            String[] lines = readLines(inputStream);
+            assertEquals(2, lines.length);
+            assertEquals("io.microsphere.event.EchoEventListener", lines[0]);
+            assertEquals("io.microsphere.event.EchoEventListener2", lines[1]);
+        }
+    }
+
+    @Test
     void testToByteArray() throws IOException {
         assertArrayEquals(TEST_BYTES, toByteArray(inputStream));
     }
@@ -87,8 +111,8 @@ class IOUtilsTest extends LoggingTest {
     }
 
     @Test
-    void testToStringWithInputStreamAndEmptyEncoding() throws IOException {
-        assertEquals(TEST_VALUE, IOUtils.toString(inputStream, ""));
+    void testToStringWithInputStreamAndEmptyEncoding() {
+        assertThrows(IllegalCharsetNameException.class, () -> IOUtils.toString(inputStream, EMPTY_STRING));
     }
 
     @Test
@@ -117,8 +141,8 @@ class IOUtilsTest extends LoggingTest {
     }
 
     @Test
-    void testCopyToStringWithInputStreamAndEmptyEncoding() throws IOException {
-        assertEquals(TEST_VALUE, copyToString(inputStream, ""));
+    void testCopyToStringWithInputStreamAndEmptyEncoding() {
+        assertThrows(IllegalCharsetNameException.class, () -> copyToString(inputStream, EMPTY_STRING));
     }
 
     @Test

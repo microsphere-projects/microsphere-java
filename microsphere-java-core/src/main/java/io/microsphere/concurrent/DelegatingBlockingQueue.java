@@ -17,7 +17,6 @@
 package io.microsphere.concurrent;
 
 import io.microsphere.lang.DelegatingWrapper;
-import io.microsphere.lang.Wrapper;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -27,6 +26,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import static io.microsphere.lang.Wrapper.tryUnwrap;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 
 /**
  * A delegating implementation of {@link BlockingQueue} that wraps another
@@ -55,8 +57,8 @@ public class DelegatingBlockingQueue<E> implements BlockingQueue<E>, DelegatingW
     private final BlockingQueue<E> delegate;
 
     public DelegatingBlockingQueue(BlockingQueue<E> delegate) {
-        BlockingQueue<E> unwrapper = Wrapper.tryUnwrap(delegate, BlockingQueue.class);
-        this.delegate = unwrapper == null ? delegate : unwrapper;
+        BlockingQueue<E> unwrapper = tryUnwrap(delegate, BlockingQueue.class);
+        this.delegate = defaultIfNull(unwrapper, delegate);
     }
 
     @Override

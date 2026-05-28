@@ -52,13 +52,14 @@ import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
+import static io.microsphere.util.ObjectUtils.nullSafe;
 import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
-import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
@@ -187,6 +188,38 @@ public abstract class ClassLoaderUtils implements Utils {
     }
 
     /**
+     * Returns a non-null {@link ClassLoader}. If the provided {@code classLoader} is {@code null},
+     * this method returns the system ClassLoader ({@link ClassLoader#getSystemClassLoader()}).
+     * Otherwise, it returns the provided {@code classLoader} itself.
+     *
+     * <p>This utility method is useful for ensuring that a ClassLoader is always available,
+     * preventing {@link NullPointerException} in scenarios where a null ClassLoader might
+     * represent the bootstrap ClassLoader or an uninitialized state.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Example 1: Handle a potentially null ClassLoader
+     * ClassLoader contextLoader = Thread.currentThread().getContextClassLoader(); // Might be null
+     * ClassLoader safeLoader = ClassLoaderUtils.nullSafeClassLoader(contextLoader);
+     * System.out.println("Safe ClassLoader: " + safeLoader);
+     * }</pre>
+     *
+     * <pre>{@code
+     * // Example 2: Use with a known non-null ClassLoader
+     * ClassLoader myLoader = MyClass.class.getClassLoader();
+     * ClassLoader safeLoader = ClassLoaderUtils.nullSafeClassLoader(myLoader);
+     * // safeLoader is the same instance as myLoader
+     * }</pre>
+     *
+     * @param classLoader the ClassLoader to check, may be {@code null}
+     * @return the provided ClassLoader if non-null, otherwise the system ClassLoader
+     */
+    @Nonnull
+    public static ClassLoader nullSafeClassLoader(@Nullable ClassLoader classLoader) {
+        return defaultIfNull(classLoader, ClassLoaderUtils::getDefaultClassLoader);
+    }
+
+    /**
      * Retrieves the default ClassLoader to use when none is explicitly provided.
      * This method attempts to find the most appropriate ClassLoader by checking:
      * <ol>
@@ -230,11 +263,11 @@ public abstract class ClassLoaderUtils implements Utils {
      *
      * @param classLoader the {@link ClassLoader} to use, may be {@code null}
      * @return the provided classLoader if non-null, or the system ClassLoader otherwise
-     * @since 1.0.0
      */
+    @Nonnull
     static ClassLoader getDefaultClassLoader(ClassLoader classLoader) {
         // classLoader is null indicates the bootstrap ClassLoader
-        return classLoader == null ? getSystemClassLoader() : classLoader;
+        return defaultIfNull(classLoader, ClassLoader::getSystemClassLoader);
     }
 
     /**
@@ -267,7 +300,7 @@ public abstract class ClassLoaderUtils implements Utils {
             return getCallerClassLoader(5);
         }
         ClassLoader classLoader = loadedClass.getClassLoader();
-        return classLoader == null ? getDefaultClassLoader() : classLoader;
+        return nullSafeClassLoader(classLoader);
     }
 
     /**
@@ -462,7 +495,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static Class<?> findLoadedClass(@Nullable ClassLoader classLoader, String className) {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         Class<?> loadedClass = invokeFindLoadedClassMethod(actualClassLoader, className);
         if (loadedClass == null) {
             Set<ClassLoader> classLoaders = doGetInheritableClassLoaders(actualClassLoader);
@@ -512,7 +545,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nullable String className) {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         return doLoadClass(actualClassLoader, className);
     }
 
@@ -554,7 +587,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     public static Class<?> loadClass(@Nullable ClassLoader classLoader, @Nullable String className, boolean cached) {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         if (cached) {
             String cacheKey = buildCacheKey(actualClassLoader, className);
             return loadedClassesCache.computeIfAbsent(cacheKey, k -> doLoadClass(actualClassLoader, className));
@@ -635,7 +668,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<URL> getResources(@Nullable ClassLoader classLoader, @Nonnull ResourceType resourceType, String resourceName) throws NullPointerException, IOException {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         String normalizedResourceName = resourceType.resolve(resourceName);
         Enumeration<URL> resources = actualClassLoader.getResources(normalizedResourceName);
         return ofSet(resources);
@@ -810,7 +843,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nullable
     public static URL getResource(@Nullable ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
-        URL resource = normalizedResourceName == null ? null : findClassLoader(classLoader).getResource(normalizedResourceName);
+        URL resource = nullSafe(normalizedResourceName, name -> nullSafeClassLoader(classLoader).getResource(name));
         if (logger.isTraceEnabled()) {
             logger.trace("To find the resource[name : '{}' , normalized : '{}' , type = {} , ClassLoader : {}] : {}",
                     resourceName, normalizedResourceName, resourceType, classLoader, resource);
@@ -1035,7 +1068,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<ClassLoader> getInheritableClassLoaders(@Nullable ClassLoader classLoader) throws NullPointerException {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         return unmodifiableSet(doGetInheritableClassLoaders(actualClassLoader));
     }
 
@@ -1105,7 +1138,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Map<ClassLoader, Set<Class<?>>> getAllLoadedClassesMap(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = new LinkedHashMap();
         Set<ClassLoader> classLoadersSet = doGetInheritableClassLoaders(actualClassLoader);
         for (ClassLoader loader : classLoadersSet) {
@@ -1183,7 +1216,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Class<?>> getLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         Field field = findField(classLoaderClass, classesFieldName);
         List<Class<?>> classes = getFieldValue(actualClassLoader, field);
         return ofSet(classes);
@@ -1481,10 +1514,9 @@ public abstract class ClassLoaderUtils implements Utils {
         if (isBlank(className)) {
             return null;
         }
-
         Class<?> targetClass = null;
         try {
-            ClassLoader targetClassLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
+            ClassLoader targetClassLoader = nullSafeClassLoader(classLoader);
             targetClass = loadClass(targetClassLoader, className, cached);
         } catch (Throwable ignored) { // Ignored
         }
@@ -1518,7 +1550,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<URL> findAllClassPathURLs(@Nullable ClassLoader classLoader) {
-        ClassLoader actualClassLoader = findClassLoader(classLoader);
+        ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
 
         Set<URL> allClassPathURLs = newLinkedHashSet();
 
@@ -1807,30 +1839,6 @@ public abstract class ClassLoaderUtils implements Utils {
             classLoader = callerClass.getClassLoader();
         }
         return classLoader;
-    }
-
-    /**
-     * Resolves the effective {@link ClassLoader} to use. Returns the provided classLoader
-     * if it is non-null; otherwise delegates to {@link #getDefaultClassLoader()} to obtain
-     * a suitable default.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ClassLoader provided = new URLClassLoader(new URL[0]);
-     *   ClassLoader result = ClassLoaderUtils.findClassLoader(provided);
-     *   // result == provided
-     *
-     *   ClassLoader fallback = ClassLoaderUtils.findClassLoader(null);
-     *   // fallback is the thread-context or system ClassLoader
-     * }</pre>
-     *
-     * @param classLoader the {@link ClassLoader} to use, may be {@code null}
-     * @return the provided classLoader if non-null, or the default ClassLoader otherwise
-     * @since 1.0.0
-     */
-    @Nullable
-    static ClassLoader findClassLoader(@Nullable ClassLoader classLoader) {
-        return classLoader == null ? getDefaultClassLoader() : classLoader;
     }
 
     /**
