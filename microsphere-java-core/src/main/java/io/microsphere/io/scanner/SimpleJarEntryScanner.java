@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.jar.JarUtils.filter;
@@ -129,7 +130,7 @@ public class SimpleJarEntryScanner {
     @Nonnull
     @Immutable
     protected Set<JarEntry> scan(JarFile jarFile, String relativePath, final boolean recursive, JarEntryFilter jarEntryFilter) throws NullPointerException, IllegalArgumentException, IOException {
-        Set<JarEntry> jarEntriesSet = new LinkedHashSet<>();
+        Set<JarEntry> jarEntriesSet = newLinkedHashSet();
         List<JarEntry> jarEntriesList = filter(jarFile, jarEntryFilter);
 
         for (JarEntry jarEntry : jarEntriesList) {

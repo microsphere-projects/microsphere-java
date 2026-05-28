@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static java.util.Collections.unmodifiableSet;
 
 /**
@@ -86,7 +87,7 @@ public class SimpleFileScanner {
     @Immutable
     public Set<File> scan(File rootDirectory, boolean recursive, IOFileFilter ioFileFilter) {
 
-        final Set<File> filesSet = new LinkedHashSet<>();
+        final Set<File> filesSet = newLinkedHashSet();
 
         if (ioFileFilter.accept(rootDirectory)) {
             filesSet.add(rootDirectory);
