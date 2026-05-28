@@ -119,7 +119,7 @@ public class JSONObject {
      * Creates a {@code JSONObject} with no name/value mappings.
      */
     public JSONObject() {
-        this.nameValuePairs = new LinkedHashMap<>();
+        this.nameValuePairs = newLinkedHashMap();
     }
 
     /**
