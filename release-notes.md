@@ -156,4 +156,37 @@ This update includes general enhancements, improved documentation, and dependenc
 
 ✔️ **Upgrade recommended**: Incorporates important bug fixes and clearer documentation updates.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.3...0.3.4
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.3...0.3.4## v0.3.5
+
+# Release Notes: Version 0.3.5
+
+## New Features
+- Introduced `nullSafe` and `defaultIfNull` helpers in `ObjectUtils` and associated test cases. ([c24a8d3a](https://github.com/microsphere-projects/...))
+- Added `readLines` API in `IOUtils` with improved charset handling and default to `FILE_ENCODING`. ([fa15f203](https://github.com/microsphere-projects/...))
+- Included `nullSafeClassLoader` for safer class loader handling across multiple modules. ([87d29011](https://github.com/microsphere-projects/...))
+- Added service provider class discovery mechanism. ([54f42608](https://github.com/microsphere-projects/...))
+
+## Documentation
+- Added **user-guide.md** targeting developers with varying experience levels. ([006fd686](https://github.com/microsphere-projects/...))
+- Linked the new **User Guide** in the Documentation table of `README.md`. ([e56a00df](https://github.com/microsphere-projects/...))
+
+## Dependency Updates
+- Bumped `microsphere-bom` version to `0.2.5`. ([4bdfc619](https://github.com/microsphere-projects/...))
+- Updated parent POM version to `0.3.0`. ([5ee3806d](https://github.com/microsphere-projects/...))
+
+## Test Improvements
+- Added comprehensive test cases for `nullSafe` and `defaultIfNull`. ([d5799b3f](https://github.com/microsphere-projects/...))
+- Enhanced `IOUtils` test suite with additional charset validation. ([a0d18c08](https://github.com/microsphere-projects/...))
+
+## Build and Workflow Enhancements
+- Cleaned up redundant `@since` tags and improved Javadocs across multiple files. ([4ed7692d](https://github.com/microsphere-projects/...))
+- Merged multiple updates and changes from the `main` branch into `release`. ([f32bd04b](https://github.com/microsphere-projects/...), [f675a18f](https://github.com/microsphere-projects/...), etc.)
+- Updated prompt templates and onboarding files. ([cf27bf1e](https://github.com/microsphere-projects/...))
+  
+## Other Changes
+- Made extensive use of `SetUtils` and `MapUtils` helper methods across codebase for cleaner factory method implementations. ([fc3449c6](https://github.com/microsphere-projects/...), [3181249a](https://github.com/microsphere-projects/...))
+- Improved null handling in various utilities by using `nullSafe` and `defaultIfNull` methods. ([ce0d215f](https://github.com/microsphere-projects/...), [d75c00dd](https://github.com/microsphere-projects/...))
+
+For a detailed list of changes, see the [Full Changelog](https://github.com/microsphere-projects/.../compare/0.3.4...0.3.5).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.4...0.3.5
