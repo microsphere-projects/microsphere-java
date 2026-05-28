@@ -33,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.lang.model.util.AnnotationUtils.getElementValue;
 import static io.microsphere.lang.model.util.AnnotationUtils.getElementValues;
 import static java.util.Objects.deepEquals;
@@ -181,7 +182,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
     void testVisitAnnotation() {
         String attributeName = "since";
 
-        Map<String, Object> attributesMap = new LinkedHashMap<>();
+        Map<String, Object> attributesMap = newLinkedHashMap();
         attributesMap.put("module", "");
         attributesMap.put("value", "1.0.0");
 
