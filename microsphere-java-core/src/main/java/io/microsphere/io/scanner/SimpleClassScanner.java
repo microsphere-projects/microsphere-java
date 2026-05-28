@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
@@ -168,7 +169,7 @@ public class SimpleClassScanner {
     public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
                               Predicate<? super Class<?>>... classFilters) {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
-        Set<Class<?>> classesSet = new LinkedHashSet<>();
+        Set<Class<?>> classesSet = newLinkedHashSet();
         for (String className : classNames) {
             Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
             if (class_ != null) {
