@@ -19,6 +19,7 @@ package io.microsphere.io;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
+import io.microsphere.util.StringUtils;
 import io.microsphere.util.Utils;
 
 import java.io.Closeable;
@@ -33,10 +34,13 @@ import java.nio.file.Paths;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
+import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.ArrayUtils.EMPTY_BYTE_ARRAY;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static io.microsphere.util.StringUtils.isBlank;
+import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
@@ -86,6 +90,102 @@ public abstract class IOUtils implements Utils {
             source = SYSTEM_PROPERTIES_SOURCE
     )
     public static final int BUFFER_SIZE = getInteger(BUFFER_SIZE_PROPERTY_NAME, DEFAULT_BUFFER_SIZE);
+
+
+    /**
+     * Reads all lines from the given {@link InputStream} and returns them as an array of strings,
+     * using the default character set for decoding.
+     *
+     * <p>This method reads the entire content of the input stream, converts it to a string using
+     * the default charset, and then splits the string into lines based on the system line separator.
+     * The input stream is left open after this operation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = getClass().getResourceAsStream("/example.txt");
+     * try {
+     *     String[] lines = IOUtils.readLines(inputStream);
+     *     for (String line : lines) {
+     *         System.out.println(line);
+     *     }
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in the InputStream to read from (may be {@code null} or empty)
+     * @return an array of strings representing the lines read from the input stream
+     * @throws IOException if an I/O error occurs during reading from the stream
+     * @see #readLines(InputStream, Charset)
+     */
+    public static String[] readLines(InputStream in) throws IOException {
+        return readLines(in, DEFAULT_CHARSET);
+    }
+
+    /**
+     * Reads all lines from the given {@link InputStream} and returns them as an array of strings,
+     * using the specified character encoding for decoding.
+     *
+     * <p>This method reads the entire content of the input stream, converts it to a string using
+     * the provided encoding, and then splits the string into lines based on the system line separator.
+     * The input stream is left open after this operation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = getClass().getResourceAsStream("/example.txt");
+     * try {
+     *     String[] lines = IOUtils.readLines(inputStream, "UTF-8");
+     *     for (String line : lines) {
+     *         System.out.println(line);
+     *     }
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in       the InputStream to read from (may be {@code null} or empty)
+     * @param encoding the character encoding to use for decoding; defaults to system file encoding if null or blank
+     * @return an array of strings representing the lines read from the input stream
+     * @throws IOException if an I/O error occurs during reading from the stream
+     * @see #readLines(InputStream, Charset)
+     */
+    public static String[] readLines(InputStream in, String encoding) throws IOException {
+        return readLines(in, forName(encoding));
+    }
+
+    /**
+     * Reads all lines from the given {@link InputStream} and returns them as an array of strings,
+     * using the specified character set for decoding.
+     *
+     * <p>This method reads the entire content of the input stream, converts it to a string using
+     * the provided charset, and then splits the string into lines based on the system line separator.
+     * The input stream is left open after this operation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * InputStream inputStream = getClass().getResourceAsStream("/example.txt");
+     * try {
+     *     Charset charset = StandardCharsets.UTF_8;
+     *     String[] lines = IOUtils.readLines(inputStream, charset);
+     *     for (String line : lines) {
+     *         System.out.println(line);
+     *     }
+     * } finally {
+     *     IOUtils.closeQuietly(inputStream);
+     * }
+     * }</pre>
+     *
+     * @param in      the InputStream to read from (may be {@code null} or empty)
+     * @param charset the character set to use for decoding; defaults to {@link CharsetUtils#DEFAULT_CHARSET} if null
+     * @return an array of strings representing the lines read from the input stream
+     * @throws IOException if an I/O error occurs during reading from the stream
+     * @see #toString(InputStream, Charset)
+     * @see StringUtils#split(String, String)
+     */
+    public static String[] readLines(InputStream in, Charset charset) throws IOException {
+        String content = toString(in, charset);
+        return split(content, LINE_SEPARATOR);
+    }
 
     /**
      * Copies the content of the given {@link InputStream} into a new byte array.
@@ -301,7 +401,7 @@ public abstract class IOUtils implements Utils {
         if (EMPTY_BYTE_ARRAY == bytes) {
             return null;
         }
-        return new String(bytes, charset == null ? DEFAULT_CHARSET : charset);
+        return new String(bytes, defaultIfNull(charset, DEFAULT_CHARSET));
     }
 
     /**

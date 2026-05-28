@@ -18,12 +18,15 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.nio.charset.CharsetUtils;
 
+import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
 
 import static io.microsphere.collection.MapUtils.newFixedHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.StringUtils.startsWith;
 import static java.lang.System.getProperties;
 import static java.lang.System.getProperty;
@@ -323,8 +326,11 @@ public abstract class SystemUtils implements Utils {
 
     /**
      * The System property for the file encoding, the default is "UTF-8"
+     *
+     * @see CharsetUtils#DEFAULT_CHARSET
+     * @see Charset#defaultCharset()
      */
-    public static final String FILE_ENCODING = getSystemProperty(FILE_ENCODING_PROPERTY_KEY, "UTF-8");
+    public static final String FILE_ENCODING = getSystemProperty(FILE_ENCODING_PROPERTY_KEY, DEFAULT_CHARSET.name());
 
     /**
      * The System property for the native encoding
@@ -624,7 +630,7 @@ public abstract class SystemUtils implements Utils {
      *
      * @param key the name of the system property
      * @return the string value of the system property from the cached copy,
-     *         or {@code null} if the copy is not available or the property is not found
+     * or {@code null} if the copy is not available or the property is not found
      * @since 1.0.0
      */
     protected static String getSystemPropertyFromCopy(String key) {
