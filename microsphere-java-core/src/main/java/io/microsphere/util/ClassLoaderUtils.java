@@ -52,6 +52,7 @@ import static io.microsphere.util.Assert.assertNoNullElements;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
@@ -1830,7 +1831,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nullable
     static ClassLoader findClassLoader(@Nullable ClassLoader classLoader) {
-        return classLoader == null ? getDefaultClassLoader() : classLoader;
+        return defaultIfNull(classLoader, ClassLoaderUtils::getDefaultClassLoader);
     }
 
     /**
