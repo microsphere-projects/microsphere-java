@@ -262,7 +262,6 @@ public abstract class VersionUtils implements Utils {
      * }</pre>
      *
      * @return the major version string of the current Java runtime
-     * @since 1.0.0
      */
     static String currentJavaMajorVersion() {
         return detectJavaMajorVersion(JAVA_VERSION);
@@ -281,7 +280,6 @@ public abstract class VersionUtils implements Utils {
      *
      * @param javaVersion the full Java version string
      * @return the major version component of the Java version string
-     * @since 1.0.0
      */
     static String detectJavaMajorVersion(String javaVersion) {
         int firstDotIndex = javaVersion.indexOf(DOT_CHAR);
