@@ -19,6 +19,7 @@ package io.microsphere.collection;
 import java.util.Iterator;
 
 import static io.microsphere.collection.EmptyIterator.INSTANCE;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 
 /**
  * An adapter that wraps an {@link Iterator} and provides an {@link Iterable} interface.
@@ -48,7 +49,7 @@ public class IterableAdapter<T> implements Iterable<T> {
     private final Iterator<T> iterator;
 
     public IterableAdapter(Iterator<T> iterator) {
-        this.iterator = iterator == null ? INSTANCE : iterator;
+        this.iterator = defaultIfNull(iterator, INSTANCE);
     }
 
     @Override

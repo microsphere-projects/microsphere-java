@@ -31,7 +31,7 @@ import java.util.List;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.Assert.assertNotEmpty;
-import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.nullSafeClassLoader;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -70,7 +70,7 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
     protected ClassPathResourceConfigurationPropertyLoader(@Nonnull String resourceName, @Nullable ClassLoader classLoader, boolean loadedAll) {
         assertNotEmpty(resourceName, () -> "The Class-Path resource must not be empty: " + resourceName);
         this.resourceName = resourceName;
-        this.classLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
+        this.classLoader = nullSafeClassLoader(classLoader);
         this.loadedAll = loadedAll;
         this.configurationPropertyReader = new DefaultConfigurationPropertyReader();
     }

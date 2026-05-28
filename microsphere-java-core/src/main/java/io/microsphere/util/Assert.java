@@ -33,6 +33,7 @@ import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
+import static io.microsphere.util.ObjectUtils.nullSafe;
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**
@@ -500,7 +501,7 @@ public abstract class Assert {
     }
 
     private static String nullSafeGet(Supplier<String> messageSupplier) {
-        return messageSupplier == null ? null : messageSupplier.get();
+        return nullSafe(messageSupplier, Supplier::get);
     }
 
     private Assert() {

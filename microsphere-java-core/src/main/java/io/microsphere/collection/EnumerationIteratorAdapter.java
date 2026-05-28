@@ -19,6 +19,7 @@ package io.microsphere.collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Collections.emptyEnumeration;
 
 /**
@@ -56,7 +57,7 @@ public class EnumerationIteratorAdapter<E> extends ReadOnlyIterator<E> {
     private final Enumeration<E> enumeration;
 
     EnumerationIteratorAdapter(Enumeration<E> enumeration) {
-        this.enumeration = enumeration == null ? emptyEnumeration() : enumeration;
+        this.enumeration = defaultIfNull(enumeration, emptyEnumeration());
     }
 
     @Override

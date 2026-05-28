@@ -22,6 +22,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.MutableInteger;
 import io.microsphere.logging.Logger;
+import io.microsphere.util.ObjectUtils;
 import io.microsphere.util.Utils;
 
 import java.beans.PropertyDescriptor;
@@ -59,6 +60,7 @@ import static io.microsphere.util.ClassUtils.isCharSequence;
 import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isSimpleType;
+import static io.microsphere.util.ObjectUtils.nullSafe;
 import static java.lang.Integer.getInteger;
 import static java.lang.Integer.parseInt;
 import static java.lang.reflect.Array.get;
@@ -470,7 +472,7 @@ public abstract class BeanUtils implements Utils {
     }
 
     static Object resolveProperty(Object value, MutableInteger resolvedDepth, int maxResolvedDepth) {
-        return resolveProperty(value, value == null ? null : value.getClass(), resolvedDepth, maxResolvedDepth);
+        return resolveProperty(value, nullSafe(value, Object::getClass), resolvedDepth, maxResolvedDepth);
     }
 
     static Object resolveProperty(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {

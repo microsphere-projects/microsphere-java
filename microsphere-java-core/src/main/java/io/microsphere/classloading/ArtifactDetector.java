@@ -19,6 +19,7 @@ import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
@@ -85,7 +86,7 @@ public class ArtifactDetector {
     }
 
     public ArtifactDetector(@Nullable ClassLoader classLoader) {
-        ClassLoader actualClassLoader = classLoader == null ? getClassLoader(getClass()) : classLoader;
+        ClassLoader actualClassLoader = defaultIfNull(classLoader, () -> getClassLoader(getClass()));
         this.artifactResourceResolvers = loadServicesList(ArtifactResourceResolver.class, actualClassLoader, true);
         this.classLoader = actualClassLoader;
         if (logger.isTraceEnabled()) {
