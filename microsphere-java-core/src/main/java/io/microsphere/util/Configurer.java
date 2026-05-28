@@ -103,7 +103,6 @@ public class Configurer<T> {
      * }</pre>
      *
      * @param name the descriptive name of this configuration entry
-     * @since 1.0.0
      */
     protected Configurer(String name) {
         this.name = name;
@@ -120,7 +119,6 @@ public class Configurer<T> {
      * }</pre>
      *
      * @param valueSupplier a supplier providing the initial configuration value
-     * @since 1.0.0
      */
     protected Configurer(Supplier<T> valueSupplier) {
         this(valueSupplier.get());
@@ -136,7 +134,6 @@ public class Configurer<T> {
      * }</pre>
      *
      * @param value the initial configuration value
-     * @since 1.0.0
      */
     protected Configurer(T value) {
         this(UNNAMED, value);
@@ -154,7 +151,6 @@ public class Configurer<T> {
      *
      * @param name          the descriptive name of this configuration entry
      * @param valueSupplier a supplier providing the initial configuration value
-     * @since 1.0.0
      */
     protected Configurer(String name, Supplier<T> valueSupplier) {
         this(name, valueSupplier.get());
@@ -173,7 +169,6 @@ public class Configurer<T> {
      *
      * @param name  the descriptive name of this configuration entry
      * @param value the initial configuration value
-     * @since 1.0.0
      */
     protected Configurer(String name, T value) {
         this.name = name;
@@ -196,7 +191,6 @@ public class Configurer<T> {
      * @param value the new configuration value
      * @param <T>   the type of the new value
      * @return a new {@link Configurer} instance with the given value
-     * @since 1.0.0
      */
     public <T> Configurer<T> value(T value) {
         return new Configurer<>(name, value);
@@ -216,7 +210,6 @@ public class Configurer<T> {
      * @param valueSupplier a supplier providing the new configuration value
      * @param <T>           the type of the new value
      * @return a new {@link Configurer} instance with the supplied value
-     * @since 1.0.0
      */
     public <T> Configurer<T> value(Supplier<T> valueSupplier) {
         return new Configurer<>(name, valueSupplier);
@@ -236,7 +229,6 @@ public class Configurer<T> {
      *
      * @param comparedValueSupplier a supplier providing the value to compare against
      * @return this {@link Configurer} instance for method chaining
-     * @since 1.0.0
      */
     public Configurer<T> compare(Supplier<T> comparedValueSupplier) {
         return compare(comparedValueSupplier.get());
@@ -257,7 +249,6 @@ public class Configurer<T> {
      *
      * @param comparedValue the value to compare against the current value
      * @return this {@link Configurer} instance for method chaining
-     * @since 1.0.0
      */
     public Configurer<T> compare(T comparedValue) {
         if (value != null) {
@@ -284,7 +275,6 @@ public class Configurer<T> {
      *
      * @param predicate the predicate to test the current value against
      * @return this {@link Configurer} instance for method chaining
-     * @since 1.0.0
      */
     public Configurer<T> on(Predicate<? super T> predicate) {
         if (value != null) {
@@ -312,7 +302,6 @@ public class Configurer<T> {
      * @param function the conversion function to apply to the current value
      * @param <R>      the target type after conversion
      * @return a {@link Configurer} holding the converted value
-     * @since 1.0.0
      */
     public <R> Configurer<R> as(Function<T, R> function) {
         final R result;
@@ -347,7 +336,6 @@ public class Configurer<T> {
      * }</pre>
      *
      * @param valueConsumer the consumer to accept the current value
-     * @since 1.0.0
      */
     public void apply(Consumer<T> valueConsumer) {
         if (value != null) {
@@ -374,7 +362,6 @@ public class Configurer<T> {
      * @param name the descriptive name of the configuration entry
      * @param <T>  the type of the value to be configured
      * @return a new {@link Configurer} instance with the given name
-     * @since 1.0.0
      */
     public static <T> Configurer<T> configure(String name) {
         return new Configurer<>(name);
@@ -395,7 +382,6 @@ public class Configurer<T> {
      * @param value the initial configuration value
      * @param <T>   the type of the value to be configured
      * @return a new {@link Configurer} instance with the given name and value
-     * @since 1.0.0
      */
     public static <T> Configurer<T> configure(String name, T value) {
         return new Configurer<>(name, value);
@@ -416,7 +402,6 @@ public class Configurer<T> {
      * @param valueSupplier a supplier providing the initial configuration value
      * @param <T>           the type of the value to be configured
      * @return a new {@link Configurer} instance with the given name and supplied value
-     * @since 1.0.0
      */
     public static <T> Configurer<T> configure(String name, Supplier<T> valueSupplier) {
         return new Configurer<>(name, valueSupplier);
@@ -435,7 +420,6 @@ public class Configurer<T> {
      * @param value the initial configuration value
      * @param <T>   the type of the value to be configured
      * @return a new unnamed {@link Configurer} instance with the given value
-     * @since 1.0.0
      */
     public static <T> Configurer<T> configure(T value) {
         return new Configurer<>(value);
@@ -455,7 +439,6 @@ public class Configurer<T> {
      * @param valueSupplier a supplier providing the initial configuration value
      * @param <T>           the type of the value to be configured
      * @return a new unnamed {@link Configurer} instance with the supplied value
-     * @since 1.0.0
      */
     public static <T> Configurer<T> configure(Supplier<T> valueSupplier) {
         return new Configurer<>(valueSupplier);
