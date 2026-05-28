@@ -63,7 +63,7 @@ class SetUtilsTest {
         assertEquals(emptySet(), set);
 
         set = ofSet("A", "B", "C");
-        Set<String> expectedSet = new LinkedHashSet<>();
+        Set<String> expectedSet = newLinkedHashSet();
         expectedSet.add("A");
         expectedSet.add("B");
         expectedSet.add("C");
