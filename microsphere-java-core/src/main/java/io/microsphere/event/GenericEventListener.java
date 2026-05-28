@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
@@ -93,7 +94,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
 
     private Map<Class<?>, Set<Method>> findHandleEventMethods() {
         // Event class for key, the eventMethods' Set as value
-        Map<Class<?>, Set<Method>> eventMethods = new HashMap<>();
+        Map<Class<?>, Set<Method>> eventMethods = newHashMap();
         of(getClass().getMethods()).filter(this::isHandleEventMethod).forEach(method -> {
             Class<?> paramType = method.getParameterTypes()[0];
             Set<Method> methods = eventMethods.computeIfAbsent(paramType, key -> new LinkedHashSet<>());

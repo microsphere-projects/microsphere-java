@@ -9,6 +9,7 @@ import java.util.NavigableMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.test.model.Color.BLUE;
 import static io.microsphere.test.model.Color.RED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +41,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetStrings() {
-        Map<String, String> testMap = new HashMap<>();
+        Map<String, String> testMap = newHashMap();
         testMap.put("key1", "value1");
         testMap.put("key2", "value2");
 
@@ -79,7 +80,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetModels() {
-        HashMap<String, Model> testMap = new HashMap<>();
+        HashMap<String, Model> testMap = newHashMap();
         testMap.put("model1", new Model());
         testMap.put("model2", new Model());
 
@@ -124,7 +125,7 @@ class MapTypeModelTest {
 
     @Test
     void testMapMutability() {
-        Map<String, String> originalMap = new HashMap<>();
+        Map<String, String> originalMap = newHashMap();
         originalMap.put("initial", "value");
         model.setStrings(originalMap);
 

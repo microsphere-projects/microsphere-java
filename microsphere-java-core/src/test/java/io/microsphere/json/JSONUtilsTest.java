@@ -41,6 +41,7 @@ import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
 import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.collection.QueueUtils.ofQueue;
 import static io.microsphere.collection.Sets.ofSet;
@@ -573,7 +574,7 @@ class JSONUtilsTest {
 
     @Test
     void testReadValueAsBeanOnMissingKey() throws JSONException {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> map = newHashMap();
         map.put("name", null);
         map.put("test-name", "test-value");
         JSONObject jsonObject = new JSONObject(map);
