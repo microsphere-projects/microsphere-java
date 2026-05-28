@@ -27,6 +27,7 @@ import java.util.Objects;
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Objects.hash;
 
 /**
@@ -227,7 +228,7 @@ public final class Deprecation implements Serializable {
         }
 
         public Builder level(@Nullable Level level) {
-            this.level = level == null ? DEFAULT : level;
+            this.level = defaultIfNull(level, DEFAULT);
             return this;
         }
 
