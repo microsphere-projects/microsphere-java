@@ -741,22 +741,6 @@ public abstract class AnnotationUtils implements Utils {
     }
 
     /**
-     * Retrieves all declared annotations from the specified {@link AnnotatedElement}, including those
-     * from its hierarchy, but excluding meta-annotations, applying the given filters.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   List<Annotation> all = AnnotationUtils.findAllDeclaredAnnotations(
-     *       MyClass.class, annotation -> true);
-     *   System.out.println(all); // all declared annotations on MyClass and its superclasses
-     * }</pre>
-     *
-     * @param annotatedElement    the annotated element
-     * @param annotationsToFilter the annotations to filter
-     * @return non-null read-only {@link List}
-     * @since 1.0.0
-     */
-    /**
      * Retrieves all declared annotations from the specified {@link AnnotatedElement}, including those from its hierarchy,
      * but excluding meta-annotations (annotations on annotations).
      *
@@ -1243,7 +1227,6 @@ public abstract class AnnotationUtils implements Utils {
      * @param annotation         the specified annotation
      * @param attributesToFilter the attribute methods to filter
      * @return non-null read-only {@link Map}
-     * @since 1.0.0
      */
     @Nonnull
     @Immutable
