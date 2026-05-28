@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static io.microsphere.collection.MapUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static java.util.Collections.unmodifiableMap;
 
@@ -71,7 +72,7 @@ public abstract class PropertiesUtils implements Utils {
         if (isEmpty(properties)) {
             return properties;
         }
-        Map<String, Object> flattenProperties = new LinkedHashMap<>();
+        Map<String, Object> flattenProperties = newLinkedHashMap();
         flatProperties(properties, null, flattenProperties);
         return unmodifiableMap(flattenProperties);
     }

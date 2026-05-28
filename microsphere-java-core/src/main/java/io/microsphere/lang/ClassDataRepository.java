@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.util.ClassPathUtils.getBootstrapClassPaths;
 import static io.microsphere.util.ClassPathUtils.getClassPaths;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
@@ -193,7 +194,7 @@ public class ClassDataRepository {
     @Nonnull
     @Immutable
     private Map<String, Set<String>> initClassPathToClassNamesMap() {
-        Map<String, Set<String>> classPathToClassNamesMap = new LinkedHashMap<>();
+        Map<String, Set<String>> classPathToClassNamesMap = newLinkedHashMap();
         Set<String> classPaths = new LinkedHashSet<>();
         classPaths.addAll(getBootstrapClassPaths());
         classPaths.addAll(getClassPaths());
@@ -207,7 +208,7 @@ public class ClassDataRepository {
     @Nonnull
     @Immutable
     private Map<String, String> initClassNameToClassPathsMap() {
-        Map<String, String> classNameToClassPathsMap = new LinkedHashMap<>();
+        Map<String, String> classNameToClassPathsMap = newLinkedHashMap();
 
         for (Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
             String classPath = entry.getKey();
