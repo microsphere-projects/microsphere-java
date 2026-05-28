@@ -87,8 +87,9 @@ public abstract class ObjectUtils implements Utils {
      * @param <T>          the type of the object
      * @return the object if non-null, otherwise the default value
      */
+    @Nullable
     public static <T> T defaultIfNull(@Nullable T object, @Nullable T defaultValue) {
-        return object != null ? object : defaultValue;
+        return object == null ? defaultValue : object;
     }
 
     private ObjectUtils() {
