@@ -4,18 +4,26 @@ import io.microsphere.LoggingTest;
 import io.microsphere.event.EchoEventListener;
 import io.microsphere.event.EchoEventListener2;
 import io.microsphere.event.EventListener;
+import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.SERVICE_LOADER_CACHED;
+import static io.microsphere.util.ServiceLoaderUtils.getServiceClassNames;
+import static io.microsphere.util.ServiceLoaderUtils.getServiceClasses;
+import static io.microsphere.util.ServiceLoaderUtils.getServiceResoources;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.ServiceLoaderUtils.loadLastService;
 import static io.microsphere.util.ServiceLoaderUtils.loadServices;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
+import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,6 +42,40 @@ class ServiceLoaderUtilsTest extends LoggingTest {
     private static final boolean TEST_CACHED = SERVICE_LOADER_CACHED;
 
     private static final ClassLoader classLoader = getClassLoader(ServiceLoaderUtilsTest.class);
+
+    @Test
+    void testGetServiceClassNames() {
+        Set<String> serviceClassNames = getServiceClassNames(TEST_CLASS);
+        assertEquals(2, serviceClassNames.size());
+        assertEquals(ofSet("io.microsphere.event.EchoEventListener", "io.microsphere.event.EchoEventListener2"), serviceClassNames);
+    }
+
+    @Test
+    void testGetServiceClasses() {
+        Set<Class<EventListener>> serviceClasses = getServiceClasses(TEST_CLASS);
+        assertEquals(ofSet(EchoEventListener.class, EchoEventListener2.class), serviceClasses);
+    }
+
+    @Test
+    void testGetServiceClassesOnNotAssignable() {
+        assertThrows(IllegalStateException.class, () -> getServiceClasses(Utils.class));
+        assertEquals(emptySet(), getServiceClasses(Utils.class, false));
+    }
+
+    @Test
+    void testGetServiceClassesOnNotFound() {
+        assertThrows(IllegalStateException.class, () -> getServiceClasses(Version.class));
+        assertEquals(emptySet(), getServiceClasses(Version.class, false));
+    }
+
+    @Test
+    void testGetServiceResources() throws IOException {
+        Set<URL> serviceResoources = getServiceResoources(TEST_CLASS, classLoader);
+        assertEquals(1, serviceResoources.size());
+
+        serviceResoources = getServiceResoources(LoggerFactory.class, classLoader);
+        assertEquals(2, serviceResoources.size());
+    }
 
     @Test
     void testLoadServicesListWithServiceType() {
