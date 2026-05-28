@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
+
 /**
  * A mutable and non-thread-safe implementation of {@link URLStreamHandlerFactory} that allows dynamic
  * registration and retrieval of {@link URLStreamHandler} instances for specific protocols.
@@ -77,7 +79,7 @@ public class MutableURLStreamHandlerFactory<H extends URLStreamHandler> implemen
      * @param handlers the handlers
      */
     public MutableURLStreamHandlerFactory(Map<String, H> handlers) {
-        this.handlers = handlers == null ? new HashMap<>() : new HashMap<>(handlers);
+        this.handlers = handlers == null ? newHashMap() : newHashMap(handlers);
     }
 
     /**
