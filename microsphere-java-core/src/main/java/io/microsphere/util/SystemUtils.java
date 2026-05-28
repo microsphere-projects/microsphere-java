@@ -631,7 +631,6 @@ public abstract class SystemUtils implements Utils {
      * @param key the name of the system property
      * @return the string value of the system property from the cached copy,
      * or {@code null} if the copy is not available or the property is not found
-     * @since 1.0.0
      */
     protected static String getSystemPropertyFromCopy(String key) {
         return systemPropertiesCopy == null ? null : systemPropertiesCopy.get(key);
