@@ -53,13 +53,13 @@ import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.ResourceType.values;
 import static io.microsphere.util.ClassUtils.resolvePrimitiveClassForName;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
+import static io.microsphere.util.ObjectUtils.nullSafe;
 import static io.microsphere.util.StackTraceUtils.getCallerClassInStatckTrace;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.endsWith;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.SystemUtils.JAVA_VENDOR;
 import static io.microsphere.util.SystemUtils.JAVA_VERSION;
-import static java.lang.ClassLoader.getSystemClassLoader;
 import static java.lang.Thread.currentThread;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
@@ -263,11 +263,11 @@ public abstract class ClassLoaderUtils implements Utils {
      *
      * @param classLoader the {@link ClassLoader} to use, may be {@code null}
      * @return the provided classLoader if non-null, or the system ClassLoader otherwise
-     * @since 1.0.0
      */
+    @Nonnull
     static ClassLoader getDefaultClassLoader(ClassLoader classLoader) {
         // classLoader is null indicates the bootstrap ClassLoader
-        return classLoader == null ? getSystemClassLoader() : classLoader;
+        return defaultIfNull(classLoader, ClassLoader::getSystemClassLoader);
     }
 
     /**
@@ -300,7 +300,7 @@ public abstract class ClassLoaderUtils implements Utils {
             return getCallerClassLoader(5);
         }
         ClassLoader classLoader = loadedClass.getClassLoader();
-        return classLoader == null ? getDefaultClassLoader() : classLoader;
+        return nullSafeClassLoader(classLoader);
     }
 
     /**
@@ -843,7 +843,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nullable
     public static URL getResource(@Nullable ClassLoader classLoader, ResourceType resourceType, String resourceName) throws NullPointerException {
         String normalizedResourceName = resourceType.resolve(resourceName);
-        URL resource = normalizedResourceName == null ? null : nullSafeClassLoader(classLoader).getResource(normalizedResourceName);
+        URL resource = nullSafe(normalizedResourceName, name -> nullSafeClassLoader(classLoader).getResource(name));
         if (logger.isTraceEnabled()) {
             logger.trace("To find the resource[name : '{}' , normalized : '{}' , type = {} , ClassLoader : {}] : {}",
                     resourceName, normalizedResourceName, resourceType, classLoader, resource);
@@ -1514,10 +1514,9 @@ public abstract class ClassLoaderUtils implements Utils {
         if (isBlank(className)) {
             return null;
         }
-
         Class<?> targetClass = null;
         try {
-            ClassLoader targetClassLoader = classLoader == null ? getDefaultClassLoader() : classLoader;
+            ClassLoader targetClassLoader = nullSafeClassLoader(classLoader);
             targetClass = loadClass(targetClassLoader, className, cached);
         } catch (Throwable ignored) { // Ignored
         }
