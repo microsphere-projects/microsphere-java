@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.ListUtils.last;
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
@@ -57,7 +58,7 @@ import static java.util.Collections.emptyList;
  */
 public class Deserializers {
 
-    private final Map<Class<?>, List<Deserializer>> typedDeserializers = new HashMap<>();
+    private final Map<Class<?>, List<Deserializer>> typedDeserializers = newHashMap();
 
     private final ClassLoader classLoader;
 
