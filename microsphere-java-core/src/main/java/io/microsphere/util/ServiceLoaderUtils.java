@@ -6,26 +6,40 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.ListUtils.last;
 import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
+import static io.microsphere.io.IOUtils.readLines;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
+import static io.microsphere.lang.function.ThrowableAction.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.asArray;
+import static io.microsphere.util.ClassLoaderUtils.ResourceType.DEFAULT;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
+import static io.microsphere.util.ClassLoaderUtils.getResources;
+import static io.microsphere.util.ClassLoaderUtils.loadClass;
+import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.ServiceLoader.load;
 
 /**
@@ -96,6 +110,21 @@ public abstract class ServiceLoaderUtils implements Utils {
     public static final String SERVICE_LOADER_CACHED_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "service-loader.cached";
 
     /**
+     * The location of service provider configuration files : "META-INF/services/".
+     *
+     * @see ServiceLoader
+     */
+    public static final String SERVICES_PROVIDER_LOCATION = "META-INF/services/";
+
+    /**
+     * The locatings' pattern of configuration files of the single service provider : "META-INF/services/{}",
+     * where "{}" is replaced with the service type name.
+     *
+     * @see ServiceLoader
+     */
+    public static final String SERVICE_PROVIDER_CONFIG_FILES_LOCATION_PATTERN = SERVICES_PROVIDER_LOCATION + "{}";
+
+    /**
      * Whether to cache the loaded services
      */
     @ConfigurationProperty(
@@ -107,6 +136,224 @@ public abstract class ServiceLoaderUtils implements Utils {
     public static final boolean SERVICE_LOADER_CACHED = parseBoolean(getProperty(SERVICE_LOADER_CACHED_PROPERTY_NAME, DEFAULT_SERVICE_LOADER_CACHED_PROPERTY_VALUE));
 
     private static final ConcurrentMap<Class<?>, List<?>> servicesCache = newConcurrentHashMap();
+
+    /**
+     * Retrieves the implementation classes of all service providers for the specified service type using the context class loader.
+     *
+     * <p>This method searches for service provider configuration files located at
+     * {@code META-INF/services/<serviceType>} using the context class loader associated with the service type.
+     * It loads the classes defined in these configuration files and verifies their assignability
+     * to the service type. This method uses the default fail-fast behavior ({@code true}).</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<Class<MyService>> classes = ServiceLoaderUtils.getServiceClasses(MyService.class);
+     * for (Class<MyService> clazz : classes) {
+     *     System.out.println("Found service implementation class: " + clazz.getName());
+     * }
+     * }</pre>
+     *
+     * @param <T>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @return an unmodifiable set of implementation classes of the service providers
+     * @throws IllegalStateException if a class cannot be loaded or is not assignable to the service type
+     */
+    @Nonnull
+    @Immutable
+    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType) {
+        return getServiceClasses(serviceType, null, true);
+    }
+
+    /**
+     * Retrieves the implementation classes of all service providers for the specified service type using the context class loader.
+     *
+     * <p>This method searches for service provider configuration files located at
+     * {@code META-INF/services/<serviceType>} using the context class loader associated with the service type.
+     * It loads the classes defined in these configuration files and verifies their assignability
+     * to the service type.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Fail fast if a class cannot be loaded or is not assignable
+     * Set<Class<MyService>> classes = ServiceLoaderUtils.getServiceClasses(MyService.class, true);
+     * for (Class<MyService> clazz : classes) {
+     *     System.out.println("Found service implementation class: " + clazz.getName());
+     * }
+     *
+     * // Lenient mode: skip invalid classes
+     * Set<Class<MyService>> lenientClasses = ServiceLoaderUtils.getServiceClasses(MyService.class, false);
+     * }</pre>
+     *
+     * @param <T>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param failFast    if {@code true}, throws an exception when a class cannot be loaded or is not assignable;
+     *                    if {@code false}, skips invalid classes
+     * @return an unmodifiable set of implementation classes of the service providers
+     * @throws IllegalStateException if {@code failFast} is {@code true} and an error occurs during loading or assignment check
+     */
+    @Nonnull
+    @Immutable
+    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, boolean failFast) {
+        return getServiceClasses(serviceType, null, failFast);
+    }
+
+    /**
+     * Retrieves the implementation classes of all service providers for the specified service type using the provided {@link ClassLoader}.
+     *
+     * <p>This method searches for service provider configuration files located at
+     * {@code META-INF/services/<serviceType>} using the provided {@link ClassLoader}.
+     * It loads the classes defined in these configuration files and verifies their assignability
+     * to the service type. This method uses the default fail-fast behavior ({@code true}).</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * Set<Class<MyService>> classes = ServiceLoaderUtils.getServiceClasses(MyService.class, classLoader);
+     * for (Class<MyService> clazz : classes) {
+     *     System.out.println("Found service implementation class: " + clazz.getName());
+     * }
+     * }</pre>
+     *
+     * @param <T>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to locate and load the resources; may be {@code null}
+     * @return an unmodifiable set of implementation classes of the service providers
+     * @throws IllegalStateException if a class cannot be loaded or is not assignable to the service type
+     */
+    @Nonnull
+    @Immutable
+    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, @Nullable ClassLoader classLoader) {
+        return getServiceClasses(serviceType, classLoader, true);
+    }
+
+    /**
+     * Retrieves the implementation classes of all service providers for the specified service type.
+     *
+     * <p>This method searches for service provider configuration files located at
+     * {@code META-INF/services/<serviceType>} using the provided {@link ClassLoader}.
+     * It loads the classes defined in these configuration files and verifies their assignability
+     * to the service type.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * // Fail fast if a class cannot be loaded or is not assignable
+     * Set<Class<MyService>> classes = ServiceLoaderUtils.getServiceClasses(MyService.class, classLoader, true);
+     * for (Class<MyService> clazz : classes) {
+     *     System.out.println("Found service implementation class: " + clazz.getName());
+     * }
+     *
+     * // Lenient mode: skip invalid classes
+     * Set<Class<MyService>> lenientClasses = ServiceLoaderUtils.getServiceClasses(MyService.class, classLoader, false);
+     * }</pre>
+     *
+     * @param <T>         the service type
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to locate and load the resources; may be {@code null}
+     * @param failFast    if {@code true}, throws an exception when a class cannot be loaded or is not assignable;
+     *                    if {@code false}, skips invalid classes
+     * @return an unmodifiable set of implementation classes of the service providers
+     * @throws IllegalStateException if {@code failFast} is {@code true} and an error occurs during loading or assignment check
+     */
+    @Nonnull
+    @Immutable
+    public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, @Nullable ClassLoader classLoader, boolean failFast) {
+        Set<String> serviceClassNames = doGetServiceClassNames(serviceType, classLoader);
+        Set<Class<T>> serviceClasses = newFixedLinkedHashSet(serviceClassNames.size());
+        for (String serviceClassName : serviceClassNames) {
+            Class<?> serviceClass = loadClass(classLoader, serviceClassName);
+            if (serviceClass == null) {
+                if (failFast) {
+                    String errorMessage = format("The service class[name : '{}'] can't be loaded by {}", serviceClassName, classLoader);
+                    throw new IllegalStateException(errorMessage);
+                }
+            } else if (isAssignableFrom(serviceType, serviceClass)) {
+                serviceClasses.add((Class<T>) serviceClass);
+            } else if (failFast) {
+                String errorMessage = format("The service class[name : '{}'] is not assignable to the service type {}", serviceClassName, serviceType);
+                throw new IllegalStateException(errorMessage);
+            }
+        }
+        return unmodifiableSet(serviceClasses);
+    }
+
+    /**
+     * Retrieves the class names of all service providers for the specified service type using the context class loader.
+     *
+     * <p>This method searches for service provider configuration files located at
+     * {@code META-INF/services/<serviceType>} using the context class loader associated with the service type.
+     * It reads the fully qualified class names defined in these configuration files.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * Set<String> classNames = ServiceLoaderUtils.getServiceClassNames(MyService.class);
+     * for (String className : classNames) {
+     *     System.out.println("Found service implementation: " + className);
+     * }
+     * }</pre>
+     *
+     * @param serviceType the class of the service type, cannot be null
+     * @return an unmodifiable set of fully qualified class names of the service providers
+     */
+    @Nonnull
+    @Immutable
+    public static Set<String> getServiceClassNames(Class<?> serviceType) {
+        return getServiceClassNames(serviceType, null);
+    }
+
+    /**
+     * Retrieves the class names of all service providers for the specified service type.
+     *
+     * <p>This method searches for service provider configuration files located at
+     * {@code META-INF/services/<serviceType>} using the provided {@link ClassLoader}.
+     * It reads the fully qualified class names defined in these configuration files.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * Set<String> classNames = ServiceLoaderUtils.getServiceClassNames(MyService.class, classLoader);
+     * for (String className : classNames) {
+     *     System.out.println("Found service implementation: " + className);
+     * }
+     * }</pre>
+     *
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to locate the resources; may be {@code null}
+     * @return an unmodifiable set of fully qualified class names of the service providers
+     */
+    @Nonnull
+    @Immutable
+    public static Set<String> getServiceClassNames(Class<?> serviceType, @Nullable ClassLoader classLoader) {
+        return unmodifiableSet(doGetServiceClassNames(serviceType, classLoader));
+    }
+
+    /**
+     * Retrieves the URLs of the service provider configuration files for the specified service type.
+     *
+     * <p>This method searches for configuration files located at {@code META-INF/services/<serviceType>}
+     * using the provided {@link ClassLoader}. It traverses the class loader hierarchy to find all
+     * matching resources.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     * Set<URL> resources = ServiceLoaderUtils.getServiceResources(MyService.class, classLoader);
+     * for (URL url : resources) {
+     *     System.out.println("Found service config at: " + url);
+     * }
+     * }</pre>
+     *
+     * @param serviceType the class of the service type, cannot be null
+     * @param classLoader the class loader used to locate the resources; may be {@code null}
+     * @return a set of {@link URL}s pointing to the service provider configuration files
+     * @throws IOException if an I/O error occurs while accessing the resources
+     */
+    @Nonnull
+    @Immutable
+    public static Set<URL> getServiceResoources(Class<?> serviceType, @Nullable ClassLoader classLoader) throws IOException {
+        String resouceLocation = format(SERVICE_PROVIDER_CONFIG_FILES_LOCATION_PATTERN, serviceType.getName());
+        return getResources(classLoader, DEFAULT, resouceLocation);
+    }
 
     /**
      * Loads all implementation instances of the specified {@link ServiceLoader} service type using the context class loader.
@@ -575,7 +822,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @param first       {@code true} to return the first service, {@code false} for the last
      * @return the selected service implementation
      * @throws IllegalArgumentException if no implementation is found
-     * @since 1.0.0
      */
     static <S> S loadService(Class<S> serviceType, @Nullable ClassLoader classLoader, boolean cached, boolean first) {
         List<S> serviceList = loadServicesAsList(serviceType, classLoader, cached);
@@ -621,7 +867,6 @@ public abstract class ServiceLoaderUtils implements Utils {
      * @param classLoader the class loader to use; may be {@code null}
      * @return a sorted list of service implementations
      * @throws IllegalArgumentException if no implementation is defined
-     * @since 1.0.0
      */
     static <S> List<S> loadServicesAsList(Class<S> serviceType, @Nullable ClassLoader classLoader) {
         if (classLoader == null) {
@@ -643,6 +888,20 @@ public abstract class ServiceLoaderUtils implements Utils {
         sort(serviceList, COMPARATOR);
 
         return serviceList;
+    }
+
+    static Set<String> doGetServiceClassNames(Class<?> serviceType, @Nullable ClassLoader classLoader) {
+        Set<String> serviceClassNames = newLinkedHashSet();
+        execute(() -> {
+            Set<URL> serviceResoources = getServiceResoources(serviceType, classLoader);
+            for (URL serviceResoource : serviceResoources) {
+                try (InputStream inputStream = serviceResoource.openStream()) {
+                    String[] classNames = readLines(inputStream);
+                    serviceClassNames.addAll(ofList(classNames));
+                }
+            }
+        });
+        return serviceClassNames;
     }
 
     private ServiceLoaderUtils() {
