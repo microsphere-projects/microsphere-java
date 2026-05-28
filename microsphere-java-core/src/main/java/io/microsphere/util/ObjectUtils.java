@@ -49,7 +49,7 @@ public abstract class ObjectUtils implements Utils {
      * @return the result of applying the function to the source object, or null if the source object is null
      */
     @Nullable
-    public static <S, T> T nullSafe(S source, Function<S, T> function) {
+    public static <S, T> T nullSafe(@Nullable S source, Function<S, T> function) {
         return source == null ? null : function.apply(source);
     }
 
