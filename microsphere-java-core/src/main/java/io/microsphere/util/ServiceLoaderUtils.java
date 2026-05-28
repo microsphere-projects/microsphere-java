@@ -161,7 +161,7 @@ public abstract class ServiceLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType) {
-        return getServiceClasses(serviceType, null, true);
+        return getServiceClasses(serviceType, null);
     }
 
     /**
