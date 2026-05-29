@@ -164,5 +164,4 @@ class StreamsTest {
         assertEquals(2, filterFirst(INTEGERS_LIST, EVEN_PREDICATE));
         assertEquals(2, filterFirst(INTEGERS_SET, EVEN_PREDICATE));
     }
-
 }

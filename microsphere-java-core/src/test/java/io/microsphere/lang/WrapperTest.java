@@ -48,5 +48,4 @@ class WrapperTest {
     void testOnNonWrapper() {
         assertNull(tryUnwrap("not a wrapper", String.class));
     }
-
 }

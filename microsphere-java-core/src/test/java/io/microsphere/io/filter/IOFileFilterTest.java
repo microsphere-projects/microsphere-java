@@ -25,5 +25,4 @@ class IOFileFilterTest {
         assertFalse(filter.accept(null));
         assertTrue(filter.accept(file.getParentFile(), file.getName()));
     }
-
 }

@@ -837,5 +837,4 @@ class JSONUtilsTest {
         data.setNames(new String[]{"Mercy", "Mercy"});
         return data;
     }
-
 }

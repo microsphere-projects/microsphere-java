@@ -64,5 +64,4 @@ class PropertyResourceBundleUtilsTest {
     private void assertResourceBundle(ResourceBundle resourceBundle) {
         assertEquals("测试名称", resourceBundle.getString("name"));
     }
-
 }

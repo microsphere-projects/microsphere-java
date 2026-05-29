@@ -132,5 +132,4 @@ class JavaTypeTestForParameterizedType extends AbstractJavaTypeTest<C<String>> {
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getGenericTypes());
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getGenericTypes());
     }
-
 }

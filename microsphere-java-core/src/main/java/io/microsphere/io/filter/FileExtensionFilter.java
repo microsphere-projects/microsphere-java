@@ -93,5 +93,4 @@ public class FileExtensionFilter implements IOFileFilter {
     public static FileExtensionFilter of(String extension) {
         return new FileExtensionFilter(extension);
     }
-
 }

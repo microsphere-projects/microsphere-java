@@ -318,5 +318,4 @@ class TypeFinderTest {
         assertEquals(1, typeVariable2.getBounds().length);
         assertEquals(Object.class, typeVariable2.getBounds()[0]);
     }
-
 }

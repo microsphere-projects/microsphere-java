@@ -21,5 +21,4 @@ class MavenArtifactResourceResolverTest extends StreamArtifactResourceResolverTe
         assertEquals(TEST_ARTIFACT_ID, mavenArtifact.getArtifactId());
         assertEquals(TEST_VERSION, mavenArtifact.getVersion());
     }
-
 }

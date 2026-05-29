@@ -47,5 +47,4 @@ class JSONExceptionTest {
         JSONException exception = new JSONException(null);
         assertNull(exception.getMessage());
     }
-
 }

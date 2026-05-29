@@ -74,5 +74,4 @@ class JavaTypeTestForUnknown extends AbstractJavaTypeTest {
         JavaType aType = javaType.as(type);
         assertNull(aType);
     }
-
 }

@@ -48,5 +48,4 @@ class DelegatingWrapperTest {
 
         assertThrows(IllegalArgumentException.class, () -> wrapper.unwrap(Integer.class));
     }
-
 }

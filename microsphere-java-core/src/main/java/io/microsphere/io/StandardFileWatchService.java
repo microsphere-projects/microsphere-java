@@ -336,5 +336,4 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
 
         private WatchEvent.Kind<?>[] watchEventKinds;
     }
-
 }

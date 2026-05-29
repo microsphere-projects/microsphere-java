@@ -63,5 +63,4 @@ public abstract class ReadOnlyIteratorTest implements Loggable {
     void testForEachRemaining() {
         instance.forEachRemaining(this::log);
     }
-
 }

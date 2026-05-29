@@ -578,5 +578,4 @@ public class JSONTokener {
             return -1;
         }
     }
-
 }

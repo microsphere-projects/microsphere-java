@@ -80,5 +80,4 @@ class EnumerationUtilsTest {
         assertFalse(e.hasMoreElements());
         assertThrows(NoSuchElementException.class, e::nextElement);
     }
-
 }

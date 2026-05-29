@@ -199,5 +199,4 @@ public class ValueHolder<V> {
     public static <V> ValueHolder<V> of(V value) {
         return new ValueHolder<>(value);
     }
-
 }

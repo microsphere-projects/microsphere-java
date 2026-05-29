@@ -59,5 +59,4 @@ class JavaTypeTestForGenericArrayType extends AbstractJavaTypeTest<C<String>[]> 
         JavaType type = javaType.as(null);
         assertNull(type);
     }
-
 }

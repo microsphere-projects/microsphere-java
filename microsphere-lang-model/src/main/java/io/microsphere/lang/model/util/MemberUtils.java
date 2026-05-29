@@ -419,5 +419,4 @@ public interface MemberUtils extends Utils {
     static <T extends Element> List<T> findDeclaredMembers(TypeElement type, boolean all, Predicate<? super T>... memberFilters) {
         return all ? findAllDeclaredMembers(type, memberFilters) : findDeclaredMembers(type, memberFilters);
     }
-
 }

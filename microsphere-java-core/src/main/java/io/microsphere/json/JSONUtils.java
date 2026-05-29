@@ -1472,5 +1472,4 @@ public abstract class JSONUtils implements Utils {
 
     private JSONUtils() {
     }
-
 }

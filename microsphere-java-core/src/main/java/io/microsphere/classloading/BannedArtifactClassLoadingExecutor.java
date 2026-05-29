@@ -135,5 +135,4 @@ public class BannedArtifactClassLoadingExecutor {
         String version = gav[2];
         return MavenArtifact.create(groupId, artifactId, version);
     }
-
 }

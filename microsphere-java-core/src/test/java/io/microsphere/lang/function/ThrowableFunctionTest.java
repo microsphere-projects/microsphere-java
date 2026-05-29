@@ -108,5 +108,4 @@ class ThrowableFunctionTest {
     void testExecute3WithNullExceptionHandler() {
         assertThrows(IllegalArgumentException.class, () -> execute("test", function, null));
     }
-
 }

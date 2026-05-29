@@ -40,5 +40,4 @@ class DirectoryFileFilterTest {
         assertFalse(INSTANCE.accept(testFile));
         testFile.deleteOnExit();
     }
-
 }

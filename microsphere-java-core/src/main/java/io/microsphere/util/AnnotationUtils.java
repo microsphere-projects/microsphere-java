@@ -1835,5 +1835,4 @@ public abstract class AnnotationUtils implements Utils {
 
     private AnnotationUtils() {
     }
-
 }

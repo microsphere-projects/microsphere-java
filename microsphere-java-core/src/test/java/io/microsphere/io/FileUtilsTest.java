@@ -376,5 +376,4 @@ class FileUtilsTest implements Loggable {
 
         return testDir;
     }
-
 }

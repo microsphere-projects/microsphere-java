@@ -1325,5 +1325,4 @@ public class JavaType implements Serializable {
         }
 
     }
-
 }

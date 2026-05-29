@@ -142,5 +142,4 @@ public class BeanMetadata {
     public static BeanMetadata of(@Nonnull Class<?> beanClass) throws RuntimeException {
         return new BeanMetadata(beanClass);
     }
-
 }

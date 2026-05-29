@@ -758,5 +758,4 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
             return cn1.compareTo(cn2);
         }
     }
-
 }

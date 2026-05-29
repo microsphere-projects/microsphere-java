@@ -51,5 +51,4 @@ class ConstructorDefinitionTest extends AbstractExecutableDefinitionTest<Constru
             this.name = name;
         }
     }
-
 }

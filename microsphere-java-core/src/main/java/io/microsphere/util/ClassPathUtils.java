@@ -218,5 +218,4 @@ public abstract class ClassPathUtils implements Utils {
 
     private ClassPathUtils() {
     }
-
 }

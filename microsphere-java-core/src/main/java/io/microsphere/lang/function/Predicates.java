@@ -190,5 +190,4 @@ public interface Predicates {
             return orPredicate;
         }
     }
-
 }

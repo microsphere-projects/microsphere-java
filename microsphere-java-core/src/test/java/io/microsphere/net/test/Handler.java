@@ -33,5 +33,4 @@ public class Handler extends ExtendableProtocolURLStreamHandler {
     public Handler(String protocol) {
         super(protocol);
     }
-
 }

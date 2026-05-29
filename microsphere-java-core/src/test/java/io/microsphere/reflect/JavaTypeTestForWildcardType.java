@@ -77,5 +77,4 @@ class JavaTypeTestForWildcardType extends AbstractJavaTypeTest {
         JavaType aType = javaType.as(type);
         assertNull(aType);
     }
-
 }

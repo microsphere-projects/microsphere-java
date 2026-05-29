@@ -58,5 +58,4 @@ class ProcessManagerTest implements Loggable {
         String response = new String(outputStream.toByteArray());
         log(response);
     }
-
 }

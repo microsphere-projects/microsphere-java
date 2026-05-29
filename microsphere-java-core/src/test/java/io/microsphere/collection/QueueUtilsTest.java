@@ -242,5 +242,4 @@ class QueueUtilsTest {
         assertEquals(3, deque.size());
         assertTrue(deque.containsAll(asList("a", "b", "c")));
     }
-
 }

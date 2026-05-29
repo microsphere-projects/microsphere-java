@@ -203,5 +203,4 @@ public class PropertyResourceBundleControl extends ResourceBundle.Control {
     public static ResourceBundle.Control newControl(final String encoding) throws UnsupportedCharsetException {
         return encodingControlMap.computeIfAbsent(encoding, PropertyResourceBundleControl::new);
     }
-
 }

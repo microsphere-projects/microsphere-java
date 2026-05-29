@@ -53,5 +53,4 @@ public abstract class ReadOnlyIterator<E> implements Iterator<E> {
     public final void remove() {
         throw new IllegalStateException("Read-Only");
     }
-
 }

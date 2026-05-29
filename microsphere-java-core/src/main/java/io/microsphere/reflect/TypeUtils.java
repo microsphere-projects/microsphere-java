@@ -1572,5 +1572,4 @@ public abstract class TypeUtils implements Utils {
 
     private TypeUtils() {
     }
-
 }

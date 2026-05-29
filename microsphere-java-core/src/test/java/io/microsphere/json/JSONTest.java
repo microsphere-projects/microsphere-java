@@ -113,5 +113,4 @@ class JSONTest {
         assertThrows(JSONException.class, () -> typeMismatch(null, null, "String"));
         assertThrows(JSONException.class, () -> typeMismatch(null, "String"));
     }
-
 }

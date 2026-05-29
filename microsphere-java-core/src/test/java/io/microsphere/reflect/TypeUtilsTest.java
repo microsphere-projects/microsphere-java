@@ -1086,5 +1086,4 @@ class TypeUtilsTest {
     private void assertEGenericInterfaces(List<Type> types) {
         assertDGenericInterfaces(types);
     }
-
 }

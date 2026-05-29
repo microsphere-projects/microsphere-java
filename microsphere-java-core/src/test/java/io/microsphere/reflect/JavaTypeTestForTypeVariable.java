@@ -70,5 +70,4 @@ class JavaTypeTestForTypeVariable<T> extends AbstractJavaTypeTest<T> {
         JavaType aType = javaType.as(type);
         assertNull(aType);
     }
-
 }

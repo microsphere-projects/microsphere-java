@@ -416,5 +416,4 @@ public abstract class ShutdownHookUtils implements Utils {
 
     private ShutdownHookUtils() {
     }
-
 }

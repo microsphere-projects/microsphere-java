@@ -744,5 +744,4 @@ public class JSONArray {
         // diverge from the original, which doesn't implement hashCode
         return this.values.hashCode();
     }
-
 }

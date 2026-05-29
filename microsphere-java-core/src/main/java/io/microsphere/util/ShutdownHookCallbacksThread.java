@@ -87,5 +87,4 @@ class ShutdownHookCallbacksThread extends Thread {
             callback.run();
         }
     }
-
 }

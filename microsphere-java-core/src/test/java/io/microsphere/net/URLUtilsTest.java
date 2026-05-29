@@ -717,5 +717,4 @@ class URLUtilsTest extends LoggingTest {
         File archiveFile = resolveArchiveFile(classArchiveEntryURL);
         assertTrue(isArchiveURL(ofURL(protocol + COLON_CHAR + SLASH_CHAR + archiveFile.getAbsolutePath())));
     }
-
 }

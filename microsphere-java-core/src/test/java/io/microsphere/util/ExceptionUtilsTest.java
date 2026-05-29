@@ -165,5 +165,4 @@ class ExceptionUtilsTest {
         assertEquals(message, t.getMessage());
         assertEquals(cause, t.getCause());
     }
-
 }

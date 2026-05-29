@@ -83,5 +83,4 @@ class FunctionalTest {
         assertNotNull(functional.toString());
         valueHolder.reset();
     }
-
 }

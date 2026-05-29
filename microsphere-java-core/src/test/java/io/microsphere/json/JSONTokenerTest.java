@@ -416,5 +416,4 @@ class JSONTokenerTest {
         assertEquals(-1, dehexchar(' '));
         assertEquals(-1, dehexchar('#'));
     }
-
 }

@@ -710,5 +710,4 @@ class AnnotationUtilsTest {
     @Since(module = "microsphere-java-core", value = "1.0.0")
     class B extends A {
     }
-
 }

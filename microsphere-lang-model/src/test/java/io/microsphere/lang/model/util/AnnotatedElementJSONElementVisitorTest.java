@@ -47,5 +47,4 @@ class AnnotatedElementJSONElementVisitorTest extends UtilTest {
         assertFalse(visitor.supports(super.testTypeElement));
         assertFalse(visitor.supports(NULL_ELEMENT));
     }
-
 }

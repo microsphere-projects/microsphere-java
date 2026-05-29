@@ -106,5 +106,4 @@ public class SimpleFileScanner {
         }
         return unmodifiableSet(filesSet);
     }
-
 }

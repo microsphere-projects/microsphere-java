@@ -65,5 +65,4 @@ class ReflectionTest {
     public String method(String message) {
         return message;
     }
-
 }

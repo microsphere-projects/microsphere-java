@@ -69,5 +69,4 @@ class FieldDefinitionTest extends AbstractMemberDefinitionTest<FieldDefinition> 
             assertEquals(definition.toString(), this.name);
         }
     }
-
 }

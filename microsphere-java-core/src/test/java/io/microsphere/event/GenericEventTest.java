@@ -76,5 +76,4 @@ class GenericEventTest {
         GenericEvent<List<String>> event = new GenericEvent<>(source);
         assertEquals(source, event.getSource());
     }
-
 }

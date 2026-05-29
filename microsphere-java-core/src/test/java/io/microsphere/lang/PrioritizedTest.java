@@ -71,5 +71,4 @@ class PrioritizedTest {
         assertEquals(0, COMPARATOR.compare("prioritized", "prioritized"));
         assertEquals(0, COMPARATOR.compare("prioritized", null));
     }
-
 }

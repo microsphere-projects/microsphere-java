@@ -18,5 +18,4 @@ class BaseUtilsTest {
         assertThrows(IllegalStateException.class, () -> new BaseUtils() {
         });
     }
-
 }

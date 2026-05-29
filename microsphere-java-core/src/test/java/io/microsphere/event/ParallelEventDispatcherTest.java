@@ -55,5 +55,4 @@ class ParallelEventDispatcherTest {
     static void afterAll() {
         ForkJoinPool.commonPool().shutdown();
     }
-
 }

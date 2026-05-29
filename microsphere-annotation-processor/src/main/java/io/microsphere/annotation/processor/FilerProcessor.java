@@ -99,5 +99,4 @@ public class FilerProcessor {
     public JavaFileManager getJavaFileManager() {
         return processInFiler(filer -> getFieldValue(filer, "fileManager"));
     }
-
 }

@@ -263,5 +263,4 @@ class ExtendableProtocolURLStreamHandlerTest {
 
     private static class MemberClass extends ExtendableProtocolURLStreamHandler {
     }
-
 }

@@ -152,5 +152,4 @@ class JavaTypeTestForClass extends AbstractJavaTypeTest<D> {
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getGenericTypes());
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, objectType.getGenericTypes());
     }
-
 }

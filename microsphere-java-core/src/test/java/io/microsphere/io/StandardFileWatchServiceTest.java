@@ -312,5 +312,4 @@ class StandardFileWatchServiceTest extends LoggingTest implements Loggable {
             assertFalse(fileWatchService.isStarted());
         }
     }
-
 }

@@ -18,5 +18,4 @@ class CharsetUtilsTest {
     void testConstants() {
         assertNotNull(DEFAULT_CHARSET);
     }
-
 }

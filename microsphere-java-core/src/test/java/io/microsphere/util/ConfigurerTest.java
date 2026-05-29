@@ -83,5 +83,4 @@ class ConfigurerTest {
                 .apply(value -> {
                 });
     }
-
 }

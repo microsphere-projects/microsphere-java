@@ -83,5 +83,4 @@ class FilterOperatorTest {
         Filter filter = XOR.createFilter(new Filter[0]);
         assertTrue(filter.accept(null));
     }
-
 }

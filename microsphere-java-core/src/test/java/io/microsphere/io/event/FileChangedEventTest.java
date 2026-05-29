@@ -33,5 +33,4 @@ class FileChangedEventTest {
         assertThrows(IllegalArgumentException.class, () -> new FileChangedEvent(null, CREATED));
         assertThrows(IllegalArgumentException.class, () -> new FileChangedEvent(new File(""), null));
     }
-
 }

@@ -59,5 +59,4 @@ class EventListenerTest {
 
         assertEquals(NORMAL_PRIORITY, listener.getPriority());
     }
-
 }

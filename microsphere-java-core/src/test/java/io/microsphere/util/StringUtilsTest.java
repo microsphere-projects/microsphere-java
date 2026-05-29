@@ -358,5 +358,4 @@ class StringUtilsTest {
         assertSame(EMPTY_STRING_ARRAY, toStringArray(newLinkedList()));
         assertArrayEquals(ofArray("a", "b", "c"), toStringArray(ofList("a", "b", "c")));
     }
-
 }

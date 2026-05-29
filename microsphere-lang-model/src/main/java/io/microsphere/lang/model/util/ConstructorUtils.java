@@ -289,5 +289,4 @@ public interface ConstructorUtils extends Utils {
 
         return filterElements(constructors, constructorFilters);
     }
-
 }

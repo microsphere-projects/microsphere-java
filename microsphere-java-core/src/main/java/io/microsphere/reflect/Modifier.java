@@ -335,5 +335,4 @@ public enum Modifier {
     public static boolean isMandated(int modifiers) {
         return MANDATED.matches(modifiers);
     }
-
 }

@@ -97,5 +97,4 @@ class ExecutableUtilsTest {
             assertEquals(1, (int) method.invoke(test, 1));
         }));
     }
-
 }
