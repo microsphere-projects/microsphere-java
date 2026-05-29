@@ -104,7 +104,6 @@ class DelegatingBlockingQueueTest extends MutableQueueTest<DelegatingBlockingQue
         // test hashCode
         assertEquals(System.identityHashCode(delegate), queue.hashCode());
 
-
         // test offer
         assertTrue(queue.offer(1));
         assertTrue(queue.offer(2, 1, SECONDS));

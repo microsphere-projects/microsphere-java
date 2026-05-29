@@ -17,7 +17,6 @@
 
 package io.microsphere.json;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.json.JSONObject.NULL;
@@ -134,7 +133,6 @@ class JSONTokenerTest {
         assertEquals("name", jsonArray.getString(0));
         assertEquals("age", jsonArray.getString(1));
 
-
         jsonTokener = new JSONTokener(" \"name\" ; \"age\" ; \"gender\" ]");
         jsonArray = jsonTokener.readArray();
         assertEquals(3, jsonArray.length());
@@ -199,7 +197,6 @@ class JSONTokenerTest {
     void testNextString() {
         JSONTokener jsonTokener = new JSONTokener("");
     }
-
 
     @Test
     void testNextStringOnSyntaxError() {

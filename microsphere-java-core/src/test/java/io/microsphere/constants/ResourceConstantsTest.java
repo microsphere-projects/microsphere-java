@@ -17,7 +17,6 @@
 
 package io.microsphere.constants;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_FILE_NAME;

@@ -17,7 +17,6 @@
 
 package io.microsphere.management.builder;
 
-
 /**
  * {@link MBeanFeatureInfoBuilder} Test
  *

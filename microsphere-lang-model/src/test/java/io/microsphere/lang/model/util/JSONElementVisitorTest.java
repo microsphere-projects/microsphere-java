@@ -17,7 +17,6 @@
 
 package io.microsphere.lang.model.util;
 
-
 import io.microsphere.test.annotation.TestAnnotation;
 import io.microsphere.test.model.Color;
 import io.microsphere.test.model.StringArrayList;
@@ -54,7 +53,6 @@ class JSONElementVisitorTest extends UtilTest {
     private StringBuilder jsonBuilder;
 
     private JSONElementVisitor visitor;
-
 
     @BeforeEach
     void setUp() {

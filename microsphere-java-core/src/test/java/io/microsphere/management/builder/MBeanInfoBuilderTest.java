@@ -17,7 +17,6 @@
 
 package io.microsphere.management.builder;
 
-
 import io.microsphere.beans.BeanMetadata;
 import io.microsphere.test.Data;
 import org.junit.jupiter.api.Test;

@@ -200,5 +200,4 @@ class ModifierTest {
         return getStaticFieldValue(java.lang.reflect.Modifier.class, name);
     }
 
-
 }

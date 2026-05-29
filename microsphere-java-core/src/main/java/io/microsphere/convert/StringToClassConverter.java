@@ -32,7 +32,6 @@ public class StringToClassConverter extends AbstractConverter<String, Class> imp
      */
     public static final StringToClassConverter INSTANCE = new StringToClassConverter();
 
-
     private static final ClassLoader classLoader = getDefaultClassLoader();
 
     @Override

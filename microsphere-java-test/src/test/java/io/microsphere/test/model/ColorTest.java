@@ -95,7 +95,7 @@ class ColorTest {
         // Verify that we can retrieve all enum constants
         Color[] allColors = values();
         assertEquals(3, allColors.length, "There should be exactly 3 color constants");
-        
+
         // Verify that all expected colors are present
         assertTrue(asList(allColors).contains(RED), "All colors should include RED");
         assertTrue(asList(allColors).contains(YELLOW), "All colors should include YELLOW");

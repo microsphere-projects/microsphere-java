@@ -17,7 +17,6 @@
 
 package io.microsphere.beans;
 
-
 import io.microsphere.beans.BeanUtilsTest.TestBean;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -28,7 +28,7 @@ class ModelTest {
         // Verify all primitive fields have their default values
         assertEquals(0.0f, model.getF(), "float field f should be 0.0f by default");
         assertEquals(0.0d, model.getD(), "double field d should be 0.0d by default");
-        
+
         // Verify all object fields are null by default
         assertNull(model.getTu(), "TimeUnit field tu should be null by default");
         assertNull(model.getStr(), "String field str should be null by default");
@@ -89,13 +89,13 @@ class ModelTest {
         // Test changing values multiple times
         model.setF(1.0f);
         assertEquals(1.0f, model.getF(), "f should be 1.0f");
-        
+
         model.setF(2.0f);
         assertEquals(2.0f, model.getF(), "f should be 2.0f after second assignment");
-        
+
         model.setD(10.0d);
         assertEquals(10.0d, model.getD(), "d should be 10.0d");
-        
+
         model.setD(20.0d);
         assertEquals(20.0d, model.getD(), "d should be 20.0d after second assignment");
     }
@@ -107,7 +107,7 @@ class ModelTest {
         model.setStr(null);
         model.setBi(null);
         model.setBd(null);
-        
+
         assertNull(model.getTu(), "tu should be null after setting to null");
         assertNull(model.getStr(), "str should be null after setting to null");
         assertNull(model.getBi(), "bi should be null after setting to null");

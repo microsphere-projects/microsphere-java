@@ -523,7 +523,6 @@ class MethodUtilsTest extends LoggingTest {
         assertFalse(overrides(compareToMethod1, compareToMethod2));
     }
 
-
     @Test
     void testOverridesOnSameDeclaringClass() {
         Method waitMethod1 = findMethod(Object.class, "wait");

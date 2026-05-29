@@ -24,7 +24,6 @@ class ListenableTest {
         assertThrows(IllegalArgumentException.class, () -> assertListener(new FinalEventListener()));
     }
 
-
     static final class FinalEventListener implements EventListener<Event> {
 
         @Override
@@ -32,6 +31,5 @@ class ListenableTest {
 
         }
     }
-
 
 }

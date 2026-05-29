@@ -190,7 +190,6 @@ class IOUtilsTest extends LoggingTest {
         assertNull(copyToString((Reader) null));
     }
 
-
     @Test
     void testCopy() throws IOException {
         FastByteArrayOutputStream outputStream = new FastByteArrayOutputStream(TEST_BYTES.length);

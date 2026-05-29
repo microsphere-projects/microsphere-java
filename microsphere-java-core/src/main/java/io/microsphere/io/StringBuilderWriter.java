@@ -17,7 +17,6 @@
 
 package io.microsphere.io;
 
-
 import java.io.StringWriter;
 import java.io.Writer;
 

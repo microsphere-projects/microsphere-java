@@ -134,7 +134,6 @@ class StringUtilsTest {
         assertTrue(contains(TEST_CSV_STRING, COMMA));
     }
 
-
     @Test
     void testStartsWith() {
         assertFalse(startsWith(null, null));

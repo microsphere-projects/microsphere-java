@@ -168,7 +168,6 @@ class ClassUtilsTest extends LoggingTest {
         assertFalse(isConcreteClass(Object[].class));
     }
 
-
     @Test
     void testIsAbstractClass() {
         // test null
@@ -526,7 +525,6 @@ class ClassUtilsTest extends LoggingTest {
         File tempFile = createRandomTempFile();
         assertTrue(findClassNamesInClassPath(tempFile, true).isEmpty());
         assertTrue(findClassNamesInClassPath(tempFile, false).isEmpty());
-
 
         File link = makeLinkFile(tempFile);
         assertTrue(findClassNamesInClassPath(link, false).isEmpty());

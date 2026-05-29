@@ -60,10 +60,10 @@ class ParentTest {
     void testInheritanceFromAncestor() {
         // Verify that the parent inherits from Ancestor class
         assertTrue(parent instanceof Ancestor, "Parent should extend Ancestor class");
-        
+
         // Test inherited functionality
         assertFalse(parent.isZ(), "Should inherit default z value of false from Ancestor");
-        
+
         parent.setZ(true);
         assertTrue(parent.isZ(), "Should be able to modify inherited z field");
     }
@@ -73,13 +73,13 @@ class ParentTest {
         // Test changing values multiple times
         parent.setB((byte) 1);
         assertEquals((byte) 1, parent.getB(), "b should be 1");
-        
+
         parent.setB((byte) 2);
         assertEquals((byte) 2, parent.getB(), "b should be 2 after second assignment");
-        
+
         parent.setI(100);
         assertEquals(100, parent.getI(), "i should be 100");
-        
+
         parent.setI(200);
         assertEquals(200, parent.getI(), "i should be 200 after second assignment");
     }

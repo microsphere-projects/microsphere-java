@@ -17,7 +17,6 @@
 
 package io.microsphere.metadata;
 
-
 import io.microsphere.LoggingTest;
 import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,6 @@ class ClassPathResourceConfigurationPropertyLoaderTest extends LoggingTest {
         };
         assertConfigurationProperties(loader);
     }
-
 
     @Test
     void testLoadWithAllResources() throws Throwable {

@@ -3,7 +3,6 @@
  */
 package io.microsphere.constants;
 
-
 import java.io.File;
 
 import static io.microsphere.constants.PathConstants.SLASH;

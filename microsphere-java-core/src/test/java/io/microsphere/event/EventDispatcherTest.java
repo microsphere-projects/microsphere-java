@@ -50,7 +50,6 @@ class EventDispatcherTest {
     void testGetExecutor() throws Throwable {
         assertSame(DIRECT_EXECUTOR, defaultInstance.getExecutor());
 
-
         EventDispatcher executor = new EventDispatcher() {
             @Override
             public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {

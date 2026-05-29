@@ -1,6 +1,5 @@
 package io.microsphere.io.scanner;
 
-
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.filter.IOFileFilter;
