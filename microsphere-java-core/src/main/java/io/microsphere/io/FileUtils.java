@@ -248,7 +248,6 @@ public abstract class FileUtils implements Utils {
         }
     }
 
-
     /**
      * Schedules all files and subdirectories within the given directory for deletion on JVM exit.
      *

@@ -17,7 +17,6 @@
 
 package io.microsphere.management.builder;
 
-
 import io.microsphere.management.CacheControlMBean;
 import org.junit.jupiter.api.Test;
 

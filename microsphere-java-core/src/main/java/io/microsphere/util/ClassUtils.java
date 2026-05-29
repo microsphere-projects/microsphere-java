@@ -1514,7 +1514,6 @@ public abstract class ClassUtils implements Utils {
         return findAllClasses(type, EMPTY_PREDICATE_ARRAY);
     }
 
-
     /**
      * Find all super classes from the specified type, optionally filtering the results.
      * <p>

@@ -17,7 +17,6 @@
 
 package io.microsphere.json;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.random;

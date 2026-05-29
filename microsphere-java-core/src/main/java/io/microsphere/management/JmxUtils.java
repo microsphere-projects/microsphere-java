@@ -566,7 +566,6 @@ public abstract class JmxUtils implements Utils {
         return mBeanInfo;
     }
 
-
     /**
      * @see MBeanOperationInfo#methodSignature(Method)
      */

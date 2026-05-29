@@ -762,7 +762,6 @@ class TypeUtilsTest extends UtilTest {
                 () -> findTypeElements(testTypeElement, true, true, true, true, new Predicate[]{null}));
     }
 
-
     @Test
     void testGetDeclaredTypeOfSuperclass() {
         DeclaredType superDeclaredType = getDeclaredTypeOfSuperclass(testTypeMirror);
@@ -1062,7 +1061,6 @@ class TypeUtilsTest extends UtilTest {
     void testFindAllDeclaredTypesWithExcludedTypes() {
         List<DeclaredType> declaredTypes = findAllDeclaredTypes(testTypeElement, testClass);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);
-
 
         declaredTypes = findAllDeclaredTypes(testTypeMirror, testClass);
         assertDeclaredTypes(declaredTypes, ALL_SUPER_TYPES);

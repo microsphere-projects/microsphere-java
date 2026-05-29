@@ -17,7 +17,6 @@
 
 package io.microsphere.json;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -298,7 +297,6 @@ class JSONObjectTest {
         assertThrows(JSONException.class, () -> jsonObject.getJSONObject("value"));
     }
 
-
     @Test
     void testOpt() throws JSONException {
         jsonObject.put("name", "Mercy");
@@ -340,7 +338,6 @@ class JSONObjectTest {
         assertEquals("", jsonObject.optString("name1"));
     }
 
-
     @Test
     void testOptJSONArray() throws JSONException {
         JSONArray jsonArray = new JSONArray();
@@ -348,7 +345,6 @@ class JSONObjectTest {
         assertEquals(jsonArray, jsonObject.optJSONArray("value"));
         assertNull(this.jsonObject.optJSONArray("value1"));
     }
-
 
     @Test
     void testOptJSONObject() throws JSONException {
@@ -380,7 +376,6 @@ class JSONObjectTest {
     void testToJSONArrayOnEmptyJSONArray() {
         assertNull(jsonObject.toJSONArray(new JSONArray()));
     }
-
 
     @Test
     void testKeys() throws JSONException {

@@ -172,7 +172,6 @@ class TypeUtilsTest {
         assertFalse(isObjectClass(String.class));
     }
 
-
     @Test
     void testIsObjectType() {
         assertTrue(isObjectType(Object.class));
@@ -397,7 +396,6 @@ class TypeUtilsTest {
         assertEGenericSuperclasses(types);
     }
 
-
     @Test
     void testGetAllGenericInterfaces() {
         List<Type> types = getAllGenericInterfaces(A.class);
@@ -519,7 +517,6 @@ class TypeUtilsTest {
         assertTrue(types.contains(RandomAccess.class));
     }
 
-
     @Test
     void testFindAllGenericSuperclasses() {
         List<Type> types = findAllGenericSuperclasses(E.class);
@@ -528,7 +525,6 @@ class TypeUtilsTest {
         assertTrue(types.contains(B.class));
         assertTrue(types.contains(C.class));
         assertTrue(types.contains(Object.class));
-
 
         types = findAllGenericSuperclasses(D.class);
 
@@ -651,7 +647,6 @@ class TypeUtilsTest {
         types = findHierarchicalTypes(D.class, GENERIC_ARRAY_TYPE_FILTER);
         assertTrue(types.isEmpty());
     }
-
 
     @Test
     void testFindAllTypes() {
@@ -779,7 +774,6 @@ class TypeUtilsTest {
 
         actualTypeArguments = doResolveActualTypeArguments(StringIntegerBooleanHashMap.class, Map.class);
         assertValues(actualTypeArguments, String.class, Integer.class);
-
 
         actualTypeArguments = doResolveActualTypeArguments(StringToStringConverter.class, Converter.class);
         assertValues(actualTypeArguments, String.class, String.class);

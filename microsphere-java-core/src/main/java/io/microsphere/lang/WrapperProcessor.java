@@ -47,4 +47,3 @@ public interface WrapperProcessor<W extends Wrapper> {
     W process(W wrapper);
 
 }
-

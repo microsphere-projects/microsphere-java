@@ -82,7 +82,6 @@ public class TypeArgument {
         return hash(this.type, this.index);
     }
 
-
     public static TypeArgument create(Type type, int index) {
         return new TypeArgument(type, index);
     }

@@ -489,7 +489,6 @@ public abstract class AnnotationUtils implements Utils {
         return isMetaAnnotation(annotation.annotationType(), metaAnnotationTypes);
     }
 
-
     /**
      * Checks whether the specified annotation type is a meta-annotation.
      *

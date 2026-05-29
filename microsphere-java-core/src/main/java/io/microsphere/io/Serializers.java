@@ -16,7 +16,6 @@
  */
 package io.microsphere.io;
 
-
 import io.microsphere.annotation.Nonnull;
 
 import java.util.HashMap;
@@ -105,7 +104,6 @@ public class Serializers {
         List<Serializer<S>> serializers = get(serializedType);
         return first(serializers);
     }
-
 
     /**
      * Get the lowest priority instance of {@link Serializer} by the specified serialized type

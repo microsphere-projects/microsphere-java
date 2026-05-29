@@ -17,7 +17,6 @@
 
 package io.microsphere.lang.model.util;
 
-
 import io.microsphere.test.annotation.TestAnnotation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;

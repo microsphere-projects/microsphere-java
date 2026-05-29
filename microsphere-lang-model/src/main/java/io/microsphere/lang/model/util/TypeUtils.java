@@ -96,7 +96,6 @@ public interface TypeUtils extends Utils {
             .map(TypeUtils::ofTypeElement)
             .toArray(TypeElement[]::new);
 
-
     /**
      * Checks if the given Element represents a simple type.
      * A simple type is defined as a basic data type that can be directly represented without further resolution.
@@ -1703,7 +1702,6 @@ public interface TypeUtils extends Utils {
                                                boolean includeSuperInterfaces) {
         return findDeclaredTypes(type, includeSelf, includeHierarchicalTypes, includeSuperClasses, includeSuperInterfaces, EMPTY_PREDICATE_ARRAY);
     }
-
 
     /**
      * Finds and returns a list of DeclaredTypes associated with the given TypeMirror,

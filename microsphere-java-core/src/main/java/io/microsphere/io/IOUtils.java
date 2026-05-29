@@ -90,7 +90,6 @@ public abstract class IOUtils implements Utils {
     )
     public static final int BUFFER_SIZE = getInteger(BUFFER_SIZE_PROPERTY_NAME, DEFAULT_BUFFER_SIZE);
 
-
     /**
      * Reads all lines from the given {@link InputStream} and returns them as an array of strings,
      * using the default character set for decoding.
@@ -214,7 +213,6 @@ public abstract class IOUtils implements Utils {
         copy(in, out);
         return out.toByteArray();
     }
-
 
     /**
      * Converts the content of the provided {@link InputStream} into a new {@link String}

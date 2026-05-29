@@ -49,7 +49,6 @@ public abstract class ThrowableUtils implements Utils {
         return rootCause;
     }
 
-
     private ThrowableUtils() {
     }
 }

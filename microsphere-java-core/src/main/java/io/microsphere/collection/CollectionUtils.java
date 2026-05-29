@@ -681,7 +681,6 @@ public abstract class CollectionUtils implements Utils {
         return QueueUtils.emptyDeque();
     }
 
-
     private CollectionUtils() {
     }
 
