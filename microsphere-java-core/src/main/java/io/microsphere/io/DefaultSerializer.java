@@ -59,4 +59,3 @@ public class DefaultSerializer implements Serializer<Object> {
         return bytes;
     }
 }
-

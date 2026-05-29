@@ -1,6 +1,5 @@
 package io.microsphere.management;
 
-
 import io.microsphere.process.ProcessIdResolver;
 import io.microsphere.util.ServiceLoaderUtils;
 import io.microsphere.util.Utils;

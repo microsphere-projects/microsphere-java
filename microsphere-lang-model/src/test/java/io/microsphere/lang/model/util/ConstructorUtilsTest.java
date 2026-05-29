@@ -17,7 +17,6 @@
 
 package io.microsphere.lang.model.util;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.core.env.Environment;
 

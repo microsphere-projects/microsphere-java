@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-
 import java.util.Map;
 import java.util.Properties;
 

@@ -43,7 +43,6 @@ class SimpleJarEntryScannerTest extends AbstractTestCase {
         assertEquals(5, jarEntrySet.size());
     }
 
-
     @Test
     void testScanInJarFile() throws IOException {
         URL resourceURL = getClassResource(classLoader, Nonnull.class);

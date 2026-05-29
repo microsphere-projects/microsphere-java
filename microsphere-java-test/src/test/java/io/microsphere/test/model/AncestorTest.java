@@ -74,7 +74,7 @@ class AncestorTest {
         // This test verifies basic functionality without actual serialization
         ancestor.setZ(true);
         assertTrue(ancestor.isZ(), "Should properly handle boolean value when used as Serializable");
-        
+
         ancestor.setZ(false);
         assertFalse(ancestor.isZ(), "Should properly handle boolean value when used as Serializable");
     }

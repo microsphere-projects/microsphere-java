@@ -19,7 +19,6 @@ class FilterOperatorTest {
 
     TrueClassFilter filter1 = TrueClassFilter.INSTANCE;
 
-
     PackageNameClassFilter filter2 = new PackageNameClassFilter("io.microsphere", true);
 
     @Test

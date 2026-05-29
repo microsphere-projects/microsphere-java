@@ -1089,7 +1089,6 @@ public abstract class JSONUtils implements Utils {
         return readValues(jsonArray, multipleClass, elementClass);
     }
 
-
     /**
      * Reads a {@link JSONArray} and converts it into an instance of the specified collection or array type.
      * <p>
@@ -1317,7 +1316,6 @@ public abstract class JSONUtils implements Utils {
         }
         return targetClass;
     }
-
 
     /**
      * Escapes a string for JSON formatting.

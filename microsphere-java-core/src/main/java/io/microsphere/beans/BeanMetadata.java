@@ -122,7 +122,6 @@ public class BeanMetadata {
         return "BeanMetadata{" + "beanClass='" + getTypeName(this.beanClass) + "'}";
     }
 
-
     /**
      * Create a {@link BeanMetadata} instance from the specified bean class.
      *

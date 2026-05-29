@@ -17,7 +17,6 @@
 
 package io.microsphere.util;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
@@ -40,7 +39,6 @@ class ObjectUtilsTest {
         assertEquals(value.length(), nullSafe(value, String::length));
         assertNull(nullSafe(null, String::length));
     }
-
 
     @Test
     void testDefaultIfNull() {

@@ -279,7 +279,6 @@ class URLUtilsTest extends LoggingTest {
         resolvedPath = normalizePath(path);
         assertEquals(expectedPath, resolvedPath);
 
-
         path = "//\\abc///";
         expectedPath = "/abc/";
         resolvedPath = normalizePath(path);
@@ -537,7 +536,6 @@ class URLUtilsTest extends LoggingTest {
         assertEquals(FTP_PROTOCOL, resolveProtocol("ftp://..."));
         assertEquals(HTTP_PROTOCOL, resolveProtocol("http://..."));
     }
-
 
     @Test
     void testResolvePath() {

@@ -30,7 +30,6 @@ package io.microsphere.util;
  */
 public abstract class NumberUtils implements Utils {
 
-
     private NumberUtils() {
     }
 }

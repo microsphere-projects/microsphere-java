@@ -1326,7 +1326,6 @@ public abstract class MethodUtils implements Utils {
         return matchesParameterCount(method, 0);
     }
 
-
     static void filterDeclaredMethodsHierarchically(Class<?> targetClass, Predicate<? super Method> methodToFilter, List<Method> methodsToCollect) {
         filterDeclaredMethods(targetClass, methodToFilter, methodsToCollect);
         for (Class<?> interfaceClass : targetClass.getInterfaces()) {

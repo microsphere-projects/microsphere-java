@@ -16,7 +16,6 @@
  */
 package io.microsphere.lang.model.util;
 
-
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 

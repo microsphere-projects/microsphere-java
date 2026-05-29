@@ -62,10 +62,10 @@ class StringArrayListTest {
     void testAddAll() {
         // Test adding multiple elements at once
         String[] elements = {"item1", "item2", "item3"};
-        
+
         boolean result = stringArrayList.addAll(Arrays.asList(elements));
         assertTrue(result, "addAll should return true when elements are added");
-        
+
         assertEquals(3, stringArrayList.size(), "Size should match number of added elements");
         assertEquals("item1", stringArrayList.get(0), "First element should match");
         assertEquals("item2", stringArrayList.get(1), "Second element should match");
@@ -77,7 +77,7 @@ class StringArrayListTest {
         // Test removing elements
         stringArrayList.add("element1");
         stringArrayList.add("element2");
-        
+
         boolean removed = stringArrayList.remove("element1");
         assertTrue(removed, "Should return true when element is successfully removed");
         assertEquals(1, stringArrayList.size(), "Size should decrease after removal");
@@ -90,11 +90,11 @@ class StringArrayListTest {
         stringArrayList.add("element1");
         stringArrayList.add("element2");
         stringArrayList.add("element3");
-        
+
         assertEquals(3, stringArrayList.size(), "Size should be 3 before clear");
-        
+
         stringArrayList.clear();
-        
+
         assertTrue(stringArrayList.isEmpty(), "List should be empty after clear");
         assertEquals(0, stringArrayList.size(), "Size should be 0 after clear");
     }
@@ -104,7 +104,7 @@ class StringArrayListTest {
         // Test contains functionality
         String element = "test_element";
         stringArrayList.add(element);
-        
+
         assertTrue(stringArrayList.contains(element), "List should contain the added element");
         assertFalse(stringArrayList.contains("non_existent"), "List should not contain non-existent element");
     }
@@ -114,16 +114,16 @@ class StringArrayListTest {
         // Test iterator functionality
         String[] elements = {"a", "b", "c"};
         stringArrayList.addAll(Arrays.asList(elements));
-        
+
         Iterator<String> iterator = stringArrayList.iterator();
         int index = 0;
-        
+
         while (iterator.hasNext() && index < elements.length) {
             String nextElement = iterator.next();
             assertEquals(elements[index], nextElement, "Iterator should return elements in order");
             index++;
         }
-        
+
         assertFalse(iterator.hasNext(), "Iterator should be exhausted after processing all elements");
     }
 

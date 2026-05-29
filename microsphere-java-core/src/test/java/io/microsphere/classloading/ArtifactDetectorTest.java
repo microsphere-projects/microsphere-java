@@ -16,7 +16,6 @@
  */
 package io.microsphere.classloading;
 
-
 import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.Test;
 

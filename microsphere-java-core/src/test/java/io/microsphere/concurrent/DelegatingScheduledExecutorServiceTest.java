@@ -61,7 +61,6 @@ class DelegatingScheduledExecutorServiceTest implements Loggable {
             log("scheduleWithFixedDelay");
         }, 1, 1, MILLISECONDS);
 
-
         // test submit
         future = instance.submit(() -> {
             log("submit");

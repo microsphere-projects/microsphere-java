@@ -661,7 +661,6 @@ public abstract class TypeUtils implements Utils {
 
         resolveTypeArgumentsMap(type, hierarchicalTypes, -1, hierarchicalTypesSize, typeArgumentsMap, baseClass, baseTypeParameters);
 
-
         return typeArgumentsMap;
     }
 

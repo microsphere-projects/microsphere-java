@@ -232,7 +232,6 @@ public final class Deprecation implements Serializable {
             return this;
         }
 
-
         /**
          * Build an instance of {@link Deprecation}
          *

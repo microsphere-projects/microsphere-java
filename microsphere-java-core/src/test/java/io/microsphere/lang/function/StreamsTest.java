@@ -16,7 +16,6 @@
  */
 package io.microsphere.lang.function;
 
-
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

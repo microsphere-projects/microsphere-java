@@ -104,7 +104,6 @@ class ReflectionUtilsTest {
         Object expectedList = asList(1, 2, 3, 4, 5, 6, 7, 8, 9);
         assertEquals(expectedList, list);
 
-
         int[][] intIntArray = new int[][]{{1, 2, 3}, {4, 5, 6,}, {7, 8, 9}};
         list = toList(intIntArray);
         expectedList = asList(asList(1, 2, 3), asList(4, 5, 6), asList(7, 8, 9));

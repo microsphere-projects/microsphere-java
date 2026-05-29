@@ -260,7 +260,6 @@ public class Configurer<T> {
         return this;
     }
 
-
     /**
      * Filters the current value using the given {@link Predicate}. If the predicate evaluates
      * to {@code false}, the current value is discarded (set to {@code null}) and subsequent

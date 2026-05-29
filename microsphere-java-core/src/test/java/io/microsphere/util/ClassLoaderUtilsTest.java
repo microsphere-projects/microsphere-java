@@ -749,7 +749,6 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
     private static class TestClassLoader extends ClassLoader {
     }
 
-
     private static class ClassComparator implements Comparator<Class<?>> {
 
         @Override

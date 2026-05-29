@@ -17,7 +17,6 @@
 
 package io.microsphere.json;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,5 @@
 package io.microsphere.reflect;
 
-
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
@@ -392,7 +391,6 @@ public abstract class ReflectionUtils implements Utils {
         }
         return object;
     }
-
 
     /**
      * Reads all non-static fields of the given object and returns them as a map.

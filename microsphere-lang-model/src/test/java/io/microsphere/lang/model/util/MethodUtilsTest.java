@@ -333,7 +333,6 @@ class MethodUtilsTest extends UtilTest {
         assertNull(findMethod(testTypeMirror, NULL_STRING, NULL_TYPE_ARRAY));
         assertNull(findMethod(testTypeMirror, NULL_STRING, NULL_STRING_ARRAY));
 
-
         assertNull(findMethod(testTypeElement, "toString", NULL_TYPE_ARRAY));
         assertNull(findMethod(testTypeElement, "toString", NULL_STRING_ARRAY));
 

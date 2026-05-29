@@ -62,7 +62,6 @@ public class EmptyIterator<E> extends DelegatingIterator<E> {
      */
     public static final EmptyIterator INSTANCE = new EmptyIterator();
 
-
     public EmptyIterator() {
         super(emptyIterator());
     }

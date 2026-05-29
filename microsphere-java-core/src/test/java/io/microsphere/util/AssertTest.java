@@ -41,7 +41,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-
 /**
  * {@link Assert} Test
  *
@@ -165,7 +164,6 @@ class AssertTest {
         assertNoNullElements(array, () -> "array");
         assertNoNullElements(array, (Supplier<String>) null);
 
-
         assertNoNullElements(TEST_NULL_OBJECT_ARRAY, "null");
         assertNoNullElements(TEST_NULL_OBJECT_ARRAY, () -> "null");
         assertNoNullElements(TEST_NULL_OBJECT_ARRAY, (Supplier<String>) null);
@@ -190,7 +188,6 @@ class AssertTest {
         assertNoNullElements(collection, () -> "collection");
         assertNoNullElements(collection, (Supplier<String>) null);
 
-
         assertNoNullElements((Collection<String>) null, "null");
         assertNoNullElements((Collection<String>) null, () -> "null");
         assertNoNullElements((Collection<String>) null, (Supplier<String>) null);
@@ -207,7 +204,6 @@ class AssertTest {
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, () -> "collectionWithNull"));
         assertThrows(IllegalArgumentException.class, () -> assertNoNullElements(collectionWithNull, (Supplier<String>) null));
     }
-
 
     @Test
     void testAssertArrayIndex() {
@@ -235,7 +231,6 @@ class AssertTest {
             assertThrows(ArrayIndexOutOfBoundsException.class, () -> assertArrayIndex(array, index));
         }
     }
-
 
     @Test
     void testAssertArrayType() {
