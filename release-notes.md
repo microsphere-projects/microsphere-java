@@ -5,10 +5,10 @@
 # Release Notes - Version 0.2.7
 
 ## New Features
-- **Artifact Detector Enhancements**:  
+- **Artifact Detector Enhancements**:
   - Added `Version.ofVersion(Class)` for artifact detection. ([6a2e5273](#))
   - Refactored `ArtifactDetector` detection API. ([68cc094c](#))
-- **Version Improvements**:  
+- **Version Improvements**:
   - Added a test for `javax.annotation.Nullable`. ([d2e39cd7](#))
   - Refactored `Version` behavior. ([04feb0ef](#))
 
@@ -36,12 +36,12 @@ For specific changes, refer to the commit hashes linked above.
 - Bumped `io.github.microsphere-projects:microsphere-all-bom` to version `0.2.0`. ([#270](https://github.com/microsphere-projects/microsphere-all-bom))
 
 ## Build and Workflow Enhancements
-- Enhanced GitHub Actions Maven workflow for tidier execution.  
-- Updated `dependabot.yml` for improved dependency management.  
-- Improved release notes generation and release creation process.  
+- Enhanced GitHub Actions Maven workflow for tidier execution.
+- Updated `dependabot.yml` for improved dependency management.
+- Improved release notes generation and release creation process.
 
 ## Other Changes
-- Removed unnecessary newlines in files for improved formatting.  
+- Removed unnecessary newlines in files for improved formatting.
 
 **Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.2.7...0.2.8## v0.2.9
 
@@ -52,8 +52,8 @@ For specific changes, refer to the commit hashes linked above.
 - **microsphere-bom**: Updated to `0.2.1`.
 
 ## Build and Workflow Enhancements
-- Upgraded Maven Wrapper to `3.9.14`.  
-- Formatted Java versions matrix spacing for enhanced readability.  
+- Upgraded Maven Wrapper to `3.9.14`.
+- Formatted Java versions matrix spacing for enhanced readability.
 
 ## Other Changes
 - Version bumped to `0.2.9` post-release of `0.2.8` for upcoming development.
@@ -86,13 +86,13 @@ For more details, refer to the full changelog in the repository.
 - Collect multiple artifacts and add trace log for enhanced observability. ([db9cb00f](#))
 
 ## Dependency Updates
-- Adopt `microsphere-all-bom` to streamline dependencies.  
+- Adopt `microsphere-all-bom` to streamline dependencies.
 - Remove outdated `testing/javaee` BOMs. ([56fa380e](#))
 
 ## Other Changes
-- Version bump to prepare for post-0.3.0 development. ([c18526da](#)) 
+- Version bump to prepare for post-0.3.0 development. ([c18526da](#))
 
-**Note**: This release includes minor enhancements and dependency refinements to improve overall functionality. 
+**Note**: This release includes minor enhancements and dependency refinements to improve overall functionality.
 
 **Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.0...0.3.1## v0.3.2
 
@@ -182,7 +182,7 @@ This update includes general enhancements, improved documentation, and dependenc
 - Cleaned up redundant `@since` tags and improved Javadocs across multiple files. ([4ed7692d](https://github.com/microsphere-projects/...))
 - Merged multiple updates and changes from the `main` branch into `release`. ([f32bd04b](https://github.com/microsphere-projects/...), [f675a18f](https://github.com/microsphere-projects/...), etc.)
 - Updated prompt templates and onboarding files. ([cf27bf1e](https://github.com/microsphere-projects/...))
-  
+
 ## Other Changes
 - Made extensive use of `SetUtils` and `MapUtils` helper methods across codebase for cleaner factory method implementations. ([fc3449c6](https://github.com/microsphere-projects/...), [3181249a](https://github.com/microsphere-projects/...))
 - Improved null handling in various utilities by using `nullSafe` and `defaultIfNull` methods. ([ce0d215f](https://github.com/microsphere-projects/...), [d75c00dd](https://github.com/microsphere-projects/...))
