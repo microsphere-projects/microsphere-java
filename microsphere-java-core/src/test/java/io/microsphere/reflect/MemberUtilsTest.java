@@ -75,7 +75,6 @@ class MemberUtilsTest {
         assertFalse(isStatic(null));
     }
 
-
     @Test
     void testIsAbstract() {
         assertTrue(isAbstract(findMethod(Map.class, "size")));

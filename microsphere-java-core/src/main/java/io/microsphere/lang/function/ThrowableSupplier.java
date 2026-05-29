@@ -148,4 +148,3 @@ public interface ThrowableSupplier<T> {
         return supplier.execute(exceptionHandler);
     }
 }
-

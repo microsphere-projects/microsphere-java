@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert.multiple;
 
-
 import io.microsphere.convert.Converter;
 
 import static java.lang.reflect.Array.newInstance;
@@ -48,7 +47,6 @@ public class StringToArrayConverter implements StringToMultiValueConverter {
 
         return array;
     }
-
 
     @Override
     public int getPriority() {

@@ -76,7 +76,6 @@ class ClassPathUtilsTest implements Loggable {
         location = getRuntimeClassLocation(predicate.getClass());
         assertNull(location);
 
-
         Set<String> classNames = INSTANCE.getAllClassNamesInClassPaths();
         for (String className : classNames) {
             if (!isLoadedClass(TEST_CLASS_LOADER, className)) {

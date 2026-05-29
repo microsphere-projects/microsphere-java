@@ -134,7 +134,7 @@ class MapTypeModelTest {
         originalMap.put("added", "new_value");
 
         // Check if the change is reflected in the getter result
-        assertTrue(model.getStrings().containsKey("added"), 
+        assertTrue(model.getStrings().containsKey("added"),
             "Changes to the original map should be reflected since maps are passed by reference");
     }
 }

@@ -17,7 +17,6 @@
 
 package io.microsphere.beans;
 
-
 import io.microsphere.LoggingTest;
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.test.MultipleValueData;
@@ -103,7 +102,6 @@ class BeanUtilsTest extends LoggingTest {
         Method writeMethod = findWriteMethod(beanMetadata, "booleanValue");
         assertNull(writeMethod);
     }
-
 
     @Test
     void testResolvePropertiesAsMap() {

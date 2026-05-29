@@ -76,7 +76,6 @@ class ExceptionUtilsTest {
         assertCreate(RuntimeException.class, "Hello,World");
     }
 
-
     @Test
     void testCreateWithTypeAndCause() {
         assertCreate(RuntimeException.class, new NullPointerException());

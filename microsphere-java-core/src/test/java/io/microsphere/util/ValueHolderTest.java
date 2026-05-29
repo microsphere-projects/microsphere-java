@@ -70,7 +70,6 @@ class ValueHolderTest {
         assertNull(valueHolder.getValue());
     }
 
-
     @Test
     void testToString() {
         ValueHolder valueHolder = of(1);

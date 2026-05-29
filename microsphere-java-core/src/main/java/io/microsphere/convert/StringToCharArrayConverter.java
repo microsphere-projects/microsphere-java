@@ -16,7 +16,6 @@
  */
 package io.microsphere.convert;
 
-
 /**
  * The class to convert {@link String} to <code>char[]</code>
  *

@@ -16,7 +16,6 @@
  */
 package io.microsphere.lang.model.util;
 
-
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;

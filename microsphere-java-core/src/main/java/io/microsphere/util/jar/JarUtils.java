@@ -411,7 +411,6 @@ public abstract class JarUtils implements Utils {
         }
     }
 
-
     /**
      * Determines whether the specified URL points to a directory entry within a JAR file.
      *

@@ -17,7 +17,6 @@
 
 package io.microsphere.collection;
 
-
 import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;

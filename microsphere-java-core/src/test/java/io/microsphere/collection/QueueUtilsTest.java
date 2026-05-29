@@ -1,6 +1,5 @@
 package io.microsphere.collection;
 
-
 import org.junit.jupiter.api.Test;
 
 import java.util.Deque;
@@ -135,7 +134,6 @@ class QueueUtilsTest {
 
         assertEquals("a", singletonDeque.getFirst());
         assertEquals("a", singletonDeque.getLast());
-
 
         assertEquals(1, singletonDeque.size());
     }

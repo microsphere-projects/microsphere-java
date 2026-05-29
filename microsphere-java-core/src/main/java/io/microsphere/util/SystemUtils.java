@@ -42,7 +42,6 @@ public abstract class SystemUtils implements Utils {
 
     private static final Logger logger = getLogger(SystemUtils.class);
 
-
     public static final String OS_NAME_WINDOWS_PREFIX = "Windows";
 
     /**

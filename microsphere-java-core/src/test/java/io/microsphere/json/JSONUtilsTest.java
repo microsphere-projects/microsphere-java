@@ -17,7 +17,6 @@
 
 package io.microsphere.json;
 
-
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.collection.CollectionUtils;
 import io.microsphere.test.A;
@@ -530,7 +529,6 @@ class JSONUtilsTest {
     void testJsonArrayOnInvalidContent() {
         assertThrows(IllegalArgumentException.class, () -> jsonArray("[1,2,3"));
     }
-
 
     @Test
     void testReadValueWithMap() {

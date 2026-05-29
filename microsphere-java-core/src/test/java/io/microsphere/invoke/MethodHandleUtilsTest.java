@@ -91,7 +91,6 @@ public class MethodHandleUtilsTest {
         testFindStatic("defaultStaticMethod");
     }
 
-
     @Test
     void testFindStaticOnPrivateStaticMethod() throws Throwable {
         testFindStatic("privateStaticMethod");

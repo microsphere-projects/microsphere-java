@@ -17,7 +17,6 @@
 
 package io.microsphere.lang.model.util;
 
-
 import org.junit.jupiter.api.Test;
 
 import javax.lang.model.element.ExecutableElement;

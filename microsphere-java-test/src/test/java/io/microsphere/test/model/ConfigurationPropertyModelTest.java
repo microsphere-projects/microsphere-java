@@ -72,17 +72,17 @@ class ConfigurationPropertyModelTest {
     void testConfigurationPropertyAnnotations() {
         // Test that the ConfigurationProperty annotations are present on the fields
         java.lang.reflect.Field[] fields = ConfigurationPropertyModel.class.getDeclaredFields();
-        
+
         boolean hasNameAnnotation = false;
         boolean hasTypeAnnotation = false;
         boolean hasDefaultValueAnnotation = false;
         boolean hasRequiredAnnotation = false;
         boolean hasDescriptionAnnotation = false;
-        
+
         for (java.lang.reflect.Field field : fields) {
             if (field.isAnnotationPresent(ConfigurationProperty.class)) {
                 ConfigurationProperty annotation = field.getAnnotation(ConfigurationProperty.class);
-                
+
                 switch (field.getName()) {
                     case "name":
                         if ("microsphere.annotation.processor.model.name".equals(annotation.name())) {
@@ -112,7 +112,7 @@ class ConfigurationPropertyModelTest {
                 }
             }
         }
-        
+
         assertTrue(hasNameAnnotation, "name field should have ConfigurationProperty annotation with correct name");
         assertTrue(hasTypeAnnotation, "type field should have ConfigurationProperty annotation with correct name");
         assertTrue(hasDefaultValueAnnotation, "defaultValue field should have ConfigurationProperty annotation with correct name");

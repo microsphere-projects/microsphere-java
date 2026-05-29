@@ -16,7 +16,6 @@
  */
 package io.microsphere.test.service;
 
-
 import io.microsphere.test.model.Model;
 
 import javax.ws.rs.DefaultValue;

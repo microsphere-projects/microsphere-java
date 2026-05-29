@@ -41,38 +41,38 @@ class PrimitiveTypeModelTest {
     void testPrimitiveTypesRange() {
         // Test various ranges for different primitive types
         PrimitiveTypeModel testModel = new PrimitiveTypeModel();
-        
+
         // Boolean
         // Cannot set values directly as there are no setters, but we can verify the default
-        
+
         // Byte range (-128 to 127)
         byte minByte = Byte.MIN_VALUE;
         byte maxByte = Byte.MAX_VALUE;
-        
+
         // Char range (0 to 65535)
         char minChar = Character.MIN_VALUE;
         char maxChar = Character.MAX_VALUE;
-        
+
         // Short range (-32768 to 32767)
         short minShort = Short.MIN_VALUE;
         short maxShort = Short.MAX_VALUE;
-        
+
         // Int range
         int minInt = Integer.MIN_VALUE;
         int maxInt = Integer.MAX_VALUE;
-        
+
         // Long range
         long minLong = Long.MIN_VALUE;
         long maxLong = Long.MAX_VALUE;
-        
+
         // Float range
         float minFloat = Float.MIN_VALUE;
         float maxFloat = Float.MAX_VALUE;
-        
+
         // Double range
         double minDouble = Double.MIN_VALUE;
         double maxDouble = Double.MAX_VALUE;
-        
+
         // These are just to ensure the getters work with different possible values
         // Since there are no setters, we're just validating the getters return values
         assertEquals(0, testModel.getI(), "Integer field should have default value");

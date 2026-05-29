@@ -17,7 +17,6 @@
 
 package io.microsphere.annotation.processor;
 
-
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.classloading.ManifestArtifactResourceResolver;
 import io.microsphere.io.IOUtils;

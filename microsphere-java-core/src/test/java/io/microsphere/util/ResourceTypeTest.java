@@ -46,7 +46,6 @@ class ResourceTypeTest {
             PACKAGE, ofArray("java.lang", "java/lang/")
     );
 
-
     @Test
     void testSupports() {
         assertTrue(DEFAULT.supports(null));

@@ -31,7 +31,6 @@ import java.util.function.Supplier;
  */
 public abstract class ObjectUtils implements Utils {
 
-
     /**
      * Applies the given function to the source object if it is non-null, otherwise returns null.
      * This method helps to avoid NullPointerException when chaining operations on potentially null objects.

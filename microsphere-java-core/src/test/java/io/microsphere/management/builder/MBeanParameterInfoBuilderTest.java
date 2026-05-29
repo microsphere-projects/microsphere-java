@@ -17,7 +17,6 @@
 
 package io.microsphere.management.builder;
 
-
 import javax.management.MBeanParameterInfo;
 
 import static io.microsphere.management.builder.MBeanParameterInfoBuilder.parameter;

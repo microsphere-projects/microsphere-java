@@ -32,7 +32,6 @@ import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.ClassUtils.isPrimitive;
 import static java.lang.reflect.Modifier.isFinal;
 
-
 /**
  * The utilities class for {@link Proxy Proxy}
  *

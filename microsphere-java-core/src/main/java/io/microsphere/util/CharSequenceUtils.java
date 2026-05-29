@@ -77,7 +77,6 @@ public abstract class CharSequenceUtils implements Utils {
         return length(value) > 0;
     }
 
-
     /**
      * Checks whether the given {@code CharSequence} contains any whitespace characters.
      *

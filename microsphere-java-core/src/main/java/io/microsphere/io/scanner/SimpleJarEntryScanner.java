@@ -99,7 +99,6 @@ public class SimpleJarEntryScanner {
         return scan(jarFile, relativePath, recursive, jarEntryFilter);
     }
 
-
     /**
      * @param jarFile
      * @param recursive

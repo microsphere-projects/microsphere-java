@@ -17,7 +17,6 @@
 
 package io.microsphere.convert;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.convert.NumberToLongConverter.INSTANCE;

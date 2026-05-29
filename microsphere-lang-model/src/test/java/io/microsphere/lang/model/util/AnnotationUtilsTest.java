@@ -687,7 +687,6 @@ class AnnotationUtilsTest extends UtilTest {
         assertEquals(1, elementValues.size());
         assertAttributeEntry(elementValues, "cacheNames", ofArray("cache-1", "cache-2"));
 
-
         elementValues = getElementValues(method, Cacheable.class, true);
         assertEquals(9, elementValues.size());
         assertAttributeEntry(elementValues, "value", EMPTY_STRING_ARRAY);

@@ -93,7 +93,6 @@ class JavaTypeTestForClass extends AbstractJavaTypeTest<D> {
         assertArrayEquals(ofArray(from(String.class, CLASS, cType)), cType.getGenericTypes());
     }
 
-
     private void testB() {
         JavaType bType = javaType.as(B.class);
 
@@ -113,7 +112,6 @@ class JavaTypeTestForClass extends AbstractJavaTypeTest<D> {
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, bType.getGenericTypes());
         assertArrayEquals(EMPTY_JAVA_TYPE_ARRAY, bType.getGenericTypes());
     }
-
 
     private void testA() {
         JavaType aType = javaType.as(A.class);

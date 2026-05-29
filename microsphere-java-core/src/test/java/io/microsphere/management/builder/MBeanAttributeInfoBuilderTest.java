@@ -17,7 +17,6 @@
 
 package io.microsphere.management.builder;
 
-
 import org.junit.jupiter.api.Test;
 
 import javax.management.MBeanAttributeInfo;

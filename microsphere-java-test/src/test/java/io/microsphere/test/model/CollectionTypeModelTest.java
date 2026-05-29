@@ -47,10 +47,10 @@ class CollectionTypeModelTest {
     @Test
     void testSetGetStrings() {
         Collection<String> testCollection = asList("hello", "world", "test");
-        
+
         model.setStrings(testCollection);
         assertSame(testCollection, model.getStrings(), "Should return the same collection reference that was set");
-        
+
         // Verify the contents match
         assertEquals(testCollection, model.getStrings(), "Collection contents should match the set value");
     }
@@ -58,10 +58,10 @@ class CollectionTypeModelTest {
     @Test
     void testSetGetColors() {
         List<Color> testList = asList(RED, BLUE, YELLOW);
-        
+
         model.setColors(testList);
         assertSame(testList, model.getColors(), "Should return the same list reference that was set");
-        
+
         // Verify the contents match
         assertEquals(testList, model.getColors(), "List contents should match the set value");
     }
@@ -71,10 +71,10 @@ class CollectionTypeModelTest {
         Queue<PrimitiveTypeModel> testQueue = new LinkedList<>();
         testQueue.add(new PrimitiveTypeModel());
         testQueue.add(new PrimitiveTypeModel());
-        
+
         model.setPrimitiveTypeModels(testQueue);
         assertSame(testQueue, model.getPrimitiveTypeModels(), "Should return the same queue reference that was set");
-        
+
         // Verify the contents match
         assertEquals(testQueue, model.getPrimitiveTypeModels(), "Queue contents should match the set value");
     }
@@ -84,10 +84,10 @@ class CollectionTypeModelTest {
         Deque<Model> testDeque = new LinkedList<>();
         testDeque.add(new Model());
         testDeque.add(new Model());
-        
+
         model.setModels(testDeque);
         assertSame(testDeque, model.getModels(), "Should return the same deque reference that was set");
-        
+
         // Verify the contents match
         assertEquals(testDeque, model.getModels(), "Deque contents should match the set value");
     }
@@ -97,10 +97,10 @@ class CollectionTypeModelTest {
         Set<Model[]> testSet = newHashSet();
         testSet.add(new Model[]{new Model(), new Model()});
         testSet.add(new Model[]{new Model()});
-        
+
         model.setModelArrays(testSet);
         assertSame(testSet, model.getModelArrays(), "Should return the same set reference that was set");
-        
+
         // Verify the contents match
         assertEquals(testSet, model.getModelArrays(), "Set contents should match the set value");
     }
@@ -110,16 +110,16 @@ class CollectionTypeModelTest {
         // Test setting each field to null
         model.setStrings(null);
         assertNull(model.getStrings(), "strings should be null after setting to null");
-        
+
         model.setColors(null);
         assertNull(model.getColors(), "colors should be null after setting to null");
-        
+
         model.setPrimitiveTypeModels(null);
         assertNull(model.getPrimitiveTypeModels(), "primitiveTypeModels should be null after setting to null");
-        
+
         model.setModels(null);
         assertNull(model.getModels(), "models should be null after setting to null");
-        
+
         model.setModelArrays(null);
         assertNull(model.getModelArrays(), "modelArrays should be null after setting to null");
     }
@@ -128,10 +128,10 @@ class CollectionTypeModelTest {
     void testCollectionMutability() {
         List<Color> originalList = new ArrayList<>(asList(RED, BLUE));
         model.setColors(originalList);
-        
+
         // Modify the original collection
         originalList.add(RED);
-        
+
         // Check if the change is reflected in the getter result
         assertTrue(model.getColors().contains(RED),
             "Changes to the original collection should be reflected since collections are passed by reference");

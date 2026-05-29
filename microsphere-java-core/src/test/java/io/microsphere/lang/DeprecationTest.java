@@ -82,7 +82,6 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
         assertNotEquals(of(SINCE, REPLACEMENT, REASON, LINK + ".git"), deprecation);
 
-
         deprecation = of(SINCE, REPLACEMENT, REASON);
         assertObjectMethods(deprecation);
         assertEquals(Version.of(SINCE), deprecation.getSince());
@@ -95,7 +94,6 @@ public class DeprecationTest {
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
         assertNotEquals(of(SINCE, REPLACEMENT, "Reason"), deprecation);
 
-
         deprecation = of(SINCE, REPLACEMENT);
         assertObjectMethods(deprecation);
         assertEquals(Version.of(SINCE), deprecation.getSince());
@@ -107,7 +105,6 @@ public class DeprecationTest {
         assertEquals(deprecation, new Deprecation(deprecation));
         assertEquals(deprecation.hashCode(), new Deprecation(deprecation).hashCode());
         assertNotEquals(of(SINCE, "Replacement"), deprecation);
-
 
         deprecation = of(SINCE);
         assertObjectMethods(deprecation);

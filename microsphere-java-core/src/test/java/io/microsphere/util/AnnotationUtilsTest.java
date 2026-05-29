@@ -119,7 +119,6 @@ class AnnotationUtilsTest {
 
     private static final DataAccess dataAccessOfB = B.class.getAnnotation(DataAccess.class);
 
-
     @Test
     void testNATIVE_ANNOTATION_TYPES() {
         assertEquals(6, NATIVE_ANNOTATION_TYPES.size());
@@ -622,7 +621,6 @@ class AnnotationUtilsTest {
         assertFalse(isAnnotationInterfaceMethod(targetValueMethod));
     }
 
-
     @Test
     void testIsCallerSensitivePresent() {
         assertEquals(isPresent(CALLER_SENSITIVE_ANNOTATION_CLASS_NAME), isCallerSensitivePresent());
@@ -714,5 +712,3 @@ class AnnotationUtilsTest {
     }
 
 }
-
-
