@@ -102,6 +102,48 @@ public abstract class PropertiesUtils implements Utils {
         return propertyNamePrefix == null ? propertyName : propertyNamePrefix + DOT + propertyName;
     }
 
+    /**
+     * Creates a new empty {@link Properties} instance.
+     *
+     * <p>This method provides a convenient way to create an empty properties object.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Properties props = PropertiesUtils.newProperties();
+     *     System.out.println(props.isEmpty()); // Output: true
+     *
+     *     props.setProperty("key", "value");
+     *     System.out.println(props); // Output: {key=value}
+     * }</pre>
+     *
+     * @return a new, empty {@link Properties}
+     */
+    @Nonnull
+    public static Properties newProperties() {
+        return new Properties();
+    }
+
+    /**
+     * Creates a new {@link Properties} instance with the specified defaults.
+     *
+     * <p>This method provides a convenient way to create a properties object with default properties.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Properties defaults = new Properties();
+     *     defaults.setProperty("default.key", "default.value");
+     *     Properties props = PropertiesUtils.newProperties(defaults);
+     *     System.out.println(props.getProperty("default.key")); // Output: default.value
+     * }</pre>
+     *
+     * @param defaults the default properties
+     * @return a new {@link Properties} with the specified defaults
+     */
+    @Nonnull
+    public static Properties newProperties(Properties defaults) {
+        return new Properties(defaults);
+    }
+
     private PropertiesUtils() {
     }
 }
