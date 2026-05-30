@@ -22,6 +22,7 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
 import java.util.Queue;
 
@@ -373,6 +374,36 @@ public abstract class QueueUtils implements Utils {
             arrayDeque.add(elements[i]);
         }
         return arrayDeque;
+    }
+
+    /**
+     * Creates a new {@link ArrayDeque} instance containing all elements from the specified {@link Collection}.
+     *
+     * <p>This method delegates to the {@link ArrayDeque} constructor that accepts a collection,
+     * ensuring all elements from the input collection are included in the resulting deque.
+     * The returned deque is modifiable and allows null elements.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     List<String> list = Arrays.asList("Hello", "World");
+     *     ArrayDeque<String> deque = QueueUtils.newArrayDeque(list);
+     *     System.out.println(deque); // prints [Hello, World]
+     *
+     *     Set<Integer> set = new HashSet<>(Arrays.asList(1, 2, 3));
+     *     ArrayDeque<Integer> intDeque = QueueUtils.newArrayDeque(set);
+     *     System.out.println(intDeque.size()); // prints 3
+     *
+     *     ArrayDeque<String> emptyDeque = QueueUtils.newArrayDeque(Collections.emptyList());
+     *     System.out.println(emptyDeque.isEmpty()); // prints true
+     * }</pre>
+     *
+     * @param <E>      the type of elements held in the deque
+     * @param elements the collection of elements to add to the deque, may be null or empty
+     * @return a new {@link ArrayDeque} instance containing all elements from the provided collection
+     */
+    @Nonnull
+    public static <E> ArrayDeque<E> newArrayDeque(Collection<? extends E> elements) {
+        return new ArrayDeque<>(elements);
     }
 
     private QueueUtils() {
