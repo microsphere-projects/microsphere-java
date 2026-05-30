@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.filter.FilterUtils.filter;
 import static io.microsphere.lang.function.Streams.filterAll;
