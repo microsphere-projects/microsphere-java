@@ -676,97 +676,102 @@ public abstract class SetUtils implements Utils {
      * @return a new empty {@link LinkedHashSet} with the specified initial capacity and fixed load factor
      * @see MapUtils#FIXED_LOAD_FACTOR
      */
+    @Nonnull
+    public static <E> LinkedHashSet<E> newFixedLinkedHashSet(int size) {
+       return newLinkedHashSet(size, FIXED_LOAD_FACTOR);
+    }
+
     /**
-     * Creates a new, empty {@link TreeSet} with the default natural order comparator.
-     *
-     * <p>This method provides a convenient way to instantiate an empty {@link TreeSet} instance.
-     * The returned set is not thread-safe and does not allow null elements.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * Set<String> set = SetUtils.newTreeSet();
-     * // returns a new empty tree set with natural ordering
-     * }</pre>
-     *
-     * @param <E> the type of elements in the set
-     * @return a new empty {@link TreeSet}
-     */
+    * Creates a new, empty {@link TreeSet} with the default natural order comparator.
+    *
+    * <p>This method provides a convenient way to instantiate an empty {@link TreeSet} instance.
+    * The returned set is not thread-safe and does not allow null elements.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    * Set<String> set = SetUtils.newTreeSet();
+    * // returns a new empty tree set with natural ordering
+    * }</pre>
+    *
+    * @param <E> the type of elements in the set
+    * @return a new empty {@link TreeSet}
+    */
     @Nonnull
     public static <E> TreeSet<E> newTreeSet() {
-        return new TreeSet<>();
+       return new TreeSet<>();
     }
 
     /**
-     * Creates a new, empty {@link TreeSet} with the specified comparator.
-     *
-     * <p>This method provides a convenient way to instantiate an empty {@link TreeSet} instance
-     * with a custom comparator for ordering. The returned set is not thread-safe and does not allow null elements.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * Set<String> set = SetUtils.newTreeSet(Comparator.reverseOrder());
-     * // returns a new empty tree set with reverse ordering
-     * }</pre>
-     *
-     * @param comparator the comparator to use for ordering the elements
-     * @param <E>        the type of elements in the set
-     * @return a new empty {@link TreeSet} with the specified comparator
-     */
+    * Creates a new, empty {@link TreeSet} with the specified comparator.
+    *
+    * <p>This method provides a convenient way to instantiate an empty {@link TreeSet} instance
+    * with a custom comparator for ordering. The returned set is not thread-safe and does not allow null elements.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    * Set<String> set = SetUtils.newTreeSet(Comparator.reverseOrder());
+    * // returns a new empty tree set with reverse ordering
+    * }</pre>
+    *
+    * @param comparator the comparator to use for ordering the elements
+    * @param <E>        the type of elements in the set
+    * @return a new empty {@link TreeSet} with the specified comparator
+    */
     @Nonnull
     public static <E> TreeSet<E> newTreeSet(Comparator<? super E> comparator) {
-        return new TreeSet<>(comparator);
+       return new TreeSet<>(comparator);
     }
 
     /**
-     * Creates a new {@link TreeSet} containing all elements from the provided {@link Collection}.
-     *
-     * <p>This method creates a new tree set and adds all elements from the provided collection.
-     * The elements will be sorted according to their natural order. If the input collection is null or empty,
-     * an empty set will still be returned.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * List<String> list = Arrays.asList("banana", "apple", "cherry");
-     * Set<String> set = SetUtils.newTreeSet(list);
-     * // returns a tree set containing ["apple", "banana", "cherry"]
-     *
-     * Set<String> emptySet = SetUtils.newTreeSet(null);
-     * // returns a new empty tree set
-     * }</pre>
-     *
-     * @param elements the collection of elements to add to the set, may be null or empty
-     * @param <E>      the type of elements in the collection
-     * @return a new {@link TreeSet} containing all elements from the provided collection
-     */
+    * Creates a new {@link TreeSet} containing all elements from the provided {@link Collection}.
+    *
+    * <p>This method creates a new tree set and adds all elements from the provided collection.
+    * The elements will be sorted according to their natural order. If the input collection is null or empty,
+    * an empty set will still be returned.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    * List<String> list = Arrays.asList("banana", "apple", "cherry");
+    * Set<String> set = SetUtils.newTreeSet(list);
+    * // returns a tree set containing ["apple", "banana", "cherry"]
+    *
+    * Set<String> emptySet = SetUtils.newTreeSet(null);
+    * // returns a new empty tree set
+    * }</pre>
+    *
+    * @param elements the collection of elements to add to the set, may be null or empty
+    * @param <E>      the type of elements in the collection
+    * @return a new {@link TreeSet} containing all elements from the provided collection
+    */
     @Nonnull
     public static <E> TreeSet<E> newTreeSet(Collection<? extends E> elements) {
-        return new TreeSet<>(elements);
+       return new TreeSet<>(elements);
     }
 
     /**
-     * Creates a new {@link TreeSet} with the same elements as the specified sorted set.
-     *
-     * <p>This method creates a new tree set and copies all elements from the provided sorted set,
-     * preserving the comparator used by the original sorted set. If the input sorted set is null or empty,
-     * an empty set will still be returned.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * SortedSet<String> sortedSet = new TreeSet<>(Arrays.asList("banana", "apple", "cherry"));
-     * Set<String> set = SetUtils.newTreeSet(sortedSet);
-     * // returns a tree set containing ["apple", "banana", "cherry"]
-     *
-     * Set<String> emptySet = SetUtils.newTreeSet((SortedSet<String>) null);
-     * // returns a new empty tree set
-     * }</pre>
-     *
-     * @param sortedSet the sorted set whose elements and comparator are to be copied, may be null or empty
-     * @param <E>       the type of elements in the sorted set
-     * @return a new {@link TreeSet} containing all elements from the provided sorted set
-     */
+    * Creates a new {@link TreeSet} with the same elements as the specified sorted set.
+    *
+    * <p>This method creates a new tree set and copies all elements from the provided sorted set,
+    * preserving the comparator used by the original sorted set. If the input sorted set is null or empty,
+    * an empty set will still be returned.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    * SortedSet<String> sortedSet = new TreeSet<>(Arrays.asList("banana", "apple", "cherry"));
+    * Set<String> set = SetUtils.newTreeSet(sortedSet);
+    * // returns a tree set containing ["apple", "banana", "cherry"]
+    *
+    * Set<String> emptySet = SetUtils.newTreeSet((SortedSet<String>) null);
+    * // returns a new empty tree set
+    * }</pre>
+    *
+    * @param sortedSet the sorted set whose elements and comparator are to be copied, may be null or empty
+    * @param <E>       the type of elements in the sorted set
+    * @return a new {@link TreeSet} containing all elements from the provided sorted set
+    */
     @Nonnull
     public static <E> TreeSet<E> newTreeSet(SortedSet<E> sortedSet) {
-        return new TreeSet<>(sortedSet);
+       return new TreeSet<>(sortedSet);
     }
 
     private SetUtils() {
