@@ -18,8 +18,8 @@
 
 package io.microsphere.convert;
 
-import static java.lang.Character.valueOf;
 
+import static java.lang.Character.valueOf;
 /**
  * The {@link Converter} for {@link Number} to {@link Character}
  *

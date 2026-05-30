@@ -18,7 +18,6 @@ package io.microsphere.classloading;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -28,7 +27,6 @@ import static io.microsphere.util.ClassLoaderUtils.newURLClassLoader;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ServiceLoadingURLClassPathHandle} Test
  *

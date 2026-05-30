@@ -18,10 +18,10 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Spliterator;
 import java.util.function.Consumer;
@@ -29,7 +29,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
-
 /**
  * An unmodifiable view of a {@link Queue}. This implementation decorates a given queue and prevents any
  * modification operations from succeeding. All mutation methods, such as {@link #add}, {@link #remove},

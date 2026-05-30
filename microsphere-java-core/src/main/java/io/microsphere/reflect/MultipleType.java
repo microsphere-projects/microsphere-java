@@ -17,7 +17,6 @@
 package io.microsphere.reflect;
 
 import io.microsphere.annotation.Immutable;
-
 import java.lang.reflect.Type;
 
 import static io.microsphere.util.ArrayUtils.arrayEquals;
@@ -25,7 +24,6 @@ import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.combineArray;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Objects.hash;
-
 /**
  * Represents a composite type that encapsulates multiple {@link Type} instances.
  * <p>

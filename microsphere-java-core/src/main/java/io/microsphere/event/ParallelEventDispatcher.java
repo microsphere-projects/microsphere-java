@@ -20,7 +20,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ForkJoinPool;
 
 import static java.util.concurrent.ForkJoinPool.commonPool;
-
 /**
  * Parallel {@link EventDispatcher} implementation.
  * <p>

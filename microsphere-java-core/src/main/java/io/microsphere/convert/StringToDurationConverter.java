@@ -19,7 +19,6 @@ package io.microsphere.convert;
 import java.time.Duration;
 
 import static java.time.Duration.parse;
-
 /**
  * The class to convert {@link String} to {@link Duration}
  *

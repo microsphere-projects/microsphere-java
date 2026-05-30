@@ -17,7 +17,6 @@
 package io.microsphere.classloading;
 
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,7 +27,6 @@ import static io.microsphere.util.ClassLoaderUtils.getClassResource;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ArchiveFileArtifactResourceResolver} Test
  *

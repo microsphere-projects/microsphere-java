@@ -20,7 +20,6 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Thread.currentThread;
-
 /**
  * A {@link ThreadFactory} implementation that creates threads with customized attributes,
  * including name prefix, daemon status, priority, and stack size.

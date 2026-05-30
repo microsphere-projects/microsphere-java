@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.ObjectToLongConverter.INSTANCE;
 import static java.lang.Long.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ObjectToLongConverter} Test
  *

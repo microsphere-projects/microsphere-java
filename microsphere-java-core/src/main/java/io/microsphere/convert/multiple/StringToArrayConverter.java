@@ -20,7 +20,6 @@ import io.microsphere.convert.Converter;
 
 import static java.lang.reflect.Array.newInstance;
 import static java.lang.reflect.Array.set;
-
 /**
  * The class to convert {@link String} to array-type object
  *

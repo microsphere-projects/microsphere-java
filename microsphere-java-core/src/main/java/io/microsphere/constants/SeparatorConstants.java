@@ -10,7 +10,6 @@ import static io.microsphere.constants.SymbolConstants.EXCLAMATION;
 import static java.io.File.pathSeparator;
 import static java.io.File.separator;
 import static java.lang.System.lineSeparator;
-
 /**
  * Separator Constants
  * <p/>

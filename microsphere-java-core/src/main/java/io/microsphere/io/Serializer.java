@@ -17,7 +17,6 @@
 package io.microsphere.io;
 
 import java.io.IOException;
-
 /**
  * A strategy interface for serializing objects of type {@code S} into a byte array.
  * <p>

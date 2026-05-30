@@ -25,7 +25,6 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
  * The annotation annotated by {@link DescriptorKey @DescriptorKey}
  *

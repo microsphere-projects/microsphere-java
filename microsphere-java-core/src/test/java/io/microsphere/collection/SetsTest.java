@@ -1,7 +1,6 @@
 package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
-
 import java.lang.invoke.MethodHandle;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_OBJECT_ARRAY;
@@ -24,7 +23,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link Sets} Test
  *

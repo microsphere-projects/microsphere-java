@@ -21,7 +21,6 @@ import java.util.Iterator;
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
-
 /**
  * {@link UnmodifiableIterator} Test
  *

@@ -6,7 +6,6 @@ package io.microsphere.filter;
 import java.util.jar.JarEntry;
 
 import static io.microsphere.constants.FileConstants.CLASS_EXTENSION;
-
 /**
  * A {@link JarEntryFilter} implementation that filters only Java class files in a JAR.
  *

@@ -19,7 +19,6 @@ package io.microsphere.collection;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
-
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
 
@@ -28,7 +27,6 @@ import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonMap;
-
 /**
  * The utility class for {@link Map} for Modern JDK(9+), which supports the feedback if Java Runtime is below JDK 9.
  *

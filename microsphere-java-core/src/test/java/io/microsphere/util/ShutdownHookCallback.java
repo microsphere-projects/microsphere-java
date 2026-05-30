@@ -19,7 +19,6 @@ package io.microsphere.util;
 
 import io.microsphere.Loggable;
 import io.microsphere.lang.Prioritized;
-
 /**
  * The ShutdownHook Callback
  *

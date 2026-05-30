@@ -16,11 +16,11 @@
 
 package io.microsphere.json;
 
+
 import static java.lang.Double.isInfinite;
 import static java.lang.Double.isNaN;
 import static java.lang.Double.parseDouble;
 import static java.lang.Double.valueOf;
-
 class JSON {
 
     static double checkDouble(double d) throws JSONException {

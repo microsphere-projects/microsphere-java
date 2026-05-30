@@ -25,7 +25,6 @@ import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
 import static io.microsphere.JSONTestUtils.newConfigurationProperty;
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ReflectiveConfigurationPropertyGenerator} Test
  *

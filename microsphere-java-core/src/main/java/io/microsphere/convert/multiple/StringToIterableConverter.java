@@ -17,7 +17,6 @@
 package io.microsphere.convert.multiple;
 
 import io.microsphere.convert.StringConverter;
-
 import java.util.Collection;
 import java.util.Optional;
 
@@ -25,7 +24,6 @@ import static io.microsphere.convert.Converter.getConverter;
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static io.microsphere.util.ClassUtils.findAllInterfaces;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
-
 /**
  * The class to convert {@link String} to {@link Iterable}-based value
  *

@@ -17,7 +17,6 @@
 package io.microsphere.convert;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Date;
 
 import static io.microsphere.convert.Converter.convertIfPossible;
@@ -27,7 +26,6 @@ import static java.lang.Boolean.FALSE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link Converter} Test-Cases
  *

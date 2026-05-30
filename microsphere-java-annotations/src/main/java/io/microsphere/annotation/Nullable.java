@@ -22,7 +22,6 @@ import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static javax.annotation.meta.When.MAYBE;
-
 /**
  * A common Microsphere annotation to declare that annotated elements can be {@code null} under
  * some circumstance.

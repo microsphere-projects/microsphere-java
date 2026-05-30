@@ -20,7 +20,6 @@ import java.io.Serializable;
 import java.util.Vector;
 
 import static java.util.Objects.hash;
-
 /**
  * {@link EchoEvent} {@link EventListener} 2
  *

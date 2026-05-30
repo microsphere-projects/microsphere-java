@@ -17,9 +17,9 @@
 package io.microsphere.collection;
 
 import java.util.AbstractQueue;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.NoSuchElementException;
-
 /**
  * Abstract {@link Deque} implementation that provides default implementations for some of the
  * operations in the {@link Deque} interface.

@@ -19,7 +19,6 @@ package io.microsphere.test;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
 /**
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0

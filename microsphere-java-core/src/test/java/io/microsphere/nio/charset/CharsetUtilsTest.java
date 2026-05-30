@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 /**
  * {@link CharsetUtils} Test
  *

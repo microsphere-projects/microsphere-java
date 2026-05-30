@@ -18,7 +18,6 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.lang.function.ThrowableFunction;
-
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.JavaFileManager;
@@ -26,7 +25,6 @@ import java.util.function.BiFunction;
 
 import static io.microsphere.lang.model.util.MessagerUtils.printMandatoryWarning;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
-
 /**
  * A processor class that provides safe and exception-handled operations for interacting with the {@link Filer}
  * in an annotation processing environment. This class wraps calls to the underlying {@link Filer} instance

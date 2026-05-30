@@ -20,7 +20,6 @@ package io.microsphere.lang.model.util;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
@@ -46,7 +45,6 @@ import static javax.lang.model.element.ElementKind.OTHER;
 import static javax.lang.model.element.ElementKind.valueOf;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
-
 /**
  * The utility class for {@link Element}
  *

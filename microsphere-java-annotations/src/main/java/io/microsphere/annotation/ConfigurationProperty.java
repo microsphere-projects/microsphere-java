@@ -22,7 +22,6 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
  * The metadata annotation used to declare on the Java field whose modifiers usually are static and final
  * for the configuration property.

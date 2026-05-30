@@ -21,8 +21,8 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
-
 import java.lang.reflect.Field;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -39,7 +39,6 @@ import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.util.Collections.unmodifiableSet;
-
 /**
  * The Java Reflection {@link Field} Utility class
  *

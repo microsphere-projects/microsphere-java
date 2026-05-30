@@ -19,7 +19,7 @@ package io.microsphere.logging;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
-
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -27,7 +27,6 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
 import static java.util.Collections.sort;
 import static java.util.Objects.nonNull;
 import static java.util.ServiceLoader.load;
-
 /**
  * The {@code LoggerFactory} serves as an abstract base class for creating and managing
  * instances of the {@link Logger} type. It also implements the {@link Prioritized}

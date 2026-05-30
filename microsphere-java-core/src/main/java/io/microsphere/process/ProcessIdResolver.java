@@ -17,7 +17,6 @@
 package io.microsphere.process;
 
 import io.microsphere.lang.Prioritized;
-
 /**
  * A strategy interface for resolving the current process ID.
  *

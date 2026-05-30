@@ -18,7 +18,6 @@
 package io.microsphere.test;
 
 import io.microsphere.collection.CollectionUtils;
-
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Queue;
 import java.util.Set;
 
 import static io.microsphere.util.ArrayUtils.arrayEquals;
-
 /**
  * Multi-Value Data
  *

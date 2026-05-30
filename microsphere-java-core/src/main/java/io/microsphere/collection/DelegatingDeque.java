@@ -23,7 +23,6 @@ import java.util.Iterator;
 import static io.microsphere.collection.QueueUtils.reversedDeque;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicVirtual;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
-
 /**
  * Delegating {@link Deque}
  *

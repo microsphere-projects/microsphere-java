@@ -18,7 +18,6 @@
 package io.microsphere.lang.model.util;
 
 import io.microsphere.util.Utils;
-
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.Diagnostic.Kind;
@@ -32,7 +31,6 @@ import static javax.tools.Diagnostic.Kind.ERROR;
 import static javax.tools.Diagnostic.Kind.MANDATORY_WARNING;
 import static javax.tools.Diagnostic.Kind.NOTE;
 import static javax.tools.Diagnostic.Kind.WARNING;
-
 /**
  * {@link Messager} utilities class
  *

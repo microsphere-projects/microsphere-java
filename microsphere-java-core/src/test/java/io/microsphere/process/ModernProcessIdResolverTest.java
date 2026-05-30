@@ -10,7 +10,6 @@ import static io.microsphere.util.VersionUtils.testCurrentJavaVersion;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link ModernProcessIdResolver} Test
  *

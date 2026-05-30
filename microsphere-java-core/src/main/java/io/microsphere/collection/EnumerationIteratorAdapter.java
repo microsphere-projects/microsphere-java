@@ -21,7 +21,6 @@ import java.util.Iterator;
 
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Collections.emptyEnumeration;
-
 /**
  * An {@link Iterator} that adapts an {@link Enumeration} instance, providing a forward-only,
  * read-only view of the elements.

@@ -18,8 +18,8 @@ package io.microsphere.event;
 
 import io.microsphere.lang.Prioritized;
 import io.microsphere.lang.function.ThrowableFunction;
-
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +28,6 @@ import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
-
 /**
  * A generic implementation of the {@link EventListener} interface that supports multiple event handling methods.
  *

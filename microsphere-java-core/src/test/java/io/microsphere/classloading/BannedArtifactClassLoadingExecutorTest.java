@@ -17,7 +17,6 @@
 package io.microsphere.classloading;
 
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
@@ -26,7 +25,6 @@ import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loa
 import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfigs;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link BannedArtifactClassLoadingExecutor} Test
  *

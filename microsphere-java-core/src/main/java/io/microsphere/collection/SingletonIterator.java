@@ -17,13 +17,11 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
-
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.function.Consumer;
 
 import static java.util.Objects.requireNonNull;
-
 /**
  * A specialized read-only {@link Iterator} implementation that iterates over a single element.
  * <p>

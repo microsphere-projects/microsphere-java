@@ -17,9 +17,7 @@
 package io.microsphere.convert;
 
 import io.microsphere.io.DefaultSerializer;
-
 import java.io.Serializable;
-
 /**
  * The class coverts the {@link Object} instance to be {@link byte[] byte array} object.
  *

@@ -2,7 +2,6 @@ package io.microsphere.logging;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static io.microsphere.constants.SymbolConstants.SPACE;
@@ -10,7 +9,6 @@ import static io.microsphere.logging.LoggerFactory.loadAvailableFactories;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link NoOpLoggerFactory} Test
  *

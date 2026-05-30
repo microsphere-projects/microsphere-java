@@ -23,7 +23,6 @@ import io.microsphere.json.JSONObject;
 
 import static io.microsphere.json.JSONUtils.writeBeanAsString;
 import static io.microsphere.util.Assert.assertNotNull;
-
 /**
  * {@link ConfigurationPropertyGenerator} class based on Java Reflection API
  *

@@ -16,8 +16,8 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.util.CharSequenceUtils.length;
 
+import static io.microsphere.util.CharSequenceUtils.length;
 /**
  * The class to convert {@link String} to {@link Character}
  *

@@ -18,8 +18,9 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -45,7 +46,6 @@ import static io.microsphere.util.TypeFinder.Include.SELF;
 import static io.microsphere.util.TypeFinder.Include.SUPER_CLASS;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
-
 /**
  * A utility class for finding related types based on a given type.
  * <p>

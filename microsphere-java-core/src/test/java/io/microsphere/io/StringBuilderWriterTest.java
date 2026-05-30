@@ -24,7 +24,6 @@ import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.AbstractTestCase.random;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link StringBuilderWriter} Test
  *

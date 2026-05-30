@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -30,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ClassLoaderUtils.ResourceType} Test
  *

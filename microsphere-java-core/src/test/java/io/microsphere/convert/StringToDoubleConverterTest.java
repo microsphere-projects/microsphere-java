@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.StringToDoubleConverter.INSTANCE;
 import static java.lang.Double.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link StringToDoubleConverter} Test
  *

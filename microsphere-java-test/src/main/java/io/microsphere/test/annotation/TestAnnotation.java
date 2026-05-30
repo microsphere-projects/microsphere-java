@@ -19,7 +19,6 @@ package io.microsphere.test.annotation;
 
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Since;
-
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -29,7 +28,6 @@ import java.util.concurrent.TimeUnit;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.util.concurrent.TimeUnit.DAYS;
-
 /**
  * The {@link Annotation} for testing
  *

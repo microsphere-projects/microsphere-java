@@ -17,7 +17,6 @@
 package io.microsphere.event;
 
 import java.io.Serializable;
-
 /**
  * {@link EchoEvent} {@link EventListener}
  *

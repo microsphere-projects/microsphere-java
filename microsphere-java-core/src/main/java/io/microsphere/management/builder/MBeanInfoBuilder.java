@@ -19,7 +19,6 @@ package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanInfo;
@@ -37,7 +36,6 @@ import java.util.function.Consumer;
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.util.Objects.nonNull;
-
 /**
  * The {@link MBeanInfo} Builder
  *

@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.ObjectToDoubleConverter.INSTANCE;
 import static java.lang.Double.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ObjectToDoubleConverter} Test
  *

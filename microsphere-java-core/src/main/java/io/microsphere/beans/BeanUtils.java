@@ -23,11 +23,16 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.MutableInteger;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
-
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -69,7 +74,6 @@ import static java.lang.reflect.Array.set;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.enumeration;
 import static java.util.Collections.unmodifiableMap;
-
 /**
  * The utilities class for Java Beans
  *

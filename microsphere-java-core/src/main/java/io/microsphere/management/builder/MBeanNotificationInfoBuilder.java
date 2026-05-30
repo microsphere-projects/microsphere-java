@@ -19,7 +19,6 @@ package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassUtils;
-
 import javax.management.MBeanFeatureInfo;
 import javax.management.MBeanNotificationInfo;
 import java.util.Objects;
@@ -27,7 +26,6 @@ import java.util.Objects;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static java.util.stream.Stream.of;
-
 /**
  * {@link MBeanNotificationInfo} Builder
  *

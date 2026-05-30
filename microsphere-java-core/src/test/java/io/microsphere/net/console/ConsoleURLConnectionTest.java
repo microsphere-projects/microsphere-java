@@ -2,13 +2,11 @@ package io.microsphere.net.console;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URL;
 
 import static java.net.Proxy.NO_PROXY;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link ConsoleURLConnection} Test
  *

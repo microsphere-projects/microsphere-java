@@ -18,13 +18,11 @@
 package io.microsphere.util;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Comparator;
 
 import static io.microsphere.util.HierarchicalClassComparator.ASCENT;
 import static io.microsphere.util.HierarchicalClassComparator.DESCENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link HierarchicalClassComparator} Test
  *

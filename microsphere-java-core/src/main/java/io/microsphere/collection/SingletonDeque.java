@@ -18,14 +18,12 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
-
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.Objects;
 
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
-
 /**
  * A {@link Deque} implementation that holds a single, immutable element.
  * <p>

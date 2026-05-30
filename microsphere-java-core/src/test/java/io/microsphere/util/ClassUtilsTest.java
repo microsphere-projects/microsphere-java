@@ -7,7 +7,6 @@ import io.microsphere.LoggingTest;
 import io.microsphere.lang.ClassDataRepository;
 import io.microsphere.test.A;
 import org.junit.jupiter.api.Test;
-
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.Serializable;
@@ -107,7 +106,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ClassUtils} Test
  *

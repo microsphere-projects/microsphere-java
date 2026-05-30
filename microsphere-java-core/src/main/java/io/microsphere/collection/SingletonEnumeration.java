@@ -17,10 +17,8 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
-
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-
 /**
  * A simple implementation of the {@link Enumeration} interface that contains a single element.
  * <p>

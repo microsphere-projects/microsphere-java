@@ -18,7 +18,6 @@ package io.microsphere.convert.multiple;
 
 import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TransferQueue;
-
 /**
  * The class to convert {@link String} to {@link TransferQueue}-based value
  *

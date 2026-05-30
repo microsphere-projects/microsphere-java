@@ -18,14 +18,12 @@
 package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.LinkedList;
 import java.util.Queue;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link DelegatingQueue} Test
  *

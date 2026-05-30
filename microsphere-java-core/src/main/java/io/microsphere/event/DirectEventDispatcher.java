@@ -17,7 +17,6 @@
 package io.microsphere.event;
 
 import io.microsphere.lang.Prioritized;
-
 /**
  * A concrete implementation of {@link AbstractEventDispatcher} that uses a direct (synchronous) execution model.
  *

@@ -18,7 +18,6 @@ package io.microsphere.reflect;
 
 import io.microsphere.reflect.JavaType.Kind;
 import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.GenericArrayType;
 
 import static io.microsphere.reflect.JavaType.Kind.GENERIC_ARRAY_TYPE;
@@ -26,7 +25,6 @@ import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link Kind} Test for {@link GenericArrayType}
  *

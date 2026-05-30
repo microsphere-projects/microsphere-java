@@ -29,7 +29,6 @@ import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.WAR_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.ZIP_PROTOCOL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ProtocolConstants} Test
  *

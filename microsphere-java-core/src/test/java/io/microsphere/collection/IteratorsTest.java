@@ -18,7 +18,6 @@
 package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +25,6 @@ import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link Iterators} Test
  *

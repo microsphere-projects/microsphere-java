@@ -4,7 +4,6 @@ import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.io.FastByteArrayInputStream;
 import io.microsphere.io.FastByteArrayOutputStream;
 import io.microsphere.logging.Logger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -27,7 +26,6 @@ import static java.lang.Long.getLong;
 import static java.lang.Long.parseLong;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 /**
  * {@link Process} Executor
  *

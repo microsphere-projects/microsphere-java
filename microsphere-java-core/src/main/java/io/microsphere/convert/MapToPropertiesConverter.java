@@ -18,7 +18,6 @@ package io.microsphere.convert;
 
 import java.util.Map;
 import java.util.Properties;
-
 /**
  * The {@link Map} To {@link Properties} {@link Converter}
  *

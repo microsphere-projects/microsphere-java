@@ -20,7 +20,6 @@ import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
-
 /**
  * Logger Utils
  *

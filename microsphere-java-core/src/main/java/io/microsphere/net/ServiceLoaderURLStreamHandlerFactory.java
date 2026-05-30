@@ -18,7 +18,6 @@ package io.microsphere.net;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
@@ -30,7 +29,6 @@ import static io.microsphere.collection.MapUtils.immutableEntry;
 import static io.microsphere.collection.MapUtils.toFixedMap;
 import static io.microsphere.net.URLUtils.attachURLStreamHandlerFactory;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-
 /**
  * A {@link URLStreamHandlerFactory} implementation that uses the JDK's {@link ServiceLoader}
  * to load and compose multiple delegates for creating {@link URLStreamHandler} instances.

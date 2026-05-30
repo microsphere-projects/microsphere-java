@@ -18,9 +18,7 @@
 package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
-
 import java.util.List;
-
 /**
  * Null {@link ConfigurationPropertyLoader}
  *

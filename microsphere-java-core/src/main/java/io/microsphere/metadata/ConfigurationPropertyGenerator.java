@@ -20,7 +20,7 @@ package io.microsphere.metadata;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.lang.Prioritized;
-
+import java.util.ArrayList;
 /**
  * {@code ConfigurationPropertyGenerator} interface can be implemented by objects that
  * generate string representations (e.g., JSON, XML, Properties) of {@link ConfigurationProperty}.

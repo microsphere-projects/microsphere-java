@@ -17,13 +17,11 @@
 package io.microsphere.reflect;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static io.microsphere.collection.Lists.ofList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link FieldDefinition} Test
  *

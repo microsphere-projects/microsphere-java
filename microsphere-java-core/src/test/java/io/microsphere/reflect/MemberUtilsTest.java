@@ -1,7 +1,6 @@
 package io.microsphere.reflect;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Map;
 
 import static io.microsphere.reflect.FieldUtils.findField;
@@ -23,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link MemberUtils} Test
  *

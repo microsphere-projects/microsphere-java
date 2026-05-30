@@ -19,7 +19,6 @@ package io.microsphere.lang.model.util;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -33,7 +32,6 @@ import static io.microsphere.lang.model.util.TypeUtils.getAllDeclaredTypes;
 import static io.microsphere.lang.model.util.TypeUtils.ofTypeElement;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-
 /**
  * A utility interface for handling members (such as fields, methods, constructors) from types
  * in the {@link javax.lang.model} package.

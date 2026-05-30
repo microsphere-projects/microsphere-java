@@ -18,7 +18,6 @@
 package io.microsphere.lang.model.util;
 
 import io.microsphere.annotation.Nonnull;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
@@ -33,7 +32,6 @@ import static io.microsphere.lang.model.util.AnnotationUtils.getElementTypes;
 import static io.microsphere.lang.model.util.ElementUtils.matchesElementType;
 import static io.microsphere.lang.model.util.TypeUtils.getDeclaredType;
 import static io.microsphere.util.Assert.assertNotNull;
-
 /**
  * An abstract implementation of {@link ElementVisitor} that generates JSON content for elements
  * annotated with a specific annotation.

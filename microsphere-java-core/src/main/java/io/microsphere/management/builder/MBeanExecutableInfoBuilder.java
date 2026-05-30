@@ -19,7 +19,6 @@
 package io.microsphere.management.builder;
 
 import io.microsphere.management.JmxUtils;
-
 import javax.management.Descriptor;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanFeatureInfo;
@@ -33,7 +32,6 @@ import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.management.JmxUtils.descriptorForElement;
 import static io.microsphere.management.builder.MBeanParameterInfoBuilder.parameter;
 import static java.util.Collections.addAll;
-
 /**
  * MBean {@link Executable} Info Builder
  *

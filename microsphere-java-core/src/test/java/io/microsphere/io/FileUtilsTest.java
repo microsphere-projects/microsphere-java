@@ -3,7 +3,6 @@ package io.microsphere.io;
 import io.microsphere.Loggable;
 import io.microsphere.lang.function.ThrowableConsumer;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,7 +51,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link FileUtils} Test
  *

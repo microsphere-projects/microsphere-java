@@ -19,12 +19,10 @@ package io.microsphere.event;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.concurrent.ForkJoinPool;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ParallelEventDispatcher} Test
  *

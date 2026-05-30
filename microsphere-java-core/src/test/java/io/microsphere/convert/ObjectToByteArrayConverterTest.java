@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.convert.ObjectToByteArrayConverter.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link ObjectToByteArrayConverter} Test
  *

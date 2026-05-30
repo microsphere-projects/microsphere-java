@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import java.util.Objects;
-
 /**
  * A container class to hold a mutable value of any type. This class is not thread-safe.
  *

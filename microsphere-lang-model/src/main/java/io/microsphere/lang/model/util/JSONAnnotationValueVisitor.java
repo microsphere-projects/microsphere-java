@@ -38,7 +38,6 @@ import static io.microsphere.json.JSONUtils.appendName;
 import static io.microsphere.lang.model.util.AnnotationUtils.getAttributeName;
 import static io.microsphere.lang.model.util.AnnotationUtils.getElementValues;
 import static io.microsphere.lang.model.util.TypeUtils.getTypeName;
-
 /**
  * A visitor implementation for converting {@link AnnotationValue} objects into JSON-formatted strings.
  * This class extends {@link SimpleAnnotationValueVisitor6} and is designed to work with Java annotation

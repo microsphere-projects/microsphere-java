@@ -18,7 +18,6 @@ package io.microsphere.invoke;
 
 import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.Test;
-
 import java.lang.invoke.MethodHandle;
 
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublic;
@@ -27,7 +26,6 @@ import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicVirtual;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link MethodHandlesLookupUtils} Test
  *

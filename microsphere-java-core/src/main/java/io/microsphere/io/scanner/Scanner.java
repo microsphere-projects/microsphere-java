@@ -5,9 +5,7 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.filter.Filter;
-
 import java.util.Set;
-
 /**
  * A component that scans elements of type {@code S} and produces a set of results of type {@code R}.
  *

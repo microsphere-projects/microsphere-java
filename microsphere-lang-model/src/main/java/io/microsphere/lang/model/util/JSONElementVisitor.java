@@ -29,7 +29,6 @@ import javax.lang.model.util.ElementKindVisitor6;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
-
 /**
  * A specialized {@link ElementVisitor} implementation that traverses Java elements and generates JSON
  * representations of the elements' metadata.

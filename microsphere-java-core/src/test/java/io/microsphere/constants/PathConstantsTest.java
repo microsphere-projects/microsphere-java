@@ -24,7 +24,6 @@ import static io.microsphere.constants.PathConstants.DOUBLE_SLASH;
 import static io.microsphere.constants.PathConstants.SLASH;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link PathConstants} Test
  *

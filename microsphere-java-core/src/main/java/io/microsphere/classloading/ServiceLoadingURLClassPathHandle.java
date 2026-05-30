@@ -22,7 +22,6 @@ import java.util.List;
 import static io.microsphere.util.ArrayUtils.isEmpty;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Objects.nonNull;
-
 /**
  * {@link URLClassPathHandle} implementation based on the Service Loading mechanism
  *

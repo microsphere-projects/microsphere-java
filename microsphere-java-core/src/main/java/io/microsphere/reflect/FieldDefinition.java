@@ -21,13 +21,11 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
-
 import java.lang.reflect.Field;
 
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.FieldUtils.setFieldValue;
-
 /**
  * The definition class of {@link Field}
  *

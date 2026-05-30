@@ -23,13 +23,16 @@ import io.microsphere.beans.BeanMetadata;
 import io.microsphere.util.CharSequenceUtils;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -72,7 +75,6 @@ import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 import static java.lang.reflect.Array.newInstance;
 import static java.lang.reflect.Array.set;
-
 /**
  * Utility class for generating and manipulating JSON strings.
  * <p>

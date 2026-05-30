@@ -18,13 +18,11 @@ package io.microsphere.management;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-
 import javax.management.Attribute;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanInfo;
 
 import static java.util.Objects.requireNonNull;
-
 /**
  * Represents an MBean attribute, encapsulating the {@link MBeanAttributeInfo} and its optional value.
  * <p>

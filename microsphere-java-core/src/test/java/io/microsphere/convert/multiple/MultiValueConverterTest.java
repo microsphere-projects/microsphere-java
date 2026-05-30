@@ -17,7 +17,6 @@
 package io.microsphere.convert.multiple;
 
 import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Deque;
@@ -33,7 +32,6 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.convert.multiple.MultiValueConverter.convertIfPossible;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link MultiValueConverter} Test
  *

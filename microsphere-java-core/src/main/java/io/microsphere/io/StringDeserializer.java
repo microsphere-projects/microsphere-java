@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-
 /**
  * A {@link Deserializer} implementation for converting byte arrays into {@link String} instances.
  * <p>

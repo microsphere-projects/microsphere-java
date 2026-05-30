@@ -21,7 +21,6 @@ import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.lang.model.util.AnnotatedElementJSONElementVisitor;
 import io.microsphere.metadata.ConfigurationPropertyGenerator;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
@@ -42,7 +41,6 @@ import static io.microsphere.lang.model.util.ClassUtils.getClassName;
 import static io.microsphere.lang.model.util.TypeUtils.getTypeName;
 import static io.microsphere.util.ServiceLoaderUtils.loadFirstService;
 import static io.microsphere.util.StringUtils.isBlank;
-
 /**
  * {@link ConfigurationProperty @ConfigurationProperty}'s {@link AnnotatedElementJSONElementVisitor} based on
  * {@link ConfigurationPropertyGenerator} generating the JSON representation of the configuration property metadata.

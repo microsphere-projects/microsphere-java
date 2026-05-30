@@ -18,7 +18,6 @@ package io.microsphere.reflect;
 
 import io.microsphere.reflect.JavaType.Kind;
 import org.junit.jupiter.api.Test;
-
 import java.lang.reflect.WildcardType;
 
 import static io.microsphere.reflect.JavaType.Kind.WILDCARD_TYPE;
@@ -26,7 +25,6 @@ import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link Kind} Test for {@link WildcardType}
  *

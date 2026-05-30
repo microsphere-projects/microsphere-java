@@ -31,7 +31,6 @@ import static io.microsphere.util.StackTraceUtils.getCallerClassNameInStackTrace
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.openjdk.jmh.annotations.Mode.AverageTime;
-
 /**
  * {@link ReflectionUtils} Benchmark
  *

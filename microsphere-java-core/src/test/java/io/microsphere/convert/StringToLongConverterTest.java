@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.StringToLongConverter.INSTANCE;
 import static java.lang.Long.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link StringToLongConverter} Test
  *

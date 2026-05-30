@@ -3,8 +3,8 @@
  */
 package io.microsphere.filter;
 
-import static io.microsphere.constants.SymbolConstants.DOT;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
 /**
  * {@link ClassFilter} implementation that filters classes based on their package name.
  *

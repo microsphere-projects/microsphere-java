@@ -20,7 +20,6 @@ import io.microsphere.annotation.Nonnull;
 
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.Thread.currentThread;
-
 /**
  * The utility class for Stack Trace
  *

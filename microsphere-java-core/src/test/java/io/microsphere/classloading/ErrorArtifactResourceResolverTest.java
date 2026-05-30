@@ -1,7 +1,7 @@
 package io.microsphere.classloading;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * {@link ErrorArtifactResourceResolver} Test
  *

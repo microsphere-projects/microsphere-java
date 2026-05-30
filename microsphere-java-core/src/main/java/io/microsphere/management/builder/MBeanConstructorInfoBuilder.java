@@ -20,7 +20,6 @@ package io.microsphere.management.builder;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanFeatureInfo;
 import java.lang.reflect.Constructor;
-
 /**
  * {@link MBeanConstructorInfo} Builder
  *

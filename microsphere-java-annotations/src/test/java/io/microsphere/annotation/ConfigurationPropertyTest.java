@@ -23,7 +23,6 @@ import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE
 import static io.microsphere.annotation.ConfigurationProperty.ENVIRONMENT_VARIABLES_SOURCE;
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ConfigurationProperty @ConfigurationProperty} Test
  *

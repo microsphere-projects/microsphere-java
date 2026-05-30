@@ -17,7 +17,6 @@
 package io.microsphere.classloading;
 
 import org.junit.jupiter.api.Test;
-
 import java.net.URL;
 import java.util.Set;
 
@@ -26,7 +25,6 @@ import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ClassicURLClassPathHandle} Test
  *

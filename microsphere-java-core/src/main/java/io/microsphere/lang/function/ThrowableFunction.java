@@ -20,7 +20,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static io.microsphere.util.Assert.assertNotNull;
-
 /**
  * Represents a function that accepts one argument and produces a result, which may throw a checked exception.
  * <p>

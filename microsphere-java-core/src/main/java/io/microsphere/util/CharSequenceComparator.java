@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import java.util.Comparator;
-
 /**
  * A {@link Comparator} implementation for comparing {@link CharSequence} objects.
  * <p>

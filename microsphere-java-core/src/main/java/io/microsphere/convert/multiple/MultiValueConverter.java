@@ -17,14 +17,12 @@
 package io.microsphere.convert.multiple;
 
 import io.microsphere.lang.Prioritized;
-
 import java.util.Collection;
 import java.util.ServiceLoader;
 
 import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
-
 /**
  * An interface to convert the source-typed value to multiple value, e.g , Java array, {@link Collection} or
  * sub-interfaces

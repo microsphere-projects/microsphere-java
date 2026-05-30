@@ -18,7 +18,6 @@ package io.microsphere.convert.multiple;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-
 /**
  * The class to convert {@link String} to {@link BlockingDeque}-based value
  *

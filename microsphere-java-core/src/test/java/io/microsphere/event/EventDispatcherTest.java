@@ -17,14 +17,12 @@
 package io.microsphere.event;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link EventDispatcher} Test
  *

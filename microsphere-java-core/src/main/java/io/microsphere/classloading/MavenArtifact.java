@@ -3,13 +3,11 @@ package io.microsphere.classloading;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-
 import java.net.URL;
 import java.util.Objects;
 
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.util.Objects.hash;
-
 /**
  * Represents a Maven software artifact with attributes such as group ID, artifact ID, version, and location.
  * This class extends the basic {@link Artifact} by adding Maven-specific identification through group ID.

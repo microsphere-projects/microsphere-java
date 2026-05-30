@@ -2,7 +2,6 @@ package io.microsphere.io.filter;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -13,7 +12,6 @@ import static io.microsphere.util.SystemUtils.USER_DIR;
 import static java.io.File.createTempFile;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link FileExtensionFilter} Test
  *

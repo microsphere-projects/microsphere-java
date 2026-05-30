@@ -18,7 +18,6 @@ package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.io.FastByteArrayInputStream;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,7 +37,6 @@ import static io.microsphere.io.scanner.SimpleFileScanner.INSTANCE;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.jar.JarUtils.filter;
-
 /**
  * An abstract base class for implementing {@link ArtifactResourceResolver} that provides a
  * skeletal implementation to resolve artifact resources from either a streamable resource (like a URL)

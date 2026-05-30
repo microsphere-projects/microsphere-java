@@ -17,7 +17,6 @@
 package io.microsphere.io.filter;
 
 import java.io.File;
-
 /**
  * This filter accepts {@link File} objects that are directories.
  *

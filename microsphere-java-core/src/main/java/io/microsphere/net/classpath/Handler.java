@@ -18,7 +18,6 @@ package io.microsphere.net.classpath;
 
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
 import io.microsphere.util.ClassLoaderUtils;
-
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
@@ -28,7 +27,6 @@ import java.net.URLStreamHandler;
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
-
 /**
  * The "classpath" protocol {@link URLStreamHandler} based on {@link ClassLoader}
  *

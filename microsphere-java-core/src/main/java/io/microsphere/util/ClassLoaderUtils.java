@@ -10,7 +10,6 @@ import io.microsphere.classloading.ServiceLoadingURLClassPathHandle;
 import io.microsphere.classloading.URLClassPathHandle;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.ReflectionUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandle;
@@ -21,7 +20,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +66,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.nonNull;
-
 /**
  * {@link ClassLoader} Utility
  *

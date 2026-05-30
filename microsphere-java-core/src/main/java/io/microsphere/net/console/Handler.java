@@ -17,12 +17,10 @@
 package io.microsphere.net.console;
 
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
-
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
-
 /**
  * "console" protocol Handler
  *

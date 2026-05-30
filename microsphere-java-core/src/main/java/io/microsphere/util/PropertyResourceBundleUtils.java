@@ -4,7 +4,6 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
-
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
@@ -15,7 +14,6 @@ import static io.microsphere.util.PropertyResourceBundleControl.newControl;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
 import static java.lang.System.getProperty;
 import static java.util.Locale.getDefault;
-
 /**
  * {@link PropertyResourceBundle} Utility class
  *

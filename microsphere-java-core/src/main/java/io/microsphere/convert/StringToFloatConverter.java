@@ -16,8 +16,8 @@
  */
 package io.microsphere.convert;
 
-import static java.lang.Float.valueOf;
 
+import static java.lang.Float.valueOf;
 /**
  * The class to convert {@link String} to {@link Float}
  *

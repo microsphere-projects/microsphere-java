@@ -1,15 +1,15 @@
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING_ARRAY;
 import static io.microsphere.collection.CollectionUtils.toIterable;
@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link SetUtils} Test
  *

@@ -4,13 +4,12 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.filter.IOFileFilter;
 import io.microsphere.io.filter.TrueFileFilter;
-
 import java.io.File;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static java.util.Collections.unmodifiableSet;
-
 /**
  * Simple File Scanner (Single-Thread)
  *

@@ -7,7 +7,6 @@ import static io.microsphere.reflect.generics.TypeArgument.create;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link TypeArgument} Test
  *

@@ -18,7 +18,6 @@ package io.microsphere.convert;
 
 import java.io.StringWriter;
 import java.util.Properties;
-
 /**
  * The {@link Properties} To {@link String} {@link Converter}
  *

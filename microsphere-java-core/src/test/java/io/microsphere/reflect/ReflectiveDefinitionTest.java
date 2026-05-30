@@ -18,14 +18,12 @@
 package io.microsphere.reflect;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static io.microsphere.lang.DeprecationTest.DEPRECATION;
 import static io.microsphere.lang.DeprecationTest.SINCE;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 /**
  * {@link ReflectiveDefinition} Test
  *

@@ -21,7 +21,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -33,7 +32,6 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.Version.ofVersion;
 import static java.util.Objects.hash;
 import static java.util.Objects.nonNull;
-
 /**
  * The abstract definition class for Java Reflection.
  * <p>

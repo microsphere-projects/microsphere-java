@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.A;
 import org.junit.jupiter.api.Test;
-
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
@@ -32,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link Kind} Test for {@link Class}
  *

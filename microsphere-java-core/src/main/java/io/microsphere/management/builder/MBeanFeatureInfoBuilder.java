@@ -18,9 +18,7 @@
 package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nullable;
-
 import javax.management.MBeanFeatureInfo;
-
 /**
  * {@link MBeanFeatureInfo} Builder
  *

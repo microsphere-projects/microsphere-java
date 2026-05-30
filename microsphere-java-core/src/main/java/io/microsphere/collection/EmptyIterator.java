@@ -17,12 +17,10 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
-
 import java.util.Collections;
 import java.util.Iterator;
 
 import static java.util.Collections.emptyIterator;
-
 /**
  * An empty and immutable implementation of the {@link Iterator} interface.
  * <p>

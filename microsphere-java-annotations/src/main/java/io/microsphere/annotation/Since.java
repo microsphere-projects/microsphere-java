@@ -31,7 +31,6 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.ElementType.TYPE_PARAMETER;
 import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
  * The annotation that indicates the API is introduced in the first time.
  *

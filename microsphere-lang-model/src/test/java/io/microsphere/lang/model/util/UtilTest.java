@@ -21,7 +21,6 @@ import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTes
 import io.microsphere.test.service.TestServiceImpl;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -37,7 +36,6 @@ import static io.microsphere.lang.model.util.FieldUtils.findField;
 import static io.microsphere.lang.model.util.MethodUtils.findMethod;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * The utilies class for testing
  *

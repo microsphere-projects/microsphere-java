@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.classloading.AbstractURLClassPathHandle.DEFAULT_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link AbstractURLClassPathHandle} Test
  *

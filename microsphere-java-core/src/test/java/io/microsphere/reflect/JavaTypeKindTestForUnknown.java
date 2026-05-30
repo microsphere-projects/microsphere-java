@@ -24,7 +24,6 @@ import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link Kind} Test for Unknown
  *

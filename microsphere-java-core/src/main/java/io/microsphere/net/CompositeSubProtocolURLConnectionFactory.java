@@ -17,17 +17,16 @@
 package io.microsphere.net;
 
 import io.microsphere.lang.Prioritized;
-
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static java.util.Collections.sort;
-
 /**
  * A composite implementation of {@link SubProtocolURLConnectionFactory} that combines multiple factories.
  * This class allows dynamic modification at runtime by adding or removing individual factories.

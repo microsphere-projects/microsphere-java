@@ -17,14 +17,12 @@
 package io.microsphere.net;
 
 import io.microsphere.net.console.ConsoleURLConnection;
-
 import java.io.Console;
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
-
 /**
  * {@link Console} {@link SubProtocolURLConnectionFactory}
  *

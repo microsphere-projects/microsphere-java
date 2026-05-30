@@ -18,7 +18,6 @@
 package io.microsphere.management.builder;
 
 import org.junit.jupiter.api.Test;
-
 import javax.management.MBeanNotificationInfo;
 
 import static io.microsphere.management.builder.MBeanNotificationInfoBuilder.getClassNames;
@@ -30,7 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link MBeanNotificationInfoBuilder} Test
  *

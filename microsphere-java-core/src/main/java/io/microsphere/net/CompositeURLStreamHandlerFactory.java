@@ -17,18 +17,17 @@
 package io.microsphere.net;
 
 import io.microsphere.lang.Prioritized;
-
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.lang.Prioritized.COMPARATOR;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
-
 /**
  * A composite {@link URLStreamHandlerFactory} that delegates the creation of {@link URLStreamHandler} instances
  * to one or more underlying factories in a prioritized order.

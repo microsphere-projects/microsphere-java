@@ -8,7 +8,6 @@ import io.microsphere.LoggingTest;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
@@ -91,7 +90,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ClassLoaderUtils} {@link Test}
  *

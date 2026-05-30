@@ -23,7 +23,6 @@ import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
 
 import static java.util.Objects.nonNull;
-
 /**
  * A concrete implementation of {@link ReflectiveDefinition} representing the definition of a Java class.
  *

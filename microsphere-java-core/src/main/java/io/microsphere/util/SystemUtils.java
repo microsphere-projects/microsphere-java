@@ -19,7 +19,6 @@ package io.microsphere.util;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.nio.charset.CharsetUtils;
-
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Properties;
@@ -30,7 +29,6 @@ import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static io.microsphere.util.StringUtils.startsWith;
 import static java.lang.System.getProperties;
 import static java.lang.System.getProperty;
-
 /**
  * The utilities class for {@link System}
  *

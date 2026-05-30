@@ -26,14 +26,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-
 import javax.xml.ws.ServiceMode;
 import java.io.Serializable;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static org.springframework.context.annotation.FilterType.ASPECTJ;
 import static org.springframework.context.annotation.ScopedProxyMode.INTERFACES;
-
 /**
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0

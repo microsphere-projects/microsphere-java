@@ -16,8 +16,8 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.convert.StringToCharArrayConverter.INSTANCE;
 
+import static io.microsphere.convert.StringToCharArrayConverter.INSTANCE;
 /**
  * {@link StringToCharArrayConverter} Test
  *

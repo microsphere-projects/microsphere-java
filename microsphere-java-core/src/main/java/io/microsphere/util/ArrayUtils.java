@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Immutable;
-
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
@@ -38,7 +37,6 @@ import static java.lang.reflect.Array.newInstance;
 import static java.util.Arrays.binarySearch;
 import static java.util.Arrays.copyOfRange;
 import static java.util.Collections.list;
-
 /**
  * The utilities class for {@link Array}
  *

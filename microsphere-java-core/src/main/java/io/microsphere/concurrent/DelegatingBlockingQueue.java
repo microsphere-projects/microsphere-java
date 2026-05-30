@@ -17,7 +17,6 @@
 package io.microsphere.concurrent;
 
 import io.microsphere.lang.DelegatingWrapper;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -29,7 +28,6 @@ import java.util.stream.Stream;
 
 import static io.microsphere.lang.Wrapper.tryUnwrap;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
-
 /**
  * A delegating implementation of {@link BlockingQueue} that wraps another
  * {@link BlockingQueue} instance and forwards all method calls to it.

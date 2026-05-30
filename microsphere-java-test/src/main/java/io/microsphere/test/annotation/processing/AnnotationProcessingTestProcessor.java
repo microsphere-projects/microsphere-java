@@ -19,7 +19,6 @@ package io.microsphere.test.annotation.processing;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -35,7 +34,6 @@ import static io.microsphere.constants.SymbolConstants.WILDCARD;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static io.microsphere.util.ThrowableUtils.getRootCause;
 import static javax.lang.model.SourceVersion.latestSupported;
-
 /**
  * {@link AnnotationProcessingTestProcessor}
  *

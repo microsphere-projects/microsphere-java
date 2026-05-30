@@ -6,13 +6,11 @@ package io.microsphere.filter;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
-
 /**
  * Utility class for working with {@link Filter} instances.
  * Provides static helper methods to apply filters to collections and iterate over filtered results.

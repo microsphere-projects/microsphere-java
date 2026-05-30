@@ -17,7 +17,6 @@
 package io.microsphere.util;
 
 import io.microsphere.logging.Logger;
-
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,7 +25,6 @@ import java.util.function.Supplier;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.text.FormatUtils.format;
-
 /**
  * A fluent configuration utility for applying conditional operations on a value of type {@code T}.
  * <p>

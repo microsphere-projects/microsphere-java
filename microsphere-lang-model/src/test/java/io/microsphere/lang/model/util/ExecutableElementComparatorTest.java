@@ -2,7 +2,6 @@ package io.microsphere.lang.model.util;
 
 import io.microsphere.test.service.TestService;
 import org.junit.jupiter.api.Test;
-
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.lang.reflect.Type;
@@ -10,7 +9,6 @@ import java.lang.reflect.Type;
 import static io.microsphere.lang.model.util.ExecutableElementComparator.INSTANCE;
 import static io.microsphere.lang.model.util.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ExecutableElementComparator} Test
  *

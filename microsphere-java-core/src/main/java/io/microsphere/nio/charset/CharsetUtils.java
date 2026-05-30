@@ -18,11 +18,9 @@ package io.microsphere.nio.charset;
 
 import io.microsphere.util.SystemUtils;
 import io.microsphere.util.Utils;
-
 import java.nio.charset.Charset;
 
 import static java.nio.charset.Charset.defaultCharset;
-
 /**
  * The Utilities class for {@link Charset}
  *

@@ -17,7 +17,6 @@
 package io.microsphere.security;
 
 import java.security.Permission;
-
 /**
  * {@link SecurityManager} for Testing
  *

@@ -18,7 +18,6 @@ package io.microsphere.net;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
@@ -50,7 +49,6 @@ import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.sort;
-
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,
  * like :

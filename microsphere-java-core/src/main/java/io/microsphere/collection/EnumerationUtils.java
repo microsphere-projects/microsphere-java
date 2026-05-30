@@ -19,12 +19,10 @@ package io.microsphere.collection;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
-
 import java.util.Collections;
 import java.util.Enumeration;
 
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
-
 /**
  * The utilities class for Java {@link Enumeration}
  *

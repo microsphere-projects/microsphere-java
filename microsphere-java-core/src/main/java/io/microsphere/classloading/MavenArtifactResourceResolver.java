@@ -22,7 +22,6 @@ import java.net.URL;
 import java.util.Properties;
 
 import static io.microsphere.classloading.MavenArtifact.create;
-
 /**
  * A resolver implementation for Maven artifact metadata, extracting information from Maven POM properties files.
  *

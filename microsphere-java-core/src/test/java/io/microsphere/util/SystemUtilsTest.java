@@ -21,7 +21,6 @@ import io.microsphere.reflect.MemberUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import javax.lang.model.SourceVersion;
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -101,7 +100,6 @@ import static javax.lang.model.SourceVersion.latest;
 import static javax.lang.model.SourceVersion.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link SystemUtils} Test
  *

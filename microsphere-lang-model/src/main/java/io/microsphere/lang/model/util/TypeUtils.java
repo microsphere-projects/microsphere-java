@@ -21,7 +21,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.TypeFinder;
 import io.microsphere.util.Utils;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
@@ -59,7 +58,6 @@ import static javax.lang.model.element.ElementKind.CLASS;
 import static javax.lang.model.element.ElementKind.ENUM;
 import static javax.lang.model.element.ElementKind.INTERFACE;
 import static javax.lang.model.type.TypeKind.ARRAY;
-
 /**
  * The utilities class for type in the package "javax.lang.model.*"
  *

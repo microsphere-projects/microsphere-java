@@ -24,7 +24,6 @@ import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link UnmodifiableDeque} Test
  *

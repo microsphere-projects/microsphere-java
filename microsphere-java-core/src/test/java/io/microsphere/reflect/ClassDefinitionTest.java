@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-
 /**
  * {@link ClassDefinition} Test
  *

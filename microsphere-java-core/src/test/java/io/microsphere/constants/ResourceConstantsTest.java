@@ -26,7 +26,6 @@ import static io.microsphere.constants.ResourceConstants.CONFIGURATION_PROPERTY_
 import static io.microsphere.constants.ResourceConstants.METADATA_RESOURCE;
 import static io.microsphere.constants.ResourceConstants.MICROSPHERE_METADATA_RESOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ResourceConstants} Test
  *

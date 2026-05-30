@@ -21,7 +21,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Deprecation;
 import io.microsphere.util.Version;
-
 /**
  * {@link ReflectiveDefinition} Implementation class
  *

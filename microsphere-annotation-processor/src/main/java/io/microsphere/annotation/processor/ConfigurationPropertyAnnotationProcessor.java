@@ -21,7 +21,6 @@ import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.constants.ResourceConstants;
 import io.microsphere.json.JSONArray;
 import io.microsphere.metadata.ConfigurationPropertyGenerator;
-
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -44,7 +43,6 @@ import static io.microsphere.lang.model.util.MessagerUtils.printNote;
 import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 import static javax.lang.model.SourceVersion.latestSupported;
 import static javax.tools.StandardLocation.CLASS_OUTPUT;
-
 /**
  * The {@link Processor} for the {@link ConfigurationProperty} annotation
  *

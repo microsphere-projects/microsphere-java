@@ -17,7 +17,6 @@
 package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -27,7 +26,6 @@ import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link PropertiesUtils} Test
  *

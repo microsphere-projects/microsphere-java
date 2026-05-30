@@ -20,7 +20,6 @@ import io.microsphere.annotation.Nullable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.AnnotatedConstruct;
@@ -42,7 +41,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-
 /**
  * Abstract {@link Annotation} Processing Test case
  *

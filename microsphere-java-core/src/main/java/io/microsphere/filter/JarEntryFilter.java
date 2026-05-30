@@ -4,7 +4,6 @@
 package io.microsphere.filter;
 
 import java.util.jar.JarEntry;
-
 /**
  * A filter for {@link JarEntry} objects. Implementations of this interface can be used to
  * selectively process or ignore entries within a JAR file.

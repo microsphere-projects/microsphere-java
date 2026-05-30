@@ -1,7 +1,6 @@
 package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
-
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
 
@@ -27,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link Maps} Test
  *

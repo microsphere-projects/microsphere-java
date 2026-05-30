@@ -4,7 +4,6 @@
 package io.microsphere.filter;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static io.microsphere.filter.FilterOperator.AND;
@@ -12,7 +11,6 @@ import static io.microsphere.filter.FilterOperator.OR;
 import static io.microsphere.filter.FilterUtils.filter;
 import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link FilterUtils} Test Case
  *

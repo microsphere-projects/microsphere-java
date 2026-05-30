@@ -19,14 +19,12 @@ package io.microsphere.collection;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.util.Iterator;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link SingletonDeque} Test
  *

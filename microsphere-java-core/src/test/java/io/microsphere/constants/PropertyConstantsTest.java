@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.constants.PropertyConstants.ENABLED_PROPERTY_NAME;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link PropertyConstants} Test
  *

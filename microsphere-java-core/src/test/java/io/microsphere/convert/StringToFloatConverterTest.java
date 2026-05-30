@@ -23,7 +23,6 @@ import static io.microsphere.convert.StringToFloatConverter.INSTANCE;
 import static java.lang.Float.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link StringToFloatConverter} Test
  *

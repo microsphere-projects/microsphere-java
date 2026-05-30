@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.util.ArrayUtils.EMPTY_OBJECT_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link AbstractLogger} Test
  *

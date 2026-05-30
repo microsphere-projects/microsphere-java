@@ -19,7 +19,6 @@ package io.microsphere.classloading;
 import java.net.URL;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
-
 /**
  * No-Operation {@link URLClassPathHandle}
  *

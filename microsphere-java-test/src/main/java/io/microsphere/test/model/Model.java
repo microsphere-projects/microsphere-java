@@ -19,7 +19,6 @@ package io.microsphere.test.model;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.concurrent.TimeUnit;
-
 /**
  * Model Object
  *

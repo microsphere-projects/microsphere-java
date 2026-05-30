@@ -1,14 +1,12 @@
 package io.microsphere.reflect;
 
 import org.junit.jupiter.api.Test;
-
 import java.util.List;
 
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 /**
  * {@link ConstructorDefinition} Test
  *

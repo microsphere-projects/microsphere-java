@@ -20,13 +20,11 @@ package io.microsphere.metadata;
 import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.List;
 
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link DefaultConfigurationPropertyReader} Test
  *

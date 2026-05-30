@@ -20,7 +20,6 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 
 import static io.microsphere.util.Assert.assertNotNull;
-
 /**
  * A delegating implementation of {@link URLStreamHandlerFactory} that forwards all calls to a provided delegate factory.
  * <p>

@@ -18,11 +18,9 @@
 package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nullable;
-
 import javax.management.Descriptor;
 import javax.management.DescriptorRead;
 import javax.management.MBeanFeatureInfo;
-
 /**
  * MBean Describable Builder
  *

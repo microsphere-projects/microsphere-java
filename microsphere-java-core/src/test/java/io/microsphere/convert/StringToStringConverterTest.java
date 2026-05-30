@@ -16,8 +16,8 @@
  */
 package io.microsphere.convert;
 
-import static io.microsphere.convert.StringToStringConverter.INSTANCE;
 
+import static io.microsphere.convert.StringToStringConverter.INSTANCE;
 /**
  * {@link StringToStringConverter} Test
  *

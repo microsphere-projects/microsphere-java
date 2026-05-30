@@ -20,7 +20,6 @@ package io.microsphere.collection;
 import java.util.Enumeration;
 
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
-
 /**
  * {@link ArrayEnumeration} Test
  *

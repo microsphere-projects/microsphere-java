@@ -19,7 +19,6 @@ package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
-
 import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
@@ -29,7 +28,6 @@ import static io.microsphere.constants.SymbolConstants.RIGHT_CURLY_BRACE_CHAR;
 import static io.microsphere.json.JSONUtils.append;
 import static io.microsphere.json.JSONUtils.appendName;
 import static io.microsphere.util.Assert.assertNotNull;
-
 /**
  * The default implementation class of {@link ConfigurationPropertyGenerator}.
  *

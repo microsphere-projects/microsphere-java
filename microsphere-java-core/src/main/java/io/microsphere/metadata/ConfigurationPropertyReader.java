@@ -21,7 +21,6 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.lang.Prioritized;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -29,7 +28,6 @@ import java.util.List;
 
 import static io.microsphere.io.IOUtils.copyToString;
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
-
 /**
  * The SPI to read the list of {@link ConfigurationProperty configuration properties} from various sources.
  *

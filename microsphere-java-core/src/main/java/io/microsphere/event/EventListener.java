@@ -17,7 +17,6 @@
 package io.microsphere.event;
 
 import io.microsphere.lang.Prioritized;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -25,7 +24,6 @@ import java.util.Objects;
 import static io.microsphere.reflect.TypeUtils.asClass;
 import static io.microsphere.reflect.TypeUtils.getAllParameterizedTypes;
 import static io.microsphere.reflect.TypeUtils.isAssignableFrom;
-
 /**
  * The {@link Event Event} Listener that is based on Java standard {@link java.util.EventListener} interface supports
  * the generic {@link Event}.

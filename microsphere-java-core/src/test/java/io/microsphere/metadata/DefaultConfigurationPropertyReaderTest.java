@@ -20,14 +20,12 @@ package io.microsphere.metadata;
 import io.microsphere.beans.ConfigurationProperty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.InputStream;
 import java.util.List;
 
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link DefaultConfigurationPropertyReader} Test
  *

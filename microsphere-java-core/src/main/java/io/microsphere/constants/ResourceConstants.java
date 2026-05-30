@@ -18,7 +18,6 @@
 package io.microsphere.constants;
 
 import io.microsphere.annotation.ConfigurationProperty;
-
 /**
  * The Constants for Microsphere Resource
  *

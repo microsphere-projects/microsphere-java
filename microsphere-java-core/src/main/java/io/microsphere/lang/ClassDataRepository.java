@@ -20,7 +20,6 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.ClassPathUtils;
-
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -38,7 +37,6 @@ import static io.microsphere.util.ClassUtils.resolvePackageName;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
-
 /**
  * A repository class that manages and provides access to classpath and class-related metadata.
  * <p>

@@ -17,7 +17,6 @@
 package io.microsphere.net;
 
 import io.microsphere.logging.Logger;
-
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLStreamHandler;
@@ -30,7 +29,6 @@ import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.newInstance;
-
 /**
  * Standard implementation of {@link URLStreamHandlerFactory} that creates a new instance of
  * URLStreamHandler for a given protocol.

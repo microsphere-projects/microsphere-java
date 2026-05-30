@@ -18,9 +18,7 @@ package io.microsphere.io;
 
 import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
-
 import java.io.File;
-
 /**
  * A service that watches files or directories for changes and notifies registered listeners.
  * <p>

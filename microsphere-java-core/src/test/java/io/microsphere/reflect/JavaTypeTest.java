@@ -21,7 +21,6 @@ import io.microsphere.test.StringIntegerBooleanHashMap;
 import io.microsphere.test.StringIntegerHashMap;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ResolvableType;
-
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -45,7 +44,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.core.ResolvableType.forType;
-
 /**
  * {@link JavaType} Test
  *

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.reflect.ProxyUtils.isProxyable;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ProxyUtils} Test
  *

@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.StringToShortConverter.INSTANCE;
 import static java.lang.Short.valueOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link StringToShortConverter} Test
  *

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.io.filter.TrueFileFilter.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link TrueFileFilter} Test
  *

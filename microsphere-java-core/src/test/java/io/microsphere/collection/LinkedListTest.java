@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
-
 /**
  * {@link LinkedList} Test
  *

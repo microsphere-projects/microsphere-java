@@ -18,7 +18,6 @@ package io.microsphere.invoke;
 
 import io.microsphere.invoke.MethodHandleUtils.LookupKey;
 import org.junit.jupiter.api.Test;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 
@@ -35,7 +34,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link MethodHandleUtils} Test
  *

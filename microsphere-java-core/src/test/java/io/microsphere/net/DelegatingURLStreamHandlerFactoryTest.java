@@ -7,7 +7,6 @@ import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link DelegatingURLStreamHandlerFactory Test}
  *

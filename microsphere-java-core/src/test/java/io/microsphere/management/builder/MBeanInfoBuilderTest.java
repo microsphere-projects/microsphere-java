@@ -20,7 +20,6 @@ package io.microsphere.management.builder;
 import io.microsphere.beans.BeanMetadata;
 import io.microsphere.test.Data;
 import org.junit.jupiter.api.Test;
-
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanInfo;
@@ -46,7 +45,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link MBeanInfoBuilder} Test
  *

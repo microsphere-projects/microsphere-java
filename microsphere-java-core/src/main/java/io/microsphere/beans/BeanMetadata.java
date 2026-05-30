@@ -19,11 +19,11 @@ package io.microsphere.beans;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
-
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -32,7 +32,6 @@ import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.StringUtils.uncapitalize;
 import static java.util.Collections.unmodifiableMap;
-
 /**
  * The metadata class of Bean, which is used to represent a Java Bean.
  *

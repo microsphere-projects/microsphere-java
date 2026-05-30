@@ -21,7 +21,6 @@ import java.io.ByteArrayInputStream;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.lang.System.arraycopy;
 import static java.util.Objects.hash;
-
 /**
  * A fast, non-thread-safe implementation of {@link ByteArrayInputStream}.
  *

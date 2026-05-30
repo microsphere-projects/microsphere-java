@@ -17,7 +17,6 @@
 package io.microsphere.net.test;
 
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
-
 /**
  * Test {@link ExtendableProtocolURLStreamHandler}
  *

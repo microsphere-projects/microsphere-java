@@ -17,10 +17,8 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
-
 import java.util.Iterator;
 import java.util.function.Consumer;
-
 /**
  * An {@link Iterator} that is unmodifiable, meaning the elements cannot be removed.
  * This class extends the {@link ReadOnlyIterator}, which throws an exception when the

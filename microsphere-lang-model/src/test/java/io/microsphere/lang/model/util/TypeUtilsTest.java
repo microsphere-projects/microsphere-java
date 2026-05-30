@@ -27,7 +27,6 @@ import io.microsphere.test.service.GenericTestService;
 import io.microsphere.test.service.TestService;
 import io.microsphere.test.service.TestServiceImpl;
 import org.junit.jupiter.api.Test;
-
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
@@ -106,7 +105,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * The {@link TypeUtils} Test
  *

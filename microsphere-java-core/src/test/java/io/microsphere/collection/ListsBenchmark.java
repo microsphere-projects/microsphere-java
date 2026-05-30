@@ -30,7 +30,6 @@ import static io.microsphere.collection.ListUtils.of;
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
-
 /**
  * {@link Lists} Benchmark
  *

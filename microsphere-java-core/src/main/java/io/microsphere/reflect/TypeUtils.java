@@ -23,13 +23,16 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
-
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -64,7 +67,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.of;
 import static java.util.stream.StreamSupport.stream;
-
 /**
  * The utilities class for {@link Type}
  *

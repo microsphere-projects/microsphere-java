@@ -23,7 +23,6 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.util.Objects.nonNull;
-
 /**
  * A {@link ProcessIdResolver} implementation for modern JDKs (Java 9+).
  *

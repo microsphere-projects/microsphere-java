@@ -4,7 +4,6 @@ import java.time.Duration;
 
 import static io.microsphere.convert.StringToDurationConverter.INSTANCE;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-
 /**
  * {@link StringToDurationConverter} Test
  *

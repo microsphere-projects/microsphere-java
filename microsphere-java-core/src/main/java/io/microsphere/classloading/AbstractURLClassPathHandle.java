@@ -19,7 +19,6 @@ package io.microsphere.classloading;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
-
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.Collection;
@@ -34,7 +33,6 @@ import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.ClassLoader.getSystemClassLoader;
-
 /**
  * Abstract implementation of {@link URLClassPathHandle} that provides a base for handling URL Class-Path entries.
  *

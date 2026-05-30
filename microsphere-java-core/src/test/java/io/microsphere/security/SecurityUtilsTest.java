@@ -19,7 +19,6 @@ package io.microsphere.security;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.File;
 import java.net.URL;
 
@@ -31,7 +30,6 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.System.clearProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link SecurityUtils}
  *

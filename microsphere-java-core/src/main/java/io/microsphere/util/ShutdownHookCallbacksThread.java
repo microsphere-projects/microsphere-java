@@ -21,7 +21,6 @@ import io.microsphere.logging.Logger;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ShutdownHookUtils.clearShutdownHookCallbacks;
 import static io.microsphere.util.ShutdownHookUtils.shutdownHookCallbacks;
-
 /**
  * A {@link Thread} that executes registered shutdown hook {@link Runnable} callbacks
  * when the JVM begins its shutdown sequence.

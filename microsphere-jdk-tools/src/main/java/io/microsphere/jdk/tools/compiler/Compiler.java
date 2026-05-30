@@ -17,7 +17,6 @@
 package io.microsphere.jdk.tools.compiler;
 
 import io.microsphere.logging.Logger;
-
 import javax.annotation.processing.Processor;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -61,7 +60,6 @@ import static javax.tools.StandardLocation.CLASS_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_OUTPUT;
 import static javax.tools.StandardLocation.SOURCE_PATH;
 import static javax.tools.ToolProvider.getSystemJavaCompiler;
-
 /**
  * The Java Compiler
  *

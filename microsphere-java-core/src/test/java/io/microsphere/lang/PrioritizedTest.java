@@ -7,7 +7,6 @@ import static io.microsphere.lang.Prioritized.MAX_PRIORITY;
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link Prioritized}
  *

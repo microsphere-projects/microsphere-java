@@ -19,7 +19,6 @@ package io.microsphere.annotation.processor;
 
 import io.microsphere.lang.function.ThrowableConsumer;
 import io.microsphere.lang.function.ThrowableFunction;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager.Location;
@@ -40,7 +39,6 @@ import static io.microsphere.lang.model.util.MessagerUtils.printWarning;
 import static io.microsphere.util.ExceptionUtils.wrap;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-
 /**
  * A processor class that provides a comprehensive and exception-safe mechanism for handling resources during annotation processing.
  * It extends the capabilities of the {@link FilerProcessor} to manage both reading from and writing to resources using various I/O operations.

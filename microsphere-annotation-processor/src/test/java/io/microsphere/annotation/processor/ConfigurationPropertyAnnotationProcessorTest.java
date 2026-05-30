@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.Assert.assertNotNull;
 import static java.util.Collections.emptySet;
-
 /**
  * {@link ConfigurationPropertyAnnotationProcessor} Test
  *

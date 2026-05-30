@@ -19,7 +19,6 @@ package io.microsphere.convert;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-
 /**
  * The class to convert {@link Object} to {@link Optional}
  *

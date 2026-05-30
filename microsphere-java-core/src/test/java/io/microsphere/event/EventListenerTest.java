@@ -22,7 +22,6 @@ import static io.microsphere.event.EventListener.findEventType;
 import static io.microsphere.lang.Prioritized.NORMAL_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 /**
  * {@link EventListener} Test
  *

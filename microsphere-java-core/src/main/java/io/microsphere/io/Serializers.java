@@ -17,7 +17,6 @@
 package io.microsphere.io;
 
 import io.microsphere.annotation.Nonnull;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import static io.microsphere.reflect.TypeUtils.resolveTypeArgumentClasses;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.emptyList;
-
 /**
  * A utility class for managing and retrieving {@link Serializer} instances.
  * <p>

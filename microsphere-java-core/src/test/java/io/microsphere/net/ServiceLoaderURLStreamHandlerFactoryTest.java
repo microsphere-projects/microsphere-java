@@ -20,7 +20,6 @@ import io.microsphere.io.IOUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandler;
@@ -33,7 +32,6 @@ import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.classpath.HandlerTest.TEST_PROPERTIES_CLASSPATH_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ServiceLoaderURLStreamHandlerFactory} Test
  *

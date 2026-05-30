@@ -17,6 +17,7 @@
 package io.microsphere.util;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -24,7 +25,6 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getType;
-
 /**
  * A {@link Comparator} implementation that sorts objects based on the value of the
  * {@link javax.annotation.Priority} annotation.

@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.collection.DefaultEntry.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 /**
  * {@link DefaultEntry} Test
  *

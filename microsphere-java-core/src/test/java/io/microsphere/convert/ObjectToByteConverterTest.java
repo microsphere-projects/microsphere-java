@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.ObjectToByteConverter.INSTANCE;
 import static java.lang.Byte.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ObjectToByteConverter} Test
  *

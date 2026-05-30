@@ -29,7 +29,6 @@ import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.lang.String.format;
 import static java.util.Arrays.fill;
-
 /**
  * Implements {@link JSONObject#toString} and {@link JSONArray#toString}. Most application
  * developers should use those methods directly and disregard this API.

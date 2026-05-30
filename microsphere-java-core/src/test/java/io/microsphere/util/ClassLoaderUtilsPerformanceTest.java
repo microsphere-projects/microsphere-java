@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.util.ClassLoaderUtils.findLoadedClassesInClassPath;
-
 /**
  * {@link ClassLoaderUtils} Performance Test
  *

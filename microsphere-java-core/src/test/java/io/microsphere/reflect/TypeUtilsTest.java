@@ -28,7 +28,6 @@ import io.microsphere.test.StringBooleanToInteger;
 import io.microsphere.test.StringIntegerBooleanHashMap;
 import io.microsphere.test.StringIntegerToBoolean;
 import org.junit.jupiter.api.Test;
-
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -105,7 +104,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link TypeUtils} Test
  *

@@ -19,7 +19,6 @@ package io.microsphere.management.builder;
 
 import io.microsphere.management.CacheControlMBean;
 import org.junit.jupiter.api.Test;
-
 import javax.management.ImmutableDescriptor;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanParameterInfo;
@@ -31,7 +30,6 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link MBeanOperationInfoBuilder} Test
  *

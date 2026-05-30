@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.ObjectToShortConverter.INSTANCE;
 import static java.lang.Short.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link ObjectToShortConverter} Test
  *

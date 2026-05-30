@@ -19,7 +19,6 @@ package io.microsphere.reflect;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 /**
  * Abstract {@link ExecutableDefinition} Test
  *

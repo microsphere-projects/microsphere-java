@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.lang.function.ThrowableFunction.execute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link ThrowableFunction} Test
  *

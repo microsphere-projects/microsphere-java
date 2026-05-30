@@ -21,7 +21,6 @@ import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
  * A common Microsphere annotation to declare that annotated elements cannot be {@code null}.
  *

@@ -25,7 +25,6 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.lang.Integer.MAX_VALUE;
-
 /**
  * {@link AbstractDeque} class for testing
  *

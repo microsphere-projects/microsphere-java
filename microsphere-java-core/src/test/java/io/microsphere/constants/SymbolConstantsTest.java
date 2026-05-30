@@ -81,7 +81,6 @@ import static io.microsphere.constants.SymbolConstants.VERTICAL_BAR_CHAR;
 import static io.microsphere.constants.SymbolConstants.WILDCARD;
 import static io.microsphere.constants.SymbolConstants.WILDCARD_CHAR;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 /**
  * {@link SymbolConstants} Test
  *

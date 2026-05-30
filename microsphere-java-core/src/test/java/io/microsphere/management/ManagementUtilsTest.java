@@ -6,7 +6,6 @@ import static io.microsphere.management.ManagementUtils.currentProcessId;
 import static io.microsphere.management.ManagementUtils.getCurrentProcessId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * {@link ManagementUtils} Test
  *

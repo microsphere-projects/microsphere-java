@@ -19,7 +19,6 @@ package io.microsphere.io.event;
 import io.microsphere.event.Event;
 import io.microsphere.event.EventListener;
 import io.microsphere.io.event.FileChangedEvent.Kind;
-
 /**
  * A listener interface for receiving file change events.
  *

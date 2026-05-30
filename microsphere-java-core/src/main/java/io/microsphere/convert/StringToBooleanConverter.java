@@ -16,9 +16,9 @@
  */
 package io.microsphere.convert;
 
+
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static java.lang.Boolean.valueOf;
-
 /**
  * The class to convert {@link String} to {@link Boolean}
  *

@@ -27,7 +27,6 @@ import static io.microsphere.reflect.TypeUtils.resolveActualTypeArgumentClass;
 import static java.util.Objects.deepEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 /**
  * Abstract {@link Converter} Test
  *

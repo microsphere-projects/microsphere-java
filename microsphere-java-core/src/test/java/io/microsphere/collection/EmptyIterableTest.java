@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.EmptyIterable.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertSame;
-
 /**
  * {@link EmptyIterable} Test
  *

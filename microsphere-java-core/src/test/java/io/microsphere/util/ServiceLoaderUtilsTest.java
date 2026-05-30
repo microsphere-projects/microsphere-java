@@ -6,7 +6,6 @@ import io.microsphere.event.EchoEventListener2;
 import io.microsphere.event.EventListener;
 import io.microsphere.logging.LoggerFactory;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -27,7 +26,6 @@ import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 /**
  * {@link ServiceLoaderUtils} Test
  *
