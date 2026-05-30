@@ -21,6 +21,8 @@ import io.microsphere.lang.MutableInteger;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -152,6 +154,46 @@ class ListUtilsTest implements Loggable {
         assertEquals(emptyList(), newLinkedList());
         assertEquals(newLinkedList(), newLinkedList(emptyEnumeration()));
         assertEquals(newLinkedList(newArrayList()), newLinkedList(emptyIterator()));
+    }
+
+    @Test
+    void testNewArrayListWithCollection() {
+        Collection<String> source = asList("A", "B", "C");
+        ArrayList<String> list = newArrayList(source);
+        assertEquals(3, list.size());
+        assertEquals("A", list.get(0));
+        assertEquals("B", list.get(1));
+        assertEquals("C", list.get(2));
+    }
+
+    @Test
+    void testNewArrayListWithSet() {
+        Set<String> source = new HashSet<>(asList("A", "B", "C"));
+        ArrayList<String> list = newArrayList(source);
+        assertEquals(3, list.size());
+        assertTrue(list.contains("A"));
+        assertTrue(list.contains("B"));
+        assertTrue(list.contains("C"));
+    }
+
+    @Test
+    void testNewLinkedListWithCollection() {
+        Collection<String> source = asList("A", "B", "C");
+        LinkedList<String> list = newLinkedList(source);
+        assertEquals(3, list.size());
+        assertEquals("A", list.get(0));
+        assertEquals("B", list.get(1));
+        assertEquals("C", list.get(2));
+    }
+
+    @Test
+    void testNewLinkedListWithSet() {
+        Set<String> source = new HashSet<>(asList("A", "B", "C"));
+        LinkedList<String> list = newLinkedList(source);
+        assertEquals(3, list.size());
+        assertTrue(list.contains("A"));
+        assertTrue(list.contains("B"));
+        assertTrue(list.contains("C"));
     }
 
     @Test
