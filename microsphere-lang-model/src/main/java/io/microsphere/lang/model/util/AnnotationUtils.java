@@ -1317,7 +1317,7 @@ public interface AnnotationUtils extends Utils {
         if (size < 1) {
             return emptyMap();
         }
-        Map<String, Object> attributesMap = newFixedLinkedHashMap(size);
+        LinkedHashMap<String, Object> attributesMap = newFixedLinkedHashMap(size);
         for (Entry<ExecutableElement, AnnotationValue> entry : attributes.entrySet()) {
             ExecutableElement attributeMethod = entry.getKey();
             String attributeName = getAttributeName(attributeMethod);
@@ -1512,7 +1512,7 @@ public interface AnnotationUtils extends Utils {
         DeclaredType annotationType = annotation.getAnnotationType();
         List<ExecutableElement> attributeMethods = getDeclaredMethods(annotationType);
         int size = attributeMethods.size();
-        Map<ExecutableElement, AnnotationValue> attributes = newFixedLinkedHashMap(size);
+        LinkedHashMap<ExecutableElement, AnnotationValue> attributes = newFixedLinkedHashMap(size);
         Map<? extends ExecutableElement, ? extends AnnotationValue> elementValues = annotation.getElementValues();
         for (int i = 0; i < size; i++) {
             ExecutableElement attributeMethod = attributeMethods.get(i);

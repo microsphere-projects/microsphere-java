@@ -1668,7 +1668,7 @@ public abstract class URLUtils implements Utils {
             return emptyMap();
         }
 
-        Map<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
+        LinkedHashMap<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
 
         for (int i = 0; i < paramsLen; i++) {
             String param = params[i];

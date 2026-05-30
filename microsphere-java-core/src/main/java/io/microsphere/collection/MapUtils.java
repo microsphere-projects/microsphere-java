@@ -389,7 +389,7 @@ public abstract class MapUtils implements Utils {
         if (length < 1) {
             return emptyMap();
         }
-        Map<K, V> map = newFixedLinkedHashMap(length);
+        LinkedHashMap<K, V> map = newFixedLinkedHashMap(length);
         for (int i = 0; i < length; i++) {
             Map.Entry<? extends K, ? extends V> entry = entries[i];
             map.put(entry.getKey(), entry.getValue());
@@ -1039,7 +1039,7 @@ public abstract class MapUtils implements Utils {
             return emptyMap();
         }
 
-        Map<K, V> fixedMap = newFixedLinkedHashMap(size);
+        LinkedHashMap<K, V> fixedMap = newFixedLinkedHashMap(size);
 
         for (E value : values) {
             Map.Entry<K, V> entry = entryMapper.apply(value);

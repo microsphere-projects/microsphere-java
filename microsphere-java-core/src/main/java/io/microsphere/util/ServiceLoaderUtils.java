@@ -259,7 +259,7 @@ public abstract class ServiceLoaderUtils implements Utils {
     @Immutable
     public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, @Nullable ClassLoader classLoader, boolean failFast) {
         Set<String> serviceClassNames = doGetServiceClassNames(serviceType, classLoader);
-        Set<Class<T>> serviceClasses = newFixedLinkedHashSet(serviceClassNames.size());
+        LinkedHashSet<Class<T>> serviceClasses = newFixedLinkedHashSet(serviceClassNames.size());
         for (String serviceClassName : serviceClassNames) {
             Class<?> serviceClass = loadClass(classLoader, serviceClassName);
             if (serviceClass == null) {

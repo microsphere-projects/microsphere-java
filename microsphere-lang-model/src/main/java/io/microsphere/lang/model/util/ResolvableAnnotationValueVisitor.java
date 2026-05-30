@@ -156,7 +156,7 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
     @Override
     public Object visitAnnotation(AnnotationMirror a, ExecutableElement attributeMethod) {
         Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(a);
-        Map<String, Object> attributesMap = newFixedLinkedHashMap(elementValues.size());
+        LinkedHashMap<String, Object> attributesMap = newFixedLinkedHashMap(elementValues.size());
         for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
             ExecutableElement method = entry.getKey();
             String attributeName = getAttributeName(method);

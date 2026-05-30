@@ -596,7 +596,7 @@ public abstract class JmxUtils implements Utils {
     public static Descriptor descriptorForAnnotations(Annotation[] annotations) {
         int length = length(annotations);
         if (length > 0) {
-            Map<String, Object> descriptorMap = newFixedHashMap(length);
+            HashMap<String, Object> descriptorMap = newFixedHashMap(length);
             for (int i = 0; i < length; i++) {
                 Annotation annotation = annotations[i];
                 Class<? extends Annotation> annotationType = annotation.annotationType();

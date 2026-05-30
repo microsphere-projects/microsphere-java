@@ -942,7 +942,7 @@ public abstract class JSONUtils implements Utils {
      * @see JSONObject
      */
     public static Map<String, Object> readValueAsMap(JSONObject jsonObject) {
-        Map<String, Object> map = newFixedLinkedHashMap(jsonObject.length());
+        LinkedHashMap<String, Object> map = newFixedLinkedHashMap(jsonObject.length());
         Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
             String key = iterator.next();
@@ -1456,7 +1456,7 @@ public abstract class JSONUtils implements Utils {
 
     static Set<Object> toSet(JSONArray jsonArray, Class<?> elementClass) {
         int length = jsonArray.length();
-        Set<Object> sets = newFixedLinkedHashSet(length);
+        LinkedHashSet<Object> sets = newFixedLinkedHashSet(length);
         addValues(jsonArray, sets, elementClass);
         return sets;
     }

@@ -158,7 +158,7 @@ public abstract class SetUtils implements Utils {
             return singleton(elements[0]);
         }
 
-        Set<E> set = newFixedLinkedHashSet(size);
+        LinkedHashSet<E> set = newFixedLinkedHashSet(size);
 
         for (int i = 0; i < size; i++) {
             set.add(elements[i]);
@@ -303,7 +303,7 @@ public abstract class SetUtils implements Utils {
 
         int size = valuesSize + othersSize;
 
-        Set<T> set = newFixedLinkedHashSet(size);
+        LinkedHashSet<T> set = newFixedLinkedHashSet(size);
         // add elements
         set.addAll(elements);
 

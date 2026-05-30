@@ -452,7 +452,7 @@ public abstract class BeanUtils implements Utils {
         Class<?> beanClass = bean.getClass();
         BeanMetadata beanMetadata = getBeanMetadata(beanClass);
         Map<String, PropertyDescriptor> propertyDescriptorsMap = beanMetadata.getPropertyDescriptorsMap();
-        Map<String, Object> propertiesMap = newFixedHashMap(propertyDescriptorsMap.size());
+        HashMap<String, Object> propertiesMap = newFixedHashMap(propertyDescriptorsMap.size());
         for (Map.Entry<String, PropertyDescriptor> entry : propertyDescriptorsMap.entrySet()) {
             String propertyName = entry.getKey();
             PropertyDescriptor propertyDescriptor = entry.getValue();
@@ -524,7 +524,7 @@ public abstract class BeanUtils implements Utils {
 
     static Set<?> toSet(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Set<?> set = (Set<?>) value;
-        Set<Object> newSet = newFixedLinkedHashSet(size(set));
+        LinkedHashSet<Object> newSet = newFixedLinkedHashSet(size(set));
         addValues(newSet, set, resolvedDepth, maxResolvedDepth);
         return newSet;
     }
@@ -545,7 +545,7 @@ public abstract class BeanUtils implements Utils {
 
     static Object toMap(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Map<?, ?> map = (Map<?, ?>) value;
-        Map<Object, Object> newMap = newFixedLinkedHashMap(size(map));
+        LinkedHashMap<Object, Object> newMap = newFixedLinkedHashMap(size(map));
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             newMap.put(entry.getKey(), resolveProperty(entry.getValue(), resolvedDepth, maxResolvedDepth));
         }

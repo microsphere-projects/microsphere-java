@@ -146,7 +146,7 @@ class SetUtilsTest {
 
     @Test
     void testNewFixedHashSet() {
-        Set<String> set = newFixedHashSet(3);
+        HashSet<String> set = newFixedHashSet(3);
         set.add("a");
         set.add("b");
         set.add("c");
@@ -155,7 +155,7 @@ class SetUtilsTest {
 
     @Test
     void testNewFixedLinkedHashSet() {
-        Set<String> set = newFixedLinkedHashSet(3);
+        LinkedHashSet<String> set = newFixedLinkedHashSet(3);
         set.add("a");
         set.add("b");
         set.add("c");
