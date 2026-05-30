@@ -19,14 +19,18 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.Properties;
 
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;
+import static io.microsphere.collection.PropertiesUtils.newProperties;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link PropertiesUtils} Test
@@ -55,5 +59,26 @@ class PropertiesUtilsTest {
     @Test
     void testFlatPropertiesOnNull() {
         assertNull(flatProperties(null));
+    }
+
+    @Test
+    void testNewPropertiesEmpty() {
+        Properties props = newProperties();
+        assertNotNull(props);
+        assertTrue(props.isEmpty());
+        assertEquals(0, props.size());
+    }
+
+    @Test
+    void testNewPropertiesWithDefaults() {
+        Properties defaults = new Properties();
+        defaults.setProperty("key1", "value1");
+        defaults.setProperty("key2", "value2");
+        
+        Properties props = newProperties(defaults);
+        assertNotNull(props);
+        assertEquals("value1", props.getProperty("key1"));
+        assertEquals("value2", props.getProperty("key2"));
+        assertTrue(props.isEmpty());  // Properties from defaults are not in the main properties
     }
 }

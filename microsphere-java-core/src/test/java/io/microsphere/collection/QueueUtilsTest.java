@@ -2,13 +2,23 @@ package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayBlockingQueue;
 import java.util.ArrayDeque;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.DelayQueue;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedBlockingQueue;
 import java.util.NoSuchElementException;
+import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.SynchronousQueue;
 
 import static io.microsphere.collection.EmptyDeque.INSTANCE;
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -19,7 +29,15 @@ import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.QueueUtils.emptyQueue;
 import static io.microsphere.collection.QueueUtils.isDeque;
 import static io.microsphere.collection.QueueUtils.isQueue;
+import static io.microsphere.collection.QueueUtils.newArrayBlockingQueue;
 import static io.microsphere.collection.QueueUtils.newArrayDeque;
+import static io.microsphere.collection.QueueUtils.newConcurrentLinkedQueue;
+import static io.microsphere.collection.QueueUtils.newDelayQueue;
+import static io.microsphere.collection.QueueUtils.newLinkedBlockingQueue;
+import static io.microsphere.collection.QueueUtils.newLinkedTransferQueue;
+import static io.microsphere.collection.QueueUtils.newPriorityBlockingQueue;
+import static io.microsphere.collection.QueueUtils.newPriorityQueue;
+import static io.microsphere.collection.QueueUtils.newSynchronousQueue;
 import static io.microsphere.collection.QueueUtils.ofQueue;
 import static io.microsphere.collection.QueueUtils.reversedDeque;
 import static io.microsphere.collection.QueueUtils.singletonDeque;
@@ -267,4 +285,171 @@ class QueueUtilsTest {
         assertTrue(deque.contains("c"));
     }
 
+    @Test
+    void testNewPriorityQueueEmpty() {
+        PriorityQueue<Integer> queue = newPriorityQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewPriorityQueueWithCapacity() {
+        PriorityQueue<Integer> queue = newPriorityQueue(10);
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    void testNewPriorityQueueWithComparator() {
+        Comparator<Integer> reverseComparator = (a, b) -> b.compareTo(a);
+        PriorityQueue<Integer> queue = newPriorityQueue(reverseComparator);
+        queue.add(3);
+        queue.add(1);
+        queue.add(2);
+        assertEquals(3, queue.poll());  // Reverse order
+        assertEquals(2, queue.poll());
+        assertEquals(1, queue.poll());
+    }
+
+    @Test
+    void testNewPriorityQueueWithCollection() {
+        Collection<Integer> source = asList(3, 1, 2);
+        PriorityQueue<Integer> queue = newPriorityQueue(source);
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertEquals(1, queue.poll());  // Natural order
+        assertEquals(2, queue.poll());
+        assertEquals(3, queue.poll());
+    }
+
+    @Test
+    void testNewConcurrentLinkedQueueEmpty() {
+        ConcurrentLinkedQueue<String> queue = newConcurrentLinkedQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewConcurrentLinkedQueueWithCollection() {
+        Collection<String> source = asList("a", "b", "c");
+        ConcurrentLinkedQueue<String> queue = newConcurrentLinkedQueue(source);
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertTrue(queue.contains("a"));
+        assertTrue(queue.contains("b"));
+        assertTrue(queue.contains("c"));
+    }
+
+    @Test
+    void testNewLinkedBlockingQueueEmpty() {
+        LinkedBlockingQueue<String> queue = newLinkedBlockingQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewLinkedBlockingQueueWithCapacity() {
+        LinkedBlockingQueue<String> queue = newLinkedBlockingQueue(5);
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    void testNewLinkedBlockingQueueWithCollection() {
+        Collection<String> source = asList("a", "b", "c");
+        LinkedBlockingQueue<String> queue = newLinkedBlockingQueue(source);
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertEquals("a", queue.poll());
+        assertEquals("b", queue.poll());
+        assertEquals("c", queue.poll());
+    }
+
+    @Test
+    void testNewArrayBlockingQueueWithCapacity() {
+        ArrayBlockingQueue<String> queue = newArrayBlockingQueue(10);
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+    }
+
+    @Test
+    void testNewArrayBlockingQueueWithCollection() {
+        Collection<String> source = asList("a", "b", "c");
+        ArrayBlockingQueue<String> queue = newArrayBlockingQueue(10, source);
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertTrue(queue.contains("a"));
+        assertTrue(queue.contains("b"));
+        assertTrue(queue.contains("c"));
+    }
+
+    @Test
+    void testNewPriorityBlockingQueueEmpty() {
+        PriorityBlockingQueue<Integer> queue = newPriorityBlockingQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewPriorityBlockingQueueWithCollection() {
+        Collection<Integer> source = asList(3, 1, 2);
+        PriorityBlockingQueue<Integer> queue = newPriorityBlockingQueue(source);
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertEquals(1, queue.poll());  // Natural order
+        assertEquals(2, queue.poll());
+        assertEquals(3, queue.poll());
+    }
+
+    @Test
+    void testNewDelayQueueEmpty() {
+        DelayQueue<TestDelayed> queue = newDelayQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewSynchronousQueueEmpty() {
+        SynchronousQueue<String> queue = newSynchronousQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewLinkedTransferQueueEmpty() {
+        LinkedTransferQueue<String> queue = newLinkedTransferQueue();
+        assertNotNull(queue);
+        assertTrue(queue.isEmpty());
+        assertEquals(0, queue.size());
+    }
+
+    @Test
+    void testNewLinkedTransferQueueWithCollection() {
+        Collection<String> source = asList("a", "b", "c");
+        LinkedTransferQueue<String> queue = newLinkedTransferQueue(source);
+        assertNotNull(queue);
+        assertEquals(3, queue.size());
+        assertTrue(queue.contains("a"));
+        assertTrue(queue.contains("b"));
+        assertTrue(queue.contains("c"));
+    }
+
+    // Test helper class for DelayQueue testing
+    static class TestDelayed implements Delayed {
+        @Override
+        public long getDelay(java.util.concurrent.TimeUnit unit) {
+            return 0;
+        }
+
+        @Override
+        public int compareTo(Delayed o) {
+            return 0;
+        }
+    }
 }
