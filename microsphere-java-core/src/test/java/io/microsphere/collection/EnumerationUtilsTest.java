@@ -16,9 +16,9 @@
  */
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.EnumerationUtils.isEnumeration;
 import static io.microsphere.collection.EnumerationUtils.of;
@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link EnumerationUtils} Test
  *

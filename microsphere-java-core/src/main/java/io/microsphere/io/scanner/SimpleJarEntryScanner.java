@@ -7,6 +7,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.filter.JarEntryFilter;
 import io.microsphere.util.jar.JarUtils;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedHashSet;
@@ -22,6 +23,7 @@ import static io.microsphere.util.jar.JarUtils.filter;
 import static io.microsphere.util.jar.JarUtils.resolveRelativePath;
 import static io.microsphere.util.jar.JarUtils.toJarFile;
 import static java.util.Collections.unmodifiableSet;
+
 /**
  * A simple scanner for {@link JarEntry} that provides methods to scan and filter entries within a JAR file.
  * <p>

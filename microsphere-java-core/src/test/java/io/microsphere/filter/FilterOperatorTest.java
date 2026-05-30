@@ -7,6 +7,7 @@ import static io.microsphere.filter.FilterOperator.OR;
 import static io.microsphere.filter.FilterOperator.XOR;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link FilterOperator} Test
  *

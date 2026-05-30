@@ -18,6 +18,7 @@ package io.microsphere.convert;
 
 
 import static java.lang.Long.valueOf;
+
 /**
  * The class to convert {@link String} to {@link Long}
  *

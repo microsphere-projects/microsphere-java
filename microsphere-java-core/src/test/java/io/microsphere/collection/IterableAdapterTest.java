@@ -16,14 +16,15 @@
  */
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
 import java.util.Iterator;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /*
  * {@link IterableAdapter} Test
  *

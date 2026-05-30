@@ -18,8 +18,10 @@
 package io.microsphere.collection;
 
 import io.microsphere.util.Utils;
+
 import java.util.Iterator;
 import java.util.Objects;
+
 /**
  * The utilties class for {@link Iterator}
  *

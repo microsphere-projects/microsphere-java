@@ -18,12 +18,14 @@
 package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
+
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.List;
 
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link AdditionalMetadataResourceConfigurationPropertyLoader} Test
  *

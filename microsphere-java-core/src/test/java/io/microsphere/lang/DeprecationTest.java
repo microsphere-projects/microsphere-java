@@ -18,6 +18,7 @@ package io.microsphere.lang;
 
 import io.microsphere.lang.Deprecation.Level;
 import io.microsphere.util.Version;
+
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;
@@ -29,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link Deprecation} Test
  *

@@ -25,6 +25,7 @@ import java.net.URLConnection;
 
 import static java.lang.System.in;
 import static java.lang.System.out;
+
 /**
  * {@link Console} {@link URLConnection}
  *

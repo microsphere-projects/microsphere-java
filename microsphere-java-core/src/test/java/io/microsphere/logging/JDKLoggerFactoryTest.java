@@ -1,10 +1,11 @@
 package io.microsphere.logging;
 
-import org.junit.jupiter.api.BeforeAll;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.LogManager;
+import org.junit.jupiter.api.BeforeAll;
+
 /**
  * {@link JDKLoggerFactory}
  *

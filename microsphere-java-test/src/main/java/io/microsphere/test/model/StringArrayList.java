@@ -18,6 +18,7 @@
 package io.microsphere.test.model;
 
 import java.util.ArrayList;
+
 /**
  * String type {@link ArrayList}
  *

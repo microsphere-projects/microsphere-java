@@ -17,10 +17,11 @@
 package io.microsphere.util;
 
 import io.microsphere.Loggable;
+
+import java.util.Queue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.util.Queue;
 
 import static io.microsphere.util.ShutdownHookUtils.SHUTDOWN_HOOK_CALLBACKS_THREAD_FILTER;
 import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
@@ -37,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ShutdownHookUtils} Test
  *

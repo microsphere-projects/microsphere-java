@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import static io.microsphere.collection.EmptyIterator.INSTANCE;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
+
 /**
  * An adapter that wraps an {@link Iterator} and provides an {@link Iterable} interface.
  * <p>

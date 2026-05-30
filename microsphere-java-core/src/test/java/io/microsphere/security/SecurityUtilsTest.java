@@ -17,10 +17,10 @@
 
 package io.microsphere.security;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.net.URL;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.security.SecurityUtils.JAVA_SECURITY_POLICY_FILE_PROPERTY_NAME;
 import static io.microsphere.security.SecurityUtils.getJavaSecurityPolicyFile;
@@ -30,6 +30,7 @@ import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.System.clearProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link SecurityUtils}
  *

@@ -17,6 +17,7 @@
 package io.microsphere.event;
 
 import io.microsphere.annotation.Nonnull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.lang.reflect.Modifier.isFinal;
 import static java.util.stream.StreamSupport.stream;
+
 /**
  * A component that allows registration and management of {@link EventListener} instances.
  * Implementations of this interface provide methods to add, remove, and retrieve event listeners,

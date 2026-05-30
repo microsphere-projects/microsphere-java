@@ -26,6 +26,7 @@ import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
+
 /**
  * A concrete implementation of {@link ArtifactResourceResolver} that resolves artifacts based on archive files.
  *

@@ -17,7 +17,9 @@
 package io.microsphere.event;
 
 import io.microsphere.Loggable;
+
 import java.util.concurrent.atomic.AtomicInteger;
+
 public abstract class AbstractEventListener<E extends Event> implements Loggable, EventListener<E> {
 
     private final AtomicInteger eventOccurs = new AtomicInteger(0);

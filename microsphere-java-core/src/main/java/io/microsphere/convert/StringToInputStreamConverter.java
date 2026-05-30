@@ -18,11 +18,13 @@ package io.microsphere.convert;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.FastByteArrayInputStream;
+
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import static io.microsphere.nio.charset.CharsetUtils.DEFAULT_CHARSET;
 import static java.nio.charset.Charset.forName;
+
 /**
  * The class to convert {@link String} to {@link InputStream}
  *

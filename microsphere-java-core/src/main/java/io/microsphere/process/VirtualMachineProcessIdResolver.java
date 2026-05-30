@@ -17,6 +17,7 @@
 package io.microsphere.process;
 
 import io.microsphere.logging.Logger;
+
 import java.lang.management.RuntimeMXBean;
 import java.lang.reflect.Field;
 
@@ -27,6 +28,7 @@ import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static java.lang.Long.valueOf;
 import static java.util.Objects.nonNull;
+
 /**
  * A {@link ProcessIdResolver} implementation for retrieving the process ID using the SUN JVM internal APIs.
  *

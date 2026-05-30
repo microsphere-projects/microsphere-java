@@ -18,6 +18,7 @@ package io.microsphere.reflect;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
@@ -53,6 +54,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Objects.hash;
+
 /**
  * Represents a Java type, encapsulating various operations and utilities for handling different kinds of types,
  * including classes, parameterized types, type variables, wildcard types, and generic array types.

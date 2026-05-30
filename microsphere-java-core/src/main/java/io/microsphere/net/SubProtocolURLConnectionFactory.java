@@ -21,6 +21,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+
 /**
  * A factory for creating {@link URLConnection} instances that handle sub-protocols.
  *

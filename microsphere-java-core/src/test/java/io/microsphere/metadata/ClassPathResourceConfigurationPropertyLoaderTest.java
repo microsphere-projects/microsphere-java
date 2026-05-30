@@ -19,14 +19,16 @@ package io.microsphere.metadata;
 
 import io.microsphere.LoggingTest;
 import io.microsphere.beans.ConfigurationProperty;
-import org.junit.jupiter.api.Test;
+
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ClassPathResourceConfigurationPropertyLoader} Test
  *

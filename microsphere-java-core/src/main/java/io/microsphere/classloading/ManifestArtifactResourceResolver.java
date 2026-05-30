@@ -17,6 +17,7 @@
 package io.microsphere.classloading;
 
 import io.microsphere.annotation.ConfigurationProperty;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -32,6 +33,7 @@ import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.jar.JarUtils.MANIFEST_RESOURCE_PATH;
 import static java.lang.System.getProperty;
 import static java.util.stream.Stream.of;
+
 /**
  * {@link ArtifactResourceResolver} implementation that reads artifact metadata from JAR manifest files.
  *

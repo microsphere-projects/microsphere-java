@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * Represents an operation that accepts a single input argument and returns no
  * result, which may throw a {@link Throwable}.

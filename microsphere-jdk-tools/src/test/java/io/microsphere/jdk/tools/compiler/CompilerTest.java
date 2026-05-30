@@ -1,13 +1,13 @@
 package io.microsphere.jdk.tools.compiler;
 
-import org.junit.jupiter.api.Test;
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.jdk.tools.compiler.Compiler.defaultRootDirectory;
 import static io.microsphere.jdk.tools.compiler.Compiler.defaultSourceDirectory;
@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Unit tests for the Compiler class
  *

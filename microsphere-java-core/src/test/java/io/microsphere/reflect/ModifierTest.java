@@ -16,11 +16,11 @@
  */
 package io.microsphere.reflect;
 
-import org.junit.jupiter.api.Test;
 import java.lang.reflect.Proxy;
 import java.util.AbstractList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static io.microsphere.reflect.Modifier.MANDATED;
@@ -46,6 +46,7 @@ import static io.microsphere.reflect.Modifier.values;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link Modifier} Test
  *

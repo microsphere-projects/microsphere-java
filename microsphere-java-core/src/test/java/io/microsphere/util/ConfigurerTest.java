@@ -3,6 +3,7 @@ package io.microsphere.util;
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.Configurer.configure;
+
 /**
  * {@link Configurer} Test
  *

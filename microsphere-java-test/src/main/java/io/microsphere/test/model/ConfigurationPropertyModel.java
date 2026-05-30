@@ -18,6 +18,7 @@
 package io.microsphere.test.model;
 
 import io.microsphere.annotation.ConfigurationProperty;
+
 /**
  * {@link ConfigurationProperty} Model
  *

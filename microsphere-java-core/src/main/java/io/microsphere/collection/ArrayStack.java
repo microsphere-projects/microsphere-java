@@ -20,6 +20,7 @@ package io.microsphere.collection;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.Stack;
+
 /**
  * The {@code Stack} class represents a last-in-first-out
  * (LIFO) stack of objects. It extends class {@code Vector} with five

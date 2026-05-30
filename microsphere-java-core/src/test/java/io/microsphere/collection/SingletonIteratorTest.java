@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;
+
 /**
  * {@link SingletonIterator} Test
  *

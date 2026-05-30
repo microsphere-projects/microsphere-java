@@ -17,14 +17,15 @@
 
 package io.microsphere.management.builder;
 
-import org.junit.jupiter.api.Test;
 import javax.management.MBeanAttributeInfo;
 import javax.management.modelmbean.DescriptorSupport;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.management.builder.MBeanAttributeInfoBuilder.attribute;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link MBeanAttributeInfoBuilder} Test
  *

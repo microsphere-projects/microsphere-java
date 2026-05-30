@@ -16,13 +16,14 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.Test;
 import java.util.Date;
 import java.util.Properties;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.convert.PropertiesToStringConverter.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * {@link PropertiesToStringConverter} Test
  *

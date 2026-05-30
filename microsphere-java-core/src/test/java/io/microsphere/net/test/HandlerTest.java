@@ -18,11 +18,13 @@ package io.microsphere.net.test;
 
 import io.microsphere.net.AbstractExtendableProtocolURLStreamHandlerTest;
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
+
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {link Handler} Test for "test" protocol
  *

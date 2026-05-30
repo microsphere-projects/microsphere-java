@@ -21,6 +21,7 @@ import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+
 /**
  * An abstract base class for implementing {@link ArtifactResourceResolver}.
  *

@@ -19,6 +19,7 @@ package io.microsphere.event;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
+
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,7 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
+
 /**
  * Abstract implementation of {@link EventDispatcher} that provides common functionality for dispatching events to
  * registered listeners.

@@ -17,6 +17,7 @@
 package io.microsphere.io;
 
 import java.io.IOException;
+
 /**
  * A functional interface for deserializing byte arrays into objects of type {@code T}.
  * <p>

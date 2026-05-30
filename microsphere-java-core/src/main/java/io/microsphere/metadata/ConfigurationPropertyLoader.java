@@ -24,6 +24,7 @@ import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ServiceLoaderUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,6 +34,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.unmodifiableList;
+
 /**
  * The Java SPI of the loader of {@link ConfigurationProperty} that will be {@link #loadAll loaded by}
  * Microsphere Annotation Processor module.

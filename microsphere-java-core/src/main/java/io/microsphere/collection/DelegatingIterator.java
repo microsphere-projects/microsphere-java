@@ -17,8 +17,10 @@
 package io.microsphere.collection;
 
 import io.microsphere.lang.DelegatingWrapper;
+
 import java.util.Iterator;
 import java.util.function.Consumer;
+
 /**
  * A delegating implementation of the {@link Iterator} interface that forwards all method calls to a delegate iterator.
  * This class is useful when you want to wrap an existing iterator and potentially override some of its behavior.

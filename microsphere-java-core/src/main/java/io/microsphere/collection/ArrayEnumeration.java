@@ -27,6 +27,7 @@ import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.lang.String.valueOf;
 import static java.util.Objects.hash;
+
 /**
  * <p>{@code ArrayEnumeration} is an implementation of enumeration based on an array,
  * used to sequentially access elements in the array.</p>

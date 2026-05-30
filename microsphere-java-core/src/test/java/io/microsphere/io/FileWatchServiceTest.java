@@ -2,12 +2,14 @@ package io.microsphere.io;
 
 import io.microsphere.Loggable;
 import io.microsphere.io.event.LoggingFileChangedListener;
-import org.junit.jupiter.api.Test;
+
 import java.io.File;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.newRandomTempFile;
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.io.event.FileChangedEvent.Kind.values;
+
 /**
  * {@link FileWatchService} Test
  *

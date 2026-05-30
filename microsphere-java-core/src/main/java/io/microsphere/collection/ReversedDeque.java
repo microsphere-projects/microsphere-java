@@ -28,6 +28,7 @@ import java.util.function.Consumer;
 import static io.microsphere.util.ArrayUtils.reverse;
 import static io.microsphere.util.ArrayUtils.toArrayReversed;
 import static java.util.Spliterator.ORDERED;
+
 /**
  * Reverse ordered {@link Deque} based on JDK 21 {@link java.util.ReverseOrderDequeView}
  *

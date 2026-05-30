@@ -16,13 +16,14 @@
  */
 package io.microsphere.convert;
 
-import org.junit.jupiter.api.Test;
 import java.util.Map;
 import java.util.Properties;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.convert.MapToPropertiesConverter.INSTANCE;
 import static java.util.Collections.singletonMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * {@link MapToPropertiesConverter} Test
  *

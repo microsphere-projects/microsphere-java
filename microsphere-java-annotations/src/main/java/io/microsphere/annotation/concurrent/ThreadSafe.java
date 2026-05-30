@@ -6,13 +6,14 @@
  */
 package io.microsphere.annotation.concurrent;
 
-import javax.annotation.concurrent.NotThreadSafe;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.CLASS;
+
 /**
  * The class to which this annotation is applied is thread-safe. This means that
  * no sequences of accesses (reads and writes to public fields, calls to public

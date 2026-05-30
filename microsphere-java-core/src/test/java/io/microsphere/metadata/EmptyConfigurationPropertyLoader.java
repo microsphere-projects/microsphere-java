@@ -18,9 +18,11 @@
 package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
+
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+
 /**
  * Empty {@link ConfigurationPropertyLoader}
  *

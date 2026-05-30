@@ -19,6 +19,7 @@ package io.microsphere.reflect;
 import io.microsphere.test.A;
 import io.microsphere.test.B;
 import io.microsphere.test.C;
+
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.RandomAccess;
@@ -32,6 +33,7 @@ import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link AbstractJavaTypeTest} for {@link ParameterizedType}
  *

@@ -17,15 +17,16 @@
 
 package io.microsphere.management.builder;
 
-import org.junit.jupiter.api.Test;
+import java.lang.reflect.Constructor;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanParameterInfo;
-import java.lang.reflect.Constructor;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.management.builder.MBeanConstructorInfoBuilder.constructor;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /**
  * {@link MBeanConstructorInfoBuilder} Test
  *

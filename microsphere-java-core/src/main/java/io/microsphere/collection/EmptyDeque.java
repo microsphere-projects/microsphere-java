@@ -18,12 +18,14 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
+
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
+
 /**
  * An empty and immutable {@link Deque} implementation that throws {@link UnsupportedOperationException}
  * for methods that attempt to modify the deque, and returns appropriate default values for read-only operations.

@@ -5,6 +5,7 @@ import io.microsphere.util.Utils;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.isBlank;
 import static java.lang.String.valueOf;
+
 /**
  * The utility class of text format
  *

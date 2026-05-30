@@ -17,9 +17,10 @@
 package io.microsphere.junit.jupiter.api.extension;
 
 import io.microsphere.util.Utils;
+
+import java.lang.reflect.Constructor;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import java.lang.reflect.Constructor;
 
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
@@ -29,6 +30,7 @@ import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.reflect.Modifier.isPublic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link BeforeAllCallback} for the utilities class test
  *

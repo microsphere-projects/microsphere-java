@@ -1,11 +1,12 @@
 package io.microsphere.io.filter;
 
-import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.util.Objects;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link IOFileFilter} Test
  *

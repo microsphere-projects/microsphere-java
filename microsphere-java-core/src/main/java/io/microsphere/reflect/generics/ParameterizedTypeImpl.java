@@ -26,6 +26,7 @@ import static io.microsphere.constants.SymbolConstants.DOLLAR_CHAR;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static java.util.Objects.hash;
+
 /**
  * {@link ParameterizedType} Implementation forks {@link sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl}
  *

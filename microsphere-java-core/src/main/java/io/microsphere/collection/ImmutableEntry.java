@@ -18,7 +18,9 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
+
 import java.util.Map;
+
 /**
  * An immutable implementation of {@link Map.Entry} that stores a fixed key-value pair.
  *

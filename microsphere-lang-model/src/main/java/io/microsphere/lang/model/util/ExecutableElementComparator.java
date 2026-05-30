@@ -17,10 +17,12 @@
 package io.microsphere.lang.model.util;
 
 import io.microsphere.util.CharSequenceComparator;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.VariableElement;
+
 import java.util.Comparator;
 import java.util.List;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
+
 /**
  * The Comparator class for {@link ExecutableElement}, the comparison rule :
  * <ol>

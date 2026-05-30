@@ -17,6 +17,7 @@
 package io.microsphere.test;
 
 import java.io.Serializable;
+
 /**
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0

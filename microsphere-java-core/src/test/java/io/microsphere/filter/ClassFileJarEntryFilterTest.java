@@ -16,12 +16,13 @@
  */
 package io.microsphere.filter;
 
-import org.junit.jupiter.api.Test;
 import java.util.jar.JarEntry;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.filter.ClassFileJarEntryFilter.INSTANCE;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ClassFileJarEntryFilter} Test
  *

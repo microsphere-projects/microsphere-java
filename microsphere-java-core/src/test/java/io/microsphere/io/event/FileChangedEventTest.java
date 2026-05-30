@@ -1,12 +1,13 @@
 package io.microsphere.io.event;
 
-import org.junit.jupiter.api.Test;
 import java.io.File;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * {@link FileChangedEvent} Test
  *

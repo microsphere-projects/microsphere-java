@@ -19,6 +19,7 @@ package io.microsphere.io.event;
 import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+
 /**
  * A {@link FileChangedListener} implementation that logs file change events at the debug level.
  *

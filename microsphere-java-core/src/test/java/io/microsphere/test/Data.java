@@ -23,6 +23,7 @@ import java.util.Objects;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static java.lang.Double.compare;
 import static java.lang.Float.compare;
+
 /**
  * Data Model
  *

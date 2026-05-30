@@ -18,12 +18,14 @@ package io.microsphere.net.console;
 
 import io.microsphere.net.AbstractExtendableProtocolURLStreamHandlerTest;
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
+
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 
 import static java.net.Proxy.NO_PROXY;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /**
  * {@link Handler} Test for "console" protocol
  *

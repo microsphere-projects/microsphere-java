@@ -18,6 +18,7 @@ package io.microsphere.beans;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.util.Assert.assertNotEmpty;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getTypeName;
+
 /**
  * {@code ConfigurationProperty} is a class that represents a configuration property
  * with its name, type, value, default value, requirement status, description, and metadata.

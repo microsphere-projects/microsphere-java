@@ -18,7 +18,7 @@ package io.microsphere.collection;
 
 import io.microsphere.Loggable;
 import io.microsphere.lang.MutableInteger;
-import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_ENUMERATION;
 import static io.microsphere.AbstractTestCase.TEST_NULL_ITERABLE;
@@ -55,6 +56,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ListUtils} Test
  *

@@ -18,8 +18,10 @@
 package io.microsphere.util;
 
 import io.microsphere.annotation.Nullable;
+
 import java.util.function.Function;
 import java.util.function.Supplier;
+
 /**
  * The utility class for {@link Object}.
  *

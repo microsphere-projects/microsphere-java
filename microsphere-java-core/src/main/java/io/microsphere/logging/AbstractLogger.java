@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.length;
+
 /**
  * An abstract implementation of the {@link Logger} interface, providing common functionality for concrete logger implementations.
  *

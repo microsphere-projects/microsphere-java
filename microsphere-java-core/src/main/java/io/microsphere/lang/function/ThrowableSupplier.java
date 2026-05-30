@@ -4,6 +4,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * A functional interface similar to {@link Supplier}, but allows the {@code get()} method to throw a
  * {@link Throwable}. This is useful for functional constructs where operations may throw checked exceptions that need

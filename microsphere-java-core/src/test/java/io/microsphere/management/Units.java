@@ -17,14 +17,15 @@
 
 package io.microsphere.management;
 
-import javax.management.DescriptorKey;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import javax.management.DescriptorKey;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+
 /**
  * The annotation annotated by {@link DescriptorKey @DescriptorKey}
  *

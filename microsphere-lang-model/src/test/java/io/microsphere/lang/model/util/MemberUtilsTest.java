@@ -17,11 +17,12 @@
 package io.microsphere.lang.model.util;
 
 import io.microsphere.test.model.Model;
-import org.junit.jupiter.api.Test;
+
+import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import java.util.List;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;
@@ -31,6 +32,7 @@ import static io.microsphere.lang.model.util.MemberUtils.getAllDeclaredMembers;
 import static io.microsphere.lang.model.util.MemberUtils.getDeclaredMembers;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link MemberUtils} Test
  *

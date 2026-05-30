@@ -17,16 +17,17 @@
 
 package io.microsphere.io.event;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.io.File;
 import java.io.IOException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.DELETED;
 import static io.microsphere.io.event.FileChangedEvent.Kind.MODIFIED;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /**
  * {@link LoggingFileChangedListener} Test
  *

@@ -19,6 +19,7 @@ package io.microsphere.io;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+
 /**
  * A default implementation of the {@link Serializer} interface that uses Java's standard serialization mechanism.
  * <p>

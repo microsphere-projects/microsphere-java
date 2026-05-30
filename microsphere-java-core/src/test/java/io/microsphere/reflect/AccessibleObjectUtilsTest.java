@@ -16,11 +16,11 @@
  */
 package io.microsphere.reflect;
 
-import org.junit.jupiter.api.Test;
-import javax.annotation.processing.AbstractProcessor;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import javax.annotation.processing.AbstractProcessor;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.AccessibleObjectUtils.canAccess;
 import static io.microsphere.reflect.AccessibleObjectUtils.handleInaccessibleObjectExceptionIfFound;
@@ -35,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link AccessibleObjectUtils} Test
  *

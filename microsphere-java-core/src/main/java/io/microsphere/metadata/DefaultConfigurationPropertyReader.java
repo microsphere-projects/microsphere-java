@@ -17,8 +17,9 @@
 
 package io.microsphere.metadata;
 
-import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
+import io.microsphere.beans.ConfigurationProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.json.JSONUtils.readValues;
 import static java.util.Collections.unmodifiableList;
+
 /**
  * {@link ConfigurationPropertyReader} based on JSON content.
  *

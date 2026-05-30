@@ -18,8 +18,10 @@
 package io.microsphere.lang.model.element;
 
 import io.microsphere.annotation.Immutable;
+
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
+
 /**
  * {@link AnnotationValue} for String type
  *

@@ -18,11 +18,13 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.io.StringBuilderWriter;
+
 import java.io.PrintWriter;
 
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static io.microsphere.util.ClassUtils.newInstance;
+
 /**
  * {@link Exception} Utilities class
  *

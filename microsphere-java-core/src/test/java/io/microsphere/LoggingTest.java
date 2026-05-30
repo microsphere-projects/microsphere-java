@@ -29,6 +29,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static ch.qos.logback.classic.Level.valueOf;
 import static org.slf4j.LoggerFactory.getILoggerFactory;
+
 /**
  * The abstract class for loggging with repeated levels
  *

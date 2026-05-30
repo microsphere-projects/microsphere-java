@@ -19,6 +19,7 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+
 /**
  * {@link EnumerationIteratorAdapter} Test
  *

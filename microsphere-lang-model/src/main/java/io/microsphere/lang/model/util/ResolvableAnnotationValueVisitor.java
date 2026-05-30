@@ -20,8 +20,8 @@ package io.microsphere.lang.model.util;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Map;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.AnnotationValueVisitor;
@@ -41,6 +41,7 @@ import static io.microsphere.util.ArrayUtils.newArray;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static java.lang.Enum.valueOf;
 import static java.lang.reflect.Array.set;
+
 /**
  * A visitor for resolving annotation values into their corresponding runtime representations.
  *

@@ -20,6 +20,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Version;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -28,6 +29,7 @@ import static io.microsphere.lang.Deprecation.Level.DEFAULT;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ObjectUtils.defaultIfNull;
 import static java.util.Objects.hash;
+
 /**
  * A serializable class that provides detailed information about deprecation.
  * <p>

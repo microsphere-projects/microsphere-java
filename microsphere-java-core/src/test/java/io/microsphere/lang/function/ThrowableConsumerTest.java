@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * {@link ThrowableConsumer} Test
  *

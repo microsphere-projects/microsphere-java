@@ -22,6 +22,7 @@ import java.util.Comparator;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Integer.compare;
+
 /**
  * {@code Prioritized} interface can be implemented by objects that
  * should be sorted, for example the tasks in executable queue.

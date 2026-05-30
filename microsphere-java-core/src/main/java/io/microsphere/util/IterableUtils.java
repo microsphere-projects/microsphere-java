@@ -19,9 +19,11 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
+
 import java.util.function.Consumer;
 
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
+
 /**
  * The utility class for {@link Iterable}
  *

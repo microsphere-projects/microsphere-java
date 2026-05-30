@@ -6,13 +6,14 @@
  */
 package io.microsphere.annotation.concurrent;
 
-import javax.annotation.concurrent.ThreadSafe;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import javax.annotation.concurrent.ThreadSafe;
 
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.CLASS;
+
 /**
  * The class to which this annotation is applied is not thread-safe. This
  * annotation primarily exists for clarifying the non-thread-safety of a class

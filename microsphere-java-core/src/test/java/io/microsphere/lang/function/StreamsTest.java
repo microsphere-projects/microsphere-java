@@ -16,11 +16,11 @@
  */
 package io.microsphere.lang.function;
 
-import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.SetUtils.ofSet;
@@ -39,6 +39,7 @@ import static io.microsphere.lang.function.Streams.stream;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link Streams} Test
  *

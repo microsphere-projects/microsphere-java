@@ -18,10 +18,12 @@
 package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nonnull;
+
 import javax.management.MBeanAttributeInfo;
 
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getTypeName;
+
 /**
  * {@link MBeanAttributeInfo} Builder
  *

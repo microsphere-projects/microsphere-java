@@ -17,6 +17,7 @@
 package io.microsphere.net;
 
 import io.microsphere.net.test.Handler;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,6 +50,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ExtendableProtocolURLStreamHandler} Test
  *

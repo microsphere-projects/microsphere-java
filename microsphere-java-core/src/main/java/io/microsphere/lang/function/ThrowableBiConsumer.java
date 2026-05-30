@@ -20,6 +20,7 @@ package io.microsphere.lang.function;
 import java.util.function.BiConsumer;
 
 import static java.util.Objects.requireNonNull;
+
 /**
  * Represents an operation that accepts two input arguments and returns no result,
  * potentially throwing a {@link Throwable}. This is the two-arity specialization of

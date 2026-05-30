@@ -19,10 +19,11 @@ package io.microsphere.io;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.event.EventDispatcher;
-import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedEvent.Kind;
+import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.logging.Logger;
+
 import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -62,6 +63,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+
 /**
  * /**
  * Standard implementation of the {@link FileWatchService} interface using JDK 7's

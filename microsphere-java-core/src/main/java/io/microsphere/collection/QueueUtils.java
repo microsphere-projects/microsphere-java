@@ -20,6 +20,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
+
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +32,7 @@ import java.util.Queue;
 import static io.microsphere.collection.ReversedDeque.of;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
+
 /**
  * The utilities class for Java {@link Queue}
  *

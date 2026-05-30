@@ -19,6 +19,7 @@ package io.microsphere.collection;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
+
 import java.lang.invoke.MethodHandle;
 import java.util.List;
 import java.util.RandomAccess;
@@ -28,6 +29,7 @@ import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+
 /**
  * The utility class for {@link List} for Modern JDK(9+), which supports the feedback if Java Runtime is below JDK 9.
  *

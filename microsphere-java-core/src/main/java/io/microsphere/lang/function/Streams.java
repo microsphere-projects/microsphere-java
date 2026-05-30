@@ -19,6 +19,7 @@ package io.microsphere.lang.function;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.collection.SetUtils;
+
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ import static io.microsphere.lang.function.Predicates.or;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.of;
+
 /**
  * The utilities class for {@link Stream}
  *

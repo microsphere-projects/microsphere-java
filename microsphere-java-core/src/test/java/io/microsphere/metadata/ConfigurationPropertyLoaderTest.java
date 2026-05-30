@@ -18,13 +18,15 @@
 package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
-import org.junit.jupiter.api.Test;
+
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ConfigurationPropertyLoader} Test
  *

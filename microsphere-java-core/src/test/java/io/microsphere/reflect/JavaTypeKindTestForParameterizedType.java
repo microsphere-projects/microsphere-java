@@ -19,12 +19,13 @@ package io.microsphere.reflect;
 import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.B;
 import io.microsphere.test.C;
-import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.RandomAccess;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
 import static io.microsphere.reflect.JavaType.from;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * {@link Kind} Test for {@link ParameterizedType}
  *

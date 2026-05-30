@@ -18,6 +18,7 @@ package io.microsphere.convert.multiple;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * The class to convert {@link String} to {@link List}-based value
  *

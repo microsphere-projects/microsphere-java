@@ -22,6 +22,7 @@ import java.util.Objects;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Assert.assertTrue;
 import static java.util.Objects.hash;
+
 /**
  * {@link Type} Argument
  *

@@ -6,10 +6,7 @@ package io.microsphere.net;
 import io.microsphere.LoggingTest;
 import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import javax.annotation.Nonnull;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -19,6 +16,10 @@ import java.net.URLStreamHandlerFactory;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.Nonnull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
@@ -94,6 +95,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link URLUtils} Test
  *

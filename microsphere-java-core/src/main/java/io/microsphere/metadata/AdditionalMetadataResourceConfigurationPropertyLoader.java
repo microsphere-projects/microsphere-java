@@ -20,6 +20,7 @@ package io.microsphere.metadata;
 import io.microsphere.constants.ResourceConstants;
 
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
+
 /**
  * {@link ConfigurationPropertyLoader} class to load the additional configuration properties metadata from
  * {@link ResourceConstants#ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE resource location}.

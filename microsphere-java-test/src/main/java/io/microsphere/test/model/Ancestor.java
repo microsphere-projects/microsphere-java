@@ -17,6 +17,7 @@
 package io.microsphere.test.model;
 
 import java.io.Serializable;
+
 /**
  * Ancestor
  *

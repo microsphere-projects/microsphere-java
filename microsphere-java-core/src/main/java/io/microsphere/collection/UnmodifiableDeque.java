@@ -18,12 +18,14 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
+
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
+
 /**
  * An unmodifiable view of a {@link Deque}. This implementation decorates a given deque and prevents any
  * modification operations from succeeding. All mutation methods, such as {@link #addFirst}, {@link #addLast},

@@ -21,6 +21,7 @@ import java.util.Iterator;
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.CollectionUtils.singletonEnumeration;
 import static io.microsphere.collection.CollectionUtils.toIterator;
+
 /**
  * {@link SingletonEnumeration} Test
  *

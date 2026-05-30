@@ -2,6 +2,7 @@ package io.microsphere.filter;
 
 
 import static io.microsphere.util.ArrayUtils.length;
+
 /**
  * Enumeration representing various logical operations for combining multiple {@link Filter} instances.
  *

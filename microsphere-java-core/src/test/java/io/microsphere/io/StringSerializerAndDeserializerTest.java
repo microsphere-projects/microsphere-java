@@ -16,13 +16,14 @@
  */
 package io.microsphere.io;
 
-import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link StringSerializer} and {@link StringDeserializer} Test
  *

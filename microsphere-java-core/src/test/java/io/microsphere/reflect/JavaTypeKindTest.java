@@ -19,11 +19,12 @@ package io.microsphere.reflect;
 import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.C;
 import io.microsphere.test.D;
-import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.GENERIC_ARRAY_TYPE;
@@ -34,6 +35,7 @@ import static io.microsphere.reflect.JavaType.Kind.WILDCARD_TYPE;
 import static io.microsphere.reflect.JavaType.Kind.valueOf;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /**
  * {@link Kind} Test
  *

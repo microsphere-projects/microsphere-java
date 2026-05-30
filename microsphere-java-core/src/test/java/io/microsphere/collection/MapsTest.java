@@ -1,13 +1,13 @@
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
 import java.lang.invoke.MethodHandle;
 import java.util.Map;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.collection.MapUtilsTest.assertOfMap;
-import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.collection.Maps.ofMap0;
+import static io.microsphere.collection.Maps.ofMap10;
 import static io.microsphere.collection.Maps.ofMap1;
 import static io.microsphere.collection.Maps.ofMap2;
 import static io.microsphere.collection.Maps.ofMap3;
@@ -17,7 +17,7 @@ import static io.microsphere.collection.Maps.ofMap6;
 import static io.microsphere.collection.Maps.ofMap7;
 import static io.microsphere.collection.Maps.ofMap8;
 import static io.microsphere.collection.Maps.ofMap9;
-import static io.microsphere.collection.Maps.ofMap10;
+import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.collection.Maps.ofMapEntries;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static java.util.Collections.emptyMap;
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * {@link Maps} Test
  *

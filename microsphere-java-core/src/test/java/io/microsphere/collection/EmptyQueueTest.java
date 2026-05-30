@@ -17,9 +17,9 @@
 
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.CollectionUtils.emptyQueue;
@@ -28,6 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * Empty {@link Queue} Test
  *

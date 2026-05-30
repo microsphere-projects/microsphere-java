@@ -6,6 +6,7 @@ package io.microsphere.constants;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+
 /**
  * File Constants
  *

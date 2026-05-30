@@ -17,7 +17,9 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
+
 import java.util.Iterator;
+
 /**
  * A skeletal implementation of the {@link Iterator} interface, designed to support
  * read-only iteration. This class provides a default implementation for the

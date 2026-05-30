@@ -19,6 +19,7 @@ package io.microsphere.lang.function;
 import java.util.function.Consumer;
 
 import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * A functional interface for actions that may throw a {@link Throwable}.
  * <p>

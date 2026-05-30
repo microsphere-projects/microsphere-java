@@ -23,6 +23,7 @@ import io.microsphere.test.D;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link AbstractJavaTypeTest} for {@link Object}'s  {@link Class}
  *

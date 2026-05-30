@@ -17,6 +17,7 @@
 package io.microsphere.collection;
 
 import io.microsphere.annotation.Immutable;
+
 /**
  * An empty {@link Iterable} implementation that always returns an empty iterator.
  * <p>

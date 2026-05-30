@@ -3,6 +3,7 @@ package io.microsphere.util;
 import io.microsphere.annotation.Nullable;
 
 import static java.lang.Character.isWhitespace;
+
 /**
  * The utilities class for {@link CharSequence}
  *

@@ -17,12 +17,13 @@
 package io.microsphere.net;
 
 import io.microsphere.io.IOUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandler;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.ProtocolConstants.CLASSPATH_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.CONSOLE_PROTOCOL;
@@ -32,6 +33,7 @@ import static io.microsphere.net.ServiceLoaderURLStreamHandlerFactory.attach;
 import static io.microsphere.net.URLUtils.clearURLStreamHandlerFactory;
 import static io.microsphere.net.classpath.HandlerTest.TEST_PROPERTIES_CLASSPATH_URL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ServiceLoaderURLStreamHandlerFactory} Test
  *

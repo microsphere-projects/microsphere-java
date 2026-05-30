@@ -18,6 +18,7 @@ package io.microsphere.convert;
 
 
 import static io.microsphere.convert.StringToClassConverter.INSTANCE;
+
 /**
  * {@link StringToClassConverter} Test
  *

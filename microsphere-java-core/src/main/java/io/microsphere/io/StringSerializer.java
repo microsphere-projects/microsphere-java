@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * A {@link Serializer} implementation for converting {@link String} objects into byte arrays using a specified charset.
  * <p>

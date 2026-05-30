@@ -17,6 +17,7 @@
 package io.microsphere.json;
 
 import io.microsphere.json.JSONStringer.Scope;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -42,6 +43,7 @@ import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isWrapperType;
+
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
  * be any mix of {@link JSONObject JSONObjects}, {@link JSONArray JSONArrays}, Strings,

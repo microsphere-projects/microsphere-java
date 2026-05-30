@@ -1,12 +1,12 @@
 package io.microsphere.management;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import java.util.Map;
+import java.util.function.Consumer;
 import javax.management.MBeanInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import java.util.Map;
-import java.util.function.Consumer;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.management.JmxUtils.getMBeanAttributesMap;
 import static io.microsphere.management.JmxUtils.getMBeanInfo;
@@ -15,6 +15,7 @@ import static javax.management.ObjectName.getInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /**
  * {@link MBeanAttribute} Test
  *

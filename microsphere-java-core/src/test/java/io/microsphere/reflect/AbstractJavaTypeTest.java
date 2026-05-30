@@ -16,17 +16,16 @@
  */
 package io.microsphere.reflect;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.AbstractList;
 import java.util.Collection;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
-import static io.microsphere.reflect.JavaType.Kind;
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.Kind.GENERIC_ARRAY_TYPE;
 import static io.microsphere.reflect.JavaType.Kind.PARAMETERIZED_TYPE;
@@ -34,6 +33,7 @@ import static io.microsphere.reflect.JavaType.Kind.TYPE_VARIABLE;
 import static io.microsphere.reflect.JavaType.Kind.UNKNOWN;
 import static io.microsphere.reflect.JavaType.Kind.WILDCARD_TYPE;
 import static io.microsphere.reflect.JavaType.Kind.valueOf;
+import static io.microsphere.reflect.JavaType.Kind;
 import static io.microsphere.reflect.JavaType.NULL_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.OBJECT_JAVA_TYPE;
 import static io.microsphere.reflect.JavaType.from;
@@ -45,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Base {@link JavaType} for {@link Class}
  *

@@ -17,6 +17,7 @@
 package io.microsphere.logging;
 
 import io.microsphere.lang.Prioritized;
+
 import java.util.logging.Level;
 
 import static java.util.logging.Level.ALL;
@@ -24,6 +25,7 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+
 /**
  * A {@link LoggerFactory} implementation that creates and manages instances of JDK logging ({@link java.util.logging.Logger}).
  *

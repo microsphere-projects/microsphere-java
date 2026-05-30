@@ -17,6 +17,7 @@
 package io.microsphere.test;
 
 import java.io.Serializable;
+
 /**
  * A for testing
  *

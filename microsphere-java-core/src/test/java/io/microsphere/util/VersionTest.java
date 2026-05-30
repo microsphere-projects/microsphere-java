@@ -16,8 +16,8 @@
  */
 package io.microsphere.util;
 
-import org.junit.jupiter.api.Test;
 import javax.annotation.Nullable;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.HYPHEN;
@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link Version} Test
  *

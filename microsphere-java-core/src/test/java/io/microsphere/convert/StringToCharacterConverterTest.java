@@ -22,6 +22,7 @@ import static io.microsphere.convert.StringToCharacterConverter.INSTANCE;
 import static java.lang.Character.valueOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * {@link StringToCharacterConverter} Test
  *

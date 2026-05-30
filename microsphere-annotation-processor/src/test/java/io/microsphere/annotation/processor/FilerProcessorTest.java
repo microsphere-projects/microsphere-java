@@ -18,17 +18,19 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
+
+import java.lang.reflect.Method;
+import javax.tools.JavaFileManager;
+import javax.tools.JavaFileObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import javax.tools.JavaFileManager;
-import javax.tools.JavaFileObject;
-import java.lang.reflect.Method;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.exists;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link FilerProcessor} Test
  *

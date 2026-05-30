@@ -17,12 +17,12 @@
 
 package io.microsphere.util;
 
-import org.junit.jupiter.api.Test;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.QueueUtils.emptyDeque;
@@ -34,6 +34,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link IterableUtils} Test
  *

@@ -24,6 +24,7 @@ import java.net.URLConnection;
 import java.security.Permission;
 import java.util.List;
 import java.util.Map;
+
 /**
  * A delegating implementation of {@link URLConnection} that forwards all method calls to a provided delegate instance.
  * This class can be used as a base class for creating specialized URLConnection wrappers that need to intercept or modify

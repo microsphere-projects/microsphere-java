@@ -5,10 +5,11 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.io.filter.DirectoryFileFilter;
 import io.microsphere.io.filter.NameFileFilter;
-import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
 import static io.microsphere.AbstractTestCase.createRandomTempFile;
@@ -17,6 +18,7 @@ import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link SimpleFileScanner} {@link Test}
  *

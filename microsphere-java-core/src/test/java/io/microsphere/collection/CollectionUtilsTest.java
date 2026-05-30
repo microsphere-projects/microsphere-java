@@ -17,6 +17,7 @@
 package io.microsphere.collection;
 
 import io.microsphere.Loggable;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -68,6 +69,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@lin CollectionUtils} Test
  *

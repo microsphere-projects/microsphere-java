@@ -19,14 +19,12 @@ package io.microsphere.io;
 import io.microsphere.Loggable;
 import io.microsphere.LoggingTest;
 import io.microsphere.io.event.DefaultFileChangedListener;
-import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedEvent.Kind;
+import io.microsphere.io.event.FileChangedEvent;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.io.event.LoggingFileChangedListener;
 import io.microsphere.lang.function.ThrowableAction;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
@@ -34,10 +32,14 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.AbstractTestCase.createRandomFile;
 import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.io.FileUtils.deleteDirectory;
 import static io.microsphere.io.FileUtils.forceDelete;
@@ -51,7 +53,6 @@ import static io.microsphere.io.event.FileChangedEvent.Kind.values;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.ClassLoaderUtils.getResource;
 import static io.microsphere.util.ExceptionUtils.wrap;
-import static io.microsphere.collection.Lists.ofList;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.Files.copy;
 import static java.nio.file.Files.write;
@@ -68,6 +69,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link StandardFileWatchService} Test For File
  *

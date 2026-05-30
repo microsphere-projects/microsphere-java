@@ -21,6 +21,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.classloading.Artifact;
 import io.microsphere.classloading.ArtifactDetector;
+
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Objects;
@@ -50,6 +51,7 @@ import static io.microsphere.util.Version.Operator.LT;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static java.lang.Integer.compare;
 import static java.lang.Integer.parseInt;
+
 /**
  * Represents a version number composed of major, minor, and patch components.
  * <p>

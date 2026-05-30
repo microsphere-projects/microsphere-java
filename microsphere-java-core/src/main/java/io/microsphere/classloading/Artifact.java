@@ -4,12 +4,14 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.constants.SymbolConstants;
+
 import java.net.URL;
 import java.util.Objects;
 import java.util.function.Function;
 
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.util.Objects.hash;
+
 /**
  * Represents a software artifact with attributes such as artifact ID, version, and location.
  * This class is used to identify and match artifacts based on their properties.

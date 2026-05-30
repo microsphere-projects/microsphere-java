@@ -20,6 +20,7 @@ package io.microsphere.util;
 import java.util.Comparator;
 
 import static io.microsphere.util.ClassUtils.isAssignableFrom;
+
 /**
  * {@link Comparator} for hierarchical class.
  *

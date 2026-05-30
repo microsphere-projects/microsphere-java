@@ -23,6 +23,7 @@ import static io.microsphere.util.SystemUtils.JAVA_VERSION;
 import static io.microsphere.util.Version.Operator.of;
 import static io.microsphere.util.Version.ofVersion;
 import static javax.lang.model.SourceVersion.latest;
+
 /**
  * The utility class for version
  *

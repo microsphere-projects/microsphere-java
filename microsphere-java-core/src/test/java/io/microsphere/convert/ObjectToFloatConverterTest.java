@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.ObjectToFloatConverter.INSTANCE;
 import static java.lang.Float.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ObjectToFloatConverter} Test
  *

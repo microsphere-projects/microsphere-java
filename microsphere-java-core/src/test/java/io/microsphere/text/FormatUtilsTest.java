@@ -22,6 +22,7 @@ import static io.microsphere.constants.SymbolConstants.SPACE;
 import static io.microsphere.text.FormatUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link FormatUtils} Test
  *

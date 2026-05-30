@@ -16,14 +16,15 @@
  */
 package io.microsphere.concurrent;
 
-import org.junit.jupiter.api.Test;
 import java.util.concurrent.ThreadFactory;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.concurrent.CustomizedThreadFactory.DEFAULT_DAEMON;
 import static io.microsphere.concurrent.CustomizedThreadFactory.DEFAULT_PRIORITY;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link CustomizedThreadFactory} Test
  *

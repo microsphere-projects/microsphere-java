@@ -18,6 +18,7 @@ package io.microsphere.lang;
 
 
 import static io.microsphere.constants.SymbolConstants.QUOTE;
+
 /**
  * A delegating {@link Wrapper} interface that provides default implementations for unwrapping and checking
  * wrapped object types. This interface is designed to be extended by classes that want to provide a delegated

@@ -18,10 +18,12 @@
 package io.microsphere.lang.model.element;
 
 import io.microsphere.lang.model.util.ResolvableAnnotationValueVisitor;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link StringAnnotationValue} Test
  *

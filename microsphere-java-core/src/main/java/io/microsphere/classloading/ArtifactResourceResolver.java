@@ -18,7 +18,9 @@ package io.microsphere.classloading;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
+
 import java.net.URL;
+
 /**
  * {@code ArtifactResourceResolver} interface is responsible for resolving resources related to an
  * {@link Artifact}. Implementations of this interface are expected to handle the resolution of

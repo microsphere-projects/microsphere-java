@@ -26,6 +26,7 @@ import static java.io.File.pathSeparator;
 import static java.io.File.separator;
 import static java.lang.System.lineSeparator;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link SeparatorConstants} Test
  *

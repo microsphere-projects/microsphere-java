@@ -22,6 +22,7 @@ import java.io.Writer;
 
 import static io.microsphere.util.ArrayUtils.isNotEmpty;
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
+
 /**
  * {@link Writer} implementation that outputs to a {@link StringBuilder}.
  * <p>

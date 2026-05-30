@@ -18,6 +18,7 @@ package io.microsphere.logging;
 
 
 import static io.microsphere.util.StringUtils.isBlank;
+
 /**
  * A no-operation implementation of the {@link Logger} interface.
  *

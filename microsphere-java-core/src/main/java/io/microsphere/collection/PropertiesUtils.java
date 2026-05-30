@@ -19,6 +19,7 @@ package io.microsphere.collection;
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -27,6 +28,7 @@ import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static java.util.Collections.unmodifiableMap;
+
 /**
  * The utilities class for {@link Properties}
  *

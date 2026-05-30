@@ -17,15 +17,16 @@
 
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
 import java.util.Deque;
 import java.util.LinkedList;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.ReversedDeque.of;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ReversedDeque} Test
  *

@@ -17,11 +17,12 @@
 
 package io.microsphere.metadata;
 
-import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
+import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.json.JSONArray;
 import io.microsphere.json.JSONException;
 import io.microsphere.json.JSONObject;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,7 @@ import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link DefaultConfigurationPropertyGenerator} Test
  *

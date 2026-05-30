@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.NumberToCharacterConverter.INSTANCE;
 import static java.lang.Character.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link NumberToCharacterConverter} Test
  *

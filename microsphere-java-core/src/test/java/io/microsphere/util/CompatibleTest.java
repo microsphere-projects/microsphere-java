@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.util.Compatible.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * {@link Compatible} Test
  *

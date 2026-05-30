@@ -21,6 +21,7 @@ import io.microsphere.logging.Logger;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static java.lang.String.valueOf;
+
 /**
  * Loggable
  *

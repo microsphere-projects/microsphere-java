@@ -25,6 +25,7 @@ import static io.microsphere.management.JmxUtils.getRuntimeMXBean;
 import static io.microsphere.util.StringUtils.isNumeric;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.lang.Long.valueOf;
+
 /**
  * A {@link ProcessIdResolver} implementation for classic JDK versions (5 - 8).
  *

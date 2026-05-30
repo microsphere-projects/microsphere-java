@@ -17,15 +17,16 @@
 
 package io.microsphere.management.builder;
 
+import javax.management.modelmbean.DescriptorSupport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import javax.management.modelmbean.DescriptorSupport;
 
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ClassUtils.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+
 /**
  * Abstract {@link MBeanDescribableBuilder} Test
  *

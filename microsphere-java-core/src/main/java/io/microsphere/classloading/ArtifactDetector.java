@@ -5,6 +5,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,6 +25,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+
 /**
  * The {@code ArtifactDetector} class is responsible for detecting and resolving artifacts from the classpath.
  * It uses a list of registered {@link ArtifactResourceResolver} implementations to resolve each URL in the classpath

@@ -23,6 +23,7 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.reflect.generics.TypeArgument;
 import io.microsphere.util.ClassUtils;
 import io.microsphere.util.Utils;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -67,6 +68,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.of;
 import static java.util.stream.StreamSupport.stream;
+
 /**
  * The utilities class for {@link Type}
  *

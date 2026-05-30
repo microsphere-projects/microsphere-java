@@ -18,6 +18,7 @@ package io.microsphere.util;
 
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Version.Operator;
+
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,6 +27,7 @@ import static io.microsphere.util.Version.getVersion;
 import static io.microsphere.util.Version.ofVersion;
 import static java.lang.Boolean.TRUE;
 import static java.util.Optional.ofNullable;
+
 /**
  * A utility class to conditionally execute logic based on version comparison.
  *

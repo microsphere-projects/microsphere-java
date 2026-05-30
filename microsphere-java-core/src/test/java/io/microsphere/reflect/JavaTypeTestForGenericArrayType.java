@@ -17,11 +17,13 @@
 package io.microsphere.reflect;
 
 import io.microsphere.test.C;
+
 import java.lang.reflect.GenericArrayType;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link AbstractJavaTypeTest} for {@link GenericArrayType}
  *

@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;
 import static io.microsphere.util.VersionUtils.JAVA_VERSION_9;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ModernURLClassPathHandle} Test
  *

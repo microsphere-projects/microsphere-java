@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import static io.microsphere.constants.SymbolConstants.QUOTE_CHAR;
 import static java.lang.Boolean.FALSE;
+
 /**
  * A fluent API utility class for performing chained operations on a value of type {@code V}.
  * <p>

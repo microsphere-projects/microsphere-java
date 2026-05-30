@@ -22,6 +22,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
+
 /**
  * {@link SubProtocolURLConnectionFactory} returns {@code false} for {@link #supports(URL, List)}
  *

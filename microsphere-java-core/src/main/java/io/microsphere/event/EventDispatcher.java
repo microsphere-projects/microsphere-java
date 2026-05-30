@@ -17,6 +17,7 @@
 package io.microsphere.event;
 
 import java.util.concurrent.Executor;
+
 /**
  * An interface that defines the contract for dispatching events to registered listeners.
  * <p>

@@ -3,15 +3,17 @@ package io.microsphere.process;
 import io.microsphere.Loggable;
 import io.microsphere.LoggingTest;
 import io.microsphere.io.FastByteArrayOutputStream;
+
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link ProcessExecutor} Test
  *

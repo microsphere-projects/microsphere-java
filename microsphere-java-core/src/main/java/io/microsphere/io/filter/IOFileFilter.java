@@ -17,9 +17,11 @@
 package io.microsphere.io.filter;
 
 import io.microsphere.filter.Filter;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
+
 /**
  * A compound interface that combines the functionalities of {@link FileFilter} and
  * {@link FilenameFilter}. Implementations of this interface can be used to filter both

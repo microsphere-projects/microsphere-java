@@ -17,15 +17,17 @@
 
 package io.microsphere.annotation.processor;
 
-import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
+import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.metadata.ConfigurationPropertyLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ClassUtils.SIMPLE_TYPES;
+
 /**
  * {@link ConfigurationPropertyLoader} for testing
  *

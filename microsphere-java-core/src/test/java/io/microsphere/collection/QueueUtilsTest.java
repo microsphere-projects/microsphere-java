@@ -1,6 +1,5 @@
 package io.microsphere.collection;
 
-import org.junit.jupiter.api.Test;
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
@@ -8,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.EmptyDeque.INSTANCE;
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * {@link QueueUtils} Test
  *

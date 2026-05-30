@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import static io.microsphere.convert.ObjectToStringConverter.INSTANCE;
 import static java.lang.String.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link ObjectToStringConverter} Test
  *

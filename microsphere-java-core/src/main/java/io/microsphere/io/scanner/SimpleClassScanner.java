@@ -7,6 +7,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.filter.PackageNameClassNameFilter;
 import io.microsphere.lang.ClassDataRepository;
+
 import java.io.File;
 import java.net.URL;
 import java.util.Collection;
@@ -28,6 +29,7 @@ import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassUtils.findClassNamesInClassPath;
 import static io.microsphere.util.StringUtils.substringBefore;
 import static java.util.Collections.unmodifiableSet;
+
 /**
  * A simple scanner for scanning {@link Class} objects under a specified package or archive.
  *

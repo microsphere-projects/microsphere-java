@@ -18,9 +18,11 @@ package io.microsphere.lang.function;
 
 import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
+
 import java.util.function.Predicate;
 
 import static io.microsphere.util.ArrayUtils.length;
+
 /**
  * The utilities class for Java {@link Predicate}
  *

@@ -17,6 +17,7 @@
 package io.microsphere.json;
 
 import io.microsphere.json.JSONStringer.Scope;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -36,6 +37,7 @@ import static io.microsphere.util.ClassUtils.isArray;
 import static java.lang.Double.NaN;
 import static java.lang.Math.min;
 import static java.lang.reflect.Array.getLength;
+
 /**
  * A dense indexed sequence of values. Values may be any mix of {@link JSONObject JSONObjects},
  * other {@link JSONArray JSONArrays}, Strings, Booleans, Integers, Longs, Doubles,

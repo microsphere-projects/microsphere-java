@@ -20,6 +20,7 @@ package io.microsphere.convert.multiple;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.StringUtils.split;
+
 /**
  * The class to convert {@link String} to multiple value object
  *

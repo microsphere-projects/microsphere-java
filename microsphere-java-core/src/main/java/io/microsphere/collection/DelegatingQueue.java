@@ -18,6 +18,7 @@
 package io.microsphere.collection;
 
 import io.microsphere.lang.DelegatingWrapper;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Queue;
@@ -27,6 +28,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * Delegating {@link Queue}
  *

@@ -20,6 +20,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
+
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -37,6 +38,7 @@ import static io.microsphere.util.ClassUtils.isAssignableFrom;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static java.util.Collections.unmodifiableSet;
+
 /**
  * The utilities class for Java {@link Set}
  *

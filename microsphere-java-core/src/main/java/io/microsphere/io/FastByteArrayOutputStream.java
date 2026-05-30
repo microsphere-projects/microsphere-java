@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.System.arraycopy;
 import static java.util.Arrays.copyOf;
+
 /**
  * A fast, non-thread-safe implementation of {@link ByteArrayOutputStream}.
  *

@@ -1,10 +1,11 @@
 package io.microsphere.classloading;
 
-import org.junit.jupiter.api.Test;
 import java.util.jar.Manifest;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
  * {@link ManifestArtifactResourceResolver} Test
  *

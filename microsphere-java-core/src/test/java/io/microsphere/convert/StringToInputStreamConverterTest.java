@@ -17,9 +17,11 @@
 package io.microsphere.convert;
 
 import io.microsphere.io.FastByteArrayInputStream;
+
 import java.io.InputStream;
 
 import static io.microsphere.convert.StringToInputStreamConverter.INSTANCE;
+
 /**
  * {@link StringToInputStreamConverter} Test
  *

@@ -16,11 +16,12 @@
  */
 package io.microsphere.util;
 
-import org.junit.jupiter.api.Test;
 import javax.annotation.Priority;
+import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.PriorityComparator.compare;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * {@link PriorityComparator} Test
  *

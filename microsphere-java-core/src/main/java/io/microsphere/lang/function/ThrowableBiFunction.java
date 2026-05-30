@@ -20,6 +20,7 @@ import java.util.function.BiFunction;
 
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotNull;
+
 /**
  * Represents a function that accepts two arguments and produces a result, which may throw a {@link Throwable}.
  *
