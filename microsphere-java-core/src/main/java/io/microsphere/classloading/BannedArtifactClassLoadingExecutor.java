@@ -12,13 +12,13 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.constants.SymbolConstants.COLON;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
-import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * The executor for the banned artifacts that are loading by {@link ClassLoader}.

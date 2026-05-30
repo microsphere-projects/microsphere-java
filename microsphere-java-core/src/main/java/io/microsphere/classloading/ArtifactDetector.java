@@ -15,6 +15,7 @@ import java.util.Set;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.ClassLoaderUtils.getClassLoader;
@@ -25,7 +26,6 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
-import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 
 /**
  * The {@code ArtifactDetector} class is responsible for detecting and resolving artifacts from the classpath.

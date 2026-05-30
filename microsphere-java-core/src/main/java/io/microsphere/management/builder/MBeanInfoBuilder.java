@@ -30,14 +30,13 @@ import java.beans.MethodDescriptor;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.util.Objects.nonNull;
-import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * The {@link MBeanInfo} Builder
