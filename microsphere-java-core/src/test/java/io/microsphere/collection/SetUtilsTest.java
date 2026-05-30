@@ -3,10 +3,13 @@ package io.microsphere.collection;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING_ARRAY;
 import static io.microsphere.collection.CollectionUtils.toIterable;
@@ -17,6 +20,7 @@ import static io.microsphere.collection.SetUtils.newFixedHashSet;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
+import static io.microsphere.collection.SetUtils.newTreeSet;
 import static io.microsphere.collection.SetUtils.of;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static java.util.Collections.emptyEnumeration;
@@ -156,6 +160,58 @@ class SetUtilsTest {
         set.add("b");
         set.add("c");
         assertSet(set);
+    }
+
+    @Test
+    void testNewTreeSetEmpty() {
+        TreeSet<String> set = newTreeSet();
+        assertTrue(set.isEmpty());
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    void testNewTreeSetWithComparator() {
+        Comparator<String> reverseComparator = (s1, s2) -> s2.compareTo(s1);
+        TreeSet<String> set = newTreeSet(reverseComparator);
+        set.add("a");
+        set.add("b");
+        set.add("c");
+        assertEquals(3, set.size());
+        // TreeSet with reverse comparator should be in reverse order
+        Object[] elements = set.toArray();
+        assertEquals("c", elements[0]);
+        assertEquals("b", elements[1]);
+        assertEquals("a", elements[2]);
+    }
+
+    @Test
+    void testNewTreeSetWithCollection() {
+        Set<String> sourceSet = newHashSet(ELEMENTS);
+        TreeSet<String> set = newTreeSet(sourceSet);
+        assertEquals(3, set.size());
+        assertTrue(set.contains("a"));
+        assertTrue(set.contains("b"));
+        assertTrue(set.contains("c"));
+        // TreeSet should be sorted naturally
+        Object[] elements = set.toArray();
+        assertEquals("a", elements[0]);
+        assertEquals("b", elements[1]);
+        assertEquals("c", elements[2]);
+    }
+
+    @Test
+    void testNewTreeSetWithSortedSet() {
+        SortedSet<String> sourceSortedSet = new TreeSet<>(java.util.Arrays.asList("z", "y", "x"));
+        TreeSet<String> set = newTreeSet(sourceSortedSet);
+        assertEquals(3, set.size());
+        assertTrue(set.contains("x"));
+        assertTrue(set.contains("y"));
+        assertTrue(set.contains("z"));
+        // TreeSet should be sorted naturally
+        Object[] elements = set.toArray();
+        assertEquals("x", elements[0]);
+        assertEquals("y", elements[1]);
+        assertEquals("z", elements[2]);
     }
 
     private void assertSet(Set<String> set) {

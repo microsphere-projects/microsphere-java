@@ -2,7 +2,10 @@ package io.microsphere.collection;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayDeque;
+import java.util.Collection;
 import java.util.Deque;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -241,6 +244,27 @@ class QueueUtilsTest {
         assertNotNull(deque);
         assertEquals(3, deque.size());
         assertTrue(deque.containsAll(asList("a", "b", "c")));
+    }
+
+    @Test
+    void testNewArrayDequeWithCollection() {
+        Collection<String> source = asList("a", "b", "c");
+        ArrayDeque<String> deque = newArrayDeque(source);
+        assertNotNull(deque);
+        assertEquals(3, deque.size());
+        assertEquals("a", deque.getFirst());
+        assertEquals("c", deque.getLast());
+    }
+
+    @Test
+    void testNewArrayDequeWithSet() {
+        Collection<String> source = new HashSet<>(asList("a", "b", "c"));
+        ArrayDeque<String> deque = newArrayDeque(source);
+        assertNotNull(deque);
+        assertEquals(3, deque.size());
+        assertTrue(deque.contains("a"));
+        assertTrue(deque.contains("b"));
+        assertTrue(deque.contains("c"));
     }
 
 }
