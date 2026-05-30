@@ -333,8 +333,8 @@ public abstract class SetUtils implements Utils {
      * @return a new {@link HashSet} containing all unique elements from the provided iterable
      */
     @Nonnull
-    public static <E> Set<E> newHashSet(Iterable<E> elements) {
-        Set<E> set = newHashSet();
+    public static <E> HashSet<E> newHashSet(Iterable<E> elements) {
+        HashSet<E> set = newHashSet();
         for (E value : elements) {
             set.add(value);
         }
@@ -363,8 +363,8 @@ public abstract class SetUtils implements Utils {
      * @return a new {@link HashSet} containing all elements from the provided collection
      */
     @Nonnull
-    public static <E> Set<E> newHashSet(Collection<E> elements) {
-        return new HashSet(elements);
+    public static <E> HashSet<E> newHashSet(Collection<E> elements) {
+        return new HashSet<>(elements);
     }
 
     /**
@@ -392,9 +392,9 @@ public abstract class SetUtils implements Utils {
      * @return a new {@link HashSet} containing all unique elements from the provided array
      */
     @Nonnull
-    public static <E> Set<E> newHashSet(E... elements) {
+    public static <E> HashSet<E> newHashSet(E... elements) {
         int length = length(elements);
-        Set<E> set = newHashSet(length);
+        HashSet<E> set = newHashSet(length);
         for (int i = 0; i < length; i++) {
             set.add(elements[i]);
         }
@@ -417,7 +417,7 @@ public abstract class SetUtils implements Utils {
      * @return a new empty {@link HashSet}
      */
     @Nonnull
-    public static <E> Set<E> newHashSet() {
+    public static <E> HashSet<E> newHashSet() {
         return new HashSet<>();
     }
 
@@ -438,7 +438,7 @@ public abstract class SetUtils implements Utils {
      * @return a new empty {@link HashSet} with the specified initial capacity
      */
     @Nonnull
-    public static <E> Set<E> newHashSet(int initialCapacity) {
+    public static <E> HashSet<E> newHashSet(int initialCapacity) {
         return new HashSet<>(initialCapacity);
     }
 
@@ -459,7 +459,7 @@ public abstract class SetUtils implements Utils {
      * @param <E>             the type of elements in the set
      * @return a new empty {@link HashSet} with the specified initial capacity and load factor
      */
-    public static <E> Set<E> newHashSet(int initialCapacity, float loadFactor) {
+    public static <E> HashSet<E> newHashSet(int initialCapacity, float loadFactor) {
         return new HashSet<>(initialCapacity, loadFactor);
     }
 
@@ -483,7 +483,7 @@ public abstract class SetUtils implements Utils {
      * @param <E>      the type of elements in the iterable
      * @return a new {@link LinkedHashSet} containing all unique elements from the provided iterable
      */
-    public static <E> Set<E> newLinkedHashSet(Iterable<E> elements) {
+    public static <E> LinkedHashSet<E> newLinkedHashSet(Iterable<E> elements) {
         return newLinkedHashSet(elements.iterator());
     }
 
@@ -500,8 +500,8 @@ public abstract class SetUtils implements Utils {
      * @return a new {@link LinkedHashSet} containing all unique elements from the provided iterator
      */
     @Nonnull
-    public static <E> Set<E> newLinkedHashSet(Iterator<E> elements) {
-        Set<E> set = newLinkedHashSet();
+    public static <E> LinkedHashSet<E> newLinkedHashSet(Iterator<E> elements) {
+        LinkedHashSet<E> set = newLinkedHashSet();
         while (elements.hasNext()) {
             E value = elements.next();
             set.add(value);
@@ -531,8 +531,8 @@ public abstract class SetUtils implements Utils {
      * @return a new {@link LinkedHashSet} containing all elements from the provided collection
      */
     @Nonnull
-    public static <E> Set<E> newLinkedHashSet(Collection<E> elements) {
-        return new LinkedHashSet(elements);
+    public static <E> LinkedHashSet<E> newLinkedHashSet(Collection<E> elements) {
+        return new LinkedHashSet<>(elements);
     }
 
     /**
@@ -560,9 +560,9 @@ public abstract class SetUtils implements Utils {
      * @return a new {@link LinkedHashSet} containing all unique elements from the provided array
      */
     @Nonnull
-    public static <E> Set<E> newLinkedHashSet(E... elements) {
+    public static <E> LinkedHashSet<E> newLinkedHashSet(E... elements) {
         int length = length(elements);
-        Set<E> set = newLinkedHashSet(length);
+        LinkedHashSet<E> set = newLinkedHashSet(length);
         for (int i = 0; i < length; i++) {
             set.add(elements[i]);
         }
@@ -585,7 +585,7 @@ public abstract class SetUtils implements Utils {
      * @return a new empty {@link LinkedHashSet}
      */
     @Nonnull
-    public static <E> Set<E> newLinkedHashSet() {
+    public static <E> LinkedHashSet<E> newLinkedHashSet() {
         return new LinkedHashSet<>();
     }
 
@@ -606,7 +606,7 @@ public abstract class SetUtils implements Utils {
      * @return a new empty {@link LinkedHashSet} with the specified initial capacity
      */
     @Nonnull
-    public static <E> Set<E> newLinkedHashSet(int initialCapacity) {
+    public static <E> LinkedHashSet<E> newLinkedHashSet(int initialCapacity) {
         return new LinkedHashSet<>(initialCapacity);
     }
 
@@ -628,7 +628,7 @@ public abstract class SetUtils implements Utils {
      * @return a new empty {@link LinkedHashSet} with the specified initial capacity and load factor
      */
     @Nonnull
-    public static <E> Set<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
+    public static <E> LinkedHashSet<E> newLinkedHashSet(int initialCapacity, float loadFactor) {
         return new LinkedHashSet<>(initialCapacity, loadFactor);
     }
 
@@ -651,7 +651,7 @@ public abstract class SetUtils implements Utils {
      * @see MapUtils#FIXED_LOAD_FACTOR
      */
     @Nonnull
-    public static <E> Set<E> newFixedHashSet(int size) {
+    public static <E> HashSet<E> newFixedHashSet(int size) {
         return newHashSet(size, FIXED_LOAD_FACTOR);
     }
 
@@ -674,7 +674,7 @@ public abstract class SetUtils implements Utils {
      * @see MapUtils#FIXED_LOAD_FACTOR
      */
     @Nonnull
-    public static <E> Set<E> newFixedLinkedHashSet(int size) {
+    public static <E> LinkedHashSet<E> newFixedLinkedHashSet(int size) {
         return newLinkedHashSet(size, FIXED_LOAD_FACTOR);
     }
 
