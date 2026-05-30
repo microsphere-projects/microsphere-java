@@ -16,6 +16,7 @@
  */
 package io.microsphere.convert;
 
+
 import static io.microsphere.util.CharSequenceUtils.length;
 
 /**

@@ -20,6 +20,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -1668,7 +1669,7 @@ public abstract class URLUtils implements Utils {
             return emptyMap();
         }
 
-        Map<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
+        LinkedHashMap<String, List<String>> parametersMap = newFixedLinkedHashMap(paramsLen);
 
         for (int i = 0; i < paramsLen; i++) {
             String param = params[i];

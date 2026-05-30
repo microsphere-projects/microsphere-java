@@ -20,6 +20,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -71,7 +72,7 @@ public abstract class PropertiesUtils implements Utils {
         if (isEmpty(properties)) {
             return properties;
         }
-        Map<String, Object> flattenProperties = newLinkedHashMap();
+        LinkedHashMap<String, Object> flattenProperties = newLinkedHashMap();
         flatProperties(properties, null, flattenProperties);
         return unmodifiableMap(flattenProperties);
     }

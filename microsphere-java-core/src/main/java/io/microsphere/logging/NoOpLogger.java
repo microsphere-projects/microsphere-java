@@ -16,6 +16,7 @@
  */
 package io.microsphere.logging;
 
+
 import static io.microsphere.util.StringUtils.isBlank;
 
 /**

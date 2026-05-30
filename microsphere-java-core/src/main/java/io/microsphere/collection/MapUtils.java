@@ -389,7 +389,7 @@ public abstract class MapUtils implements Utils {
         if (length < 1) {
             return emptyMap();
         }
-        Map<K, V> map = newFixedLinkedHashMap(length);
+        LinkedHashMap<K, V> map = newFixedLinkedHashMap(length);
         for (int i = 0; i < length; i++) {
             Map.Entry<? extends K, ? extends V> entry = entries[i];
             map.put(entry.getKey(), entry.getValue());
@@ -1039,7 +1039,7 @@ public abstract class MapUtils implements Utils {
             return emptyMap();
         }
 
-        Map<K, V> fixedMap = newFixedLinkedHashMap(size);
+        LinkedHashMap<K, V> fixedMap = newFixedLinkedHashMap(size);
 
         for (E value : values) {
             Map.Entry<K, V> entry = entryMapper.apply(value);
@@ -1181,7 +1181,7 @@ public abstract class MapUtils implements Utils {
     @Nonnull
     @Immutable
     public static Map<String, Object> nestedMap(Map<String, Object> map) {
-        Map<String, Object> nestedMap = newLinkedHashMap();
+        LinkedHashMap<String, Object> nestedMap = newLinkedHashMap();
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String propertyName = entry.getKey();
@@ -1235,7 +1235,7 @@ public abstract class MapUtils implements Utils {
     @Nonnull
     static Map<String, Object> extraProperties(Map<String, Object> map) {
         int size = size(map);
-        Map<String, Object> properties = newLinkedHashMap(size);
+        LinkedHashMap<String, Object> properties = newLinkedHashMap(size);
         if (size > 0) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();

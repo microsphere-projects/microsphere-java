@@ -7,6 +7,7 @@ import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -115,7 +116,7 @@ public class ArtifactDetector {
         if (size < 1) {
             return emptyList();
         }
-        List<Artifact> artifactList = newArrayList(size);
+        ArrayList<Artifact> artifactList = newArrayList(size);
         for (URL classPathURL : classPathURLs) {
             Artifact artifact = detect(classPathURL);
             if (artifact != null) {
@@ -148,7 +149,7 @@ public class ArtifactDetector {
 
     protected Set<URL> getClassPathURLs(boolean includedJdkLibraries) {
         Set<URL> urls = findAllClassPathURLs(classLoader);
-        Set<URL> classPathURLs = new LinkedHashSet<>(urls);
+        LinkedHashSet<URL> classPathURLs = new LinkedHashSet<>(urls);
         if (!includedJdkLibraries) {
             removeJdkClassPathURLs(classPathURLs);
         }

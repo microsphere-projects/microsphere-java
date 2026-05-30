@@ -4,7 +4,7 @@ import io.microsphere.collection.MutableQueueTest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.concurrent.BlockingQueue;
@@ -137,7 +137,7 @@ class DelegatingBlockingQueueTest extends MutableQueueTest<DelegatingBlockingQue
         queue.offer(1);
         queue.offer(2);
         queue.offer(3);
-        List<Integer> values = newLinkedList();
+        LinkedList<Integer> values = newLinkedList();
         assertEquals(3, queue.drainTo(values));
         assertTrue(queue.isEmpty());
         assertEquals(ofList(1, 2, 3), values);

@@ -22,7 +22,6 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -284,7 +283,7 @@ public abstract class ListUtils implements Utils {
         if (iterator == null) {
             return emptyList();
         }
-        List<E> list = newLinkedList();
+        LinkedList<E> list = newLinkedList();
         while (iterator.hasNext()) {
             list.add(iterator.next());
         }

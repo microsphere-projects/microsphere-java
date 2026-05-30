@@ -20,6 +20,7 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -258,7 +259,7 @@ public class TypeFinder<T> {
             return emptyList();
         }
 
-        List<T> types = newArrayList(size);
+        ArrayList<T> types = newArrayList(size);
 
         if (hasSuperclass) {
             types.add(superclass);

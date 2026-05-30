@@ -4,9 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
@@ -42,7 +39,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetStrings() {
-        Map<String, String> testMap = newHashMap();
+        HashMap<String, String> testMap = newHashMap();
         testMap.put("key1", "value1");
         testMap.put("key2", "value2");
 
@@ -55,7 +52,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetColors() {
-        SortedMap<String, Color> testMap = newTreeMap();
+        TreeMap<String, Color> testMap = newTreeMap();
         testMap.put("red_key", RED);
         testMap.put("blue_key", BLUE);
 
@@ -68,7 +65,7 @@ class MapTypeModelTest {
 
     @Test
     void testSetGetPrimitiveTypeModels() {
-        NavigableMap<Color, PrimitiveTypeModel> testMap = newTreeMap();
+        TreeMap<Color, PrimitiveTypeModel> testMap = newTreeMap();
         testMap.put(RED, new PrimitiveTypeModel());
         testMap.put(BLUE, new PrimitiveTypeModel());
 
@@ -126,7 +123,7 @@ class MapTypeModelTest {
 
     @Test
     void testMapMutability() {
-        Map<String, String> originalMap = newHashMap();
+        HashMap<String, String> originalMap = newHashMap();
         originalMap.put("initial", "value");
         model.setStrings(originalMap);
 

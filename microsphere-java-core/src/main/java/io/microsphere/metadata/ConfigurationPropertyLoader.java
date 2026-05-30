@@ -25,6 +25,7 @@ import io.microsphere.lang.Prioritized;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.ServiceLoaderUtils;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.CollectionUtils.isNotEmpty;
@@ -90,7 +91,7 @@ public interface ConfigurationPropertyLoader extends Prioritized {
     static List<ConfigurationProperty> loadAll() {
         Logger logger = getLogger(ConfigurationPropertyLoader.class);
         List<ConfigurationPropertyLoader> loaders = loadServicesList(ConfigurationPropertyLoader.class);
-        List<ConfigurationProperty> configurationProperties = newLinkedList();
+        LinkedList<ConfigurationProperty> configurationProperties = newLinkedList();
         for (ConfigurationPropertyLoader loader : loaders) {
             try {
                 List<ConfigurationProperty> loadedProperties = loader.load();

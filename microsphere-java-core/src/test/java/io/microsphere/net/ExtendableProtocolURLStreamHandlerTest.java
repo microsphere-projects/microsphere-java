@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -143,7 +144,7 @@ class ExtendableProtocolURLStreamHandlerTest {
     @Test
     void testInitSubProtocolURLConnectionFactories() {
         List<SubProtocolURLConnectionFactory> factories = emptyList();
-        List<SubProtocolURLConnectionFactory> copy = newLinkedList(factories);
+        LinkedList<SubProtocolURLConnectionFactory> copy = newLinkedList(factories);
         handler.initSubProtocolURLConnectionFactories(copy);
         assertEquals(copy, factories);
     }

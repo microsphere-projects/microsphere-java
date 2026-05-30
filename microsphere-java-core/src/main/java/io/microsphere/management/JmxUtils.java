@@ -52,6 +52,7 @@ import java.lang.management.ThreadMXBean;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -374,7 +375,7 @@ public abstract class JmxUtils implements Utils {
         if (length == 0) {
             return emptyMap();
         }
-        Map<String, MBeanAttribute> mBeanAttributesMap = newHashMap(length);
+        HashMap<String, MBeanAttribute> mBeanAttributesMap = newHashMap(length);
         for (int i = 0; i < length; i++) {
             MBeanAttribute mBeanAttribute = mBeanAttributes[i];
             String attributeName = mBeanAttribute.getName();
@@ -596,7 +597,7 @@ public abstract class JmxUtils implements Utils {
     public static Descriptor descriptorForAnnotations(Annotation[] annotations) {
         int length = length(annotations);
         if (length > 0) {
-            Map<String, Object> descriptorMap = newFixedHashMap(length);
+            HashMap<String, Object> descriptorMap = newFixedHashMap(length);
             for (int i = 0; i < length; i++) {
                 Annotation annotation = annotations[i];
                 Class<? extends Annotation> annotationType = annotation.annotationType();

@@ -18,6 +18,7 @@ package io.microsphere.lang;
 
 import io.microsphere.lang.Deprecation.Level;
 import io.microsphere.util.Version;
+
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.Deprecation.Level.DEFAULT;

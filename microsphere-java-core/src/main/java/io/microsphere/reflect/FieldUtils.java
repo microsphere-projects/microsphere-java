@@ -23,6 +23,7 @@ import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
 import java.lang.reflect.Field;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -301,7 +302,7 @@ public abstract class FieldUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
-        Set<Field> allFields = newLinkedHashSet();
+        LinkedHashSet<Field> allFields = newLinkedHashSet();
         addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allFields, superType.getFields());
@@ -342,7 +343,7 @@ public abstract class FieldUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
-        Set<Field> allDeclaredFields = newLinkedHashSet();
+        LinkedHashSet<Field> allDeclaredFields = newLinkedHashSet();
         addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());
