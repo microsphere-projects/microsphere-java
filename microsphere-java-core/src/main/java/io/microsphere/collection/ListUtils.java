@@ -535,32 +535,6 @@ public abstract class ListUtils implements Utils {
     }
 
     /**
-     * Creates a new {@link LinkedList} instance containing all elements from the specified {@link Collection}.
-     *
-     * <p>This method delegates to the {@link LinkedList} constructor that accepts a collection,
-     * ensuring all elements from the input collection are included in the resulting list.
-     * The returned list is modifiable and allows null elements.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *     Set<String> fruits = new HashSet<>(Arrays.asList("apple", "banana", "cherry"));
-     *     List<String> listCopy = ListUtils.newLinkedList(fruits);
-     *     System.out.println(listCopy.size()); // Output: 3
-     *
-     *     List<String> emptyList = ListUtils.newLinkedList(Collections.emptyList());
-     *     System.out.println(emptyList.isEmpty()); // Output: true
-     * }</pre>
-     *
-     * @param elements the collection of elements to add to the list, may be null or empty
-     * @param <E>      the type of elements in the collection
-     * @return a new {@link LinkedList} containing all elements from the provided collection
-     */
-    @Nonnull
-    public static <E> LinkedList<E> newLinkedList(Collection<? extends E> elements) {
-        return new LinkedList<>(elements);
-    }
-
-    /**
      * Creates a new {@link ArrayList} containing all elements from the specified array.
      * The resulting list is modifiable, allowing for further additions or modifications after creation.
      *
