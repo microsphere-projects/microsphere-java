@@ -24,6 +24,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
@@ -39,9 +40,12 @@ import static io.microsphere.collection.MapUtils.isMap;
 import static io.microsphere.collection.MapUtils.isNotEmpty;
 import static io.microsphere.collection.MapUtils.nestedMap;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.collection.MapUtils.newConcurrentSkipListMap;
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.collection.MapUtils.newIdentityHashMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.collection.MapUtils.newTreeMap;
+import static io.microsphere.collection.MapUtils.newWeakHashMap;
 import static io.microsphere.collection.MapUtils.of;
 import static io.microsphere.collection.MapUtils.ofEntry;
 import static io.microsphere.collection.MapUtils.ofMap;
@@ -57,6 +61,7 @@ import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -446,5 +451,81 @@ class MapUtilsTest {
         assertEquals(mapClass, map.getClass());
         assertEquals(0, map.size());
         assertTrue(map.isEmpty());
+    }
+
+    @Test
+    void testNewConcurrentSkipListMapEmpty() {
+        ConcurrentSkipListMap<String, Integer> map = newConcurrentSkipListMap();
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+        assertEquals(0, map.size());
+    }
+
+    @Test
+    void testNewConcurrentSkipListMapWithMap() {
+        Map<String, Integer> source = ofMap("c", 3, "a", 1, "b", 2);
+        ConcurrentSkipListMap<String, Integer> map = newConcurrentSkipListMap(source);
+        assertNotNull(map);
+        assertEquals(3, map.size());
+        assertEquals(1, map.get("a"));
+        assertEquals(2, map.get("b"));
+        assertEquals(3, map.get("c"));
+        // ConcurrentSkipListMap maintains sorted order by key
+        Object[] keys = map.keySet().toArray();
+        assertEquals("a", keys[0]);
+        assertEquals("b", keys[1]);
+        assertEquals("c", keys[2]);
+    }
+
+    @Test
+    void testNewWeakHashMapEmpty() {
+        WeakHashMap<String, Integer> map = newWeakHashMap();
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+        assertEquals(0, map.size());
+    }
+
+    @Test
+    void testNewWeakHashMapWithCapacity() {
+        WeakHashMap<String, Integer> map = newWeakHashMap(16);
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    void testNewWeakHashMapWithMap() {
+        Map<String, Integer> source = ofMap("a", 1, "b", 2, "c", 3);
+        WeakHashMap<String, Integer> map = newWeakHashMap(source);
+        assertNotNull(map);
+        assertEquals(3, map.size());
+        assertEquals(1, map.get("a"));
+        assertEquals(2, map.get("b"));
+        assertEquals(3, map.get("c"));
+    }
+
+    @Test
+    void testNewIdentityHashMapEmpty() {
+        IdentityHashMap<String, Integer> map = newIdentityHashMap();
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+        assertEquals(0, map.size());
+    }
+
+    @Test
+    void testNewIdentityHashMapWithExpectedMaxSize() {
+        IdentityHashMap<String, Integer> map = newIdentityHashMap(16);
+        assertNotNull(map);
+        assertTrue(map.isEmpty());
+    }
+
+    @Test
+    void testNewIdentityHashMapWithMap() {
+        Map<String, Integer> source = ofMap("a", 1, "b", 2, "c", 3);
+        IdentityHashMap<String, Integer> map = newIdentityHashMap(source);
+        assertNotNull(map);
+        assertEquals(3, map.size());
+        assertEquals(1, map.get("a"));
+        assertEquals(2, map.get("b"));
+        assertEquals(3, map.get("c"));
     }
 }

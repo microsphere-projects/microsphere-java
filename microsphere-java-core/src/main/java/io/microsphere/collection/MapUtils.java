@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentNavigableMap;
@@ -1253,6 +1254,189 @@ public abstract class MapUtils implements Utils {
             }
         }
         return properties;
+    }
+
+    /**
+     * Creates a new empty {@link ConcurrentSkipListMap} instance.
+     *
+     * <p>This method provides a convenient way to create an empty concurrent skip list map.
+     * The returned map is thread-safe and allows for efficient concurrent operations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> map = MapUtils.newConcurrentSkipListMap();
+     *     System.out.println(map.isEmpty()); // Output: true
+     *
+     *     map.put("key", "value");
+     *     System.out.println(map); // Output: {key=value}
+     * }</pre>
+     *
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @return a new, empty {@link ConcurrentSkipListMap}
+     */
+    @Nonnull
+    public static <K, V> ConcurrentSkipListMap<K, V> newConcurrentSkipListMap() {
+        return new ConcurrentSkipListMap<>();
+    }
+
+    /**
+     * Creates a new {@link ConcurrentSkipListMap} instance from the specified {@link Map}.
+     *
+     * <p>This method converts the given {@link Map} into a {@link ConcurrentSkipListMap}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> original = new HashMap<>();
+     *     original.put("key", "value");
+     *     Map<String, String> map = MapUtils.newConcurrentSkipListMap(original);
+     *     System.out.println(map); // Output: {key=value}
+     * }</pre>
+     *
+     * @param map the map whose entries are to be copied, may be null or empty
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @return a new {@link ConcurrentSkipListMap} containing all entries from the map
+     */
+    @Nonnull
+    public static <K, V> ConcurrentSkipListMap<K, V> newConcurrentSkipListMap(Map<? extends K, ? extends V> map) {
+        return new ConcurrentSkipListMap<>(map);
+    }
+
+    /**
+     * Creates a new empty {@link WeakHashMap} instance.
+     *
+     * <p>This method provides a convenient way to create an empty weak hash map.
+     * The returned map allows weak reference keys that can be garbage collected.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> map = MapUtils.newWeakHashMap();
+     *     System.out.println(map.isEmpty()); // Output: true
+     *
+     *     map.put("key", "value");
+     *     System.out.println(map); // Output: {key=value}
+     * }</pre>
+     *
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @return a new, empty {@link WeakHashMap}
+     */
+    @Nonnull
+    public static <K, V> WeakHashMap<K, V> newWeakHashMap() {
+        return new WeakHashMap<>();
+    }
+
+    /**
+     * Creates a new {@link WeakHashMap} instance with the specified initial capacity.
+     *
+     * <p>This method provides a convenient way to create a weak hash map with a predefined initial size.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> map = MapUtils.newWeakHashMap(16);
+     *     System.out.println(map.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param initialCapacity the initial capacity of the weak hash map
+     * @param <K>             the type of keys in the map
+     * @param <V>             the type of values in the map
+     * @return a new, empty {@link WeakHashMap} with the specified initial capacity
+     */
+    @Nonnull
+    public static <K, V> WeakHashMap<K, V> newWeakHashMap(int initialCapacity) {
+        return new WeakHashMap<>(initialCapacity);
+    }
+
+    /**
+     * Creates a new {@link WeakHashMap} instance from the specified {@link Map}.
+     *
+     * <p>This method converts the given {@link Map} into a {@link WeakHashMap}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> original = new HashMap<>();
+     *     original.put("key", "value");
+     *     Map<String, String> map = MapUtils.newWeakHashMap(original);
+     *     System.out.println(map); // Output: {key=value}
+     * }</pre>
+     *
+     * @param map the map whose entries are to be copied, may be null or empty
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @return a new {@link WeakHashMap} containing all entries from the map
+     */
+    @Nonnull
+    public static <K, V> WeakHashMap<K, V> newWeakHashMap(Map<? extends K, ? extends V> map) {
+        return new WeakHashMap<>(map);
+    }
+
+    /**
+     * Creates a new empty {@link IdentityHashMap} instance.
+     *
+     * <p>This method provides a convenient way to create an empty identity hash map.
+     * The returned map uses reference equality instead of object equality for key comparisons.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> map = MapUtils.newIdentityHashMap();
+     *     System.out.println(map.isEmpty()); // Output: true
+     *
+     *     map.put("key", "value");
+     *     System.out.println(map); // Output: {key=value}
+     * }</pre>
+     *
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @return a new, empty {@link IdentityHashMap}
+     */
+    @Nonnull
+    public static <K, V> IdentityHashMap<K, V> newIdentityHashMap() {
+        return new IdentityHashMap<>();
+    }
+
+    /**
+     * Creates a new {@link IdentityHashMap} instance with the specified expected maximum size.
+     *
+     * <p>This method provides a convenient way to create an identity hash map with a predefined initial size.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> map = MapUtils.newIdentityHashMap(16);
+     *     System.out.println(map.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param expectedMaxSize the expected maximum size of the map
+     * @param <K>             the type of keys in the map
+     * @param <V>             the type of values in the map
+     * @return a new, empty {@link IdentityHashMap} with the expected maximum size
+     */
+    @Nonnull
+    public static <K, V> IdentityHashMap<K, V> newIdentityHashMap(int expectedMaxSize) {
+        return new IdentityHashMap<>(expectedMaxSize);
+    }
+
+    /**
+     * Creates a new {@link IdentityHashMap} instance from the specified {@link Map}.
+     *
+     * <p>This method converts the given {@link Map} into an {@link IdentityHashMap}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Map<String, String> original = new HashMap<>();
+     *     original.put("key", "value");
+     *     Map<String, String> map = MapUtils.newIdentityHashMap(original);
+     *     System.out.println(map); // Output: {key=value}
+     * }</pre>
+     *
+     * @param map the map whose entries are to be copied, may be null or empty
+     * @param <K> the type of keys in the map
+     * @param <V> the type of values in the map
+     * @return a new {@link IdentityHashMap} containing all entries from the map
+     */
+    @Nonnull
+    public static <K, V> IdentityHashMap<K, V> newIdentityHashMap(Map<? extends K, ? extends V> map) {
+        return new IdentityHashMap<>(map);
     }
 
     private MapUtils() {

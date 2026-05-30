@@ -9,13 +9,18 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING_ARRAY;
 import static io.microsphere.collection.CollectionUtils.toIterable;
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
 import static io.microsphere.collection.SetUtils.isSet;
+import static io.microsphere.collection.SetUtils.newConcurrentSkipListSet;
+import static io.microsphere.collection.SetUtils.newCopyOnWriteArraySet;
 import static io.microsphere.collection.SetUtils.newFixedHashSet;
 import static io.microsphere.collection.SetUtils.newFixedLinkedHashSet;
 import static io.microsphere.collection.SetUtils.newHashSet;
@@ -26,8 +31,10 @@ import static io.microsphere.collection.SetUtils.ofSet;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
+import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -208,6 +215,65 @@ class SetUtilsTest {
         assertTrue(set.contains("y"));
         assertTrue(set.contains("z"));
         // TreeSet should be sorted naturally
+        Object[] elements = set.toArray();
+        assertEquals("x", elements[0]);
+        assertEquals("y", elements[1]);
+        assertEquals("z", elements[2]);
+    }
+
+    @Test
+    void testNewCopyOnWriteArraySetEmpty() {
+        CopyOnWriteArraySet<String> set = newCopyOnWriteArraySet();
+        assertNotNull(set);
+        assertTrue(set.isEmpty());
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    void testNewCopyOnWriteArraySetWithCollection() {
+        Collection<String> source = asList("a", "b", "c");
+        CopyOnWriteArraySet<String> set = newCopyOnWriteArraySet(source);
+        assertNotNull(set);
+        assertEquals(3, set.size());
+        assertTrue(set.contains("a"));
+        assertTrue(set.contains("b"));
+        assertTrue(set.contains("c"));
+    }
+
+    @Test
+    void testNewConcurrentSkipListSetEmpty() {
+        ConcurrentSkipListSet<String> set = newConcurrentSkipListSet();
+        assertNotNull(set);
+        assertTrue(set.isEmpty());
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    void testNewConcurrentSkipListSetWithCollection() {
+        Collection<String> source = asList("c", "a", "b");
+        ConcurrentSkipListSet<String> set = newConcurrentSkipListSet(source);
+        assertNotNull(set);
+        assertEquals(3, set.size());
+        assertTrue(set.contains("a"));
+        assertTrue(set.contains("b"));
+        assertTrue(set.contains("c"));
+        // ConcurrentSkipListSet maintains sorted order
+        Object[] elements = set.toArray();
+        assertEquals("a", elements[0]);
+        assertEquals("b", elements[1]);
+        assertEquals("c", elements[2]);
+    }
+
+    @Test
+    void testNewConcurrentSkipListSetWithSortedSet() {
+        SortedSet<String> sourceSortedSet = new TreeSet<>(asList("z", "y", "x"));
+        ConcurrentSkipListSet<String> set = newConcurrentSkipListSet(sourceSortedSet);
+        assertNotNull(set);
+        assertEquals(3, set.size());
+        assertTrue(set.contains("x"));
+        assertTrue(set.contains("y"));
+        assertTrue(set.contains("z"));
+        // ConcurrentSkipListSet maintains sorted order
         Object[] elements = set.toArray();
         assertEquals("x", elements[0]);
         assertEquals("y", elements[1]);

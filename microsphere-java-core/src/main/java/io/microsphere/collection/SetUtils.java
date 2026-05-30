@@ -30,6 +30,8 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
@@ -773,6 +775,115 @@ public abstract class SetUtils implements Utils {
     public static <E> TreeSet<E> newTreeSet(SortedSet<E> sortedSet) {
        return new TreeSet<>(sortedSet);
     }
+
+   /**
+    * Creates a new empty {@link CopyOnWriteArraySet} instance.
+    *
+    * <p>This method provides a convenient way to create an empty copy-on-write array set.
+    * The returned set is thread-safe and allows for safe concurrent reads and writes.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    *     Set<String> set = SetUtils.newCopyOnWriteArraySet();
+    *     System.out.println(set.isEmpty()); // Output: true
+    *
+    *     set.add("Hello");
+    *     System.out.println(set); // Output: [Hello]
+    * }</pre>
+    *
+    * @param <E> the type of elements in the set
+    * @return a new, empty {@link CopyOnWriteArraySet}
+    */
+   @Nonnull
+   public static <E> CopyOnWriteArraySet<E> newCopyOnWriteArraySet() {
+       return new CopyOnWriteArraySet<>();
+   }
+
+   /**
+    * Creates a new {@link CopyOnWriteArraySet} instance from the specified {@link Collection}.
+    *
+    * <p>This method converts the given {@link Collection} into a {@link CopyOnWriteArraySet}.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    *     Set<String> original = Arrays.asList("apple", "banana", "cherry");
+    *     Set<String> set = SetUtils.newCopyOnWriteArraySet(original);
+    *     System.out.println(set); // Output: [apple, banana, cherry]
+    * }</pre>
+    *
+    * @param elements the collection of elements to add to the set, may be null or empty
+    * @param <E>      the type of elements in the collection
+    * @return a new {@link CopyOnWriteArraySet} containing all elements from the collection
+    */
+   @Nonnull
+   public static <E> CopyOnWriteArraySet<E> newCopyOnWriteArraySet(Collection<? extends E> elements) {
+       return new CopyOnWriteArraySet<>(elements);
+   }
+
+   /**
+    * Creates a new empty {@link ConcurrentSkipListSet} instance.
+    *
+    * <p>This method provides a convenient way to create an empty concurrent skip list set.
+    * The returned set is thread-safe and allows for efficient concurrent operations.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    *     Set<String> set = SetUtils.newConcurrentSkipListSet();
+    *     System.out.println(set.isEmpty()); // Output: true
+    *
+    *     set.add("Hello");
+    *     System.out.println(set); // Output: [Hello]
+    * }</pre>
+    *
+    * @param <E> the type of elements in the set
+    * @return a new, empty {@link ConcurrentSkipListSet}
+    */
+   @Nonnull
+   public static <E> ConcurrentSkipListSet<E> newConcurrentSkipListSet() {
+       return new ConcurrentSkipListSet<>();
+   }
+
+   /**
+    * Creates a new {@link ConcurrentSkipListSet} instance from the specified {@link Collection}.
+    *
+    * <p>This method converts the given {@link Collection} into a {@link ConcurrentSkipListSet}.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    *     Set<String> original = Arrays.asList("apple", "banana", "cherry");
+    *     Set<String> set = SetUtils.newConcurrentSkipListSet(original);
+    *     System.out.println(set); // Output: [apple, banana, cherry]
+    * }</pre>
+    *
+    * @param elements the collection of elements to add to the set, may be null or empty
+    * @param <E>      the type of elements in the collection
+    * @return a new {@link ConcurrentSkipListSet} containing all elements from the collection
+    */
+   @Nonnull
+   public static <E> ConcurrentSkipListSet<E> newConcurrentSkipListSet(Collection<? extends E> elements) {
+       return new ConcurrentSkipListSet<>(elements);
+   }
+
+   /**
+    * Creates a new {@link ConcurrentSkipListSet} instance from the specified {@link SortedSet}.
+    *
+    * <p>This method converts the given {@link SortedSet} into a {@link ConcurrentSkipListSet}.</p>
+    *
+    * <h3>Example Usage</h3>
+    * <pre>{@code
+    *     SortedSet<String> original = new TreeSet<>(Arrays.asList("apple", "banana", "cherry"));
+    *     Set<String> set = SetUtils.newConcurrentSkipListSet(original);
+    *     System.out.println(set); // Output: [apple, banana, cherry]
+    * }</pre>
+    *
+    * @param sortedSet the sorted set whose elements are to be copied, may be null or empty
+    * @param <E>       the type of elements in the sorted set
+    * @return a new {@link ConcurrentSkipListSet} containing all elements from the sorted set
+    */
+   @Nonnull
+   public static <E> ConcurrentSkipListSet<E> newConcurrentSkipListSet(SortedSet<E> sortedSet) {
+       return new ConcurrentSkipListSet<>(sortedSet);
+   }
 
     private SetUtils() {
     }

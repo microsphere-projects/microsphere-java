@@ -22,10 +22,12 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -685,6 +687,50 @@ public abstract class ListUtils implements Utils {
      */
     public static <T> boolean addIfAbsent(List<T> values, T newValue) {
         return values.contains(newValue) ? false : values.add(newValue);
+    }
+
+    /**
+     * Creates a new empty {@link CopyOnWriteArrayList} instance.
+     *
+     * <p>This method provides a convenient way to create an empty copy-on-write array list.
+     * The returned list is thread-safe and allows for safe concurrent reads and writes.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     List<String> list = ListUtils.newCopyOnWriteArrayList();
+     *     System.out.println(list.isEmpty()); // Output: true
+     *
+     *     list.add("Hello");
+     *     System.out.println(list); // Output: [Hello]
+     * }</pre>
+     *
+     * @param <E> the type of elements in the list
+     * @return a new, empty {@link CopyOnWriteArrayList}
+     */
+    @Nonnull
+    public static <E> CopyOnWriteArrayList<E> newCopyOnWriteArrayList() {
+        return new CopyOnWriteArrayList<>();
+    }
+
+    /**
+     * Creates a new {@link CopyOnWriteArrayList} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into a {@link CopyOnWriteArrayList}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     List<String> original = Arrays.asList("apple", "banana", "cherry");
+     *     List<String> list = ListUtils.newCopyOnWriteArrayList(original);
+     *     System.out.println(list); // Output: [apple, banana, cherry]
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the list, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link CopyOnWriteArrayList} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> CopyOnWriteArrayList<E> newCopyOnWriteArrayList(Collection<? extends E> elements) {
+        return new CopyOnWriteArrayList<>(elements);
     }
 
     private ListUtils() {
