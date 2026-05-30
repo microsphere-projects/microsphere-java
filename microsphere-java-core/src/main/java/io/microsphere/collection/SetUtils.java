@@ -334,7 +334,7 @@ public abstract class SetUtils implements Utils {
      */
     @Nonnull
     public static <E> HashSet<E> newHashSet(Iterable<E> elements) {
-        Set<E> set = newHashSet();
+        HashSet<E> set = newHashSet();
         for (E value : elements) {
             set.add(value);
         }
@@ -394,7 +394,7 @@ public abstract class SetUtils implements Utils {
     @Nonnull
     public static <E> HashSet<E> newHashSet(E... elements) {
         int length = length(elements);
-        Set<E> set = newHashSet(length);
+        HashSet<E> set = newHashSet(length);
         for (int i = 0; i < length; i++) {
             set.add(elements[i]);
         }
@@ -501,7 +501,7 @@ public abstract class SetUtils implements Utils {
      */
     @Nonnull
     public static <E> LinkedHashSet<E> newLinkedHashSet(Iterator<E> elements) {
-        Set<E> set = newLinkedHashSet();
+        LinkedHashSet<E> set = newLinkedHashSet();
         while (elements.hasNext()) {
             E value = elements.next();
             set.add(value);
@@ -562,7 +562,7 @@ public abstract class SetUtils implements Utils {
     @Nonnull
     public static <E> LinkedHashSet<E> newLinkedHashSet(E... elements) {
         int length = length(elements);
-        Set<E> set = newLinkedHashSet(length);
+        LinkedHashSet<E> set = newLinkedHashSet(length);
         for (int i = 0; i < length; i++) {
             set.add(elements[i]);
         }
