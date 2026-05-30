@@ -364,7 +364,7 @@ public abstract class SetUtils implements Utils {
      */
     @Nonnull
     public static <E> HashSet<E> newHashSet(Collection<E> elements) {
-        return new HashSet(elements);
+        return new HashSet<>(elements);
     }
 
     /**
@@ -532,7 +532,7 @@ public abstract class SetUtils implements Utils {
      */
     @Nonnull
     public static <E> LinkedHashSet<E> newLinkedHashSet(Collection<E> elements) {
-        return new LinkedHashSet(elements);
+        return new LinkedHashSet<>(elements);
     }
 
     /**
