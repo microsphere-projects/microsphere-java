@@ -24,12 +24,12 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.constants.SymbolConstants.COLON_CHAR;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
@@ -50,7 +50,6 @@ import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.sort;
-import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,

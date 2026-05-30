@@ -18,13 +18,13 @@ package io.microsphere.json;
 
 import io.microsphere.json.JSONStringer.Scope;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
 
 import static io.microsphere.beans.BeanUtils.resolvePropertiesAsMap;
 import static io.microsphere.collection.EnumerationUtils.isEnumeration;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.MapUtils.isMap;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.json.JSON.checkDouble;
@@ -43,7 +43,6 @@ import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isWrapperType;
-import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may

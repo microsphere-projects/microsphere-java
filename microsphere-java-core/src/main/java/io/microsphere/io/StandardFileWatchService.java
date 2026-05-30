@@ -33,7 +33,6 @@ import java.nio.file.WatchService;
 import java.nio.file.Watchable;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
@@ -41,6 +40,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
 import static io.microsphere.collection.MapUtils.newTreeMap;
+import static io.microsphere.collection.SetUtils.newTreeSet;
 import static io.microsphere.concurrent.CustomizedThreadFactory.newThreadFactory;
 import static io.microsphere.concurrent.ExecutorUtils.shutdown;
 import static io.microsphere.concurrent.ExecutorUtils.shutdownOnExit;
@@ -63,7 +63,6 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static io.microsphere.collection.SetUtils.newTreeSet;
 
 /**
  * /**

@@ -16,9 +16,9 @@
 
 package io.microsphere.json;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.json.JSONObject.NULL;
 import static io.microsphere.json.JSONObject.numberToString;
 import static io.microsphere.json.JSONStringer.Scope.DANGLING_KEY;
@@ -29,7 +29,6 @@ import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.lang.String.format;
 import static java.util.Arrays.fill;
-import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * Implements {@link JSONObject#toString} and {@link JSONArray#toString}. Most application

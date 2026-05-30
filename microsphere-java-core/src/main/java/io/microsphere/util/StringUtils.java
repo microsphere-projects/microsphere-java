@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
@@ -32,7 +33,6 @@ import static java.lang.Character.isWhitespace;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
 import static java.lang.String.valueOf;
-import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * The utilities class for {@link String}

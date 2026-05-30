@@ -16,19 +16,18 @@
  */
 package io.microsphere.util;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.constants.SymbolConstants.QUOTE;
 import static io.microsphere.util.StringUtils.isBlank;
 import static java.lang.System.nanoTime;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.hash;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * <p>{@code StopWatch} provides a simple way to measure execution time for tasks, supporting nested task tracking.
