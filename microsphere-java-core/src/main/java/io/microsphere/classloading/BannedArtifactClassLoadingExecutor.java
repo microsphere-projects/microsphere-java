@@ -94,7 +94,7 @@ public class BannedArtifactClassLoadingExecutor {
     }
 
     static List<MavenArtifact> loadBannedArtifactConfigs(ClassLoader classLoader) {
-        List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
+        LinkedList<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try {
             Enumeration<URL> configResources = classLoader.getResources(CONFIG_LOCATION);
             while (configResources.hasMoreElements()) {
@@ -109,7 +109,7 @@ public class BannedArtifactClassLoadingExecutor {
     }
 
     static List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
-        List<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
+        LinkedList<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
         try (InputStream inputStream = configResource.openStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING))
         ) {

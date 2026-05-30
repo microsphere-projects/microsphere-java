@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -374,7 +375,7 @@ public abstract class ReflectionUtils implements Utils {
     @Nonnull
     public static <T> List<T> toList(Object array) throws IllegalArgumentException {
         int length = getLength(array);
-        List<T> list = new ArrayList<>(length);
+        ArrayList<T> list = new ArrayList<>(length);
         for (int i = 0; i < length; i++) {
             Object element = get(array, i);
             list.add((T) toObject(element));
@@ -442,7 +443,7 @@ public abstract class ReflectionUtils implements Utils {
         }
         Class<?> type = object.getClass();
         Field[] fields = type.getDeclaredFields();
-        Map<String, Object> fieldsAsMap = newLinkedHashMap(fields.length);
+        LinkedHashMap<String, Object> fieldsAsMap = newLinkedHashMap(fields.length);
         for (Field field : fields) {
 
             if (isStatic(field)) { // To filter static fields

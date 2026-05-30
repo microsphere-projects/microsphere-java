@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -259,7 +261,7 @@ public abstract class ServiceLoaderUtils implements Utils {
     @Immutable
     public static <T> Set<Class<T>> getServiceClasses(Class<T> serviceType, @Nullable ClassLoader classLoader, boolean failFast) {
         Set<String> serviceClassNames = doGetServiceClassNames(serviceType, classLoader);
-        Set<Class<T>> serviceClasses = newFixedLinkedHashSet(serviceClassNames.size());
+        LinkedHashSet<Class<T>> serviceClasses = newFixedLinkedHashSet(serviceClassNames.size());
         for (String serviceClassName : serviceClassNames) {
             Class<?> serviceClass = loadClass(classLoader, serviceClassName);
             if (serviceClass == null) {
@@ -883,7 +885,7 @@ public abstract class ServiceLoaderUtils implements Utils {
             throw new IllegalArgumentException(message);
         }
 
-        List<S> serviceList = newLinkedList(iterator);
+        LinkedList<S> serviceList = newLinkedList(iterator);
 
         sort(serviceList, COMPARATOR);
 
@@ -891,7 +893,7 @@ public abstract class ServiceLoaderUtils implements Utils {
     }
 
     static Set<String> doGetServiceClassNames(Class<?> serviceType, @Nullable ClassLoader classLoader) {
-        Set<String> serviceClassNames = newLinkedHashSet();
+        LinkedHashSet<String> serviceClassNames = newLinkedHashSet();
         execute(() -> {
             Set<URL> serviceResoources = getServiceResoources(serviceType, classLoader);
             for (URL serviceResoource : serviceResoources) {

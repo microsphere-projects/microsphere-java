@@ -525,11 +525,11 @@ class ClassLoaderUtilsTest extends LoggingTest implements Loggable {
 
         Set<Class<?>> classesSet = getAllLoadedClasses(classLoader);
 
-        Set<Class<?>> remainingClasses = new LinkedHashSet<>(allLoadedClasses);
+        LinkedHashSet<Class<?>> remainingClasses = new LinkedHashSet<>(allLoadedClasses);
 
         remainingClasses.addAll(classesSet);
 
-        Set<Class<?>> sortedClasses = new TreeSet(new ClassComparator());
+        TreeSet<Class<?>> sortedClasses = new TreeSet(new ClassComparator());
         sortedClasses.addAll(remainingClasses);
 
         log(sortedClasses);

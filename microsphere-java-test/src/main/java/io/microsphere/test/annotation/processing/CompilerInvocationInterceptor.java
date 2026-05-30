@@ -25,9 +25,7 @@ import javax.annotation.processing.Processor;
 import java.lang.reflect.Method;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.ServiceLoader;
-import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
@@ -44,7 +42,7 @@ class CompilerInvocationInterceptor implements InvocationInterceptor {
     @Override
     public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) throws Throwable {
-        Set<Class<?>> compiledClassesSet = newLinkedHashSet();
+        LinkedHashSet<Class<?>> compiledClassesSet = newLinkedHashSet();
         AbstractAnnotationProcessingTest test = (AbstractAnnotationProcessingTest) invocationContext.getTarget().get();
         Class<?> testClass = extensionContext.getTestClass().get();
         ClassLoader classLoader = testClass.getClassLoader();
@@ -56,7 +54,7 @@ class CompilerInvocationInterceptor implements InvocationInterceptor {
         Compiler compiler = new Compiler();
         compiler.sourcePaths(compiledClasses);
 
-        List<Processor> processors = new LinkedList<>();
+        LinkedList<Processor> processors = new LinkedList<>();
         processors.add(new AnnotationProcessingTestProcessor(test, invocation, invocationContext, extensionContext));
         // Loads the SPI instances of Processor
         ServiceLoader<Processor> loadedProcessors = load(Processor.class, classLoader);

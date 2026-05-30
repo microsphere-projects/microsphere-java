@@ -20,6 +20,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.lang.Prioritized;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -82,7 +83,7 @@ public abstract class LoggerFactory implements Prioritized {
     }
 
     static List<LoggerFactory> loadFactories() {
-        List<LoggerFactory> factories = newLinkedList(load(LoggerFactory.class, classLoader));
+        LinkedList<LoggerFactory> factories = newLinkedList(load(LoggerFactory.class, classLoader));
         sort(factories, COMPARATOR);
         return factories;
     }

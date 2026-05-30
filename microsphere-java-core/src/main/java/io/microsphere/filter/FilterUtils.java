@@ -74,7 +74,7 @@ public abstract class FilterUtils implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> filter(Iterable<E> iterable, FilterOperator filterOperator, Filter<E>... filters) {
-        List<E> list = new ArrayList<E>();
+        ArrayList<E> list = new ArrayList<E>();
         Iterator<E> iterator = iterable.iterator();
         while (iterator.hasNext()) {
             E element = iterator.next();

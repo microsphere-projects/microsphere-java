@@ -29,7 +29,10 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -633,7 +636,7 @@ public abstract class TypeUtils implements Utils {
         if (pType != null) {
             Type[] actualTypeArguments = pType.getActualTypeArguments();
             int actualTypeArgumentsLength = actualTypeArguments.length;
-            List<Type> actualTypeArgumentsList = newArrayList(actualTypeArgumentsLength);
+            ArrayList<Type> actualTypeArgumentsList = newArrayList(actualTypeArgumentsLength);
             for (int i = 0; i < actualTypeArgumentsLength; i++) {
                 Type actualTypeArgument = actualTypeArguments[i];
                 if (isActualType(actualTypeArgument)) {
@@ -652,7 +655,7 @@ public abstract class TypeUtils implements Utils {
 
         int size = hierarchicalTypesSize + 1;
 
-        Map<Class, TypeArgument[]> typeArgumentsMap = newLinkedHashMap(size);
+        LinkedHashMap<Class, TypeArgument[]> typeArgumentsMap = newLinkedHashMap(size);
 
         for (int i = hierarchicalTypesSize - 1; i > -1; i--) {
             Type hierarchicalType = hierarchicalTypes.get(i);
@@ -1196,7 +1199,7 @@ public abstract class TypeUtils implements Utils {
         if (targetClass == null || targetClass.isPrimitive() || targetClass.isArray()) {
             return emptyList();
         }
-        List<Type> typeArguments = newLinkedList();
+        LinkedList<Type> typeArguments = newLinkedList();
         while (targetClass != Object.class) {
             typeArguments.addAll(resolveTypeArguments(targetClass.getGenericSuperclass()));
             typeArguments.addAll(resolveTypeArguments(targetClass.getGenericInterfaces()));
@@ -1210,7 +1213,7 @@ public abstract class TypeUtils implements Utils {
         if (length < 1) {
             return emptyList();
         }
-        List<Type> typeArguments = newLinkedList();
+        LinkedList<Type> typeArguments = newLinkedList();
         for (int i = 0; i < length; i++) {
             typeArguments.addAll(getActualTypeArguments(types[i]));
         }

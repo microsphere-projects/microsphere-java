@@ -127,7 +127,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     @Override
     @Immutable
     public List<EventListener<?>> getAllEventListeners() {
-        List<EventListener<?>> listeners = new LinkedList<>();
+        LinkedList<EventListener<?>> listeners = new LinkedList<>();
 
         sortedListeners().forEach(listener -> {
             addIfAbsent(listeners, listener);

@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -232,7 +233,7 @@ class TypeFinderTest {
     @Test
     void testAddSuperTypes() {
         TypeFinder<Type> typeFinder = genericTypeFinder(String.class, values());
-        List<Type> types = newArrayList();
+        ArrayList<Type> types = newArrayList();
         typeFinder.addSuperTypes(types, String.class, false, false, false);
         assertTrue(types.isEmpty());
 

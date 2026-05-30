@@ -5,12 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.newHashSet;
 import static io.microsphere.test.model.Color.BLUE;
@@ -68,7 +65,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetPrimitiveTypeModels() {
-        Queue<PrimitiveTypeModel> testQueue = new LinkedList<>();
+        LinkedList<PrimitiveTypeModel> testQueue = new LinkedList<>();
         testQueue.add(new PrimitiveTypeModel());
         testQueue.add(new PrimitiveTypeModel());
 
@@ -81,7 +78,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetModels() {
-        Deque<Model> testDeque = new LinkedList<>();
+        LinkedList<Model> testDeque = new LinkedList<>();
         testDeque.add(new Model());
         testDeque.add(new Model());
 
@@ -94,7 +91,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetModelArrays() {
-        Set<Model[]> testSet = newHashSet();
+        HashSet<Model[]> testSet = newHashSet();
         testSet.add(new Model[]{new Model(), new Model()});
         testSet.add(new Model[]{new Model()});
 
@@ -126,7 +123,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testCollectionMutability() {
-        List<Color> originalList = new ArrayList<>(asList(RED, BLUE));
+        ArrayList<Color> originalList = new ArrayList<>(asList(RED, BLUE));
         model.setColors(originalList);
 
         // Modify the original collection

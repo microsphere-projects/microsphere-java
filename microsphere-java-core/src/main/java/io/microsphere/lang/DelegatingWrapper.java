@@ -16,6 +16,7 @@
  */
 package io.microsphere.lang;
 
+
 import static io.microsphere.constants.SymbolConstants.QUOTE;
 
 /**

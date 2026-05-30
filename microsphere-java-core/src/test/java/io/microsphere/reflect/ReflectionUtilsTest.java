@@ -118,7 +118,7 @@ class ReflectionUtilsTest {
         map = readFieldsAsMap(asList(1, 2, 3, 4));
         assertFalse(map.isEmpty());
 
-        Map<String, String> value = new HashMap(3);
+        HashMap<String, String> value = new HashMap(3);
         value.put("a", "a");
         value.put("b", "b");
         value.put("c", "c");
