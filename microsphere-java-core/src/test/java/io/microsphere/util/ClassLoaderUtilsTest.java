@@ -5,7 +5,11 @@ package io.microsphere.util;
 
 import io.microsphere.Loggable;
 import io.microsphere.LoggingTest;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.reflect.Field;
@@ -20,10 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_EMPTY_COLLECTION;
 import static io.microsphere.AbstractTestCase.TEST_EMPTY_LIST;

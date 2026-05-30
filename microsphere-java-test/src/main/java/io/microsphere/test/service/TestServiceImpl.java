@@ -19,9 +19,6 @@ package io.microsphere.test.service;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Since;
 import io.microsphere.test.annotation.TestAnnotation;
-
-import java.io.Serializable;
-import javax.xml.ws.ServiceMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +26,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
+import javax.xml.ws.ServiceMode;
+import java.io.Serializable;
 
 import static java.util.concurrent.TimeUnit.HOURS;
 import static org.springframework.context.annotation.FilterType.ASPECTJ;

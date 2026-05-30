@@ -16,10 +16,11 @@
  */
 package io.microsphere.classloading;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;

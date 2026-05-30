@@ -16,8 +16,9 @@
  */
 package io.microsphere.collection;
 
-import java.util.Map;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;

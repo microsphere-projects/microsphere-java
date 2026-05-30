@@ -17,6 +17,7 @@
 package io.microsphere.collection;
 
 import io.microsphere.Loggable;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -24,8 +25,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.AbstractTestCase.TEST_EMPTY_COLLECTION;

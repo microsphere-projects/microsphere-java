@@ -17,11 +17,11 @@
 package io.microsphere.classloading;
 
 import io.microsphere.LoggingTest;
-
-import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import java.net.URL;
 
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;
 import static io.microsphere.net.URLUtils.ofURL;

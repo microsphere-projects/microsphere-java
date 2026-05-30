@@ -16,8 +16,9 @@
  */
 package io.microsphere.util;
 
-import java.sql.SQLException;
 import org.junit.jupiter.api.Test;
+
+import java.sql.SQLException;
 
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.ofArray;

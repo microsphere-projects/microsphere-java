@@ -19,6 +19,8 @@ package io.microsphere.reflect;
 import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.StringIntegerBooleanHashMap;
 import io.microsphere.test.StringIntegerHashMap;
+import org.junit.jupiter.api.Test;
+import org.springframework.core.ResolvableType;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -27,8 +29,6 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.junit.jupiter.api.Test;
-import org.springframework.core.ResolvableType;
 
 import static io.microsphere.reflect.JavaType.EMPTY_JAVA_TYPE_ARRAY;
 import static io.microsphere.reflect.JavaType.Kind.CLASS;

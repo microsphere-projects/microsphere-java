@@ -16,8 +16,9 @@
  */
 package io.microsphere.event;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
 import static java.util.Collections.emptyList;

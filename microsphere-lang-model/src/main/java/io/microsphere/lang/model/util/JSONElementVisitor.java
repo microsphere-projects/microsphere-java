@@ -17,7 +17,6 @@
 
 package io.microsphere.lang.model.util;
 
-import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementVisitor;
 import javax.lang.model.element.ExecutableElement;
@@ -27,6 +26,7 @@ import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.util.AbstractElementVisitor6;
 import javax.lang.model.util.ElementKindVisitor6;
+import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 

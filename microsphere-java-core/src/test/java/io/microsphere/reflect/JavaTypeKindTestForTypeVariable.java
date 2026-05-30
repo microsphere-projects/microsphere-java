@@ -17,9 +17,9 @@
 package io.microsphere.reflect;
 
 import io.microsphere.reflect.JavaType.Kind;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.TypeVariable;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.JavaType.Kind.TYPE_VARIABLE;
 import static io.microsphere.reflect.JavaType.from;

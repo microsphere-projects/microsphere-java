@@ -17,9 +17,10 @@
 
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Iterator;
 import java.util.List;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.Lists.ofList;

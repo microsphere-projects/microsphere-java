@@ -22,7 +22,6 @@ import io.microsphere.annotation.Immutable;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
 

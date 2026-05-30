@@ -21,10 +21,6 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Predicate;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -32,6 +28,10 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.ListUtils.first;

@@ -16,10 +16,11 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfig;
 import static io.microsphere.classloading.BannedArtifactClassLoadingExecutor.loadBannedArtifactConfigs;

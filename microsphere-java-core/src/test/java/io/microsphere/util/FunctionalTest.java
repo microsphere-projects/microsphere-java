@@ -16,8 +16,9 @@
  */
 package io.microsphere.util;
 
-import java.util.Objects;
 import org.junit.jupiter.api.Test;
+
+import java.util.Objects;
 
 import static io.microsphere.util.Functional.of;
 import static io.microsphere.util.Functional.value;

@@ -20,9 +20,9 @@ package io.microsphere.lang.model.util;
 import io.microsphere.test.annotation.TestAnnotation;
 import io.microsphere.test.model.Color;
 import io.microsphere.test.model.StringArrayList;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.io.Serializable;
-import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.PackageElement;
@@ -30,8 +30,8 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import java.io.Serializable;
+import java.util.List;
 
 import static io.microsphere.lang.model.util.TypeUtils.ofTypeElement;
 import static java.lang.Boolean.TRUE;

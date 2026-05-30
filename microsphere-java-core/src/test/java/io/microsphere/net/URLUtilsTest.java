@@ -6,20 +6,19 @@ package io.microsphere.net;
 import io.microsphere.LoggingTest;
 import io.microsphere.net.console.Handler;
 import io.microsphere.util.StringUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandlerFactory;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
@@ -207,7 +206,7 @@ class URLUtilsTest extends LoggingTest {
     void testResolveQueryParameters() {
         String url = TEST_HTTP_WITH_QUERY_STRING;
         Map<String, List<String>> parametersMap = resolveQueryParameters(url);
-        LinkedHashMap<String, List<String>> expectedParametersMap = newLinkedHashMap();
+        Map<String, List<String>> expectedParametersMap = newLinkedHashMap();
         expectedParametersMap.put("q", ofList("java"));
         expectedParametersMap.put("oq", ofList("java"));
         expectedParametersMap.put("sourceid", ofList("chrome"));
@@ -231,7 +230,7 @@ class URLUtilsTest extends LoggingTest {
     void testResolveMatrixParameters() {
         String url = TEST_HTTP_WITH_MATRIX_STRING;
         Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
-        LinkedHashMap<String, List<String>> expectedParametersMap = newLinkedHashMap();
+        Map<String, List<String>> expectedParametersMap = newLinkedHashMap();
         expectedParametersMap.put("q", ofList("java"));
         expectedParametersMap.put("oq", ofList("java"));
         expectedParametersMap.put("sourceid", ofList("chrome"));

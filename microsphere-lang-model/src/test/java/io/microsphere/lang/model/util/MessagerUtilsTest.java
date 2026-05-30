@@ -17,11 +17,12 @@
 
 package io.microsphere.lang.model.util;
 
-import java.lang.reflect.Method;
-import javax.annotation.processing.Messager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+
+import javax.annotation.processing.Messager;
+import java.lang.reflect.Method;
 
 import static io.microsphere.lang.model.util.MessagerUtils.printError;
 import static io.microsphere.lang.model.util.MessagerUtils.printMandatoryWarning;

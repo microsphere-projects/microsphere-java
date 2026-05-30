@@ -192,7 +192,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     void doInListener(Class<? extends Event> eventType, Consumer<Collection<EventListener>> consumer) {
         if (eventType != null) {
             synchronized (mutex) {
-                LinkedList<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
+                List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
                 // consume
                 consumer.accept(listeners);
                 // sort

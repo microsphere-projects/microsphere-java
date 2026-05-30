@@ -3,12 +3,12 @@ package io.microsphere.io.event;
 import io.microsphere.Loggable;
 import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.util.ValueHolder;
-
-import java.io.File;
-import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.io.FileUtils.forceDelete;

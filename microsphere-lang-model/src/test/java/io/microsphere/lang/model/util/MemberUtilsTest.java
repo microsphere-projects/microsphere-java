@@ -17,12 +17,12 @@
 package io.microsphere.lang.model.util;
 
 import io.microsphere.test.model.Model;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import org.junit.jupiter.api.Test;
+import java.util.List;
 
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;

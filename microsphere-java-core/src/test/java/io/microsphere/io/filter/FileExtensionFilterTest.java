@@ -1,9 +1,10 @@
 package io.microsphere.io.filter;
 
-import java.io.File;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 import static io.microsphere.io.filter.FileExtensionFilter.of;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;

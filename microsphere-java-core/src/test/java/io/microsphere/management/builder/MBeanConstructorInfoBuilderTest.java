@@ -17,10 +17,11 @@
 
 package io.microsphere.management.builder;
 
-import java.lang.reflect.Constructor;
+import org.junit.jupiter.api.Test;
+
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanParameterInfo;
-import org.junit.jupiter.api.Test;
+import java.lang.reflect.Constructor;
 
 import static io.microsphere.management.builder.MBeanConstructorInfoBuilder.constructor;
 import static io.microsphere.reflect.ConstructorUtils.findConstructor;

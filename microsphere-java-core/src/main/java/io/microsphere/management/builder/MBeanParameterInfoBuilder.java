@@ -19,11 +19,11 @@ package io.microsphere.management.builder;
 
 import io.microsphere.annotation.Nonnull;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Parameter;
 import javax.management.Descriptor;
 import javax.management.MBeanFeatureInfo;
 import javax.management.MBeanParameterInfo;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Parameter;
 
 import static io.microsphere.management.JmxUtils.descriptorForAnnotations;
 import static io.microsphere.util.ClassUtils.getTypeName;

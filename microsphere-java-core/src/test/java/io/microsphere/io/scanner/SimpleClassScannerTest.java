@@ -4,11 +4,11 @@
 package io.microsphere.io.scanner;
 
 import io.microsphere.AbstractTestCase;
+import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.Set;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.io.scanner.SimpleClassScanner.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;

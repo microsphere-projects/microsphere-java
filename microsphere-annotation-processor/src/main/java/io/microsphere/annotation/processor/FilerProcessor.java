@@ -19,10 +19,10 @@ package io.microsphere.annotation.processor;
 
 import io.microsphere.lang.function.ThrowableFunction;
 
-import java.util.function.BiFunction;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.tools.JavaFileManager;
+import java.util.function.BiFunction;
 
 import static io.microsphere.lang.model.util.MessagerUtils.printMandatoryWarning;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;

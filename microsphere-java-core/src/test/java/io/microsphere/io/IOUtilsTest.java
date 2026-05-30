@@ -1,6 +1,9 @@
 package io.microsphere.io;
 
 import io.microsphere.LoggingTest;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +12,6 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.IllegalCharsetNameException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_STRING;
 import static io.microsphere.io.IOUtils.BUFFER_SIZE;

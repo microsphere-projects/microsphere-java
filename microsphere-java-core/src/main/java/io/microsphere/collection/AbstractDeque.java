@@ -17,7 +17,6 @@
 package io.microsphere.collection;
 
 import java.util.AbstractQueue;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 

@@ -1,12 +1,12 @@
 package io.microsphere.reflect;
 
 import io.microsphere.Loggable;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;

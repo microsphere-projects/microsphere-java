@@ -16,8 +16,9 @@
  */
 package io.microsphere.collection;
 
-import java.util.Iterator;
 import org.junit.jupiter.api.Test;
+
+import java.util.Iterator;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.collection.CollectionUtils.singletonIterator;

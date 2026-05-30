@@ -17,8 +17,9 @@
 
 package io.microsphere.collection;
 
-import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
+
+import java.util.NoSuchElementException;
 
 import static io.microsphere.collection.CollectionUtils.emptyIterator;
 import static io.microsphere.collection.EmptyDeque.INSTANCE;

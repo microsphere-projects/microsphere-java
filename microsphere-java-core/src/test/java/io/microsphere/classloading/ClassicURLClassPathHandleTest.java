@@ -16,9 +16,10 @@
  */
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.Test;
+
 import java.net.URL;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ClassLoaderUtils.findAllClassPathURLs;
 import static io.microsphere.util.VersionUtils.CURRENT_JAVA_VERSION;

@@ -19,7 +19,6 @@ package io.microsphere.convert;
 
 import io.microsphere.util.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -54,7 +53,7 @@ class Converters implements Utils {
         for (int i = 0; i < size; i++) {
             Converter converter = convertersList.get(i);
             Entry<Class<?>, Class<?>> key = immutableEntry(converter.getSourceType(), converter.getTargetType());
-            ArrayList<Converter> converters = convertersCache.computeIfAbsent(key, k -> newArrayList(4));
+            List<Converter> converters = convertersCache.computeIfAbsent(key, k -> newArrayList(4));
             converters.add(converter);
         }
         return convertersCache;

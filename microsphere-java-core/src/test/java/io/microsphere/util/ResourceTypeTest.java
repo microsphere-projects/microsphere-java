@@ -16,8 +16,9 @@
  */
 package io.microsphere.util;
 
-import java.util.Map;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.constants.SymbolConstants.SPACE;

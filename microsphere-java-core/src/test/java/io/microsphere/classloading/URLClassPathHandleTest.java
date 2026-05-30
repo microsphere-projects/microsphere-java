@@ -1,8 +1,9 @@
 package io.microsphere.classloading;
 
+import org.junit.jupiter.api.Test;
+
 import java.net.URL;
 import java.net.URLClassLoader;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;
 import static io.microsphere.net.URLUtils.EMPTY_URL_ARRAY;

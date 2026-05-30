@@ -18,13 +18,13 @@
 package io.microsphere.annotation.processor;
 
 import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
-
-import java.lang.reflect.Method;
-import java.util.Optional;
-import javax.tools.FileObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+
+import javax.tools.FileObject;
+import java.lang.reflect.Method;
+import java.util.Optional;
 
 import static io.microsphere.annotation.processor.ResourceProcessor.FOR_READING;
 import static io.microsphere.annotation.processor.ResourceProcessor.FOR_WRITING;

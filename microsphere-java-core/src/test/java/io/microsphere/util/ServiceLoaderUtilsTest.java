@@ -1,16 +1,16 @@
 package io.microsphere.util;
 
 import io.microsphere.LoggingTest;
-import io.microsphere.event.EchoEventListener2;
 import io.microsphere.event.EchoEventListener;
+import io.microsphere.event.EchoEventListener2;
 import io.microsphere.event.EventListener;
 import io.microsphere.logging.LoggerFactory;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Sets.ofSet;

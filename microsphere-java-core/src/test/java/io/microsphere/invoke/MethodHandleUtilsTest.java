@@ -17,10 +17,10 @@
 package io.microsphere.invoke;
 
 import io.microsphere.invoke.MethodHandleUtils.LookupKey;
+import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.invoke.MethodHandleUtils.LookupKey.buildKey;
 import static io.microsphere.invoke.MethodHandleUtils.LookupMode.PROTECTED;

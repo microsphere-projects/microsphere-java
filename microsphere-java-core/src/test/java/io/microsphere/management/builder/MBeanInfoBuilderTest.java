@@ -19,16 +19,16 @@ package io.microsphere.management.builder;
 
 import io.microsphere.beans.BeanMetadata;
 import io.microsphere.test.Data;
+import org.junit.jupiter.api.Test;
 
-import java.beans.BeanInfo;
-import java.beans.MethodDescriptor;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanConstructorInfo;
 import javax.management.MBeanInfo;
 import javax.management.MBeanOperationInfo;
-import org.junit.jupiter.api.Test;
+import java.beans.BeanInfo;
+import java.beans.MethodDescriptor;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 
 import static io.microsphere.beans.BeanUtils.getBeanMetadata;
 import static io.microsphere.management.builder.AbstractMBeanFeatureInfoBuilderTest.TEST_NAME;

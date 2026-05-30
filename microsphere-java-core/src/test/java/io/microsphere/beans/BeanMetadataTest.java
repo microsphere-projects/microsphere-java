@@ -18,13 +18,13 @@
 package io.microsphere.beans;
 
 import io.microsphere.beans.BeanUtilsTest.TestBean;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.beans.BeanMetadata.of;
 import static org.junit.jupiter.api.Assertions.assertEquals;

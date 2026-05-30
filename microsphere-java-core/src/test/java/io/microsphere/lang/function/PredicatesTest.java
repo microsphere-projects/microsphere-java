@@ -16,8 +16,9 @@
  */
 package io.microsphere.lang.function;
 
-import java.util.function.Predicate;
 import org.junit.jupiter.api.Test;
+
+import java.util.function.Predicate;
 
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;

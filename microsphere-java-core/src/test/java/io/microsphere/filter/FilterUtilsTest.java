@@ -3,8 +3,9 @@
  */
 package io.microsphere.filter;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
+
+import java.util.List;
 
 import static io.microsphere.filter.FilterOperator.AND;
 import static io.microsphere.filter.FilterOperator.OR;

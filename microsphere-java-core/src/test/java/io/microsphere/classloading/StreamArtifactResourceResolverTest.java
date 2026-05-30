@@ -16,10 +16,11 @@
  */
 package io.microsphere.classloading;
 
+import org.springframework.core.ResolvableType;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.springframework.core.ResolvableType;
 
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;

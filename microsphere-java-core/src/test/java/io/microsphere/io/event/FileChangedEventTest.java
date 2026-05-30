@@ -1,7 +1,8 @@
 package io.microsphere.io.event;
 
-import java.io.File;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
 
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
 import static org.junit.jupiter.api.Assertions.assertEquals;

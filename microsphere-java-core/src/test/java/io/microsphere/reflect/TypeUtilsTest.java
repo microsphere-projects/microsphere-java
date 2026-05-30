@@ -27,6 +27,7 @@ import io.microsphere.test.E;
 import io.microsphere.test.StringBooleanToInteger;
 import io.microsphere.test.StringIntegerBooleanHashMap;
 import io.microsphere.test.StringIntegerToBoolean;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
@@ -40,7 +41,6 @@ import java.util.RandomAccess;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Predicate;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.assertValues;
 import static io.microsphere.collection.Lists.ofList;

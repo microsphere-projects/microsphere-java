@@ -18,11 +18,11 @@
 package io.microsphere.metadata;
 
 import io.microsphere.beans.ConfigurationProperty;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.InputStream;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.constants.ResourceConstants.ADDITIONAL_CONFIGURATION_PROPERTY_METADATA_RESOURCE;
 import static io.microsphere.lang.Prioritized.MIN_PRIORITY;

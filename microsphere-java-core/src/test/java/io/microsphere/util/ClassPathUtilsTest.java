@@ -4,12 +4,12 @@
 package io.microsphere.util;
 
 import io.microsphere.Loggable;
+import org.junit.jupiter.api.Test;
 
 import java.lang.management.RuntimeMXBean;
 import java.net.URL;
 import java.util.Set;
 import java.util.function.Predicate;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_CLASS_LOADER;
 import static io.microsphere.lang.ClassDataRepository.INSTANCE;

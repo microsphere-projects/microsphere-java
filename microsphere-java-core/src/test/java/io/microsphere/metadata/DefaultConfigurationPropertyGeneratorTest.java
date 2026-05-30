@@ -17,12 +17,11 @@
 
 package io.microsphere.metadata;
 
-import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.json.JSONArray;
 import io.microsphere.json.JSONException;
 import io.microsphere.json.JSONObject;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

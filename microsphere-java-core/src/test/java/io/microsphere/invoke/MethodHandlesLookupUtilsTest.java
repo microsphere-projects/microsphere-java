@@ -17,9 +17,9 @@
 package io.microsphere.invoke;
 
 import io.microsphere.LoggingTest;
+import org.junit.jupiter.api.Test;
 
 import java.lang.invoke.MethodHandle;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublic;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;

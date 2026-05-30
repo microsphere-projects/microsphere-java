@@ -73,7 +73,7 @@ public class Serializers {
         for (Serializer serializer : loadServicesList(Serializer.class, classLoader)) {
             List<Class<?>> typeArguments = resolveTypeArgumentClasses(serializer.getClass());
             Class<?> targetClass = first(typeArguments);
-            LinkedList<Serializer> serializers = typedSerializers.computeIfAbsent(targetClass, k -> new LinkedList());
+            List<Serializer> serializers = typedSerializers.computeIfAbsent(targetClass, k -> new LinkedList());
             serializers.add(serializer);
         }
     }

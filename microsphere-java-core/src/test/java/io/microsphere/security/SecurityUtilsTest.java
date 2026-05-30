@@ -17,10 +17,11 @@
 
 package io.microsphere.security;
 
-import java.io.File;
-import java.net.URL;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.net.URL;
 
 import static io.microsphere.security.SecurityUtils.JAVA_SECURITY_POLICY_FILE_PROPERTY_NAME;
 import static io.microsphere.security.SecurityUtils.getJavaSecurityPolicyFile;

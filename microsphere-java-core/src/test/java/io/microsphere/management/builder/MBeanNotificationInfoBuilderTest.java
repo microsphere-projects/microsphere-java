@@ -17,8 +17,9 @@
 
 package io.microsphere.management.builder;
 
-import javax.management.MBeanNotificationInfo;
 import org.junit.jupiter.api.Test;
+
+import javax.management.MBeanNotificationInfo;
 
 import static io.microsphere.management.builder.MBeanNotificationInfoBuilder.getClassNames;
 import static io.microsphere.management.builder.MBeanNotificationInfoBuilder.notification;

@@ -18,11 +18,11 @@ package io.microsphere.reflect;
 
 import io.microsphere.reflect.JavaType.Kind;
 import io.microsphere.test.A;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.Map;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.JavaType.Kind.CLASS;
 import static io.microsphere.reflect.JavaType.from;

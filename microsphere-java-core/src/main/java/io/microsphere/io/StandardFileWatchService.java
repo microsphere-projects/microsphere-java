@@ -19,8 +19,8 @@ package io.microsphere.io;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.event.EventDispatcher;
-import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.io.event.FileChangedEvent;
+import io.microsphere.io.event.FileChangedEvent.Kind;
 import io.microsphere.io.event.FileChangedListener;
 import io.microsphere.logging.Logger;
 

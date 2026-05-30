@@ -5,11 +5,11 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.io.filter.DirectoryFileFilter;
 import io.microsphere.io.filter.NameFileFilter;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.createRandomTempDirectory;
 import static io.microsphere.AbstractTestCase.createRandomTempFile;

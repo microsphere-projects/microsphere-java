@@ -16,9 +16,10 @@
  */
 package io.microsphere.convert;
 
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;

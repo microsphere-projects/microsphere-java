@@ -17,11 +17,11 @@
 package io.microsphere.classloading;
 
 import io.microsphere.LoggingTest;
+import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.net.URL;
 import java.util.List;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_SET;
 import static io.microsphere.collection.Sets.ofSet;

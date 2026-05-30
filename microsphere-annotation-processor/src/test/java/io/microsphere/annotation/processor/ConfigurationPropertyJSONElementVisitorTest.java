@@ -25,9 +25,9 @@ import io.microsphere.reflect.MethodUtils;
 import io.microsphere.reflect.TypeUtils;
 import io.microsphere.test.annotation.processing.AbstractAnnotationProcessingTest;
 import io.microsphere.util.ServiceLoaderUtils;
+import org.junit.jupiter.api.Test;
 
 import java.util.Set;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.annotation.processor.ConfigurationPropertyJSONElementVisitor.CONFIGURATION_PROPERTY_ANNOTATION_CLASS_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;

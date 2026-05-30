@@ -16,14 +16,15 @@
  */
 package io.microsphere.net;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.SetUtils.ofSet;

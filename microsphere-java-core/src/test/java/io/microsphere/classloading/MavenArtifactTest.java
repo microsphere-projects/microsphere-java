@@ -16,9 +16,10 @@
  */
 package io.microsphere.classloading;
 
-import java.net.URL;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.net.URL;
 
 import static io.microsphere.classloading.Artifact.UNKNOWN;
 import static io.microsphere.classloading.Artifact.WILDCARD;

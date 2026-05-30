@@ -21,13 +21,13 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
-import java.util.List;
-import java.util.function.Predicate;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import java.util.List;
+import java.util.function.Predicate;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.lang.function.Predicates.EMPTY_PREDICATE_ARRAY;

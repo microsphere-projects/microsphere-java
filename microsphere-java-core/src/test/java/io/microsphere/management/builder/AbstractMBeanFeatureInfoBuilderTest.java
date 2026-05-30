@@ -17,9 +17,10 @@
 
 package io.microsphere.management.builder;
 
-import javax.management.MBeanFeatureInfo;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import javax.management.MBeanFeatureInfo;
 
 import static javax.management.ImmutableDescriptor.EMPTY_DESCRIPTOR;
 import static org.junit.jupiter.api.Assertions.assertEquals;

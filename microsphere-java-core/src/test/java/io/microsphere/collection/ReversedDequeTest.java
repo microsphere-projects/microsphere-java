@@ -17,9 +17,10 @@
 
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Deque;
 import java.util.LinkedList;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.QueueUtils.emptyDeque;
 import static io.microsphere.collection.ReversedDeque.of;

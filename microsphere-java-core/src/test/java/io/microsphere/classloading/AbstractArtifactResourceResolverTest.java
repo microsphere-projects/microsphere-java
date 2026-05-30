@@ -17,12 +17,12 @@
 package io.microsphere.classloading;
 
 import io.microsphere.LoggingTest;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import javax.annotation.Nonnull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import javax.annotation.Nonnull;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 
 import static io.microsphere.reflect.JavaType.from;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;

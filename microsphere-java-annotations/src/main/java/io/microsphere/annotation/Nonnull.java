@@ -16,9 +16,9 @@
 
 package io.microsphere.annotation;
 
+import javax.annotation.meta.TypeQualifierNickname;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
-import javax.annotation.meta.TypeQualifierNickname;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 

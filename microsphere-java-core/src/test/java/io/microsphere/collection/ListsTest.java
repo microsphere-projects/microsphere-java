@@ -1,13 +1,15 @@
 package io.microsphere.collection;
 
-import java.lang.invoke.MethodHandle;
 import org.junit.jupiter.api.Test;
+
+import java.lang.invoke.MethodHandle;
 
 import static io.microsphere.AbstractTestCase.TEST_NULL_OBJECT_ARRAY;
 import static io.microsphere.collection.ListUtils.of;
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Lists.ofList0;
-import static io.microsphere.collection.Lists.ofList10;
 import static io.microsphere.collection.Lists.ofList1;
+import static io.microsphere.collection.Lists.ofList10;
 import static io.microsphere.collection.Lists.ofList2;
 import static io.microsphere.collection.Lists.ofList3;
 import static io.microsphere.collection.Lists.ofList4;
@@ -16,7 +18,6 @@ import static io.microsphere.collection.Lists.ofList6;
 import static io.microsphere.collection.Lists.ofList7;
 import static io.microsphere.collection.Lists.ofList8;
 import static io.microsphere.collection.Lists.ofList9;
-import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.Lists.ofListElements;
 import static io.microsphere.invoke.MethodHandlesLookupUtils.findPublicStatic;
 import static java.util.Collections.emptyList;

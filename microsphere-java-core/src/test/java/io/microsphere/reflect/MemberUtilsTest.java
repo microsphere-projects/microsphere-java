@@ -1,7 +1,8 @@
 package io.microsphere.reflect;
 
-import java.util.Map;
 import org.junit.jupiter.api.Test;
+
+import java.util.Map;
 
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.MemberUtils.FINAL_MEMBER_PREDICATE;

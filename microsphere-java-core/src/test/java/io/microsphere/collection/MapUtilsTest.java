@@ -16,6 +16,8 @@
  */
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -25,7 +27,6 @@ import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.Function;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.collection.MapUtils.FIXED_LOAD_FACTOR;
@@ -381,7 +382,7 @@ class MapUtilsTest {
 
     @Test
     void testNestedMap() {
-        LinkedHashMap<String, Object> map = newLinkedHashMap();
+        Map<String, Object> map = newLinkedHashMap();
         map.put("a.b.1", "1");
         map.put("a.b.2", "2");
         map.put("d.e.f.1", "1");

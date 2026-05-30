@@ -1,11 +1,11 @@
 package io.microsphere.concurrent;
 
 import io.microsphere.Loggable;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.Lists.ofList;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;

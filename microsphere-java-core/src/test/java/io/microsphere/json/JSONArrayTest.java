@@ -17,10 +17,11 @@
 
 package io.microsphere.json;
 
-import java.util.Collection;
-import java.util.Enumeration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
+import java.util.Enumeration;
 
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;

@@ -18,12 +18,12 @@ package io.microsphere.net.classpath;
 
 import io.microsphere.net.AbstractExtendableProtocolURLStreamHandlerTest;
 import io.microsphere.net.ExtendableProtocolURLStreamHandler;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.io.IOUtils.toByteArray;
 import static java.net.Proxy.NO_PROXY;

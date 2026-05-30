@@ -16,8 +16,9 @@
  */
 package io.microsphere.util;
 
-import javax.annotation.Nullable;
 import org.junit.jupiter.api.Test;
+
+import javax.annotation.Nullable;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.HYPHEN;

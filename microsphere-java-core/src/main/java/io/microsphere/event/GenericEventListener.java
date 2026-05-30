@@ -97,7 +97,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
         HashMap<Class<?>, Set<Method>> eventMethods = newHashMap();
         of(getClass().getMethods()).filter(this::isHandleEventMethod).forEach(method -> {
             Class<?> paramType = method.getParameterTypes()[0];
-            LinkedHashSet<Method> methods = eventMethods.computeIfAbsent(paramType, key -> new LinkedHashSet<>());
+            Set<Method> methods = eventMethods.computeIfAbsent(paramType, key -> new LinkedHashSet<>());
             methods.add(method);
         });
         return eventMethods;

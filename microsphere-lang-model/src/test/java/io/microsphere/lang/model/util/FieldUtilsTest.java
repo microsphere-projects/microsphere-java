@@ -18,7 +18,12 @@ package io.microsphere.lang.model.util;
 
 import io.microsphere.test.model.Color;
 import io.microsphere.test.model.Model;
+import org.junit.jupiter.api.Test;
 
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.TypeMirror;
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Type;
@@ -26,11 +31,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.TypeMirror;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.Predicates.alwaysFalse;
 import static io.microsphere.lang.function.Predicates.alwaysTrue;

@@ -25,6 +25,8 @@ import io.microsphere.test.C;
 import io.microsphere.test.D;
 import io.microsphere.test.Data;
 import io.microsphere.test.MultipleValueData;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -33,8 +35,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.JSONTestUtils.assertConfigurationPropertyJSON;
 import static io.microsphere.JSONTestUtils.newConfigurationProperty;

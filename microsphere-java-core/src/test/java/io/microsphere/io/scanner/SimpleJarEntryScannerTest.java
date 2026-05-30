@@ -5,14 +5,14 @@ package io.microsphere.io.scanner;
 
 import io.microsphere.AbstractTestCase;
 import io.microsphere.util.jar.JarUtils;
+import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import javax.annotation.Nonnull;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.io.scanner.SimpleJarEntryScanner.INSTANCE;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;

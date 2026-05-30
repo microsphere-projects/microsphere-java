@@ -17,10 +17,11 @@
 
 package io.microsphere.collection;
 
-import java.util.Collection;
-import java.util.Iterator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Collection;
+import java.util.Iterator;
 
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.Lists.ofList;

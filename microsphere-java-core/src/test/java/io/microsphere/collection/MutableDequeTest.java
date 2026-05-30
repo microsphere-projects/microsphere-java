@@ -17,10 +17,11 @@
 
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

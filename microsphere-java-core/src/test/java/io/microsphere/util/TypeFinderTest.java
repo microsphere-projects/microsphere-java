@@ -6,6 +6,7 @@ import io.microsphere.test.StringIntegerF1;
 import io.microsphere.test.StringIntegerToBoolean;
 import io.microsphere.test.StringIntegerToBooleanClass;
 import io.microsphere.util.TypeFinder.Include;
+import org.junit.jupiter.api.Test;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -14,7 +15,6 @@ import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.assertValues;
 import static io.microsphere.collection.ListUtils.newArrayList;

@@ -1,12 +1,13 @@
 package io.microsphere.reflect.generics;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Dictionary;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.reflect.generics.ParameterizedTypeImpl.of;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;

@@ -21,7 +21,6 @@ import io.microsphere.annotation.Nonnull;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -207,7 +206,7 @@ public class TypeFinder<T> {
      */
     protected List<T> doFindTypes(Predicate<? super T>[] typeFilters) {
 
-        LinkedList<T> allTypes = newLinkedList();
+        List<T> allTypes = newLinkedList();
 
         if (includeSelf) {
             // add self

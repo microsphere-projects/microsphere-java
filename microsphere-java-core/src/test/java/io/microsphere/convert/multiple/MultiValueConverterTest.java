@@ -16,6 +16,8 @@
  */
 package io.microsphere.convert.multiple;
 
+import org.junit.jupiter.api.Test;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Deque;
@@ -26,7 +28,6 @@ import java.util.Set;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TransferQueue;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.SetUtils.ofSet;
 import static io.microsphere.convert.multiple.MultiValueConverter.convertIfPossible;

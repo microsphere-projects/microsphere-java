@@ -1,16 +1,15 @@
 package io.microsphere.concurrent;
 
 import io.microsphere.collection.MutableQueueTest;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Spliterator;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.Lists.ofList;

@@ -16,9 +16,10 @@
  */
 package io.microsphere.collection;
 
+import org.junit.jupiter.api.Test;
+
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.collection.EnumerationUtils.isEnumeration;
 import static io.microsphere.collection.EnumerationUtils.of;

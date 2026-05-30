@@ -17,8 +17,8 @@
 
 package io.microsphere.metadata;
 
-import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.beans.ConfigurationProperty.Metadata;
 
 import java.util.Set;
 

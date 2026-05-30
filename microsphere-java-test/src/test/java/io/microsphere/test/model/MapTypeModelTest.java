@@ -1,12 +1,10 @@
 package io.microsphere.test.model;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.TreeMap;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.collection.MapUtils.newTreeMap;

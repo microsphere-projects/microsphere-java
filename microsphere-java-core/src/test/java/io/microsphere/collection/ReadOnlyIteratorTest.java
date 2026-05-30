@@ -17,10 +17,10 @@
 package io.microsphere.collection;
 
 import io.microsphere.Loggable;
+import org.junit.jupiter.api.Test;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.junit.jupiter.api.Test;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static org.junit.jupiter.api.Assertions.assertEquals;

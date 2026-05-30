@@ -17,10 +17,11 @@
 
 package io.microsphere.io.event;
 
-import java.io.File;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.File;
+import java.io.IOException;
 
 import static io.microsphere.AbstractTestCase.createRandomTempFile;
 import static io.microsphere.io.event.FileChangedEvent.Kind.CREATED;
