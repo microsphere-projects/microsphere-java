@@ -50,7 +50,7 @@ import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.sort;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,

@@ -29,7 +29,7 @@ import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
-import static io.microsphere.collection.SetUtils.*;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 
 /**
  * A generic implementation of the {@link EventListener} interface that supports multiple event handling methods.

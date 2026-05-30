@@ -40,7 +40,7 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * Abstract implementation of {@link EventDispatcher} that provides common functionality for dispatching events to

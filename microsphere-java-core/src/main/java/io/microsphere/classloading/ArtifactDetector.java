@@ -25,7 +25,7 @@ import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static io.microsphere.util.SystemUtils.JAVA_HOME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
-import static io.microsphere.collection.SetUtils.*;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 
 /**
  * The {@code ArtifactDetector} class is responsible for detecting and resolving artifacts from the classpath.

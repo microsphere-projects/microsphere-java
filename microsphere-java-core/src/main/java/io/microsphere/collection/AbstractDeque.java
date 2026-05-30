@@ -19,7 +19,6 @@ package io.microsphere.collection;
 import java.util.AbstractQueue;
 import java.util.Deque;
 import java.util.NoSuchElementException;
-import static io.microsphere.collection.ListUtils.*;
 
 /**
  * Abstract {@link Deque} implementation that provides default implementations for some of the
@@ -35,7 +34,7 @@ import static io.microsphere.collection.ListUtils.*;
  * <h3>Example Usage</h3>
  * <pre>{@code
  * public class SimpleDeque<E> extends AbstractDeque<E> {
- *     private final List<E> list = newArrayList();
+ *     private final List<E> list = new ArrayList<>();
  *
  *     public void addFirst(E e) {
  *         list.add(0, e);

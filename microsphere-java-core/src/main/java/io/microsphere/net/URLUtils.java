@@ -818,7 +818,7 @@ public abstract class URLUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * // Example 1: Basic usage with multiple parameters
-     * Map<String, List<String>> matrixParams = newLinkedHashMap();
+     * Map<String, List<String>> matrixParams = new LinkedHashMap<>();
      * matrixParams.put("key1", Arrays.asList("valueA", "valueB"));
      * matrixParams.put("key2", Collections.singletonList("valueC"));
      * matrixParams.put("_sp", Arrays.asList("subproto1", "subproto2")); // This will be skipped

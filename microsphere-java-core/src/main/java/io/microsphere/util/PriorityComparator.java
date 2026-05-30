@@ -24,7 +24,6 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.util.AnnotationUtils.findAnnotation;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getType;
-import static io.microsphere.collection.ListUtils.*;
 
 /**
  * A {@link Comparator} implementation that sorts objects based on the value of the
@@ -36,7 +35,7 @@ import static io.microsphere.collection.ListUtils.*;
  *
  * <h3>Example Usage</h3>
  * <pre>{@code
- * List<Object> list = newArrayList();
+ * List<Object> list = new ArrayList<>();
  * list.add(new HighPriorityService());
  * list.add(new LowPriorityService());
  * Collections.sort(list, PriorityComparator.INSTANCE);

@@ -28,7 +28,7 @@ import static java.lang.System.nanoTime;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.hash;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * <p>{@code StopWatch} provides a simple way to measure execution time for tasks, supporting nested task tracking.

@@ -32,7 +32,7 @@ import static java.lang.Character.isWhitespace;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
 import static java.lang.String.valueOf;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * The utilities class for {@link String}
@@ -823,7 +823,7 @@ public abstract class StringUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * StringUtils.toStringArray(null)               = []
-     * StringUtils.toStringArray(newArrayList())  = []
+     * StringUtils.toStringArray(new ArrayList<>())  = []
      * StringUtils.toStringArray(Arrays.asList("a", "b", "c")) = ["a", "b", "c"]
      * }</pre>
      *

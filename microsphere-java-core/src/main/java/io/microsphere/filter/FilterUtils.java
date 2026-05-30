@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * Utility class for working with {@link Filter} instances.

@@ -43,7 +43,7 @@ import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isWrapperType;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may

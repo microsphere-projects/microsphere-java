@@ -255,7 +255,7 @@ public interface Streams {
      *
      * <h3>Example Usage with Set</h3>
      * <pre>{@code
-     * Set<String> names = newLinkedHashSet(Arrays.asList("Alice", "Bob", "Charlie", "Anna"));
+     * Set<String> names = new LinkedHashSet<>(Arrays.asList("Alice", "Bob", "Charlie", "Anna"));
      * Set<String> filteredSet = Streams.filter(names, name -> name.startsWith("A"));
      * System.out.println(filteredSet);  // Output: [Alice, Anna]
      * }</pre>
@@ -291,7 +291,7 @@ public interface Streams {
      *
      * <h3>Example Usage with Set</h3>
      * <pre>{@code
-     * Set<String> names = newLinkedHashSet(Arrays.asList("Alice", "Anna", "Bob", "Andrew"));
+     * Set<String> names = new LinkedHashSet<>(Arrays.asList("Alice", "Anna", "Bob", "Andrew"));
      * Set<String> filtered = Streams.filterAll(names,
      *     name -> name.startsWith("A"),
      *     name -> name.length() > 4
@@ -385,7 +385,7 @@ public interface Streams {
      *
      * <h3>Example Usage with Set</h3>
      * <pre>{@code
-     * Set<String> names = newLinkedHashSet(Arrays.asList("Alice", "Anna", "Bob", "Andrew"));
+     * Set<String> names = new LinkedHashSet<>(Arrays.asList("Alice", "Anna", "Bob", "Andrew"));
      * Set<String> filtered = Streams.filterAny(names,
      *     name -> name.startsWith("B"),
      *     name -> name.length() <= 3
@@ -484,7 +484,7 @@ public interface Streams {
      *
      * <h3>Example Usage with Set</h3>
      * <pre>{@code
-     * Set<String> names = newLinkedHashSet(Arrays.asList("Alice", "Anna", "Bob", "Andrew"));
+     * Set<String> names = new LinkedHashSet<>(Arrays.asList("Alice", "Anna", "Bob", "Andrew"));
      * String result = Streams.filterFirst(names,
      *     name -> name.startsWith("A"),
      *     name -> name.length() > 4

@@ -63,7 +63,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static io.microsphere.collection.SetUtils.*;
+import static io.microsphere.collection.SetUtils.newTreeSet;
 
 /**
  * /**

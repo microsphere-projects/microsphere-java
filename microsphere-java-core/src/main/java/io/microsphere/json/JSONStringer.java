@@ -29,7 +29,7 @@ import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.lang.String.format;
 import static java.util.Arrays.fill;
-import static io.microsphere.collection.ListUtils.*;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * Implements {@link JSONObject#toString} and {@link JSONArray#toString}. Most application

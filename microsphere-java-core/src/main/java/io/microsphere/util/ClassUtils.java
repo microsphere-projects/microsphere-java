@@ -84,7 +84,6 @@ import static java.util.Collections.emptySet;
 import static java.util.Collections.synchronizedMap;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Collections.unmodifiableSet;
-import static io.microsphere.collection.ListUtils.*;
 
 /**
  * {@link Class} utility class
@@ -597,7 +596,7 @@ public abstract class ClassUtils implements Utils {
      * <pre>{@code
      * boolean result1 = ClassUtils.isSimpleType("Hello");  // returns true
      * boolean result2 = ClassUtils.isSimpleType(123);      // returns true
-     * boolean result3 = ClassUtils.isSimpleType(newArrayList()); // returns false
+     * boolean result3 = ClassUtils.isSimpleType(new ArrayList<>()); // returns false
      * boolean result4 = ClassUtils.isSimpleType(null);     // returns false
      * }</pre>
      *
