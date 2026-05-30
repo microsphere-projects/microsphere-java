@@ -853,7 +853,7 @@ public abstract class AnnotationUtils implements Utils {
             return emptyList();
         }
 
-        List<Annotation> allAnnotations = new LinkedList<>();
+        LinkedList<Annotation> allAnnotations = new LinkedList<>();
         List<Class<?>> allInheritedClasses = findAllInheritedClasses(type, NON_OBJECT_CLASS_FILTER);
 
         // Add the declared annotations
@@ -1812,7 +1812,7 @@ public abstract class AnnotationUtils implements Utils {
     @Nonnull
     @Immutable
     public static <A extends Annotation> List<A> findMetaAnnotations(AnnotatedElement annotatedElement, Class<A> metaAnnotationType) {
-        List<A> annotations = newLinkedList();
+        LinkedList<A> annotations = newLinkedList();
         findMetaAnnotations(annotatedElement, metaAnnotationType, annotations);
         return unmodifiableList(annotations);
     }

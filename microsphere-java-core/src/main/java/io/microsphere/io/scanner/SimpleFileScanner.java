@@ -85,7 +85,7 @@ public class SimpleFileScanner {
     @Immutable
     public Set<File> scan(File rootDirectory, boolean recursive, IOFileFilter ioFileFilter) {
 
-        final Set<File> filesSet = newLinkedHashSet();
+        final LinkedHashSet<File> filesSet = newLinkedHashSet();
 
         if (ioFileFilter.accept(rootDirectory)) {
             filesSet.add(rootDirectory);

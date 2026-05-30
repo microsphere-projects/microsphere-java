@@ -883,7 +883,7 @@ public abstract class ServiceLoaderUtils implements Utils {
             throw new IllegalArgumentException(message);
         }
 
-        List<S> serviceList = newLinkedList(iterator);
+        LinkedList<S> serviceList = newLinkedList(iterator);
 
         sort(serviceList, COMPARATOR);
 
@@ -891,7 +891,7 @@ public abstract class ServiceLoaderUtils implements Utils {
     }
 
     static Set<String> doGetServiceClassNames(Class<?> serviceType, @Nullable ClassLoader classLoader) {
-        Set<String> serviceClassNames = newLinkedHashSet();
+        LinkedHashSet<String> serviceClassNames = newLinkedHashSet();
         execute(() -> {
             Set<URL> serviceResoources = getServiceResoources(serviceType, classLoader);
             for (URL serviceResoource : serviceResoources) {

@@ -1181,7 +1181,7 @@ public abstract class MapUtils implements Utils {
     @Nonnull
     @Immutable
     public static Map<String, Object> nestedMap(Map<String, Object> map) {
-        Map<String, Object> nestedMap = newLinkedHashMap();
+        LinkedHashMap<String, Object> nestedMap = newLinkedHashMap();
 
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             String propertyName = entry.getKey();
@@ -1235,7 +1235,7 @@ public abstract class MapUtils implements Utils {
     @Nonnull
     static Map<String, Object> extraProperties(Map<String, Object> map) {
         int size = size(map);
-        Map<String, Object> properties = newLinkedHashMap(size);
+        LinkedHashMap<String, Object> properties = newLinkedHashMap(size);
         if (size > 0) {
             for (Map.Entry<String, Object> entry : map.entrySet()) {
                 String key = entry.getKey();

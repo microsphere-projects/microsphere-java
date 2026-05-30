@@ -71,7 +71,7 @@ public abstract class PropertiesUtils implements Utils {
         if (isEmpty(properties)) {
             return properties;
         }
-        Map<String, Object> flattenProperties = newLinkedHashMap();
+        LinkedHashMap<String, Object> flattenProperties = newLinkedHashMap();
         flatProperties(properties, null, flattenProperties);
         return unmodifiableMap(flattenProperties);
     }

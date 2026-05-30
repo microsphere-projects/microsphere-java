@@ -301,7 +301,7 @@ public abstract class FieldUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Field> findAllFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
-        Set<Field> allFields = newLinkedHashSet();
+        LinkedHashSet<Field> allFields = newLinkedHashSet();
         addAll(allFields, declaredClass.getFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allFields, superType.getFields());
@@ -342,7 +342,7 @@ public abstract class FieldUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Field> findAllDeclaredFields(Class<?> declaredClass, Predicate<? super Field>... fieldFilters) {
-        Set<Field> allDeclaredFields = newLinkedHashSet();
+        LinkedHashSet<Field> allDeclaredFields = newLinkedHashSet();
         addAll(allDeclaredFields, declaredClass.getDeclaredFields());
         for (Class superType : getAllInheritedTypes(declaredClass)) {
             addAll(allDeclaredFields, superType.getDeclaredFields());

@@ -382,7 +382,7 @@ class MapUtilsTest {
 
     @Test
     void testNestedMap() {
-        Map<String, Object> map = newLinkedHashMap();
+        LinkedHashMap<String, Object> map = newLinkedHashMap();
         map.put("a.b.1", "1");
         map.put("a.b.2", "2");
         map.put("d.e.f.1", "1");

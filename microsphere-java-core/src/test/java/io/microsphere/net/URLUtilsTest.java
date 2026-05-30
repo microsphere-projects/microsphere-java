@@ -207,7 +207,7 @@ class URLUtilsTest extends LoggingTest {
     void testResolveQueryParameters() {
         String url = TEST_HTTP_WITH_QUERY_STRING;
         Map<String, List<String>> parametersMap = resolveQueryParameters(url);
-        Map<String, List<String>> expectedParametersMap = newLinkedHashMap();
+        LinkedHashMap<String, List<String>> expectedParametersMap = newLinkedHashMap();
         expectedParametersMap.put("q", ofList("java"));
         expectedParametersMap.put("oq", ofList("java"));
         expectedParametersMap.put("sourceid", ofList("chrome"));
@@ -231,7 +231,7 @@ class URLUtilsTest extends LoggingTest {
     void testResolveMatrixParameters() {
         String url = TEST_HTTP_WITH_MATRIX_STRING;
         Map<String, List<String>> parametersMap = resolveMatrixParameters(url);
-        Map<String, List<String>> expectedParametersMap = newLinkedHashMap();
+        LinkedHashMap<String, List<String>> expectedParametersMap = newLinkedHashMap();
         expectedParametersMap.put("q", ofList("java"));
         expectedParametersMap.put("oq", ofList("java"));
         expectedParametersMap.put("sourceid", ofList("chrome"));

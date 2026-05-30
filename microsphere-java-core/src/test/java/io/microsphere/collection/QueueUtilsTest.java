@@ -228,19 +228,19 @@ class QueueUtilsTest {
 
     @Test
     void testNewArrayDeque() {
-        Deque<String> deque = newArrayDeque();
+        ArrayDeque<String> deque = newArrayDeque();
         assertNotNull(deque);
     }
 
     @Test
     void testNewArrayDequeWithCapacity() {
-        Deque<String> deque = newArrayDeque(10);
+        ArrayDeque<String> deque = newArrayDeque(10);
         assertNotNull(deque);
     }
 
     @Test
     void testNewArrayDequeWithElements() {
-        Deque<String> deque = newArrayDeque("a", "b", "c");
+        ArrayDeque<String> deque = newArrayDeque("a", "b", "c");
         assertNotNull(deque);
         assertEquals(3, deque.size());
         assertTrue(deque.containsAll(asList("a", "b", "c")));
@@ -258,7 +258,7 @@ class QueueUtilsTest {
 
     @Test
     void testNewArrayDequeWithSet() {
-        Collection<String> source = new HashSet<>(asList("a", "b", "c"));
+        HashSet<String> source = new HashSet<>(asList("a", "b", "c"));
         ArrayDeque<String> deque = newArrayDeque(source);
         assertNotNull(deque);
         assertEquals(3, deque.size());

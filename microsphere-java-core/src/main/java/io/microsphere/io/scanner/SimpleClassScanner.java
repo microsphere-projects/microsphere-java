@@ -119,11 +119,11 @@ public class SimpleClassScanner {
     @Nonnull
     @Immutable
     public Set<Class<?>> scan(ClassLoader classLoader, String packageName, final boolean recursive, boolean requiredLoad) throws IllegalArgumentException, IllegalStateException {
-        Set<Class<?>> classesSet = new LinkedHashSet();
+        LinkedHashSet<Class<?>> classesSet = new LinkedHashSet();
 
         final String packageResourceName = PACKAGE.resolve(packageName);
 
-        Set<String> classNames = new LinkedHashSet();
+        LinkedHashSet<String> classNames = new LinkedHashSet();
         // Find in class loader
         Set<URL> resourceURLs = execute(() -> getResources(classLoader, PACKAGE, packageName));
 
@@ -168,7 +168,7 @@ public class SimpleClassScanner {
     public Set<Class<?>> scan(ClassLoader classLoader, File archiveFile, boolean requiredLoad,
                               Predicate<? super Class<?>>... classFilters) {
         Set<String> classNames = findClassNamesInClassPath(archiveFile, true);
-        Set<Class<?>> classesSet = newLinkedHashSet();
+        LinkedHashSet<Class<?>> classesSet = newLinkedHashSet();
         for (String className : classNames) {
             Class<?> class_ = requiredLoad ? loadClass(classLoader, className) : findLoadedClass(classLoader, className);
             if (class_ != null) {
@@ -180,7 +180,7 @@ public class SimpleClassScanner {
 
     private Set<String> filterClassNames(Set<String> classNames, String packageName, boolean recursive) {
         PackageNameClassNameFilter packageNameClassNameFilter = new PackageNameClassNameFilter(packageName, recursive);
-        Set<String> filterClassNames = new LinkedHashSet(filter(classNames, packageNameClassNameFilter));
+        LinkedHashSet<String> filterClassNames = new LinkedHashSet(filter(classNames, packageNameClassNameFilter));
         return filterClassNames;
     }
 

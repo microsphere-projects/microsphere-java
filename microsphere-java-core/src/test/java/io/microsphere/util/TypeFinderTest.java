@@ -232,7 +232,7 @@ class TypeFinderTest {
     @Test
     void testAddSuperTypes() {
         TypeFinder<Type> typeFinder = genericTypeFinder(String.class, values());
-        List<Type> types = newArrayList();
+        ArrayList<Type> types = newArrayList();
         typeFinder.addSuperTypes(types, String.class, false, false, false);
         assertTrue(types.isEmpty());
 

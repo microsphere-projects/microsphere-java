@@ -77,7 +77,7 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
 
     @Override
     public final List<ConfigurationProperty> load() throws Throwable {
-        List<ConfigurationProperty> configurationProperties = newLinkedList();
+        LinkedList<ConfigurationProperty> configurationProperties = newLinkedList();
         if (loadedAll) {
             Enumeration<URL> urls = this.classLoader.getResources(this.resourceName);
             while (urls.hasMoreElements()) {

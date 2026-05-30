@@ -81,7 +81,7 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     }
 
     public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
-        List<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
+        LinkedList<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
         this.factories = newFactories;
         sortFactories();
     }

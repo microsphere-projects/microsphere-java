@@ -54,16 +54,16 @@ public class MBeanInfoBuilder extends MBeanDescribableBuilder<MBeanInfoBuilder> 
     String className;
 
     @Nullable
-    List<MBeanAttributeInfoBuilder> attributeBuilders = new LinkedList<>();
+    LinkedList<MBeanAttributeInfoBuilder> attributeBuilders = new LinkedList<>();
 
     @Nullable
-    List<MBeanOperationInfoBuilder> operationBuilders = new LinkedList<>();
+    LinkedList<MBeanOperationInfoBuilder> operationBuilders = new LinkedList<>();
 
     @Nullable
-    List<MBeanConstructorInfoBuilder> constructorBuilders = new LinkedList<>();
+    LinkedList<MBeanConstructorInfoBuilder> constructorBuilders = new LinkedList<>();
 
     @Nullable
-    List<MBeanNotificationInfoBuilder> notificationBuilders = new LinkedList<>();
+    LinkedList<MBeanNotificationInfoBuilder> notificationBuilders = new LinkedList<>();
 
     public MBeanInfoBuilder attribute(String attributeName, Class<?> attributeType, Consumer<MBeanAttributeInfoBuilder> builderConsumer) {
         MBeanAttributeInfoBuilder builder = MBeanAttributeInfoBuilder.attribute(attributeType).name(attributeName);

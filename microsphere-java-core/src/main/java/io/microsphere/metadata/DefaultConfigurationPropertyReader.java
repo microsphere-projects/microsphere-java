@@ -41,7 +41,7 @@ public class DefaultConfigurationPropertyReader implements ConfigurationProperty
     public List<ConfigurationProperty> read(String content) throws Throwable {
         List<Map<String, Object>> configurationPropertiesMaps = readValues(content, List.class, Map.class);
         int size = configurationPropertiesMaps.size();
-        List<ConfigurationProperty> configurationProperties = newArrayList(size);
+        ArrayList<ConfigurationProperty> configurationProperties = newArrayList(size);
         for (int i = 0; i < size; i++) {
             Map<String, Object> configurationPropertyMap = configurationPropertiesMaps.get(i);
             ConfigurationProperty configurationProperty = readConfigurationProperty(configurationPropertyMap);

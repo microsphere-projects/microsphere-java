@@ -127,7 +127,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     @Override
     @Immutable
     public List<EventListener<?>> getAllEventListeners() {
-        List<EventListener<?>> listeners = new LinkedList<>();
+        LinkedList<EventListener<?>> listeners = new LinkedList<>();
 
         sortedListeners().forEach(listener -> {
             addIfAbsent(listeners, listener);
@@ -192,7 +192,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     void doInListener(Class<? extends Event> eventType, Consumer<Collection<EventListener>> consumer) {
         if (eventType != null) {
             synchronized (mutex) {
-                List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
+                LinkedList<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
                 // consume
                 consumer.accept(listeners);
                 // sort

@@ -68,7 +68,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetPrimitiveTypeModels() {
-        Queue<PrimitiveTypeModel> testQueue = new LinkedList<>();
+        LinkedList<PrimitiveTypeModel> testQueue = new LinkedList<>();
         testQueue.add(new PrimitiveTypeModel());
         testQueue.add(new PrimitiveTypeModel());
 
@@ -81,7 +81,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetModels() {
-        Deque<Model> testDeque = new LinkedList<>();
+        LinkedList<Model> testDeque = new LinkedList<>();
         testDeque.add(new Model());
         testDeque.add(new Model());
 
@@ -94,7 +94,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testSetGetModelArrays() {
-        Set<Model[]> testSet = newHashSet();
+        HashSet<Model[]> testSet = newHashSet();
         testSet.add(new Model[]{new Model(), new Model()});
         testSet.add(new Model[]{new Model()});
 
@@ -126,7 +126,7 @@ class CollectionTypeModelTest {
 
     @Test
     void testCollectionMutability() {
-        List<Color> originalList = new ArrayList<>(asList(RED, BLUE));
+        ArrayList<Color> originalList = new ArrayList<>(asList(RED, BLUE));
         model.setColors(originalList);
 
         // Modify the original collection

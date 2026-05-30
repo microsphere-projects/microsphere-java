@@ -198,7 +198,7 @@ public abstract class SetUtils implements Utils {
             return emptySet();
         }
 
-        Set<E> set = newLinkedHashSet();
+        LinkedHashSet<E> set = newLinkedHashSet();
         while (elements.hasMoreElements()) {
             set.add(elements.nextElement());
         }

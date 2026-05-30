@@ -517,7 +517,7 @@ public abstract class BeanUtils implements Utils {
 
     static List<?> toList(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
         List<?> list = (List<?>) value;
-        List<Object> newList = newArrayList(size(list));
+        ArrayList<Object> newList = newArrayList(size(list));
         addValues(newList, list, resolvedDepth, maxResolvedDepth);
         return newList;
     }
@@ -531,14 +531,14 @@ public abstract class BeanUtils implements Utils {
 
     static Queue<?> toQueue(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Queue<?> queue = (Queue<?>) value;
-        Queue<Object> newQueue = newArrayDeque(size(queue));
+        ArrayDeque<Object> newQueue = newArrayDeque(size(queue));
         addValues(newQueue, queue, resolvedDepth, maxResolvedDepth);
         return newQueue;
     }
 
     static Enumeration<?> toEnumeration(Object value, Class<?> valueType, MutableInteger resolvedDepth, int maxResolvedDepth) {
         Enumeration<?> enumeration = (Enumeration<?>) value;
-        List<Object> newList = newLinkedList();
+        LinkedList<Object> newList = newLinkedList();
         addValues(newList, toIterable(enumeration), resolvedDepth, maxResolvedDepth);
         return enumeration(newList);
     }

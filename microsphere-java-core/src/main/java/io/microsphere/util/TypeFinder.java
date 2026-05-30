@@ -205,7 +205,7 @@ public class TypeFinder<T> {
      */
     protected List<T> doFindTypes(Predicate<? super T>[] typeFilters) {
 
-        List<T> allTypes = newLinkedList();
+        LinkedList<T> allTypes = newLinkedList();
 
         if (includeSelf) {
             // add self
@@ -258,7 +258,7 @@ public class TypeFinder<T> {
             return emptyList();
         }
 
-        List<T> types = newArrayList(size);
+        ArrayList<T> types = newArrayList(size);
 
         if (hasSuperclass) {
             types.add(superclass);

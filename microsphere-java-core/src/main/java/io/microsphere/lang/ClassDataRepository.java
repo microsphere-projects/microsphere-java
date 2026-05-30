@@ -185,7 +185,7 @@ public class ClassDataRepository {
     @Nonnull
     @Immutable
     public Set<String> getAllClassNamesInClassPaths() {
-        Set<String> allClassNames = new LinkedHashSet();
+        LinkedHashSet<String> allClassNames = new LinkedHashSet();
         for (Set<String> classNames : classPathToClassNamesMap.values()) {
             allClassNames.addAll(classNames);
         }
@@ -195,8 +195,8 @@ public class ClassDataRepository {
     @Nonnull
     @Immutable
     private Map<String, Set<String>> initClassPathToClassNamesMap() {
-        Map<String, Set<String>> classPathToClassNamesMap = newLinkedHashMap();
-        Set<String> classPaths = newLinkedHashSet();
+        LinkedHashMap<String, Set<String>> classPathToClassNamesMap = newLinkedHashMap();
+        LinkedHashSet<String> classPaths = newLinkedHashSet();
         classPaths.addAll(getBootstrapClassPaths());
         classPaths.addAll(getClassPaths());
         for (String classPath : classPaths) {
@@ -209,7 +209,7 @@ public class ClassDataRepository {
     @Nonnull
     @Immutable
     private Map<String, String> initClassNameToClassPathsMap() {
-        Map<String, String> classNameToClassPathsMap = newLinkedHashMap();
+        LinkedHashMap<String, String> classNameToClassPathsMap = newLinkedHashMap();
 
         for (Entry<String, Set<String>> entry : classPathToClassNamesMap.entrySet()) {
             String classPath = entry.getKey();
@@ -225,7 +225,7 @@ public class ClassDataRepository {
     @Nonnull
     @Immutable
     private Map<String, Set<String>> initPackageNameToClassNamesMap() {
-        Map<String, Set<String>> packageNameToClassNamesMap = new LinkedHashMap();
+        LinkedHashMap<String, Set<String>> packageNameToClassNamesMap = new LinkedHashMap();
         for (Entry<String, String> entry : classNameToClassPathsMap.entrySet()) {
             String className = entry.getKey();
             String packageName = resolvePackageName(className);

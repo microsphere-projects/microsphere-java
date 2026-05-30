@@ -572,7 +572,7 @@ class JSONUtilsTest {
 
     @Test
     void testReadValueAsBeanOnMissingKey() throws JSONException {
-        Map<String, Object> map = newHashMap();
+        HashMap<String, Object> map = newHashMap();
         map.put("name", null);
         map.put("test-name", "test-value");
         JSONObject jsonObject = new JSONObject(map);

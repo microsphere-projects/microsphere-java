@@ -1443,13 +1443,13 @@ public abstract class JSONUtils implements Utils {
     }
 
     static List<?> toList(JSONArray jsonArray, Class<?> elementClass) {
-        List<Object> list = newArrayList(jsonArray.length());
+        ArrayList<Object> list = newArrayList(jsonArray.length());
         addValues(jsonArray, list, elementClass);
         return list;
     }
 
     static Queue<Object> toQueue(JSONArray jsonArray, Class<?> elementClass) {
-        Queue<Object> queue = newArrayDeque(jsonArray.length());
+        ArrayDeque<Object> queue = newArrayDeque(jsonArray.length());
         addValues(jsonArray, queue, elementClass);
         return queue;
     }

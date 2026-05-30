@@ -67,7 +67,7 @@ class SetUtilsTest {
         assertEquals(emptySet(), set);
 
         set = ofSet("A", "B", "C");
-        Set<String> expectedSet = newLinkedHashSet();
+        LinkedHashSet<String> expectedSet = newLinkedHashSet();
         expectedSet.add("A");
         expectedSet.add("B");
         expectedSet.add("C");
@@ -125,7 +125,7 @@ class SetUtilsTest {
         assertEquals(iterable, newHashSet(iterable));
 
         iterable = newHashSet(ELEMENTS);
-        Collection<String> elements = newHashSet(iterable);
+        HashSet<String> elements = newHashSet(iterable);
         assertEquals(iterable, newHashSet(iterable));
         assertEquals(iterable, newHashSet(elements));
         assertSet((Set<String>) iterable);
@@ -186,7 +186,7 @@ class SetUtilsTest {
 
     @Test
     void testNewTreeSetWithCollection() {
-        Set<String> sourceSet = newHashSet(ELEMENTS);
+        HashSet<String> sourceSet = newHashSet(ELEMENTS);
         TreeSet<String> set = newTreeSet(sourceSet);
         assertEquals(3, set.size());
         assertTrue(set.contains("a"));
@@ -201,7 +201,7 @@ class SetUtilsTest {
 
     @Test
     void testNewTreeSetWithSortedSet() {
-        SortedSet<String> sourceSortedSet = new TreeSet<>(java.util.Arrays.asList("z", "y", "x"));
+        TreeSet<String> sourceSortedSet = new TreeSet<>(java.util.Arrays.asList("z", "y", "x"));
         TreeSet<String> set = newTreeSet(sourceSortedSet);
         assertEquals(3, set.size());
         assertTrue(set.contains("x"));

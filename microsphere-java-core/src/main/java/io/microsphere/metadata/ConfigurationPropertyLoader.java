@@ -90,7 +90,7 @@ public interface ConfigurationPropertyLoader extends Prioritized {
     static List<ConfigurationProperty> loadAll() {
         Logger logger = getLogger(ConfigurationPropertyLoader.class);
         List<ConfigurationPropertyLoader> loaders = loadServicesList(ConfigurationPropertyLoader.class);
-        List<ConfigurationProperty> configurationProperties = newLinkedList();
+        LinkedList<ConfigurationProperty> configurationProperties = newLinkedList();
         for (ConfigurationPropertyLoader loader : loaders) {
             try {
                 List<ConfigurationProperty> loadedProperties = loader.load();

@@ -374,7 +374,7 @@ public abstract class JmxUtils implements Utils {
         if (length == 0) {
             return emptyMap();
         }
-        Map<String, MBeanAttribute> mBeanAttributesMap = newHashMap(length);
+        HashMap<String, MBeanAttribute> mBeanAttributesMap = newHashMap(length);
         for (int i = 0; i < length; i++) {
             MBeanAttribute mBeanAttribute = mBeanAttributes[i];
             String attributeName = mBeanAttribute.getName();

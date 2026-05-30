@@ -111,7 +111,7 @@ public interface Listenable<E extends EventListener<?>> {
      */
     default void addEventListeners(E listener, E... others) throws NullPointerException,
             IllegalArgumentException {
-        List<E> listeners = new ArrayList<>(1 + others.length);
+        ArrayList<E> listeners = new ArrayList<>(1 + others.length);
         listeners.add(listener);
         addAll(listeners, others);
         addEventListeners(listeners);

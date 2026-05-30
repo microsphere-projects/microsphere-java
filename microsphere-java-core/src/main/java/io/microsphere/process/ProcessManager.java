@@ -44,7 +44,7 @@ public class ProcessManager {
      */
     public static final ProcessManager INSTANCE = new ProcessManager();
 
-    final ConcurrentMap<Process, String> unfinishedProcessesCache = newConcurrentHashMap();
+    final ConcurrentHashMap<Process, String> unfinishedProcessesCache = newConcurrentHashMap();
 
     private ProcessManager() {
     }

@@ -73,7 +73,7 @@ class JSONObjectTest {
 
     @Test
     void testConstructorWithMapOnNullKey() {
-        Map<String, Object> map = newHashMap();
+        HashMap<String, Object> map = newHashMap();
         map.put(null, null);
         assertThrows(NullPointerException.class, () -> new JSONObject(map));
     }
@@ -516,7 +516,7 @@ class JSONObjectTest {
 
     @Test
     void testWrapOnException() {
-        Map<String, Object> map = newHashMap();
+        HashMap<String, Object> map = newHashMap();
         map.put(null, null);
         assertNull(wrap(map));
     }

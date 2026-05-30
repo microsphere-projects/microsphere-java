@@ -39,7 +39,7 @@ class ReversedDequeTest extends MutableDequeTest<Deque<Object>> {
 
     @Override
     protected Deque<Object> newInstance() {
-        Deque<Object> reversedDeque = of(of(new LinkedList<>()));
+        LinkedList<Object> reversedDeque = of(of(new LinkedList<>()));
         return reversedDeque;
     }
 

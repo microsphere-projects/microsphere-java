@@ -182,7 +182,7 @@ class ResolvableAnnotationValueVisitorTest extends UtilTest {
     void testVisitAnnotation() {
         String attributeName = "since";
 
-        Map<String, Object> attributesMap = newLinkedHashMap();
+        LinkedHashMap<String, Object> attributesMap = newLinkedHashMap();
         attributesMap.put("module", "");
         attributesMap.put("value", "1.0.0");
 

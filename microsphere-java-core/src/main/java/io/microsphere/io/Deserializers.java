@@ -73,7 +73,7 @@ public class Deserializers {
         for (Deserializer deserializer : loadServicesList(Deserializer.class, classLoader)) {
             List<Class<?>> typeArguments = resolveTypeArgumentClasses(deserializer.getClass());
             Class<?> targetClass = first(typeArguments);
-            List<Deserializer> deserializers = typedDeserializers.computeIfAbsent(targetClass, k -> new LinkedList());
+            LinkedList<Deserializer> deserializers = typedDeserializers.computeIfAbsent(targetClass, k -> new LinkedList());
             deserializers.add(deserializer);
         }
     }
