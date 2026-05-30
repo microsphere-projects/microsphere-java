@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static java.util.Collections.unmodifiableList;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * Utility class for working with {@link Filter} instances.
@@ -74,7 +75,7 @@ public abstract class FilterUtils implements Utils {
     @Nonnull
     @Immutable
     public static <E> List<E> filter(Iterable<E> iterable, FilterOperator filterOperator, Filter<E>... filters) {
-        ArrayList<E> list = new ArrayList<E>();
+        ArrayList<E> list = newArrayList();
         Iterator<E> iterator = iterable.iterator();
         while (iterator.hasNext()) {
             E element = iterator.next();

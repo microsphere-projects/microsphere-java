@@ -40,6 +40,7 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * Abstract implementation of {@link EventDispatcher} that provides common functionality for dispatching events to
@@ -127,7 +128,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     @Override
     @Immutable
     public List<EventListener<?>> getAllEventListeners() {
-        LinkedList<EventListener<?>> listeners = new LinkedList<>();
+        LinkedList<EventListener<?>> listeners = newLinkedList();
 
         sortedListeners().forEach(listener -> {
             addIfAbsent(listeners, listener);
@@ -192,7 +193,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     void doInListener(Class<? extends Event> eventType, Consumer<Collection<EventListener>> consumer) {
         if (eventType != null) {
             synchronized (mutex) {
-                List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> new LinkedList<>());
+                List<EventListener> listeners = listenersCache.computeIfAbsent(eventType, e -> newLinkedList());
                 // consume
                 consumer.accept(listeners);
                 // sort

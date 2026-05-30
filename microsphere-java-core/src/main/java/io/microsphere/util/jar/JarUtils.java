@@ -25,6 +25,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.ofList;
 import static io.microsphere.constants.ProtocolConstants.FILE_PROTOCOL;
 import static io.microsphere.constants.ProtocolConstants.JAR_PROTOCOL;
@@ -215,7 +216,7 @@ public abstract class JarUtils implements Utils {
     @Nonnull
     @Immutable
     protected static List<JarEntry> doFilter(Iterable<JarEntry> jarEntries, JarEntryFilter jarEntryFilter) {
-        LinkedList<JarEntry> jarEntriesList = new LinkedList<>();
+        LinkedList<JarEntry> jarEntriesList = newLinkedList();
         for (JarEntry jarEntry : jarEntries) {
             if (jarEntryFilter == null || jarEntryFilter.accept(jarEntry)) {
                 jarEntriesList.add(jarEntry);
