@@ -977,7 +977,7 @@ public abstract class MapUtils implements Utils {
      * @see HashMap#HashMap(int, float)
      */
     @Nonnull
-    public static <K, V> Map<K, V> newFixedHashMap(int size) {
+    public static <K, V> HashMap<K, V> newFixedHashMap(int size) {
         return newHashMap(size, FIXED_LOAD_FACTOR);
     }
 
@@ -1001,7 +1001,7 @@ public abstract class MapUtils implements Utils {
      * @see LinkedHashMap#LinkedHashMap(int, float)
      */
     @Nonnull
-    public static <K, V> Map<K, V> newFixedLinkedHashMap(int size) {
+    public static <K, V> LinkedHashMap<K, V> newFixedLinkedHashMap(int size) {
         return newLinkedHashMap(size, FIXED_LOAD_FACTOR);
     }
 
