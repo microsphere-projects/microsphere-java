@@ -10,9 +10,9 @@ import io.microsphere.lang.ClassDataRepository;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -130,10 +130,10 @@ public class SimpleClassScanner {
         if (resourceURLs.isEmpty()) {
             //Find in class path
             ClassDataRepository repository = ClassDataRepository.INSTANCE;
-            List<String> classNamesInPackage = newArrayList(repository.getClassNamesInPackage(packageName));
+            Collection<String> classNamesInPackage = repository.getClassNamesInPackage(packageName);
 
             if (!classNamesInPackage.isEmpty()) {
-                String classPath = repository.findClassPath(classNamesInPackage.get(0));
+                String classPath = repository.findClassPath(classNamesInPackage.iterator().next());
                 URL resourceURL = execute(() -> new File(classPath).toURI().toURL());
                 resourceURLs = new HashSet();
                 resourceURLs.add(resourceURL);
