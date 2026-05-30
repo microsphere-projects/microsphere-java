@@ -17,6 +17,7 @@
 package io.microsphere.lang.function;
 
 import io.microsphere.Loggable;
+
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.lang.function.ThrowableAction.execute;

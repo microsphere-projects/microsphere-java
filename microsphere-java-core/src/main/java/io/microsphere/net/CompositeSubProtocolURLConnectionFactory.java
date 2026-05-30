@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -81,7 +82,7 @@ public class CompositeSubProtocolURLConnectionFactory implements SubProtocolURLC
     }
 
     public CompositeSubProtocolURLConnectionFactory(Iterable<SubProtocolURLConnectionFactory> factories) {
-        List<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
+        LinkedList<SubProtocolURLConnectionFactory> newFactories = newLinkedList(factories);
         this.factories = newFactories;
         sortFactories();
     }

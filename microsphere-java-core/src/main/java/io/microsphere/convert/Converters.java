@@ -21,6 +21,7 @@ import io.microsphere.util.Utils;
 
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ class Converters implements Utils {
         // sorted and cached converters
         List<Converter> convertersList = loadConvertersList();
         int size = convertersList.size();
-        ConcurrentMap<Entry<Class<?>, Class<?>>, List<Converter>> convertersCache = newConcurrentHashMap(size);
+        ConcurrentHashMap<Entry<Class<?>, Class<?>>, List<Converter>> convertersCache = newConcurrentHashMap(size);
         for (int i = 0; i < size; i++) {
             Converter converter = convertersList.get(i);
             Entry<Class<?>, Class<?>> key = immutableEntry(converter.getSourceType(), converter.getTargetType());

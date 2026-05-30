@@ -24,6 +24,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -64,7 +65,7 @@ public class BeanMetadata {
     static Map<String, PropertyDescriptor> buildPropertyDescriptorsMap(BeanInfo beanInfo) {
         PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
         int length = propertyDescriptors.length;
-        Map<String, PropertyDescriptor> propertyDescriptorsMap = newFixedHashMap(length);
+        HashMap<String, PropertyDescriptor> propertyDescriptorsMap = newFixedHashMap(length);
         for (int i = 0; i < length; i++) {
             PropertyDescriptor propertyDescriptor = propertyDescriptors[i];
             String propertyName = uncapitalize(propertyDescriptor.getName());

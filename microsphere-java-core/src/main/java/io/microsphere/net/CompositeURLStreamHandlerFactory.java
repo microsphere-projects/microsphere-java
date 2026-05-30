@@ -22,6 +22,7 @@ import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -65,7 +66,7 @@ public class CompositeURLStreamHandlerFactory implements URLStreamHandlerFactory
     }
 
     public CompositeURLStreamHandlerFactory(Iterable<URLStreamHandlerFactory> factories) {
-        List<URLStreamHandlerFactory> newFactories = newLinkedList(factories);
+        LinkedList<URLStreamHandlerFactory> newFactories = newLinkedList(factories);
         sortFactories(newFactories);
         this.factories = newFactories;
     }

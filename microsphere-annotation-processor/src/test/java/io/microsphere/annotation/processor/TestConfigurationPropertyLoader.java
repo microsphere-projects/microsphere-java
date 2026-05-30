@@ -21,6 +21,7 @@ import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.metadata.ConfigurationPropertyLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class TestConfigurationPropertyLoader implements ConfigurationPropertyLoa
     public List<ConfigurationProperty> load() throws Throwable {
 
         int size = SIMPLE_TYPES.size();
-        List<ConfigurationProperty> configurationProperties = newArrayList(size);
+        ArrayList<ConfigurationProperty> configurationProperties = newArrayList(size);
 
         Random random = new Random();
 

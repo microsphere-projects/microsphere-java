@@ -20,6 +20,7 @@ import io.microsphere.lang.Prioritized;
 import io.microsphere.lang.function.ThrowableFunction;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -93,7 +94,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
 
     private Map<Class<?>, Set<Method>> findHandleEventMethods() {
         // Event class for key, the eventMethods' Set as value
-        Map<Class<?>, Set<Method>> eventMethods = newHashMap();
+        HashMap<Class<?>, Set<Method>> eventMethods = newHashMap();
         of(getClass().getMethods()).filter(this::isHandleEventMethod).forEach(method -> {
             Class<?> paramType = method.getParameterTypes()[0];
             Set<Method> methods = eventMethods.computeIfAbsent(paramType, key -> new LinkedHashSet<>());

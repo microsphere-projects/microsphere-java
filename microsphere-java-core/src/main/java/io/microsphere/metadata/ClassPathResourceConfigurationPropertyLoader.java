@@ -26,6 +26,7 @@ import io.microsphere.logging.Logger;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.collection.ListUtils.newLinkedList;
@@ -77,7 +78,7 @@ public abstract class ClassPathResourceConfigurationPropertyLoader implements Co
 
     @Override
     public final List<ConfigurationProperty> load() throws Throwable {
-        List<ConfigurationProperty> configurationProperties = newLinkedList();
+        LinkedList<ConfigurationProperty> configurationProperties = newLinkedList();
         if (loadedAll) {
             Enumeration<URL> urls = this.classLoader.getResources(this.resourceName);
             while (urls.hasMoreElements()) {

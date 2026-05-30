@@ -21,8 +21,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import static io.microsphere.collection.EnumerationUtils.ofEnumeration;
 import static io.microsphere.collection.Lists.ofList;
@@ -73,7 +73,7 @@ class JSONObjectTest {
 
     @Test
     void testConstructorWithMapOnNullKey() {
-        Map<String, Object> map = newHashMap();
+        HashMap<String, Object> map = newHashMap();
         map.put(null, null);
         assertThrows(NullPointerException.class, () -> new JSONObject(map));
     }
@@ -516,7 +516,7 @@ class JSONObjectTest {
 
     @Test
     void testWrapOnException() {
-        Map<String, Object> map = newHashMap();
+        HashMap<String, Object> map = newHashMap();
         map.put(null, null);
         assertNull(wrap(map));
     }

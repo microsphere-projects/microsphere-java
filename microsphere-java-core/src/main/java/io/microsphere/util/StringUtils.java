@@ -22,7 +22,6 @@ import io.microsphere.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -170,7 +169,7 @@ public abstract class StringUtils implements Utils {
 
         int delimiterLength = delimiter.length();
 
-        List<String> result = new ArrayList<>();
+        ArrayList<String> result = new ArrayList<>();
 
         if (delimiterLength == 0) {
             for (int i = 0; i < length; i++) {

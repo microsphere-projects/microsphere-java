@@ -16,6 +16,7 @@
 
 package io.microsphere.json;
 
+
 import static java.lang.Double.isInfinite;
 import static java.lang.Double.isNaN;
 import static java.lang.Double.parseDouble;

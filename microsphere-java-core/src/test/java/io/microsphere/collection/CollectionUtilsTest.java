@@ -20,10 +20,11 @@ import io.microsphere.Loggable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 
 import static io.microsphere.AbstractTestCase.TEST_ELEMENT;
 import static io.microsphere.AbstractTestCase.TEST_EMPTY_COLLECTION;
@@ -208,14 +209,14 @@ class CollectionUtilsTest implements Loggable {
 
     @Test
     void testAddAllWithList() {
-        List<String> values = newLinkedList();
+        LinkedList<String> values = newLinkedList();
         assertEquals(2, addAll(values, "A", "B"));
         assertEquals(ofList("A", "B"), values);
     }
 
     @Test
     void testAddAllWithSet() {
-        Set<String> set = newHashSet(TEST_ELEMENT);
+        HashSet<String> set = newHashSet(TEST_ELEMENT);
         assertEquals(0, addAll(set, TEST_ELEMENT));
     }
 
@@ -232,13 +233,13 @@ class CollectionUtilsTest implements Loggable {
 
     @Test
     public void testAddAllWithListAndIterable() {
-        List<String> values = newLinkedList();
+        LinkedList<String> values = newLinkedList();
         assertEquals(2, addAll(values, ofList("A", "B")));
     }
 
     @Test
     public void testAddAllWithSetAndIterable() {
-        Set<String> set = newHashSet(TEST_ELEMENT);
+        HashSet<String> set = newHashSet(TEST_ELEMENT);
         assertEquals(0, addAll(set, set));
     }
 

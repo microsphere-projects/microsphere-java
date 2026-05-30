@@ -26,6 +26,7 @@ import javax.lang.model.type.ArrayType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.SimpleAnnotationValueVisitor6;
 import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -156,7 +157,7 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
     @Override
     public Object visitAnnotation(AnnotationMirror a, ExecutableElement attributeMethod) {
         Map<ExecutableElement, AnnotationValue> elementValues = getElementValues(a);
-        Map<String, Object> attributesMap = newFixedLinkedHashMap(elementValues.size());
+        LinkedHashMap<String, Object> attributesMap = newFixedLinkedHashMap(elementValues.size());
         for (Entry<ExecutableElement, AnnotationValue> entry : elementValues.entrySet()) {
             ExecutableElement method = entry.getKey();
             String attributeName = getAttributeName(method);

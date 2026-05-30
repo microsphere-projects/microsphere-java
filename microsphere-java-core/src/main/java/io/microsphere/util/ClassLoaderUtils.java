@@ -22,6 +22,7 @@ import java.net.URLClassLoader;
 import java.security.SecureClassLoader;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -390,7 +391,7 @@ public abstract class ClassLoaderUtils implements Utils {
         if (size < 1) {
             return emptySet();
         }
-        Set<Class<?>> loadedClasses = newLinkedHashSet(size);
+        LinkedHashSet<Class<?>> loadedClasses = newLinkedHashSet(size);
         for (String className : classNames) {
             Class<?> class_ = findLoadedClass(classLoader, className);
             if (class_ != null) {
@@ -1089,7 +1090,7 @@ public abstract class ClassLoaderUtils implements Utils {
      */
     @Nonnull
     static Set<ClassLoader> doGetInheritableClassLoaders(ClassLoader classLoader) throws NullPointerException {
-        Set<ClassLoader> classLoadersSet = newLinkedHashSet();
+        LinkedHashSet<ClassLoader> classLoadersSet = newLinkedHashSet();
         classLoadersSet.add(classLoader);
         ClassLoader parentClassLoader = classLoader.getParent();
         while (parentClassLoader != null) {
@@ -1136,7 +1137,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Immutable
     public static Map<ClassLoader, Set<Class<?>>> getAllLoadedClassesMap(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
         ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
-        Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = new LinkedHashMap();
+        LinkedHashMap<ClassLoader, Set<Class<?>>> allLoadedClassesMap = new LinkedHashMap();
         Set<ClassLoader> classLoadersSet = doGetInheritableClassLoaders(actualClassLoader);
         for (ClassLoader loader : classLoadersSet) {
             allLoadedClassesMap.put(loader, getLoadedClasses(actualClassLoader));
@@ -1175,7 +1176,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Class<?>> getAllLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
-        Set<Class<?>> allLoadedClassesSet = newLinkedHashSet();
+        LinkedHashSet<Class<?>> allLoadedClassesSet = newLinkedHashSet();
         Map<ClassLoader, Set<Class<?>>> allLoadedClassesMap = getAllLoadedClassesMap(classLoader);
         for (Set<Class<?>> loadedClassesSet : allLoadedClassesMap.values()) {
             allLoadedClassesSet.addAll(loadedClassesSet);
@@ -1297,7 +1298,7 @@ public abstract class ClassLoaderUtils implements Utils {
     @Nonnull
     @Immutable
     public static Set<Class<?>> findLoadedClassesInClassPaths(@Nullable ClassLoader classLoader, Set<String> classPaths) throws UnsupportedOperationException {
-        Set<Class<?>> loadedClasses = newLinkedHashSet();
+        LinkedHashSet<Class<?>> loadedClasses = newLinkedHashSet();
         for (String classPath : classPaths) {
             loadedClasses.addAll(findLoadedClassesInClassPath(classLoader, classPath));
         }
@@ -1549,7 +1550,7 @@ public abstract class ClassLoaderUtils implements Utils {
     public static Set<URL> findAllClassPathURLs(@Nullable ClassLoader classLoader) {
         ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
 
-        Set<URL> allClassPathURLs = newLinkedHashSet();
+        LinkedHashSet<URL> allClassPathURLs = newLinkedHashSet();
 
         URL[] classPathURLs = urlClassPathHandle.getURLs(actualClassLoader);
 

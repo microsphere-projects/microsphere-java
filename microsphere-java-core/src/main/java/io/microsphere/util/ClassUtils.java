@@ -23,6 +23,8 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -223,7 +225,7 @@ public abstract class ClassUtils implements Utils {
                 Date.class,
                 Object.class);
 
-        Set<Class<?>> simpleTypes = newFixedLinkedHashSet(WRAPPER_TYPES_ARRAY.length + otherSimpleTypes.length);
+        LinkedHashSet<Class<?>> simpleTypes = newFixedLinkedHashSet(WRAPPER_TYPES_ARRAY.length + otherSimpleTypes.length);
         addAll(simpleTypes, WRAPPER_TYPES_ARRAY);
         addAll(simpleTypes, otherSimpleTypes);
 
@@ -239,7 +241,7 @@ public abstract class ClassUtils implements Utils {
 
     static {
         int size = WRAPPER_TYPES_ARRAY.length;
-        Map<Class<?>, Class<?>> wrapperToPrimitiveTypesMap = newFixedLinkedHashMap(size);
+        LinkedHashMap<Class<?>, Class<?>> wrapperToPrimitiveTypesMap = newFixedLinkedHashMap(size);
 
         for (int i = 0; i < size; i++) {
             Class<?> wrapperType = WRAPPER_TYPES_ARRAY[i];
@@ -259,7 +261,7 @@ public abstract class ClassUtils implements Utils {
 
     static {
         int size = PRIMITIVE_TYPES_ARRAY.length;
-        Map<Class<?>, Class<?>> primitiveToWrapperTypesMap = newFixedLinkedHashMap(size);
+        LinkedHashMap<Class<?>, Class<?>> primitiveToWrapperTypesMap = newFixedLinkedHashMap(size);
 
         for (int i = 0; i < size; i++) {
             Class<?> primitiveType = PRIMITIVE_TYPES_ARRAY[i];
@@ -278,7 +280,7 @@ public abstract class ClassUtils implements Utils {
     private static final Map<String, Class<?>> NAME_TO_TYPE_PRIMITIVE_MAP;
 
     static {
-        Map<String, Class<?>> primitiveTypeNameMap = newFixedLinkedHashMap(PRIMITIVE_TYPES.size() + PRIMITIVE_ARRAY_TYPES.size());
+        LinkedHashMap<String, Class<?>> primitiveTypeNameMap = newFixedLinkedHashMap(PRIMITIVE_TYPES.size() + PRIMITIVE_ARRAY_TYPES.size());
 
         PRIMITIVE_TYPES.forEach(type -> {
             primitiveTypeNameMap.put(type.getName(), type);
@@ -1214,7 +1216,7 @@ public abstract class ClassUtils implements Utils {
             return emptySet();
         }
 
-        Set<String> classNames = newLinkedHashSet();
+        LinkedHashSet<String> classNames = newLinkedHashSet();
 
         for (File classFile : classFiles) {
             String className = resolveClassName(classesDirectory, classFile);

@@ -1,6 +1,7 @@
 package io.microsphere.util;
 
 import io.microsphere.LoggingTest;
+
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.util.ShutdownHookCallbacksThread.INSTANCE;

@@ -168,7 +168,7 @@ class ListUtilsTest implements Loggable {
 
     @Test
     void testNewArrayListWithSet() {
-        Set<String> source = new HashSet<>(asList("A", "B", "C"));
+        HashSet<String> source = new HashSet<>(asList("A", "B", "C"));
         ArrayList<String> list = newArrayList(source);
         assertEquals(3, list.size());
         assertTrue(list.contains("A"));
@@ -188,7 +188,7 @@ class ListUtilsTest implements Loggable {
 
     @Test
     void testNewLinkedListWithSet() {
-        Set<String> source = new HashSet<>(asList("A", "B", "C"));
+        HashSet<String> source = new HashSet<>(asList("A", "B", "C"));
         LinkedList<String> list = newLinkedList(source);
         assertEquals(3, list.size());
         assertTrue(list.contains("A"));
@@ -250,7 +250,7 @@ class ListUtilsTest implements Loggable {
 
     @Test
     void testAddIfAbsent() {
-        List<String> values = newArrayList();
+        ArrayList<String> values = newArrayList();
         assertTrue(addIfAbsent(values, "A"));
         assertFalse(addIfAbsent(values, "A"));
         assertTrue(addIfAbsent(values, "B"));
