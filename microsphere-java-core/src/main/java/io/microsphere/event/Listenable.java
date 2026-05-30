@@ -22,12 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.lang.reflect.Modifier.isFinal;
 import static java.util.stream.StreamSupport.stream;
-import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * A component that allows registration and management of {@link EventListener} instances.

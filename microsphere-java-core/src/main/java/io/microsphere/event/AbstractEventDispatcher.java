@@ -31,6 +31,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.event.EventListener.findEventType;
 import static io.microsphere.lang.function.ThrowableAction.execute;
@@ -40,7 +41,6 @@ import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.ServiceLoaderUtils.loadServicesList;
 import static java.util.Collections.sort;
 import static java.util.Collections.unmodifiableList;
-import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * Abstract implementation of {@link EventDispatcher} that provides common functionality for dispatching events to

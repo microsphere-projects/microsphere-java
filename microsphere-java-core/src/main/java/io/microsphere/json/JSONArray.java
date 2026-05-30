@@ -19,7 +19,6 @@ package io.microsphere.json;
 import io.microsphere.json.JSONStringer.Scope;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 
