@@ -32,6 +32,7 @@ import static java.lang.Character.isWhitespace;
 import static java.lang.Character.toLowerCase;
 import static java.lang.Character.toUpperCase;
 import static java.lang.String.valueOf;
+import static io.microsphere.collection.ListUtils.newArrayList;
 
 /**
  * The utilities class for {@link String}
@@ -169,7 +170,7 @@ public abstract class StringUtils implements Utils {
 
         int delimiterLength = delimiter.length();
 
-        ArrayList<String> result = new ArrayList<>();
+        ArrayList<String> result = newArrayList();
 
         if (delimiterLength == 0) {
             for (int i = 0; i < length; i++) {
