@@ -567,7 +567,7 @@ public abstract class MethodUtils implements Utils {
         }
 
         // All methods
-        LinkedList<Method> allMethods = new LinkedList<>();
+        LinkedList<Method> allMethods = newLinkedList();
 
         if (includeInheritedTypes) {
             while (targetClass != null) {

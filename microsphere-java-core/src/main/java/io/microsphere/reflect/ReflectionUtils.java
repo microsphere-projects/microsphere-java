@@ -37,6 +37,7 @@ import static java.lang.reflect.Array.get;
 import static java.lang.reflect.Array.getLength;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * Reflection Utility class , generic methods are defined from {@link FieldUtils} , {@link MethodUtils} , {@link
@@ -375,7 +376,7 @@ public abstract class ReflectionUtils implements Utils {
     @Nonnull
     public static <T> List<T> toList(Object array) throws IllegalArgumentException {
         int length = getLength(array);
-        ArrayList<T> list = new ArrayList<>(length);
+        ArrayList<T> list = newArrayList(length);
         for (int i = 0; i < length; i++) {
             Object element = get(array, i);
             list.add((T) toObject(element));

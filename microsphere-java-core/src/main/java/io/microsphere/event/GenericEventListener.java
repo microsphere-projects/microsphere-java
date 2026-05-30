@@ -29,6 +29,7 @@ import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.lang.function.ThrowableConsumer.execute;
 import static java.util.Collections.emptySet;
 import static java.util.stream.Stream.of;
+import static io.microsphere.collection.SetUtils.*;
 
 /**
  * A generic implementation of the {@link EventListener} interface that supports multiple event handling methods.
@@ -97,7 +98,7 @@ public abstract class GenericEventListener implements EventListener<Event> {
         HashMap<Class<?>, Set<Method>> eventMethods = newHashMap();
         of(getClass().getMethods()).filter(this::isHandleEventMethod).forEach(method -> {
             Class<?> paramType = method.getParameterTypes()[0];
-            Set<Method> methods = eventMethods.computeIfAbsent(paramType, key -> new LinkedHashSet<>());
+            Set<Method> methods = eventMethods.computeIfAbsent(paramType, key -> newLinkedHashSet());
             methods.add(method);
         });
         return eventMethods;

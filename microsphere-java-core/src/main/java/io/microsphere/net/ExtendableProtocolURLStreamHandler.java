@@ -50,6 +50,7 @@ import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.net.Proxy.NO_PROXY;
 import static java.util.Collections.sort;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * Extendable Protocol {@link URLStreamHandler} class supports the sub-protocols,
@@ -133,7 +134,7 @@ public abstract class ExtendableProtocolURLStreamHandler extends URLStreamHandle
 
     private final String protocol;
 
-    private final List<SubProtocolURLConnectionFactory> factories = new ArrayList<>();
+    private final List<SubProtocolURLConnectionFactory> factories = newArrayList();
 
     /**
      * The default constructor must obey the following conventions:

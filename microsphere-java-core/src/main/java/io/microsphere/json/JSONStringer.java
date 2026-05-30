@@ -29,6 +29,7 @@ import static io.microsphere.json.JSONStringer.Scope.NONEMPTY_OBJECT;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.lang.String.format;
 import static java.util.Arrays.fill;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * Implements {@link JSONObject#toString} and {@link JSONArray#toString}. Most application
@@ -121,7 +122,7 @@ public class JSONStringer {
      * Unlike the original implementation, this stack isn't limited to 20 levels of
      * nesting.
      */
-    private final List<Scope> stack = new ArrayList<>();
+    private final List<Scope> stack = newArrayList();
 
     /**
      * A string containing a full set of spaces for a single level of indentation, or null

@@ -29,6 +29,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * An unmodifiable view of a {@link Queue}. This implementation decorates a given queue and prevents any
@@ -45,7 +46,7 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
  * </p>
  *
  * <pre>{@code
- * Queue<String> mutableQueue = new LinkedList<>();
+ * Queue<String> mutableQueue = newLinkedList();
  * mutableQueue.add("Hello");
  * Queue<String> unmodifiableQueue = new UnmodifiableQueue<>(mutableQueue);
  * unmodifiableQueue.add("World"); // throws UnsupportedOperationException

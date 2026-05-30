@@ -43,6 +43,7 @@ import static io.microsphere.util.ClassUtils.isClass;
 import static io.microsphere.util.ClassUtils.isEnum;
 import static io.microsphere.util.ClassUtils.isNumber;
 import static io.microsphere.util.ClassUtils.isWrapperType;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * A modifiable set of name/value mappings. Names are unique, non-null strings. Values may
@@ -730,7 +731,7 @@ public class JSONObject {
      * @return the array
      */
     public JSONArray names() {
-        return this.nameValuePairs.isEmpty() ? null : new JSONArray(new ArrayList<>(this.nameValuePairs.keySet()));
+        return this.nameValuePairs.isEmpty() ? null : new JSONArray(newArrayList(this.nameValuePairs.keySet()));
     }
 
     /**

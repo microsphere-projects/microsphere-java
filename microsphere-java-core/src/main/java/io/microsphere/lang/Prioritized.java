@@ -21,6 +21,7 @@ import java.util.Comparator;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.MIN_VALUE;
 import static java.lang.Integer.compare;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * {@code Prioritized} interface can be implemented by objects that
@@ -45,7 +46,7 @@ import static java.lang.Integer.compare;
  * }
  *
  * // Sorting a list of Prioritized objects
- * List<Prioritized> tasks = new ArrayList<>();
+ * List<Prioritized> tasks = newArrayList();
  * tasks.add(new MyTask(5));
  * tasks.add(new MyTask(1));
  * Collections.sort(tasks);

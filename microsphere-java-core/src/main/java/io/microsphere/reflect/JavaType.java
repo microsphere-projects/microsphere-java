@@ -52,6 +52,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_TYPE_ARRAY;
 import static io.microsphere.util.ArrayUtils.asArray;
 import static io.microsphere.util.ArrayUtils.length;
 import static java.util.Objects.hash;
+import static io.microsphere.collection.MapUtils.*;
 
 /**
  * Represents a Java type, encapsulating various operations and utilities for handling different kinds of types,
@@ -860,7 +861,7 @@ public class JavaType implements Serializable {
      * <pre>{@code
      * public class Example {
      *     public Map<String, Integer> getExampleMap() {
-     *         return new HashMap<>();
+     *         return newHashMap();
      *     }
      *
      *     public static void main(String[] args) {
@@ -892,7 +893,7 @@ public class JavaType implements Serializable {
      * <pre>{@code
      * public class Example {
      *     public Map<String, Integer> getExampleMap() {
-     *         return new HashMap<>();
+     *         return newHashMap();
      *     }
      *
      *     public static void main(String[] args) throws Throwable {

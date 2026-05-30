@@ -440,7 +440,7 @@ public abstract class CollectionUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * Collection<String> collection = new ArrayList<>();
+     * Collection<String> collection = newArrayList();
      * int count1 = CollectionUtils.addAll(collection, "a", "b", "c"); // returns 3
      *
      * int count2 = CollectionUtils.addAll(null, "a", "b"); // returns 0
@@ -486,7 +486,7 @@ public abstract class CollectionUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * Collection<String> collection = new ArrayList<>();
+     * Collection<String> collection = newArrayList();
      * Iterable<String> values = Arrays.asList("a", "b", "c");
      * int count1 = CollectionUtils.addAll(collection, values); // returns 3
      *

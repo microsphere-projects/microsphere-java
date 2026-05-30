@@ -37,6 +37,7 @@ import java.util.function.Consumer;
 import static io.microsphere.reflect.MethodUtils.isIsMethod;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static java.util.Objects.nonNull;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * The {@link MBeanInfo} Builder
@@ -54,16 +55,16 @@ public class MBeanInfoBuilder extends MBeanDescribableBuilder<MBeanInfoBuilder> 
     String className;
 
     @Nullable
-    List<MBeanAttributeInfoBuilder> attributeBuilders = new LinkedList<>();
+    List<MBeanAttributeInfoBuilder> attributeBuilders = newLinkedList();
 
     @Nullable
-    List<MBeanOperationInfoBuilder> operationBuilders = new LinkedList<>();
+    List<MBeanOperationInfoBuilder> operationBuilders = newLinkedList();
 
     @Nullable
-    List<MBeanConstructorInfoBuilder> constructorBuilders = new LinkedList<>();
+    List<MBeanConstructorInfoBuilder> constructorBuilders = newLinkedList();
 
     @Nullable
-    List<MBeanNotificationInfoBuilder> notificationBuilders = new LinkedList<>();
+    List<MBeanNotificationInfoBuilder> notificationBuilders = newLinkedList();
 
     public MBeanInfoBuilder attribute(String attributeName, Class<?> attributeType, Consumer<MBeanAttributeInfoBuilder> builderConsumer) {
         MBeanAttributeInfoBuilder builder = MBeanAttributeInfoBuilder.attribute(attributeType).name(attributeName);

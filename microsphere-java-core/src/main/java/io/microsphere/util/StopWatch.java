@@ -28,6 +28,7 @@ import static java.lang.System.nanoTime;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.hash;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * <p>{@code StopWatch} provides a simple way to measure execution time for tasks, supporting nested task tracking.
@@ -80,12 +81,12 @@ public class StopWatch {
     /**
      * Running tasks(FIFO)
      */
-    private final List<Task> runningTasks = new LinkedList<>();
+    private final List<Task> runningTasks = newLinkedList();
 
     /**
      * Completed tasks(FILO)
      */
-    private final List<Task> completedTasks = new LinkedList<>();
+    private final List<Task> completedTasks = newLinkedList();
 
     /**
      * Total running time.

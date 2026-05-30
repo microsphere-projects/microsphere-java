@@ -24,6 +24,7 @@ import java.util.Deque;
 import java.util.Iterator;
 
 import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * An unmodifiable view of a {@link Deque}. This implementation decorates a given deque and prevents any
@@ -40,7 +41,7 @@ import static io.microsphere.collection.CollectionUtils.unmodifiableIterator;
  * </p>
  *
  * <pre>{@code
- * Deque<String> mutableDeque = new LinkedList<>();
+ * Deque<String> mutableDeque = newLinkedList();
  * mutableDeque.addFirst("World");
  * Deque<String> unmodifiableDeque = new UnmodifiableDeque<>(mutableDeque);
  * unmodifiableDeque.addFirst("Hello"); // throws UnsupportedOperationException

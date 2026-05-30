@@ -215,7 +215,7 @@ public abstract class JarUtils implements Utils {
     @Nonnull
     @Immutable
     protected static List<JarEntry> doFilter(Iterable<JarEntry> jarEntries, JarEntryFilter jarEntryFilter) {
-        LinkedList<JarEntry> jarEntriesList = new LinkedList<>();
+        LinkedList<JarEntry> jarEntriesList = newLinkedList();
         for (JarEntry jarEntry : jarEntries) {
             if (jarEntryFilter == null || jarEntryFilter.accept(jarEntry)) {
                 jarEntriesList.add(jarEntry);

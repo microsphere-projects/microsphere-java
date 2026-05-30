@@ -82,7 +82,7 @@ public class JSONArray {
      * Creates a {@code JSONArray} with no values.
      */
     public JSONArray() {
-        this.values = new ArrayList<>();
+        this.values = newArrayList();
     }
 
     @SuppressWarnings("rawtypes")

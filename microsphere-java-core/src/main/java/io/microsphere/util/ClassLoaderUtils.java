@@ -1269,7 +1269,7 @@ public abstract class ClassLoaderUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * // Example 1: Find loaded classes from specific class paths using a custom ClassLoader
-     * Set<String> classPaths = new HashSet<>(Arrays.asList("path/to/classes", "lib/dependency.jar"));
+     * Set<String> classPaths = newHashSet(Arrays.asList("path/to/classes", "lib/dependency.jar"));
      * ClassLoader customClassLoader = MyCustomClassLoader.getInstance();
      * try {
      *     Set<Class<?>> loadedClasses = ClassLoaderUtils.findLoadedClassesInClassPaths(customClassLoader, classPaths);
@@ -1281,7 +1281,7 @@ public abstract class ClassLoaderUtils implements Utils {
      *
      * <pre>{@code
      * // Example 2: Use the default ClassLoader to find loaded classes from specific class paths
-     * Set<String> classPaths = new HashSet<>(Arrays.asList("com/example/app", "libs/utils.jar"));
+     * Set<String> classPaths = newHashSet(Arrays.asList("com/example/app", "libs/utils.jar"));
      * try {
      *     Set<Class<?>> loadedClasses = ClassLoaderUtils.findLoadedClassesInClassPaths(null, classPaths);
      *     System.out.println("Loaded Classes: " + loadedClasses);

@@ -20,6 +20,7 @@ package io.microsphere.metadata;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.beans.ConfigurationProperty;
 import io.microsphere.lang.Prioritized;
+import static io.microsphere.collection.ListUtils.*;
 
 /**
  * {@code ConfigurationPropertyGenerator} interface can be implemented by objects that
@@ -43,7 +44,7 @@ import io.microsphere.lang.Prioritized;
  * }
  *
  * // Registering and using generators
- * List<ConfigurationPropertyGenerator> generators = new ArrayList<>();
+ * List<ConfigurationPropertyGenerator> generators = newArrayList();
  * generators.add(new JsonPropertyGenerator());
  * Collections.sort(generators); // Sort by priority
  * }</pre>
