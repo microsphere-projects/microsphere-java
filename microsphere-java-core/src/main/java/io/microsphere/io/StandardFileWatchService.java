@@ -63,6 +63,7 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 import static java.util.concurrent.Executors.newSingleThreadExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static io.microsphere.collection.SetUtils.newTreeSet;
 
 /**
  * /**
@@ -330,7 +331,7 @@ public class StandardFileWatchService implements FileWatchService, AutoCloseable
 
     private static class FileChangedMetadata {
 
-        private final Set<Path> filePaths = new TreeSet<>();
+        private final Set<Path> filePaths = newTreeSet();
 
         private EventDispatcher eventDispatcher;
 

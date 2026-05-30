@@ -853,7 +853,7 @@ public abstract class AnnotationUtils implements Utils {
             return emptyList();
         }
 
-        LinkedList<Annotation> allAnnotations = new LinkedList<>();
+        LinkedList<Annotation> allAnnotations = newLinkedList();
         List<Class<?>> allInheritedClasses = findAllInheritedClasses(type, NON_OBJECT_CLASS_FILTER);
 
         // Add the declared annotations

@@ -18,6 +18,7 @@ import static io.microsphere.util.ClassLoaderUtils.removeClassPathURL;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.SystemUtils.FILE_ENCODING;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 
 /**
  * The executor for the banned artifacts that are loading by {@link ClassLoader}.
@@ -94,7 +95,7 @@ public class BannedArtifactClassLoadingExecutor {
     }
 
     static List<MavenArtifact> loadBannedArtifactConfigs(ClassLoader classLoader) {
-        LinkedList<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
+        LinkedList<MavenArtifact> bannedArtifactConfigs = newLinkedList();
         try {
             Enumeration<URL> configResources = classLoader.getResources(CONFIG_LOCATION);
             while (configResources.hasMoreElements()) {
@@ -109,7 +110,7 @@ public class BannedArtifactClassLoadingExecutor {
     }
 
     static List<MavenArtifact> loadBannedArtifactConfigs(URL configResource) throws IOException {
-        LinkedList<MavenArtifact> bannedArtifactConfigs = new LinkedList<>();
+        LinkedList<MavenArtifact> bannedArtifactConfigs = newLinkedList();
         try (InputStream inputStream = configResource.openStream();
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, ENCODING))
         ) {
