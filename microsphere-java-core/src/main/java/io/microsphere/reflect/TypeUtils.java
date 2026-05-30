@@ -67,7 +67,6 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static java.util.stream.Stream.of;
 import static java.util.stream.StreamSupport.stream;
-import static io.microsphere.collection.SetUtils.*;
 
 /**
  * The utilities class for {@link Type}
@@ -175,7 +174,7 @@ public abstract class TypeUtils implements Utils {
      * <pre>{@code
      * TypeUtils.isParameterizedType(List.class); // returns false (raw type)
      * TypeUtils.isParameterizedType(ArrayList.class); // returns false (raw type)
-     * TypeUtils.isParameterizedType(newArrayList().getClass().getGenericSuperclass()); // returns true
+     * TypeUtils.isParameterizedType(new ArrayList<String>().getClass().getGenericSuperclass()); // returns true
      * TypeUtils.isParameterizedType(null); // returns false
      * }</pre>
      *
@@ -265,7 +264,7 @@ public abstract class TypeUtils implements Utils {
      *
      * TypeUtils.isActualType(Example.class); // returns true (Class)
      *
-     * ParameterizedType listType = (ParameterizedType) newArrayList().getClass().getGenericSuperclass();
+     * ParameterizedType listType = (ParameterizedType) new ArrayList<String>().getClass().getGenericSuperclass();
      * TypeUtils.isActualType(listType); // returns true (ParameterizedType)
      *
      * TypeVariable<?> typeVar = List.class.getTypeParameters()[0];
@@ -298,7 +297,7 @@ public abstract class TypeUtils implements Utils {
      * <pre>{@code
      * TypeUtils.getRawType(List.class); // returns List.class
      *
-     * ParameterizedType parameterizedType = (ParameterizedType) newArrayList().getClass().getGenericSuperclass();
+     * ParameterizedType parameterizedType = (ParameterizedType) new ArrayList<String>().getClass().getGenericSuperclass();
      * TypeUtils.getRawType(parameterizedType); // returns List.class
      *
      * TypeUtils.getRawType(String.class); // returns String.class
@@ -328,7 +327,7 @@ public abstract class TypeUtils implements Utils {
      * <pre>{@code
      * TypeUtils.getRawClass(List.class); // returns List.class
      *
-     * ParameterizedType parameterizedType = (ParameterizedType) newArrayList().getClass().getGenericSuperclass();
+     * ParameterizedType parameterizedType = (ParameterizedType) new ArrayList<String>().getClass().getGenericSuperclass();
      * TypeUtils.getRawClass(parameterizedType); // returns List.class
      *
      * TypeUtils.getRawClass(String.class); // returns String.class
@@ -353,12 +352,12 @@ public abstract class TypeUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * Type listType = newArrayList().getClass().getGenericSuperclass(); // ParameterizedType for List<String>
+     * Type listType = new ArrayList<String>().getClass().getGenericSuperclass(); // ParameterizedType for List<String>
      * Type superType = List.class;
      *
      * boolean assignable1 = TypeUtils.isAssignableFrom(superType, listType); // returns true
      *
-     * Type mapType = newHashMap().getClass().getGenericSuperclass(); // ParameterizedType for AbstractMap<String, Integer>
+     * Type mapType = new HashMap<String, Integer>().getClass().getGenericSuperclass(); // ParameterizedType for AbstractMap<String, Integer>
      * Type superType2 = Map.class;
      *
      * boolean assignable2 = TypeUtils.isAssignableFrom(superType2, mapType); // returns true
@@ -387,7 +386,7 @@ public abstract class TypeUtils implements Utils {
      * <h3>Example Usage</h3>
      * <pre>{@code
      * Class<?> superClass = List.class;
-     * Type targetType = newArrayList().getClass().getGenericSuperclass(); // ParameterizedType for List<String>
+     * Type targetType = new ArrayList<String>().getClass().getGenericSuperclass(); // ParameterizedType for List<String>
      *
      * boolean isAssignable = TypeUtils.isAssignableFrom(superClass, targetType); // returns true
      *
@@ -1115,7 +1114,7 @@ public abstract class TypeUtils implements Utils {
      * <pre>{@code
      * TypeUtils.getClassName(String.class); // returns "java.lang.String"
      *
-     * ParameterizedType listType = (ParameterizedType) newArrayList().getClass().getGenericSuperclass();
+     * ParameterizedType listType = (ParameterizedType) new ArrayList<String>().getClass().getGenericSuperclass();
      * TypeUtils.getClassName(listType); // returns "java.util.List"
      *
      * TypeUtils.getClassName(Integer.TYPE); // returns "int"
@@ -1145,10 +1144,10 @@ public abstract class TypeUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * ParameterizedType listType = (ParameterizedType) newArrayList().getClass().getGenericSuperclass();
-     * ParameterizedType mapType = (ParameterizedType) newHashMap().getClass().getGenericSuperclass();
+     * ParameterizedType listType = (ParameterizedType) new ArrayList<String>().getClass().getGenericSuperclass();
+     * ParameterizedType mapType = (ParameterizedType) new HashMap<String, Integer>().getClass().getGenericSuperclass();
      *
-     * Set<Type> types = newHashSet();
+     * Set<Type> types = new HashSet<>();
      * types.add(listType);
      * types.add(mapType);
      * types.add(String.class);
@@ -1278,7 +1277,7 @@ public abstract class TypeUtils implements Utils {
      * System.out.println(stringClass); // Output: class java.lang.String
      *
      * // Convert a parameterized type's raw type
-     * List<String> list = newArrayList();
+     * List<String> list = new ArrayList<>();
      * ParameterizedType parameterizedType = (ParameterizedType) list.getClass().getGenericSuperclass();
      * Class<?> listClass = TypeUtils.asClass(parameterizedType);
      * System.out.println(listClass); // Output: interface java.util.List
@@ -1360,7 +1359,7 @@ public abstract class TypeUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * List<String> list = newArrayList();
+     * List<String> list = new ArrayList<>();
      * ParameterizedType parameterizedType = (ParameterizedType) list.getClass().getGenericSuperclass();
      *
      * // Convert a parameterized type
@@ -1410,7 +1409,7 @@ public abstract class TypeUtils implements Utils {
      * System.out.println(fromRawClass == null); // Output: true
      *
      * // Trying to convert a ParameterizedType returns null
-     * List<String> list = newArrayList();
+     * List<String> list = new ArrayList<>();
      * ParameterizedType parameterizedType = (ParameterizedType) list.getClass().getGenericSuperclass();
      * TypeVariable fromParameterized = TypeUtils.asTypeVariable(parameterizedType);
      * System.out.println(fromParameterized == null); // Output: true
@@ -1450,7 +1449,7 @@ public abstract class TypeUtils implements Utils {
      * System.out.println(fromRawClass == null); // Output: true
      *
      * // Trying to convert a ParameterizedType returns null
-     * List<String> list = newArrayList();
+     * List<String> list = new ArrayList<>();
      * ParameterizedType parameterizedType = (ParameterizedType) list.getClass().getGenericSuperclass();
      * WildcardType fromParameterized = TypeUtils.asWildcardType(parameterizedType);
      * System.out.println(fromParameterized == null); // Output: true
@@ -1527,7 +1526,7 @@ public abstract class TypeUtils implements Utils {
      * <pre>{@code
      * TypeUtils.getTypeName(String.class); // returns "java.lang.String"
      *
-     * ParameterizedType listType = (ParameterizedType) newArrayList().getClass().getGenericSuperclass();
+     * ParameterizedType listType = (ParameterizedType) new ArrayList<String>().getClass().getGenericSuperclass();
      * TypeUtils.getTypeName(listType); // returns "java.util.List<java.lang.String>"
      *
      * TypeUtils.getTypeName(Integer.TYPE); // returns "int"
@@ -1554,8 +1553,8 @@ public abstract class TypeUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * Type listType = newArrayList().getClass().getGenericSuperclass(); // ParameterizedType for List<String>
-     * Type mapType = newHashMap().getClass().getGenericSuperclass(); // ParameterizedType for AbstractMap<String, Integer>
+     * Type listType = new ArrayList<String>().getClass().getGenericSuperclass(); // ParameterizedType for List<String>
+     * Type mapType = new HashMap<String, Integer>().getClass().getGenericSuperclass(); // ParameterizedType for AbstractMap<String, Integer>
      *
      * String[] typeNames = TypeUtils.getTypeNames(listType, mapType, String.class);
      * // Possible output: ["java.util.List<java.lang.String>", "java.util.AbstractMap<java.lang.String, java.lang.Integer>", "java.lang.String"]
