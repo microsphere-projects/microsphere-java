@@ -744,7 +744,7 @@ public abstract class SetUtils implements Utils {
     }
 
     /**
-     * Creates a new {@link TreeSet} with the same mappings as the specified sorted set.
+     * Creates a new {@link TreeSet} with the same elements as the specified sorted set.
      *
      * <p>This method creates a new tree set and copies all elements from the provided sorted set,
      * preserving the comparator used by the original sorted set. If the input sorted set is null or empty,
