@@ -19,7 +19,6 @@ package io.microsphere.net;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
