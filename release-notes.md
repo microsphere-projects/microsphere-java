@@ -189,4 +189,36 @@ This update includes general enhancements, improved documentation, and dependenc
 
 For a detailed list of changes, see the [Full Changelog](https://github.com/microsphere-projects/.../compare/0.3.4...0.3.5).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.4...0.3.5
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.4...0.3.5## v0.3.6
+
+# Release Notes: Version 0.3.6
+
+## New Features
+- **Factory Methods Added**:
+  - Introduced new factory methods for collections, including:
+    - `TreeSet`, `ArrayList`, `LinkedList`, `ArrayDeque`
+    - Concurrent collections: `newFixedLinkedHashSet`, `newFixedHashSet`, `newFixedLinkedHashMap`, `newFixedHashMap`, etc. ([#286](https://github.com/microsphere-projects/issues/286), [#283](https://github.com/microsphere-projects/issues/283)).
+  - Added `ThreadSafe` and `NotThreadSafe` annotations for better code clarity. ([#282](https://github.com/microsphere-projects/issues/282))
+
+## Bug Fixes
+- Fixed type mismatches and reverted inappropriate changes in `ReversedDequeTest`.  
+- Corrected raw type constructors and local variable types in `SetUtils`.  
+- Fixed import issues and removed wildcard imports across core classes.
+
+## Documentation
+- Revised JavaDocs for collection utility methods for better clarity.  
+- Corrected mismatches in method documentation, ensuring accurate terminology (e.g., `mappings` to `elements`).
+
+## Test Improvements
+- Added comprehensive test cases for newly introduced collection factory methods.  
+
+## Build and Workflow Enhancements
+- Removed duplicated line separators, trailing whitespace, and unnecessary final newlines across Java files for cleaner codebase.  
+
+## Other Changes
+- Refactored collection constructor return types from interfaces to concrete collection types.  
+- Organized imports and restored blank lines between import sections in Java files.  
+
+**Full Changelog**: [v0.3.5...v0.3.6](https://github.com/microsphere-projects/compare/v0.3.5...v0.3.6)  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.5...0.3.6
