@@ -1,0 +1,5043 @@
+{
+  "scriptCompleted": true,
+  "files": [
+    {
+      "path": ".github/dependabot.yml",
+      "language": "yaml",
+      "sizeLines": 11,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".github/prompts/create-readme.prompt.md",
+      "language": "markdown",
+      "sizeLines": 45,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".github/prompts/document-api.prompt.md",
+      "language": "markdown",
+      "sizeLines": 52,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".github/prompts/explain-code.prompt.md",
+      "language": "markdown",
+      "sizeLines": 19,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".github/prompts/generate-unit-tests.prompt.md",
+      "language": "markdown",
+      "sizeLines": 52,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".github/prompts/onboarding-plan.prompt.md",
+      "language": "markdown",
+      "sizeLines": 26,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".github/prompts/review-code.prompt.md",
+      "language": "markdown",
+      "sizeLines": 59,
+      "fileCategory": "docs"
+    },
+    {
+      "path": ".github/scripts/generate-wiki-docs.py",
+      "language": "python",
+      "sizeLines": 831,
+      "fileCategory": "code"
+    },
+    {
+      "path": ".github/workflows/maven-build.yml",
+      "language": "yaml",
+      "sizeLines": 50,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".github/workflows/maven-publish.yml",
+      "language": "yaml",
+      "sizeLines": 211,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".github/workflows/merge-main-to-branches.yml",
+      "language": "yaml",
+      "sizeLines": 38,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".github/workflows/sync-branches-from-upstream.yml",
+      "language": "yaml",
+      "sizeLines": 129,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".github/workflows/wiki-publish.yml",
+      "language": "yaml",
+      "sizeLines": 79,
+      "fileCategory": "infra"
+    },
+    {
+      "path": ".mvn/wrapper/maven-wrapper.properties",
+      "language": "properties",
+      "sizeLines": 3,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/.understandignore",
+      "language": "unknown",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "CODE_OF_CONDUCT.md",
+      "language": "markdown",
+      "sizeLines": 47,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "microsphere-annotation-processor/pom.xml",
+      "language": "xml",
+      "sizeLines": 132,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/main/java/io/microsphere/annotation/processor/ConfigurationPropertyAnnotationProcessor.java",
+      "language": "java",
+      "sizeLines": 166,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/main/java/io/microsphere/annotation/processor/ConfigurationPropertyJSONElementVisitor.java",
+      "language": "java",
+      "sizeLines": 161,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/main/java/io/microsphere/annotation/processor/FilerProcessor.java",
+      "language": "java",
+      "sizeLines": 103,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/main/java/io/microsphere/annotation/processor/ResourceProcessor.java",
+      "language": "java",
+      "sizeLines": 246,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/main/resources/META-INF/services/javax.annotation.processing.Processor",
+      "language": "processor",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/java/io/microsphere/annotation/processor/ConfigurationPropertyAnnotationProcessorTest.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/java/io/microsphere/annotation/processor/ConfigurationPropertyJSONElementVisitorTest.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/java/io/microsphere/annotation/processor/FilerProcessorTest.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/java/io/microsphere/annotation/processor/ResourceProcessorTest.java",
+      "language": "java",
+      "sizeLines": 195,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/java/io/microsphere/annotation/processor/TestConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/resources/logback-test.xml",
+      "language": "xml",
+      "sizeLines": 14,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-annotation-processor/src/test/resources/META-INF/services/io.microsphere.metadata.ConfigurationPropertyLoader",
+      "language": "configurationpropertyloader",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/pom.xml",
+      "language": "xml",
+      "sizeLines": 43,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/concurrent/NotThreadSafe.java",
+      "language": "java",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/concurrent/ThreadSafe.java",
+      "language": "java",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/ConfigurationProperty.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/Experimental.java",
+      "language": "java",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/Immutable.java",
+      "language": "java",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/Nonnull.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/Nullable.java",
+      "language": "java",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/main/java/io/microsphere/annotation/Since.java",
+      "language": "java",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/test/java/io/microsphere/annotation/ConfigurationPropertyTest.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/test/java/io/microsphere/annotation/ExperimentalTest.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/test/java/io/microsphere/annotation/ImmutableTest.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/test/java/io/microsphere/annotation/NonnullTest.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/test/java/io/microsphere/annotation/NullableTest.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-annotations/src/test/java/io/microsphere/annotation/SinceTest.java",
+      "language": "java",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/pom.xml",
+      "language": "xml",
+      "sizeLines": 99,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/beans/BeanMetadata.java",
+      "language": "java",
+      "sizeLines": 147,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/beans/BeanProperty.java",
+      "language": "java",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/beans/BeanUtils.java",
+      "language": "java",
+      "sizeLines": 570,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/beans/ConfigurationProperty.java",
+      "language": "java",
+      "sizeLines": 357,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/AbstractArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/AbstractURLClassPathHandle.java",
+      "language": "java",
+      "sizeLines": 240,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ArchiveFileArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/Artifact.java",
+      "language": "java",
+      "sizeLines": 144,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ArtifactDetector.java",
+      "language": "java",
+      "sizeLines": 176,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/BannedArtifactClassLoadingExecutor.java",
+      "language": "java",
+      "sizeLines": 140,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ClassicURLClassPathHandle.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ManifestArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 233,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/MavenArtifact.java",
+      "language": "java",
+      "sizeLines": 114,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/MavenArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 126,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ModernURLClassPathHandle.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/NoOpURLClassPathHandle.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/ServiceLoadingURLClassPathHandle.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/StreamArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 201,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/classloading/URLClassPathHandle.java",
+      "language": "java",
+      "sizeLines": 127,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/AbstractDeque.java",
+      "language": "java",
+      "sizeLines": 143,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/ArrayEnumeration.java",
+      "language": "java",
+      "sizeLines": 99,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/ArrayStack.java",
+      "language": "java",
+      "sizeLines": 141,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/CollectionUtils.java",
+      "language": "java",
+      "sizeLines": 687,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/DefaultEntry.java",
+      "language": "java",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/DelegatingDeque.java",
+      "language": "java",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/DelegatingIterator.java",
+      "language": "java",
+      "sizeLines": 88,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/DelegatingQueue.java",
+      "language": "java",
+      "sizeLines": 183,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/EmptyDeque.java",
+      "language": "java",
+      "sizeLines": 133,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/EmptyIterable.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/EmptyIterator.java",
+      "language": "java",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/EnumerationIteratorAdapter.java",
+      "language": "java",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/EnumerationUtils.java",
+      "language": "java",
+      "sizeLines": 125,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/ImmutableEntry.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/IterableAdapter.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/Iterators.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/Lists.java",
+      "language": "java",
+      "sizeLines": 533,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/ListUtils.java",
+      "language": "java",
+      "sizeLines": 738,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/Maps.java",
+      "language": "java",
+      "sizeLines": 605,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/MapUtils.java",
+      "language": "java",
+      "sizeLines": 1445,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/PropertiesUtils.java",
+      "language": "java",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/QueueUtils.java",
+      "language": "java",
+      "sizeLines": 792,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/ReadOnlyIterator.java",
+      "language": "java",
+      "sizeLines": 57,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/ReversedDeque.java",
+      "language": "java",
+      "sizeLines": 307,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/Sets.java",
+      "language": "java",
+      "sizeLines": 572,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/SetUtils.java",
+      "language": "java",
+      "sizeLines": 890,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/SingletonDeque.java",
+      "language": "java",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/SingletonEnumeration.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/SingletonIterator.java",
+      "language": "java",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/UnmodifiableDeque.java",
+      "language": "java",
+      "sizeLines": 153,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/UnmodifiableIterator.java",
+      "language": "java",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/collection/UnmodifiableQueue.java",
+      "language": "java",
+      "sizeLines": 207,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/concurrent/CustomizedThreadFactory.java",
+      "language": "java",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/concurrent/DelegatingBlockingQueue.java",
+      "language": "java",
+      "sizeLines": 243,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/concurrent/DelegatingScheduledExecutorService.java",
+      "language": "java",
+      "sizeLines": 156,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/concurrent/ExecutorUtils.java",
+      "language": "java",
+      "sizeLines": 146,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/Constants.java",
+      "language": "java",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/FileConstants.java",
+      "language": "java",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/PathConstants.java",
+      "language": "java",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/PropertyConstants.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/ProtocolConstants.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/ResourceConstants.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/SeparatorConstants.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/constants/SymbolConstants.java",
+      "language": "java",
+      "sizeLines": 344,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/AbstractConverter.java",
+      "language": "java",
+      "sizeLines": 173,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ByteArrayToObjectConverter.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/Converter.java",
+      "language": "java",
+      "sizeLines": 166,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/Converters.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/MapToPropertiesConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/MultiValueConverter.java",
+      "language": "java",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToArrayConverter.java",
+      "language": "java",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToBlockingDequeConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToBlockingQueueConverter.java",
+      "language": "java",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToCollectionConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToDequeConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToIterableConverter.java",
+      "language": "java",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToListConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToMultiValueConverter.java",
+      "language": "java",
+      "sizeLines": 57,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToNavigableSetConverter.java",
+      "language": "java",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToQueueConverter.java",
+      "language": "java",
+      "sizeLines": 34,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToSetConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToSortedSetConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/multiple/StringToTransferQueueConverter.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToByteConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToCharacterConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToDoubleConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToFloatConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToIntegerConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToLongConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/NumberToShortConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToBooleanConverter.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToByteArrayConverter.java",
+      "language": "java",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToByteConverter.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToCharacterConverter.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToDoubleConverter.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToFloatConverter.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToIntegerConverter.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToLongConverter.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToOptionalConverter.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToShortConverter.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/ObjectToStringConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/PropertiesToStringConverter.java",
+      "language": "java",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringConverter.java",
+      "language": "java",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToBooleanConverter.java",
+      "language": "java",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToByteConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToCharacterConverter.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToCharArrayConverter.java",
+      "language": "java",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToClassConverter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToDoubleConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToDurationConverter.java",
+      "language": "java",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToFloatConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToInputStreamConverter.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToIntegerConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToLongConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToShortConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/convert/StringToStringConverter.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/AbstractEventDispatcher.java",
+      "language": "java",
+      "sizeLines": 219,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/ConditionalEventListener.java",
+      "language": "java",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/DirectEventDispatcher.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/Event.java",
+      "language": "java",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/EventDispatcher.java",
+      "language": "java",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/EventListener.java",
+      "language": "java",
+      "sizeLines": 209,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/GenericEvent.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/GenericEventListener.java",
+      "language": "java",
+      "sizeLines": 152,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/Listenable.java",
+      "language": "java",
+      "sizeLines": 172,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/event/ParallelEventDispatcher.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/ClassFileJarEntryFilter.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/ClassFilter.java",
+      "language": "java",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/Filter.java",
+      "language": "java",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/FilterOperator.java",
+      "language": "java",
+      "sizeLines": 122,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/FilterUtils.java",
+      "language": "java",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/JarEntryFilter.java",
+      "language": "java",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/PackageNameClassFilter.java",
+      "language": "java",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/PackageNameClassNameFilter.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/filter/TrueClassFilter.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/invoke/MethodHandlesLookupUtils.java",
+      "language": "java",
+      "sizeLines": 131,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/invoke/MethodHandleUtils.java",
+      "language": "java",
+      "sizeLines": 371,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/DefaultDeserializer.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/DefaultSerializer.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/Deserializer.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/Deserializers.java",
+      "language": "java",
+      "sizeLines": 130,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/event/FileChangedEvent.java",
+      "language": "java",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/event/FileChangedListener.java",
+      "language": "java",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/event/LoggingFileChangedListener.java",
+      "language": "java",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/FastByteArrayInputStream.java",
+      "language": "java",
+      "sizeLines": 169,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/FastByteArrayOutputStream.java",
+      "language": "java",
+      "sizeLines": 190,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/FileUtils.java",
+      "language": "java",
+      "sizeLines": 345,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/FileWatchService.java",
+      "language": "java",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/filter/DirectoryFileFilter.java",
+      "language": "java",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/filter/FileExtensionFilter.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/filter/IOFileFilter.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/filter/NameFileFilter.java",
+      "language": "java",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/filter/TrueFileFilter.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/IOUtils.java",
+      "language": "java",
+      "sizeLines": 549,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/scanner/Scanner.java",
+      "language": "java",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/scanner/SimpleClassScanner.java",
+      "language": "java",
+      "sizeLines": 192,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/scanner/SimpleFileScanner.java",
+      "language": "java",
+      "sizeLines": 110,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/scanner/SimpleJarEntryScanner.java",
+      "language": "java",
+      "sizeLines": 162,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/Serializer.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/Serializers.java",
+      "language": "java",
+      "sizeLines": 130,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/StandardFileWatchService.java",
+      "language": "java",
+      "sizeLines": 340,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/StringBuilderWriter.java",
+      "language": "java",
+      "sizeLines": 228,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/StringDeserializer.java",
+      "language": "java",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/io/StringSerializer.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSON.java",
+      "language": "java",
+      "sizeLines": 127,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSONArray.java",
+      "language": "java",
+      "sizeLines": 747,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSONException.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSONObject.java",
+      "language": "java",
+      "sizeLines": 888,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSONStringer.java",
+      "language": "java",
+      "sizeLines": 478,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSONTokener.java",
+      "language": "java",
+      "sizeLines": 583,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/JSONUtils.java",
+      "language": "java",
+      "sizeLines": 1480,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/json/package-info.java",
+      "language": "java",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/ClassDataRepository.java",
+      "language": "java",
+      "sizeLines": 250,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/DelegatingWrapper.java",
+      "language": "java",
+      "sizeLines": 104,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/Deprecation.java",
+      "language": "java",
+      "sizeLines": 279,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/Predicates.java",
+      "language": "java",
+      "sizeLines": 194,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/Streams.java",
+      "language": "java",
+      "sizeLines": 507,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/ThrowableAction.java",
+      "language": "java",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/ThrowableBiConsumer.java",
+      "language": "java",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/ThrowableBiFunction.java",
+      "language": "java",
+      "sizeLines": 165,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/ThrowableConsumer.java",
+      "language": "java",
+      "sizeLines": 194,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/ThrowableFunction.java",
+      "language": "java",
+      "sizeLines": 203,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/function/ThrowableSupplier.java",
+      "language": "java",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/MutableInteger.java",
+      "language": "java",
+      "sizeLines": 351,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/Prioritized.java",
+      "language": "java",
+      "sizeLines": 106,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/Wrapper.java",
+      "language": "java",
+      "sizeLines": 122,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/lang/WrapperProcessor.java",
+      "language": "java",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/AbstractLogger.java",
+      "language": "java",
+      "sizeLines": 132,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/ACLLoggerFactory.java",
+      "language": "java",
+      "sizeLines": 151,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/JDKLoggerFactory.java",
+      "language": "java",
+      "sizeLines": 170,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/Logger.java",
+      "language": "java",
+      "sizeLines": 241,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/LoggerFactory.java",
+      "language": "java",
+      "sizeLines": 154,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/NoOpLogger.java",
+      "language": "java",
+      "sizeLines": 111,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/NoOpLoggerFactory.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/logging/Sfl4jLoggerFactory.java",
+      "language": "java",
+      "sizeLines": 173,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanAttributeInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanConstructorInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanDescribableBuilder.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanExecutableInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 89,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanFeatureInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 186,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanNotificationInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanOperationInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/builder/MBeanParameterInfoBuilder.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/JmxUtils.java",
+      "language": "java",
+      "sizeLines": 656,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/ManagementUtils.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/management/MBeanAttribute.java",
+      "language": "java",
+      "sizeLines": 139,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/AdditionalMetadataResourceConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/ClassPathResourceConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/ConfigurationPropertyGenerator.java",
+      "language": "java",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/ConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 107,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/ConfigurationPropertyReader.java",
+      "language": "java",
+      "sizeLines": 121,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/DefaultConfigurationPropertyGenerator.java",
+      "language": "java",
+      "sizeLines": 165,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/DefaultConfigurationPropertyReader.java",
+      "language": "java",
+      "sizeLines": 90,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/MetadataResourceConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/metadata/ReflectiveConfigurationPropertyGenerator.java",
+      "language": "java",
+      "sizeLines": 80,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/misc/UnsafeUtils.java",
+      "language": "java",
+      "sizeLines": 1174,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/classpath/Handler.java",
+      "language": "java",
+      "sizeLines": 64,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/CompositeSubProtocolURLConnectionFactory.java",
+      "language": "java",
+      "sizeLines": 152,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/CompositeURLStreamHandlerFactory.java",
+      "language": "java",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/console/ConsoleURLConnection.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/console/Handler.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/DelegatingURLConnection.java",
+      "language": "java",
+      "sizeLines": 261,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/DelegatingURLStreamHandlerFactory.java",
+      "language": "java",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/ExtendableProtocolURLStreamHandler.java",
+      "language": "java",
+      "sizeLines": 420,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/MutableURLStreamHandlerFactory.java",
+      "language": "java",
+      "sizeLines": 139,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/ServiceLoaderURLStreamHandlerFactory.java",
+      "language": "java",
+      "sizeLines": 92,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/StandardURLStreamHandlerFactory.java",
+      "language": "java",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/SubProtocolURLConnectionFactory.java",
+      "language": "java",
+      "sizeLines": 92,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/net/URLUtils.java",
+      "language": "java",
+      "sizeLines": 1724,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/nio/charset/CharsetUtils.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/process/ClassicProcessIdResolver.java",
+      "language": "java",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/process/ModernProcessIdResolver.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/process/ProcessExecutor.java",
+      "language": "java",
+      "sizeLines": 193,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/process/ProcessIdResolver.java",
+      "language": "java",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/process/ProcessManager.java",
+      "language": "java",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/process/VirtualMachineProcessIdResolver.java",
+      "language": "java",
+      "sizeLines": 103,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/AccessibleObjectUtils.java",
+      "language": "java",
+      "sizeLines": 215,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ClassDefinition.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ConstructorDefinition.java",
+      "language": "java",
+      "sizeLines": 133,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ConstructorUtils.java",
+      "language": "java",
+      "sizeLines": 313,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ExecutableDefinition.java",
+      "language": "java",
+      "sizeLines": 171,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ExecutableUtils.java",
+      "language": "java",
+      "sizeLines": 240,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/FieldDefinition.java",
+      "language": "java",
+      "sizeLines": 143,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/FieldUtils.java",
+      "language": "java",
+      "sizeLines": 688,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/generics/ParameterizedTypeImpl.java",
+      "language": "java",
+      "sizeLines": 242,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/generics/TypeArgument.java",
+      "language": "java",
+      "sizeLines": 88,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/JavaType.java",
+      "language": "java",
+      "sizeLines": 1329,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/MemberDefinition.java",
+      "language": "java",
+      "sizeLines": 195,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/MemberUtils.java",
+      "language": "java",
+      "sizeLines": 341,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/MethodDefinition.java",
+      "language": "java",
+      "sizeLines": 172,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/MethodUtils.java",
+      "language": "java",
+      "sizeLines": 1446,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/Modifier.java",
+      "language": "java",
+      "sizeLines": 339,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/MultipleType.java",
+      "language": "java",
+      "sizeLines": 88,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ProxyUtils.java",
+      "language": "java",
+      "sizeLines": 103,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ReflectionUtils.java",
+      "language": "java",
+      "sizeLines": 530,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/ReflectiveDefinition.java",
+      "language": "java",
+      "sizeLines": 234,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/reflect/TypeUtils.java",
+      "language": "java",
+      "sizeLines": 1579,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/security/SecurityUtils.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/text/FormatUtils.java",
+      "language": "java",
+      "sizeLines": 86,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/AnnotationUtils.java",
+      "language": "java",
+      "sizeLines": 1839,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ArrayUtils.java",
+      "language": "java",
+      "sizeLines": 2186,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/Assert.java",
+      "language": "java",
+      "sizeLines": 509,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/BaseUtils.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/CharSequenceComparator.java",
+      "language": "java",
+      "sizeLines": 88,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/CharSequenceUtils.java",
+      "language": "java",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ClassLoaderUtils.java",
+      "language": "java",
+      "sizeLines": 2138,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ClassPathUtils.java",
+      "language": "java",
+      "sizeLines": 222,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ClassUtils.java",
+      "language": "java",
+      "sizeLines": 2327,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/Compatible.java",
+      "language": "java",
+      "sizeLines": 275,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/Configurer.java",
+      "language": "java",
+      "sizeLines": 445,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ExceptionUtils.java",
+      "language": "java",
+      "sizeLines": 312,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/Functional.java",
+      "language": "java",
+      "sizeLines": 263,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/HierarchicalClassComparator.java",
+      "language": "java",
+      "sizeLines": 94,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/IterableUtils.java",
+      "language": "java",
+      "sizeLines": 124,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/jar/JarUtils.java",
+      "language": "java",
+      "sizeLines": 513,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/NumberUtils.java",
+      "language": "java",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ObjectUtils.java",
+      "language": "java",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/PriorityComparator.java",
+      "language": "java",
+      "sizeLines": 153,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/PropertyResourceBundleControl.java",
+      "language": "java",
+      "sizeLines": 207,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/PropertyResourceBundleUtils.java",
+      "language": "java",
+      "sizeLines": 178,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ServiceLoaderUtils.java",
+      "language": "java",
+      "sizeLines": 911,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ShutdownHookCallbacksThread.java",
+      "language": "java",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ShutdownHookUtils.java",
+      "language": "java",
+      "sizeLines": 420,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/StackTraceUtils.java",
+      "language": "java",
+      "sizeLines": 137,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/StopWatch.java",
+      "language": "java",
+      "sizeLines": 564,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/StringUtils.java",
+      "language": "java",
+      "sizeLines": 926,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/SystemUtils.java",
+      "language": "java",
+      "sizeLines": 644,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ThrowableUtils.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/TypeFinder.java",
+      "language": "java",
+      "sizeLines": 471,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/Utils.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/ValueHolder.java",
+      "language": "java",
+      "sizeLines": 203,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/Version.java",
+      "language": "java",
+      "sizeLines": 791,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/java/io/microsphere/util/VersionUtils.java",
+      "language": "java",
+      "sizeLines": 301,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/microsphere/configuration-properties.json",
+      "language": "json",
+      "sizeLines": 98,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.classloading.ArtifactResourceResolver",
+      "language": "artifactresourceresolver",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.classloading.URLClassPathHandle",
+      "language": "urlclasspathhandle",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.convert.Converter",
+      "language": "converter",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.convert.multiple.MultiValueConverter",
+      "language": "multivalueconverter",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.event.EventDispatcher",
+      "language": "eventdispatcher",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.io.Deserializer",
+      "language": "deserializer",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.io.Serializer",
+      "language": "serializer",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.logging.LoggerFactory",
+      "language": "loggerfactory",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.metadata.ConfigurationPropertyGenerator",
+      "language": "configurationpropertygenerator",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.metadata.ConfigurationPropertyLoader",
+      "language": "configurationpropertyloader",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.metadata.ConfigurationPropertyReader",
+      "language": "configurationpropertyreader",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.net.ExtendableProtocolURLStreamHandler",
+      "language": "extendableprotocolurlstreamhandler",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/main/resources/META-INF/services/io.microsphere.process.ProcessIdResolver",
+      "language": "processidresolver",
+      "sizeLines": 2,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/AbstractTestCase.java",
+      "language": "java",
+      "sizeLines": 201,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/beans/BeanMetadataTest.java",
+      "language": "java",
+      "sizeLines": 104,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/beans/BeanPropertyTest.java",
+      "language": "java",
+      "sizeLines": 124,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/beans/BeanUtilsTest.java",
+      "language": "java",
+      "sizeLines": 290,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/beans/ConfigurationPropertyTest.java",
+      "language": "java",
+      "sizeLines": 235,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/AbstractArtifactResourceResolverTest.java",
+      "language": "java",
+      "sizeLines": 103,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/AbstractURLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ArchiveFileArtifactResourceResolverTest.java",
+      "language": "java",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ArtifactDetectorTest.java",
+      "language": "java",
+      "sizeLines": 102,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ArtifactTest.java",
+      "language": "java",
+      "sizeLines": 114,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/BannedArtifactClassLoadingExecutorTest.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/BaseURLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 85,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ClassicURLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ErrorArtifactResourceResolver.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ErrorArtifactResourceResolverTest.java",
+      "language": "java",
+      "sizeLines": 19,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ManifestArtifactResourceResolverTest.java",
+      "language": "java",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/MavenArtifactResourceResolverTest.java",
+      "language": "java",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/MavenArtifactTest.java",
+      "language": "java",
+      "sizeLines": 121,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ModernURLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/NoOpURLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 63,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/ServiceLoadingURLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/StreamArtifactResourceResolverTest.java",
+      "language": "java",
+      "sizeLines": 92,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/classloading/URLClassPathHandleTest.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/AbstractDequeTest.java",
+      "language": "java",
+      "sizeLines": 240,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/AbstractEnumerationTest.java",
+      "language": "java",
+      "sizeLines": 91,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ArrayEnumerationTest.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ArrayStackTest.java",
+      "language": "java",
+      "sizeLines": 92,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/CollectionUtilsTest.java",
+      "language": "java",
+      "sizeLines": 282,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/DefaultEntryTest.java",
+      "language": "java",
+      "sizeLines": 76,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/DelegatingDequeTest.java",
+      "language": "java",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/DelegatingIteratorTest.java",
+      "language": "java",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/DelegatingQueueTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/EmptyDequeTest.java",
+      "language": "java",
+      "sizeLines": 92,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/EmptyIterableTest.java",
+      "language": "java",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/EmptyIteratorTest.java",
+      "language": "java",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/EmptyQueueTest.java",
+      "language": "java",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/EnumerationIteratorAdapterTest.java",
+      "language": "java",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/EnumerationUtilsTest.java",
+      "language": "java",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ImmutableEntryTest.java",
+      "language": "java",
+      "sizeLines": 76,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/IterableAdapterTest.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/IteratorsTest.java",
+      "language": "java",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/LinkedListTest.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ListsBenchmark.java",
+      "language": "java",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ListsTest.java",
+      "language": "java",
+      "sizeLines": 239,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ListUtilsTest.java",
+      "language": "java",
+      "sizeLines": 267,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/MapsTest.java",
+      "language": "java",
+      "sizeLines": 387,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/MapUtilsTest.java",
+      "language": "java",
+      "sizeLines": 531,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/MutableCollectionTest.java",
+      "language": "java",
+      "sizeLines": 239,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/MutableDequeTest.java",
+      "language": "java",
+      "sizeLines": 179,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/MutableQueueTest.java",
+      "language": "java",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/PropertiesUtilsTest.java",
+      "language": "java",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/QueueUtilsTest.java",
+      "language": "java",
+      "sizeLines": 455,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ReadOnlyIteratorTest.java",
+      "language": "java",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/ReversedDequeTest.java",
+      "language": "java",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/SetsTest.java",
+      "language": "java",
+      "sizeLines": 239,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/SetUtilsTest.java",
+      "language": "java",
+      "sizeLines": 290,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/SingletonDequeTest.java",
+      "language": "java",
+      "sizeLines": 127,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/SingletonEnumerationTest.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/SingletonIteratorTest.java",
+      "language": "java",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/TestDeque.java",
+      "language": "java",
+      "sizeLines": 194,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/UnmodifiableDequeTest.java",
+      "language": "java",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/UnmodifiableIteratorTest.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/collection/UnmodifiableQueueTest.java",
+      "language": "java",
+      "sizeLines": 171,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/concurrent/CustomizedThreadFactoryTest.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/concurrent/DelegatingBlockingQueueTest.java",
+      "language": "java",
+      "sizeLines": 178,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/concurrent/DelegatingScheduledExecutorServiceTest.java",
+      "language": "java",
+      "sizeLines": 111,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/concurrent/ExecutorUtilsTest.java",
+      "language": "java",
+      "sizeLines": 90,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/ConstantsTest.java",
+      "language": "java",
+      "sizeLines": 228,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/FileConstantsTest.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/PathConstantsTest.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/PropertyConstantsTest.java",
+      "language": "java",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/ProtocolConstantsTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/ResourceConstantsTest.java",
+      "language": "java",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/SeparatorConstantsTest.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/constants/SymbolConstantsTest.java",
+      "language": "java",
+      "sizeLines": 159,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/AbstractConverterTest.java",
+      "language": "java",
+      "sizeLines": 127,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/BaseConverterTest.java",
+      "language": "java",
+      "sizeLines": 105,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ByteArrayToObjectConverterTest.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ConverterTest.java",
+      "language": "java",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/MapToPropertiesConverterTest.java",
+      "language": "java",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/MultiValueConverterTest.java",
+      "language": "java",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToArrayConverterTest.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToBlockingDequeConverterTest.java",
+      "language": "java",
+      "sizeLines": 119,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToBlockingQueueConverterTest.java",
+      "language": "java",
+      "sizeLines": 122,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToCollectionConverterTest.java",
+      "language": "java",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToDequeConverterTest.java",
+      "language": "java",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToIterableConverterTest.java",
+      "language": "java",
+      "sizeLines": 128,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToListConverterTest.java",
+      "language": "java",
+      "sizeLines": 116,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToMultiValueConverterTest.java",
+      "language": "java",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToNavigableSetConverterTest.java",
+      "language": "java",
+      "sizeLines": 116,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToQueueConverterTest.java",
+      "language": "java",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToSetConverterTest.java",
+      "language": "java",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToSortedSetConverterTest.java",
+      "language": "java",
+      "sizeLines": 116,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/multiple/StringToTransferQueueConverterTest.java",
+      "language": "java",
+      "sizeLines": 119,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToByteConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToCharacterConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToDoubleConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToFloatConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToIntegerConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToLongConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/NumberToShortConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToBooleanConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToByteArrayConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToByteConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToCharacterConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToDoubleConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToFloatConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToIntegerConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToLongConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToOptionalConverterTest.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToShortConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/ObjectToStringConverterTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/PropertiesToStringConverterTest.java",
+      "language": "java",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToBooleanConverterTest.java",
+      "language": "java",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToByteConverterTest.java",
+      "language": "java",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToCharacterConverterTest.java",
+      "language": "java",
+      "sizeLines": 57,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToCharArrayConverterTest.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToClassConverterTest.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToDoubleConverterTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToDurationConverterTest.java",
+      "language": "java",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToFloatConverterTest.java",
+      "language": "java",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToInputStreamConverterTest.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToIntegerConverterTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToLongConverterTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToShortConverterTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/convert/StringToStringConverterTest.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/AbstractEventDispatcherTest.java",
+      "language": "java",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/AbstractEventListener.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/ConditionalEventListenerTest.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/DirectEventDispatcherTest.java",
+      "language": "java",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/EchoEvent.java",
+      "language": "java",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/EchoEventListener.java",
+      "language": "java",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/EchoEventListener2.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/EventDispatcherTest.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/EventListenerTest.java",
+      "language": "java",
+      "sizeLines": 63,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/GenericEventListenerTest.java",
+      "language": "java",
+      "sizeLines": 84,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/GenericEventTest.java",
+      "language": "java",
+      "sizeLines": 80,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/ListenableTest.java",
+      "language": "java",
+      "sizeLines": 35,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/event/ParallelEventDispatcherTest.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/ClassFileJarEntryFilterTest.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/FilterOperatorTest.java",
+      "language": "java",
+      "sizeLines": 87,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/FilterTest.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/FilterUtilsTest.java",
+      "language": "java",
+      "sizeLines": 41,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/PackageNameClassFilterTest.java",
+      "language": "java",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/PackageNameClassNameFilterTest.java",
+      "language": "java",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/filter/TrueClassFilterTest.java",
+      "language": "java",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/invoke/MethodHandlesLookupUtilsTest.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/invoke/MethodHandleUtilsBenchmark.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/invoke/MethodHandleUtilsTest.java",
+      "language": "java",
+      "sizeLines": 166,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/DefaultDeserializerTest.java",
+      "language": "java",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/DefaultSerializerAndDeserializerTest.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/DeserializersTest.java",
+      "language": "java",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/event/DefaultFileChangedListener.java",
+      "language": "java",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/event/FileChangedEventTest.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/event/FileChangedListenerTest.java",
+      "language": "java",
+      "sizeLines": 104,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/event/LoggingFileChangedListenerTest.java",
+      "language": "java",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/FastByteArrayInputStreamTest.java",
+      "language": "java",
+      "sizeLines": 140,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/FastByteArrayOutputStreamTest.java",
+      "language": "java",
+      "sizeLines": 119,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/FileUtilsTest.java",
+      "language": "java",
+      "sizeLines": 380,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/FileWatchServiceTest.java",
+      "language": "java",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/filter/DirectoryFileFilterTest.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/filter/FileExtensionFilterTest.java",
+      "language": "java",
+      "sizeLines": 80,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/filter/IOFileFilterTest.java",
+      "language": "java",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/filter/NameFileFilterTest.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/filter/TrueFileFilterTest.java",
+      "language": "java",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/IOUtilsTest.java",
+      "language": "java",
+      "sizeLines": 217,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/scanner/SimpleClassScannerTest.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/scanner/SimpleFileScannerTest.java",
+      "language": "java",
+      "sizeLines": 71,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/scanner/SimpleJarEntryScannerTest.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/SerializersAndDeserializersTest.java",
+      "language": "java",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/SerializersTest.java",
+      "language": "java",
+      "sizeLines": 98,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/StandardFileWatchServiceTest.java",
+      "language": "java",
+      "sizeLines": 316,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/StringBuilderWriterTest.java",
+      "language": "java",
+      "sizeLines": 150,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/io/StringSerializerAndDeserializerTest.java",
+      "language": "java",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONArrayTest.java",
+      "language": "java",
+      "sizeLines": 510,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONExceptionTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONObjectTest.java",
+      "language": "java",
+      "sizeLines": 590,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONStringerTest.java",
+      "language": "java",
+      "sizeLines": 219,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONTest.java",
+      "language": "java",
+      "sizeLines": 117,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONTokenerTest.java",
+      "language": "java",
+      "sizeLines": 420,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/json/JSONUtilsTest.java",
+      "language": "java",
+      "sizeLines": 841,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/JSONTestUtils.java",
+      "language": "java",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/junit/jupiter/api/extension/annotation/UtilsTestExtension.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/junit/jupiter/api/extension/UtilsTestBeforeAllExtension.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/ClassDataRepositoryTest.java",
+      "language": "java",
+      "sizeLines": 113,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/DelegatingWrapperImpl.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/DelegatingWrapperTest.java",
+      "language": "java",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/DeprecationTest.java",
+      "language": "java",
+      "sizeLines": 163,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/PredicatesTest.java",
+      "language": "java",
+      "sizeLines": 106,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/StreamsTest.java",
+      "language": "java",
+      "sizeLines": 168,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/ThrowableActionTest.java",
+      "language": "java",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/ThrowableBiConsumerTest.java",
+      "language": "java",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/ThrowableBiFunctionTest.java",
+      "language": "java",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/ThrowableConsumerTest.java",
+      "language": "java",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/ThrowableFunctionTest.java",
+      "language": "java",
+      "sizeLines": 112,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/function/ThrowableSupplierTest.java",
+      "language": "java",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/MutableIntegerTest.java",
+      "language": "java",
+      "sizeLines": 171,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/PrioritizedTest.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/lang/WrapperTest.java",
+      "language": "java",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/Loggable.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/AbstractLoggerTest.java",
+      "language": "java",
+      "sizeLines": 118,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/ACLLoggerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/JDKLoggerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/LoggerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 104,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/NoDelegateLoggerFactory.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/NoOpLoggerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/NoOpLoggerTest.java",
+      "language": "java",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/logging/Sfl4jLoggerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 16,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/LoggingTest.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/AbstractMBeanDescribableBuilderTest.java",
+      "language": "java",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/AbstractMBeanFeatureInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 67,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanAttributeInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanConstructorInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanFeatureInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 261,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanNotificationInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanOperationInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/builder/MBeanParameterInfoBuilderTest.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/CacheControl.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/CacheControlMBean.java",
+      "language": "java",
+      "sizeLines": 33,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/JmxUtilsTest.java",
+      "language": "java",
+      "sizeLines": 378,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/ManagementUtilsTest.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/MBeanAttributeTest.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/management/Units.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/AdditionalMetadataResourceConfigurationPropertyLoaderTest.java",
+      "language": "java",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/ClassPathResourceConfigurationPropertyLoaderTest.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/ConfigurationPropertiesJSONReaderTest.java",
+      "language": "java",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/ConfigurationPropertyLoaderTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/DefaultConfigurationPropertyGeneratorTest.java",
+      "language": "java",
+      "sizeLines": 146,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/DefaultConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 39,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/DefaultConfigurationPropertyReaderTest.java",
+      "language": "java",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/EmptyConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/ErrorConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/MetadataResourceConfigurationPropertyLoaderTest.java",
+      "language": "java",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/NullConfigurationPropertyLoader.java",
+      "language": "java",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/metadata/ReflectiveConfigurationPropertyGeneratorTest.java",
+      "language": "java",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/misc/UnsafeUtilTest.java",
+      "language": "java",
+      "sizeLines": 394,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/AbstractExtendableProtocolURLStreamHandlerTest.java",
+      "language": "java",
+      "sizeLines": 156,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/classpath/HandlerTest.java",
+      "language": "java",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/CompositeSubProtocolURLConnectionFactoryTest.java",
+      "language": "java",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/CompositeURLStreamHandlerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/console/ConsoleURLConnectionTest.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/console/HandlerTest.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/ConsoleSubProtocolURLConnectionFactory.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/DelegatingURLConnectionTest.java",
+      "language": "java",
+      "sizeLines": 312,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/DelegatingURLStreamHandlerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/ExtendableProtocolURLStreamHandlerTest.java",
+      "language": "java",
+      "sizeLines": 268,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/FalseSubProtocolURLConnectionFactory.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/MutableURLStreamHandlerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 125,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/NullSubProtocolURLConnectionFactory.java",
+      "language": "java",
+      "sizeLines": 44,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/ServiceLoaderURLStreamHandlerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/StandardURLStreamHandlerFactoryTest.java",
+      "language": "java",
+      "sizeLines": 48,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/SubProtocolURLConnectionFactoryTest.java",
+      "language": "java",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/test/Handler.java",
+      "language": "java",
+      "sizeLines": 37,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/test/HandlerTest.java",
+      "language": "java",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/net/URLUtilsTest.java",
+      "language": "java",
+      "sizeLines": 720,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/nio/charset/CharsetUtilsTest.java",
+      "language": "java",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/performance/AbstractPerformanceTest.java",
+      "language": "java",
+      "sizeLines": 23,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/performance/PerformanceAction.java",
+      "language": "java",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/process/ClassicProcessIdResolverTest.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/process/ModernProcessIdResolverTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/process/ProcessExecutorTest.java",
+      "language": "java",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/process/ProcessManagerTest.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/process/VirtualMachineProcessIdResolverTest.java",
+      "language": "java",
+      "sizeLines": 42,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/AbstractExecutableDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/AbstractJavaTypeKindTest.java",
+      "language": "java",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/AbstractJavaTypeTest.java",
+      "language": "java",
+      "sizeLines": 266,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/AbstractMemberDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/AbstractReflectiveDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 152,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/AccessibleObjectUtilsTest.java",
+      "language": "java",
+      "sizeLines": 125,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ClassDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ConstructorDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ConstructorUtilsTest.java",
+      "language": "java",
+      "sizeLines": 129,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ExecutableUtilsTest.java",
+      "language": "java",
+      "sizeLines": 101,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/FieldDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/FieldUtilsTest.java",
+      "language": "java",
+      "sizeLines": 320,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/generics/ParameterizedTypeImplTest.java",
+      "language": "java",
+      "sizeLines": 149,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/generics/TypeArgumentTest.java",
+      "language": "java",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTest.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTestForClass.java",
+      "language": "java",
+      "sizeLines": 89,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTestForGenericArrayType.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTestForParameterizedType.java",
+      "language": "java",
+      "sizeLines": 94,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTestForTypeVariable.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTestForUnknown.java",
+      "language": "java",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeKindTestForWildcardType.java",
+      "language": "java",
+      "sizeLines": 60,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTest.java",
+      "language": "java",
+      "sizeLines": 324,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForClass.java",
+      "language": "java",
+      "sizeLines": 156,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForGenericArrayType.java",
+      "language": "java",
+      "sizeLines": 63,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForObjectClass.java",
+      "language": "java",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForParameterizedType.java",
+      "language": "java",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForTypeVariable.java",
+      "language": "java",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForUnknown.java",
+      "language": "java",
+      "sizeLines": 78,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/JavaTypeTestForWildcardType.java",
+      "language": "java",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/MemberUtilsTest.java",
+      "language": "java",
+      "sizeLines": 184,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/MethodDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/MethodUtilsTest.java",
+      "language": "java",
+      "sizeLines": 852,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ModifierTest.java",
+      "language": "java",
+      "sizeLines": 203,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/MultipleTypeTest.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ProxyUtilsTest.java",
+      "language": "java",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ReflectionTest.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ReflectionUtilsBenchmark.java",
+      "language": "java",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ReflectionUtilsTest.java",
+      "language": "java",
+      "sizeLines": 202,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ReflectiveDefinitionImpl.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/ReflectiveDefinitionTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/reflect/TypeUtilsTest.java",
+      "language": "java",
+      "sizeLines": 1090,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/security/SecurityUtilsTest.java",
+      "language": "java",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/security/TestSecurityManager.java",
+      "language": "java",
+      "sizeLines": 62,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/A.java",
+      "language": "java",
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/B.java",
+      "language": "java",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/BF3.java",
+      "language": "java",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/C.java",
+      "language": "java",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/D.java",
+      "language": "java",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/Data.java",
+      "language": "java",
+      "sizeLines": 195,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/E.java",
+      "language": "java",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/MultipleValueData.java",
+      "language": "java",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/MyHashMap.java",
+      "language": "java",
+      "sizeLines": 29,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringBF2.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringBooleanToInteger.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringIntegerBooleanHashMap.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringIntegerF1.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringIntegerHashMap.java",
+      "language": "java",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringIntegerToBoolean.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringIntegerToBooleanClass.java",
+      "language": "java",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/test/StringToIntegerF1.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/text/FormatUtilsTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/AnnotationUtilsTest.java",
+      "language": "java",
+      "sizeLines": 714,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ArrayUtilsTest.java",
+      "language": "java",
+      "sizeLines": 1152,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/AssertTest.java",
+      "language": "java",
+      "sizeLines": 278,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/BaseUtilsTest.java",
+      "language": "java",
+      "sizeLines": 22,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/CharSequenceComparatorTest.java",
+      "language": "java",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/CharSequenceUtilsTest.java",
+      "language": "java",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ClassLoaderUtilsPerformanceTest.java",
+      "language": "java",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ClassLoaderUtilsTest.java",
+      "language": "java",
+      "sizeLines": 762,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ClassPathUtilsTest.java",
+      "language": "java",
+      "sizeLines": 101,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ClassUtilsBenchmark.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ClassUtilsTest.java",
+      "language": "java",
+      "sizeLines": 975,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/CompatibleTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ConfigurerTest.java",
+      "language": "java",
+      "sizeLines": 87,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ExceptionUtilsTest.java",
+      "language": "java",
+      "sizeLines": 169,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/FunctionalTest.java",
+      "language": "java",
+      "sizeLines": 87,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/HierarchicalClassComparatorTest.java",
+      "language": "java",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/IterableUtilsTest.java",
+      "language": "java",
+      "sizeLines": 95,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/jar/JarUtilsTest.java",
+      "language": "java",
+      "sizeLines": 206,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ObjectUtilsTest.java",
+      "language": "java",
+      "sizeLines": 49,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/PriorityComparatorTest.java",
+      "language": "java",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/PropertyResourceBundleControlTest.java",
+      "language": "java",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/PropertyResourceBundleUtilsTest.java",
+      "language": "java",
+      "sizeLines": 68,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ResourceTypeTest.java",
+      "language": "java",
+      "sizeLines": 100,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ServiceLoaderUtilsTest.java",
+      "language": "java",
+      "sizeLines": 233,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ShutdownHookCallback.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ShutdownHookCallbacksThreadTest.java",
+      "language": "java",
+      "sizeLines": 31,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ShutdownHookUtilsTest.java",
+      "language": "java",
+      "sizeLines": 158,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/StackTraceUtilsTest.java",
+      "language": "java",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/StopWatchTest.java",
+      "language": "java",
+      "sizeLines": 152,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/StringUtilsTest.java",
+      "language": "java",
+      "sizeLines": 362,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/SystemUtilsTest.java",
+      "language": "java",
+      "sizeLines": 263,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ThrowableUtilsTest.java",
+      "language": "java",
+      "sizeLines": 64,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/TypeFinderTest.java",
+      "language": "java",
+      "sizeLines": 323,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/ValueHolderTest.java",
+      "language": "java",
+      "sizeLines": 96,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/VersionOperatorTest.java",
+      "language": "java",
+      "sizeLines": 103,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/VersionTest.java",
+      "language": "java",
+      "sizeLines": 400,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/java/io/microsphere/util/VersionUtilsTest.java",
+      "language": "java",
+      "sizeLines": 151,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/junit-platform.properties",
+      "language": "properties",
+      "sizeLines": 2,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/logback-test.xml",
+      "language": "xml",
+      "sizeLines": 14,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/.sar",
+      "language": "unknown",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/banned-artifacts",
+      "language": "unknown",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/class-load-test.policy",
+      "language": "policy",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/empty-class-name.sar",
+      "language": "sar",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/empty.sar",
+      "language": "sar",
+      "sizeLines": 6,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/logging.properties",
+      "language": "properties",
+      "sizeLines": 2,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/MANIFEST.MF",
+      "language": "text",
+      "sizeLines": 4,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/maven/io/github/microsphere-projects/microsphere-java-core/pom.properties",
+      "language": "properties",
+      "sizeLines": 3,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/microsphere/additional-configuration-properties.json",
+      "language": "json",
+      "sizeLines": 31,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/io.microsphere.event.EventListener",
+      "language": "eventlistener",
+      "sizeLines": 1,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/io.microsphere.logging.LoggerFactory",
+      "language": "loggerfactory",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/io.microsphere.metadata.ConfigurationPropertyLoader",
+      "language": "configurationpropertyloader",
+      "sizeLines": 3,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/io.microsphere.util.Utils",
+      "language": "utils",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/io.microsphere.util.Version",
+      "language": "version",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/java.net.URLStreamHandlerFactory",
+      "language": "urlstreamhandlerfactory",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/services/org.junit.jupiter.api.extension.Extension",
+      "language": "extension",
+      "sizeLines": 0,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/System.properties",
+      "language": "properties",
+      "sizeLines": 27,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/temp.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/test_zh_CN.properties",
+      "language": "properties",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/META-INF/test.properties",
+      "language": "properties",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/test.txt",
+      "language": "text",
+      "sizeLines": 0,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/test/json/array.json",
+      "language": "json",
+      "sizeLines": 13,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/test/json/clean.txt",
+      "language": "text",
+      "sizeLines": 10,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "microsphere-java-core/src/test/resources/test/json/data.json",
+      "language": "json",
+      "sizeLines": 15,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-dependencies/pom.xml",
+      "language": "xml",
+      "sizeLines": 63,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-parent/pom.xml",
+      "language": "xml",
+      "sizeLines": 64,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-test/pom.xml",
+      "language": "xml",
+      "sizeLines": 93,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/annotation/processing/AbstractAnnotationProcessingTest.java",
+      "language": "java",
+      "sizeLines": 163,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/annotation/processing/AnnotationProcessingTestProcessor.java",
+      "language": "java",
+      "sizeLines": 106,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/annotation/processing/CompilerInvocationInterceptor.java",
+      "language": "java",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/annotation/TestAnnotation.java",
+      "language": "java",
+      "sizeLines": 73,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/Ancestor.java",
+      "language": "java",
+      "sizeLines": 38,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/ArrayTypeModel.java",
+      "language": "java",
+      "sizeLines": 76,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/CollectionTypeModel.java",
+      "language": "java",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/Color.java",
+      "language": "java",
+      "sizeLines": 47,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/ConfigurationPropertyModel.java",
+      "language": "java",
+      "sizeLines": 85,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/MapTypeModel.java",
+      "language": "java",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/Model.java",
+      "language": "java",
+      "sizeLines": 90,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/Parent.java",
+      "language": "java",
+      "sizeLines": 66,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/PrimitiveTypeModel.java",
+      "language": "java",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/SimpleTypeModel.java",
+      "language": "java",
+      "sizeLines": 162,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/model/StringArrayList.java",
+      "language": "java",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/service/DefaultTestService.java",
+      "language": "java",
+      "sizeLines": 57,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/service/GenericTestService.java",
+      "language": "java",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/service/TestService.java",
+      "language": "java",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/java/io/microsphere/test/service/TestServiceImpl.java",
+      "language": "java",
+      "sizeLines": 101,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/main/resources/junit-platform.properties",
+      "language": "properties",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-test/src/main/resources/logback-test.xml",
+      "language": "xml",
+      "sizeLines": 18,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/annotation/processing/AnnotationProcessingTest.java",
+      "language": "java",
+      "sizeLines": 101,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/AncestorTest.java",
+      "language": "java",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/ArrayTypeModelTest.java",
+      "language": "java",
+      "sizeLines": 122,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/CollectionTypeModelTest.java",
+      "language": "java",
+      "sizeLines": 136,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/ColorTest.java",
+      "language": "java",
+      "sizeLines": 104,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/ConfigurationPropertyModelTest.java",
+      "language": "java",
+      "sizeLines": 153,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/MapTypeModelTest.java",
+      "language": "java",
+      "sizeLines": 137,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/ModelTest.java",
+      "language": "java",
+      "sizeLines": 116,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/ParentTest.java",
+      "language": "java",
+      "sizeLines": 86,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/PrimitiveTypeModelTest.java",
+      "language": "java",
+      "sizeLines": 81,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/SimpleTypeModelTest.java",
+      "language": "java",
+      "sizeLines": 184,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/model/StringArrayListTest.java",
+      "language": "java",
+      "sizeLines": 137,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/service/DefaultTestServiceTest.java",
+      "language": "java",
+      "sizeLines": 83,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/service/GenericTestServiceTest.java",
+      "language": "java",
+      "sizeLines": 59,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-java-test/src/test/java/io/microsphere/test/service/TestServiceImplTest.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-jdk-tools/pom.xml",
+      "language": "xml",
+      "sizeLines": 57,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-jdk-tools/src/main/java/io/microsphere/jdk/tools/compiler/Compiler.java",
+      "language": "java",
+      "sizeLines": 282,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-jdk-tools/src/test/java/io/microsphere/jdk/tools/compiler/CompilerTest.java",
+      "language": "java",
+      "sizeLines": 188,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-jdk-tools/src/test/resources/logback-test.xml",
+      "language": "xml",
+      "sizeLines": 14,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-lang-model/pom.xml",
+      "language": "xml",
+      "sizeLines": 94,
+      "fileCategory": "config"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/element/StringAnnotationValue.java",
+      "language": "java",
+      "sizeLines": 50,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/AnnotatedElementJSONElementVisitor.java",
+      "language": "java",
+      "sizeLines": 127,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/AnnotationUtils.java",
+      "language": "java",
+      "sizeLines": 1876,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/ClassUtils.java",
+      "language": "java",
+      "sizeLines": 109,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/ConstructorUtils.java",
+      "language": "java",
+      "sizeLines": 293,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/ElementUtils.java",
+      "language": "java",
+      "sizeLines": 734,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/ExecutableElementComparator.java",
+      "language": "java",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/FieldUtils.java",
+      "language": "java",
+      "sizeLines": 763,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/JSONAnnotationValueVisitor.java",
+      "language": "java",
+      "sizeLines": 196,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/JSONElementVisitor.java",
+      "language": "java",
+      "sizeLines": 220,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/LoggerUtils.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/MemberUtils.java",
+      "language": "java",
+      "sizeLines": 423,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/MessagerUtils.java",
+      "language": "java",
+      "sizeLines": 310,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/MethodUtils.java",
+      "language": "java",
+      "sizeLines": 1165,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/ResolvableAnnotationValueVisitor.java",
+      "language": "java",
+      "sizeLines": 201,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/main/java/io/microsphere/lang/model/util/TypeUtils.java",
+      "language": "java",
+      "sizeLines": 2506,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/element/StringAnnotationValueTest.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/AnnotatedElementJSONElementVisitorTest.java",
+      "language": "java",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/AnnotationUtilsTest.java",
+      "language": "java",
+      "sizeLines": 811,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/ClassUtilsTest.java",
+      "language": "java",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/ConstructorUtilsTest.java",
+      "language": "java",
+      "sizeLines": 148,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/ElementUtilsTest.java",
+      "language": "java",
+      "sizeLines": 354,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/ExecutableElementComparatorTest.java",
+      "language": "java",
+      "sizeLines": 75,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/FieldUtilsTest.java",
+      "language": "java",
+      "sizeLines": 413,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/JSONAnnotationValueVisitorTest.java",
+      "language": "java",
+      "sizeLines": 135,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/JSONElementVisitorTest.java",
+      "language": "java",
+      "sizeLines": 256,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/LoggerUtilsTest.java",
+      "language": "java",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/MemberUtilsTest.java",
+      "language": "java",
+      "sizeLines": 173,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/MessagerUtilsTest.java",
+      "language": "java",
+      "sizeLines": 82,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/MethodUtilsTest.java",
+      "language": "java",
+      "sizeLines": 502,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/ResolvableAnnotationValueVisitorTest.java",
+      "language": "java",
+      "sizeLines": 218,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/TypeUtilsTest.java",
+      "language": "java",
+      "sizeLines": 1874,
+      "fileCategory": "code"
+    },
+    {
+      "path": "microsphere-lang-model/src/test/java/io/microsphere/lang/model/util/UtilTest.java",
+      "language": "java",
+      "sizeLines": 97,
+      "fileCategory": "code"
+    },
+    {
+      "path": "mvnw",
+      "language": "unknown",
+      "sizeLines": 295,
+      "fileCategory": "code"
+    },
+    {
+      "path": "mvnw.cmd",
+      "language": "shell",
+      "sizeLines": 189,
+      "fileCategory": "script"
+    },
+    {
+      "path": "onboarding-plan.md",
+      "language": "markdown",
+      "sizeLines": 141,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "pom.xml",
+      "language": "xml",
+      "sizeLines": 67,
+      "fileCategory": "config"
+    },
+    {
+      "path": "README.md",
+      "language": "markdown",
+      "sizeLines": 274,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "release-notes.md",
+      "language": "markdown",
+      "sizeLines": 223,
+      "fileCategory": "docs"
+    },
+    {
+      "path": "user-guide.md",
+      "language": "markdown",
+      "sizeLines": 787,
+      "fileCategory": "docs"
+    }
+  ],
+  "totalFiles": 825,
+  "filteredByIgnore": 0,
+  "estimatedComplexity": "very-large",
+  "stats": {
+    "filesScanned": 825,
+    "byCategory": {
+      "config": 27,
+      "docs": 13,
+      "code": 779,
+      "infra": 5,
+      "script": 1
+    },
+    "byLanguage": {
+      "yaml": 6,
+      "markdown": 11,
+      "python": 1,
+      "properties": 8,
+      "unknown": 4,
+      "xml": 13,
+      "java": 748,
+      "processor": 1,
+      "configurationpropertyloader": 3,
+      "json": 5,
+      "artifactresourceresolver": 1,
+      "urlclasspathhandle": 1,
+      "converter": 1,
+      "multivalueconverter": 1,
+      "eventdispatcher": 1,
+      "deserializer": 1,
+      "serializer": 1,
+      "loggerfactory": 2,
+      "configurationpropertygenerator": 1,
+      "configurationpropertyreader": 1,
+      "extendableprotocolurlstreamhandler": 1,
+      "processidresolver": 1,
+      "policy": 1,
+      "sar": 2,
+      "mf": 1,
+      "eventlistener": 1,
+      "utils": 1,
+      "version": 1,
+      "urlstreamhandlerfactory": 1,
+      "extension": 1,
+      "txt": 2,
+      "batch": 1
+    }
+  },
+  "projectRoot": "/Users/mercyblitz/workspaces/github/microsphere-projects/microsphere-java",
+  "projectName": "Microsphere Java",
+  "projectDescription": "A foundational Java library providing reusable components, utilities, and annotation processing capabilities for the MicroSphere ecosystem.",
+  "languages": [
+    "yaml",
+    "markdown",
+    "python",
+    "properties",
+    "unknown",
+    "xml",
+    "java",
+    "processor",
+    "configurationpropertyloader",
+    "json",
+    "artifactresourceresolver",
+    "urlclasspathhandle",
+    "converter",
+    "multivalueconverter",
+    "eventdispatcher",
+    "deserializer",
+    "serializer",
+    "loggerfactory",
+    "configurationpropertygenerator",
+    "configurationpropertyreader",
+    "extendableprotocolurlstreamhandler",
+    "processidresolver",
+    "policy",
+    "sar",
+    "text",
+    "eventlistener",
+    "utils",
+    "version",
+    "urlstreamhandlerfactory",
+    "extension",
+    "shell"
+  ],
+  "frameworks": [
+    "JUnit 5"
+  ],
+  "complexity": "very-large",
+  "importMap": {}
+}
