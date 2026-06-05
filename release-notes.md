@@ -221,4 +221,20 @@ For a detailed list of changes, see the [Full Changelog](https://github.com/micr
 
 **Full Changelog**: [v0.3.5...v0.3.6](https://github.com/microsphere-projects/compare/v0.3.5...v0.3.6)  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.5...0.3.6
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.5...0.3.6## v0.3.7
+
+# Release Notes - Version 0.3.7
+
+## Dependency Updates
+- Bumped `microsphere-bom.version` to `0.2.6`. ([a8ffffda](#))
+
+## Build and Workflow Enhancements
+- Bumped parent POM version to `0.3.1`. ([21140f70](#))
+- Version updated to next patch after publishing `0.3.6`. ([442c5a47](#))
+- Merged `main` into `release` for version alignment. ([8cc3b499](#), [ef638e22](#))
+
+---
+
+No new features, bug fixes, or documentation updates in this release.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.6...0.3.7
