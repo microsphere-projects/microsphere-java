@@ -1,0 +1,51 @@
+# .understandignore — patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+# Lines below are suggestions — uncomment to activate.
+# Use ! prefix to force-include something excluded by defaults.
+#
+# Built-in defaults (always excluded unless negated):
+#   node_modules/, .git/, dist/, build/, obj/, *.lock, *.min.js, etc.
+#
+# --- From .gitignore (uncomment to exclude) ---
+
+# *.class
+# *.ctxt
+# .mtj.tmp/
+# *.jar
+# *.war
+# *.nar
+# *.ear
+# *.tar.gz
+# *.rar
+# hs_err_pid*
+# !.mvn/wrapper/*
+# dependency-reduced-pom.xml
+# .settings/
+# .project
+# .classpath
+# *.ipr
+# *.iml
+# *.iws
+# *.cache
+# *.diff
+# *.patch
+# *.tmp
+# .DS_Store
+# Thumbs.db
+# *.orig
+# .flattened-pom.xml
+# license-list
+# compiler/gradle.properties
+# compiler/build/*
+# compiler/.gradle/*
+# .extract
+# .java-version
+# build.txt
+# wiki/
+# wiki-output/
+
+# --- Test file patterns (uncomment to exclude) ---
+
+# *.test.*
+# *.spec.*
+# *.snap
