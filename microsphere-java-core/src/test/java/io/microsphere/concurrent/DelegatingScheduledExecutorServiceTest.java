@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static io.microsphere.collection.Lists.ofList;
+import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -91,6 +92,10 @@ class DelegatingScheduledExecutorServiceTest implements Loggable {
         instance.execute(() -> {
             log("execute");
         });
+
+        instance.schedule(() -> {
+            log("delayed schedule");
+        }, 1, DAYS);
 
         // test shutdownNow
         assertFalse(instance.shutdownNow().isEmpty());
