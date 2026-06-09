@@ -20,13 +20,19 @@ import io.microsphere.annotation.Immutable;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.util.Utils;
 
+import java.io.StringReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
+import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
+import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.lang.function.ThrowableAction.execute;
+import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.StringUtils.arrayToString;
 import static java.util.Collections.unmodifiableMap;
 
 /**
@@ -142,6 +148,45 @@ public abstract class PropertiesUtils implements Utils {
     @Nonnull
     public static Properties newProperties(Properties defaults) {
         return new Properties(defaults);
+    }
+
+    /**
+     * Loads properties from the given string values.
+     *
+     * <p>The provided string values are joined using the system file separator to form a single content string,
+     * which is then parsed as a standard Java properties format.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     // Load properties from multiple lines
+     *     Properties props = PropertiesUtils.loadProperties(
+     *         "key1=value1",
+     *         "key2=value2"
+     *     );
+     *     System.out.println(props.getProperty("key1")); // Output: value1
+     *     System.out.println(props.getProperty("key2")); // Output: value2
+     *
+     *     // Load empty properties if no arguments are provided
+     *     Properties emptyProps = PropertiesUtils.loadProperties();
+     *     System.out.println(emptyProps.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param propertiesValue the string values representing properties content
+     * @return a new {@link Properties} instance loaded from the given values
+     */
+    @Nonnull
+    public static Properties loadProperties(String... propertiesValue) {
+        int length = length(propertiesValue);
+        Properties properties = newProperties();
+        if (length > 0) {
+            String content = arrayToString(propertiesValue, LINE_SEPARATOR);
+            execute(() -> {
+                try (StringReader reader = new StringReader(content)) {
+                    properties.load(reader);
+                }
+            });
+        }
+        return properties;
     }
 
     private PropertiesUtils() {
