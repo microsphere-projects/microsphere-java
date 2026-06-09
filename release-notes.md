@@ -237,4 +237,28 @@ For a detailed list of changes, see the [Full Changelog](https://github.com/micr
 
 No new features, bug fixes, or documentation updates in this release.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.6...0.3.7
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.6...0.3.7## v0.3.8
+
+# Release Notes - Version 0.3.8
+
+## 🌟 New Features
+- Added `loadProperties` helper utility with tests. ([8e42d20b](#))
+- Introduced `arrayToString` utility with tests. ([b78cb2c9](#))
+
+## 📖 Documentation
+- Reformatted README for improved readability (line wrapping and adjusted layout). ([225828ae](#), [cfbcc8ac](#))
+
+## 🔗 Dependency Updates
+- Updated `microsphere-bom.version` to `0.2.7`. ([a68740cf](#))
+- Bumped `org.springframework:spring-framework-bom` from `7.0.7` to `7.0.8`. ([8c33b6e0](#))
+- Bumped parent project version to `0.3.3`. ([79ef1703](#))
+
+## 🧪 Test Improvements
+- Included tests for the new utility methods (`loadProperties` and `arrayToString`). ([8e42d20b](#), [b78cb2c9](#))
+
+## 🛠️ Build and Workflow Enhancements
+- Added `.understand-anything` analysis artifacts. ([4bbfbf8c](#))
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.7...0.3.8
