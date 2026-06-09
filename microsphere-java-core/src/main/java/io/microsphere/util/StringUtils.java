@@ -22,9 +22,11 @@ import io.microsphere.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.StringJoiner;
 
 import static io.microsphere.collection.CollectionUtils.isEmpty;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.util.ArrayUtils.length;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
@@ -834,6 +836,41 @@ public abstract class StringUtils implements Utils {
     @Nonnull
     public static String[] toStringArray(@Nullable Collection<String> collection) {
         return isEmpty(collection) ? EMPTY_STRING_ARRAY : collection.toArray(EMPTY_STRING_ARRAY);
+    }
+    
+    /**
+     * <p>Converts an array of Objects into a single String, with each element separated by the specified delimiter.</p>
+     *
+     * <p>A {@code null} or empty array returns an empty string. Each element is converted to a String using
+     * {@link String#valueOf(Object)}. If the array contains only one element, that element's String representation
+     * is returned without the delimiter.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * StringUtils.arrayToString(null, ",")           = ""
+     * StringUtils.arrayToString(new Object[]{}, ",") = ""
+     * StringUtils.arrayToString(new Object[]{"a"}, ",") = "a"
+     * StringUtils.arrayToString(new Object[]{"a", "b", "c"}, ",") = "a,b,c"
+     * StringUtils.arrayToString(new Object[]{1, 2, 3}, "-") = "1-2-3"
+     * }</pre>
+     *
+     * @param values    the array of Objects to convert, may be {@code null} or empty
+     * @param delimiter the String to use as a delimiter between elements, may be {@code null} (treated as "null")
+     * @return the joined String, or an empty string if the input array is {@code null} or empty
+     */
+    public static String arrayToString(@Nullable Object[] values, String delimiter) {
+        int length = length(values);
+        if (length < 1) {
+            return EMPTY_STRING;
+        }
+        if (length == 1) {
+            return valueOf(values[0]);
+        }
+        StringJoiner sj = new StringJoiner(delimiter);
+        for (Object elem : values) {
+            sj.add(valueOf(elem));
+        }
+        return sj.toString();
     }
 
     /**

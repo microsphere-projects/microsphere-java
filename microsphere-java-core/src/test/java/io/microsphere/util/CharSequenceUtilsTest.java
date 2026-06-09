@@ -8,6 +8,7 @@ import static io.microsphere.util.CharSequenceUtils.isEmpty;
 import static io.microsphere.util.CharSequenceUtils.isNotEmpty;
 import static io.microsphere.util.CharSequenceUtils.length;
 import static io.microsphere.util.CharSequenceUtils.trimAllWhitespace;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class CharSequenceUtilsTest {
 
-    static final String TEST_EMPTY_STRING = "";
+    static final String TEST_EMPTY_STRING = EMPTY_STRING;
 
     static final String TEST_BLANK_STRING = SPACE;
 
