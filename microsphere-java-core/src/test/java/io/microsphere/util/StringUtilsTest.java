@@ -18,6 +18,7 @@ import static io.microsphere.util.CharSequenceUtilsTest.TEST_STRING;
 import static io.microsphere.util.StringUtils.EMPTY;
 import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
+import static io.microsphere.util.StringUtils.arrayToString;
 import static io.microsphere.util.StringUtils.capitalize;
 import static io.microsphere.util.StringUtils.contains;
 import static io.microsphere.util.StringUtils.containsWhitespace;
@@ -45,6 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.util.StringUtils.delimitedListToStringArray;
 
@@ -357,6 +359,18 @@ class StringUtilsTest {
         assertSame(EMPTY_STRING_ARRAY, toStringArray(emptyList()));
         assertSame(EMPTY_STRING_ARRAY, toStringArray(newLinkedList()));
         assertArrayEquals(ofArray("a", "b", "c"), toStringArray(ofList("a", "b", "c")));
+    }
+
+    @Test
+    void testArrayToString() {
+        assertSame(TEST_EMPTY_STRING, arrayToString(null, COMMA));
+        assertSame(TEST_EMPTY_STRING, arrayToString(EMPTY_STRING_ARRAY, COMMA));
+        assertSame("a", arrayToString(ofArray("a"), COMMA));
+        assertEquals("a,b,c", arrayToString(ofArray("a", "b", "c"), COMMA));
+        assertEquals("1-2-3", arrayToString(ofArray(1, 2, 3), "-"));
+        assertEquals("1,2,3", arrayToString(ofArray(1, 2, 3), COMMA));
+
+        assertThrows(NullPointerException.class, () -> arrayToString(ofArray(1, 2, 3), null));
     }
 
 }
