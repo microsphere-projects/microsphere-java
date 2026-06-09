@@ -57,16 +57,16 @@ frameworks like Spring, making it a versatile addition to any Java developer's t
 
 The framework is organized into several focused modules:
 
-| Module                           | Artifact ID                        | Purpose                                                                                              |
-|----------------------------------|------------------------------------|------------------------------------------------------------------------------------------------------|
-| microsphere-java-annotations     | `microsphere-java-annotations`     | Common annotations (`@Nullable`, `@Nonnull`, `@Immutable`, `@Experimental`, `@Since`, …)             |
+| Module                           | Artifact ID                        | Purpose                                                                                               |
+|----------------------------------|------------------------------------|-------------------------------------------------------------------------------------------------------|
+| microsphere-java-annotations     | `microsphere-java-annotations`     | Common annotations (`@Nullable`, `@Nonnull`, `@Immutable`, `@Experimental`, `@Since`, …)              |
 | microsphere-java-core            | `microsphere-java-core`            | Core utilities: strings, collections, reflection, I/O, concurrency, events, type conversion, and more |
-| microsphere-lang-model           | `microsphere-lang-model`           | Components and utilities for the Java Language Model API                                             |
-| microsphere-jdk-tools            | `microsphere-jdk-tools`            | Helpers for Java compiler and JDK tool APIs                                                          |
-| microsphere-annotation-processor | `microsphere-annotation-processor` | Compile-time annotation processor for `@ConfigurationProperty` metadata generation                  |
-| microsphere-java-test            | `microsphere-java-test`            | Models and utilities for JUnit 5-based testing                                                       |
-| microsphere-java-dependencies    | `microsphere-java-dependencies`    | BOM (Bill of Materials) managing dependency versions across the project                              |
-| microsphere-java-parent          | `microsphere-java-parent`          | Parent POM with shared build configuration                                                           |
+| microsphere-lang-model           | `microsphere-lang-model`           | Components and utilities for the Java Language Model API                                              |
+| microsphere-jdk-tools            | `microsphere-jdk-tools`            | Helpers for Java compiler and JDK tool APIs                                                           |
+| microsphere-annotation-processor | `microsphere-annotation-processor` | Compile-time annotation processor for `@ConfigurationProperty` metadata generation                    |
+| microsphere-java-test            | `microsphere-java-test`            | Models and utilities for JUnit 5-based testing                                                        |
+| microsphere-java-dependencies    | `microsphere-java-dependencies`    | BOM (Bill of Materials) managing dependency versions across the project                               |
+| microsphere-java-parent          | `microsphere-java-parent`          | Parent POM with shared build configuration                                                            |
 
 ## Prerequisites
 
