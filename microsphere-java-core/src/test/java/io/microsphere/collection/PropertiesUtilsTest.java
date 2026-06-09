@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.collection.PropertiesUtils.flatProperties;
+import static io.microsphere.collection.PropertiesUtils.loadProperties;
 import static io.microsphere.collection.PropertiesUtils.newProperties;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
@@ -74,11 +75,22 @@ class PropertiesUtilsTest {
         Properties defaults = new Properties();
         defaults.setProperty("key1", "value1");
         defaults.setProperty("key2", "value2");
-        
+
         Properties props = newProperties(defaults);
         assertNotNull(props);
         assertEquals("value1", props.getProperty("key1"));
         assertEquals("value2", props.getProperty("key2"));
         assertTrue(props.isEmpty());  // Properties from defaults are not in the main properties
+    }
+
+    @Test
+    void testLoadProperties() {
+        Properties properties = loadProperties();
+        assertTrue(properties.isEmpty());
+
+        properties = loadProperties("a=1", "b : 2", "c 3");
+        assertEquals("1", properties.getProperty("a"));
+        assertEquals("2", properties.getProperty("b"));
+        assertEquals("3", properties.getProperty("c"));
     }
 }
