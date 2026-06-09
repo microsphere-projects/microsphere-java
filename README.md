@@ -41,11 +41,9 @@ frameworks like Spring, making it a versatile addition to any Java developer's t
 
 - **String & Collection Utilities** — Null-safe helpers for strings, arrays, lists, sets, maps, and deques
 - **Reflection Utilities** — Simplified access to fields, methods, constructors, and generic type arguments
-- **Type Conversion** — Extensible `Converter` SPI with built-in converters for standard Java types (primitives,
-  collections, `Duration`, `InputStream`, and more)
+- **Type Conversion** — Extensible `Converter` SPI with built-in converters for standard Java types (primitives, collections, `Duration`, `InputStream`, and more)
 - **Event Dispatching** — Lightweight `EventDispatcher` with sequential and parallel execution modes
-- **Class Loading & Artifact Detection** — Utilities for classpath scanning, JAR introspection, and Maven/module
-  artifact resolution
+- **Class Loading & Artifact Detection** — Utilities for classpath scanning, JAR introspection, and Maven/module artifact resolution
 - **Networking** — Custom `URLStreamHandler` and URL utility helpers
 - **I/O** — Enhanced file, stream, and charset utilities, plus a file-watch service
 - **Concurrency** — Delegating executor wrappers and custom thread factory
@@ -82,37 +80,35 @@ The framework is organized into several focused modules:
 Add the BOM to your `pom.xml` to manage versions centrally:
 
 ```xml
-
 <dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-java-dependencies</artifactId>
-            <version>${microsphere-java.version}</version>
-            <type>pom</type>
-            <scope>import</scope>
-        </dependency>
-    </dependencies>
+  <dependencies>
+      <dependency>
+          <groupId>io.github.microsphere-projects</groupId>
+          <artifactId>microsphere-java-dependencies</artifactId>
+          <version>${microsphere-java.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+      </dependency>
+  </dependencies>
 </dependencyManagement>
 ```
 
 Then declare only the modules you need:
 
 ```xml
-
 <dependencies>
-    <!-- Core utilities -->
-    <dependency>
-        <groupId>io.github.microsphere-projects</groupId>
-        <artifactId>microsphere-java-core</artifactId>
-    </dependency>
+  <!-- Core utilities -->
+  <dependency>
+      <groupId>io.github.microsphere-projects</groupId>
+      <artifactId>microsphere-java-core</artifactId>
+  </dependency>
 
-    <!-- Compile-time annotation processor (optional) -->
-    <dependency>
-        <groupId>io.github.microsphere-projects</groupId>
-        <artifactId>microsphere-annotation-processor</artifactId>
-        <optional>true</optional>
-    </dependency>
+  <!-- Compile-time annotation processor (optional) -->
+  <dependency>
+      <groupId>io.github.microsphere-projects</groupId>
+      <artifactId>microsphere-annotation-processor</artifactId>
+      <optional>true</optional>
+  </dependency>
 </dependencies>
 ```
 
@@ -120,10 +116,10 @@ Then declare only the modules you need:
 
 ```groovy
 dependencies {
-    implementation platform("io.github.microsphere-projects:microsphere-java-dependencies:${microsphereJavaVersion}")
+  implementation platform("io.github.microsphere-projects:microsphere-java-dependencies:${microsphereJavaVersion}")
 
-    implementation "io.github.microsphere-projects:microsphere-java-core"
-    annotationProcessor "io.github.microsphere-projects:microsphere-annotation-processor"
+  implementation "io.github.microsphere-projects:microsphere-java-core"
+  annotationProcessor "io.github.microsphere-projects:microsphere-annotation-processor"
 }
 ```
 
@@ -135,15 +131,9 @@ dependencies {
 import io.microsphere.util.StringUtils;
 
 StringUtils.isBlank(null);      // true
-StringUtils.
-
-isBlank("");        // true
-StringUtils.
-
-isBlank("  ");      // true
-StringUtils.
-
-isBlank("Hello");   // false
+StringUtils.isBlank("");        // true
+StringUtils.isBlank("  ");      // true
+StringUtils.isBlank("Hello");   // false
 ```
 
 #### Collection Utilities
@@ -152,12 +142,8 @@ isBlank("Hello");   // false
 import io.microsphere.collection.CollectionUtils;
 
 CollectionUtils.isEmpty(null);              // true
-CollectionUtils.
-
-isEmpty(List.of());         // true
-        CollectionUtils.
-
-isEmpty(List.of("item"));   // false
+CollectionUtils.isEmpty(List.of());         // true
+CollectionUtils.isEmpty(List.of("item"));   // false
 ```
 
 #### Reflection Utilities
@@ -169,8 +155,8 @@ import io.microsphere.reflect.MethodUtils;
 // Read a private field value without boilerplate
 Object value = FieldUtils.getFieldValue(myObject, "fieldName");
 
-        // Find all declared methods matching a predicate
-        Set<Method> methods = MethodUtils.findMethods(MyClass.class, m -> m.isAnnotationPresent(Override.class));
+// Find all declared methods matching a predicate
+Set<Method> methods = MethodUtils.findMethods(MyClass.class, m -> m.isAnnotationPresent(Override.class));
 ```
 
 #### Type Conversion
@@ -181,8 +167,8 @@ import io.microsphere.convert.Converters;
 // Convert a String to Integer
 Integer number = Converters.convert("42", Integer.class);
 
-        // Convert a String to a List of Strings
-        List<String> items = Converters.convert("a,b,c", List.class);
+// Convert a String to a List of Strings
+List<String> items = Converters.convert("a,b,c", List.class);
 ```
 
 #### Event Dispatching
@@ -193,24 +179,14 @@ import io.microsphere.event.EventListener;
 
 // Sequential (direct) dispatcher
 EventDispatcher dispatcher = EventDispatcher.newDefault();
-dispatcher.
+dispatcher.addEventListener((EventListener<MyEvent>) event -> System.out.println("Received: " + event));
+dispatcher.dispatch(new MyEvent("hello"));
 
-        addEventListener((EventListener<MyEvent>) event ->System.out.
-
-        println("Received: "+event));
-        dispatcher.
-
-        dispatch(new MyEvent("hello"));
-
-        // Parallel dispatcher with a custom thread pool
-        Executor executor = Executors.newFixedThreadPool(4);
-        EventDispatcher parallel = EventDispatcher.parallel(executor);
-parallel.
-
-        addEventListener(myListener);
-parallel.
-
-        dispatch(new MyEvent("world"));
+// Parallel dispatcher with a custom thread pool
+Executor executor = Executors.newFixedThreadPool(4);
+EventDispatcher parallel = EventDispatcher.parallel(executor);
+parallel.addEventListener(myListener);
+parallel.dispatch(new MyEvent("world"));
 ```
 
 #### Artifact / Version Detection
@@ -220,7 +196,7 @@ import io.microsphere.util.Version;
 
 // Detect the runtime version of a library from its JAR manifest
 Version springVersion = Version.ofVersion(org.springframework.core.SpringVersion.class);
-        boolean isModern = springVersion.isGreaterThanOrEqualTo("6.0.0");
+boolean isModern = springVersion.isGreaterThanOrEqualTo("6.0.0");
 ```
 
 ## Building from Source
@@ -253,13 +229,13 @@ To run the full test suite with coverage:
 
 ## Documentation
 
-| Resource                   | Link                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| User Guide                 | [user-guide.md](./user-guide.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| AI-powered docs (DeepWiki) | [![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/microsphere-projects/microsphere-java)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| Ask Zread                  | [![zread](https://img.shields.io/badge/Ask_Zread-_.svg?style=flat&color=00b0aa&labelColor=000000&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuOTYxNTYgMS42MDAxSDIuMjQxNTZDMS44ODgxIDEuNjAwMSAxLjYwMTU2IDEuODg2NjQgMS42MDE1NiAyLjI0MDFWNC45NjAxQzEuNjAxNTYgNS4zMTM1NiAxLjg4ODEgNS42MDAxIDIuMjQxNTYgNS42MDAxSDQuOTYxNTZDNS4zMTUwMiA1LjYwMDEgNS42MDE1NiA1LjMxMzU2IDUuNjAxNTYgNC45NjAxVjIuMjQwMUM1LjYwMTU2IDEuODg2NjQgNS4zMTUwMiAxLjYwMDEgNC45NjE1NiAxLjYwMDFaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00Ljk2MTU2IDEwLjM5OTlIMi4yNDE1NkMxLjg4ODEgMTAuMzk5OSAxLjYwMTU2IDEwLjY4NjQgMS42MDE1NiAxMS4wMzk5VjEzLjc1OTlDMS42MDE1NiAxNC4xMTM0IDEuODg4MSAxNC4zOTk5IDIuMjQxNTYgMTQuMzk5OUg0Ljk2MTU2QzUuMzE1MDIgMTQuMzk5OSA1LjYwMTU2IDE0LjExMzQgNS42MDE1NiAxMy43NTk5VjExLjAzOTlDNS42MDE1NiAxMC42ODY0IDUuMzE1MDIgMTAuMzk5OSA0Ljk2MTU2IDEwLjM5OTlaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik0xMy43NTg0IDEuNjAwMUgxMS4wMzg0QzEwLjY4NSAxLjYwMDEgMTAuMzk4NCAxLjg4NjY0IDEwLjM5ODQgMi4yNDAxVjQuOTYwMUMxMC4zOTg0IDUuMzEzNTYgMTAuNjg1IDUuNjAwMSAxMS4wMzg0IDUuNjAwMUgxMy43NTg0QzE0LjExMTkgNS42MDAxIDE0LjM5ODQgNS4zMTM1NiAxNC4zOTg0IDQuOTYwMVYyLjI0MDFDMTQuMzk4NCAxLjg4NjY0IDE0LjExMTkgMS42MDAxIDEzLjc1ODQgMS42MDAxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNNCAxMkwxMiA0TDQgMTJaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00IDEyTDEyIDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K&logoColor=ffffff)](https://zread.ai/microsphere-projects/microsphere-java) |
-| Wiki                       | [GitHub Wiki](https://github.com/microsphere-projects/microsphere-java/wiki)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| Release Notes              | [release-notes.md](./release-notes.md)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Resource | Link |
+|----------|------|
+| User Guide | [user-guide.md](./user-guide.md) |
+| AI-powered docs (DeepWiki) | [![DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/microsphere-projects/microsphere-java) |
+| Ask Zread | [![zread](https://img.shields.io/badge/Ask_Zread-_.svg?style=flat&color=00b0aa&labelColor=000000&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuOTYxNTYgMS42MDAxSDIuMjQxNTZDMS44ODgxIDEuNjAwMSAxLjYwMTU2IDEuODg2NjQgMS42MDE1NiAyLjI0MDFWNC45NjAxQzEuNjAxNTYgNS4zMTM1NiAxLjg4ODEgNS42MDAxIDIuMjQxNTYgNS42MDAxSDQuOTYxNTZDNS4zMTUwMiA1LjYwMDEgNS42MDE1NiA1LjMxMzU2IDUuNjAxNTYgNC45NjAxVjIuMjQwMUM1LjYwMTU2IDEuODg2NjQgNS4zMTUwMiAxLjYwMDEgNC45NjE1NiAxLjYwMDFaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00Ljk2MTU2IDEwLjM5OTlIMi4yNDE1NkMxLjg4ODEgMTAuMzk5OSAxLjYwMTU2IDEwLjY4NjQgMS42MDE1NiAxMS4wMzk5VjEzLjc1OTlDMS42MDE1NiAxNC4xMTM0IDEuODg4MSAxNC4zOTk5IDIuMjQxNTYgMTQuMzk5OUg0Ljk2MTU2QzUuMzE1MDIgMTQuMzk5OSA1LjYwMTU2IDE0LjExMzQgNS42MDE1NiAxMy43NTk5VjExLjAzOTlDNS42MDE1NiAxMC42ODY0IDUuMzE1MDIgMTAuMzk5OSA0Ljk2MTU2IDEwLjM5OTlaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik0xMy43NTg0IDEuNjAwMUgxMS4wMzg0QzEwLjY4NSAxLjYwMDEgMTAuMzk4NCAxLjg4NjY0IDEwLjM5ODQgMi4yNDAxVjQuOTYwMUMxMC4zOTg0IDUuMzEzNTYgMTAuNjg1IDUuNjAwMSAxMS4wMzg0IDUuNjAwMUgxMy43NTg0QzE0LjExMTkgNS42MDAxIDE0LjM5ODQgNS4zMTM1NiAxNC4zOTg0IDQuOTYwMVYyLjI0MDFDMTQuMzk4NCAxLjg4NjY0IDE0LjExMTkgMS42MDAxIDEzLjc1ODQgMS42MDAxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNNCAxMkwxMiA0TDQgMTJaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00IDEyTDEyIDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K&logoColor=ffffff)](https://zread.ai/microsphere-projects/microsphere-java) |
+| Wiki | [GitHub Wiki](https://github.com/microsphere-projects/microsphere-java/wiki) |
+| Release Notes | [release-notes.md](./release-notes.md) |
 
 ### JavaDoc
 
@@ -283,17 +259,14 @@ Please read [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) before contributing.
 
 ## Getting Help
 
-- **Bug reports & feature requests
-  ** — [Open an issue](https://github.com/microsphere-projects/microsphere-java/issues/new) (
-  search [existing issues](https://github.com/microsphere-projects/microsphere-java/issues) first)
-- **Questions & discussions
-  ** — [GitHub Discussions](https://github.com/microsphere-projects/microsphere-java/discussions)
+- **Bug reports & feature requests** — [Open an issue](https://github.com/microsphere-projects/microsphere-java/issues/new) (search [existing issues](https://github.com/microsphere-projects/microsphere-java/issues) first)
+- **Questions & discussions** — [GitHub Discussions](https://github.com/microsphere-projects/microsphere-java/discussions)
 - **AI-powered documentation** — [DeepWiki](https://deepwiki.com/microsphere-projects/microsphere-java)
 
 ## Maintainers
 
-| Name                                                   | Role                       | Contact              |
-|--------------------------------------------------------|----------------------------|----------------------|
+| Name | Role | Contact |
+|------|------|---------|
 | [Mercy Ma (mercyblitz)](https://github.com/mercyblitz) | Lead Architect & Developer | mercyblitz@gmail.com |
 
 ## License
