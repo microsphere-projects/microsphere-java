@@ -261,4 +261,20 @@ No new features, bug fixes, or documentation updates in this release.
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.7...0.3.8
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.7...0.3.8## v0.3.9
+
+# Release Notes - Version 0.3.9
+
+## Dependency Updates
+- Bumped **microsphere-bom** to version 0.2.8.
+- Updated parent version to 0.3.4.
+
+## Build and Workflow Enhancements
+- Synced `main` and `release` branches for improved workflow consistency.  
+- Incremented version to the next patch after publishing 0.3.8.
+
+---
+
+**Note:** This release primarily includes dependency updates and build process improvements.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.8...0.3.9
