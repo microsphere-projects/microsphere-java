@@ -305,4 +305,22 @@ No new features, bug fixes, or documentation updates in this release.
 ## Other Changes
 - Bumped version to next patch `0.3.11` post publishing `0.3.10`. ([95f7b037](#))
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.10...0.3.11
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.10...0.3.11## v0.3.12
+
+# Release Notes: Version 0.3.12
+
+### Dependency Updates
+- **Microsphere BOM**: Updated to version `0.3.1`. ([5ade306e](commit-link))
+
+### Build and Workflow Enhancements
+- Merged `main` into `release`. ([b1240e5f](commit-link))
+- Merged `release` into `main`. ([dd0d50c9](commit-link))
+
+### Other Changes
+- Updated version to prepare for the next patch after publishing `0.3.11`. ([b26e6ce1](commit-link))
+
+---
+
+For complete details, see the [full changelog](#).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.11...0.3.12
