@@ -416,376 +416,376 @@ public abstract class QueueUtils implements Utils {
         return new ArrayDeque<>(elements);
     }
 
-   /**
-    * Creates a new empty {@link PriorityQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty priority queue.
-    * The returned queue orders elements according to their natural ordering.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<Integer> queue = QueueUtils.newPriorityQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    *
-    *     queue.add(3);
-    *     queue.add(1);
-    *     queue.add(2);
-    *     System.out.println(queue.poll()); // Output: 1
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue
-    * @return a new, empty {@link PriorityQueue}
-    */
-   @Nonnull
-   public static <E> PriorityQueue<E> newPriorityQueue() {
-       return new PriorityQueue<>();
-   }
+    /**
+     * Creates a new empty {@link PriorityQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty priority queue.
+     * The returned queue orders elements according to their natural ordering.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<Integer> queue = QueueUtils.newPriorityQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     *
+     *     queue.add(3);
+     *     queue.add(1);
+     *     queue.add(2);
+     *     System.out.println(queue.poll()); // Output: 1
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue
+     * @return a new, empty {@link PriorityQueue}
+     */
+    @Nonnull
+    public static <E> PriorityQueue<E> newPriorityQueue() {
+        return new PriorityQueue<>();
+    }
 
-   /**
-    * Creates a new {@link PriorityQueue} instance with the specified initial capacity.
-    *
-    * <p>This method provides a convenient way to create a priority queue with a predefined initial size.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<Integer> queue = QueueUtils.newPriorityQueue(10);
-    *     System.out.println(queue.isEmpty()); // Output: true
-    * }</pre>
-    *
-    * @param initialCapacity the initial capacity of the priority queue
-    * @param <E>             the type of elements in the queue
-    * @return a new, empty {@link PriorityQueue} with the specified initial capacity
-    */
-   @Nonnull
-   public static <E> PriorityQueue<E> newPriorityQueue(int initialCapacity) {
-       return new PriorityQueue<>(initialCapacity);
-   }
+    /**
+     * Creates a new {@link PriorityQueue} instance with the specified initial capacity.
+     *
+     * <p>This method provides a convenient way to create a priority queue with a predefined initial size.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<Integer> queue = QueueUtils.newPriorityQueue(10);
+     *     System.out.println(queue.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param initialCapacity the initial capacity of the priority queue
+     * @param <E>             the type of elements in the queue
+     * @return a new, empty {@link PriorityQueue} with the specified initial capacity
+     */
+    @Nonnull
+    public static <E> PriorityQueue<E> newPriorityQueue(int initialCapacity) {
+        return new PriorityQueue<>(initialCapacity);
+    }
 
-   /**
-    * Creates a new {@link PriorityQueue} instance with the specified comparator.
-    *
-    * <p>This method provides a convenient way to create a priority queue with a custom comparator.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<Integer> queue = QueueUtils.newPriorityQueue(Comparator.reverseOrder());
-    *     queue.add(1);
-    *     queue.add(3);
-    *     queue.add(2);
-    *     System.out.println(queue.poll()); // Output: 3
-    * }</pre>
-    *
-    * @param comparator the comparator to use for ordering elements
-    * @param <E>        the type of elements in the queue
-    * @return a new, empty {@link PriorityQueue} with the specified comparator
-    */
-   @Nonnull
-   public static <E> PriorityQueue<E> newPriorityQueue(Comparator<? super E> comparator) {
-       return new PriorityQueue<>(comparator);
-   }
+    /**
+     * Creates a new {@link PriorityQueue} instance with the specified comparator.
+     *
+     * <p>This method provides a convenient way to create a priority queue with a custom comparator.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<Integer> queue = QueueUtils.newPriorityQueue(Comparator.reverseOrder());
+     *     queue.add(1);
+     *     queue.add(3);
+     *     queue.add(2);
+     *     System.out.println(queue.poll()); // Output: 3
+     * }</pre>
+     *
+     * @param comparator the comparator to use for ordering elements
+     * @param <E>        the type of elements in the queue
+     * @return a new, empty {@link PriorityQueue} with the specified comparator
+     */
+    @Nonnull
+    public static <E> PriorityQueue<E> newPriorityQueue(Comparator<? super E> comparator) {
+        return new PriorityQueue<>(comparator);
+    }
 
-   /**
-    * Creates a new {@link PriorityQueue} instance from the specified {@link Collection}.
-    *
-    * <p>This method converts the given {@link Collection} into a {@link PriorityQueue}.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Collection<Integer> original = Arrays.asList(3, 1, 2);
-    *     Queue<Integer> queue = QueueUtils.newPriorityQueue(original);
-    *     System.out.println(queue.poll()); // Output: 1
-    * }</pre>
-    *
-    * @param elements the collection of elements to add to the queue, may be null or empty
-    * @param <E>      the type of elements in the collection
-    * @return a new {@link PriorityQueue} containing all elements from the collection
-    */
-   @Nonnull
-   public static <E> PriorityQueue<E> newPriorityQueue(Collection<? extends E> elements) {
-       return new PriorityQueue<>(elements);
-   }
+    /**
+     * Creates a new {@link PriorityQueue} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into a {@link PriorityQueue}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Collection<Integer> original = Arrays.asList(3, 1, 2);
+     *     Queue<Integer> queue = QueueUtils.newPriorityQueue(original);
+     *     System.out.println(queue.poll()); // Output: 1
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the queue, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link PriorityQueue} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> PriorityQueue<E> newPriorityQueue(Collection<? extends E> elements) {
+        return new PriorityQueue<>(elements);
+    }
 
-   /**
-    * Creates a new empty {@link ConcurrentLinkedQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty concurrent linked queue.
-    * The returned queue is thread-safe and allows for safe concurrent operations.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<String> queue = QueueUtils.newConcurrentLinkedQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    *
-    *     queue.add("Hello");
-    *     System.out.println(queue.poll()); // Output: Hello
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue
-    * @return a new, empty {@link ConcurrentLinkedQueue}
-    */
-   @Nonnull
-   public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue() {
-       return new ConcurrentLinkedQueue<>();
-   }
+    /**
+     * Creates a new empty {@link ConcurrentLinkedQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty concurrent linked queue.
+     * The returned queue is thread-safe and allows for safe concurrent operations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<String> queue = QueueUtils.newConcurrentLinkedQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     *
+     *     queue.add("Hello");
+     *     System.out.println(queue.poll()); // Output: Hello
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue
+     * @return a new, empty {@link ConcurrentLinkedQueue}
+     */
+    @Nonnull
+    public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue() {
+        return new ConcurrentLinkedQueue<>();
+    }
 
-   /**
-    * Creates a new {@link ConcurrentLinkedQueue} instance from the specified {@link Collection}.
-    *
-    * <p>This method converts the given {@link Collection} into a {@link ConcurrentLinkedQueue}.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Collection<String> original = Arrays.asList("a", "b", "c");
-    *     Queue<String> queue = QueueUtils.newConcurrentLinkedQueue(original);
-    *     System.out.println(queue); // Output: [a, b, c]
-    * }</pre>
-    *
-    * @param elements the collection of elements to add to the queue, may be null or empty
-    * @param <E>      the type of elements in the collection
-    * @return a new {@link ConcurrentLinkedQueue} containing all elements from the collection
-    */
-   @Nonnull
-   public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue(Collection<? extends E> elements) {
-       return new ConcurrentLinkedQueue<>(elements);
-   }
+    /**
+     * Creates a new {@link ConcurrentLinkedQueue} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into a {@link ConcurrentLinkedQueue}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Collection<String> original = Arrays.asList("a", "b", "c");
+     *     Queue<String> queue = QueueUtils.newConcurrentLinkedQueue(original);
+     *     System.out.println(queue); // Output: [a, b, c]
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the queue, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link ConcurrentLinkedQueue} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> ConcurrentLinkedQueue<E> newConcurrentLinkedQueue(Collection<? extends E> elements) {
+        return new ConcurrentLinkedQueue<>(elements);
+    }
 
-   /**
-    * Creates a new empty {@link LinkedBlockingQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty linked blocking queue.
-    * The returned queue is thread-safe and allows for blocking operations.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<String> queue = QueueUtils.newLinkedBlockingQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    *
-    *     queue.add("Hello");
-    *     System.out.println(queue.poll()); // Output: Hello
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue
-    * @return a new, empty {@link LinkedBlockingQueue}
-    */
-   @Nonnull
-   public static <E> LinkedBlockingQueue<E> newLinkedBlockingQueue() {
-       return new LinkedBlockingQueue<>();
-   }
+    /**
+     * Creates a new empty {@link LinkedBlockingQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty linked blocking queue.
+     * The returned queue is thread-safe and allows for blocking operations.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<String> queue = QueueUtils.newLinkedBlockingQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     *
+     *     queue.add("Hello");
+     *     System.out.println(queue.poll()); // Output: Hello
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue
+     * @return a new, empty {@link LinkedBlockingQueue}
+     */
+    @Nonnull
+    public static <E> LinkedBlockingQueue<E> newLinkedBlockingQueue() {
+        return new LinkedBlockingQueue<>();
+    }
 
-   /**
-    * Creates a new {@link LinkedBlockingQueue} instance with the specified capacity.
-    *
-    * <p>This method provides a convenient way to create a linked blocking queue with a predefined capacity.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<String> queue = QueueUtils.newLinkedBlockingQueue(10);
-    *     System.out.println(queue.isEmpty()); // Output: true
-    * }</pre>
-    *
-    * @param capacity the capacity of the linked blocking queue
-    * @param <E>      the type of elements in the queue
-    * @return a new, empty {@link LinkedBlockingQueue} with the specified capacity
-    */
-   @Nonnull
-   public static <E> LinkedBlockingQueue<E> newLinkedBlockingQueue(int capacity) {
-       return new LinkedBlockingQueue<>(capacity);
-   }
+    /**
+     * Creates a new {@link LinkedBlockingQueue} instance with the specified capacity.
+     *
+     * <p>This method provides a convenient way to create a linked blocking queue with a predefined capacity.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<String> queue = QueueUtils.newLinkedBlockingQueue(10);
+     *     System.out.println(queue.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param capacity the capacity of the linked blocking queue
+     * @param <E>      the type of elements in the queue
+     * @return a new, empty {@link LinkedBlockingQueue} with the specified capacity
+     */
+    @Nonnull
+    public static <E> LinkedBlockingQueue<E> newLinkedBlockingQueue(int capacity) {
+        return new LinkedBlockingQueue<>(capacity);
+    }
 
-   /**
-    * Creates a new {@link LinkedBlockingQueue} instance from the specified {@link Collection}.
-    *
-    * <p>This method converts the given {@link Collection} into a {@link LinkedBlockingQueue}.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Collection<String> original = Arrays.asList("a", "b", "c");
-    *     Queue<String> queue = QueueUtils.newLinkedBlockingQueue(original);
-    *     System.out.println(queue); // Output: [a, b, c]
-    * }</pre>
-    *
-    * @param elements the collection of elements to add to the queue, may be null or empty
-    * @param <E>      the type of elements in the collection
-    * @return a new {@link LinkedBlockingQueue} containing all elements from the collection
-    */
-   @Nonnull
-   public static <E> LinkedBlockingQueue<E> newLinkedBlockingQueue(Collection<? extends E> elements) {
-       return new LinkedBlockingQueue<>(elements);
-   }
+    /**
+     * Creates a new {@link LinkedBlockingQueue} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into a {@link LinkedBlockingQueue}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Collection<String> original = Arrays.asList("a", "b", "c");
+     *     Queue<String> queue = QueueUtils.newLinkedBlockingQueue(original);
+     *     System.out.println(queue); // Output: [a, b, c]
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the queue, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link LinkedBlockingQueue} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> LinkedBlockingQueue<E> newLinkedBlockingQueue(Collection<? extends E> elements) {
+        return new LinkedBlockingQueue<>(elements);
+    }
 
-   /**
-    * Creates a new empty {@link ArrayBlockingQueue} instance with the specified capacity.
-    *
-    * <p>This method provides a convenient way to create an empty array blocking queue with a predefined capacity.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<String> queue = QueueUtils.newArrayBlockingQueue(10);
-    *     System.out.println(queue.isEmpty()); // Output: true
-    *
-    *     queue.add("Hello");
-    *     System.out.println(queue.poll()); // Output: Hello
-    * }</pre>
-    *
-    * @param capacity the capacity of the array blocking queue
-    * @param <E>      the type of elements in the queue
-    * @return a new, empty {@link ArrayBlockingQueue} with the specified capacity
-    */
-   @Nonnull
-   public static <E> ArrayBlockingQueue<E> newArrayBlockingQueue(int capacity) {
-       return new ArrayBlockingQueue<>(capacity);
-   }
+    /**
+     * Creates a new empty {@link ArrayBlockingQueue} instance with the specified capacity.
+     *
+     * <p>This method provides a convenient way to create an empty array blocking queue with a predefined capacity.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<String> queue = QueueUtils.newArrayBlockingQueue(10);
+     *     System.out.println(queue.isEmpty()); // Output: true
+     *
+     *     queue.add("Hello");
+     *     System.out.println(queue.poll()); // Output: Hello
+     * }</pre>
+     *
+     * @param capacity the capacity of the array blocking queue
+     * @param <E>      the type of elements in the queue
+     * @return a new, empty {@link ArrayBlockingQueue} with the specified capacity
+     */
+    @Nonnull
+    public static <E> ArrayBlockingQueue<E> newArrayBlockingQueue(int capacity) {
+        return new ArrayBlockingQueue<>(capacity);
+    }
 
-   /**
-    * Creates a new {@link ArrayBlockingQueue} instance from the specified {@link Collection}.
-    *
-    * <p>This method converts the given {@link Collection} into an {@link ArrayBlockingQueue}.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Collection<String> original = Arrays.asList("a", "b", "c");
-    *     Queue<String> queue = QueueUtils.newArrayBlockingQueue(10, original);
-    *     System.out.println(queue); // Output: [a, b, c]
-    * }</pre>
-    *
-    * @param capacity the capacity of the array blocking queue
-    * @param elements the collection of elements to add to the queue, may be null or empty
-    * @param <E>      the type of elements in the collection
-    * @return a new {@link ArrayBlockingQueue} containing all elements from the collection
-    */
-   @Nonnull
-   public static <E> ArrayBlockingQueue<E> newArrayBlockingQueue(int capacity, Collection<? extends E> elements) {
-       return new ArrayBlockingQueue<>(capacity, false, elements);
-   }
+    /**
+     * Creates a new {@link ArrayBlockingQueue} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into an {@link ArrayBlockingQueue}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Collection<String> original = Arrays.asList("a", "b", "c");
+     *     Queue<String> queue = QueueUtils.newArrayBlockingQueue(10, original);
+     *     System.out.println(queue); // Output: [a, b, c]
+     * }</pre>
+     *
+     * @param capacity the capacity of the array blocking queue
+     * @param elements the collection of elements to add to the queue, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link ArrayBlockingQueue} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> ArrayBlockingQueue<E> newArrayBlockingQueue(int capacity, Collection<? extends E> elements) {
+        return new ArrayBlockingQueue<>(capacity, false, elements);
+    }
 
-   /**
-    * Creates a new empty {@link PriorityBlockingQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty priority blocking queue.
-    * The returned queue is thread-safe and orders elements according to their natural ordering.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<Integer> queue = QueueUtils.newPriorityBlockingQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    *
-    *     queue.add(3);
-    *     queue.add(1);
-    *     System.out.println(queue.poll()); // Output: 1
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue
-    * @return a new, empty {@link PriorityBlockingQueue}
-    */
-   @Nonnull
-   public static <E> PriorityBlockingQueue<E> newPriorityBlockingQueue() {
-       return new PriorityBlockingQueue<>();
-   }
+    /**
+     * Creates a new empty {@link PriorityBlockingQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty priority blocking queue.
+     * The returned queue is thread-safe and orders elements according to their natural ordering.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<Integer> queue = QueueUtils.newPriorityBlockingQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     *
+     *     queue.add(3);
+     *     queue.add(1);
+     *     System.out.println(queue.poll()); // Output: 1
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue
+     * @return a new, empty {@link PriorityBlockingQueue}
+     */
+    @Nonnull
+    public static <E> PriorityBlockingQueue<E> newPriorityBlockingQueue() {
+        return new PriorityBlockingQueue<>();
+    }
 
-   /**
-    * Creates a new {{@link PriorityBlockingQueue} instance from the specified {@link Collection}.
-    *
-    * <p>This method converts the given {@link Collection} into a {@link PriorityBlockingQueue}.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Collection<Integer> original = Arrays.asList(3, 1, 2);
-    *     Queue<Integer> queue = QueueUtils.newPriorityBlockingQueue(original);
-    *     System.out.println(queue.poll()); // Output: 1
-    * }</pre>
-    *
-    * @param elements the collection of elements to add to the queue, may be null or empty
-    * @param <E>      the type of elements in the collection
-    * @return a new {@link PriorityBlockingQueue} containing all elements from the collection
-    */
-   @Nonnull
-   public static <E> PriorityBlockingQueue<E> newPriorityBlockingQueue(Collection<? extends E> elements) {
-       return new PriorityBlockingQueue<>(elements);
-   }
+    /**
+     * Creates a new {{@link PriorityBlockingQueue} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into a {@link PriorityBlockingQueue}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Collection<Integer> original = Arrays.asList(3, 1, 2);
+     *     Queue<Integer> queue = QueueUtils.newPriorityBlockingQueue(original);
+     *     System.out.println(queue.poll()); // Output: 1
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the queue, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link PriorityBlockingQueue} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> PriorityBlockingQueue<E> newPriorityBlockingQueue(Collection<? extends E> elements) {
+        return new PriorityBlockingQueue<>(elements);
+    }
 
-   /**
-    * Creates a new empty {@link DelayQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty delay queue.
-    * The returned queue is an unbounded queue where elements can only be retrieved after their delay expires.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<DelayedElement> queue = QueueUtils.newDelayQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue, must be of type Delayed
-    * @return a new, empty {@link DelayQueue}
-    */
-   @Nonnull
-   public static <E extends Delayed> DelayQueue<E> newDelayQueue() {
-       return new DelayQueue<>();
-   }
+    /**
+     * Creates a new empty {@link DelayQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty delay queue.
+     * The returned queue is an unbounded queue where elements can only be retrieved after their delay expires.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<DelayedElement> queue = QueueUtils.newDelayQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue, must be of type Delayed
+     * @return a new, empty {@link DelayQueue}
+     */
+    @Nonnull
+    public static <E extends Delayed> DelayQueue<E> newDelayQueue() {
+        return new DelayQueue<>();
+    }
 
-   /**
-    * Creates a new empty {@link SynchronousQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty synchronous queue.
-    * The returned queue is a blocking queue with zero capacity where each put operation must wait for a get operation.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<String> queue = QueueUtils.newSynchronousQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue
-    * @return a new, empty {@link SynchronousQueue}
-    */
-   @Nonnull
-   public static <E> SynchronousQueue<E> newSynchronousQueue() {
-       return new SynchronousQueue<>();
-   }
+    /**
+     * Creates a new empty {@link SynchronousQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty synchronous queue.
+     * The returned queue is a blocking queue with zero capacity where each put operation must wait for a get operation.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<String> queue = QueueUtils.newSynchronousQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue
+     * @return a new, empty {@link SynchronousQueue}
+     */
+    @Nonnull
+    public static <E> SynchronousQueue<E> newSynchronousQueue() {
+        return new SynchronousQueue<>();
+    }
 
-   /**
-    * Creates a new empty {@link LinkedTransferQueue} instance.
-    *
-    * <p>This method provides a convenient way to create an empty linked transfer queue.
-    * The returned queue is an unbounded queue for use with producers and consumers that may arrive and depart dynamically.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Queue<String> queue = QueueUtils.newLinkedTransferQueue();
-    *     System.out.println(queue.isEmpty()); // Output: true
-    *
-    *     queue.add("Hello");
-    *     System.out.println(queue.poll()); // Output: Hello
-    * }</pre>
-    *
-    * @param <E> the type of elements in the queue
-    * @return a new, empty {@link LinkedTransferQueue}
-    */
-   @Nonnull
-   public static <E> LinkedTransferQueue<E> newLinkedTransferQueue() {
-       return new LinkedTransferQueue<>();
-   }
+    /**
+     * Creates a new empty {@link LinkedTransferQueue} instance.
+     *
+     * <p>This method provides a convenient way to create an empty linked transfer queue.
+     * The returned queue is an unbounded queue for use with producers and consumers that may arrive and depart dynamically.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Queue<String> queue = QueueUtils.newLinkedTransferQueue();
+     *     System.out.println(queue.isEmpty()); // Output: true
+     *
+     *     queue.add("Hello");
+     *     System.out.println(queue.poll()); // Output: Hello
+     * }</pre>
+     *
+     * @param <E> the type of elements in the queue
+     * @return a new, empty {@link LinkedTransferQueue}
+     */
+    @Nonnull
+    public static <E> LinkedTransferQueue<E> newLinkedTransferQueue() {
+        return new LinkedTransferQueue<>();
+    }
 
-   /**
-    * Creates a new {@link LinkedTransferQueue} instance from the specified {@link Collection}.
-    *
-    * <p>This method converts the given {@link Collection} into a {@link LinkedTransferQueue}.</p>
-    *
-    * <h3>Example Usage</h3>
-    * <pre>{@code
-    *     Collection<String> original = Arrays.asList("a", "b", "c");
-    *     Queue<String> queue = QueueUtils.newLinkedTransferQueue(original);
-    *     System.out.println(queue); // Output: [a, b, c]
-    * }</pre>
-    *
-    * @param elements the collection of elements to add to the queue, may be null or empty
-    * @param <E>      the type of elements in the collection
-    * @return a new {@link LinkedTransferQueue} containing all elements from the collection
-    */
-   @Nonnull
-   public static <E> LinkedTransferQueue<E> newLinkedTransferQueue(Collection<? extends E> elements) {
-       return new LinkedTransferQueue<>(elements);
-   }
+    /**
+     * Creates a new {@link LinkedTransferQueue} instance from the specified {@link Collection}.
+     *
+     * <p>This method converts the given {@link Collection} into a {@link LinkedTransferQueue}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *     Collection<String> original = Arrays.asList("a", "b", "c");
+     *     Queue<String> queue = QueueUtils.newLinkedTransferQueue(original);
+     *     System.out.println(queue); // Output: [a, b, c]
+     * }</pre>
+     *
+     * @param elements the collection of elements to add to the queue, may be null or empty
+     * @param <E>      the type of elements in the collection
+     * @return a new {@link LinkedTransferQueue} containing all elements from the collection
+     */
+    @Nonnull
+    public static <E> LinkedTransferQueue<E> newLinkedTransferQueue(Collection<? extends E> elements) {
+        return new LinkedTransferQueue<>(elements);
+    }
 
     private QueueUtils() {
     }
