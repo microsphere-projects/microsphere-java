@@ -131,6 +131,6 @@ class CollectionTypeModelTest {
 
         // Check if the change is reflected in the getter result
         assertTrue(model.getColors().contains(RED),
-            "Changes to the original collection should be reflected since collections are passed by reference");
+                "Changes to the original collection should be reflected since collections are passed by reference");
     }
 }
