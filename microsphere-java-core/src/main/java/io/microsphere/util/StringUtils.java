@@ -837,7 +837,7 @@ public abstract class StringUtils implements Utils {
     public static String[] toStringArray(@Nullable Collection<String> collection) {
         return isEmpty(collection) ? EMPTY_STRING_ARRAY : collection.toArray(EMPTY_STRING_ARRAY);
     }
-    
+
     /**
      * <p>Converts an array of Objects into a single String, with each element separated by the specified delimiter.</p>
      *

@@ -157,10 +157,10 @@ public class Compatible<T, R> {
      * System.out.println(result.orElse("No Match")); // Output: Condition Matched
      * }</pre>
      *
-     * @param operator         the operator to compare versions (e.g., ">", "<", "==", ">=", "<=")
-     * @param comparedVersion  the version to compare against, as a string
+     * @param operator            the operator to compare versions (e.g., ">", "<", "==", ">=", "<=")
+     * @param comparedVersion     the version to compare against, as a string
      * @param conditionalFunction the function to execute if the condition is met
-     * @param <R>              the return type of the conditional function
+     * @param <R>                 the return type of the conditional function
      * @return a new {@link Compatible} instance with the added condition, or the same instance if the condition is not met
      */
     public <R> Compatible<T, R> on(String operator, String comparedVersion,
@@ -184,10 +184,10 @@ public class Compatible<T, R> {
      * System.out.println(result.orElse("No Match")); // Output: Condition Matched
      * }</pre>
      *
-     * @param operator         the operator to compare versions (e.g., Operator.GT, Operator.LT, Operator.EQ, Operator.GE, Operator.LE)
-     * @param comparedVersion  the version to compare against
+     * @param operator            the operator to compare versions (e.g., Operator.GT, Operator.LT, Operator.EQ, Operator.GE, Operator.LE)
+     * @param comparedVersion     the version to compare against
      * @param conditionalFunction the function to execute if the condition is met
-     * @param <R>              the return type of the conditional function
+     * @param <R>                 the return type of the conditional function
      * @return a new {@link Compatible} instance with the added condition, or the same instance if the condition is not met
      */
     public <R> Compatible<T, R> on(Operator operator, Version comparedVersion,

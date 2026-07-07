@@ -27,7 +27,6 @@ import java.util.Properties;
 
 import static io.microsphere.collection.MapUtils.isEmpty;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
-import static io.microsphere.constants.SeparatorConstants.FILE_SEPARATOR;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.lang.function.ThrowableAction.execute;
