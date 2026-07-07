@@ -354,4 +354,33 @@ For complete details, see the [full changelog](#).
 ## Other Changes
 - Bumped version to the next patch after publishing `0.3.13`. ([155bb4fc](#))
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.13...0.3.14
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.13...0.3.14## v0.3.15
+
+# Release Notes - Version 0.3.15
+
+## Dependency Updates
+- Upgraded Microsphere BOM to version `0.3.4`.  
+- Updated Microsphere Build parent to version `0.3.8`.
+
+## Build and Workflow Enhancements
+- Merged `main` branch into `release`, ensuring parity. [skip-ci]  
+
+## Test Improvements
+- Adjusted spacing and formatting in various test classes:  
+  - `MessagerUtilsTest`  
+  - `MapTypeModelTest`  
+  - `FormatBeforeTest` super call.  
+
+## Code Quality Improvements
+- Standardized indentation and formatting in utility classes:  
+  - `SetUtils`  
+  - `QueueUtils` factory methods.  
+- Trimmed unnecessary whitespace in `StringUtils`.  
+- Aligned wrapped `assertTrue` message indentation.  
+- Improved Javadoc `@param` formatting in `Compatible`.  
+- Aligned parameter indentation in `Maps` methods.  
+- Removed unused `FILE_SEPARATOR` import.
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.14...0.3.15
