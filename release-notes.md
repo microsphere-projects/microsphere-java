@@ -339,4 +339,19 @@ For complete details, see the [full changelog](#).
 
 *No new features, bug fixes, or documentation updates in this release.* 
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.12...0.3.13
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.12...0.3.13## v0.3.14
+
+# Release Notes - Version 0.3.14
+
+## Dependency Updates
+- Bumped Microsphere BOM to `0.3.3`. ([31f2d21b](#))
+- Bumped Microsphere Build Parent to `0.3.7`. ([647b4672](#))
+
+## Build and Workflow Enhancements
+- Merged `main` into `release`. [skip ci] ([c3fef602](#), [114da2cb](#))
+- Merged `release` back into `main`. [skip ci] ([0b2dcac2](#))
+
+## Other Changes
+- Bumped version to the next patch after publishing `0.3.13`. ([155bb4fc](#))
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-java/compare/0.3.13...0.3.14
