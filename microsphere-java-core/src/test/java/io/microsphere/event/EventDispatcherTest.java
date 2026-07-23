@@ -21,7 +21,11 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static io.microsphere.event.EventDispatcher.DIRECT_EXECUTOR;
+import static io.microsphere.event.EventDispatcher.newDefault;
+import static io.microsphere.event.EventDispatcher.of;
+import static io.microsphere.event.EventDispatcher.parallel;
 import static java.util.Collections.emptyList;
+import static java.util.concurrent.ForkJoinPool.commonPool;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -33,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  */
 class EventDispatcherTest {
 
-    private EventDispatcher defaultInstance = EventDispatcher.newDefault();
+    private EventDispatcher defaultInstance = newDefault();
 
     @Test
     void testDefaultInstance() {
@@ -44,6 +48,15 @@ class EventDispatcherTest {
     void testDefaultMethods() {
         assertEquals(DIRECT_EXECUTOR, defaultInstance.getExecutor());
         assertEquals(2, defaultInstance.getAllEventListeners().size());
+    }
+
+    @Test
+    void testOf() {
+        EventDispatcher dispatcher = of(null);
+        assertEquals(newDefault().getClass(), dispatcher.getClass());
+
+        dispatcher = of(commonPool());
+        assertEquals(parallel(commonPool()).getClass(), dispatcher.getClass());
     }
 
     @Test
