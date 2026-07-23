@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.event.EventListener.findEventType;
+import static io.microsphere.event.Listenable.assertListener;
 import static io.microsphere.lang.function.ThrowableAction.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -106,14 +107,14 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
      * @throws IllegalArgumentException <code>executor</code> is <code>null</code>
      */
     protected AbstractEventDispatcher(Executor executor) {
-        assertNotNull(executor, () -> "executor must not be null");
+        assertNotNull(executor, () -> "The 'executor' must not be null");
         this.executor = executor;
         this.loadEventListenerInstances();
     }
 
     @Override
     public void addEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
-        Listenable.assertListener(listener);
+        assertListener(listener);
         doInListener(listener, listeners -> {
             addIfAbsent(listeners, listener);
         });
@@ -121,7 +122,7 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
 
     @Override
     public void removeEventListener(EventListener<?> listener) throws NullPointerException, IllegalArgumentException {
-        Listenable.assertListener(listener);
+        assertListener(listener);
         doInListener(listener, listeners -> listeners.remove(listener));
     }
 
@@ -205,15 +206,15 @@ public abstract class AbstractEventDispatcher implements EventDispatcher {
     /**
      * Default, load the instances of {@link EventListener event listeners} by {@link ServiceLoader}
      * <p>
-     * It could be override by the sub-class
+     * It could be overridden by the sub-class
      *
      * @see EventListener
      * @see ServiceLoader#load(Class)
      */
     protected void loadEventListenerInstances() {
-        execute(() -> loadServicesList(EventListener.class, getDefaultClassLoader())
+        execute(() -> loadServicesList(EventListener.class, getDefaultClassLoader(), true)
                 .stream()
                 .sorted()
-                .forEach(this::addEventListener), e -> logger.trace(e.getMessage(), e));
+                .forEach(this::addEventListener), e -> logger.trace(e.getMessage()));
     }
 }
