@@ -16,6 +16,9 @@
  */
 package io.microsphere.event;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+
 import java.util.concurrent.Executor;
 
 /**
@@ -64,6 +67,7 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
      *
      * @return the default implementation of {@link EventDispatcher}
      */
+    @Nonnull
     static EventDispatcher newDefault() {
         return new DirectEventDispatcher();
     }
@@ -72,10 +76,22 @@ public interface EventDispatcher extends Listenable<EventListener<?>> {
      * The parallel implementation of {@link EventDispatcher} with the specified {@link Executor}
      *
      * @param executor {@link Executor}
-     * @return the default implementation of {@link EventDispatcher}
+     * @return the parallel implementation of {@link EventDispatcher}
      */
-    static EventDispatcher parallel(Executor executor) {
+    @Nonnull
+    static EventDispatcher parallel(@Nonnull Executor executor) {
         return new ParallelEventDispatcher(executor);
+    }
+
+    /**
+     * Create an instance of {@link EventDispatcher} with the specified {@link Executor}
+     *
+     * @param executor {@link Executor}, can be <code>null</code>
+     * @return an instance of {@link EventDispatcher}
+     */
+    @Nonnull
+    static EventDispatcher of(@Nullable Executor executor) {
+        return executor == null ? newDefault() : parallel(executor);
     }
 
     /**
