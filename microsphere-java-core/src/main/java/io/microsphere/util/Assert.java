@@ -126,11 +126,11 @@ public abstract class Assert {
      *
      * @param object  the object to check
      * @param message the exception message to use if the assertion fails
-     * @throws IllegalArgumentException if the object is {@code null}
+     * @throws NullPointerException if the object is {@code null}
      */
     public static void assertNotNull(@Nullable Object object, String message) {
         if (object == null) {
-            throw new IllegalArgumentException(message);
+            throw new NullPointerException(message);
         }
     }
 
@@ -144,11 +144,11 @@ public abstract class Assert {
      * @param object          the object to check
      * @param messageSupplier a supplier for the exception message to use if the
      *                        assertion fails
-     * @throws IllegalArgumentException if the object is {@code null}
+     * @throws NullPointerException if the object is {@code null}
      */
     public static void assertNotNull(@Nullable Object object, Supplier<String> messageSupplier) {
         if (object == null) {
-            throw new IllegalArgumentException(nullSafeGet(messageSupplier));
+            throw new NullPointerException(nullSafeGet(messageSupplier));
         }
     }
 
