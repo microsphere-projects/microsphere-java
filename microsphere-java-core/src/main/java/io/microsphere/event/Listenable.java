@@ -23,10 +23,7 @@ import java.util.List;
 
 import static io.microsphere.collection.CollectionUtils.addAll;
 import static io.microsphere.collection.ListUtils.newArrayList;
-import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotNull;
-import static io.microsphere.util.ClassUtils.getTypeName;
-import static java.lang.reflect.Modifier.isFinal;
 import static java.util.stream.StreamSupport.stream;
 
 /**
@@ -83,13 +80,13 @@ public interface Listenable<E extends EventListener<?>> {
     static void assertListener(EventListener<?> listener) throws IllegalArgumentException {
         assertNotNull(listener, () -> "The 'listener' must not be null.");
 
-        Class<?> listenerClass = listener.getClass();
-
-        int modifiers = listenerClass.getModifiers();
-
-        if (isFinal(modifiers)) {
-            throw new IllegalArgumentException(format("The listener[class : '{}'] must be non-final class", getTypeName(listenerClass)));
-        }
+//        Class<?> listenerClass = listener.getClass();
+//
+//        int modifiers = listenerClass.getModifiers();
+//
+//        if (isFinal(modifiers)) {
+//            throw new IllegalArgumentException(format("The listener[class : '{}'] must be non-final class", getTypeName(listenerClass)));
+//        }
     }
 
     /**
