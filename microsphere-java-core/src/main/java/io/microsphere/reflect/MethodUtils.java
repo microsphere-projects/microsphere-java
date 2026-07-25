@@ -60,6 +60,7 @@ import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
 import static io.microsphere.util.ArrayUtils.arrayEquals;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.length;
+import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
@@ -734,9 +735,8 @@ public abstract class MethodUtils implements Utils {
      * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
      * @param <R>        The expected return type of the method.
      * @return The result of invoking the method, wrapped in the appropriate type.
-     * @throws NullPointerException     If the provided object is null.
-     * @throws IllegalStateException    If the method cannot be found or accessed.
-     * @throws IllegalArgumentException If the arguments do not match the method's parameter types.
+     * @throws NullPointerException     If the provided object is null or the method cannot be found.
+     * @throws IllegalArgumentException If the arguments do not match the method's parameter types or accessed.
      * @throws RuntimeException         If the underlying method throws an exception during invocation.
      */
     @Nullable
@@ -770,9 +770,8 @@ public abstract class MethodUtils implements Utils {
      * @param arguments   the arguments to pass to the method (can be null or empty)
      * @param <R>         the expected return type of the method
      * @return the result of the method invocation, wrapped in the appropriate type
-     * @throws NullPointerException     if the provided target class or method name is null
-     * @throws IllegalStateException    if the method cannot be found or accessed
-     * @throws IllegalArgumentException if the arguments do not match the method's parameter types
+     * @throws NullPointerException     if the provided target class or method name is null or the method cannot be found.
+     * @throws IllegalArgumentException if the arguments do not match the method's parameter types or accessed
      * @throws RuntimeException         if the underlying method throws an exception during invocation
      */
     @Nullable
@@ -806,9 +805,8 @@ public abstract class MethodUtils implements Utils {
      * @param arguments the arguments to pass to the method (can be null or empty)
      * @param <R>       the expected return type of the method
      * @return the result of the method invocation, wrapped in the appropriate type
-     * @throws NullPointerException     if the provided method is null
-     * @throws IllegalStateException    if the method cannot be accessed or throws an exception during invocation
-     * @throws IllegalArgumentException if the arguments do not match the method's parameter types
+     * @throws NullPointerException     if the provided method is null  or the method cannot be found.
+     * @throws IllegalArgumentException if the arguments do not match the method's parameter types or accessed.
      */
     @Nullable
     public static <R> R invokeStaticMethod(Method method, Object... arguments) {
@@ -846,20 +844,14 @@ public abstract class MethodUtils implements Utils {
      * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
      * @param <R>        The expected return type of the method.
      * @return The result of invoking the method, wrapped in the appropriate type.
-     * @throws NullPointerException     If the provided type or method name is null.
-     * @throws IllegalStateException    If the method cannot be found or accessed.
-     * @throws IllegalArgumentException If the arguments do not match the method's parameter types.
+     * @throws NullPointerException     If the provided type or method name is null or the method cannot be found.
+     * @throws IllegalArgumentException If the arguments do not match the method's parameter types or accessed.
      * @throws RuntimeException         If the underlying method throws an exception during invocation.
      */
     @Nullable
     public static <R> R invokeMethod(Object instance, Class<?> type, String methodName, Object... arguments) {
         Class[] parameterTypes = getTypes(arguments);
         Method method = findMethod(type, methodName, parameterTypes);
-
-        if (method == null) {
-            throw new IllegalStateException(format("cannot find method[name : '{}'], class: '{}'", methodName, type.getName()));
-        }
-
         return invokeMethod(instance, method, arguments);
     }
 
@@ -924,9 +916,6 @@ public abstract class MethodUtils implements Utils {
      * this object on {@code instance} with parameters
      * {@code arguments}
      * @throws NullPointerException     if this {@link Method} object is <code>null</code>
-     * @throws IllegalStateException    if this {@code Method} object
-     *                                  is enforcing Java language access control and the underlying
-     *                                  method is inaccessible.
      * @throws IllegalArgumentException if the method is an
      *                                  instance method and the specified object argument
      *                                  is not an instance of the class or interface
@@ -937,14 +926,11 @@ public abstract class MethodUtils implements Utils {
      *                                  after possible unwrapping, a parameter value
      *                                  cannot be converted to the corresponding formal
      *                                  parameter type by a method invocation conversion.
-     * @throws RuntimeException         if the underlying method
-     *                                  throws an exception.
+     * @throws RuntimeException         if the underlying method throws an exception.
      */
     @Nullable
     public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
-        if (method == null) {
-            throw new NullPointerException("The 'method' must not be null");
-        }
+        assertNotNull(method, () -> "The 'method' must not be null");
         R result = null;
         RuntimeException failure = null;
         try {

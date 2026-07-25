@@ -448,11 +448,8 @@ class MethodUtilsTest extends LoggingTest {
     @Test
     void testInvokeMethodOnNullPointerException() {
         assertThrows(NullPointerException.class, () -> invokeMethod("test", (Method) null));
-    }
+        assertThrows(NullPointerException.class, () -> invokeMethod("test", "notFound"));
 
-    @Test
-    void testInvokeMethodOnIllegalStateException() {
-        assertThrows(IllegalStateException.class, () -> invokeMethod("test", "notFound"));
     }
 
     @Test
