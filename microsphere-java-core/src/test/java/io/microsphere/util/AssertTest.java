@@ -75,9 +75,9 @@ class AssertTest {
         assertNotNull(false, "false");
         assertNotNull(false, () -> "false");
         assertNotNull(false, (Supplier<String>) null);
-        assertThrows(NullPointerException.class, () -> assertNotNull(null, "null"));
-        assertThrows(NullPointerException.class, () -> assertNotNull(null, () -> "null"));
-        assertThrows(NullPointerException.class, () -> assertNotNull(null, (Supplier<String>) null));
+        assertThrows(IllegalArgumentException.class, () -> assertNotNull(null, "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotNull(null, () -> "null"));
+        assertThrows(IllegalArgumentException.class, () -> assertNotNull(null, (Supplier<String>) null));
     }
 
     @Test
