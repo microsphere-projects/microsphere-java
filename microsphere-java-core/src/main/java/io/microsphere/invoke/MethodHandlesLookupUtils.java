@@ -22,6 +22,7 @@ import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
@@ -33,7 +34,7 @@ import static java.lang.invoke.MethodHandles.publicLookup;
 import static java.lang.invoke.MethodType.methodType;
 
 /**
- * Utilities class providing convenient methods for working with {@link MethodHandles.Lookup}.
+ * Utilities class providing convenient methods for working with {@link Lookup}.
  *
  * <p>This class offers various static methods to simplify the process of obtaining and using
  * method handles, particularly for public virtual and static methods. It serves as a central
@@ -66,12 +67,12 @@ public abstract class MethodHandlesLookupUtils implements Utils {
     public static final MethodHandle NOT_FOUND_METHOD_HANDLE = null;
 
     /**
-     * The {@link MethodHandles.Lookup} for {@link MethodHandles#publicLookup()}
+     * The {@link Lookup} for {@link MethodHandles#publicLookup()}
      */
-    public static final MethodHandles.Lookup PUBLIC_LOOKUP = publicLookup();
+    public static final Lookup PUBLIC_LOOKUP = publicLookup();
 
     /**
-     * The convenient method to find {@link MethodHandles.Lookup#findVirtual(Class, String, MethodType)} for public method
+     * The convenient method to find {@link Lookup#findVirtual(Class, String, MethodType)} for public method
      *
      * @param requestedClass the class to be looked up
      * @param methodName     the target method name
@@ -83,7 +84,7 @@ public abstract class MethodHandlesLookupUtils implements Utils {
     }
 
     /**
-     * The convenient method to find {@link MethodHandles.Lookup#findStatic(Class, String, MethodType)} for public static method
+     * The convenient method to find {@link Lookup#findStatic(Class, String, MethodType)} for public static method
      *
      * @param requestedClass the class to be looked up
      * @param methodName     the target method name
@@ -95,22 +96,22 @@ public abstract class MethodHandlesLookupUtils implements Utils {
     }
 
     protected static MethodHandle findPublic(Class<?> requestedClass, String methodName, Class[] parameterTypes,
-                                             ThrowableBiFunction<MethodHandles.Lookup, MethodType, MethodHandle> function) {
+                                             ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         return find(PUBLIC_LOOKUP, requestedClass, methodName, parameterTypes, function);
     }
 
-    protected static MethodHandle find(MethodHandles.Lookup lookup, Class<?> requestedClass, String methodName, Class[] parameterTypes,
-                                       ThrowableBiFunction<MethodHandles.Lookup, MethodType, MethodHandle> function) {
+    protected static MethodHandle find(Lookup lookup, Class<?> requestedClass, String methodName, Class[] parameterTypes,
+                                       ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         Method method = findMethod(requestedClass, methodName, parameterTypes);
         return find(lookup, method, function);
     }
 
-    protected static MethodHandle findPublic(Method method, ThrowableBiFunction<MethodHandles.Lookup, MethodType, MethodHandle> function) {
+    protected static MethodHandle findPublic(Method method, ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         return find(PUBLIC_LOOKUP, method, function);
     }
 
-    protected static MethodHandle find(MethodHandles.Lookup lookup, Method method,
-                                       ThrowableBiFunction<MethodHandles.Lookup, MethodType, MethodHandle> function) {
+    protected static MethodHandle find(Lookup lookup, Method method,
+                                       ThrowableBiFunction<Lookup, MethodType, MethodHandle> function) {
         if (method == null) {
             return NOT_FOUND_METHOD_HANDLE;
         }
