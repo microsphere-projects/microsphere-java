@@ -13,6 +13,7 @@ import static io.microsphere.reflect.MemberUtils.STATIC_MEMBER_PREDICATE;
 import static io.microsphere.reflect.MemberUtils.asMember;
 import static io.microsphere.reflect.MemberUtils.isAbstract;
 import static io.microsphere.reflect.MemberUtils.isFinal;
+import static io.microsphere.reflect.MemberUtils.isInvalidDeclaringClass;
 import static io.microsphere.reflect.MemberUtils.isNonPrivate;
 import static io.microsphere.reflect.MemberUtils.isNonStatic;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
@@ -180,5 +181,12 @@ class MemberUtilsTest {
     @Test
     void testAsMemberOnNull() {
         assertNull(asMember(null));
+    }
+
+    @Test
+    void testIsInvalidDeclaringClass() {
+        assertTrue(isInvalidDeclaringClass(null));
+        assertTrue(isInvalidDeclaringClass(int.class));
+        assertFalse(isInvalidDeclaringClass(ReflectionTest.class));
     }
 }

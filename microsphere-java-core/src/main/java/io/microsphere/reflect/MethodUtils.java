@@ -29,13 +29,14 @@ import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Predicate;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
+import static io.microsphere.collection.ListUtils.first;
 import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.collection.ListUtils.of;
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.constants.PropertyConstants.MICROSPHERE_PROPERTY_NAME_PREFIX;
 import static io.microsphere.constants.SymbolConstants.COMMA_CHAR;
 import static io.microsphere.constants.SymbolConstants.LEFT_PARENTHESIS;
@@ -50,6 +51,7 @@ import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.MemberUtils.isInvalidDeclaringClass;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
 import static io.microsphere.reflect.TypeUtils.isObjectClass;
@@ -66,7 +68,7 @@ import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
-import static io.microsphere.util.ClassUtils.isPrimitive;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringBefore;
@@ -111,6 +113,10 @@ public abstract class MethodUtils implements Utils {
      * method = MethodUtils.findMethod(String.class, "substring", int.class); // returns non-null
      * }</pre>
      */
+    @ConfigurationProperty(
+            type = String[].class,
+            source = SYSTEM_PROPERTIES_SOURCE
+    )
     public static final String BANNED_METHODS_PROPERTY_NAME = MICROSPHERE_PROPERTY_NAME_PREFIX + "reflect.banned-methods";
 
     /**
@@ -157,7 +163,7 @@ public abstract class MethodUtils implements Utils {
      */
     public final static Predicate<? super Method> NON_PRIVATE_METHOD_PREDICATE = MemberUtils::isNonPrivate;
 
-    private final static ConcurrentMap<MethodKey, Method> methodsCache = new ConcurrentHashMap<>(256);
+    private final static ConcurrentMap<MethodKey, Method> methodsCache = newConcurrentHashMap(256);
 
     /**
      * The cache to store the methods to be banned by the {@link #buildSignature(Class, String, Class[]) signatures}.
@@ -170,14 +176,18 @@ public abstract class MethodUtils implements Utils {
      * method = MethodUtils.findMethod(String.class, "substring", int.class); // returns non-null
      * }</pre>
      */
-    @ConfigurationProperty(
-            name = BANNED_METHODS_PROPERTY_NAME,
-            type = String[].class,
-            source = SYSTEM_PROPERTIES_SOURCE
-    )
-    private final static ConcurrentMap<MethodKey, Method> bannedMethodsCache = new ConcurrentHashMap<>(16);
+    private final static ConcurrentMap<MethodKey, Method> bannedMethodsCache = newConcurrentHashMap(16);
 
-    private static final ConcurrentMap<Class<?>, Method[]> declaredMethodsCache = new ConcurrentHashMap<>(256);
+    private static final ConcurrentMap<Class<?>, Method[]> declaredMethodsCache = newConcurrentHashMap(256);
+
+    static {
+        initBannedMethods();
+        addShutdownHookCallback(() -> {
+            clearMethodsCache();
+            clearBannedMethodsCache();
+            clearDeclaredMethodsCache();
+        });
+    }
 
     /**
      * Initializes the banned methods cache based on the system property {@value #BANNED_METHODS_PROPERTY_NAME}.
@@ -250,34 +260,12 @@ public abstract class MethodUtils implements Utils {
      * @see #initBannedMethods()
      * @see #bannedMethodsCache
      */
-    public static Method banMethod(Class<?> declaredClass, String methodName, Class<?>... parameterTypes) {
+    @Nonnull
+    public static Method banMethod(@Nonnull Class<?> declaredClass, @Nonnull String methodName, @Nonnull Class<?>... parameterTypes) {
         MethodKey key = buildKey(declaredClass, methodName, parameterTypes);
         Method method = methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
         bannedMethodsCache.put(key, method);
         return method;
-    }
-
-    /**
-     * Clears the cache of banned methods.
-     *
-     * <p>This method removes all entries from the {@link #bannedMethodsCache}, effectively
-     * allowing all previously banned methods to be discoverable again by {@link #findMethod(Class, String, Class[])}.</p>
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     * // Clear all banned methods
-     * MethodUtils.clearBannedMethods();
-     *
-     * // After this call, findMethod will return previously banned methods
-     * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
-     * // method may now be non-null if it was previously banned
-     * }</pre>
-     *
-     * @see #initBannedMethods()
-     * @see #bannedMethodsCache
-     */
-    public static void clearBannedMethods() {
-        bannedMethodsCache.clear();
     }
 
     /**
@@ -297,7 +285,7 @@ public abstract class MethodUtils implements Utils {
      * @return a non-null {@link Predicate} that evaluates to {@code true} for methods not declared by the given class
      */
     @Nonnull
-    public static Predicate<? super Method> excludedDeclaredClass(Class<?> declaredClass) {
+    public static Predicate<? super Method> excludedDeclaredClass(@Nullable Class<?> declaredClass) {
         return method -> !Objects.equals(declaredClass, method.getDeclaringClass());
     }
 
@@ -319,7 +307,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> getDeclaredMethods(Class<?> targetClass) {
+    public static List<Method> getDeclaredMethods(@Nullable Class<?> targetClass) {
         return findDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -341,7 +329,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> getMethods(Class<?> targetClass) {
+    public static List<Method> getMethods(@Nullable Class<?> targetClass) {
         return findMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -363,7 +351,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> getAllDeclaredMethods(Class<?> targetClass) {
+    public static List<Method> getAllDeclaredMethods(@Nullable Class<?> targetClass) {
         return findAllDeclaredMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -388,7 +376,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> getAllMethods(Class<?> targetClass) {
+    public static List<Method> getAllMethods(@Nullable Class<?> targetClass) {
         return findAllMethods(targetClass, EMPTY_PREDICATE_ARRAY);
     }
 
@@ -418,7 +406,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> findDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findDeclaredMethods(@Nullable Class<?> targetClass, @Nullable Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, false, methodsToFilter);
     }
 
@@ -448,7 +436,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> findMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findMethods(@Nullable Class<?> targetClass, @Nullable Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, false, true, methodsToFilter);
     }
 
@@ -478,7 +466,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> findAllDeclaredMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findAllDeclaredMethods(@Nullable Class<?> targetClass, @Nullable Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, false, methodsToFilter);
     }
 
@@ -508,7 +496,7 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> findAllMethods(Class<?> targetClass, Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findAllMethods(@Nullable Class<?> targetClass, @Nullable Predicate<? super Method>... methodsToFilter) {
         return findMethods(targetClass, true, true, methodsToFilter);
     }
 
@@ -548,10 +536,10 @@ public abstract class MethodUtils implements Utils {
      */
     @Nonnull
     @Immutable
-    public static List<Method> findMethods(Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
-                                           Predicate<? super Method>... methodsToFilter) {
+    public static List<Method> findMethods(@Nullable Class<?> targetClass, boolean includeInheritedTypes, boolean publicOnly,
+                                           @Nullable Predicate<? super Method>... methodsToFilter) {
 
-        if (targetClass == null || isPrimitive(targetClass)) {
+        if (isInvalidDeclaringClass(targetClass)) {
             return emptyList();
         }
 
@@ -606,7 +594,7 @@ public abstract class MethodUtils implements Utils {
      * @return the found method, or {@code null} if no matching method is found
      */
     @Nullable
-    public static Method findMethod(Class targetClass, String methodName) {
+    public static Method findMethod(@Nullable Class targetClass, @Nullable String methodName) {
         return findMethod(targetClass, methodName, EMPTY_CLASS_ARRAY);
     }
 
@@ -642,7 +630,7 @@ public abstract class MethodUtils implements Utils {
      * @return the found method, or {@code null} if no matching method is found
      */
     @Nullable
-    public static Method findMethod(Class targetClass, String methodName, Class<?>... parameterTypes) {
+    public static Method findMethod(@Nullable Class targetClass, @Nullable String methodName, @Nullable Class<?>... parameterTypes) {
         MethodKey key = buildKey(targetClass, methodName, parameterTypes);
         return bannedMethodsCache.containsKey(key) ? null : methodsCache.computeIfAbsent(key, MethodUtils::doFindMethod);
     }
@@ -671,21 +659,19 @@ public abstract class MethodUtils implements Utils {
      * @return the found method, or {@code null} if no matching method is found
      */
     @Nullable
-    public static Method findDeclaredMethod(Class<?> targetClass, String methodName, Class<?>... parameterTypes) {
-
-        if (targetClass == null) {
+    public static Method findDeclaredMethod(@Nullable Class<?> targetClass, @Nullable String methodName, @Nullable Class<?>... parameterTypes) {
+        if (isInvalidDeclaringClass(targetClass)) {
             return null;
         }
-
         // First, try to find the declared method in directly target class
         Method method = doFindDeclaredMethod(targetClass, methodName, parameterTypes);
-
-        if (method == null) {  // Second, to find the declared method in the super class
+        // Second, to find the declared method in the super class
+        if (method == null) {
             Class<?> superClass = targetClass.isInterface() ? Object.class : targetClass.getSuperclass();
             method = findDeclaredMethod(superClass, methodName, parameterTypes);
         }
-
-        if (method == null) { // Third, to find the declared method in the interfaces
+        // Third, to find the declared method in the interfaces
+        if (method == null) {
             for (Class<?> interfaceClass : targetClass.getInterfaces()) {
                 method = findDeclaredMethod(interfaceClass, methodName, parameterTypes);
                 if (method != null) {
@@ -693,14 +679,13 @@ public abstract class MethodUtils implements Utils {
                 }
             }
         }
-
+        // Finally, log if the method was not found
         if (method == null) {
             if (logger.isTraceEnabled()) {
                 logger.trace("The declared method was not found in the target class[name : '{}'] by name['{}'] and parameter types['{}']",
                         targetClass, methodName, arrayToString(parameterTypes));
             }
         }
-
         return method;
     }
 
@@ -735,14 +720,118 @@ public abstract class MethodUtils implements Utils {
      * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
      * @param <R>        The expected return type of the method.
      * @return The result of invoking the method, wrapped in the appropriate type.
-     * @throws NullPointerException     If the provided object is null or the method cannot be found.
-     * @throws IllegalArgumentException If the arguments do not match the method's parameter types or accessed.
+     * @throws NullPointerException     If the provided object is null.
+     * @throws IllegalArgumentException If the method cannot be found, or the arguments do not match the method's
+     *                                  parameter types or accessed.
      * @throws RuntimeException         If the underlying method throws an exception during invocation.
      */
     @Nullable
-    public static <R> R invokeMethod(Object object, String methodName, Object... arguments) {
-        Class type = object.getClass();
-        return invokeMethod(object, type, methodName, arguments);
+    public static <R> R invokeMethod(@Nonnull Object object, @Nonnull String methodName, @Nonnull Object... arguments) {
+        return invokeMethod(object, object.getClass(), methodName, arguments);
+    }
+
+    /**
+     * Invokes a method with the specified name on the given object, optionally forcing accessibility.
+     *
+     * <p>When {@code forceAccess} is {@code true}, this method allows invocation of non-public methods by
+     * setting accessible flag before invoking.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class User {
+     *     private String secret() {
+     *         return "hidden";
+     *     }
+     * }
+     *
+     * User user = new User();
+     * String value = MethodUtils.invokeMethod(true, user, "secret");
+     * System.out.println(value); // Output: hidden
+     * }</pre>
+     *
+     * @param <R>         the expected return type
+     * @param forceAccess whether to force method accessibility
+     * @param object      the target object
+     * @param methodName  the method name
+     * @param arguments   method arguments
+     * @return the invocation result, or {@code null} if method return type is void
+     */
+    @Nullable
+    public static <R> R invokeMethod(boolean forceAccess, @Nonnull Object object, @Nonnull String methodName, @Nonnull Object... arguments) {
+        return invokeMethod(object, forceAccess, object.getClass(), methodName, arguments);
+    }
+
+    /**
+     * Invokes a method with the specified name on the given class type, using the provided arguments.
+     *
+     * <p>This method dynamically searches for a method in the specified class that matches the method name
+     * and argument types, and then invokes it. It supports both instance and static methods.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * public class ExampleClass {
+     *     public String greet(String name) {
+     *         return "Hello, " + name;
+     *     }
+     * }
+     *
+     * // Create an instance of ExampleClass
+     * ExampleClass exampleInstance = new ExampleClass();
+     *
+     * // Call the 'greet' method using invokeMethod
+     * String result = MethodUtils.invokeMethod(exampleInstance, ExampleClass.class, "greet", "World");
+     * System.out.println(result);  // Output: Hello, World
+     * }</pre>
+     *
+     * <p><b>Note:</b> This method internally uses reflection to find and invoke the matching method,
+     * which may throw exceptions if the method cannot be found or invoked properly.</p>
+     *
+     * @param object     The object on which the method will be invoked. Can be null for static methods.
+     * @param type       The class type to search for the method. Must not be null.
+     * @param methodName The name of the method to invoke. Must not be null or empty.
+     * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
+     * @param <R>        The expected return type of the method.
+     * @return The result of invoking the method, wrapped in the appropriate type.
+     * @throws IllegalArgumentException If the provided object is null or the arguments do not match the method's parameter types or accessed.
+     * @throws RuntimeException         If the underlying method throws an exception during invocation.
+     */
+    @Nullable
+    public static <R> R invokeMethod(@Nonnull Object object, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
+        return invokeMethod(object, false, type, methodName, arguments);
+    }
+
+    /**
+     * Invokes a method by name on the specified type, optionally forcing accessibility.
+     *
+     * <p>This overload is useful when the invocation target is represented by a super type or interface,
+     * or when private/protected methods need to be accessed via reflection.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class BaseService {
+     *     protected String ping(String name) {
+     *         return "pong " + name;
+     *     }
+     * }
+     *
+     * BaseService service = new BaseService();
+     * String result = MethodUtils.invokeMethod(service, true, BaseService.class, "ping", "Microsphere");
+     * System.out.println(result); // Output: pong Microsphere
+     * }</pre>
+     *
+     * @param <R>         the expected return type
+     * @param object      the target object (can be {@code null} for static methods)
+     * @param forceAccess whether to force method accessibility
+     * @param type        the type used to resolve the method
+     * @param methodName  the method name
+     * @param arguments   method arguments
+     * @return the invocation result, or {@code null} if method return type is void
+     */
+    @Nullable
+    public static <R> R invokeMethod(@Nonnull Object object, boolean forceAccess, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
+        Class[] parameterTypes = getTypes(arguments);
+        Method method = findMethod(type, methodName, parameterTypes);
+        return invokeMethod(forceAccess, object, method, arguments);
     }
 
     /**
@@ -775,8 +864,41 @@ public abstract class MethodUtils implements Utils {
      * @throws RuntimeException         if the underlying method throws an exception during invocation
      */
     @Nullable
-    public static <R> R invokeStaticMethod(Class<?> targetClass, String methodName, Object... arguments) {
-        return invokeMethod(null, targetClass, methodName, arguments);
+    public static <R> R invokeStaticMethod(@Nonnull Class<?> targetClass, @Nonnull String methodName, @Nonnull Object... arguments) {
+        return invokeStaticMethod(false, targetClass, methodName, arguments);
+    }
+
+    /**
+     * Invokes a static method of the specified class by name, with optional forced accessibility.
+     *
+     * <p>When {@code forceAccess} is {@code true}, this method attempts to make the target method
+     * accessible before invocation, allowing reflective access to non-public static methods.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class SecretMath {
+     *     private static int sum(int a, int b) {
+     *         return a + b;
+     *     }
+     * }
+     *
+     * Integer value = MethodUtils.invokeStaticMethod(true, SecretMath.class, "sum", 1, 2);
+     * System.out.println(value); // Output: 3
+     * }</pre>
+     *
+     * @param <R>         the expected return type
+     * @param forceAccess whether to force accessibility for non-public methods
+     * @param targetClass the class declaring the static method
+     * @param methodName  the name of the static method to invoke
+     * @param arguments   the arguments passed to the method
+     * @return the invocation result, or {@code null} if the method return type is void
+     * @throws NullPointerException     if {@code targetClass} or {@code methodName} is null, or if method lookup fails
+     * @throws IllegalArgumentException if the arguments do not match the method signature
+     * @throws RuntimeException         if the underlying method throws an exception
+     */
+    @Nullable
+    public static <R> R invokeStaticMethod(boolean forceAccess, @Nonnull Class<?> targetClass, @Nonnull String methodName, @Nonnull Object... arguments) {
+        return invokeMethod(null, forceAccess, targetClass, methodName, arguments);
     }
 
     /**
@@ -805,54 +927,43 @@ public abstract class MethodUtils implements Utils {
      * @param arguments the arguments to pass to the method (can be null or empty)
      * @param <R>       the expected return type of the method
      * @return the result of the method invocation, wrapped in the appropriate type
-     * @throws NullPointerException     if the provided method is null  or the method cannot be found.
-     * @throws IllegalArgumentException if the arguments do not match the method's parameter types or accessed.
+     * @throws IllegalArgumentException if the provided method is null or the arguments do not match the method's parameter types or accessed.
      */
     @Nullable
-    public static <R> R invokeStaticMethod(Method method, Object... arguments) {
-        return invokeMethod(null, method, arguments);
+    public static <R> R invokeStaticMethod(@Nonnull Method method, @Nonnull Object... arguments) {
+        return invokeStaticMethod(false, method, arguments);
     }
 
     /**
-     * Invokes a method with the specified name on the given class type, using the provided arguments.
+     * Invokes a static method represented by a {@link Method} with optional forced accessibility.
      *
-     * <p>This method dynamically searches for a method in the specified class that matches the method name
-     * and argument types, and then invokes it. It supports both instance and static methods.</p>
+     * <p>If {@code forceAccess} is {@code true}, this method tries to enable access to non-public
+     * static methods before invocation.</p>
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     * public class ExampleClass {
-     *     public String greet(String name) {
-     *         return "Hello, " + name;
+     * class Internal {
+     *     private static String echo(String value) {
+     *         return value;
      *     }
      * }
      *
-     * // Create an instance of ExampleClass
-     * ExampleClass exampleInstance = new ExampleClass();
-     *
-     * // Call the 'greet' method using invokeMethod
-     * String result = MethodUtils.invokeMethod(exampleInstance, ExampleClass.class, "greet", "World");
-     * System.out.println(result);  // Output: Hello, World
+     * Method method = Internal.class.getDeclaredMethod("echo", String.class);
+     * String result = MethodUtils.invokeStaticMethod(method, true, "Microsphere");
+     * System.out.println(result); // Output: Microsphere
      * }</pre>
      *
-     * <p><b>Note:</b> This method internally uses reflection to find and invoke the matching method,
-     * which may throw exceptions if the method cannot be found or invoked properly.</p>
-     *
-     * @param instance   The object on which the method will be invoked. Can be null for static methods.
-     * @param type       The class type to search for the method. Must not be null.
-     * @param methodName The name of the method to invoke. Must not be null or empty.
-     * @param arguments  The arguments to pass to the method. Can be null or empty if the method requires no parameters.
-     * @param <R>        The expected return type of the method.
-     * @return The result of invoking the method, wrapped in the appropriate type.
-     * @throws NullPointerException     If the provided type or method name is null or the method cannot be found.
-     * @throws IllegalArgumentException If the arguments do not match the method's parameter types or accessed.
-     * @throws RuntimeException         If the underlying method throws an exception during invocation.
+     * @param <R>         the expected return type
+     * @param forceAccess whether to force accessibility for non-public methods
+     * @param method      the static method to invoke
+     * @param arguments   the arguments passed to the method
+     * @return the invocation result, or {@code null} if the method return type is void
+     * @throws IllegalArgumentException if the method is null, non-static, or arguments do not match
+     * @throws RuntimeException         if the underlying method throws an exception
      */
     @Nullable
-    public static <R> R invokeMethod(Object instance, Class<?> type, String methodName, Object... arguments) {
-        Class[] parameterTypes = getTypes(arguments);
-        Method method = findMethod(type, methodName, parameterTypes);
-        return invokeMethod(instance, method, arguments);
+    public static <R> R invokeStaticMethod(boolean forceAccess, @Nonnull Method method, @Nonnull Object... arguments) {
+        return invokeMethod(forceAccess, null, method, arguments);
     }
 
     /**
@@ -915,8 +1026,7 @@ public abstract class MethodUtils implements Utils {
      * @return the result of dispatching the method represented by
      * this object on {@code instance} with parameters
      * {@code arguments}
-     * @throws NullPointerException     if this {@link Method} object is <code>null</code>
-     * @throws IllegalArgumentException if the method is an
+     * @throws IllegalArgumentException if the method is <code>null</code> or is an
      *                                  instance method and the specified object argument
      *                                  is not an instance of the class or interface
      *                                  declaring the underlying method (or of a subclass
@@ -929,12 +1039,61 @@ public abstract class MethodUtils implements Utils {
      * @throws RuntimeException         if the underlying method throws an exception.
      */
     @Nullable
-    public static <R> R invokeMethod(@Nullable Object instance, Method method, Object... arguments) {
+    public static <R> R invokeMethod(@Nullable Object instance, @Nonnull Method method, @Nonnull Object... arguments) {
+        return invokeMethod(false, instance, method, arguments);
+    }
+
+    /**
+     * Invokes the given {@link Method} on the specified instance, optionally forcing reflective access.
+     *
+     * <p>This overload is the core reflective invocation path used by other utility methods in this class.
+     * If {@code forceAccess} is {@code true}, it attempts to make the method accessible before invoking,
+     * which allows calling non-public methods when the runtime permits it.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * class Demo {
+     *     private String hello(String name) {
+     *         return "Hello, " + name;
+     *     }
+     * }
+     *
+     * Demo demo = new Demo();
+     * Method hello = Demo.class.getDeclaredMethod("hello", String.class);
+     * String value = MethodUtils.invokeMethod(true, demo, hello, "Microsphere");
+     * System.out.println(value); // Output: Hello, Microsphere
+     * }</pre>
+     *
+     * <pre>{@code
+     * class MathUtil {
+     *     static int sum(int a, int b) {
+     *         return a + b;
+     *     }
+     * }
+     *
+     * Method sum = MathUtil.class.getDeclaredMethod("sum", int.class, int.class);
+     * Integer result = MethodUtils.invokeMethod(true, null, sum, 1, 2);
+     * System.out.println(result); // Output: 3
+     * }</pre>
+     *
+     * @param <R>         the expected return type
+     * @param forceAccess whether to force accessibility before invocation
+     * @param instance    the target instance for instance methods; may be {@code null} for static methods
+     * @param method      the method to invoke, must not be {@code null}
+     * @param arguments   the invocation arguments (can be empty)
+     * @return the invocation result, or {@code null} when the method return type is {@code void}
+     * @throws IllegalArgumentException if the method cannot be accessed with provided arguments
+     * @throws RuntimeException         if the underlying method throws an exception
+     */
+    @Nullable
+    public static <R> R invokeMethod(boolean forceAccess, @Nullable Object instance, @Nonnull Method method, @Nonnull Object... arguments) {
         assertNotNull(method, () -> "The 'method' must not be null");
         R result = null;
         RuntimeException failure = null;
         try {
-            trySetAccessible(method);
+            if (forceAccess) {
+                trySetAccessible(method);
+            }
             result = (R) method.invoke(instance, arguments);
         } catch (IllegalAccessException | IllegalArgumentException e) {
             String errorMessage = format("The arguments can't match the method[signature : '{}' , instance : {}] : {}", getSignature(method), instance, arrayToString(arguments));
@@ -943,12 +1102,10 @@ public abstract class MethodUtils implements Utils {
             String errorMessage = format("It's failed to invoke the method[signature : '{}' , instance : {} , arguments : {}]", getSignature(method), instance, arrayToString(arguments));
             failure = new RuntimeException(errorMessage, e.getTargetException());
         }
-
         if (failure != null) {
             logger.error(failure.getMessage(), failure.getCause());
             throw failure;
         }
-
         return result;
     }
 
@@ -992,7 +1149,7 @@ public abstract class MethodUtils implements Utils {
      * @jls 8.4.8 Inheritance, Overriding, and Hiding
      * @jls 9.4.1 Inheritance and Overriding
      */
-    public static boolean overrides(Method overrider, Method overridden) {
+    public static boolean overrides(@Nullable Method overrider, @Nullable Method overridden) {
 
         if (overrider == null || overridden == null || overrider == overridden) {
             return false;
@@ -1082,9 +1239,10 @@ public abstract class MethodUtils implements Utils {
      *
      * @param overrider the method that potentially overrides another method
      * @return the overridden method if found; otherwise, {@code null}
+     * @throws NullPointerException if the provided method is null
      */
     @Nullable
-    public static Method findNearestOverriddenMethod(Method overrider) {
+    public static Method findNearestOverriddenMethod(@Nonnull Method overrider) {
         Class<?> targetClass = overrider.getDeclaringClass();
         Method overriddenMethod = null;
         for (Class<?> inheritedType : getAllInheritedTypes(targetClass)) {
@@ -1136,9 +1294,9 @@ public abstract class MethodUtils implements Utils {
      * @return the overridden method declared in the target class, or {@code null} if none is found
      */
     @Nullable
-    public static Method findOverriddenMethod(Method overrider, Class<?> targetClass) {
+    public static Method findOverriddenMethod(@Nullable Method overrider, @Nullable Class<?> targetClass) {
         List<Method> matchedMethods = findDeclaredMethods(targetClass, method -> overrides(overrider, method));
-        return matchedMethods.isEmpty() ? null : matchedMethods.get(0);
+        return first(matchedMethods);
     }
 
     /**
@@ -1156,9 +1314,10 @@ public abstract class MethodUtils implements Utils {
      *
      * @param method The method for which to generate the signature.
      * @return A non-null string representing the method signature.
+     * @throws NullPointerException if the provided method is null
      */
     @Nonnull
-    public static String getSignature(Method method) {
+    public static String getSignature(@Nonnull Method method) {
         return buildSignature(method.getDeclaringClass(), method.getName(), method.getParameterTypes());
     }
 
@@ -1183,8 +1342,9 @@ public abstract class MethodUtils implements Utils {
      * @param methodName     the name of the method
      * @param parameterTypes the parameter types of the method
      * @return a non-null string representing the method signature
+     * @throws NullPointerException if any of the provided arguments are null
      */
-    public static String buildSignature(Class<?> declaringClass, String methodName, Class<?>... parameterTypes) {
+    public static String buildSignature(@Nonnull Class<?> declaringClass, @Nonnull String methodName, @Nonnull Class<?>... parameterTypes) {
         int parameterCount = length(parameterTypes);
         String[] parameterTypeNames = new String[parameterCount];
         String declaringClassName = getTypeName(declaringClass);
@@ -1241,7 +1401,7 @@ public abstract class MethodUtils implements Utils {
      * @param method the method to check, may be null
      * @return true if the method is declared by the {@link Object} class; false otherwise or if the method is null
      */
-    public static boolean isObjectMethod(Method method) {
+    public static boolean isObjectMethod(@Nullable Method method) {
         if (method != null) {
             return isObjectClass(method.getDeclaringClass());
         }
@@ -1265,11 +1425,11 @@ public abstract class MethodUtils implements Utils {
      * @return <code>true</code> if the method is non-null and annotated with {@link jdk.internal.reflect.CallerSensitive}; false otherwise
      * @see jdk.internal.reflect.CallerSensitive
      */
-    public static boolean isCallerSensitiveMethod(Method method) {
+    public static boolean isCallerSensitiveMethod(@Nullable Method method) {
         return isAnnotationPresent(method, CALLER_SENSITIVE_ANNOTATION_CLASS);
     }
 
-    public static boolean isIsMethod(Method method) {
+    public static boolean isIsMethod(@Nullable Method method) {
         if (startsWith(getMethodName(method), IS_METHOD_NAME_PREFIX)) {
             if (isNoArgMethod(method)) {
                 return matchesReturnType(method, boolean.class);
@@ -1278,7 +1438,7 @@ public abstract class MethodUtils implements Utils {
         return false;
     }
 
-    public static boolean isGetterMethod(Method method) {
+    public static boolean isGetterMethod(@Nullable Method method) {
         if (startsWith(getMethodName(method), GET_METHOD_NAME_PREFIX)) {
             if (isNoArgMethod(method)) {
                 return !matchesReturnType(method, void.class);
@@ -1287,7 +1447,7 @@ public abstract class MethodUtils implements Utils {
         return false;
     }
 
-    public static boolean isSetterMethod(Method method) {
+    public static boolean isSetterMethod(@Nullable Method method) {
         if (startsWith(getMethodName(method), SET_METHOD_NAME_PREFIX)) {
             if (matchesParameterCount(method, 1)) {
                 return matchesReturnType(method, void.class);
@@ -1309,6 +1469,43 @@ public abstract class MethodUtils implements Utils {
         return method == null ? false : Objects.equals(returnType, method.getReturnType());
     }
 
+    /**
+     * Clears the cache of discovered methods.
+     */
+    public static void clearMethodsCache() {
+        methodsCache.clear();
+    }
+
+    /**
+     * Clears the cache of banned methods.
+     *
+     * <p>This method removes all entries from the {@link #bannedMethodsCache}, effectively
+     * allowing all previously banned methods to be discoverable again by {@link #findMethod(Class, String, Class[])}.</p>
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     * // Clear all banned methods
+     * MethodUtils.clearBannedMethodsCache();
+     *
+     * // After this call, findMethod will return previously banned methods
+     * Method method = MethodUtils.findMethod(String.class, "substring", int.class, int.class);
+     * // method may now be non-null if it was previously banned
+     * }</pre>
+     *
+     * @see #initBannedMethods()
+     * @see #bannedMethodsCache
+     */
+    public static void clearBannedMethodsCache() {
+        bannedMethodsCache.clear();
+    }
+
+    /**
+     * Clears the cache of declared methods.
+     */
+    public static void clearDeclaredMethodsCache() {
+        declaredMethodsCache.clear();
+    }
+
     static boolean isNoArgMethod(Method method) {
         return matchesParameterCount(method, 0);
     }
@@ -1320,7 +1517,7 @@ public abstract class MethodUtils implements Utils {
         }
     }
 
-    static void filterDeclaredMethods(Class<?> targetClass, Predicate<? super Method> methodToFilter, List<Method> methodsToCollect) {
+    static void filterDeclaredMethods(@Nullable Class<?> targetClass, Predicate<? super Method> methodToFilter, List<Method> methodsToCollect) {
         for (Method method : doGetDeclaredMethods(targetClass)) {
             if (methodToFilter.test(method)) {
                 methodsToCollect.add(method);
@@ -1328,12 +1525,12 @@ public abstract class MethodUtils implements Utils {
         }
     }
 
-    static Method doFindDeclaredMethod(Class<?> klass, String methodName, Class<?>[] parameterTypes) {
+    static Method doFindDeclaredMethod(@Nonnull Class<?> klass, @Nullable String methodName, @Nullable Class<?>[] parameterTypes) {
         Method[] declaredMethods = doGetDeclaredMethods(klass);
         return doFindMethod(declaredMethods, methodName, parameterTypes);
     }
 
-    static Method doFindMethod(Method[] methods, String methodName, Class<?>[] parameterTypes) {
+    static Method doFindMethod(@Nonnull Method[] methods, String methodName, Class<?>[] parameterTypes) {
         Method targetMethod = null;
         for (Method method : methods) {
             if (matches(method, methodName, parameterTypes)) {
@@ -1348,23 +1545,27 @@ public abstract class MethodUtils implements Utils {
         return targetMethod;
     }
 
-    static boolean matches(Method method, String methodName, Class<?>[] parameterTypes) {
-        int parameterCount = parameterTypes.length;
-        return parameterCount == method.getParameterCount()
-                && Objects.equals(method.getName(), methodName)
-                && matchesParameterTypes(method.getParameterTypes(), parameterTypes, parameterCount);
+    static boolean matches(@Nonnull Method method, @Nullable String methodName, @Nullable Class<?>[] parameterTypes) {
+        if (!Objects.equals(method.getName(), methodName)) {
+            return false;
+        }
+        int parameterCount = length(parameterTypes);
+        if (!(method.getParameterCount() == parameterCount)) {
+            return false;
+        }
+        return matchesParameterTypes(method.getParameterTypes(), parameterTypes, parameterCount);
     }
 
     static boolean matchesParameterTypes(Class<?>[] oneParameterTypes, Class<?>[] anotherParameterTypes, int parameterCount) {
         for (int i = 0; i < parameterCount; i++) {
-            if (oneParameterTypes[i] != anotherParameterTypes[i]) {
+            if (!Objects.equals(oneParameterTypes[i], anotherParameterTypes[i])) {
                 return false;
             }
         }
         return true;
     }
 
-    static Method[] doGetDeclaredMethods(Class<?> klass) {
+    static Method[] doGetDeclaredMethods(@Nonnull Class<?> klass) {
         return declaredMethodsCache.computeIfAbsent(klass, c -> c.getDeclaredMethods());
     }
 
@@ -1430,3 +1631,4 @@ public abstract class MethodUtils implements Utils {
     private MethodUtils() {
     }
 }
+
