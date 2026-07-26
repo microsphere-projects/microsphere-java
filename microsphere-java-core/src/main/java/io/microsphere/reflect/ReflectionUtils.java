@@ -68,7 +68,7 @@ public abstract class ReflectionUtils implements Utils {
     public static final String SUN_REFLECT_REFLECTION_CLASS_NAME = "sun.reflect.Reflection";
 
 
-    public static final String SHARED_SECRETS_CLASS_NAME ="jdk.internal.access.SharedSecrets";
+    public static final String SHARED_SECRETS_CLASS_NAME = "jdk.internal.access.SharedSecrets";
 
     /**
      * The {@link Class} of sun.reflect.Reflection
@@ -455,7 +455,7 @@ public abstract class ReflectionUtils implements Utils {
             }
 
             String fieldName = field.getName();
-            Object fieldValue = getFieldValue(object, field);
+            Object fieldValue = getFieldValue(object, field, true);
             Class<?> fieldValueType = field.getType();
             if (fieldValue != object) {
                 if (!isPrimitive(fieldValueType) && !isSimpleType(fieldValueType)

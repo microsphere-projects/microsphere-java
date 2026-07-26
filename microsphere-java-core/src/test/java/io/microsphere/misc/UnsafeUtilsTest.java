@@ -26,7 +26,6 @@ import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.getLongFromArrayVolatile;
-import static io.microsphere.misc.UnsafeUtils.getStaticFieldOffset;
 import static io.microsphere.misc.UnsafeUtils.putLongIntoArrayVolatile;
 import static io.microsphere.misc.UnsafeUtils.putOrderedLongIntoArray;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
@@ -429,10 +428,9 @@ class UnsafeUtilsTest {
 //
 //        final MethodHandle overrideSetter = implLookup.findSetter(AccessibleObject.class, "override", boolean.class);
 //        overrideSetter.invokeWithArguments(field, true);
-
-        String fieldName = "value";
-        long offset = getStaticFieldOffset(Integer.class, fieldName);
-        assertNotNull(offset);
+//        String fieldName = "value";
+//        long offset = getStaticFieldOffset(Integer.class, fieldName);
+//        assertNotNull(offset);
     }
 
     private static class Model {

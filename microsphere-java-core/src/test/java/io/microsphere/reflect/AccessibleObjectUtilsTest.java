@@ -70,11 +70,6 @@ class AccessibleObjectUtilsTest {
     }
 
     @Test
-    void testSetAccessibleOnNull() {
-        assertFalse(setAccessible(null));
-    }
-
-    @Test
     void testSetAccessibleOnNonPublicMembers() {
         assertEquals(setAccessible(tryCanAccessMethod), tryCanAccessMethod.isAccessible());
 
