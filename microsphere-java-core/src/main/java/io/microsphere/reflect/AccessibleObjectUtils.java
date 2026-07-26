@@ -66,12 +66,8 @@ public abstract class AccessibleObjectUtils implements Utils {
     private static final Method trySetAccessibleMethod = findMethod(AccessibleObject.class, trySetAccessibleMethodName);
 
     static {
-        if (canAccessMethod != null) {
-            setAccessible(canAccessMethod);
-        }
-        if (trySetAccessibleMethod != null) {
-            setAccessible(trySetAccessibleMethod);
-        }
+        setAccessible(canAccessMethod);
+        setAccessible(trySetAccessibleMethod);
     }
 
     /**
@@ -158,6 +154,9 @@ public abstract class AccessibleObjectUtils implements Utils {
      * @return previous accessible status of the {@link AccessibleObject} instance
      */
     static boolean setAccessible(AccessibleObject accessibleObject) {
+        if (accessibleObject == null) {
+            return false;
+        }
         boolean accessible = accessibleObject.isAccessible();
         if (!accessible) {
             try {

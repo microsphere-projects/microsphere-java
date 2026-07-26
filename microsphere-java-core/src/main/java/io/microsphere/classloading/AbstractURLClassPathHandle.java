@@ -122,8 +122,8 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
         if (classLoader == null) {
             return EMPTY_URL_ARRAY;
         }
-        Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
-        return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(ucp, "getURLs");
+        Object ucp = getFieldValue(classLoader, findUcpField(classLoader), true);
+        return ucp == null ? EMPTY_URL_ARRAY : invokeMethod(true, ucp, "getURLs");
     }
 
     @Override
@@ -134,10 +134,10 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
 
         initializeLoaders(classLoader);
 
-        Object ucp = getFieldValue(classLoader, findUcpField(classLoader));
-        Collection<URL> urls = getFieldValue(ucp, getUrlsField());
-        Collection<URL> path = getFieldValue(ucp, getPathField());
-        Collection<Object> loaders = getFieldValue(ucp, getLoadersField());
+        Object ucp = getFieldValue(classLoader, findUcpField(classLoader), true);
+        Collection<URL> urls = getFieldValue(ucp, getUrlsField(), true);
+        Collection<URL> path = getFieldValue(ucp, getPathField(), true);
+        Collection<Object> loaders = getFieldValue(ucp, getLoadersField(), true);
 
         String basePath = resolveBasePath(url);
 
@@ -148,7 +148,7 @@ public abstract class AbstractURLClassPathHandle implements URLClassPathHandle, 
             Iterator<Object> iterator = loaders.iterator();
             while (iterator.hasNext()) {
                 Object loader = iterator.next();
-                URL base = getFieldValue(loader, getBaseField());
+                URL base = getFieldValue(loader, getBaseField(), true);
                 String basePath_ = resolveBasePath(base);
                 if (Objects.equals(basePath_, basePath)) {
                     if (logger.isTraceEnabled()) {
