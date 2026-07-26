@@ -97,7 +97,7 @@ public class FilerProcessor {
      * @return the {@link JavaFileManager}
      */
     public JavaFileManager getJavaFileManager() {
-        return processInFiler(filer -> getFieldValue(filer, "fileManager"));
+        return processInFiler(filer -> getFieldValue(filer, "fileManager", true));
     }
 
 }
