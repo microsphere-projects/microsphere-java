@@ -1850,7 +1850,7 @@ public abstract class ClassLoaderUtils implements Utils {
         Class<?> loadedClass = null;
         try {
             Method findLoadedClassMethod = findMethod(ClassLoader.class, findLoadedClassMethodName, String.class);
-            loadedClass = invokeMethod(classLoader, findLoadedClassMethod, className);
+            loadedClass = invokeMethod(true, classLoader, findLoadedClassMethod, className);
         } catch (Throwable e) {
             logOnFindLoadedClassInvocationFailed(classLoader, className, e);
         }

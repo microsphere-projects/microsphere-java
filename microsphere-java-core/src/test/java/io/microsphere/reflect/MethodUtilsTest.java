@@ -51,7 +51,7 @@ import static io.microsphere.reflect.MethodUtils.STATIC_METHOD_PREDICATE;
 import static io.microsphere.reflect.MethodUtils.banMethod;
 import static io.microsphere.reflect.MethodUtils.buildKey;
 import static io.microsphere.reflect.MethodUtils.buildSignature;
-import static io.microsphere.reflect.MethodUtils.clearBannedMethods;
+import static io.microsphere.reflect.MethodUtils.clearBannedMethodsCache;
 import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.findAllMethods;
@@ -113,7 +113,7 @@ class MethodUtilsTest extends LoggingTest {
     @AfterAll
     static void afterAll() {
         System.getProperties().remove(BANNED_METHODS_PROPERTY_NAME);
-        clearBannedMethods();
+        clearBannedMethodsCache();
     }
 
     @Test
@@ -207,7 +207,11 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = getDeclaredMethods(TestClass.class);
         assertEquals(7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+
+        methods = getDeclaredMethods(null);
+        assertTrue(methods.isEmpty());
     }
+
 
     @Test
     void testGetMethods() {
@@ -222,6 +226,9 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = getMethods(TestClass.class);
         assertEquals(1, methods.size());
+
+        methods = getMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -231,6 +238,9 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = getAllDeclaredMethods(TestClass.class);
         assertEquals(OBJECT_DECLARED_METHODS.size() + 7 + JACOCO_ADDED_METHOD_COUNT, methods.size());
+
+        methods = getAllDeclaredMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -243,6 +253,9 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = getAllMethods(TestClass.class);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+
+        methods = getAllMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -255,6 +268,9 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = findDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(1, methods.size());
+
+        methods = findDeclaredMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -270,6 +286,9 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = findMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(1, methods.size());
+
+        methods = findMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -282,6 +301,9 @@ class MethodUtilsTest extends LoggingTest {
 
         methods = findAllDeclaredMethods(TestClass.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+
+        methods = findAllDeclaredMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -292,8 +314,11 @@ class MethodUtilsTest extends LoggingTest {
         methods = findAllMethods(Object.class, PUBLIC_METHOD_PREDICATE);
         assertEquals(OBJECT_PUBLIC_METHODS, methods);
 
-        methods = getAllMethods(TestClass.class);
+        methods = findAllMethods(TestClass.class);
         assertEquals(OBJECT_PUBLIC_METHODS.size() + 1, methods.size());
+
+        methods = findAllMethods(null);
+        assertTrue(methods.isEmpty());
     }
 
     @Test
@@ -436,20 +461,31 @@ class MethodUtilsTest extends LoggingTest {
     }
 
     @Test
+    void testFindMethodOnNull() {
+        assertNull(findMethod(null, "equals", int.class));
+        assertNull(findMethod(TestInterface.class, null, Object.class));
+        assertNull(findMethod(TestInterface.class, "equals", null));
+    }
+
+    @Test
+    void testFindMethodOnPrimitiveType() {
+        assertNull(findMethod(int.class, "equals", int.class));
+    }
+
+    @Test
     void testInvokeMethod() {
         String test = "test";
         assertEquals(test, invokeMethod(test, "toString"));
 
         TestClass testClass = new TestClass();
-        assertEquals(valueOf(0), invokeMethod(testClass, "intMethod"));
-        assertEquals(testClass, invokeMethod(testClass, "objectMethod"));
+        assertEquals(valueOf(0), invokeMethod(testClass, true, "intMethod"));
+        assertEquals(testClass, invokeMethod(testClass, true, "objectMethod"));
     }
 
     @Test
     void testInvokeMethodOnNullPointerException() {
-        assertThrows(NullPointerException.class, () -> invokeMethod("test", (Method) null));
-        assertThrows(NullPointerException.class, () -> invokeMethod("test", "notFound"));
-
+        assertThrows(IllegalArgumentException.class, () -> invokeMethod("test", (Method) null));
+        assertThrows(IllegalArgumentException.class, () -> invokeMethod("test", "notFound"));
     }
 
     @Test
@@ -467,7 +503,8 @@ class MethodUtilsTest extends LoggingTest {
     void testInvokeStaticMethod() {
         Method method = findMethod(Integer.class, "valueOf", int.class);
         assertEquals(valueOf(0), (Integer) invokeStaticMethod(method, 0));
-        assertEquals(valueOf(0), (Integer) invokeStaticMethod(TestClass.class, "value", 0));
+        assertEquals(valueOf(0), (Integer) invokeStaticMethod(true, TestClass.class, "value", 0));
+        assertEquals(valueOf(0), (Integer) invokeStaticMethod(Integer.class, "parseInt", "0"));
     }
 
     @Test
