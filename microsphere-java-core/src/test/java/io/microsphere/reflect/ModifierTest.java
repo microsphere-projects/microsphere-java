@@ -197,7 +197,7 @@ class ModifierTest {
     }
 
     private int findModifierValue(String name) {
-        return getStaticFieldValue(java.lang.reflect.Modifier.class, name);
+        return getStaticFieldValue(java.lang.reflect.Modifier.class, name, true);
     }
 
 }

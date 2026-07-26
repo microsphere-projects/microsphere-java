@@ -25,6 +25,10 @@ import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_INDEX_SCALE;
+import static io.microsphere.misc.UnsafeUtils.getLongFromArrayVolatile;
+import static io.microsphere.misc.UnsafeUtils.getStaticFieldOffset;
+import static io.microsphere.misc.UnsafeUtils.putLongIntoArrayVolatile;
+import static io.microsphere.misc.UnsafeUtils.putOrderedLongIntoArray;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,10 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * {@link UnsafeUtils} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see UnsafeUtilTest
+ * @see UnsafeUtilsTest
  * @since 1.0.0
  */
-class UnsafeUtilTest {
+class UnsafeUtilsTest {
 
     private Model model;
 
@@ -73,7 +77,7 @@ class UnsafeUtilTest {
         Class<?> unsafeUtilsClass = UnsafeUtils.class;
         Set<Field> allDeclaredFields = findAllDeclaredFields(unsafeUtilsClass, MemberUtils::isStatic);
         for (Field field : allDeclaredFields) {
-            Object value = getStaticFieldValue(field);
+            Object value = getStaticFieldValue(field, true);
             assertNotNull(value, "The static field value of " + field + " should not be null");
         }
     }
@@ -240,14 +244,14 @@ class UnsafeUtilTest {
         String fieldName = "longArrayValue";
         long value = 123;
         int index = 2;
-        UnsafeUtils.putLongIntoArrayVolatile(model, fieldName, index, value);
-        long returnValue = UnsafeUtils.getLongFromArrayVolatile(model, fieldName, index);
+        putLongIntoArrayVolatile(model, fieldName, index, value);
+        long returnValue = getLongFromArrayVolatile(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.longArrayValue[index], returnValue);
 
         value = Integer.MAX_VALUE;
-        UnsafeUtils.putOrderedLongIntoArray(model, fieldName, index, value);
-        returnValue = UnsafeUtils.getLongFromArrayVolatile(model, fieldName, index);
+        putOrderedLongIntoArray(model, fieldName, index, value);
+        returnValue = getLongFromArrayVolatile(model, fieldName, index);
         assertEquals(returnValue, value);
         assertEquals(model.longArrayValue[index], returnValue);
     }
@@ -416,6 +420,19 @@ class UnsafeUtilTest {
             exception = e;
         }
         assertNotNull(exception);
+    }
+
+    @Test
+    void testGetStaticFieldOffset() throws Throwable {
+//        Field field = findField(AccessibleObject.class, "override");
+//        Lookup implLookup = getStaticFieldValue(Lookup.class, "IMPL_LOOKUP", true);
+//
+//        final MethodHandle overrideSetter = implLookup.findSetter(AccessibleObject.class, "override", boolean.class);
+//        overrideSetter.invokeWithArguments(field, true);
+
+        String fieldName = "value";
+        long offset = getStaticFieldOffset(Integer.class, fieldName);
+        assertNotNull(offset);
     }
 
     private static class Model {

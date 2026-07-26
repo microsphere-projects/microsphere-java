@@ -68,7 +68,6 @@ import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
 import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
-import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
 import static io.microsphere.util.StringUtils.substringBefore;
@@ -182,11 +181,6 @@ public abstract class MethodUtils implements Utils {
 
     static {
         initBannedMethods();
-        addShutdownHookCallback(() -> {
-            clearMethodsCache();
-            clearBannedMethodsCache();
-            clearDeclaredMethodsCache();
-        });
     }
 
     /**
