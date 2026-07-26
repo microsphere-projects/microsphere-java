@@ -745,19 +745,19 @@ public abstract class MethodUtils implements Utils {
      * }
      *
      * User user = new User();
-     * String value = MethodUtils.invokeMethod(user, true, "secret");
+     * String value = MethodUtils.invokeMethod(true, user, "secret");
      * System.out.println(value); // Output: hidden
      * }</pre>
      *
-     * @param object      the target object
+     * @param <R>         the expected return type
      * @param forceAccess whether to force method accessibility
+     * @param object      the target object
      * @param methodName  the method name
      * @param arguments   method arguments
-     * @param <R>         the expected return type
      * @return the invocation result, or {@code null} if method return type is void
      */
     @Nullable
-    public static <R> R invokeMethod(@Nonnull Object object, boolean forceAccess, @Nonnull String methodName, @Nonnull Object... arguments) {
+    public static <R> R invokeMethod(boolean forceAccess, @Nonnull Object object, @Nonnull String methodName, @Nonnull Object... arguments) {
         return invokeMethod(object, forceAccess, object.getClass(), methodName, arguments);
     }
 

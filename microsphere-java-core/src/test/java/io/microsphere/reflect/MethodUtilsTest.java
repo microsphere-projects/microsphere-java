@@ -478,8 +478,8 @@ class MethodUtilsTest extends LoggingTest {
         assertEquals(test, invokeMethod(test, "toString"));
 
         TestClass testClass = new TestClass();
-        assertEquals(valueOf(0), invokeMethod(testClass, true, "intMethod"));
-        assertEquals(testClass, invokeMethod(testClass, true, "objectMethod"));
+        assertEquals(valueOf(0), invokeMethod(true, testClass, "intMethod"));
+        assertEquals(testClass, invokeMethod(true, testClass, "objectMethod"));
     }
 
     @Test
