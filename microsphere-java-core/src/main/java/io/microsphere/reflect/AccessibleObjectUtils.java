@@ -21,14 +21,16 @@ import io.microsphere.util.Utils;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Method;
+import java.lang.reflect.Member;
 
 import static io.microsphere.constants.PathConstants.SLASH_CHAR;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOUBLE_QUOTE;
 import static io.microsphere.constants.SymbolConstants.SPACE;
+import static io.microsphere.invoke.MethodHandleUtils.findVirtual;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MemberUtils.asMember;
+import static io.microsphere.reflect.MemberUtils.isPublic;
 import static io.microsphere.reflect.ReflectionUtils.isInaccessibleObjectException;
 import static io.microsphere.util.StringUtils.substringBetween;
 
@@ -54,21 +56,16 @@ public abstract class AccessibleObjectUtils implements Utils {
     private static final String trySetAccessibleMethodName = "trySetAccessible";
 
     /**
-     * The {@link Method} of {@link AccessibleObject#canAccess(Object)} since JDK 9
-     * if <code>canAccessMethod == null</code>, it indicates the version of JDK is less than 9
+     * The {@link MethodHandle} of {@link AccessibleObject#canAccess(Object)} since JDK 9
+     * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
-    private static final Method canAccessMethod = findMethod(AccessibleObject.class, canAccessMethodName, Object.class);
+    private static final MethodHandle canAccessMethodHandle = findVirtual(AccessibleObject.class, canAccessMethodName, Object.class);
 
     /**
-     * The {@link Method} of {@link AccessibleObject#trySetAccessible()} since JDK 9
-     * if <code>trySetAccessibleMethod == null</code>, it indicates the version of JDK is less than 9
+     * The {@link MethodHandle} of {@link AccessibleObject#trySetAccessible()} since JDK 9
+     * if <code>canAccessMethodHandle == null</code>, it indicates the version of JDK is less than 9
      */
-    private static final Method trySetAccessibleMethod = findMethod(AccessibleObject.class, trySetAccessibleMethodName);
-
-    static {
-        setAccessible(canAccessMethod);
-        setAccessible(trySetAccessibleMethod);
-    }
+    private static final MethodHandle trySetAccessibleMethodHandle = findVirtual(AccessibleObject.class, trySetAccessibleMethodName);
 
     /**
      * Attempts to set the accessibility of the given {@link AccessibleObject}.
@@ -98,11 +95,11 @@ public abstract class AccessibleObjectUtils implements Utils {
      * @see AccessibleObject#isAccessible()
      */
     public static boolean trySetAccessible(AccessibleObject accessibleObject) {
-        Method method = trySetAccessibleMethod;
-        if (method == null) { // JDK < 9 or not be initialized
+        MethodHandle methodHandle = trySetAccessibleMethodHandle;
+        if (methodHandle == null) { // JDK < 9 or not be initialized
             return setAccessible(accessibleObject);
         } else { // JDK 9+
-            return trySetAccessible(method, accessibleObject);
+            return trySetAccessible(methodHandle, accessibleObject);
         }
     }
 
@@ -143,6 +140,10 @@ public abstract class AccessibleObjectUtils implements Utils {
      * @see AccessibleObject#isAccessible()
      */
     public static boolean canAccess(Object object, AccessibleObject accessibleObject) {
+        Member member = asMember(accessibleObject);
+        if (isPublic(member)) {
+            return true;
+        }
         Boolean access = tryCanAccess(object, accessibleObject);
         return access == null ? accessibleObject.isAccessible() : access;
     }
@@ -154,9 +155,6 @@ public abstract class AccessibleObjectUtils implements Utils {
      * @return previous accessible status of the {@link AccessibleObject} instance
      */
     static boolean setAccessible(AccessibleObject accessibleObject) {
-        if (accessibleObject == null) {
-            return false;
-        }
         boolean accessible = accessibleObject.isAccessible();
         if (!accessible) {
             try {
@@ -169,27 +167,27 @@ public abstract class AccessibleObjectUtils implements Utils {
         return accessible;
     }
 
-    static boolean trySetAccessible(Method method, AccessibleObject accessibleObject) {
+    static boolean trySetAccessible(MethodHandle methodHandle, AccessibleObject accessibleObject) {
         boolean accessible = false;
         try {
-            accessible = (boolean) method.invoke(accessibleObject);
+            accessible = (boolean) methodHandle.invokeExact(accessibleObject);
         } catch (Throwable e) {
-            logger.error("It's failed to invokeExact on {} with accessibleObject : {}", method, accessibleObject, e);
+            logger.error("It's failed to invokeExact on {} with accessibleObject : {}", methodHandle, accessibleObject, e);
         }
         return accessible;
     }
 
     static Boolean tryCanAccess(Object object, AccessibleObject accessibleObject) {
-        return tryCanAccess(canAccessMethod, object, accessibleObject);
+        return tryCanAccess(canAccessMethodHandle, object, accessibleObject);
     }
 
-    static Boolean tryCanAccess(Method method, Object object, AccessibleObject accessibleObject) {
+    static Boolean tryCanAccess(MethodHandle methodHandle, Object object, AccessibleObject accessibleObject) {
         Boolean access = null;
-        if (method != null) { // JDK 9+
+        if (methodHandle != null) { // JDK 9+
             try {
-                access = (boolean) method.invoke(accessibleObject, object);
+                access = (boolean) methodHandle.invokeExact(accessibleObject, object);
             } catch (Throwable e) {
-                logger.error("It's failed to invokeExact on {} with object : {} , accessible object : {}", canAccessMethod, object, accessibleObject, e);
+                logger.error("It's failed to invokeExact on {} with object : {} , accessible object : {}", canAccessMethodHandle, object, accessibleObject, e);
             }
         }
         return access;
