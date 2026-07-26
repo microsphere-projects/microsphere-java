@@ -16,6 +16,7 @@
  */
 package io.microsphere.reflect;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.util.Utils;
 
 import java.lang.reflect.Constructor;
@@ -24,6 +25,8 @@ import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.function.Predicate;
+
+import static io.microsphere.util.ClassUtils.isPrimitive;
 
 /**
  * Java Reflection {@link Member} Utilities class
@@ -334,6 +337,16 @@ public abstract class MemberUtils implements Utils {
      */
     public static Member asMember(Object object) {
         return object instanceof Member ? (Member) object : null;
+    }
+
+    /**
+     * Checks whether the specified declaring class is invalid, which means it is either {@code null} or a primitive type.
+     *
+     * @param declaredClass the declaring class to check
+     * @return <code>true</code> if the declaring class is invalid; <code>false</code> otherwise
+     */
+    public static boolean isInvalidDeclaringClass(@Nullable Class<?> declaredClass) {
+        return declaredClass == null || isPrimitive(declaredClass);
     }
 
     private MemberUtils() {
