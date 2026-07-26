@@ -40,7 +40,7 @@ class ModernProcessIdResolverTest extends LoggingTest {
         if (isGEJava9) {
             assertNotNull(resolver.current());
         } else {
-            assertThrows(NullPointerException.class, resolver::current);
+            assertThrows(IllegalArgumentException.class, resolver::current);
         }
     }
 

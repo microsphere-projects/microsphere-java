@@ -153,7 +153,7 @@ public final class MethodDefinition extends ExecutableDefinition<Method> {
      *                                  throws an exception.
      */
     public <R> R invoke(Object instance, Object... args) throws IllegalStateException, IllegalArgumentException, RuntimeException {
-        return invokeMethod(instance, getMethod(), args);
+        return invokeMethod(true, instance, getMethod(), args);
     }
 
     @Override

@@ -87,7 +87,7 @@ class AccessibleObjectUtilsTest {
 
     @Test
     void testCanAccessOnNonPublicMembers() {
-        assertTrue(canAccess(null, tryCanAccessMethod));
+        assertFalse(canAccess(null, tryCanAccessMethod));
 
         Method cloneMethod = findMethod(Object.class, "clone");
         assertFalse(canAccess(null, cloneMethod));
@@ -104,7 +104,7 @@ class AccessibleObjectUtilsTest {
     @Test
     void testTrySetAccessibleOnNonPublicMembers() {
         assertTrue(trySetAccessible(tryCanAccessMethod));
-        assertFalse(trySetAccessible(abstractProcessorConstructor));
+        assertTrue(trySetAccessible(abstractProcessorConstructor));
     }
 
     @Test

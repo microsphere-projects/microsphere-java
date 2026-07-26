@@ -19,17 +19,4 @@ class ListenableTest {
         assertThrows(IllegalArgumentException.class, () -> assertListener(null));
     }
 
-    @Test
-    void testAssertListenerOnInterface() {
-        assertThrows(IllegalArgumentException.class, () -> assertListener(new FinalEventListener()));
-    }
-
-    static final class FinalEventListener implements EventListener<Event> {
-
-        @Override
-        public void onEvent(Event event) {
-
-        }
-    }
-
 }

@@ -145,4 +145,42 @@ class DirectEventDispatcherTest {
         assertEquals(2, echoEventListener.getEventOccurs());
         assertEquals(3, echoEventListener2.getEventOccurs());
     }
+
+//    @Test
+//    void testAddEventListenerOnLambdaForm() {
+//        ValueHolder<Event> eventHolder = of(null);
+//
+//        EventListener<?> eventListener = event -> {
+//            eventHolder.setValue(event);
+//        };
+//
+//        EventListener<EchoEvent> echoEventEventListener = event -> {
+//            eventHolder.setValue(event);
+//        };
+//
+////        JavaLangAccess javaLangAccess = SharedSecrets.getJavaLangAccess();
+////        ConstantPool constantPool = javaLangAccess.getConstantPool(echoEventEventListener.getClass());
+////        for (int i = 0; i < constantPool.getSize(); i++) {
+////            Member member = null;
+////            try {
+////                member = constantPool.getMethodAt(i);
+////            } catch (Throwable e) {
+////
+////            }
+////            System.out.println(member);
+////        }
+//
+//        Class<?> eventType = findEventType(eventListener);
+//        assertInstanceOf(Event.class, eventType);
+//
+//
+//        this.dispatcher.addEventListener(eventListener);
+//
+//        Event event = new Event("Test") {
+//        };
+//
+//        this.dispatcher.dispatch(event);
+//
+//        assertSame(eventHolder.getValue(), event);
+//    }
 }

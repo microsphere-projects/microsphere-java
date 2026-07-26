@@ -67,6 +67,9 @@ public abstract class ReflectionUtils implements Utils {
      */
     public static final String SUN_REFLECT_REFLECTION_CLASS_NAME = "sun.reflect.Reflection";
 
+
+    public static final String SHARED_SECRETS_CLASS_NAME ="jdk.internal.access.SharedSecrets";
+
     /**
      * The {@link Class} of sun.reflect.Reflection
      */

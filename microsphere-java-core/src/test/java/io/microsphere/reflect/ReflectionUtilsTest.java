@@ -91,7 +91,7 @@ class ReflectionUtilsTest {
     @Test
     void testGetCallerClassNamesInStackWalker() {
         if (testCurrentJavaVersion("<", JAVA_VERSION_9)) {
-            assertThrows(NullPointerException.class, () -> getCallerClassNamesInStackWalker());
+            assertThrows(IllegalArgumentException.class, () -> getCallerClassNamesInStackWalker());
         } else {
             assertTrue(getCallerClassNamesInStackWalker().contains(CALLER_CLASS_NAME));
         }

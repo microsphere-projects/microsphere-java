@@ -128,7 +128,7 @@ public class BeanProperty {
             PropertyDescriptor descriptor = new PropertyDescriptor(propertyName, beanClass);
             BeanProperty beanProperty = new BeanProperty(propertyName, beanClass, descriptor);
             Method getterMethod = descriptor.getReadMethod();
-            Object propertyValue = invokeMethod(bean, getterMethod);
+            Object propertyValue = invokeMethod(true, bean, getterMethod);
             beanProperty.value = (propertyValue);
             return beanProperty;
         });
