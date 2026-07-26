@@ -1422,7 +1422,7 @@ public abstract class URLUtils implements Utils {
      */
     @Nullable
     public static URLStreamHandlerFactory getURLStreamHandlerFactory() {
-        return getStaticFieldValue(URL.class, "factory");
+        return getStaticFieldValue(URL.class, "factory", true);
     }
 
     /**

@@ -187,28 +187,33 @@ class FieldUtilsTest extends LoggingTest {
     void testGetFieldValue() {
         String value = "Hello,World";
         if (CURRENT_JAVA_VERSION.le(JAVA_VERSION_8)) {
-            assertArrayEquals(value.toCharArray(), getFieldValue(value, "value", char[].class));
+            assertArrayEquals(value.toCharArray(), getFieldValue(value, "value", char[].class, true));
         } else {
-            assertArrayEquals(value.getBytes(), getFieldValue(value, "value", byte[].class));
+            assertArrayEquals(value.getBytes(), getFieldValue(value, "value", byte[].class, true));
         }
 
-        assertGetFieldValue(test, "privateField");
-        assertGetFieldValue(test, "packagePrivateField");
-        assertGetFieldValue(test, "protectedField");
-        assertGetFieldValue(test, "publicField");
+        assertGetFieldValue(test, "privateField", true);
+        assertGetFieldValue(test, "packagePrivateField", false);
+        assertGetFieldValue(test, "protectedField", false);
+        assertGetFieldValue(test, "publicField", false);
     }
 
     @Test
     void testGetFieldValueWithDefaultValue() {
         ReflectionTestExt testExt = new ReflectionTestExt();
-        assertGetFieldValue(testExt, "integerField", 0);
-        assertGetFieldValue(testExt, "stringField", "test");
+        assertGetFieldValue(testExt, "integerField", 0, true);
+        assertGetFieldValue(testExt, "stringField", "test", true);
     }
 
     @Test
     void testGetFieldValueOnIllegalArgumentException() {
         Field field = findField(test, "privateField");
-        assertThrows(IllegalArgumentException.class, () -> getFieldValue("test", field));
+        assertThrows(IllegalArgumentException.class, () -> getFieldValue("test", field, true));
+    }
+
+    @Test
+    void testGetFieldValueOnIllegalStateException() {
+        assertThrows(IllegalStateException.class, () -> getFieldValue(this, "value", String.class));
     }
 
     @Test
@@ -220,13 +225,13 @@ class FieldUtilsTest extends LoggingTest {
     @Test
     void testSetFieldValue() {
         Integer value = 999;
-        setFieldValue(value, "value", 2);
-        assertEquals(value.intValue(), setFieldValue(value, "value", 2));
+        setFieldValue(value, "value", 2, true);
+        assertEquals(value.intValue(), setFieldValue(value, "value", 2, true));
 
-        assertSetFieldValue(test, "privateField", "test");
-        assertSetFieldValue(test, "packagePrivateField", "test");
-        assertSetFieldValue(test, "protectedField", "test");
-        assertSetFieldValue(test, "publicField", "test");
+        assertSetFieldValue(test, "privateField", "test", true);
+        assertSetFieldValue(test, "packagePrivateField", "test", false);
+        assertSetFieldValue(test, "protectedField", "test", false);
+        assertSetFieldValue(test, "publicField", "test", false);
     }
 
     @Test
@@ -241,10 +246,10 @@ class FieldUtilsTest extends LoggingTest {
 
     @Test
     void testSetStaticFieldValue() {
-        setStaticFieldValue(getClass(), "value", "abc");
+        setStaticFieldValue(getClass(), "value", "abc", true);
         assertEquals("abc", value);
 
-        assertSetStaticFieldValue(ReflectionTest.class, "staticField", "test");
+        assertSetStaticFieldValue(ReflectionTest.class, "staticField", "test", false);
     }
 
     @Test
@@ -289,21 +294,41 @@ class FieldUtilsTest extends LoggingTest {
         assertEquals(fieldName, getStaticFieldValue(klass, fieldName));
     }
 
-    private void assertGetFieldValue(ReflectionTest test, String fieldName) {
-        assertEquals(fieldName, getFieldValue(test, fieldName));
-        assertEquals(fieldName, getFieldValue(test, fieldName, (Object) null));
+    private void assertGetFieldValue(ReflectionTest test, String fieldName, boolean forceAccess) {
+        if (forceAccess) {
+            assertEquals(fieldName, getFieldValue(test, fieldName, true));
+            assertEquals(fieldName, getFieldValue(test, fieldName, (Object) null, true));
+        } else {
+            assertEquals(fieldName, getFieldValue(test, fieldName));
+            assertEquals(fieldName, getFieldValue(test, fieldName, (Object) null));
+        }
     }
 
-    private void assertGetFieldValue(ReflectionTest test, String fieldName, Object defaultValue) {
-        assertEquals(defaultValue, getFieldValue(test, fieldName, defaultValue));
+    private void assertGetFieldValue(ReflectionTest test, String fieldName, Object defaultValue, boolean forceAccess) {
+        if (forceAccess) {
+            assertEquals(defaultValue, getFieldValue(test, fieldName, defaultValue, true));
+        } else {
+            assertEquals(defaultValue, getFieldValue(test, fieldName, defaultValue));
+        }
     }
 
-    private void assertSetFieldValue(ReflectionTest test, String fieldName, String fieldValue) {
-        assertEquals(fieldName, setFieldValue(test, fieldName, fieldValue));
+    private void assertSetFieldValue(ReflectionTest test, String fieldName, String fieldValue, boolean forceAccess) {
+        Field field = findField(test, fieldName);
+        if (forceAccess) {
+            assertEquals(fieldName, setFieldValue(test, fieldName, fieldValue, true));
+            setFieldValue(test, field, fieldValue, true);
+        } else {
+            assertEquals(fieldName, setFieldValue(test, fieldName, fieldValue));
+            setFieldValue(test, field, fieldValue);
+        }
     }
 
-    private void assertSetStaticFieldValue(Class<?> klass, String fieldName, String fieldValue) {
-        assertEquals(fieldName, setStaticFieldValue(klass, fieldName, fieldValue));
+    private void assertSetStaticFieldValue(Class<?> klass, String fieldName, String fieldValue, boolean forceAccess) {
+        if (forceAccess) {
+            assertEquals(fieldName, setStaticFieldValue(klass, fieldName, fieldValue, true));
+        } else {
+            assertEquals(fieldName, setStaticFieldValue(klass, fieldName, fieldValue));
+        }
     }
 
     private void assertGetDeclaredField(Class<?> klass, String fieldName) {
