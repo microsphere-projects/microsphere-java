@@ -1639,7 +1639,7 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static void clearURLStreamHandlerFactory() {
-        setStaticFieldValue(URL.class, "factory", null);
+        setStaticFieldValue(URL.class, "factory", null, true);
     }
 
     protected static String reformProtocol(String protocol, String spec) {
