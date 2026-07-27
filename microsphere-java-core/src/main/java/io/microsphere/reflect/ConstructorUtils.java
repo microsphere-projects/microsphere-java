@@ -23,9 +23,8 @@ import io.microsphere.lang.function.ThrowableSupplier;
 import io.microsphere.logging.Logger;
 import io.microsphere.util.Utils;
 
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.util.List;
 import java.util.function.Predicate;
@@ -35,9 +34,9 @@ import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
-import static io.microsphere.reflect.ExecutableUtils.execute;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.ClassUtils.getTypes;
 import static java.util.Collections.unmodifiableList;
 
 /**
@@ -271,43 +270,140 @@ public abstract class ConstructorUtils implements Utils {
     }
 
     /**
-     * Creates a new instance by invoking the specified {@link Constructor} with the provided arguments.
+     * Creates a new instance of the specified class by inferring constructor parameter types
+     * from the runtime types of {@code args}.
      *
      * <p>
-     * This method makes the constructor accessible (if it is not already) using
-     * {@link AccessibleObjectUtils#trySetAccessible(AccessibleObject)} and then invokes it using
-     * the utility method from {@link ExecutableUtils#execute(Executable, ThrowableSupplier)} to handle exceptions uniformly.
+     * This method delegates to {@link #newInstance(boolean, Class, Object...)} with
+     * {@code forceAccess = false}, so normal Java access checks apply.
      * </p>
      *
      * <h3>Example Usage</h3>
-     * <h4>Basic Instantiation</h4>
+     * <pre>{@code
+     * Person person = newInstance(Person.class, "Mercy", 18);
+     * }</pre>
+     *
+     * @param type the target class to instantiate
+     * @param args the constructor arguments used to locate and invoke a matching constructor
+     * @param <T>  the target type
+     * @return a new instance of {@code type}
+     */
+    @Nonnull
+    public static <T> T newInstance(Class<T> type, Object... args) {
+        return newInstance(false, type, args);
+    }
+
+    /**
+     * Creates a new instance of the specified class by locating a declared constructor
+     * that matches the runtime argument types and invoking it.
+     *
+     * <p>
+     * When {@code forceAccess} is {@code true}, this method attempts to make the resolved
+     * constructor accessible before invocation, which allows use of non-public constructors.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <h4>Invoke Public Constructor</h4>
+     * <pre>{@code
+     * User user = newInstance(false, User.class, "Alice");
+     * }</pre>
+     *
+     * <h4>Invoke Private Constructor</h4>
+     * <pre>{@code
+     * Singleton singleton = newInstance(true, Singleton.class);
+     * }</pre>
+     *
+     * @param forceAccess whether to force constructor accessibility
+     * @param type        the target class to instantiate
+     * @param args        the constructor arguments used to locate and invoke a matching constructor
+     * @param <T>         the target type
+     * @return a new instance of {@code type}
+     */
+    @Nonnull
+    public static <T> T newInstance(boolean forceAccess, Class<T> type, Object... args) {
+        Constructor<T> constructor = findConstructor(type, getTypes(args));
+        return newInstance(forceAccess, constructor, args);
+    }
+
+    /**
+     * Creates a new instance by invoking the specified {@link Constructor} with the provided arguments.
+     *
+     * <p>
+     * This method uses normal Java access checks and delegates to
+     * {@link #newInstance(boolean, Constructor, Object...)} with {@code forceAccess = false}.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
      * <pre>{@code
      * Constructor<MyClass> constructor = MyClass.class.getConstructor(String.class, int.class);
      * MyClass instance = newInstance(constructor, "hello", 42);
-     * }</pre>
-     *
-     * <h4>Using a Private Constructor</h4>
-     * <pre>{@code
-     * Constructor<SingletonClass> privateConstructor = SingletonClass.class.getDeclaredConstructor();
-     * SingletonClass instance = newInstance(privateConstructor); // Accesses private constructor
      * }</pre>
      *
      * @param constructor the constructor to invoke
      * @param args        the arguments to pass to the constructor
      * @param <T>         the type of the object created by the constructor
      * @return a new instance of the object constructed by the given constructor
-     * @throws NullPointerException     if the constructor is {@code null}
-     * @throws IllegalStateException    if the constructor cannot be accessed or invoked
-     * @throws IllegalArgumentException if the arguments do not match the expected parameter types
-     * @throws RuntimeException         if the constructor throws an exception during invocation
      */
     @Nonnull
     public static <T> T newInstance(Constructor<T> constructor, Object... args) {
-        trySetAccessible(constructor);
-        return execute(constructor, () -> constructor.newInstance(args));
+        return newInstance(false, constructor, args);
+    }
+
+    /**
+     * Creates a new instance by invoking the specified {@link Constructor} with optional forced access.
+     *
+     * <p>
+     * When {@code forceAccess} is {@code true}, this method attempts to make the constructor accessible first,
+     * allowing invocation of non-public constructors. When {@code forceAccess} is {@code false}, normal Java
+     * access checks apply.
+     * </p>
+     *
+     * <h3>Example Usage</h3>
+     * <h4>Invoke a Public Constructor Without Forcing Access</h4>
+     * <pre>{@code
+     * Constructor<MyClass> constructor = MyClass.class.getConstructor(String.class);
+     * MyClass instance = newInstance(false, constructor, "hello");
+     * }</pre>
+     *
+     * <h4>Invoke a Private Constructor by Forcing Access</h4>
+     * <pre>{@code
+     * Constructor<SingletonClass> constructor = SingletonClass.class.getDeclaredConstructor();
+     * SingletonClass instance = newInstance(true, constructor);
+     * }</pre>
+     *
+     * @param forceAccess whether to force constructor accessibility before invocation
+     * @param constructor the constructor to invoke
+     * @param args        the arguments to pass to the constructor
+     * @param <T>         the type of the object created by the constructor
+     * @return a new instance created by invoking the given constructor
+     * @throws IllegalStateException    if this {@code Constructor} enforces Java language access control and
+     *                                  the underlying constructor is inaccessible, or if the declaring class
+     *                                  is abstract and cannot be instantiated
+     * @throws IllegalArgumentException if the argument count or argument types are incompatible with the
+     *                                  constructor parameters, or if this constructor belongs to an enum class
+     * @throws RuntimeException         if the underlying constructor throws an exception
+     */
+    @Nonnull
+    public static <T> T newInstance(boolean forceAccess, Constructor<T> constructor, Object... args) {
+        if (forceAccess) {
+            trySetAccessible(constructor);
+        }
+        T instance = null;
+        RuntimeException failure = null;
+        try {
+            instance = constructor.newInstance(args);
+        } catch (IllegalAccessException | InstantiationException e) {
+            failure = new IllegalStateException(e.getMessage(), e);
+        } catch (InvocationTargetException e) {
+            failure = new RuntimeException(e.getMessage(), e.getTargetException());
+        }
+        if (failure != null) {
+            logger.error("It's failed to invoke the constructor[signature : '{}' , arguments : {}]", constructor, arrayToString(args), failure.getCause());
+            throw failure;
+        }
+        return instance;
     }
 
     private ConstructorUtils() {
     }
-
 }
