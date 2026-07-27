@@ -76,7 +76,7 @@ class UnsafeUtilsTest {
         Class<?> unsafeUtilsClass = UnsafeUtils.class;
         Set<Field> allDeclaredFields = findAllDeclaredFields(unsafeUtilsClass, MemberUtils::isStatic);
         for (Field field : allDeclaredFields) {
-            Object value = getStaticFieldValue(field, true);
+            Object value = getStaticFieldValue(true, field);
             assertNotNull(value, "The static field value of " + field + " should not be null");
         }
     }

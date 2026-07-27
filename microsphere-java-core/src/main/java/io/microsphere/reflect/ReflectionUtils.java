@@ -455,7 +455,7 @@ public abstract class ReflectionUtils implements Utils {
             }
 
             String fieldName = field.getName();
-            Object fieldValue = getFieldValue(object, field, true);
+            Object fieldValue = getFieldValue(true, object, field);
             Class<?> fieldValueType = field.getType();
             if (fieldValue != object) {
                 if (!isPrimitive(fieldValueType) && !isSimpleType(fieldValueType)

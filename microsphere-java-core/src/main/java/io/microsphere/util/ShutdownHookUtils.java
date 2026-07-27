@@ -411,7 +411,7 @@ public abstract class ShutdownHookUtils implements Utils {
      * @return the map of shutdown hook threads, or an empty map if the class is {@code null}
      */
     static Map<Thread, Thread> shutdownHookThreadsMap(Class<?> applicationShutdownHooksClass) {
-        return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(applicationShutdownHooksClass, HOOKS_FIELD_NAME, true);
+        return applicationShutdownHooksClass == null ? emptyMap() : getStaticFieldValue(true, applicationShutdownHooksClass, HOOKS_FIELD_NAME);
     }
 
     private ShutdownHookUtils() {

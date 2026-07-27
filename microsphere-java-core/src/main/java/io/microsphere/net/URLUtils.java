@@ -1422,7 +1422,7 @@ public abstract class URLUtils implements Utils {
      */
     @Nullable
     public static URLStreamHandlerFactory getURLStreamHandlerFactory() {
-        return getStaticFieldValue(URL.class, "factory", true);
+        return getStaticFieldValue(true, URL.class, "factory");
     }
 
     /**
@@ -1639,7 +1639,7 @@ public abstract class URLUtils implements Utils {
     }
 
     protected static void clearURLStreamHandlerFactory() {
-        setStaticFieldValue(URL.class, "factory", null, true);
+        setStaticFieldValue(true, URL.class, "factory", null);
     }
 
     protected static String reformProtocol(String protocol, String spec) {
