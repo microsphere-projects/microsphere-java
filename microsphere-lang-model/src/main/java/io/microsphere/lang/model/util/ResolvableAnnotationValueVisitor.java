@@ -170,7 +170,7 @@ public class ResolvableAnnotationValueVisitor extends SimpleAnnotationValueVisit
         }
 
         Class annotationClass = loadClass(a.getAnnotationType());
-        return invokeStaticMethod(annotationForMapMethod, annotationClass, attributesMap);
+        return invokeStaticMethod(true, annotationForMapMethod, annotationClass, attributesMap);
     }
 
     @Override
