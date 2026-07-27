@@ -96,7 +96,16 @@ class ConstructorUtilsTest extends LoggingTest {
     }
 
     @Test
-    void testNewInstance() {
+    void testNewInstanceWithType() {
+        assertEquals("test", newInstance(String.class, "test"));
+        assertNotNull(newInstance(true, PrivateConstructorClass.class));
+        assertNotNull(newInstance(PackagePrivateConstructorClass.class));
+        assertNotNull(newInstance(ProtectedConstructorClass.class));
+        assertNotNull(newInstance(PublicConstructorClass.class, "test"));
+    }
+
+    @Test
+    void testNewInstanceWithConstructor() {
         assertNotNull(newInstance(getConstructor(PublicConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(ProtectedConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(PackagePrivateConstructorClass.class)));
