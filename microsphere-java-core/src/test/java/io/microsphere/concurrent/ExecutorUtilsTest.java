@@ -47,7 +47,7 @@ class ExecutorUtilsTest extends LoggingTest implements Loggable {
     @Test
     void testShutdownOnExit() throws InterruptedException {
         shutdownOnExit(this.executorService, this.executorService, this.executorService);
-        PriorityBlockingQueue<Runnable> shutdownHookCallbacks = getStaticFieldValue(ShutdownHookUtils.class, "shutdownHookCallbacks", true);
+        PriorityBlockingQueue<Runnable> shutdownHookCallbacks = getStaticFieldValue(true, ShutdownHookUtils.class, "shutdownHookCallbacks");
         assertNotNull(shutdownHookCallbacks);
 
         Iterator<Runnable> iterator = shutdownHookCallbacks.iterator();

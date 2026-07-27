@@ -122,7 +122,7 @@ public final class FieldDefinition extends MemberDefinition<Field> {
      *                                  the underlying field (or a subclass or implementor thereof).
      */
     public <T> T get(Object instance) throws IllegalStateException, IllegalArgumentException {
-        return getFieldValue(instance, getResolvedField(), true);
+        return getFieldValue(true, instance, getResolvedField());
     }
 
     /**
@@ -138,6 +138,6 @@ public final class FieldDefinition extends MemberDefinition<Field> {
      *                                  the underlying field (or a subclass or implementor thereof).
      */
     public <T> T set(Object instance, T fieldValue) {
-        return setFieldValue(instance, getResolvedField(), fieldValue, true);
+        return setFieldValue(true, instance, getResolvedField(), fieldValue);
     }
 }

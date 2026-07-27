@@ -1216,7 +1216,7 @@ public abstract class ClassLoaderUtils implements Utils {
     public static Set<Class<?>> getLoadedClasses(@Nullable ClassLoader classLoader) throws UnsupportedOperationException {
         ClassLoader actualClassLoader = nullSafeClassLoader(classLoader);
         Field field = findField(classLoaderClass, classesFieldName);
-        List<Class<?>> classes = getFieldValue(actualClassLoader, field, true);
+        List<Class<?>> classes = getFieldValue(true, actualClassLoader, field);
         return ofSet(classes);
     }
 
