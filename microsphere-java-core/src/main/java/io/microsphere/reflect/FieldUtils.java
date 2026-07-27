@@ -219,7 +219,7 @@ public abstract class FieldUtils implements Utils {
     @Nullable
     public static <T> T getStaticFieldValue(@Nonnull Class<?> klass, @Nonnull String fieldName) throws
             IllegalStateException, IllegalArgumentException {
-        return getStaticFieldValue(klass, fieldName, false);
+        return getStaticFieldValue(false, klass, fieldName);
     }
 
     /**
@@ -234,14 +234,14 @@ public abstract class FieldUtils implements Utils {
      *     private static String SECRET = "Hidden";
      * }
      *
-     * String value = FieldUtils.getStaticFieldValue(Example.class, "SECRET", true);
+     * String value = FieldUtils.getStaticFieldValue(true, Example.class, "SECRET");
      * System.out.println(value);  // Output: Hidden
      * }</pre>
      *
+     * @param <T>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param klass       The class containing the static field
      * @param fieldName   The name of the static field
-     * @param forceAccess Whether to force reflective accessibility when reading the field
-     * @param <T>         The type of the field value
      * @return The value of the static field, or {@code null} if the field is not found
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible.
@@ -250,10 +250,10 @@ public abstract class FieldUtils implements Utils {
      *                                  or implementor thereof).
      */
     @Nullable
-    public static <T> T getStaticFieldValue(@Nonnull Class<?> klass, @Nonnull String fieldName, boolean forceAccess)
+    public static <T> T getStaticFieldValue(boolean forceAccess, @Nonnull Class<?> klass, @Nonnull String fieldName)
             throws IllegalStateException, IllegalArgumentException {
         Field field = findField(klass, fieldName);
-        return getStaticFieldValue(field, forceAccess);
+        return getStaticFieldValue(forceAccess, field);
     }
 
     /**
@@ -284,7 +284,7 @@ public abstract class FieldUtils implements Utils {
      */
     @Nullable
     public static <T> T getStaticFieldValue(@Nullable Field field) throws IllegalStateException, IllegalArgumentException {
-        return getStaticFieldValue(field, false);
+        return getStaticFieldValue(false, field);
     }
 
     /**
@@ -300,13 +300,13 @@ public abstract class FieldUtils implements Utils {
      * }
      *
      * Field portField = FieldUtils.findField(Example.class, "PORT");
-     * Integer port = FieldUtils.getStaticFieldValue(portField, true);
+     * Integer port = FieldUtils.getStaticFieldValue(true, portField);
      * System.out.println(port);  // Output: 8080
      * }</pre>
      *
-     * @param field       The {@link Field} object representing the static field
-     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param <T>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when reading the field
+     * @param field       The {@link Field} object representing the static field
      * @return The value of the static field, or {@code null} if the field is {@code null}
      * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
      *                                  field is inaccessible
@@ -314,8 +314,8 @@ public abstract class FieldUtils implements Utils {
      *                                  the underlying field (or a subclass or implementor thereof)
      */
     @Nullable
-    public static <T> T getStaticFieldValue(@Nullable Field field, boolean forceAccess) throws IllegalStateException, IllegalArgumentException {
-        return getFieldValue(null, field, forceAccess);
+    public static <T> T getStaticFieldValue(boolean forceAccess, @Nullable Field field) throws IllegalStateException, IllegalArgumentException {
+        return getFieldValue(forceAccess, null, field);
     }
 
     /**
@@ -347,7 +347,7 @@ public abstract class FieldUtils implements Utils {
     @Nullable
     public static <V> V setStaticFieldValue(@Nonnull Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue) {
         Field field = findField(klass, fieldName);
-        return setStaticFieldValue(klass, fieldName, fieldValue, false);
+        return setStaticFieldValue(false, klass, fieldName, fieldValue);
     }
 
     /**
@@ -362,22 +362,22 @@ public abstract class FieldUtils implements Utils {
      *     private static String MODE = "DEV";
      * }
      *
-     * String previous = FieldUtils.setStaticFieldValue(Example.class, "MODE", "PROD", true);
+     * String previous = FieldUtils.setStaticFieldValue(true, Example.class, "MODE", "PROD");
      * System.out.println(previous); // Output: DEV
-     * System.out.println(FieldUtils.getStaticFieldValue(Example.class, "MODE", true)); // Output: PROD
+     * System.out.println(FieldUtils.getStaticFieldValue(true, Example.class, "MODE")); // Output: PROD
      * }</pre>
      *
+     * @param <V>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when writing the field
      * @param klass       The class containing the static field
      * @param fieldName   The name of the static field to set
      * @param fieldValue  The new value to assign to the static field
-     * @param forceAccess Whether to force reflective accessibility when writing the field
-     * @param <V>         The type of the field value
      * @return The previous value of the static field, or {@code null} if the field is not found
      */
     @Nullable
-    public static <V> V setStaticFieldValue(@Nonnull Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue, boolean forceAccess) {
+    public static <V> V setStaticFieldValue(boolean forceAccess, @Nonnull Class<?> klass, @Nonnull String fieldName, @Nullable V fieldValue) {
         Field field = findField(klass, fieldName);
-        return setFieldValue(null, field, fieldValue, forceAccess);
+        return setFieldValue(forceAccess, null, field, fieldValue);
     }
 
     /**
@@ -495,7 +495,7 @@ public abstract class FieldUtils implements Utils {
     /**
      * Retrieves the value of a field by name from the given object instance.
      *
-     * <p>This is a convenience overload of {@link #getFieldValue(Object, String, boolean)}
+     * <p>This is a convenience overload of {@link #getFieldValue(boolean, Object, String)}
      * with {@code forceAccess=false}. It will read public fields directly and may throw an
      * access-related exception for non-public fields.</p>
      *
@@ -521,7 +521,7 @@ public abstract class FieldUtils implements Utils {
      */
     @Nullable
     public static <V> V getFieldValue(@Nonnull Object instance, @Nonnull String fieldName) throws IllegalStateException, IllegalArgumentException {
-        return getFieldValue(instance, fieldName, false);
+        return getFieldValue(false, instance, fieldName);
     }
 
     /**
@@ -537,14 +537,14 @@ public abstract class FieldUtils implements Utils {
      * }
      *
      * Example instance = new Example();
-     * String value = FieldUtils.getFieldValue(instance, "secret", true);
+     * String value = FieldUtils.getFieldValue(true, instance, "secret");
      * System.out.println(value);  // Output: Hidden
      * }</pre>
      *
      * @param <V>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param instance    The object instance from which to retrieve the field value
      * @param fieldName   The name of the field whose value is to be retrieved
-     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @return The value of the field, or {@code null} if the field is not found
      * @throws IllegalStateException    if this Field object is enforcing Java language access control and the underlying
      *                                  field is inaccessible
@@ -553,9 +553,9 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(@Nonnull Object instance, @Nonnull String fieldName, boolean forceAccess) throws
+    public static <V> V getFieldValue(boolean forceAccess, @Nonnull Object instance, @Nonnull String fieldName) throws
             IllegalStateException, IllegalArgumentException, NullPointerException {
-        return getFieldValue(instance, findField(instance, fieldName), forceAccess);
+        return getFieldValue(forceAccess, instance, findField(instance, fieldName));
     }
 
     /**
@@ -601,7 +601,7 @@ public abstract class FieldUtils implements Utils {
     @Nullable
     public static <V> V getFieldValue(@Nonnull Object instance, @Nonnull String fieldName, @Nullable V defaultValue)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
-        return getFieldValue(instance, fieldName, defaultValue, false);
+        return getFieldValue(false, instance, fieldName, defaultValue);
     }
 
     /**
@@ -618,7 +618,7 @@ public abstract class FieldUtils implements Utils {
      * }
      *
      * Example instance = new Example();
-     * String value = FieldUtils.getFieldValue(instance, "name", "Unknown", true);
+     * String value = FieldUtils.getFieldValue(true, instance, "name", "Unknown");
      * System.out.println(value);  // Output: Unknown
      * }</pre>
      *
@@ -630,15 +630,15 @@ public abstract class FieldUtils implements Utils {
      * }
      *
      * Example instance = new Example();
-     * String value = FieldUtils.getFieldValue(instance, "name", "Unknown", true);
+     * String value = FieldUtils.getFieldValue(true, instance, "name", "Unknown");
      * System.out.println(value);  // Output: Microsphere
      * }</pre>
      *
      * @param <V>          The type of the field value
+     * @param forceAccess  Whether to force reflective accessibility when reading the field
      * @param instance     The object instance from which to retrieve the field value
      * @param fieldName    The name of the field whose value is to be retrieved
      * @param defaultValue The fallback value to return if the resolved field value is {@code null}
-     * @param forceAccess  Whether to force reflective accessibility when reading the field
      * @return The resolved field value, or {@code defaultValue} if the resolved value is {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible
@@ -647,16 +647,16 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(@Nonnull Object instance, @Nonnull String fieldName, @Nullable V defaultValue,
-                                      boolean forceAccess) throws IllegalStateException, IllegalArgumentException, NullPointerException {
-        V value = getFieldValue(instance, fieldName, forceAccess);
+    public static <V> V getFieldValue(boolean forceAccess, @Nonnull Object instance, @Nonnull String fieldName, @Nullable V defaultValue)
+            throws IllegalStateException, IllegalArgumentException, NullPointerException {
+        V value = getFieldValue(forceAccess, instance, fieldName);
         return defaultIfNull(value, defaultValue);
     }
 
     /**
      * Retrieves the value of a field by name and expected type from the given object instance.
      *
-     * <p>This is a convenience overload of {@link #getFieldValue(Object, String, Class, boolean)}
+     * <p>This is a convenience overload of {@link #getFieldValue(boolean, Object, String, Class)}
      * with {@code forceAccess=false}. Use this method when the target field is accessible and you
      * want a type-safe lookup by field name and declared type.</p>
      *
@@ -697,7 +697,7 @@ public abstract class FieldUtils implements Utils {
     @Nullable
     public static <V> V getFieldValue(@Nonnull Object instance, @Nonnull String fieldName, @Nonnull Class<V> fieldType)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
-        return getFieldValue(instance, fieldName, fieldType, false);
+        return getFieldValue(false, instance, fieldName, fieldType);
     }
 
     /**
@@ -714,15 +714,15 @@ public abstract class FieldUtils implements Utils {
      * }
      *
      * Example instance = new Example();
-     * String value = FieldUtils.getFieldValue(instance, "secret", String.class, true);
+     * String value = FieldUtils.getFieldValue(true, instance, "secret", String.class);
      * System.out.println(value);  // Output: typed
      * }</pre>
      *
      * @param <V>         The expected type of the field value
+     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param instance    The object instance from which to retrieve the field value
      * @param fieldName   The name of the field whose value is to be retrieved
      * @param fieldType   The expected type of the field
-     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @return The value of the field if found and of the correct type; otherwise, {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible
@@ -731,17 +731,16 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(@Nonnull Object instance, @Nonnull String fieldName, @Nonnull Class<V> fieldType,
-                                      boolean forceAccess)
+    public static <V> V getFieldValue(boolean forceAccess, @Nonnull Object instance, @Nonnull String fieldName, @Nonnull Class<V> fieldType)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
         Field field = findField(instance.getClass(), fieldName, fieldType);
-        return getFieldValue(instance, field, forceAccess);
+        return getFieldValue(forceAccess, instance, field);
     }
 
     /**
      * Retrieves the value of the specified {@link Field} from the given object instance.
      *
-     * <p>This is a convenience overload of {@link #getFieldValue(Object, Field, boolean)}
+     * <p>This is a convenience overload of {@link #getFieldValue(boolean, Object, Field)}
      * with {@code forceAccess=false}. Use this method when the field is already accessible,
      * or when you are reading public members.</p>
      *
@@ -778,7 +777,7 @@ public abstract class FieldUtils implements Utils {
     @Nullable
     public static <V> V getFieldValue(@Nullable Object instance, @Nullable Field field) throws IllegalStateException,
             IllegalArgumentException, NullPointerException {
-        return getFieldValue(instance, field, false);
+        return getFieldValue(false, instance, field);
     }
 
     /**
@@ -796,14 +795,14 @@ public abstract class FieldUtils implements Utils {
      *
      * Example instance = new Example();
      * Field field = FieldUtils.findField(instance, "secret");
-     * String value = FieldUtils.getFieldValue(instance, field, true);
+     * String value = FieldUtils.getFieldValue(true, instance, field);
      * System.out.println(value);  // Output: Reflection
      * }</pre>
      *
      * @param <V>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @param instance    The object instance from which to retrieve the field value
      * @param field       The {@link Field} object representing the field to retrieve (nullable)
-     * @param forceAccess Whether to force reflective accessibility when reading the field
      * @return The value of the field if found and accessible; otherwise, {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible.
@@ -813,7 +812,7 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V getFieldValue(@Nullable Object instance, @Nullable Field field, boolean forceAccess) throws
+    public static <V> V getFieldValue(boolean forceAccess, @Nullable Object instance, @Nullable Field field) throws
             IllegalStateException, IllegalArgumentException, NullPointerException {
         if (field == null) {
             return null;
@@ -875,7 +874,7 @@ public abstract class FieldUtils implements Utils {
     @Nullable
     public static <V> V setFieldValue(@Nonnull Object instance, @Nonnull String fieldName, @Nullable V value) throws
             IllegalStateException, IllegalArgumentException, NullPointerException {
-        return setFieldValue(instance, fieldName, value, false);
+        return setFieldValue(false, instance, fieldName, value);
     }
 
     /**
@@ -891,16 +890,16 @@ public abstract class FieldUtils implements Utils {
      * }
      *
      * Example instance = new Example();
-     * String previous = FieldUtils.setFieldValue(instance, "mode", "PROD", true);
+     * String previous = FieldUtils.setFieldValue(true, instance, "mode", "PROD");
      * System.out.println(previous); // Output: DEV
-     * System.out.println(FieldUtils.getFieldValue(instance, "mode", true)); // Output: PROD
+     * System.out.println(FieldUtils.getFieldValue(true, instance, "mode")); // Output: PROD
      * }</pre>
      *
      * @param <V>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when writing the field
      * @param instance    The object instance whose field value is to be modified
      * @param fieldName   The name of the field whose value is to be set
      * @param value       The new value to assign to the field
-     * @param forceAccess Whether to force reflective accessibility when writing the field
      * @return The previous value of the field before modification, or {@code null} if the field is not found
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible or final; or if this {@code Field} object has
@@ -911,9 +910,9 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field.
      */
     @Nullable
-    public static <V> V setFieldValue(@Nullable Object instance, @Nonnull String fieldName, @Nullable V value, boolean forceAccess)
+    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nonnull String fieldName, @Nullable V value)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
-        return setFieldValue(instance, findField(instance, fieldName), value, forceAccess);
+        return setFieldValue(forceAccess, instance, findField(instance, fieldName), value);
     }
 
     /**
@@ -964,7 +963,7 @@ public abstract class FieldUtils implements Utils {
      */
     @Nullable
     public static <V> V setFieldValue(@Nullable Object instance, @Nullable Field field, @Nullable V value) throws IllegalStateException, IllegalArgumentException {
-        return setFieldValue(instance, field, value, false);
+        return setFieldValue(false, instance, field, value);
     }
 
     /**
@@ -982,15 +981,15 @@ public abstract class FieldUtils implements Utils {
      *
      * Example instance = new Example();
      * Field field = FieldUtils.findField(instance, "port");
-     * Integer previous = FieldUtils.setFieldValue(instance, field, 9090, true);
+     * Integer previous = FieldUtils.setFieldValue(true, instance, field, 9090);
      * System.out.println(previous); // Output: 8080
      * }</pre>
      *
      * @param <V>         The type of the field value
+     * @param forceAccess Whether to force reflective accessibility when writing the field
      * @param instance    The object instance whose field value is to be modified
      * @param field       The {@link Field} object representing the field to modify
      * @param value       The new value to assign to the field
-     * @param forceAccess Whether to force reflective accessibility when writing the field
      * @return The previous value of the field before modification, or {@code null} if the field is {@code null}
      * @throws IllegalStateException    if this {@code Field} object is enforcing Java language access control and the
      *                                  underlying field is inaccessible or final; or if this {@code Field} object has
@@ -1001,7 +1000,7 @@ public abstract class FieldUtils implements Utils {
      * @throws NullPointerException     if the specified object is null and the field is an instance field
      */
     @Nullable
-    public static <V> V setFieldValue(@Nullable Object instance, @Nullable Field field, @Nullable V value, boolean forceAccess)
+    public static <V> V setFieldValue(boolean forceAccess, @Nullable Object instance, @Nullable Field field, @Nullable V value)
             throws IllegalStateException, IllegalArgumentException, NullPointerException {
         if (field == null) {
             return null;

@@ -444,7 +444,7 @@ class MapUtilsTest {
         map.put("G", 7);
         map.put("H", 8);
         assertEquals(size, map.size());
-        assertEquals(valueOf(size), getFieldValue(map, "threshold", true));
+        assertEquals(valueOf(size), getFieldValue(true, map, "threshold"));
     }
 
     private void assertNewMap(Class<? extends Map> mapClass, Map<?, ?> map) {

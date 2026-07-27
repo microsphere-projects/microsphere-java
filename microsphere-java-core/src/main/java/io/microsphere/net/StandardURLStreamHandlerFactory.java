@@ -91,7 +91,7 @@ public class StandardURLStreamHandlerFactory implements URLStreamHandlerFactory 
             }
             return null;
         }
-        URLStreamHandlerFactory factory = getStaticFieldValue(defaultFactoryField, true);
+        URLStreamHandlerFactory factory = getStaticFieldValue(true, defaultFactoryField);
         URLStreamHandler handler = factory.createURLStreamHandler(protocol);
         return handler;
     }
