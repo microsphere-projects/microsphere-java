@@ -2463,7 +2463,7 @@ public interface TypeUtils extends Utils {
             List<? extends TypeParameterElement> typeParameterElements = element.getTypeParameters();
             int typeParameterElementsSize = typeParameterElements.size();
             if (typeParameterElementsSize > 0) {
-                List<TypeMirror> typeMirrors = invokeMethod(type, "getTypeArguments");
+                List<TypeMirror> typeMirrors = invokeMethod(true, type, "getTypeArguments");
                 int size = typeMirrors.size();
                 if (size > 0) {
                     StringBuilder typeBuilder = new StringBuilder(element.toString());
