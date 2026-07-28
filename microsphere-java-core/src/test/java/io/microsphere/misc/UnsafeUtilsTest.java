@@ -25,9 +25,12 @@ import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.OBJECT_ARRAY_INDEX_SCALE;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_BASE_OFFSET;
 import static io.microsphere.misc.UnsafeUtils.SHORT_ARRAY_INDEX_SCALE;
+import static io.microsphere.misc.UnsafeUtils.addressSize;
+import static io.microsphere.misc.UnsafeUtils.allocateMemory;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapInt;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapLong;
 import static io.microsphere.misc.UnsafeUtils.compareAndSwapObject;
+import static io.microsphere.misc.UnsafeUtils.freeMemory;
 import static io.microsphere.misc.UnsafeUtils.getBoolean;
 import static io.microsphere.misc.UnsafeUtils.getBooleanVolatile;
 import static io.microsphere.misc.UnsafeUtils.getBooleanVolatileFromArray;
@@ -55,6 +58,7 @@ import static io.microsphere.misc.UnsafeUtils.getObjectVolatileFromArray;
 import static io.microsphere.misc.UnsafeUtils.getShort;
 import static io.microsphere.misc.UnsafeUtils.getShortVolatile;
 import static io.microsphere.misc.UnsafeUtils.getShortVolatileFromArray;
+import static io.microsphere.misc.UnsafeUtils.pageSize;
 import static io.microsphere.misc.UnsafeUtils.putBoolean;
 import static io.microsphere.misc.UnsafeUtils.putBooleanVolatile;
 import static io.microsphere.misc.UnsafeUtils.putBooleanVolatileIntoArray;
@@ -506,6 +510,26 @@ class UnsafeUtilsTest {
 //        String fieldName = "value";
 //        long offset = getStaticFieldOffset(Integer.class, fieldName);
 //        assertNotNull(offset);
+    }
+
+    @Test
+    void testByteOpsInOffHeap() {
+        long address = allocateMemory(1);
+        byte b = 1;
+        putByte(address, b);
+        byte returnValue = getByte(address);
+        assertEquals(b, returnValue);
+        freeMemory(address);
+    }
+
+    @Test
+    void testAddressSize() {
+        assertTrue(addressSize() > 0);
+    }
+
+    @Test
+    void testPageSize() {
+        assertTrue(pageSize() > 0);
     }
 
     private static class Model {
