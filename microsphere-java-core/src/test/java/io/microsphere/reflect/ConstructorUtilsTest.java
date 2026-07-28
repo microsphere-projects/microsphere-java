@@ -105,6 +105,18 @@ class ConstructorUtilsTest extends LoggingTest {
     }
 
     @Test
+    void testNewInstanceWithTypeOnIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> newInstance(PrivateConstructorClass.class, "test"));
+        assertThrows(IllegalArgumentException.class, () -> newInstance(PackagePrivateConstructorClass.class, "test"));
+        assertThrows(IllegalArgumentException.class, () -> newInstance(ProtectedConstructorClass.class, "test"));
+    }
+
+    @Test
+    void testNewInstanceWithTypeOnIllegalStateException() {
+        assertThrows(IllegalStateException.class, () -> newInstance(PrivateConstructorClass.class));
+    }
+
+    @Test
     void testNewInstanceWithConstructor() {
         assertNotNull(newInstance(getConstructor(PublicConstructorClass.class)));
         assertThrows(RuntimeException.class, () -> newInstance(getConstructor(ProtectedConstructorClass.class)));
