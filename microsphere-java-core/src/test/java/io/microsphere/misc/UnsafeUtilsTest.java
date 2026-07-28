@@ -72,7 +72,6 @@ class UnsafeUtilsTest {
         assertEquals(2, CHAR_ARRAY_INDEX_SCALE);
         assertEquals(4, OBJECT_ARRAY_INDEX_SCALE);
 
-
         Class<?> unsafeUtilsClass = UnsafeUtils.class;
         Set<Field> allDeclaredFields = findAllDeclaredFields(unsafeUtilsClass, MemberUtils::isStatic);
         for (Field field : allDeclaredFields) {
