@@ -51,6 +51,7 @@ import static io.microsphere.lang.function.Predicates.and;
 import static io.microsphere.lang.function.Streams.filterAll;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.AccessibleObjectUtils.trySetAccessible;
+import static io.microsphere.reflect.ExecutableUtils.matchParameterTypes;
 import static io.microsphere.reflect.MemberUtils.isInvalidDeclaringClass;
 import static io.microsphere.reflect.MemberUtils.isPrivate;
 import static io.microsphere.reflect.MemberUtils.isStatic;
@@ -66,7 +67,6 @@ import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.ClassUtils.getAllInheritedTypes;
 import static io.microsphere.util.ClassUtils.getTypeName;
-import static io.microsphere.util.ClassUtils.getTypes;
 import static io.microsphere.util.ClassUtils.isArray;
 import static io.microsphere.util.StringUtils.split;
 import static io.microsphere.util.StringUtils.startsWith;
@@ -820,11 +820,23 @@ public abstract class MethodUtils implements Utils {
      * @param methodName  the method name
      * @param arguments   method arguments
      * @return the invocation result, or {@code null} if method return type is void
+     * @throws IllegalArgumentException if the method cannot be accessed with provided arguments
+     * @throws RuntimeException         if the underlying method throws an exception
      */
     @Nullable
     public static <R> R invokeMethod(@Nonnull Object object, boolean forceAccess, @Nonnull Class<?> type, @Nonnull String methodName, @Nonnull Object... arguments) {
-        Class[] parameterTypes = getTypes(arguments);
-        Method method = findMethod(type, methodName, parameterTypes);
+        List<Method> allDeclaredMethods = findAllDeclaredMethods(type, method -> {
+            if (Objects.equals(methodName, method.getName()) && matchParameterTypes(method, arguments)) {
+                return true;
+            }
+            return false;
+        });
+        if (allDeclaredMethods.isEmpty()) {
+            String message = format("No method was not matched by the declared type : {} , name : '{}' , arguments : {}",
+                    type, methodName, arrayToString(arguments));
+            throw new IllegalArgumentException(message);
+        }
+        Method method = allDeclaredMethods.get(0);
         return invokeMethod(forceAccess, object, method, arguments);
     }
 

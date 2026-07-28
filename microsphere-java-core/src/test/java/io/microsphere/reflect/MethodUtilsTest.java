@@ -52,6 +52,8 @@ import static io.microsphere.reflect.MethodUtils.banMethod;
 import static io.microsphere.reflect.MethodUtils.buildKey;
 import static io.microsphere.reflect.MethodUtils.buildSignature;
 import static io.microsphere.reflect.MethodUtils.clearBannedMethodsCache;
+import static io.microsphere.reflect.MethodUtils.clearDeclaredMethodsCache;
+import static io.microsphere.reflect.MethodUtils.clearMethodsCache;
 import static io.microsphere.reflect.MethodUtils.excludedDeclaredClass;
 import static io.microsphere.reflect.MethodUtils.findAllDeclaredMethods;
 import static io.microsphere.reflect.MethodUtils.findAllMethods;
@@ -113,7 +115,9 @@ class MethodUtilsTest extends LoggingTest {
     @AfterAll
     static void afterAll() {
         System.getProperties().remove(BANNED_METHODS_PROPERTY_NAME);
+        clearMethodsCache();
         clearBannedMethodsCache();
+        clearDeclaredMethodsCache();
     }
 
     @Test
