@@ -54,7 +54,7 @@ abstract class AbstractMBeanDescribableBuilderTest<B extends MBeanDescribableBui
                 .as(AbstractMBeanDescribableBuilderTest.class)
                 .getGenericType(0)
                 .toClass();
-        return newInstance(builderClass);
+        return newInstance(true, builderClass);
     }
 
     @Test
