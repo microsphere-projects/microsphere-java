@@ -26,6 +26,7 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -99,6 +100,12 @@ class ExecutableUtilsTest {
         assertThrows(RuntimeException.class, () -> execute(method, m -> {
             assertEquals(1, (int) method.invoke(test, 1));
         }));
+    }
+
+    @Test
+    void testExecuteWithThrowableSupplier() {
+        Method method = findMethod(ReflectionTest.class, "publicMethod", int.class);
+        assertNull(execute(method, () -> null));
     }
 
     @Test
