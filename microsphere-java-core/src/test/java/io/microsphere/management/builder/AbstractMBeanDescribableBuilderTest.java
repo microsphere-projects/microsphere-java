@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.management.modelmbean.DescriptorSupport;
 
+import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.reflect.JavaType.from;
-import static io.microsphere.util.ClassUtils.newInstance;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 

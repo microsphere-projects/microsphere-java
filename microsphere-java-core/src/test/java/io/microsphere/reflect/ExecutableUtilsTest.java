@@ -21,10 +21,13 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.Method;
 
 import static io.microsphere.reflect.ExecutableUtils.execute;
+import static io.microsphere.reflect.ExecutableUtils.matchParameterTypes;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ExecutableUtils} Test
@@ -98,4 +101,11 @@ class ExecutableUtilsTest {
         }));
     }
 
+    @Test
+    void testMatchParameterTypes() {
+        Method method = findMethod(ReflectionTest.class, "publicMethod", int.class);
+        assertTrue(matchParameterTypes(method, 1));
+        assertFalse(matchParameterTypes(method, 1L));
+        assertFalse(matchParameterTypes(method));
+    }
 }
